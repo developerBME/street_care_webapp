@@ -12,18 +12,22 @@ const NavBar = () => {
   const links = [
     {
       id: 1,
+      label: "About",
       link: "About",
     },
     {
       id: 2,
+      label: "How to help",
       link: "How to help",
     },
     {
       id: 3,
+      label: "Community",
       link: "Community",
     },
     {
       id: 4,
+      label: "Contact",
       link: "Contact",
     },
   ];
@@ -34,13 +38,13 @@ const NavBar = () => {
         <h1 className="text-3xl  ml-8 ">Street Care</h1>
       </div>
       <ul className="hidden items-center md:flex px-2">
-        {links.map(({ id, link }) => (
+        {links.map(({ id, link, label }) => (
           <li
             key={id}
             className=" px-6 py-3 text-xl cursor-pointer capitalize 
         text-white hover:scale-105 duration-200"
           >
-            <Link to={link}>{link}</Link>
+            <Link to={link}>{label}</Link>
           </li>
         ))}
         <li>
