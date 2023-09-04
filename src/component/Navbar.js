@@ -32,6 +32,9 @@ const NavBar = () => {
     },
   ];
 
+  // Login state
+  const [Loggedin, setLoggedin] = useState(false);
+
   return (
     <div className=" z-10 flex justify-between items-center w-full h-28  text-white fixed bg-nav px-4">
       <div>
@@ -52,14 +55,24 @@ const NavBar = () => {
             Donate
           </button>
         </li>
-        <li>
-          <Avatar
-            className="ml-4 mr-4 "
-            alt="S"
-            src="avatar.jpg"
-            sx={{ width: 58, height: 56 }}
-          />
-        </li>
+        {!Loggedin && (
+          <li
+            className=" px-6 py-3 text-xl cursor-pointer capitalize 
+        text-white hover:scale-105 duration-200"
+          >
+            Login
+          </li>
+        )}
+        {Loggedin && (
+          <li>
+            <Avatar
+              className="ml-4 mr-4 "
+              alt="S"
+              src="avatar.jpg"
+              sx={{ width: 58, height: 56 }}
+            />
+          </li>
+        )}
       </ul>
       <div
         onClick={() => setNav(!nav)}
