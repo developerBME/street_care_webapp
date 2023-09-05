@@ -1,5 +1,6 @@
 import React from "react";
 import Navbar from "./Navbar";
+import FAQs from "./FAQs";
 
 function Home() {
   return (
@@ -14,9 +15,11 @@ function Home() {
         <div className="  container mt-8 rounded-2xl bg-white w-full h-[819px] pt-40 text-black"></div>
         <div className="  container mt-8 rounded-2xl bg-white w-full h-[819px] pt-40 text-black"></div>
         {/* Aniket */}
-        <div className="  container mt-8 rounded-2xl bg-white w-full h-[819px] pt-40 text-black"></div>
-        <div className="  container mt-8 rounded-2xl bg-white w-full h-[819px] pt-40 text-black"></div>
-        <div className="  container mt-8 rounded-2xl bg-white w-full h-[819px] pt-40 text-black"></div>
+        <div className="  container mt-8 rounded-2xl bg-white w-full h-[750px] text-black"></div>
+        <div className="  container mt-8 rounded-2xl bg-white w-full h-[550px] text-black"></div>
+        <div className="  container mt-8 rounded-2xl bg-white w-full h-[900px] mb-12 text-black">
+          <FAQs />
+        </div>
       </div>
     </div>
   );
