@@ -4,7 +4,6 @@ import { FaBars, FaTimes } from "react-icons/fa";
 import Avatar from "@mui/material/Avatar";
 
 import { Link } from "react-router-dom";
-import App from "../App";
 
 const NavBar = () => {
   const [nav, setNav] = useState(false);

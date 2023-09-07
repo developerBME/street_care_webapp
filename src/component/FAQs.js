@@ -11,7 +11,7 @@ export default function FAQs() {
     setExpanded(isExpanded ? panel : false);
   };
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 p-20 bg-gray-100 rounded-lg h-[900px]">
+    <div className="mx-auto max-w-7xl px-6 lg:px-8 p-20 bg-gray-100 rounded-lg h-fit">
       <h1 className="text-2xl px-2 pb-8 font-bricolage font-bold">
         Frequently Asked Questions
       </h1>
