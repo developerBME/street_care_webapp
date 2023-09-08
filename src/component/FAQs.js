@@ -11,13 +11,13 @@ export default function FAQs() {
     setExpanded(isExpanded ? panel : false);
   };
   return (
-    <div className="mx-auto max-w-7xl px-6 lg:px-8 p-20 bg-gray-100 rounded-lg h-fit">
+    <div className="mx-auto max-w-8xl px-6 lg:px-8 p-20 bg-gray-100 rounded-lg h-fit">
       <h1 className="text-2xl px-2 pb-8 font-bricolage font-bold">
         Frequently Asked Questions
       </h1>
       <div>
         <Accordion
-          className="p-3 m-2 bg-white flex flex-col rounded-lg w-full"
+          className="p-3 mb-2 bg-white flex flex-col rounded-lg w-full"
           expanded={expanded === "panel1"}
           onChange={handleChange("panel1")}
         >
@@ -51,7 +51,7 @@ export default function FAQs() {
           </AccordionDetails>
         </Accordion>
         <Accordion
-          className="p-3 m-2 bg-white flex flex-col rounded-lg w-full"
+          className="p-3 mb-2 bg-white flex flex-col rounded-lg w-full"
           expanded={expanded === "panel2"}
           onChange={handleChange("panel2")}
         >
@@ -85,7 +85,7 @@ export default function FAQs() {
           </AccordionDetails>
         </Accordion>
         <Accordion
-          className="p-3 m-2 bg-white flex flex-col rounded-lg w-full"
+          className="p-3 mb-2 bg-white flex flex-col rounded-lg w-full"
           expanded={expanded === "panel3"}
           onChange={handleChange("panel3")}
         >
@@ -119,7 +119,7 @@ export default function FAQs() {
           </AccordionDetails>
         </Accordion>
         <Accordion
-          className="p-3 m-2 bg-white flex flex-col rounded-lg w-full"
+          className="p-3 mb-2 bg-white flex flex-col rounded-lg w-full"
           expanded={expanded === "panel4"}
           onChange={handleChange("panel4")}
         >
@@ -153,7 +153,7 @@ export default function FAQs() {
           </AccordionDetails>
         </Accordion>
         <Accordion
-          className="p-3 m-2 bg-white flex flex-col rounded-lg w-full"
+          className="p-3 mb-2 bg-white flex flex-col rounded-lg w-full"
           expanded={expanded === "panel5"}
           onChange={handleChange("panel5")}
         >
@@ -185,7 +185,7 @@ export default function FAQs() {
           </AccordionDetails>
         </Accordion>
         <Accordion
-          className="p-3 m-2 bg-white flex flex-col rounded-lg w-full"
+          className="p-3 mb-2 bg-white flex flex-col rounded-lg w-full"
           expanded={expanded === "panel6"}
           onChange={handleChange("panel6")}
         >
