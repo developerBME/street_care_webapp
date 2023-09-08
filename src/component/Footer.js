@@ -174,7 +174,7 @@ function Footer() {
             </div>
           </div>
         </div>
-        <hr class=" bg-gray-800 " />
+        <hr class=" bg-gray-800 mx-4" />
         <div class="px-4 py-6 bg-nav dark:bg-nav md:flex md:items-center md:justify-between">
           <span class="text-sm text-gray-300 sm:text-center"></span>
           <div class=" float-right text-white mt-4 space-x-5 md:mt-0">
