@@ -15,7 +15,7 @@ function Success() {
             <img src={Campaign} className=""></img>
           </div>
         </div>
-        <div className="grow shrink basis-0 flex-col justify-start items-start gap-8 inline-flex">
+        <div className="grow  basis-0 flex-col justify-start items-start gap-8 inline-flex">
           <div className="self-stretch text-violet-800 text-[20px] font-bold leading-7">
             Great News!
           </div>

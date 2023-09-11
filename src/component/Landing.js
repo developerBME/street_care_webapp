@@ -9,7 +9,7 @@ function Landing() {
       <div className="  ">
         <p className="text-5xl font-bricolage font-medium">
           {" "}
-          Support the homeless.Prepare care packages.Join outreach. Make a
+          Support the homeless. Prepare care packages. Join outreach. Make a
           difference.
         </p>
         <button class="bg-[#36295e]  text-white font-bold py-4 px-8 mt-12 rounded-full">

@@ -21,16 +21,20 @@ function Home() {
         </div>
 
         {/* Vishnu */}
-        <div className="container mt-8 rounded-2xl bg-white w-full pt-20 text-black">
-          <h1 className="text-2xl font-semibold mb-4 pl-8">
-            Upcoming Outreach Events
-          </h1>
-          <div className="container md:flex md:flex-row flex-col p-6 justify-between space-y-4 md:space-y-0">
-            <Eventcard />
-            <Eventcard />
-            <Eventcard />
+        <div className="w-fit mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
+          <div className="items-center justify-center px-4 py-8 lg:p-32 h-full w-full rounded-2xl bg-[#F7F7F7] ">
+            <p className=" font-bricolage text-5xl text-[#1F0A58]">
+              {" "}
+              Upcoming outreach events
+            </p>
+            <div className=" md:flex md:flex-row flex-col pt-9 justify-between ">
+              <Eventcard />
+              <Eventcard />
+              <Eventcard />
+            </div>
           </div>
         </div>
+        {/*  */}
         <div className="container mt-8 rounded-2xl bg-white w-full h-auto md:h-[819px] pt-20 text-black">
           <h1 className="text-2xl font-semibold mb-4 pl-8">
             BME Official Gathering
