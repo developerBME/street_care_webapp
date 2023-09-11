@@ -1,16 +1,22 @@
 {
   "files": {
-    "main.css": "/street_care_webapp/static/css/main.c089f676.css",
-    "main.js": "/street_care_webapp/static/js/main.128360b4.js",
-    "static/js/787.0f2d6133.chunk.js": "/street_care_webapp/static/js/787.0f2d6133.chunk.js",
-    "static/media/logo.png": "/street_care_webapp/static/media/logo.8fe4f387042f215024c4.png",
-    "index.html": "/street_care_webapp/index.html",
-    "main.c089f676.css.map": "/street_care_webapp/static/css/main.c089f676.css.map",
-    "main.128360b4.js.map": "/street_care_webapp/static/js/main.128360b4.js.map",
-    "787.0f2d6133.chunk.js.map": "/street_care_webapp/static/js/787.0f2d6133.chunk.js.map"
+    "main.css": "/static/css/main.914d1a9a.css",
+    "main.js": "/static/js/main.bea23cda.js",
+    "static/js/787.0f2d6133.chunk.js": "/static/js/787.0f2d6133.chunk.js",
+    "static/media/two.png": "/static/media/two.1390b929868ae1dc1309.png",
+    "static/media/one.png": "/static/media/one.896c1f1907ca4dc4701f.png",
+    "static/media/three.png": "/static/media/three.773e6276bdd1aed4eb2e.png",
+    "static/media/map.png": "/static/media/map.59f67e287406f560226b.png",
+    "static/media/logo.png": "/static/media/logo.8fe4f387042f215024c4.png",
+    "static/media/avatar.jpg": "/static/media/avatar.e499314f15a182ce2baa.jpg",
+    "index.html": "/index.html",
+    "static/media/campaign.svg": "/static/media/campaign.1134cc4d016d533b8bee3670b13c67b4.svg",
+    "main.914d1a9a.css.map": "/static/css/main.914d1a9a.css.map",
+    "main.bea23cda.js.map": "/static/js/main.bea23cda.js.map",
+    "787.0f2d6133.chunk.js.map": "/static/js/787.0f2d6133.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.c089f676.css",
-    "static/js/main.128360b4.js"
+    "static/css/main.914d1a9a.css",
+    "static/js/main.bea23cda.js"
   ]
 }
