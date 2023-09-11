@@ -4,6 +4,9 @@ import Eventcard from "./Eventcard";
 import BMEcard from "./BMEcard";
 import Landing from "./Landing";
 import Success from "./Success";
+import News from "./News";
+import Map from "./Map";
+import Process from "./Process";
 
 function Home() {
   return (
@@ -38,14 +41,20 @@ function Home() {
             <BMEcard />
           </div>
         </div>
-        <div className="  container mt-8 rounded-2xl bg-white w-full h-[819px] pt-40 text-black"></div>
+        <div className="  container mt-8 rounded-2xl bg-white w-full h-[300px] text-black">
+          <Process />
+        </div>
 
         {/* Meet  */}
         <div className="  container mt-8 rounded-2xl bg-white w-full h-[819px] pt-40 text-black"></div>
 
         {/* Aniket */}
-        <div className="  container mt-8 rounded-2xl bg-white w-full h-[750px] text-black"></div>
-        <div className="  container mt-8 rounded-2xl bg-white w-full h-[550px] text-black"></div>
+        <div className="  container mt-8 rounded-2xl bg-white w-full h-[750px] text-black">
+          <Map />
+        </div>
+        <div className="  container mt-8 rounded-2xl bg-white w-full h-[550px] text-black">
+          <News />
+        </div>
         <div className="  container mt-8 rounded-2xl bg-white w-full h-fit mb-12 text-black">
           <FAQs />
         </div>
