@@ -1,5 +1,7 @@
 import React from "react";
 import FAQs from "./FAQs";
+import Eventcard from "./Eventcard"
+import BMEcard from "./BMEcard"
 
 function Home() {
   return (
@@ -9,9 +11,29 @@ function Home() {
         <div className="  container mt-8 rounded-2xl bg-white w-full h-[819px] pt-40 text-black"></div>
 
         {/* Vishnu */}
+     {/* Vishnu */}
+     <div className="container mt-8 rounded-2xl bg-white w-full pt-20 text-black">
+     <h1 className="text-2xl font-semibold mb-4 pl-8">Upcoming Outreach Events</h1>
+       <div className="container md:flex md:flex-row flex-col p-6 justify-between space-y-4 md:space-y-0">
+         <Eventcard />
+         <Eventcard />
+         <Eventcard />
+       </div>
+       
+
+       
+     </div>
+     <div className="container mt-8 rounded-2xl bg-white w-full h-auto md:h-[819px] pt-20 text-black">
+     <h1 className="text-2xl font-semibold mb-4 pl-8">BME Official Gathering</h1>
+       <div className="container md:flex md:flex-row flex-col gap-4 p-6 space-y-4 md:space-y-0">
+         <BMEcard />
+         <BMEcard />
+         <BMEcard />
+       </div>
+     </div>
         <div className="  container mt-8 rounded-2xl bg-white w-full h-[819px] pt-40 text-black"></div>
-        <div className="  container mt-8 rounded-2xl bg-white w-full h-[819px] pt-40 text-black"></div>
-        <div className="  container mt-8 rounded-2xl bg-white w-full h-[819px] pt-40 text-black"></div>
+       
+       
         {/* Meet  */}
         <div className="  container mt-8 rounded-2xl bg-white w-full h-[819px] pt-40 text-black"></div>
 
