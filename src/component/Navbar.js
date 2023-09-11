@@ -35,7 +35,7 @@ const NavBar = () => {
   const [Loggedin, setLoggedin] = useState(false);
 
   return (
-    <div className=" z-10 flex justify-between items-center w-full h-28  text-white fixed bg-nav px-4">
+    <div className=" z-10 flex justify-between items-center w-full h-[90px]  text-white fixed bg-nav px-4">
       <div>
         <h1 className="text-3xl  ml-8 ">Street Care</h1>
       </div>
@@ -50,7 +50,7 @@ const NavBar = () => {
           </li>
         ))}
         <li>
-          <button class="bg-white hover:bg-yellow-300 text-black text-xl font-bold py-4 px-8 rounded-full">
+          <button class="bg-white hover:bg-yellow-300 text-black text-xl font-bold py-3 px-6 rounded-full">
             Donate
           </button>
         </li>
