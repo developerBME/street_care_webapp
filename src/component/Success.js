@@ -17,7 +17,7 @@ function Success() {
         </div>
         <div className="grow  basis-0 flex-col justify-start items-start gap-8 inline-flex">
           <div className="self-stretch text-violet-800 text-[20px] font-bold leading-7">
-            Great News!
+            Great News!!!
           </div>
           <div className="self-stretch">
             <span className="text-neutral-900 text-[24px] font-medium leading-10">
