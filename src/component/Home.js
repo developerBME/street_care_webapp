@@ -112,15 +112,14 @@ function Home() {
 
                 {/* New Quote Box */}
                 <div className="flex flex-col items-center mt-8">
-                  <div className="p-4 bg-[#F2F6D8] rounded-[30px] text-center max-w-[400px]">
+                  <div className="p-4 bg-[#F2F6D8] rounded-[30px] text-center w-[400px]">
                     <div className="p-16 pt-6"> {/* Added pt-4 */}
-                      <p className="text-lg font-bricolage mb-4">
+                      <p className="text-lg font-bricolage mb-2">
                         “A Saturday of service at Street Care’s Day of Outreach to Homeless Families and Individuals [on behalf of GivingTuesdayMilitary] gave this military spouse a big helping of much-needed perspective!”
                       </p>
-                      <p className="mb-2 text-base font-lato"> {/* Added space and author's name */}
+                      <p className="mb-1 text-base font-lato"> {/* Added space and author's name */}
                         — Hope Guinn Bradley, Volunteer
                       </p>
-
                     </div>
                   </div>
                 </div>
