@@ -68,10 +68,9 @@ function Home() {
               <p className="font-bricolage text-3xl font-normal mb-8 text-on-surface">
                 Empowered by community support
               </p>
-              <div className="flex justify-start items-start">
+              <div className="flex justify-between items-start">
                 {/* Container for Image 1 and Content Box */}
-                <div className="relative flex">
-
+                <div className="flex flex-col items-center">
                   <div style={{ padding: '16px' }}>
                     <img src={pic1} alt="Pic 1" />
 
@@ -79,6 +78,7 @@ function Home() {
                       <p className="text-lg font-open-sans">NY Attorney General</p>
                       <p className="text-xl font-bricolage">Letitia James</p>
                     </div>
+
                     <div style={{ padding: '36px' }}>
                       <button
                         style={{
@@ -95,9 +95,11 @@ function Home() {
                         <span className="text-white font-bricolage text-lg">More About Us</span>
                       </button>
                     </div>
-
                   </div>
+                </div>
 
+                {/* Container for Image 2 and Content Box */}
+                <div className="flex flex-col items-center">
                   <div style={{ padding: '16px' }}>
                     <img src={pic2} alt="Pic 2" />
 
@@ -105,13 +107,28 @@ function Home() {
                       <p className="text-lg font-open-sans">NYC Mayor</p>
                       <p className="text-xl font-bricolage">Eric Adams</p>
                     </div>
-
                   </div>
+                </div>
 
+                {/* New Quote Box */}
+                <div className="flex flex-col items-center mt-8">
+                  <div className="p-4 bg-[#F2F6D8] rounded-[30px] text-center max-w-[400px]">
+                    <div className="p-16 pt-6"> {/* Added pt-4 */}
+                      <p className="text-lg font-bricolage mb-4">
+                        “A Saturday of service at Street Care’s Day of Outreach to Homeless Families and Individuals [on behalf of GivingTuesdayMilitary] gave this military spouse a big helping of much-needed perspective!”
+                      </p>
+                      <p className="mb-2 text-base font-lato"> {/* Added space and author's name */}
+                        — Hope Guinn Bradley, Volunteer
+                      </p>
+
+                    </div>
+                  </div>
                 </div>
 
 
+
               </div>
+
             </div>
 
           </div>
