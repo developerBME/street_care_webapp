@@ -11,10 +11,11 @@ export default function FAQs() {
     setExpanded(isExpanded ? panel : false);
   };
   return (
-    <div className="mx-auto max-w-8xl px-6 lg:px-8 p-20 bg-gray-100 rounded-lg h-fit">
-      <h1 className="text-2xl px-2 pb-8 font-bricolage font-bold">
+    // <div className="mx-auto max-w-8xl px-6 lg:px-8 p-20 bg-gray-100 rounded-lg h-fit">
+    <div className="items-center justify-center px-4 py-8 lg:p-28 h-full w-full rounded-2xl bg-[#F7F7F7]">
+      <p className="pb-8 font-bricolage text-4xl text-[#1F0A58]">
         Frequently Asked Questions
-      </h1>
+      </p>
       <div>
         <Accordion
           className="p-3 mb-2 bg-white flex flex-col rounded-lg w-full"

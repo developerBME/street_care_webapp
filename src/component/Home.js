@@ -50,7 +50,10 @@ function Home() {
             <BMEcard />
           </div>
         </div>
-        <div className="  container mt-8 rounded-2xl bg-white w-full h-[300px] text-black">
+        {/* <div className="  container mt-8 rounded-2xl bg-white w-full h-[300px] text-black">
+          <Process />
+        </div> */}
+        <div className="  w-fit mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
           <Process />
         </div>
 
@@ -117,14 +120,23 @@ function Home() {
 
         {/* Aniket */}
 
-        <div className="  container mt-8 rounded-2xl bg-white w-full h-[750px] text-black">
+        {/* <div className="  container mt-8 rounded-2xl bg-white w-full h-[750px] text-black">
           <Map />
         </div>
         <div className="  container mt-8 rounded-2xl bg-white w-full h-[550px] text-black">
           <News />
         </div>
-
         <div className="  container mt-8 rounded-2xl bg-white w-full h-fit mb-12 text-black">
+          <FAQs />
+        </div> */}
+
+        <div className="  w-fit mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+          <Map />
+        </div>
+        <div className="  w-fit mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+          <News />
+        </div>
+        <div className="  w-fit mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black ">
           <FAQs />
         </div>
       </div>
