@@ -17,7 +17,7 @@ function Success() {
         </div>
         <div className="grow  basis-0 flex-col justify-start items-start gap-8 inline-flex">
           <div className="self-stretch text-violet-800 text-[20px] font-bold leading-7">
-            Great News!!!
+            Great News!!
           </div>
           <div className="self-stretch">
             <span className="text-neutral-900 text-[24px] font-medium leading-10">
@@ -46,7 +46,7 @@ function Success() {
       </div>
       {/* Grid */}
 
-      <div className="w-full h-fit justify-start items-start inline-flex grid grid-cols-1 lg:grid-cols-3 font-bricolage">
+      <div className="w-full h-fit justify-start items-start  grid grid-cols-1 lg:grid-cols-3 font-bricolage">
         {/*  */}
         <div className="grow rounded-t-2xl  lg:rounded-tr-none lg:rounded-l-2xl shrink basis-0 h-fit p-8 bg-gradient-to-br from-emerald-100 to-neutral-200 justify-start items-end gap-6 flex">
           <div className="flex-col justify-start items-start gap-6 inline-flex">
