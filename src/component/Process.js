@@ -1,7 +1,8 @@
 const Process = () => {
   return (
-    <div className="mx-auto max-w-8xl px-6 sm:py-10 lg:px-8 p-20 bg-gray-100 rounded-lg h-[300px]">
-      <p className="text-4xl font-bold text-gray-900 sm:text-3xl font-bricolage">
+    // <div className="mx-auto max-w-8xl px-6 py-20 sm:py-10 lg:px-32 lg:py-24 bg-gray-100 rounded-lg h-[ful]">
+    <div className="items-center justify-center px-4 py-8 lg:p-28 h-full w-full rounded-2xl bg-[#F7F7F7]">
+      <p className="font-bricolage text-4xl text-[#1F0A58]">
         What is the overall process?
       </p>
       <div className="grid grid-cols-1 gap-x-8 gap-y-8 sm:mt-4 sm:pt-4 lg:mx-0 lg:max-w-none lg:grid-cols-4">

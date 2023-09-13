@@ -9,7 +9,6 @@ import News from "./News";
 import Map from "./Map";
 import Process from "./Process";
 
-
 function Home() {
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed ">
@@ -47,24 +46,35 @@ function Home() {
             <BMEcard />
           </div>
         </div>
-        <div className="  container mt-8 rounded-2xl bg-white w-full h-[300px] text-black">
+        {/* <div className="  container mt-8 rounded-2xl bg-white w-full h-[300px] text-black">
+          <Process />
+        </div> */}
+        <div className="  w-fit mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
           <Process />
         </div>
-
 
         {/* Meet  */}
         <div className="  container mt-8 rounded-2xl bg-white w-full h-[819px] pt-40 text-black"></div>
 
         {/* Aniket */}
 
-        <div className="  container mt-8 rounded-2xl bg-white w-full h-[750px] text-black">
+        {/* <div className="  container mt-8 rounded-2xl bg-white w-full h-[750px] text-black">
           <Map />
         </div>
         <div className="  container mt-8 rounded-2xl bg-white w-full h-[550px] text-black">
           <News />
         </div>
-
         <div className="  container mt-8 rounded-2xl bg-white w-full h-fit mb-12 text-black">
+          <FAQs />
+        </div> */}
+
+        <div className="  w-fit mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+          <Map />
+        </div>
+        <div className="  w-fit mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+          <News />
+        </div>
+        <div className="  w-fit mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black ">
           <FAQs />
         </div>
       </div>
