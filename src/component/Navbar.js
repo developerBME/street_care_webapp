@@ -63,7 +63,7 @@ const NavBar = () => {
             className=" px-6 py-3 text-xl cursor-pointer capitalize 
         text-white hover:scale-105 duration-200"
           >
-            Login
+                <Link to="/login">Login</Link> {/* Test Code - To be removed */}
           </li>
         )}
         {Loggedin && (
