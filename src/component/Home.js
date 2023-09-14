@@ -1,16 +1,17 @@
 import React from "react";
 import FAQs from "./FAQs";
-
 import Eventcard from "./Eventcard";
-
 import BMEcard from "./BMEcard";
 import Landing from "./Landing";
 import Success from "./Success";
 import News from "./News";
 import Map from "./Map";
 import Process from "./Process";
-import pic1 from "../images/pic1.png";
-import pic2 from "../images/pic2.png";
+import ImageBox from "./ImageBox";
+import QuoteBox from "./QuoteBox";
+
+
+
 
 function Home() {
   return (
@@ -57,86 +58,32 @@ function Home() {
         </div>
 
         {/* Meet */}
-        <div className="container mt-8 rounded-2xl bg-white w-full h-[819px] pt-20 text-black relative">
-          <div className="flex justify-start items-start h-full px-12 py-6 space-x-2">
-            <div className="text-left">
-              <p className="font-bricolage text-3xl font-normal mb-2 text-on-surface">
-                Fueled by 100% volunteer passion, Growing with 264 dedicated
-                hearts.
+        <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
+          <div className="relative flex flex-col items-center">
+            <div className="mx-2 lg:mx-40 mt-8 mb-16 rounded-2xl bg-white text-black p-8 font-bricolage">
+              <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-4">
+                Fueled by 100% volunteer passion, Growing with 264 dedicated hearts.
               </p>
-              <p className="font-bricolage text-3xl font-normal mb-8 text-on-surface">
+              <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-8">
                 Empowered by community support
               </p>
-              <div className="flex justify-between items-start">
-                {/* Container for Image 1 and Content Box */}
-                <div className="flex flex-col items-center">
-                  <div style={{ padding: "16px" }}>
-                    <img src={pic1} alt="Pic 1" />
-
-                    <div className="p-4 bg-[#F2F6D8] rounded-b-[30px] text-center">
-                      <p className="text-lg font-open-sans">
-                        NY Attorney General
-                      </p>
-                      <p className="text-xl font-bricolage">Letitia James</p>
-                    </div>
-
-                    <div style={{ padding: "36px" }}>
-                      <button
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          padding: "12px 24px",
-                          background: "#5F36D6",
-                          border: "none",
-                          borderRadius: "30px",
-                          cursor: "pointer",
-                        }}
-                      >
-                        <span className="text-white font-bricolage text-lg">
-                          More About Us
-                        </span>
-                      </button>
-                    </div>
+              <div className="flex flex-col lg:flex-row items-start justify-center w-full mx-2 lg:mx-0 mt-8 mb-8 rounded-2xl bg-white text-black">
+                <div className="flex flex-row"></div>
+                <div className="flex flex-col items-center w-full lg:w-1/2 space-y-4">
+                  {/* Image 1 and Image 2 with content box */}
+                  <ImageBox />
+                </div>
+                <div className="flex flex-col items-center w-full lg:w-1/2 h-full">
+                  <div className="h-full w-full">
+                    <QuoteBox imageHeight="h-[500]" />
                   </div>
                 </div>
 
-                {/* Container for Image 2 and Content Box */}
-                <div className="flex flex-col items-center">
-                  <div style={{ padding: "16px" }}>
-                    <img src={pic2} alt="Pic 2" />
-
-                    <div className="p-4 bg-[#F2F6D8] rounded-b-[30px] text-center">
-                      <p className="text-lg font-open-sans">NYC Mayor</p>
-                      <p className="text-xl font-bricolage">Eric Adams</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* New Quote Box */}
-                <div className="flex flex-col items-center mt-8">
-                  <div className="p-4 bg-[#F2F6D8] rounded-[30px] text-center max-w-[400px]">
-                    <div className="p-16 pt-6">
-                      {" "}
-                      {/* Added pt-4 */}
-                      <p className="text-lg font-bricolage mb-4">
-                        “A Saturday of service at Street Care’s Day of Outreach
-                        to Homeless Families and Individuals [on behalf of
-                        GivingTuesdayMilitary] gave this military spouse a big
-                        helping of much-needed perspective!”
-                      </p>
-                      <p className="mb-2 text-base font-lato">
-                        {" "}
-                        {/* Added space and author's name */}— Hope Guinn
-                        Bradley, Volunteer
-                      </p>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
         </div>
+
 
         {/* Aniket */}
 
