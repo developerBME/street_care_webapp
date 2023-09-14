@@ -41,23 +41,23 @@ function Home() {
             </div>
           </div>
         </div>
-      
-
+    
         
 
-        <div className="w-fit md:w-[78%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-[#F7F7F7] text-black">
-        <div className="items-center justify-center px-4 py-8 lg:p-12 h-full w-full rounded-2xl bg-[#F7F7F7] mt-12">
-        <p className=" font-bricolage text-5xl text-[#1F0A58] pl-28 md:pl-8">
-            {" "}
-            BME Official Gathering
-          </p>
-          <div className="md:flex md:flex-row flex-col justify-center gap-4 p-8 space-y-4 md:space-y-0">
-            <BMEcard />
-            <BMEcard />
-            <BMEcard />
+        <div className="w-fit md:w-[78%] mx-2 mt-8 rounded-2xl bg-[#F7F7F7] text-black">
+          <div className="items-center justify-center lg:p-12 h-full w-full rounded-2xl bg-[#F7F7F7] mt-12">
+            <p className=" font-bricolage text-5xl text-[#1F0A58] p-4">
+                {" "}
+                BME Official Gathering
+            </p>
+            <div className="md:flex md:flex-row flex-col justify-center gap-4 p-4 space-y-4 md:space-y-0">
+              <BMEcard />
+              <BMEcard />
+              <BMEcard />
+            </div>
           </div>
         </div>
-        </div>
+
         {/* <div className="  container mt-8 rounded-2xl bg-white w-full h-[300px] text-black">
           <Process />
         </div> */}
