@@ -54,7 +54,7 @@ function Home() {
           </div>
         </div>
         {/* Aniket */}
-        <div className="w-fit md:w-[50%] lg:w-[80%] mx-2 lg:mx-40 mt-8  rounded-2xl bg-white text-black">
+        <div className="w-fit md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8  rounded-2xl bg-white text-black">
           <Process />
         </div>
 
@@ -141,13 +141,13 @@ function Home() {
         </div>
         {/* Aniket */}
 
-        <div className="w-fit md:w-[50%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+        <div className="w-fit md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
           <Map />
         </div>
-        <div className="w-fit md:w-[50%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+        <div className="w-fit md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
           <News />
         </div>
-        <div className="w-fit md:w-[50%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black ">
+        <div className="w-fit md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black ">
           <FAQs />
         </div>
       </div>
