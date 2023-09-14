@@ -8,7 +8,7 @@ const Process = () => {
       <div className="grid grid-cols-1 gap-x-8 gap-y-8 mt-6 sm:pt-4 lg:mx-0 lg:max-w-none lg:grid-cols-4">
         <article
           key="1"
-          className="flex max-w-xl flex-col items-start justify-normal border-t-4 border-violet-600 bg-white"
+          className="flex max-w-2xl flex-col items-start justify-normal border-t-4 border-violet-600 bg-white"
         >
           <h1 className="text-black text-2xl pt-4 px-2 font-bricolage">
             Sign Up/Initiate Group Outreach
@@ -20,7 +20,7 @@ const Process = () => {
         </article>
         <article
           key="2"
-          className="flex max-w-xl flex-col items-start justify-normal border-t-4 border-violet-600  bg-white"
+          className="flex max-w-2xl flex-col items-start justify-normal border-t-4 border-violet-600  bg-white"
         >
           <h1 className="text-black text-2xl pt-4 px-2 font-bricolage">
             Pack the care bag.
@@ -32,7 +32,7 @@ const Process = () => {
         </article>{" "}
         <article
           key="3"
-          className="flex max-w-xl flex-col items-start justify-normal border-t-4 border-violet-600  bg-white"
+          className="flex max-w-2xl flex-col items-start justify-normal border-t-4 border-violet-600  bg-white"
         >
           <h1 className="text-black text-2xl pt-4 px-2 font-bricolage">
             Go to the outreach
@@ -44,7 +44,7 @@ const Process = () => {
         </article>
         <article
           key="4"
-          className="flex max-w-xl flex-col items-start justify-normal border-t-4 border-violet-600 bg-white"
+          className="flex max-w-2xl flex-col items-start justify-normal border-t-4 border-violet-600 bg-white"
         >
           <h1 className="text-black text-2xl pt-4 px-2 font-bricolage">
             Document your experience

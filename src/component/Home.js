@@ -38,12 +38,11 @@ function Home() {
           </div>
         </div>
 
-    
         <div className="w-fit md:w-[90%] lg:w-[80%] mx-2 mt-8 rounded-2xl bg-[#F7F7F7] text-black">
           <div className="items-center justify-center lg:p-12 h-full w-full rounded-2xl bg-[#F7F7F7] mt-12">
             <p className=" font-bricolage text-5xl text-[#1F0A58] p-4">
-                {" "}
-                BME Official Gathering
+              {" "}
+              BME Official Gathering
             </p>
             <div className="md:flex md:flex-row flex-col justify-center gap-4 p-4 space-y-4 md:space-y-0">
               <BMEcard />
@@ -53,7 +52,7 @@ function Home() {
           </div>
         </div>
         {/* Aniket */}
-        <div className="w-fit md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8  rounded-2xl bg-white text-black">
+        <div className="sm:w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8  rounded-2xl bg-white text-black">
           <Process />
         </div>
 
@@ -85,13 +84,13 @@ function Home() {
         </div>
         {/* Aniket */}
 
-        <div className="w-fit md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+        <div className="sm:w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
           <Map />
         </div>
-        <div className="w-fit md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+        <div className="sm:w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
           <News />
         </div>
-        <div className="w-fit md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black ">
+        <div className="sm:w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black ">
           <FAQs />
         </div>
       </div>
