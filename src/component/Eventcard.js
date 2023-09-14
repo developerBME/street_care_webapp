@@ -5,7 +5,7 @@ import wavingHand from "../images/waving_hand.png";
 
 const Eventcard = () => {
   return (
-    <div className=" w-fit  bg-[#DEF6EB] rounded-lg p-8 lg:p-6 ">
+    <div className=" w-full mx-auto bg-[#DEF6EB] rounded-lg p-8 lg:p-6 ">
       <div class="flex items-center gap-1">
         <img class="w-9 h-9 rounded-full" src={userImg} alt="User Avatar" />
         <div class="text-black text-xs font-normal">William Smith</div>

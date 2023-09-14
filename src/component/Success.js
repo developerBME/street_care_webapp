@@ -4,17 +4,18 @@ import Campaign from "../images/campaign.svg";
 
 function Success() {
   return (
-    <div className="items-center justify-center px-4 py-8 lg:p-28 h-full w-full rounded-2xl bg-[#F7F7F7] ">
+    <div className="items-center justify-center px-4 py-8 lg:p-32 h-full w-full rounded-2xl bg-[#F7F7F7] ">
       <p className=" font-bricolage text-5xl text-[#1F0A58]">
         {" "}
         Highlights of our success
       </p>
-      <div className="w-fit h-fit my-9 p-7 bg-white rounded-[30px] justify-start items-start gap-8 inline-flex">
+      <div className="w-fit h-fit my-9 p-7 bg-white rounded-[30px] justify-start items-start lg:gap-5 lg:inline-flex">
         <div className="w-20 h-20 p-4 bg-gradient-to-br from-yellow-100 to-neutral-200 rounded-3xl justify-start items-start gap-2.5 flex">
           <div className="w-12 h-12 relative">
             <img src={Campaign} className=""></img>
           </div>
         </div>
+
         <div className="grow  basis-0 flex-col justify-start items-start gap-8 inline-flex">
           <div className="self-stretch text-violet-800 text-[20px] font-bold leading-7">
             Great News!!
@@ -59,7 +60,7 @@ function Success() {
               </div>
             </div>
           </div>
-          <div className="w-fit text-violet-950 text-2xl font-medium py-2 ">
+          <div className="w-fit text-violet-950 text-2xl font-medium py-2 inline-flex">
             homeless people
           </div>
         </div>

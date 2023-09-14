@@ -10,30 +10,27 @@ import Process from "./Process";
 import ImageBox from "./ImageBox";
 import QuoteBox from "./QuoteBox";
 
-
-
-
 function Home() {
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center ">
-        <div className=" w-fit mx-2 lg:mx-40 mt-32 rounded-2xl bg-white text-black ">
+        <div className=" w-fit md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-32 rounded-2xl bg-white text-black ">
           {" "}
           <Landing />
         </div>
-        <div className="  w-fit mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+        <div className="  w-fit md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
           <Success />
         </div>
 
         {/* Vishnu */}
 
-        <div className="w-fit mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
+        <div className="w-fit md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
           <div className="items-center justify-center px-4 py-8 lg:p-32 h-full w-full rounded-2xl bg-[#F7F7F7] ">
             <p className=" font-bricolage text-5xl text-[#1F0A58]">
               {" "}
               Upcoming outreach events
             </p>
-            <div className=" grid grid-cols-1 lg:grid-cols-3 pt-9 gap-5 ">
+            <div className=" w-full h-fit grid grid-cols-1 lg:grid-cols-3 pt-9 gap-5">
               <Eventcard />
               <Eventcard />
               <Eventcard />
@@ -64,7 +61,8 @@ function Home() {
           <div className="relative flex flex-col items-center">
             <div className="mx-2 lg:mx-40 mt-8 mb-16 rounded-2xl bg-white text-black p-8 font-bricolage">
               <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-4">
-                Fueled by 100% volunteer passion, Growing with 264 dedicated hearts.
+                Fueled by 100% volunteer passion, Growing with 264 dedicated
+                hearts.
               </p>
               <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-8">
                 Empowered by community support
@@ -80,7 +78,6 @@ function Home() {
                     <QuoteBox imageHeight="h-[500]" />
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
