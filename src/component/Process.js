@@ -5,7 +5,7 @@ const Process = () => {
       <p className="font-bricolage text-4xl text-[#1F0A58]">
         What is the overall process?
       </p>
-      <div className="grid grid-cols-1 gap-x-8 gap-y-8 mt-9 sm:pt-4 lg:mx-0 lg:max-w-none lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-x-8 gap-y-8 mt-6 sm:pt-4 lg:mx-0 lg:max-w-none lg:grid-cols-4">
         <article
           key="1"
           className="flex max-w-xl flex-col items-start justify-normal border-t-4 border-violet-600 bg-white"
