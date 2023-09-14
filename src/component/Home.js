@@ -39,7 +39,7 @@ function Home() {
         </div>
 
     
-        <div className="w-fit md:w-[78%] mx-2 mt-8 rounded-2xl bg-[#F7F7F7] text-black">
+        <div className="w-fit md:w-[90%] lg:w-[80%] mx-2 mt-8 rounded-2xl bg-[#F7F7F7] text-black">
           <div className="items-center justify-center lg:p-12 h-full w-full rounded-2xl bg-[#F7F7F7] mt-12">
             <p className=" font-bricolage text-5xl text-[#1F0A58] p-4">
                 {" "}
