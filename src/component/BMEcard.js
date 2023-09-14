@@ -27,7 +27,7 @@ const BMEcard = () => {
             <div className="self-stretch text-zinc-700 text-[12px] md:text-[17px] font-normal leading-normal">Open Spots: 8/20</div>
           </div>
         </div>
-        <div className="self-stretch h-auto md:h-[68px] pt-2 md:pt-3 flex-col justify-start items-start gap-2.5 flex">
+        <div className="self-stretch h-auto md:h-[68px] pt-4 md:pt-12 flex-col justify-start items-start gap-2.5 flex">
           <div className="px-6 py-2 rounded-[100px] border border-violet-950 justify-center items-center gap-2.5 inline-flex">
             <button className="text-center text-sm md:text-base">Join</button>
           </div>
