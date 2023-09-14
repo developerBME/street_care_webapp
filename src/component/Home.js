@@ -24,8 +24,11 @@ function Home() {
           <Success />
         </div>
 
+        
+
         {/* Vishnu */}
-        <div className=" mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
+
+        <div className="w-fit mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
           <div className="items-center justify-center px-4 py-8 lg:p-32 h-full w-full rounded-2xl bg-[#F7F7F7] ">
             <p className=" font-bricolage text-5xl text-[#1F0A58]">
               {" "}
@@ -38,8 +41,27 @@ function Home() {
             </div>
           </div>
         </div>
-        {/*  */} 
-         
+        
+
+        
+
+        <div className="w-fit md:w-[78%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-[#F7F7F7] text-black">
+        <div className="items-center justify-center px-4 py-8 lg:p-12 h-full w-full rounded-2xl bg-[#F7F7F7] mt-12">
+        <p className=" font-bricolage text-5xl text-[#1F0A58] pl-28 md:pl-8">
+            {" "}
+            BME Official Gathering
+          </p>
+          <div className="md:flex md:flex-row flex-col justify-center gap-4 p-8 space-y-4 md:space-y-0">
+            <BMEcard />
+            <BMEcard />
+            <BMEcard />
+          </div>
+        </div>
+        </div>
+
+
+        {/* 
+
         <div className="container mt-8 rounded-2xl bg-[#F7F7F7] w-full h-auto md:h-[819px] pt-40 text-black">
           <p className=" font-bricolage text-5xl text-[#1F0A58] pl-28 md:pl-8">
             {" "}
@@ -51,15 +73,15 @@ function Home() {
             <BMEcard />
           </div>
         </div>
-<<<<<<< HEAD
+
+       */} 
+
         
-        <div className="  container mt-8 rounded-2xl bg-white w-full h-[300px] text-black">
-=======
+
         {/* <div className="  container mt-8 rounded-2xl bg-white w-full h-[300px] text-black">
           <Process />
         </div> */}
         <div className="  w-fit mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
->>>>>>> origin/feature
           <Process />
         </div>
 
