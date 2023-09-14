@@ -18,13 +18,13 @@ const BMEcard = () => {
           <div className="text-black text-xs md:text-sm font-normal">Street Care Official</div>
         </div>
         <div className="self-stretch h-auto md:h-[156px] flex-col justify-start items-start gap-2 md:gap-6 flex">
-          <div className="self-stretch text-neutral-800 text-lg md:text-2xl font-medium leading-loose">Volunteer Meetup</div>
-          <div className="self-stretch text-zinc-700 text-sm md:text-lg font-semibold leading-normal">Sept 9, 2023 SAT 12:00pm</div>
+          <div className="self-stretch text-neutral-800 md:text-2xl font-medium leading-loose">Volunteer Meetup</div>
+          <div className="self-stretch text-zinc-700 md:text-lg font-semibold leading-normal">Sept 9, 2023 SAT 12:00pm</div>
           <div className="self-stretch h-auto md:h-[52px] flex-col justify-start items-start gap-1 flex">
-            <div className="self-stretch text-zinc-700 text-[12px] md:text-[17px] font-normal leading-normal">
+            <div className="self-stretch text-zinc-700 md:text-[17px] font-normal leading-normal">
               200 Eastern Pkwy, Brooklyn, NY 11238
             </div>
-            <div className="self-stretch text-zinc-700 text-[12px] md:text-[17px] font-normal leading-normal">Open Spots: 8/20</div>
+            <div className="self-stretch text-zinc-700 md:text-[17px] font-normal leading-normal">Open Spots: 8/20</div>
           </div>
         </div>
         <div className="self-stretch h-auto md:h-[68px] pt-4 md:pt-12 flex-col justify-start items-start gap-2.5 flex">
