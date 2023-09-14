@@ -23,9 +23,9 @@ const Eventcard = () => {
         <div className="text-zinc-700  text-[17px] font-semibold leading-normal">
           Sept 9, 2023 SAT 12:00pm
         </div>
-        <div className="my-6 p-2 bg-white rounded-lg flex items-center gap-2.5">
+        <div className=" w-fit my-6 p-2 pr-8 bg-white rounded-lg flex items-center gap-2.5">
           <img src={wavingHand} alt="Waving Hand" />
-          <div className="text-neutral-900 text-sm font-normal leading-snug">
+          <div className="text-neutral-900  text-sm font-normal leading-snug">
             Childcare specialist needed
           </div>
         </div>
