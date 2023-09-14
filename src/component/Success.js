@@ -5,7 +5,7 @@ import Campaign from "../images/campaign.svg";
 function Success() {
   return (
     <div className="items-center justify-center px-4 py-8 lg:p-32 h-full w-full rounded-2xl bg-[#F7F7F7] ">
-      <p className=" font-bricolage text-5xl text-[#1F0A58]">
+      <p className=" font-bricolage text-4xl text-[#1F0A58]">
         {" "}
         Highlights of our success
       </p>
