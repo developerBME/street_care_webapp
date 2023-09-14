@@ -4,6 +4,7 @@ import Home from "./component/Home";
 import logo from "./logo.png";
 import NavBar from "./component/Navbar";
 import Footer from "./component/Footer";
+import Login from "./component/Login";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
         <Footer />
       </Router>
