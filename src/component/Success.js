@@ -5,7 +5,7 @@ import Campaign from "../images/campaign.svg";
 function Success() {
   return (
     <div className="items-center justify-center px-4 py-8 lg:p-32 h-full w-full rounded-2xl bg-[#F7F7F7] ">
-      <p className=" font-bricolage text-5xl text-[#1F0A58]">
+      <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
         {" "}
         Highlights of our success
       </p>
@@ -16,8 +16,8 @@ function Success() {
           </div>
         </div>
 
-        <div className="grow  basis-0 flex-col justify-start items-start gap-8 inline-flex">
-          <div className="self-stretch text-violet-800 text-[20px] font-bold leading-7">
+        <div className="grow font-bricolage basis-0 flex-col justify-start items-start gap-8 inline-flex">
+          <div className="self-stretch pt-6 lg:pt-2 text-violet-800 text-[20px] font-bold leading-7">
             Great News!!
           </div>
           <div className="self-stretch">
@@ -54,13 +54,14 @@ function Success() {
             <div className="text-violet-950 text-2xl font-medium leading-loose">
               We helped
             </div>
-            <div className="px-6 py-2 bg-white rounded-[100px] inline-flex">
-              <div className="text-violet-950 font-bricolage text-[48px] font-normal leading-[64px]">
-                1031
+
+            <div className="px-8 py-2 bg-white rounded-[100px] inline-flex">
+              <div className="text-violet-950 font-bricolage text-[53px] font-normal leading-[64px]">
+                103
               </div>
             </div>
           </div>
-          <div className="w-fit text-violet-950 text-2xl font-medium py-2 inline-flex">
+          <div className="w-fit text-violet-950 text-xl font-medium py-2 md:ml-[-8px] inline-flex">
             homeless people
           </div>
         </div>
@@ -71,12 +72,12 @@ function Success() {
               Helped by{" "}
             </div>
             <div className="px-6 py-2 bg-white rounded-[100px] inline-flex">
-              <div className="text-violet-950 font-bricolage text-[48px] font-normal leading-[64px]">
+              <div className="text-violet-950 font-bricolage text-[53px] font-normal leading-[64px]">
                 264
               </div>
             </div>
           </div>
-          <div className="w-fit text-violet-950 text-2xl font-medium py-2 ">
+          <div className="w-fit text-violet-950 text-xl font-medium py-2 md:ml-[-12px] inline-flex ">
             volunteers
           </div>
         </div>
@@ -87,12 +88,12 @@ function Success() {
               Donated
             </div>
             <div className="px-6 py-2 bg-white rounded-[100px] inline-flex">
-              <div className="text-violet-950 font-bricolage text-[48px] font-normal leading-[64px]">
-                11752{" "}
+              <div className="text-violet-950 font-bricolage text-[53px] font-normal leading-[64px]">
+                1172{" "}
               </div>
             </div>
           </div>
-          <div className="w-fit text-violet-950 text-2xl font-medium py-2">
+          <div className="w-fit text-violet-950 text-xl font-medium py-2 md:ml-[-8px] inline-flex">
             items
           </div>
         </div>

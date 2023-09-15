@@ -7,12 +7,15 @@ function Landing() {
   return (
     <div className="items-center justify-center px-4 py-8 lg:p-32 h-full w-full rounded-2xl bg-[#F7F7F7] grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div className="  ">
-        <p className="text-5xl font-bricolage font-medium">
+        <p className="font-bricolage font-medium text-4xl md:text-5xl text-[#1F0A58] ">
           {" "}
-          Support the homeless. Prepare care packages. Join outreach. Make a
-          difference.
+          Support the homeless. Prepare care packages.
         </p>
-        <button class="bg-[#36295e]  text-white font-bold py-4 px-8 mt-12 rounded-full">
+        <p className="font-bricolage font-medium text-4xl md:text-5xl text-[#1F0A58] ">
+          Join outreach. Make a difference.
+        </p>
+
+        <button class=" bg-violet-700  text-white font-bold py-4 px-8 mt-12 rounded-full">
           Browse Outreach Events
         </button>
       </div>

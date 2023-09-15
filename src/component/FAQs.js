@@ -13,10 +13,10 @@ export default function FAQs() {
   return (
     // <div className="mx-auto max-w-8xl px-6 lg:px-8 p-20 bg-gray-100 rounded-lg h-fit">
     <div className="items-center justify-center px-4 py-8 lg:p-28 h-full w-full rounded-2xl bg-[#F7F7F7]">
-      <p className="pb-8 font-bricolage text-4xl text-[#1F0A58]">
+      <p className="font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
         Frequently Asked Questions
       </p>
-      <div>
+      <div className=" pt-9">
         <Accordion
           className="p-3 mb-2 bg-white flex flex-col rounded-lg w-full"
           expanded={expanded === "panel1"}

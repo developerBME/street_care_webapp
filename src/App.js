@@ -4,6 +4,8 @@ import Home from "./component/Home";
 import logo from "./logo.png";
 import NavBar from "./component/Navbar";
 import Footer from "./component/Footer";
+import Login from "./component/Login";
+import Profile from "./component/Profile";
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
         <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
         <Footer />
       </Router>
