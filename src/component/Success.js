@@ -16,7 +16,7 @@ function Success() {
           </div>
         </div>
 
-        <div className="grow  basis-0 flex-col justify-start items-start gap-8 inline-flex">
+        <div className="grow font-bricolage basis-0 flex-col justify-start items-start gap-8 inline-flex">
           <div className="self-stretch pt-6 lg:pt-2 text-violet-800 text-[20px] font-bold leading-7">
             Great News!!
           </div>
@@ -56,7 +56,7 @@ function Success() {
             </div>
 
             <div className="px-8 py-2 bg-white rounded-[100px] inline-flex">
-              <div className="text-violet-950 font-bricolage text-[48px] font-normal leading-[64px]">
+              <div className="text-violet-950 font-bricolage text-[53px] font-normal leading-[64px]">
                 103
               </div>
             </div>
@@ -72,7 +72,7 @@ function Success() {
               Helped by{" "}
             </div>
             <div className="px-6 py-2 bg-white rounded-[100px] inline-flex">
-              <div className="text-violet-950 font-bricolage text-[48px] font-normal leading-[64px]">
+              <div className="text-violet-950 font-bricolage text-[53px] font-normal leading-[64px]">
                 264
               </div>
             </div>
@@ -88,7 +88,7 @@ function Success() {
               Donated
             </div>
             <div className="px-6 py-2 bg-white rounded-[100px] inline-flex">
-              <div className="text-violet-950 font-bricolage text-[48px] font-normal leading-[64px]">
+              <div className="text-violet-950 font-bricolage text-[53px] font-normal leading-[64px]">
                 1172{" "}
               </div>
             </div>
