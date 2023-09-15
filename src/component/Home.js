@@ -29,7 +29,7 @@ function Home() {
 
         <div className="sm:w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
           <div className="items-center justify-center px-4 py-8 lg:p-32 h-full w-full rounded-2xl bg-[#F7F7F7] ">
-            <p className=" font-bricolage text-5xl text-[#1F0A58]">
+            <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
               {" "}
               Upcoming outreach events
             </p>
@@ -43,7 +43,7 @@ function Home() {
 
         <div className="sm:w-[95%] md:w-[90%] lg:w-[80%] mx-2 mt-8 rounded-2xl bg-[#F7F7F7] text-black">
           <div className="items-center justify-center px-4 py-8 lg:p-32 h-full w-full rounded-2xl bg-[#F7F7F7]">
-            <p className=" font-bricolage text-5xl text-[#1F0A58] ">
+            <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] ">
               {" "}
               BME Official Gathering
             </p>
@@ -71,7 +71,7 @@ function Home() {
         <div className="sm:w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
           <News />
         </div>
-        <div className="sm:w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black ">
+        <div className="sm:w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-16 rounded-2xl bg-white text-black ">
           <FAQs />
         </div>
       </div>

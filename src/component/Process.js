@@ -2,7 +2,7 @@ const Process = () => {
   return (
     // <div className="mx-auto max-w-8xl px-6 py-20 sm:py-10 lg:px-32 lg:py-24 bg-gray-100 rounded-lg h-[ful]">
     <div className="items-center justify-center px-4 py-8 lg:p-28 h-full w-full rounded-2xl bg-[#F7F7F7] ">
-      <p className="font-bricolage text-4xl text-[#1F0A58]">
+      <p className="font-bricolage font-medium text-[45px] text-[#1F0A58]">
         What is the overall process?
       </p>
       <div className="grid grid-cols-1 gap-x-8 gap-y-8 mt-6 sm:pt-4 lg:mx-0 lg:max-w-none lg:grid-cols-4">
