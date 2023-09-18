@@ -60,7 +60,7 @@ function Home() {
         </div>
 
         {/* Meet */}
-        <div className="sm:w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black ">
+        <div className="sm:w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black">
           <MoreAboutUs />
         </div>
         {/* Aniket */}
