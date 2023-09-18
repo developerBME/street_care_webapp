@@ -5,7 +5,7 @@ import pic2 from "../images/pic2.png";
 function MoreAboutUs() {
     return (
         <div className=" justify-center px-4 py-8 lg:p-28  h-full w-full rounded-2xl bg-[#F7F7F7] flex flex-col">
-            <div className="font-bricolage  font-medium  text-[#212121] font-[500] lg:text-[32px] md:text-[32px] min-[320px]:text-[20px] leading-tight">
+            <div className="font-bricolage  font-medium  text-[#212121] font-[500] lg:text-[24px] md:text-[24px] min-[320px]:text-[20px] leading-tight">
                 <p >
                     Fueled by 100% volunteer passion, Growing with 264 dedicated hearts.
                 </p>
@@ -36,14 +36,14 @@ function MoreAboutUs() {
                 <div className="md:w-1/2 min-[320px]:max-md:w-full flex place-self-stretch">
                     <div className="bg-[#F2F6D8] w-full rounded-[30px] h-full flex flex-col justify-center">
                         <div className="p-4 md:p-4 md:pb-0">
-                            <p className="text-sm lg:text-[16px] md:text-[16px] font-bricolage text-center mt-1 lg:max-pt-4 md:mt-4 min-[320px]:pb-8 ">
+                            <p className="text-sm lg:text-[16px] md:text-[16px] font-bricolage text-center mt-1 lg:max-pt-4 md:mt-4 min-[320px]:pb-8 min-[320px]:text-[16px] font-[500] ">
                                 “A Saturday of service at Street Care’s Day of Outreach to
                                 Homeless Families and Individuals [on behalf of
                                 GivingTuesdayMilitary] gave this military spouse a big helping
                                 of much-needed perspective!”
                             </p>
                         
-                        <p className="font-bricolage text-sm  lg:text-[12px]  md:text-[12px] font-thin text-center lg:pt-2 md:pt-2" >
+                        <p className="italic font-bricolage font-[400] text-sm  lg:text-[12px]  md:text-[12px] min-[320px]:text-[12px] font-thin text-center lg:pt-2 md:pt-2" >
                             — Hope Guinn Bradley, Volunteer
                         </p>
                         </div>
