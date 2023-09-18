@@ -4,7 +4,7 @@ import Campaign from "../images/campaign.svg";
 
 function Success() {
   return (
-    <div className="items-center justify-center px-4 py-8 lg:p-32 h-full w-full rounded-2xl bg-[#F7F7F7] ">
+    <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
       <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
         {" "}
         Highlights of our success
@@ -49,14 +49,14 @@ function Success() {
 
       <div className="w-full h-fit justify-start items-start  grid grid-cols-1 lg:grid-cols-3 font-bricolage">
         {/*  */}
-        <div className="grow rounded-t-2xl  lg:rounded-tr-none lg:rounded-l-2xl shrink basis-0 h-fit p-8 bg-gradient-to-br from-emerald-100 to-neutral-200 justify-start items-end gap-6 flex">
+        <div className="grow rounded-t-2xl  lg:rounded-tr-none lg:rounded-l-2xl shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-emerald-100 to-neutral-200 justify-start items-end gap-6 flex">
           <div className="flex-col justify-start items-start gap-6 inline-flex">
             <div className="text-violet-950 text-2xl font-medium leading-loose">
               We helped
             </div>
 
             <div className="px-8 py-2 bg-white rounded-[100px] inline-flex">
-              <div className="text-violet-950 font-bricolage text-[53px] font-normal leading-[64px]">
+              <div className="text-violet-950 font-bricolage text-5xl font-normal leading-[64px]">
                 103
               </div>
             </div>
@@ -66,13 +66,13 @@ function Success() {
           </div>
         </div>
         {/*  */}
-        <div className="grow shrink basis-0 h-fit p-8 bg-gradient-to-br from-purple-300 to-zinc-200 justify-start items-end gap-6 flex">
+        <div className="grow shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-purple-300 to-zinc-200 justify-start items-end gap-6 flex">
           <div className="flex-col justify-start items-start gap-6 inline-flex">
             <div className="text-violet-950 text-2xl font-medium leading-loose">
               Helped by{" "}
             </div>
             <div className="px-6 py-2 bg-white rounded-[100px] inline-flex">
-              <div className="text-violet-950 font-bricolage text-[53px] font-normal leading-[64px]">
+              <div className="text-violet-950 font-bricolage text-5xl font-normal leading-[64px]">
                 264
               </div>
             </div>
@@ -82,13 +82,13 @@ function Success() {
           </div>
         </div>
         {/*  */}
-        <div className="grow rounded-b-2xl lg:rounded-r-2xl lg:rounded-bl-none shrink basis-0 h-fit p-8 bg-gradient-to-br from-sky-200 to-neutral-200 justify-start items-end gap-6 flex">
+        <div className="grow rounded-b-2xl lg:rounded-r-2xl lg:rounded-bl-none shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-sky-200 to-neutral-200 justify-start items-end gap-6 flex">
           <div className="flex-col justify-start items-start gap-6 inline-flex">
             <div className="text-violet-950 text-2xl font-medium leading-loose">
               Donated
             </div>
             <div className="px-6 py-2 bg-white rounded-[100px] inline-flex">
-              <div className="text-violet-950 font-bricolage text-[53px] font-normal leading-[64px]">
+              <div className="text-violet-950 font-bricolage text-5xl font-normal leading-[64px]">
                 1172{" "}
               </div>
             </div>

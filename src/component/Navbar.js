@@ -1,9 +1,9 @@
 import "../App.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import Avatar from "@mui/material/Avatar";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const NavBar = () => {
   const [nav, setNav] = useState(false);
@@ -33,35 +33,35 @@ const NavBar = () => {
 
   // Login state
   const [Loggedin, setLoggedin] = useState(false);
+  const navigate = useNavigate();
 
   return (
-
-    <div className=" z-10 flex justify-between items-center w-full h-[90px]  text-white fixed bg-nav px-4">
-
+    <div className=" z-10 flex justify-between items-center w-full h-[85px]  text-white fixed bg-nav px-2">
       <div>
-        <h1 className="text-3xl  ml-8 ">Street Care</h1>
+        <h1 className=" text-2xl  ml-4 font-bricolage font-medium leading-9">
+          Street Care
+        </h1>
       </div>
-      <ul className="hidden items-center md:flex px-2">
+      <ul className="hidden items-center md:flex px-2    leading-6">
         {links.map(({ id, link, label }) => (
           <li
             key={id}
-            className=" px-6 py-3 text-xl cursor-pointer capitalize 
+            className=" px-6 py-3 text-sm  font-inter font-medium cursor-pointer  
         text-white hover:scale-105 duration-200"
           >
             <Link to={link}>{label}</Link>
           </li>
         ))}
         <li>
-
-          <button class="bg-white hover:bg-yellow-300 text-black text-xl font-bold py-3 px-6 rounded-full">
-
+          <button class="bg-white hover:bg-yellow-300 text-black text-sm font-inter font-bold py-3 px-6 rounded-full">
             Donate
           </button>
         </li>
         {!Loggedin && (
           <li
-            className=" px-6 py-3 text-xl cursor-pointer capitalize 
+            className=" px-6 py-3 text-sm font-inter font-medium cursor-pointer  
         text-white hover:scale-105 duration-200"
+            onClick={() => navigate("/login2")}
           >
             Login
           </li>
@@ -92,7 +92,7 @@ const NavBar = () => {
           {links.map(({ id, link }) => (
             <li
               key={id}
-              className="px-4 cursor-pointer capitalize text-4xl font-medium py-6
+              className="px-4 cursor-pointer capitalize text-lg font-inter font-medium py-6
         text-white hover:scale-105 duration-200"
             >
               <Link onClick={() => setNav(!nav)} to={link}>
@@ -101,9 +101,14 @@ const NavBar = () => {
             </li>
           ))}
           <li>
-            <button class="bg-white hover:bg-yellow-300 text-black font-bold py-2 px-4 rounded-full">
+            {/* <button class=" items-stretch bg-white hover:bg-yellow-300 text-black font-inter text-xl font-bold py-3 px-7 rounded-full">
               Donate
-            </button>
+            </button> */}
+            <div className="w-[328px] h-14 px-8 py-4 bg-white rounded-[100px] border border-white justify-center items-center gap-2.5 inline-flex">
+              <div className="text-center text-black text-lg font-bold font-inter leading-normal">
+                Donate
+              </div>
+            </div>
           </li>
         </ul>
       )}

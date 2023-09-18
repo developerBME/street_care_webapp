@@ -5,17 +5,23 @@ import three from "../images/three.png";
 
 function Landing() {
   return (
-    <div className="items-center justify-center px-4 py-8 lg:p-32 h-full w-full rounded-2xl bg-[#F7F7F7] grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] grid grid-cols-1 lg:grid-cols-2 gap-2">
       <div className="  ">
-        <p className="font-bricolage font-medium text-4xl md:text-5xl text-[#1F0A58] ">
+        <p className="font-bricolage font-medium text-4xl md:text-[44px] md:leading-[48px]  text-black ">
           {" "}
-          Support the homeless. Prepare care packages.
+          Support the homeless.{" "}
+          <p className="font-bricolage font-medium text-4xl md:text-[44px] md:leading-[48px] text-black ">
+            Prepare care packages.
+          </p>
         </p>
-        <p className="font-bricolage font-medium text-4xl md:text-5xl text-[#1F0A58] ">
-          Join outreach. Make a difference.
+        <p className="font-bricolage font-medium text-4xl md:text-[44px] md:leading-[48px] text-black ">
+          Join outreach.{" "}
+          <p className="font-bricolage font-medium text-4xl md:text-[44px] md:leading-[48px] text-black ">
+            Make a difference.
+          </p>
         </p>
 
-        <button class=" bg-violet-700  text-white font-bold py-4 px-8 mt-12 rounded-full">
+        <button class=" bg-violet-700 text-base text-white font-normal py-3 px-6 mt-12 rounded-full">
           Browse Outreach Events
         </button>
       </div>

@@ -6,6 +6,8 @@ import NavBar from "./component/Navbar";
 import Footer from "./component/Footer";
 import Login from "./component/Login";
 import Profile from "./component/Profile";
+import Login2 from "./component/Login2";
+import Signup2 from "./component/Signup2";
 
 function App() {
   return (
@@ -32,6 +34,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/login2" element={<Login2 />} />
+          <Route path="/signup2" element={<Signup2 />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
         <Footer />
