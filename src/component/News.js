@@ -7,59 +7,71 @@ const News = () => {
       <div className="grid grid-cols-1 gap-x-8 gap-y-8 mt-6 sm:pt-4 lg:mx-0 lg:max-w-none lg:grid-cols-3">
         <article
           key="123"
-          className="flex max-w-2xl flex-col items-start justify-normal border-t-4 border-violet-600  bg-white h-fit"
+          className="flex max-w-2xl flex-col items-start justify-normal border-t-4 border-violet-600  bg-white h-full "
         >
-          <h1 className="text-black text-xl pt-4 pb-2 px-2 font-bricolage">
-            Military Families event for Street Care on Giving Tuesday, 12/1!
-          </h1>
-          <h3 className="text-black text-xs py-1 px-2 font-bricolage">
-            Published Sep 1, 2022
-          </h3>
+          <div className=" h-full">
+            <h1 className="text-black text-xl pt-4 pb-2 px-2 font-bricolage">
+              Military Families event for Street Care on Giving Tuesday, 12/1!
+            </h1>
+            <h3 className="text-black text-xs py-1 px-2 font-bricolage">
+              Published Sep 1, 2022
+            </h3>
 
-          <p className="mt-2 line-clamp-4 text-sm leading-6 text-gray-600 px-2 font-inter">
-            Teams of military families will make care kits for us. Stay tuned.
-          </p>
-          <a className="mt-5 px-2 text-sm font-inter underline pb-2 cursor-pointer">
-            Read More
-          </a>
+            <p className="mt-2 line-clamp-4 text-sm leading-6 text-gray-600 px-2 font-inter">
+              Teams of military families will make care kits for us.
+            </p>
+          </div>
+          <div className="flex flex-col h-full ml-2 mt-6 justify-end">
+            <a className="  text-sm font-inter underline pb-2 cursor-pointer ">
+              Read More
+            </a>
+          </div>
         </article>
         <article
           key="123"
-          className="flex max-w-2xl flex-col items-start justify-normal border-t-4 border-violet-600 bg-white h-fit"
+          className="flex max-w-2xl flex-col items-start justify-normal border-t-4 border-violet-600 bg-white h-full"
         >
-          <h1 className="text-black text-xl pt-4 pb-2 px-2 font-bricolage">
-            Thank You to Maryland Team who helps Street Care Monthly!
-          </h1>
-          <h3 className="text-black text-xs py-1 px-2 font-bricolage">
-            Published Jan 18, 2022
-          </h3>
+          <div className=" h-full">
+            <h1 className="text-black text-xl pt-4 pb-2 px-2 font-bricolage">
+              Thank You to Maryland Team who helps Street Care Monthly!
+            </h1>
+            <h3 className="text-black text-xs py-1 px-2 font-bricolage">
+              Published Jan 18, 2022
+            </h3>
 
-          <p className="mt-2 line-clamp-4 text-sm leading-6 text-gray-600 px-2 font-inter">
-            Our Maryland Team is out on the streets in the greater Baltimore
-            area monthly helping those homeless in need
-          </p>
-          <a className="mt-5 px-2 text-sm font-inter underline pb-2 cursor-pointer">
-            Read More
-          </a>
+            <p className="mt-2 line-clamp-4 text-sm leading-6 text-gray-600 px-2 font-inter">
+              Our Maryland Team is out on the streets in the greater Baltimore
+              area monthly helping those homeless in need
+            </p>
+          </div>
+          <div className="flex flex-col h-full ml-2 mt-6 justify-end">
+            <a className="text-sm font-inter underline pb-2 cursor-pointer">
+              Read More
+            </a>
+          </div>
         </article>
         <article
           key="123"
-          className="flex max-w-2xl flex-col items-start justify-normal border-t-4 border-violet-600 bg-white h-fit"
+          className="flex max-w-2xl flex-col items-start justify-normal border-t-4 border-violet-600 bg-white h-full"
         >
-          <h1 className="text-black text-xl pt-4 pb-2 px-2 font-bricolage">
-            Thank You to the United Methodist Church for Grant!
-          </h1>
-          <h3 className="text-black text-xs py-1 px-2 font-bricolage">
-            Published Jan 18, 2022
-          </h3>
+          <div className=" h-full">
+            <h1 className="text-black text-xl pt-4 pb-2 px-2 font-bricolage">
+              Thank You to the United Methodist Church for Grant!
+            </h1>
+            <h3 className="text-black text-xs py-1 px-2 font-bricolage">
+              Published Jan 18, 2022
+            </h3>
 
-          <p className="mt-2 text-sm line-clamp-4 leading-6 text-gray-600 px-2 font-inter">
-            Thank You to the United Methodist church (Baltimore-Washington DC)
-            for rewarding BME Maryland partners with a grant for SC
-          </p>
-          <a className="mt-5 px-2 text-sm font-inter underline pb-2 cursor-pointer">
-            Read More
-          </a>
+            <p className="mt-2 text-sm line-clamp-4 leading-6 text-gray-600 px-2 font-inter">
+              Thank You to the United Methodist church (Baltimore-Washington DC)
+              for rewarding BME Maryland partners with a grant for SC
+            </p>
+          </div>
+          <div className="flex flex-col h-full ml-2 mt-6 justify-end">
+            <a className="mt-5 px-2 text-sm font-inter underline pb-2 cursor-pointer">
+              Read More
+            </a>
+          </div>
         </article>
       </div>
       <button className="bg-violet-600 rounded-full w-32 px-4 py-3 mt-16 text-white hover:bg-opacity-80 font-inter">
