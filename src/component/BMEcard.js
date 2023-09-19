@@ -2,7 +2,7 @@ import React from "react";
 
 const BMEcard = () => {
   return (
-    <div className="w-full mx-auto bg-purple-50 rounded-lg p-8 lg:p-6 ">
+    <div className="w-full mx-auto bg-[#F5EEFE] rounded-lg p-8 lg:p-6 ">
       <div className="p-2 justify-start items-center gap-2 inline-flex">
         <div className="w-7 h-7 md:w-9 relative">
           <div className="w-7 h-7 md:w-9 left-0 top-0 absolute bg-yellow-200 rounded-full"></div>
