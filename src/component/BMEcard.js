@@ -18,22 +18,22 @@ const BMEcard = () => {
         </div>
       </div>
       <div className="self-stretch h-auto md:h-[156px] flex-col justify-start items-start gap-2 md:gap-4 flex">
-        <div className="self-stretch text-neutral-800 text-[20px] md:text-[16px] lg:text-[20px] font-medium leading-loose">
+        <div className="self-stretch text-neutral-800 text-xl md:text-[20px] font-medium leading-loose">
           Volunteer Meetup
         </div>
-        <div className="self-stretch text-zinc-700 text-[14px] md:text-[12px] lg:text[14px] font-semibold leading-normal">
+        <div className="self-stretch text-zinc-700 text-[17px] md:text-[17px] font-semibold leading-normal">
           Sept 9, 2023 SAT 12:00pm
         </div>
         <div className="self-stretch h-auto md:h-[52px] flex-col justify-start items-start gap-1 flex">
-          <div className="self-stretch text-zinc-700 text-[12px]  md:text-[10px] lg:text[12px] font-normal leading-normal">
+          <div className="self-stretch text-zinc-700 text-[17px]  md:text-[13px] font-normal leading-normal">
             200 Eastern Pkwy, Brooklyn, NY 11238
           </div>
-          <div className="self-stretch text-zinc-700 text-[12px] md:text-[10px] lg:text[12px] font-normal leading-normal">
+          <div className="self-stretch text-zinc-700 text-[17px] md:text-[13px] font-normal leading-normal">
             Open Spots: 8/20
           </div>
         </div>
       </div>
-      <div className="self-stretch h-auto md:h-[68px]  flex-col justify-start items-start gap-2.5 flex">
+      <div className="self-stretch h-auto md:h-[68px] pt-4 flex-col justify-start items-start flex">
         <div className="px-6 py-2 rounded-[100px] border border-violet-950 justify-center items-center gap-2.5 inline-flex">
           <button className="text-center text-sm md:text-base">Join</button>
         </div>
