@@ -12,7 +12,7 @@ export default function FAQs() {
   };
   return (
     // <div className="mx-auto max-w-8xl px-6 lg:px-8 p-20 bg-gray-100 rounded-lg h-fit">
-    <div className="items-center justify-center px-4 py-8 lg:p-32 h-full w-full rounded-2xl bg-[#F7F7F7]">
+    <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
       <p className="font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
         Frequently Asked Questions
       </p>

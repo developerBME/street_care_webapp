@@ -1,74 +1,50 @@
 import React from "react";
+import verifiedImg from "../images/verified.png";
+import userImg from "../images/avatar.jpg";
+import wavingHand from "../images/waving_hand.png";
 
 const BMEcard = () => {
   return (
-    <div className="w-full mx-auto bg-[#F5EEFE] rounded-lg p-8 lg:p-6 ">
-      <div className="p-2 justify-start items-center gap-2 inline-flex">
-        <div className="w-7 h-7 md:w-9 relative">
-          <div className="w-7 h-7 md:w-9 left-0 top-0 absolute bg-yellow-200 rounded-full"></div>
-          <div className="left-[4px] top-[6px] md:left-[6px] md:top-[8px] absolute text-black text-[6px] md:text-[8px] font-bold">
-            Street
-          </div>
-          <div className="left-[7px] top-[14px] md:left-[9px] md:top-[18px] absolute text-black text-[6px] md:text-[8px] font-bold">
-            Care
+    <div className=" w-fit mx-auto bg-[#F5EEFE] rounded-3xl p-7 font-inter">
+      <div className="flex items-center gap-2">
+        <div className="w-7 h-7 md:w-9 relative ">
+          <div className="w-8 h-8  left-0 top-0 bg-[#E5FF7F] rounded-full">
+            <div className=" text-center p-1.5 text-black text-[7px] font-bold">
+              Street Care
+            </div>
           </div>
         </div>
-        <div className="text-black lg:text-[12px] md:text-[10px] font-normal">
-          Street Care Official
+
+        <div className="text-black lg:text-[12px] md:text-[10px]  font-normal">
+          Street Care Official{" "}
         </div>
       </div>
-      <div className="self-stretch h-auto md:h-[156px] flex-col justify-start items-start gap-2 md:gap-4 flex">
-        <div className="self-stretch text-neutral-800 text-xl md:text-[20px] font-medium leading-loose">
+      <div className="mt-6">
+        <div className="text-neutral-800 text-xl font-medium leading-normal font-bricolage">
           Volunteer Meetup
         </div>
-        <div className="self-stretch text-zinc-700 text-[17px] md:text-[17px] font-semibold leading-normal">
+        <div className="text-zinc-700 my-4  text-[17px] font-semibold leading-normal">
           Sept 9, 2023 SAT 12:00pm
         </div>
-        <div className="self-stretch h-auto md:h-[52px] flex-col justify-start items-start gap-1 flex">
-          <div className="self-stretch text-zinc-700 text-[17px]  md:text-[13px] font-normal leading-normal">
+
+        <div className="mt-4 flex flex-col gap-1">
+          <div className="text-zinc-700 text-[15px] md:text-[14px] font-normal">
             200 Eastern Pkwy, Brooklyn, NY 11238
           </div>
-          <div className="self-stretch text-zinc-700 text-[17px] md:text-[13px] font-normal leading-normal">
+          <div className="text-zinc-700 text-[15px] md:text-[14px] font-normal">
             Open Spots: 8/20
           </div>
         </div>
       </div>
-      <div className="self-stretch h-auto md:h-[68px] pt-4 flex-col justify-start items-start flex">
-        <div className="px-6 py-2 rounded-[100px] border border-violet-950 justify-center items-center gap-2.5 inline-flex">
-          <button className="text-center text-sm md:text-base">Join</button>
+      <div className="mt-3">
+        <div className="pt-3 flex items-center gap-2.5">
+          <button className=" border-2 border-[#1F0A58] text-[#1F0A58] py-2 px-4 rounded-full text-base ">
+            Join
+          </button>
         </div>
       </div>
     </div>
   );
 };
-
-// const BMEcard = ()=>{
-//     return(
-//     <div className="w-[429.33px] h-[404px] p-8 bg-violet-50 rounded-[30px] flex-col justify-start items-start gap-8 inline-flex">
-//     <div className="p-2 justify-start items-center gap-2 inline-flex">
-//         <div className="w-9 h-9 relative">
-//             <div className="w-9 h-9 left-0 top-0 absolute bg-yellow-200 rounded-full"></div>
-//             <div className="left-[6px] top-[8px] absolute text-black text-[8px] font-bold">Street</div>
-//             <div className="left-[9px] top-[18px] absolute text-black text-[8px] font-bold">Care</div>
-//         </div>
-//         <div className="text-black text-xs font-normal">Street Care Official</div>
-//     </div>
-//     <div className="self-stretch h-[156px] flex-col justify-start items-start gap-6 flex">
-//         <div className="self-stretch text-neutral-800 text-2xl font-medium leading-loose">Volunteer Meetup</div>
-//         <div className="self-stretch text-zinc-700 text-lg font-semibold leading-normal">Sept 9, 2023 SAT 12:00pm</div>
-//         <div className="self-stretch h-[52px] flex-col justify-start items-start gap-1 flex">
-//             <div className="self-stretch text-zinc-700 text-[17px] font-normal leading-normal">200 Eastern Pkwy, Brooklyn, NY 11238</div>
-//             <div className="self-stretch text-zinc-700 text-[17px] font-normal leading-normal">Open Spots: 8/20</div>
-//         </div>
-//     </div>
-//     <div className="self-stretch h-[68px] pt-3 flex-col justify-start items-start gap-2.5 flex">
-//         <div className="px-8 py-4 rounded-[100px] border border-violet-950 justify-center items-center gap-2.5 inline-flex">
-//             <button className="text-center">Join</button>
-//         </div>
-//     </div>
-// </div>
-
-//     )
-// }
 
 export default BMEcard;

@@ -25,32 +25,34 @@ function Home() {
           <Success />
         </div>
 
-        {/* Vishnu */}
-
         <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
           <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
             <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
               {" "}
               Upcoming outreach events
             </p>
-            <div className=" w-full h-fit grid grid-cols-1  lg:grid-cols-3 pt-9 gap-5">
+            <div className=" w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
               <Eventcard />
               <Eventcard />
-              <Eventcard />
+              <div className=" md:col-span-2 lg:col-span-1">
+                <Eventcard />
+              </div>
             </div>
           </div>
         </div>
-
-        <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 mt-8 rounded-2xl bg-[#F7F7F7] text-black">
-          <div className="items-center justify-center px-4 py-8 lg:p-32 h-full w-full rounded-2xl bg-[#F7F7F7]">
-            <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] ">
+        {/* Vishnu */}
+        <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
+          <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
+            <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
               {" "}
-              BME Official Gathering
+              Upcoming outreach events
             </p>
-            <div className="md:flex md:flex-row flex-col justify-center gap-4 pt-9 space-y-4 md:space-y-0">
+            <div className=" w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
               <BMEcard />
               <BMEcard />
-              <BMEcard />
+              <div className=" md:col-span-2 lg:col-span-1">
+                <BMEcard />
+              </div>
             </div>
           </div>
         </div>
