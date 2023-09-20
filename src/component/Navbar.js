@@ -17,7 +17,7 @@ const NavBar = () => {
     {
       id: 2,
       label: "How to help",
-      link: "How to help",
+      link: "Howtohelp",
     },
     {
       id: 3,
@@ -37,7 +37,7 @@ const NavBar = () => {
 
   return (
     <div className=" z-10 flex justify-between items-center w-full h-[85px]  text-white fixed bg-nav px-2">
-      <div>
+      <div onClick={() => navigate("/")} className=" cursor-pointer">
         <h1 className=" text-[28px]  ml-4 font-bricolage font-medium leading-9">
           Street Care
         </h1>
