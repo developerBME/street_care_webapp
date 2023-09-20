@@ -118,7 +118,7 @@ function Profile() {
               </div>
             </div>
             <div className="inline-flex bg-[#F2F6D8] p-4 rounded-xl space-x-4">
-              <div className="text-neutral-800 text-[16px] font-medium font-['Bricolage Grotesque'] leading-loose">
+              <div className="text-neutral-800 text-[16px] font-medium font-bricolage leading-loose">
                 Congratulations! You have attended more than 1 outreach event.
                 Now you can host your own.
               </div>
