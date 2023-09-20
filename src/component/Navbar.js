@@ -38,7 +38,7 @@ const NavBar = () => {
   return (
     <div className=" z-10 flex justify-between items-center w-full h-[85px]  text-white fixed bg-nav px-2">
       <div>
-        <h1 className=" text-2xl  ml-4 font-bricolage font-medium leading-9">
+        <h1 className=" text-[28px]  ml-4 font-bricolage font-medium leading-9">
           Street Care
         </h1>
       </div>
@@ -46,22 +46,20 @@ const NavBar = () => {
         {links.map(({ id, link, label }) => (
           <li
             key={id}
-            className=" px-6 py-3 text-sm  font-inter font-medium cursor-pointer  
+            className=" px-6 py-3 text-lg  font-inter font-medium cursor-pointer  
         text-white hover:scale-105 duration-200"
           >
             <Link to={link}>{label}</Link>
           </li>
         ))}
         <li>
-
-          <button class="bg-white hover:bg-yellow-300 text-black text-sm font-inter font-bold py-3 px-6 rounded-full">
-
+          <button class="bg-white hover:bg-yellow-300 text-black text-lg font-inter font-bold py-3 px-6 rounded-full">
             Donate
           </button>
         </li>
         {!Loggedin && (
           <li
-            className=" px-6 py-3 text-sm font-inter font-medium cursor-pointer  
+            className=" px-6 py-3 text-lg font-inter font-medium cursor-pointer  
         text-white hover:scale-105 duration-200"
             onClick={() => navigate("/login2")}
           >

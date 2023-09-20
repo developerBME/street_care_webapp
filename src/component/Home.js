@@ -9,29 +9,15 @@ import Map from "./Map";
 import Process from "./Process";
 import MoreAboutUs from "./MoreAboutUs";
 
-import Eventcard from "./Eventcard";
-import BMEcard from "./BMEcard";
-import Landing from "./Landing";
-import Success from "./Success";
-import News from "./News";
-import Map from "./Map";
-import Process from "./Process";
-
-
 function Home() {
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
-      {/* <style>
-  @import
-  url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque&display=swap');
-</style>; */}
       <div className="relative flex flex-col items-center ">
         <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-32 rounded-2xl bg-white text-black ">
           {" "}
           <Landing />
         </div>
         <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
-
           <Success />
         </div>
 
@@ -72,7 +58,6 @@ function Home() {
           <Process />
         </div>
 
-
         {/* Meet */}
         <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black">
           <MoreAboutUs />
@@ -86,7 +71,6 @@ function Home() {
           <News />
         </div>
         <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-16 rounded-2xl bg-white text-black ">
-
           <FAQs />
         </div>
       </div>
