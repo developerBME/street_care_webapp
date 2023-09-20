@@ -75,6 +75,7 @@ const News = () => {
         </article>
       </div>
       <button className="bg-violet-600 rounded-full w-32 px-4 py-3 mt-16 text-white hover:bg-opacity-80 font-inter">
+
         More News
       </button>
     </div>

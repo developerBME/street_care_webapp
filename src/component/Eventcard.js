@@ -5,12 +5,14 @@ import wavingHand from "../images/waving_hand.png";
 
 const Eventcard = () => {
   return (
+
     <div className=" w-fit mx-auto bg-[#DEF6EB] rounded-3xl p-7 font-inter">
       <div class="flex items-center gap-2">
         <img class="w-9 h-9 rounded-full" src={userImg} alt="User Avatar" />
         <div class="text-black text-xs font-normal">William Smith</div>
         <div class="bg-emerald-100 rounded-lg border border-stone-300 flex items-center px-2 py-1 gap-1">
           <img class="w-5 h-5" src={verifiedImg} alt="Verified" />
+
           <div class="text-zinc-700 text-xs  font-semibold leading-tight ">
             Certified Lead
           </div>
@@ -34,13 +36,16 @@ const Eventcard = () => {
             200 Eastern Pkwy, Brooklyn, NY 11238
           </div>
           <div className="text-zinc-700 text-[15px] md:text-[14px] font-normal">
+
             Open Spots: 8/20
           </div>
         </div>
       </div>
+
       <div className="mt-2">
         <div className="pt-3 flex items-center gap-2.5">
           <button className=" border-2 border-[#1F0A58] text-[#1F0A58] py-2 px-4 rounded-full text-base ">
+
             Join
           </button>
         </div>
@@ -48,5 +53,4 @@ const Eventcard = () => {
     </div>
   );
 };
-
 export default Eventcard;

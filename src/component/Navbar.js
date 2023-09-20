@@ -53,7 +53,9 @@ const NavBar = () => {
           </li>
         ))}
         <li>
+
           <button class="bg-white hover:bg-yellow-300 text-black text-sm font-inter font-bold py-3 px-6 rounded-full">
+
             Donate
           </button>
         </li>

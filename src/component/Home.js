@@ -9,6 +9,15 @@ import Map from "./Map";
 import Process from "./Process";
 import MoreAboutUs from "./MoreAboutUs";
 
+import Eventcard from "./Eventcard";
+import BMEcard from "./BMEcard";
+import Landing from "./Landing";
+import Success from "./Success";
+import News from "./News";
+import Map from "./Map";
+import Process from "./Process";
+
+
 function Home() {
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
@@ -22,6 +31,7 @@ function Home() {
           <Landing />
         </div>
         <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+
           <Success />
         </div>
 
@@ -41,6 +51,7 @@ function Home() {
           </div>
         </div>
         {/* Vishnu */}
+
         <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
           <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
             <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
@@ -61,6 +72,7 @@ function Home() {
           <Process />
         </div>
 
+
         {/* Meet */}
         <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black">
           <MoreAboutUs />
@@ -74,6 +86,7 @@ function Home() {
           <News />
         </div>
         <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-16 rounded-2xl bg-white text-black ">
+
           <FAQs />
         </div>
       </div>
