@@ -5,7 +5,7 @@ const UserProfileCard = ({cardData})=>{
     const { title, eventName, eventDate, buttonText } = cardData;
 
     return(
-        <div className="bg-[#F1EEFE] w-fit p-4 rounded-xl">
+        <div className="bg-[#F1EEFE] lg:w-full w-[250px] p-4 rounded-xl">
             <div className="flex flex-col space-y-8">
                 <p className="text-xs text-sky-900 font-['Inter'] font-semibold leading-[18px]">{title}</p>
                 <div className="flex flex-col space-y-6">
