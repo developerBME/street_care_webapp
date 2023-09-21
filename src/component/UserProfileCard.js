@@ -1,8 +1,7 @@
 import React from "react";
 
-const UserProfileCard = ({cardData})=>{
-
-    const { title, eventName, eventDate, buttonText } = cardData;
+const UserProfileCard = ({ cardData }) => {
+  const { title, eventName, eventDate, buttonText } = cardData;
 
     return(
         <div className="bg-[#F1EEFE] lg:w-full w-[250px] p-4 rounded-xl">
@@ -16,8 +15,8 @@ const UserProfileCard = ({cardData})=>{
                     <button className="px-6 py-2 border border-violet-400 rounded-full text-center text-violet-400 text-md font-semibold font-lato leading-normal">{buttonText}</button>
                 </div>
             </div>
-        </div>
-    )
-}
+      </div>
+  );
+};
 
 export default UserProfileCard;
