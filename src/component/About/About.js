@@ -1,7 +1,6 @@
 import React from "react";
 
-import Landing from "../Landing";
-
+import Landing from "../HomePage/Landing";
 function About() {
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">

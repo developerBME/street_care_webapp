@@ -1,8 +1,9 @@
 import React from "react";
-import user from "../images/user.png";
-import crown from "../images/crown.png";
-import notes from "../images/notes.png";
-import announcement from "../images/announcement.png";
+
+import user from "../../images/user.png";
+import crown from "../../images/crown.png";
+import notes from "../../images/notes.png";
+import announcement from "../../images/announcement.png";
 
 const UserInfo = () => {
   return (

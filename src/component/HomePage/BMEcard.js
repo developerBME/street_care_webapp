@@ -1,7 +1,4 @@
 import React from "react";
-import verifiedImg from "../images/verified.png";
-import userImg from "../images/avatar.jpg";
-import wavingHand from "../images/waving_hand.png";
 
 const BMEcard = () => {
   return (

@@ -1,6 +1,6 @@
 import React from "react";
-import pic1 from "../images/pic1.png";
-import pic2 from "../images/pic2.png";
+import pic1 from "../../images/pic1.png";
+import pic2 from "../../images/pic2.png";
 
 function MoreAboutUs() {
   return (

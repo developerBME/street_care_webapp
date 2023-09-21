@@ -1,15 +1,15 @@
 import React from "react";
-import FAQs from "./FAQs";
-import Eventcard from "./Eventcard";
-import BMEcard from "./BMEcard";
-import Landing from "./Landing";
-import Success from "./Success";
-import News from "./News";
-import Map from "./Map";
-import Process from "./Process";
-import MoreAboutUs from "./MoreAboutUs";
+import FAQs from "./HomePage/FAQs";
+import Eventcard from "./HomePage/Eventcard";
+import BMEcard from "./HomePage/BMEcard";
+import Landing from "./HomePage/Landing";
+import Success from "./HomePage/Success";
+import News from "./HomePage/News";
+import Map from "./HomePage/Map";
+import Process from "./HomePage/Process";
+import MoreAboutUs from "./HomePage/MoreAboutUs";
 
-function Home() {
+function HomePage() {
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center ">
@@ -78,4 +78,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default HomePage;

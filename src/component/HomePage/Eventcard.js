@@ -1,11 +1,10 @@
 import React from "react";
-import verifiedImg from "../images/verified.png";
-import userImg from "../images/avatar.jpg";
-import wavingHand from "../images/waving_hand.png";
+import verifiedImg from "../../images/verified.png";
+import userImg from "../../images/avatar.jpg";
+import wavingHand from "../../images/waving_hand.png";
 
 const Eventcard = () => {
   return (
-
     <div className=" w-fit mx-auto bg-[#DEF6EB] rounded-3xl p-7 font-inter">
       <div class="flex items-center gap-2">
         <img class="w-9 h-9 rounded-full" src={userImg} alt="User Avatar" />
@@ -36,7 +35,6 @@ const Eventcard = () => {
             200 Eastern Pkwy, Brooklyn, NY 11238
           </div>
           <div className="text-zinc-700 text-[15px] md:text-[14px] font-normal">
-
             Open Spots: 8/20
           </div>
         </div>
@@ -45,7 +43,6 @@ const Eventcard = () => {
       <div className="mt-2">
         <div className="pt-3 flex items-center gap-2.5">
           <button className=" border-2 border-[#1F0A58] text-[#1F0A58] py-2 px-4 rounded-full text-base ">
-
             Join
           </button>
         </div>
