@@ -4,7 +4,7 @@ import Home from "./component/Home";
 import NavBar from "./component/Navbar";
 import Footer from "./component/Footer";
 import Login from "./component/Login";
-import Profile from "./component/Home/Profile";
+import Profile from "./component/HomePage/Profile";
 import Login2 from "./component/Login2";
 import Signup2 from "./component/Signup2";
 import HowToHelp from "./component/HowToHelp";

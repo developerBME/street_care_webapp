@@ -13,6 +13,7 @@ function Profile() {
       eventDate: "Nov 9, 2023 FRI 5:00pm",
       buttonText: "Upcoming...",
       cardColor: "#F1EEFE",
+      upcomingEvent:1,
     },
     {
       title: "Group",
@@ -20,6 +21,7 @@ function Profile() {
       eventDate: "Oct 16, 2023 SAT 5:00pm",
       buttonText: "Add Visit Log",
       cardColor: "#F1EEFE",
+      upcomingEvent:0,
     },
     {
       title: "Group",
@@ -27,13 +29,15 @@ function Profile() {
       eventDate: "Oct 4, 2023 SAT 5:00pm",
       buttonText: "Add Visit Log",
       cardColor: "#F1EEFE",
+      upcomingEvent:0,
     },
     {
       title: "Personal",
       eventName: "Manhatten Harlem Outreach",
       eventDate: "Apr 12, 2023 SAT 5:00pm",
       buttonText: "Edit Details",
-      cardColor: "#F1EEFE",
+      cardColor: "#DEF6EB",
+      upcomingEvent:0,
     },
     {
       title: "BME Official Event",
@@ -41,13 +45,15 @@ function Profile() {
       eventDate: "Sept 12, 2023 SAT 12:00pm",
       buttonText: "Edit Details",
       cardColor: "#F1EEFE",
+      upcomingEvent:1,
     },
     {
       title: "Personal",
       eventName: "Manhatten Harlem Outreach",
       eventDate: "Apr 12, 2023 SAT 5:00pm",
       buttonText: "Edit Details",
-      cardColor: "#F1EEFE",
+      cardColor: "#DEF6EB",
+      upcomingEvent:0,
     },
     {
       title: "Group",
@@ -55,6 +61,7 @@ function Profile() {
       eventDate: "12/12/2023 SAT 5:00pm",
       buttonText: "Add Visit Log",
       cardColor: "#F1EEFE",
+      upcomingEvent:0,
     },
     {
       title: "Personal",
@@ -62,6 +69,7 @@ function Profile() {
       eventDate: "Apr 12, 2023 SAT 5:00pm",
       buttonText: "Add Visit Log",
       cardColor: "#F1EEFE",
+      upcomingEvent:0,
     },
   ];
 
