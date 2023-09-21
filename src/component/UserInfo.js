@@ -1,45 +1,48 @@
 import React from "react";
-import userAvatar from "../images/userAvatar.png";
-import communityLeader from "../images/communityLeader.png";
+import user from "../images/user.png";
+import crown from "../images/crown.png";
+import notes from "../images/notes.png";
+import announcement from "../images/announcement.png";
+
 const UserInfo = () => {
   return (
     <div>
-      <div className="flex px-32 pt-32 pb-16">
+      <div className="flex px-24 pt-24 pb-16">
         <div className="pr-16">
           <img
-            src={userAvatar}
+            src={user}
             alt="..."
             className="rounded-full h-56 w-56 border-none"
           />
         </div>
         <div className="py-8">
-          <h1 className="font-bricolage text-[52px] font-medium h-16">
+          <h1 className="font-bricolage text-[52px] font-medium h-16 text-[#212121]">
             Mandy Klose
           </h1>
-          <h3 className="py-4 text-gray-600 font-bricolage text-sm">
+          <h3 className="py-4 text-[#212121] font-bricolage text-sm">
             Joined 12/20/23
           </h3>
           <div className="flex flex-wrap">
-            <div className="px-4 py-2 mr-2 h-10 bg-green-100 rounded-full border border-gray-300">
-              <h3 className="">Spanish Speaker</h3>
+            <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold">
+              <h3 className="text-[#212121]">Spanish Speaker</h3>
             </div>
-            <div className="px-4 py-2 mr-2 h-10 bg-green-100 rounded-full border border-gray-300">
-              <h3 className="">Healthcare</h3>
+            <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold">
+              <h3 className="text-[#212121]">Healthcare</h3>
             </div>
-            <div className="px-4 py-2 mr-2 h-10 bg-green-100 rounded-full border border-gray-300">
-              <h3 className="">Childcare</h3>
+            <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold">
+              <h3 className="text-[#212121]">Childcare</h3>
             </div>
-            <button className="px-2 py-2 mr-2 h-10 rounded-md border border-gray-300 hover:bg-green-100">
+            <button className="px-2 py-2 mr-2 h-10 rounded-md border border-[#CACACA] hover:bg-[#DEF6EB] text-[#212121] font-semibold">
               Add my superpower
             </button>
           </div>
         </div>
       </div>
-      <div className="px-32 pb-16 grid grid-cols-3 grid-rows-2 gap-4">
-        <div className="p-4 h-24 bg-green-100 rounded-2xl flex">
-          <img className="w-16 h-16 mr-4" src={communityLeader}></img>
+      <div className="px-24 pb-16 grid grid-cols-3 grid-rows-2 gap-4">
+        <div className="p-4 h-24 bg-[#DEF6EB] rounded-2xl flex border border-[#CACACA]">
+          <img className="w-16 h-16 mr-4" src={crown}></img>
           <div className="flex flex-col">
-            <h1 className="text-sm font-bold pb-2 font-bricolage">
+            <h1 className="text-sm font-bold pb-2 font-bricolage text-[#212121]">
               Community Leader
             </h1>
             <h3 className="text-xs font-semibold pb-2 text-[#616161]">
@@ -50,10 +53,10 @@ const UserInfo = () => {
             </h3>
           </div>
         </div>
-        <div className="p-4 h-24 bg-green-100 rounded-2xl flex">
-          <img className="w-16 h-16 mr-4" src={communityLeader}></img>
+        <div className="p-4 h-24 bg-[#DEF6EB] rounded-2xl flex border border-[#CACACA]">
+          <img className="w-16 h-16 mr-4" src={notes}></img>
           <div className="flex flex-col">
-            <h1 className="text-sm font-bold mt-2 pb-2 font-bricolage">
+            <h1 className="text-sm font-bold mt-2 pb-2 font-bricolage text-[#212121]">
               Volunteer Trainers
             </h1>
             <h3 className="text-xs mb-2 font-normal text-[#616161]">
@@ -61,10 +64,10 @@ const UserInfo = () => {
             </h3>
           </div>
         </div>
-        <div className="p-4 h-24 bg-green-100 rounded-2xl flex">
-          <img className="w-16 h-16 mr-4" src={communityLeader}></img>
+        <div className="p-4 h-24 bg-[#DEF6EB] rounded-2xl flex border border-[#CACACA]">
+          <img className="w-16 h-16 mr-4" src={announcement}></img>
           <div className="flex flex-col">
-            <h1 className="text-sm font-bold mt-2 pb-2 font-bricolage">
+            <h1 className="text-sm font-bold mt-2 pb-2 font-bricolage text-[#212121]">
               Ambassador
             </h1>
             <h3 className="text-xs mb-2 font-normal text-[#616161]">
@@ -72,10 +75,10 @@ const UserInfo = () => {
             </h3>
           </div>
         </div>
-        <div className="p-4 h-24 bg-green-100 rounded-2xl flex">
-          <img className="w-16 h-16 mr-4" src={communityLeader}></img>
+        <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA]">
+          <img className="w-16 h-16 mr-4" src={crown}></img>
           <div className="flex flex-col">
-            <h1 className="text-sm font-bold mt-2 pb-2 font-bricolage">
+            <h1 className="text-sm font-bold mt-2 pb-2 font-bricolage text-[#212121]">
               Neighborhood Leader
             </h1>
             <h3 className="text-xs mb-2 font-normal text-[#616161]">
@@ -83,10 +86,10 @@ const UserInfo = () => {
             </h3>
           </div>
         </div>
-        <div className="p-4 h-24 bg-green-100 rounded-2xl flex">
-          <img className="w-16 h-16 mr-4" src={communityLeader}></img>
+        <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA]">
+          <img className="w-16 h-16 mr-4" src={crown}></img>
           <div className="flex flex-col">
-            <h1 className="text-sm font-bold mt-2 pb-2 font-bricolage">
+            <h1 className="text-sm font-bold mt-2 pb-2 font-bricolage text-[#212121]">
               Information Sharer
             </h1>
             <h3 className="text-xs mb-2 font-normal text-[#616161]">
@@ -94,10 +97,10 @@ const UserInfo = () => {
             </h3>
           </div>
         </div>
-        <div className="p-4 h-24 bg-green-100 rounded-2xl flex">
-          <img className="w-16 h-16 mr-4" src={communityLeader}></img>
+        <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA]">
+          <img className="w-16 h-16 mr-4" src={crown}></img>
           <div className="flex flex-col">
-            <h1 className="text-sm font-bold mt-2 pb-2 font-bricolage">
+            <h1 className="text-sm font-bold mt-2 pb-2 font-bricolage text-[#212121]">
               Seasoned Volunteer
             </h1>
             <h3 className="text-[11px] mb-2 font-normal text-[#616161]">
@@ -106,57 +109,57 @@ const UserInfo = () => {
           </div>
         </div>
       </div>
-      <div className="px-32 pb-32">
-        <h1 className="font-medium font-bricolage text-[44px] pb-16">
+      <div className="px-24 pb-24">
+        <h1 className="font-medium font-bricolage text-[44px] pb-16 text-[#212121]">
           My Impact
         </h1>
         <div className="w-full h-fit justify-start items-start  grid grid-cols-1 lg:grid-cols-3 font-bricolage">
           {/*  */}
           <div className="grow rounded-t-2xl  lg:rounded-tr-none lg:rounded-l-2xl shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-emerald-100 to-neutral-200 justify-start items-end gap-6 flex">
             <div className="flex-col justify-start items-start gap-6 inline-flex">
-              <div className="text-violet-950 text-2xl font-medium leading-loose">
-                We helped
+              <div className="text-[#1F0A58] text-2xl font-medium leading-loose">
+                Helped
               </div>
 
               <div className="px-8 py-2 bg-white rounded-[100px] inline-flex">
-                <div className="text-violet-950 font-bricolage text-5xl font-normal leading-[64px]">
+                <div className="text-[#1F0A58]font-bricolage text-5xl font-normal leading-[64px]">
                   103
                 </div>
               </div>
             </div>
-            <div className="w-fit text-violet-950 text-xl font-medium py-2 md:ml-[-8px] inline-flex">
+            <div className="w-fit text-[#1F0A58] text-xl font-medium py-2 md:ml-[-8px] inline-flex">
               homeless people
             </div>
           </div>
           {/*  */}
           <div className="grow shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-purple-300 to-zinc-200 justify-start items-end gap-6 flex">
             <div className="flex-col justify-start items-start gap-6 inline-flex">
-              <div className="text-violet-950 text-2xl font-medium leading-loose">
-                Helped by{" "}
+              <div className="text-[#1F0A58] text-2xl font-medium leading-loose">
+                Participated
               </div>
               <div className="px-6 py-2 bg-white rounded-[100px] inline-flex">
-                <div className="text-violet-950 font-bricolage text-5xl font-normal leading-[64px]">
+                <div className="text-[#1F0A58] font-bricolage text-5xl font-normal leading-[64px]">
                   264
                 </div>
               </div>
             </div>
-            <div className="w-fit text-violet-950 text-xl font-medium py-2 md:ml-[-12px] inline-flex ">
-              volunteers
+            <div className="w-fit text-[#1F0A58] text-xl font-medium py-2 md:ml-[-12px] inline-flex ">
+              Outreaches
             </div>
           </div>
           {/*  */}
           <div className="grow rounded-b-2xl lg:rounded-r-2xl lg:rounded-bl-none shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-sky-200 to-neutral-200 justify-start items-end gap-6 flex">
             <div className="flex-col justify-start items-start gap-6 inline-flex">
-              <div className="text-violet-950 text-2xl font-medium leading-loose">
+              <div className="text-[#1F0A58] text-2xl font-medium leading-loose">
                 Donated
               </div>
               <div className="px-6 py-2 bg-white rounded-[100px] inline-flex">
-                <div className="text-violet-950 font-bricolage text-5xl font-normal leading-[64px]">
+                <div className="text-[#1F0A58] font-bricolage text-5xl font-normal leading-[64px]">
                   1172{" "}
                 </div>
               </div>
             </div>
-            <div className="w-fit text-violet-950 text-xl font-medium py-2 md:ml-[-8px] inline-flex">
+            <div className="w-fit text-[#1F0A58] text-xl font-medium py-2 md:ml-[-8px] inline-flex">
               items
             </div>
           </div>
