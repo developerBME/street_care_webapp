@@ -71,7 +71,7 @@ function Signup2() {
                 <div className="self-stretch h-fit flex-col justify-start items-start gap-4 flex">
                   <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
                     <div className="self-stretch text-zinc-700 text-[15px] font-semibold font-inter leading-tight">
-                      Email
+                      Email*
                     </div>
                     <div className="self-stretch  bg-white rounded border border-stone-300 justify-start items-center gap-2 inline-flex">
                       <div className="grow shrink basis-0 h-10 flex-col justify-center items-start inline-flex">
@@ -87,7 +87,7 @@ function Signup2() {
                   </div>
                   <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
                     <div className="self-stretch text-zinc-700 text-[15px]  font-semibold font-inter leading-tight">
-                      Password
+                      Password*
                     </div>
                     <div className="self-stretch  bg-white rounded border border-stone-300 justify-start items-center gap-2 inline-flex">
                       <div className="grow shrink basis-0 h-10 flex-col justify-center items-start inline-flex">
@@ -101,32 +101,33 @@ function Signup2() {
                       </div>
                     </div>
                   </div>
-                  <div className="w-fit text-violet-600 text-[15px] font-normal font-inter leading-snug hover:underline cursor-pointer">
-                    Forgot your password?
+                  {/*  */}
+                  <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
+                    <div className="self-stretch text-zinc-700 text-[15px]  font-semibold font-inter leading-tight">
+                      What should we call you?*
+                    </div>
+                    <div className="self-stretch  bg-white rounded border border-stone-300 justify-start items-center gap-2 inline-flex">
+                      <div className="grow shrink basis-0 h-10 flex-col justify-center items-start inline-flex">
+                        <input
+                          type="text"
+                          id="name"
+                          placeholder="Enter your profile name"
+                          className="text-zinc-700 w-full h-full px-4 text-[15px] font-normal font-inter leading-snug"
+                          onChange={(e) => setPassword(e.target.value)}
+                        ></input>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="justify-start items-center mt-14 gap-4 inline-flex">
-                <div className="w-[18px] h-[18px] relative">
-                  <input
-                    type="checkbox"
-                    name="remember"
-                    id="remember"
-                    className="w-[18px] h-[18px] left-0 top-0 absolute bg-violet-700 rounded-sm cursor-pointer "
-                    required
-                  ></input>
-                </div>
-                <div className="text-black text-sm font-normal font-open-sans leading-tight">
-                  Remember me
-                </div>
-              </div>
+
               <div className="self-stretch my-14 h-14 flex-col justify-start items-start gap-4 flex">
                 <div className="self-stretch h-14 px-8 py-4 bg-violet-700 rounded-[100px] justify-center items-center gap-2.5 inline-flex">
                   <button
                     type="submit"
                     className="grow shrink basis-0 text-center text-neutral-100 text-lg font-semibold font-inter leading-normal"
                   >
-                    Log in
+                    Sign up with email
                   </button>
                 </div>
               </div>
@@ -135,7 +136,7 @@ function Signup2() {
                   Already have an account?{" "}
                 </span>
                 <span className="text-violet-600 text-base font-normal font-open-sans leading-normal cursor-pointer">
-                  Sign in
+                  Log in
                 </span>
               </div>
             </form>

@@ -4,7 +4,7 @@ function Footer() {
   return (
     <footer class="bg-nav">
       <div class=" lg:mx-auto  h-fit w-full max-w-screen-xl">
-        <div class=" py-14 px-4 grid mx-7 grid-cols-2 gap-y-7 lg:gap-20 items-center lg:grid-cols-5">
+        <div class=" pt-14 pb-6 px-4 grid mx-7 grid-cols-2 gap-y-7 lg:gap-20 items-center lg:grid-cols-5">
           <div className=" col-span-2">
             <h2 class="mb-6 font-bricolage text-6xl text-white dark:text-white">
               Street Care

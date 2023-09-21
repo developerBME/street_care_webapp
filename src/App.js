@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import Home from "./component/Home";
 import logo from "./logo.png";
@@ -9,6 +9,9 @@ import Profile from "./component/Profile";
 import Login2 from "./component/Login2";
 import Signup2 from "./component/Signup2";
 import HowToHelp from "./component/HowToHelp";
+import Community from "./component/Community/Community";
+import About from "./component/About/About";
+import Contact from "./component/Contact/Contact";
 
 function App() {
   return (
@@ -34,10 +37,13 @@ function App() {
         <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/howtohelp" element={<HowToHelp />} />
+          <Route path="/community" element={<Community />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/login2" element={<Login2 />} />
           <Route path="/signup2" element={<Signup2 />} />
-          <Route path="/howtohelp" element={<HowToHelp />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
         <Footer />

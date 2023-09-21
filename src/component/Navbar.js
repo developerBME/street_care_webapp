@@ -12,7 +12,7 @@ const NavBar = () => {
     {
       id: 1,
       label: "About",
-      link: "About",
+      link: "about",
     },
     {
       id: 2,
@@ -22,12 +22,12 @@ const NavBar = () => {
     {
       id: 3,
       label: "Community",
-      link: "Community",
+      link: "community",
     },
     {
       id: 4,
       label: "Contact",
-      link: "Contact",
+      link: "contact",
     },
   ];
 

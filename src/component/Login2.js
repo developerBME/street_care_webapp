@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./firebase"; // Importing the auth instance
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { Link, useNavigate } from "react-router-dom";
 
 import { FcGoogle } from "react-icons/fc";
 import { AiFillApple } from "react-icons/ai";
 
 function Login2() {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -132,10 +135,15 @@ function Login2() {
               </div>
               <div className="w-fit text-center mx-auto">
                 <span className="text-zinc-700 text-base font-normal font-open-sans leading-normal">
-                  Already have an account?{" "}
+                  Don't have an account?{" "}
                 </span>
-                <span className="text-violet-600 text-base font-normal font-open-sans leading-normal cursor-pointer">
-                  Sign in
+                <span
+                  onClick={() => {
+                    navigate("/signup2");
+                  }}
+                  className="text-violet-600 text-base font-normal font-open-sans leading-normal cursor-pointer"
+                >
+                  Sign up
                 </span>
               </div>
             </form>
