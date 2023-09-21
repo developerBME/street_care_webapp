@@ -33,7 +33,7 @@ export default function FAQs() {
             </p>
           </AccordionSummary>
           <AccordionDetails>
-            <p className="font-bricolage sm:text-2xl">
+            <p className="font-bricolage ">
               At vero eos et accusamus et iusto odio dignissimos ducimus qui
               blanditiis praesentium voluptatum deleniti atque corrupti quos
               dolores et quas molestias excepturi sint occaecati cupiditate non
