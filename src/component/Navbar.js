@@ -4,10 +4,23 @@ import { FaBars, FaTimes } from "react-icons/fa";
 import Avatar from "@mui/material/Avatar";
 
 import { Link, useNavigate } from "react-router-dom";
+import { getAuth, signOut } from "firebase/auth";
 
-const NavBar = () => {
+
+const NavBar = (props) => {
   const [nav, setNav] = useState(false);
-
+  const fAuth = getAuth();
+  const fireBaseSignOut = async () => {
+    signOut(fAuth).then(() => {
+      console.log("success")
+    }).catch((error) => {
+      console.log(error)
+      // An error happened.
+    })
+  }
+  useEffect(() => {
+    console.log(props)
+  }, []);
   const links = [
     {
       id: 1,
@@ -32,7 +45,7 @@ const NavBar = () => {
   ];
 
   // Login state
-  const [Loggedin, setLoggedin] = useState(false);
+  // const [Loggedin, setLoggedin] = useState(false);
   const navigate = useNavigate();
 
   return (
@@ -57,7 +70,7 @@ const NavBar = () => {
             Donate
           </button>
         </li>
-        {!Loggedin && (
+        {!props.loggedIn && (
           <li
             className=" px-6 py-3 text-lg font-inter font-medium cursor-pointer  
         text-white hover:scale-105 duration-200"
@@ -66,9 +79,9 @@ const NavBar = () => {
             Login
           </li>
         )}
-        {Loggedin && (
+        {props.loggedIn && (
           <li>
-            <Avatar
+            <Avatar onClick={()=>{fireBaseSignOut()}}
               className="ml-4 mr-4 "
               alt="S"
               src="avatar.jpg"

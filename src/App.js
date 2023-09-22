@@ -12,8 +12,25 @@ import HowToHelp from "./component/HowToHelp";
 import Community from "./component/Community/Community";
 import About from "./component/About/About";
 import Contact from "./component/Contact/Contact";
+import { getAuth, onAuthStateChanged} from "firebase/auth";
+import React , {useEffect , useState} from "react";
 
 function App() {
+  const fAuth = getAuth();
+  const [loggedIn, setLoggedIn] = useState(false)
+  useEffect(() => {
+  }, []);
+  onAuthStateChanged(fAuth, (user) => {
+    if (user) {
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/auth.user
+      setLoggedIn(true)
+      // ...
+    } else {
+      // User is signed out
+      // ...
+    }
+  });
   return (
     // <div className="bg-black text-white justify-center w-screen h-screen">
     //   <img src={logo} alt="logo" />
@@ -34,7 +51,7 @@ function App() {
     // </div>
     <div>
       <Router>
-        <NavBar />
+        <NavBar loggedIn={loggedIn} />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />

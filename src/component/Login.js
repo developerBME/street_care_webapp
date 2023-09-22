@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./firebase"; // Importing the auth instance
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider , onAuthStateChanged} from "firebase/auth";
+import { useNavigate, Link } from "react-router-dom";
+import { SimCard } from "@mui/icons-material";
 
 // function GoogleAuth(props) {
 //   const [message, setMessage] = useState("");
@@ -54,6 +56,21 @@ function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [loginSuccess, setLoginSuccess] = useState("");
+  const fAuth = getAuth();
+  let navigate = useNavigate();
+  useEffect(() => {
+  }, []);
+  onAuthStateChanged(fAuth, (user) => {
+    if (user) {
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/auth.user
+      navigate("/", { replace: true });
+      // ...
+    } else {
+      // User is signed out
+      // ...
+    }
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();

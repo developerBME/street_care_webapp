@@ -1,4 +1,4 @@
-import React from "react";
+import React , {useEffect} from "react";
 import FAQs from "./FAQs";
 import Eventcard from "./Eventcard";
 import BMEcard from "./BMEcard";
@@ -8,8 +8,24 @@ import News from "./News";
 import Map from "./Map";
 import Process from "./Process";
 import MoreAboutUs from "./MoreAboutUs";
+import { getAuth, onAuthStateChanged} from "firebase/auth";
 
 function Home() {
+  const fAuth = getAuth();
+  useEffect(() => {
+  }, []);
+  onAuthStateChanged(fAuth, (user) => {
+    if (user) {
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/auth.user
+      console.log(user)
+      // ...
+    } else {
+      // User is signed out
+      // ...
+    }
+  });
+
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center ">
