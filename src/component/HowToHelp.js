@@ -1,6 +1,4 @@
 import React from "react";
-import Landing from "./Landing";
-import Success from "./Success";
 
 function HowToHelp() {
   return (

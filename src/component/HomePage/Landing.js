@@ -1,7 +1,7 @@
 import React from "react";
-import one from "../images/one.png";
-import two from "../images/two.png";
-import three from "../images/three.png";
+import one from "../../images/one.png";
+import two from "../../images/two.png";
+import three from "../../images/three.png";
 
 function Landing() {
   return (
@@ -22,7 +22,6 @@ function Landing() {
         </p>
 
         <button class=" bg-violet-700 text-base text-white font-normal py-3 px-6 mt-12 mb-6 lg:mb-0 rounded-full">
-
           Browse Outreach Events
         </button>
       </div>
