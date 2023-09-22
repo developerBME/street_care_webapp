@@ -74,7 +74,7 @@ const NavBar = (props) => {
           <li
             className=" px-6 py-3 text-lg font-inter font-medium cursor-pointer  
         text-white hover:scale-105 duration-200"
-            onClick={() => navigate("/login2")}
+            onClick={() => navigate("/login")}
           >
             Login
           </li>

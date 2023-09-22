@@ -5,7 +5,6 @@ import NavBar from "./component/Navbar";
 import Footer from "./component/Footer";
 import Login from "./component/Login";
 import Profile from "./component/HomePage/Profile";
-import Login2 from "./component/Login2";
 import Signup2 from "./component/Signup2";
 import HowToHelp from "./component/HowToHelp";
 import Community from "./component/Community/Community";
@@ -26,6 +25,7 @@ function App() {
       setLoggedIn(true)
       // ...
     } else {
+      setLoggedIn(false)
       // User is signed out
       // ...
     }
@@ -41,7 +41,6 @@ function App() {
           <Route path="/community" element={<Community />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/login2" element={<Login2 />} />
           <Route path="/signup2" element={<Signup2 />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
