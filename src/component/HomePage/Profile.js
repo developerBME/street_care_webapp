@@ -83,7 +83,7 @@ function Profile() {
         </div>
 
         <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black mb-10">
-          <div className="flex flex-col gap-4 lg:gap-14 lg:p-28 p-4">
+          <div className="flex flex-col gap-4 lg:gap-14 lg:p-28 pt-4 pb-4 pl-4">
             <div className="inline-flex flex-col sm:flex-row lg:space-x-16">
               <div class="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage leading-[52px]">
                 My Outreaches
