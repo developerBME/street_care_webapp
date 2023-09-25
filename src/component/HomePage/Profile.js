@@ -13,7 +13,7 @@ function Profile() {
       eventDate: "Nov 9, 2023 FRI 5:00pm",
       buttonText: "Upcoming...",
       cardColor: "#F1EEFE",
-      upcomingEvent:1,
+      upcomingEvent: 1,
     },
     {
       title: "Group",
@@ -21,7 +21,7 @@ function Profile() {
       eventDate: "Oct 16, 2023 SAT 5:00pm",
       buttonText: "Add Visit Log",
       cardColor: "#F1EEFE",
-      upcomingEvent:0,
+      upcomingEvent: 0,
     },
     {
       title: "Group",
@@ -29,7 +29,7 @@ function Profile() {
       eventDate: "Oct 4, 2023 SAT 5:00pm",
       buttonText: "Add Visit Log",
       cardColor: "#F1EEFE",
-      upcomingEvent:0,
+      upcomingEvent: 0,
     },
     {
       title: "Personal",
@@ -37,7 +37,7 @@ function Profile() {
       eventDate: "Apr 12, 2023 SAT 5:00pm",
       buttonText: "Edit Details",
       cardColor: "#DEF6EB",
-      upcomingEvent:0,
+      upcomingEvent: 0,
     },
     {
       title: "BME Official Event",
@@ -45,7 +45,7 @@ function Profile() {
       eventDate: "Sept 12, 2023 SAT 12:00pm",
       buttonText: "Edit Details",
       cardColor: "#F1EEFE",
-      upcomingEvent:1,
+      upcomingEvent: 1,
     },
     {
       title: "Personal",
@@ -53,7 +53,7 @@ function Profile() {
       eventDate: "Apr 12, 2023 SAT 5:00pm",
       buttonText: "Edit Details",
       cardColor: "#DEF6EB",
-      upcomingEvent:0,
+      upcomingEvent: 0,
     },
     {
       title: "Group",
@@ -61,7 +61,7 @@ function Profile() {
       eventDate: "12/12/2023 SAT 5:00pm",
       buttonText: "Add Visit Log",
       cardColor: "#F1EEFE",
-      upcomingEvent:0,
+      upcomingEvent: 0,
     },
     {
       title: "Personal",
@@ -69,7 +69,7 @@ function Profile() {
       eventDate: "Apr 12, 2023 SAT 5:00pm",
       buttonText: "Add Visit Log",
       cardColor: "#F1EEFE",
-      upcomingEvent:0,
+      upcomingEvent: 0,
     },
   ];
 
@@ -79,7 +79,6 @@ function Profile() {
         {/* Aniket */}
         <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-32 rounded-2xl bg-white text-black ">
           <UserInfo />
-          {/* Remove this component and create a new one for your code  */}
         </div>
 
         <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black mb-10">
