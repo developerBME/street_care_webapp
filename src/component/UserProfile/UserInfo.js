@@ -1,11 +1,39 @@
-import React from "react";
+import React , {useState , useEffect} from "react";
 
 import user from "../../images/user.png";
 import crown from "../../images/crown.png";
 import notes from "../../images/notes.png";
 import announcement from "../../images/announcement.png";
+import {db} from "../firebase";
+import { doc, getDoc,getDocs, collection, query,where } from "firebase/firestore";
 
-const UserInfo = () => {
+const UserInfo =  () => {
+  const userId = "Uej8TTFv5aXghZ6S8JfzhTo0nWw2"
+  const [helped,setHelped] = useState("");
+  const [donations,setDonations] = useState("");
+  const logOfUserRef = query(collection(db, "visitLog"), where("uid", "==", userId));
+
+  useEffect( ()=>{
+    const getValues = async () =>{
+      try {
+      const data = await getDocs(logOfUserRef); 
+      let totalHelped = 0;
+      let totalDonations = 0;
+      data.docs.map((doc)=> {
+        totalHelped = totalHelped + doc.data().numberPeopleHelped; 
+        // totalDonations = totalDonations + doc.data().numberIt; 
+        return null;
+      })
+      setHelped(totalHelped);
+      }
+      catch(err){
+        console.log(err);
+      }
+    }
+    getValues()
+  },[]);
+
+  useEffect (()=>{console.log(helped)},[helped])
   return (
     <div>
       <div className="flex px-24 pt-24 pb-16">
@@ -124,7 +152,7 @@ const UserInfo = () => {
 
               <div className="px-8 py-2 bg-white rounded-[100px] inline-flex">
                 <div className="text-[#1F0A58]font-bricolage text-5xl font-normal leading-[64px]">
-                  103
+                  {helped}
                 </div>
               </div>
             </div>
