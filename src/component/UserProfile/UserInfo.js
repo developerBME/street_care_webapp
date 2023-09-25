@@ -51,7 +51,7 @@ const UserInfo = () => {
   }, [helped]);
   return (
     <div>
-      <div className="flex flex-col pt-0 px-0 pb-4 md:flex md:flex-row md:px-8 md:pt-12 md:pb-16 lg:px-24 lg:pt-24 lg:pb-16">
+      <div className="flex flex-col pt-0 px-0 pb-2 md:flex md:flex-row md:px-8 md:pt-8 md:pb-8 lg:px-24 lg:pt-16 lg:pb-12">
         <div className="md:mr-12 lg:mr-12 pr-0 bg-gradient-to-tr from-[#C0F4FF] from-10% via-[#C0F4FF] via-60% to-[#DDD] to-90% bg-fixed rounded-t-2xl md:bg-none">
           {/* bg-gradient-to-tr from-[#C0F4FF] from-10% via-[#C0F4FF] via-60% to-[#DDD] to-90% bg-fixed */}
           <img
@@ -60,7 +60,7 @@ const UserInfo = () => {
             className="rounded-full md:h-56 md:w-56 lg:w-60 lg:h-60 border-none md:mt-12 h-32 w-32 mx-auto mt-8 mb-4 "
           />
         </div>
-        <div className="px-4 py-4 md:mt-12 lg:mt-16">
+        <div className="px-4 py-4 md:mt-12 lg:mt-20">
           <h1 className="font-bricolage md:text-[52px] font-medium md:h-16 text-[#212121] h-12 text-4xl">
             Mandy Klose
           </h1>
@@ -88,10 +88,10 @@ const UserInfo = () => {
         <div className="p-4 h-24 bg-[#DEF6EB] rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
           <img className="w-16 h-16 mr-4" src={crown} alt="..."></img>
           <div className="flex flex-col">
-            <h1 className="text-sm font-bold pb-2 font-bricolage text-[#212121]">
+            <h1 className="text-sm font-bold pb-1 font-bricolage text-[#212121]">
               Community Leader
             </h1>
-            <h3 className="text-xs font-semibold pb-2 text-[#616161]">
+            <h3 className="text-xs font-semibold pb-1 text-[#616161]">
               Achieved June 3rd, 2023
             </h3>
             <h3 className="text-xs font-normal text-[#616161]">
@@ -102,7 +102,7 @@ const UserInfo = () => {
         <div className="p-4 h-24 bg-[#DEF6EB] rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
           <img className="w-16 h-16 mr-4" src={notes} alt="..."></img>
           <div className="flex flex-col">
-            <h1 className="text-sm font-bold mt-2 pb-2 font-bricolage text-[#212121]">
+            <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121]">
               Volunteer Trainers
             </h1>
             <h3 className="text-xs mb-2 font-normal text-[#616161]">
@@ -113,7 +113,7 @@ const UserInfo = () => {
         <div className="p-4 h-24 bg-[#DEF6EB] rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
           <img className="w-16 h-16 mr-4" src={announcement} alt="..."></img>
           <div className="flex flex-col">
-            <h1 className="text-sm font-bold mt-2 pb-2 font-bricolage text-[#212121]">
+            <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121]">
               Ambassador
             </h1>
             <h3 className="text-xs mb-2 font-normal text-[#616161]">
@@ -124,7 +124,7 @@ const UserInfo = () => {
         <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
           <img className="w-16 h-16 mr-4" src={neighborhood} alt="..."></img>
           <div className="flex flex-col">
-            <h1 className="text-sm font-bold mt-2 pb-2 font-bricolage text-[#212121]">
+            <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121]">
               Neighborhood Leader
             </h1>
             <h3 className="text-xs mb-2 font-normal text-[#616161]">
@@ -135,7 +135,7 @@ const UserInfo = () => {
         <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
           <img className="w-16 h-16 mr-4" src={information} alt="..."></img>
           <div className="flex flex-col">
-            <h1 className="text-sm font-bold mt-2 pb-2 font-bricolage text-[#212121]">
+            <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121]">
               Information Sharer
             </h1>
             <h3 className="text-xs mb-2 font-normal text-[#616161]">
@@ -143,10 +143,10 @@ const UserInfo = () => {
             </h3>
           </div>
         </div>
-        <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] sm:w-[265px] md:w-auto">
+        <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
           <img className="w-16 h-16 mr-4" src={star} alt="..."></img>
           <div className="flex flex-col">
-            <h1 className="text-sm font-bold mt-2 pb-2 font-bricolage text-[#212121]">
+            <h1 className="text-sm font-bold mt-1 pb-1 font-bricolage text-[#212121]">
               Seasoned Volunteer
             </h1>
             <h3 className="text-[11px] mb-2 font-normal text-[#616161]">
@@ -156,7 +156,7 @@ const UserInfo = () => {
         </div>
       </div>
       {/* Impact */}
-      <div className="px-4 pb-6 md:px-8 md:pb-16 lg:px-24 lg:pb-24">
+      {/* <div className="px-4 pb-6 md:px-8 md:pb-16 lg:px-24 lg:pb-24">
         <h1 className="font-medium font-bricolage text-3xl pb-4 md:text-[52px] md:pb-12 text-[#212121]">
           My Impact
         </h1>
@@ -208,7 +208,7 @@ const UserInfo = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
 
     // Web version
