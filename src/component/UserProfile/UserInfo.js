@@ -51,24 +51,24 @@ const UserInfo = () => {
   }, [helped]);
   return (
     <div>
-      <div className="flex flex-col pt-0 px-0 pb-4 md:flex md:flex-row md:px-8 md:pt-24 md:pb-16 lg:px-24 lg:pt-24 lg:pb-16">
+      <div className="flex flex-col pt-0 px-0 pb-4 md:flex md:flex-row md:px-8 md:pt-12 md:pb-16 lg:px-24 lg:pt-24 lg:pb-16">
         <div className="md:mr-12 lg:mr-12 pr-0 bg-gradient-to-tr from-[#C0F4FF] from-10% via-[#C0F4FF] via-60% to-[#DDD] to-90% bg-fixed rounded-t-2xl md:bg-none">
           {/* bg-gradient-to-tr from-[#C0F4FF] from-10% via-[#C0F4FF] via-60% to-[#DDD] to-90% bg-fixed */}
           <img
             src={user}
             alt="..."
-            className="rounded-full md:h-56 md:w-56 lg:w-60 lg:h-60 border-none md:mt-12 sm:h-32 sm:w-32 sm:mx-auto sm:mt-8 sm:mb-4 "
+            className="rounded-full md:h-56 md:w-56 lg:w-60 lg:h-60 border-none md:mt-12 h-32 w-32 mx-auto mt-8 mb-4 "
           />
         </div>
-        <div className="sm:px-4 sm:py-4 md:mt-12 lg:mt-16">
+        <div className="px-4 py-4 md:mt-12 lg:mt-16">
           <h1 className="font-bricolage md:text-[52px] font-medium md:h-16 text-[#212121] h-12 text-4xl">
             Mandy Klose
           </h1>
-          <h3 className="py-4 text-[#212121] font-bricolage text-sm sm:pt-0 sm:pb-4">
+          <h3 className="py-4 text-[#212121] font-bricolage text-sm pt-0 pb-4">
             Joined 12/20/23
           </h3>
 
-          <div className="sm:flex sm:overflow-x-auto md:grid md:grid-rows-2 md:grid-cols-2 md:gap-y-2 lg:flex lg:flex-wrap">
+          <div className="flex overflow-x-auto md:grid md:grid-rows-2 md:grid-cols-2 md:gap-y-2 lg:flex lg:flex-wrap">
             <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold">
               <h6 className="text-[#212121] w-[130px]">Spanish Speaker</h6>
             </div>
@@ -84,8 +84,8 @@ const UserInfo = () => {
           </div>
         </div>
       </div>
-      <div className="px-4 pb-4 sm:grid sm:grid-flow-col sm:overflow-x-auto gap-2 md:px-8 md:pb-12 md:grid md:grid-cols-2 md:grid-rows-3 md:gap-4 lg:px-24 lg:pb-16 lg:grid lg:grid-cols-3 lg:grid-rows-2 lg:gap-4">
-        <div className="p-4 h-24 bg-[#DEF6EB] rounded-2xl flex border border-[#CACACA] sm:w-[265px] md:w-auto">
+      <div className="px-4 pb-4 grid grid-flow-col overflow-x-auto gap-2 md:px-8 md:pb-12 md:grid md:grid-cols-2 md:grid-rows-3 md:gap-4 lg:px-24 lg:pb-16 lg:grid lg:grid-cols-3 lg:grid-rows-2 lg:gap-4">
+        <div className="p-4 h-24 bg-[#DEF6EB] rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
           <img className="w-16 h-16 mr-4" src={crown} alt="..."></img>
           <div className="flex flex-col">
             <h1 className="text-sm font-bold pb-2 font-bricolage text-[#212121]">
@@ -99,7 +99,7 @@ const UserInfo = () => {
             </h3>
           </div>
         </div>
-        <div className="p-4 h-24 bg-[#DEF6EB] rounded-2xl flex border border-[#CACACA] sm:w-[265px] md:w-auto">
+        <div className="p-4 h-24 bg-[#DEF6EB] rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
           <img className="w-16 h-16 mr-4" src={notes} alt="..."></img>
           <div className="flex flex-col">
             <h1 className="text-sm font-bold mt-2 pb-2 font-bricolage text-[#212121]">
@@ -110,7 +110,7 @@ const UserInfo = () => {
             </h3>
           </div>
         </div>
-        <div className="p-4 h-24 bg-[#DEF6EB] rounded-2xl flex border border-[#CACACA] sm:w-[265px] md:w-auto">
+        <div className="p-4 h-24 bg-[#DEF6EB] rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
           <img className="w-16 h-16 mr-4" src={announcement} alt="..."></img>
           <div className="flex flex-col">
             <h1 className="text-sm font-bold mt-2 pb-2 font-bricolage text-[#212121]">
@@ -121,7 +121,7 @@ const UserInfo = () => {
             </h3>
           </div>
         </div>
-        <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] sm:w-[265px] md:w-auto">
+        <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
           <img className="w-16 h-16 mr-4" src={neighborhood} alt="..."></img>
           <div className="flex flex-col">
             <h1 className="text-sm font-bold mt-2 pb-2 font-bricolage text-[#212121]">
@@ -132,7 +132,7 @@ const UserInfo = () => {
             </h3>
           </div>
         </div>
-        <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] sm:w-[265px] md:w-auto">
+        <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
           <img className="w-16 h-16 mr-4" src={information} alt="..."></img>
           <div className="flex flex-col">
             <h1 className="text-sm font-bold mt-2 pb-2 font-bricolage text-[#212121]">
@@ -156,7 +156,7 @@ const UserInfo = () => {
         </div>
       </div>
       {/* Impact */}
-      <div className="px-4 sm:pb-6 md:px-8 md:pb-16 lg:px-24 lg:pb-24">
+      <div className="px-4 pb-6 md:px-8 md:pb-16 lg:px-24 lg:pb-24">
         <h1 className="font-medium font-bricolage text-3xl pb-4 md:text-[52px] md:pb-12 text-[#212121]">
           My Impact
         </h1>
