@@ -10,7 +10,7 @@ const Form = ()=>{
         <div>
             <form className="space-y-6">
                 <div>
-                    <div className="text-5xl font-medium font-bricolage pb-16">Create Outreach Event</div>
+                    <div className="lg:text-5xl text-3xl font-medium font-bricolage pb-4 lg:pb-16">Create Outreach Event</div>
                     <div className="space-y-4">
                         <div className="font-semibold font-bricolage text-[22px]">Event Information</div>
                         <div className="space-y-1.5">
@@ -63,23 +63,22 @@ const Form = ()=>{
                 <div className="space-y-6">
                     <div className="font-semibold font-bricolage text-[22px]">What kind of help they need?</div>
                         <div className="space-y-1.5 relative">
-                        <p className="font-semibold font-['Inter'] text-[15px]">Is this Event related to any Help Request?</p>
-                        <select
-                        className="px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring focus:ring-indigo-400 appearance-none"
-                        defaultValue=""
-                        >
-                        <option value="" disabled>Select Help Request</option>
-                        <option value="helpRequest1">Help Request 1</option>
-                        <option value="helpRequest2">Help Request 2</option>
-                        </select>
+                            <p className="font-semibold font-['Inter'] text-[15px]">Is this Event related to any Help Request?</p>
+                            <select
+                            className="px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring focus:ring-indigo-400 appearance-none"
+                            defaultValue=""
+                            >
+                                <option value="" disabled>Select Help Request</option>
+                                <option value="helpRequest1">Help Request 1</option>
+                                <option value="helpRequest2">Help Request 2</option>
+                            </select>
                         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 pt-5 text-gray-700">
-                        {/* Add padding to the caret here */}
-                        <img src={arrowDown}/>
+                            <img src={arrowDown}/>
                         </div>
                     </div>
   
                     <div className="font-semibold font-bricolage text-[15px]">Select skills it would require to provide the help</div>
-                    <div className="w-[587px] space-y-2">
+                    <div className="lg:w-[587px] space-y-2">
                         {chipList.map((value, index) => (
                             <Chip key={index} val={value} />
                         ))}
