@@ -17,29 +17,28 @@ import {
   query,
   where,
 } from "firebase/firestore";
-
-const UserInfo = () => {
-  const userId = "Uej8TTFv5aXghZ6S8JfzhTo0nWw2";
-  const [helped, setHelped] = useState("");
-  const [donations, setDonations] = useState("");
-  const logOfUserRef = query(
-    collection(db, "visitLog"),
-    where("uid", "==", userId)
-  );
+const UserInfo =  () => {
+  const userId = "Uej8TTFv5aXghZ6S8JfzhTo0nWw2"
+  const [helped,setHelped] = useState("");
+  const [donations,setDonations] = useState("");
+  const [outreaches,setOutreaches] = useState("");
+  const logOfUserRef = query(collection(db, "visitLog"), where("uid", "==", userId));
 
   useEffect(() => {
     const getValues = async () => {
       try {
-        const data = await getDocs(logOfUserRef);
-        let totalHelped = 0;
-        let totalDonations = 0;
-        data.docs.map((doc) => {
-          totalHelped = totalHelped + doc.data().numberPeopleHelped;
-          // totalDonations = totalDonations + doc.data().numberIt;
-          return null;
-        });
-        setHelped(totalHelped);
-      } catch (err) {
+      const data = await getDocs(logOfUserRef); 
+      let totalHelped = 0;
+      let totalDonations = 0;
+      data.docs.map((doc)=> {
+        totalHelped = totalHelped + doc.data().numberPeopleHelped; 
+        // totalDonations = totalDonations + doc.data().numberIt; 
+        return null;
+      })
+      setHelped(totalHelped);
+      setOutreaches(data.docs.length);
+      }
+      catch(err){
         console.log(err);
       }
     };
@@ -156,7 +155,7 @@ const UserInfo = () => {
       </div>
 
       {/* Impact */}
-      {/* <div>
+       {/* <div>
         <div className="px-4 pb-6 md:px-8 md:pb-16 lg:px-24 lg:pb-24">
           <h1 className="font-medium font-bricolage text-3xl pb-4 md:text-[52px] md:pb-12 text-[#212121]">
             My Impact
@@ -183,10 +182,9 @@ const UserInfo = () => {
                 <div className="text-[#1F0A58] text-2xl font-medium leading-loose">
                   Participated
                 </div>
-                <div className="px-6 py-2 bg-white rounded-[100px] inline-flex">
-                  <div className="text-[#1F0A58] font-bricolage text-5xl font-normal leading-[64px]">
-                    264
-                  </div>
+              <div className="px-6 py-2 bg-white rounded-[100px] inline-flex">
+                <div className="text-[#1F0A58] font-bricolage text-5xl font-normal leading-[64px]">
+                  {outreaches}
                 </div>
               </div>
               <div className="w-fit text-[#1F0A58] text-xl font-medium py-2 md:ml-[-12px] inline-flex ">
@@ -210,7 +208,9 @@ const UserInfo = () => {
             </div>
           </div>
         </div>
-      </div> */}
+      </div> 
+      </div>
+    </div> */}
     </div>
 
     // Web version
