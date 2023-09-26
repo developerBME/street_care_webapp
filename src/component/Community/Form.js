@@ -62,17 +62,6 @@ const Form = ()=>{
                 </div>
                 <div className="space-y-6">
                     <div className="font-semibold font-bricolage text-[22px]">What kind of help they need?</div>
-                    {/*<div className="space-y-1.5">  
-                        <p className="font-semibold font-['Inter'] text-[15px]">Is this Event related to any Help Request? </p>
-                        <select
-                            className="px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring focus:ring-indigo-400"
-                            defaultValue=""
-                        >
-                            <option value="" disabled>Select Help Request</option>
-                            <option value="helpRequest1">Help Request 1</option>
-                            <option value="helpRequest2">Help Request 2</option>
-                        </select>
-    </div> */}
                         <div className="space-y-1.5 relative">
                         <p className="font-semibold font-['Inter'] text-[15px]">Is this Event related to any Help Request?</p>
                         <select
