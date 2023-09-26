@@ -53,7 +53,6 @@ const UserInfo = () => {
     <div>
       <div className="flex flex-col pt-0 px-0 pb-2 md:flex md:flex-row md:px-8 md:pt-8 md:pb-8 lg:px-24 lg:pt-16 lg:pb-12">
         <div className="md:mr-12 lg:mr-12 pr-0 bg-gradient-to-tr from-[#C0F4FF] from-10% via-[#C0F4FF] via-60% to-[#DDD] to-90% bg-fixed rounded-t-2xl md:bg-none">
-          {/* bg-gradient-to-tr from-[#C0F4FF] from-10% via-[#C0F4FF] via-60% to-[#DDD] to-90% bg-fixed */}
           <img
             src={user}
             alt="..."
@@ -64,11 +63,11 @@ const UserInfo = () => {
           <h1 className="font-bricolage md:text-[52px] font-medium md:h-16 text-[#212121] h-12 text-4xl">
             Mandy Klose
           </h1>
-          <h3 className="py-4 text-[#212121] font-bricolage text-sm pt-0 pb-4">
+          <h3 className="py-4 text-[#212121] font-bricolage text-sm pt-0">
             Joined 12/20/23
           </h3>
 
-          <div className="flex overflow-x-auto md:grid md:grid-rows-2 md:grid-cols-2 md:gap-y-2 lg:flex lg:flex-wrap">
+          <div className="pb-2 flex overflow-x-auto md:grid md:grid-rows-2 md:grid-cols-2 md:gap-y-2 lg:flex lg:flex-wrap">
             <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold">
               <h6 className="text-[#212121] w-[130px]">Spanish Speaker</h6>
             </div>
@@ -155,56 +154,59 @@ const UserInfo = () => {
           </div>
         </div>
       </div>
-      {/* Impact */}
-      {/* <div className="px-4 pb-6 md:px-8 md:pb-16 lg:px-24 lg:pb-24">
-        <h1 className="font-medium font-bricolage text-3xl pb-4 md:text-[52px] md:pb-12 text-[#212121]">
-          My Impact
-        </h1>
-        <div className="w-full h-fit justify-start items-start  grid grid-cols-3 font-bricolage">
-          <div className="rounded-l-2xl h-fit px-8 py-4 bg-gradient-to-br from-emerald-100 to-neutral-200 justify-start items-end gap-6 flex">
-            <div className="flex-col justify-start items-start gap-6 inline-flex">
-              <div className="text-[#1F0A58] text-2xl font-medium leading-loose">
-                Helped
-              </div>
 
-              <div className="px-8 py-2 bg-white rounded-[100px] inline-flex">
-                <div className="text-[#1F0A58]font-bricolage text-5xl font-normal leading-[64px]">
-                  {helped}
+      {/* Impact */}
+      {/* <div>
+        <div className="px-4 pb-6 md:px-8 md:pb-16 lg:px-24 lg:pb-24">
+          <h1 className="font-medium font-bricolage text-3xl pb-4 md:text-[52px] md:pb-12 text-[#212121]">
+            My Impact
+          </h1>
+          <div className="w-full h-fit justify-start items-start  grid grid-cols-3 font-bricolage">
+            <div className="rounded-l-2xl h-fit px-8 py-4 bg-gradient-to-br from-emerald-100 to-neutral-200 justify-start items-end gap-6 flex">
+              <div className="flex-col justify-start items-start gap-6 inline-flex">
+                <div className="text-[#1F0A58] text-2xl font-medium leading-loose">
+                  Helped
+                </div>
+
+                <div className="px-8 py-2 bg-white rounded-[100px] inline-flex">
+                  <div className="text-[#1F0A58]font-bricolage text-5xl font-normal leading-[64px]">
+                    {helped}
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="w-fit text-[#1F0A58] text-xl font-medium py-2 md:ml-[-8px] inline-flex">
-              homeless people
-            </div>
-          </div>
-          <div className="h-fit px-8 py-4 bg-gradient-to-br from-purple-300 to-zinc-200 justify-start items-end gap-6 flex">
-            <div className="flex-col justify-start items-start gap-6 inline-flex">
-              <div className="text-[#1F0A58] text-2xl font-medium leading-loose">
-                Participated
+              <div className="w-fit text-[#1F0A58] text-xl font-medium py-2 md:ml-[-8px] inline-flex">
+                homeless people
               </div>
-              <div className="px-6 py-2 bg-white rounded-[100px] inline-flex">
-                <div className="text-[#1F0A58] font-bricolage text-5xl font-normal leading-[64px]">
-                  264
+            </div>
+            <div className="h-fit px-8 py-4 bg-gradient-to-br from-purple-300 to-zinc-200 justify-start items-end gap-6 flex">
+              <div className="flex-col justify-start items-start gap-6 inline-flex">
+                <div className="text-[#1F0A58] text-2xl font-medium leading-loose">
+                  Participated
+                </div>
+                <div className="px-6 py-2 bg-white rounded-[100px] inline-flex">
+                  <div className="text-[#1F0A58] font-bricolage text-5xl font-normal leading-[64px]">
+                    264
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="w-fit text-[#1F0A58] text-xl font-medium py-2 md:ml-[-12px] inline-flex ">
-              Outreaches
-            </div>
-          </div>
-          <div className="rounded-r-2xl h-fit px-8 py-4 bg-gradient-to-br from-sky-200 to-neutral-200 justify-start items-end gap-6 flex">
-            <div className="flex-col justify-start items-start gap-6 inline-flex">
-              <div className="text-[#1F0A58] text-2xl font-medium leading-loose">
-                Donated
+              <div className="w-fit text-[#1F0A58] text-xl font-medium py-2 md:ml-[-12px] inline-flex ">
+                Outreaches
               </div>
-              <div className="px-6 py-2 bg-white rounded-[100px] inline-flex">
-                <div className="text-[#1F0A58] font-bricolage text-5xl font-normal leading-[64px]">
-                  1172{" "}
+            </div>
+            <div className="rounded-r-2xl h-fit px-8 py-4 bg-gradient-to-br from-sky-200 to-neutral-200 justify-start items-end gap-6 flex">
+              <div className="flex-col justify-start items-start gap-6 inline-flex">
+                <div className="text-[#1F0A58] text-2xl font-medium leading-loose">
+                  Donated
+                </div>
+                <div className="px-6 py-2 bg-white rounded-[100px] inline-flex">
+                  <div className="text-[#1F0A58] font-bricolage text-5xl font-normal leading-[64px]">
+                    1172{" "}
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="w-fit text-[#1F0A58] text-xl font-medium py-2 md:ml-[-8px] inline-flex">
-              items
+              <div className="w-fit text-[#1F0A58] text-xl font-medium py-2 md:ml-[-8px] inline-flex">
+                items
+              </div>
             </div>
           </div>
         </div>
