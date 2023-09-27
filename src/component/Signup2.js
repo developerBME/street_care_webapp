@@ -1,7 +1,9 @@
-import React, { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "./firebase"; // Importing the auth instance
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import React, { useState, useEffect } from "react";
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth, db } from "./firebase"; // Importing the auth instance
+import { useNavigate } from "react-router-dom";
+import { collection, doc, setDoc } from "firebase/firestore";
+
 
 import { FcGoogle } from "react-icons/fc";
 import { AiFillApple } from "react-icons/ai";
@@ -9,20 +11,69 @@ import { AiFillApple } from "react-icons/ai";
 function Signup2() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [userName, setUserName] = useState("");
+  const navigate = useNavigate();
+
   const [error, setError] = useState(null);
   const [loginSuccess, setLoginSuccess] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      setLoginSuccess("Successfully logged in!");
-      setError(""); // Clearing out any existing error messages
-    } catch (error) {
+const handleSignUp = async (e) => {
+  e.preventDefault();
+  if (!userName) {
+    setError('Username is Mandatory');
+    return;
+  }
+  if (!email || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
+    setError('Enter Valid Email Address');
+    return;
+  }
+  if (!password) {
+    setError('Password is Mandatory');
+    return;
+  }
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const currentUser = userCredential.user;
+
+    const userData = {
+      dateCreated: new Date(),
+      deviceType: 'Web',
+      email: email,
+      isValid: true,
+      //organization: company,
+      username: userName,
+      uid: currentUser.uid
+    };
+
+    //await firestore.collection('users').doc(currentUser.uid).set(userData);
+    const userRef = doc(db, 'users', currentUser.uid);
+    await setDoc(userRef, userData);
+
+
+
+    // Clear inputs or navigate to a different page
+    setUserName('');
+    setEmail('');
+    setPassword('');
+    //setCompany('');
+    setLoginSuccess("Successfully signed up!");
+    setError(""); // Clear out any existing error messages
+
+    setTimeout(() => {
+      navigate("/profile");
+    }, 6000); // Wait for 2 seconds to let the user see the success message
+
+  } catch (error) {
+    if (error.message === "Firebase: Error (auth/email-already-in-use).") {
+      setError("Account already exists, please Log in.");
+    } else {
       setError(error.message);
-      setLoginSuccess(""); // Clearing out any success messages
     }
-  };
+    setLoginSuccess(""); // Clear out any success messages
+  }
+};
+
+
 
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
@@ -30,7 +81,7 @@ function Signup2() {
         <div className=" w-fit mx-2 lg:mx-40 mt-32 mb-16 rounded-2xl bg-white text-black ">
           <div className="items-center justify-center px-4 py-8 lg:px-32 lg:py-20 h-full w-full mx-auto rounded-2xl ">
             {/* form */}
-            <form id="login" onSubmit={handleSubmit}>
+            <form id="login" onSubmit={handleSignUp}>
               <div className="w-fit text-neutral-800 text-5xl font-medium font-bricolage leading-[64px]">
                 Sign up
               </div>
@@ -113,14 +164,17 @@ function Signup2() {
                           id="name"
                           placeholder="Enter your profile name"
                           className="text-zinc-700 w-full h-full px-4 text-[15px] font-normal font-inter leading-snug"
-                          onChange={(e) => setPassword(e.target.value)}
+                          onChange={(e) => setUserName(e.target.value)}
                         ></input>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-
+              <div className="self-stretch text-center mt-4 mb-4">
+                {error && <p className="text-red-500">{error}</p>}
+                {loginSuccess && <p className="text-green-500">{loginSuccess}</p>}
+              </div>
               <div className="self-stretch my-14 h-14 flex-col justify-start items-start gap-4 flex">
                 <div className="self-stretch h-14 px-8 py-4 bg-violet-700 rounded-[100px] justify-center items-center gap-2.5 inline-flex">
                   <button
