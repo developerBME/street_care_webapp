@@ -1,9 +1,10 @@
 import React from "react";
 
-import UserProfileCard from "../UserProfile/UserProfileCard";
+import UserProfileCard from "./UserProfileCard";
 import icon from "../../images/icon.png";
 import add from "../../images/add.png";
-import UserInfo from "../UserProfile/UserInfo";
+import UserInfo from "./UserInfo";
+import axc from "./CommOutForm";
 
 function Profile() {
   const cardData = [
