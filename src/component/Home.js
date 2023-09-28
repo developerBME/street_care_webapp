@@ -1,5 +1,10 @@
-import React, { useState , useEffect} from "react";
-import { getAuth, signInWithPopup, GoogleAuthProvider , onAuthStateChanged} from "firebase/auth";
+import React, { useState, useEffect } from "react";
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+} from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
 import FAQs from "./HomePage/FAQs";
 import Eventcard from "./HomePage/Eventcard";
@@ -10,16 +15,16 @@ import News from "./HomePage/News";
 import Map from "./HomePage/Map";
 import Process from "./HomePage/Process";
 import MoreAboutUs from "./HomePage/MoreAboutUs";
+import Navbar from "./Navbar";
 
 function HomePage() {
   const fAuth = getAuth();
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
   onAuthStateChanged(fAuth, (user) => {
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/auth.user
-      console.log(user)
+      console.log(user);
       // ...
     } else {
       // User is signed out
