@@ -51,8 +51,8 @@ const UserInfo = () => {
     console.log(helped);
   }, [helped]);
   return (
-    <div className="">
-      <div className="flex flex-col pt-0 px-0 pb-2 md:flex md:flex-row md:px-8 md:pt-8 md:pb-8 lg:px-24 lg:pt-16 lg:pb-12">
+    <div className="lg:px-24 lg:py-12 ">
+      <div className="flex flex-col pt-0 px-0 pb-2 md:flex md:flex-row md:px-8  md:pb-8 lg:px-0  lg:pb-12">
         <div className="md:mr-12 lg:mr-12 pr-0 bg-gradient-to-tr from-[#C0F4FF] from-10% via-[#C0F4FF] via-60% to-[#DDD] to-90% bg-fixed rounded-t-2xl md:bg-none">
           <img
             src={user}
@@ -84,7 +84,7 @@ const UserInfo = () => {
           </div>
         </div>
       </div>
-      <div className="px-4 pb-4 grid grid-flow-col overflow-x-auto gap-2 md:px-8 md:pb-12 md:grid md:grid-cols-2 md:grid-rows-3 md:gap-4 lg:px-24 lg:pb-16 lg:grid lg:grid-cols-3 lg:grid-rows-2 lg:gap-4">
+      <div className="px-4 pb-4 grid grid-flow-col overflow-x-auto gap-2 md:px-8 md:pb-12 md:grid md:grid-cols-2 md:grid-rows-3 md:gap-4 lg:px-0 lg:pb-16 lg:grid lg:grid-cols-3 lg:grid-rows-2 lg:gap-4">
         <div className="p-4 h-24 bg-[#DEF6EB] rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
           <img className="w-16 h-16 mr-4" src={crown} alt="..."></img>
           <div className="flex flex-col">
@@ -155,63 +155,66 @@ const UserInfo = () => {
           </div>
         </div>
       </div>
-
       {/* Impact */}
+      <div className="">
+        <p className="text-neutral-800 text-[28px] font-medium font-bricolage leading-9">
+          My Impact
+        </p>
+        <div className="w-full h-fit justify-center items-center lg:justify-start lg:items-start  grid grid-cols-3 sm:grid-cols-1 lg:grid-cols-3 font-bricolage py-6 px-2 md:px-8 lg:px-0 md:pt-8 md:pb-8  lg:pt-16 lg:pb-12">
+          {/*  */}
+          <div className=" sm:flex grow rounded-l-2xl sm:rounded-t-2xl lg:rounded-tr-none lg:rounded-l-2xl shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-emerald-100 to-neutral-200 justify-center items-center sm:justify-start sm:items-end gap-6 ">
+            <div className=" w-full sm:w-fit flex-col  justify-center items-center sm:justify-start sm:items-start sm:gap-6 inline-flex">
+              <div className="text-violet-950 text-xs sm:text-2xl font-semibold leading-loose font-inter">
+                Helped
+              </div>
 
-      <div className="w-full h-fit justify-start items-start  grid grid-cols-3 sm:grid-cols-1 lg:grid-cols-3 font-bricolage py-6 px-2 md:px-8 md:pt-8 md:pb-8 lg:px-24 lg:pt-16 lg:pb-12">
-        {/*  */}
-        <div className=" sm:flex grow rounded-l-2xl sm:rounded-t-2xl lg:rounded-tr-none lg:rounded-l-2xl shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-emerald-100 to-neutral-200 justify-start items-end gap-6 ">
-          <div className="flex-col justify-center items-center sm:justify-start sm:items-start gap-6 inline-flex">
-            <div className="text-violet-950 text-xs sm:text-2xl font-medium leading-loose">
-              Helped
-            </div>
-
-            <div className="sm:px-8 sm:py-2 sm:bg-white rounded-[100px] inline-flex">
-              <div className="text-violet-950 font-bricolage text-3xl sm:text-5xl font-normal leading-[64px]">
-                {helped}
+              <div className=" w-full justify-center sm:justify-start  sm:px-8 sm:py-2 sm:bg-white rounded-[100px] inline-flex">
+                <div className="  text-violet-950 font-bricolage text-3xl sm:text-5xl font-normal leading-[64px] ">
+                  {helped}
+                </div>
               </div>
             </div>
-          </div>
-          <div className="w-fit text-violet-950 text-xs sm:text-xl font-medium sm:py-2 md:ml-[-8px] inline-flex">
-            People
-          </div>
-        </div>
-        {/*  */}
-
-        <div className=" sm:flex grow shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-purple-300 to-zinc-200 justify-center items-center sm:justify-start sm:items-end gap-6 ">
-          <div className="flex-col  gap-6 inline-flex">
-            <div className="text-violet-950 text-xs sm:text-2xl font-medium leading-loose">
-              Joined
+            <div className="w-full  justify-center sm:justify-start text-violet-950 text-xs sm:text-xl font-semibold sm:py-2 md:ml-[-8px] inline-flex">
+              People
             </div>
-            <div className="sm:px-8 sm:py-2 sm:bg-white rounded-[100px] inline-flex">
-              <div className="text-violet-950 font-bricolage text-3xl sm:text-5xl font-normal leading-[64px]">
-                {outreaches}
+          </div>
+          {/*  */}
+
+          <div className=" sm:flex grow shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-purple-300 to-zinc-200 justify-center items-center sm:justify-start sm:items-end gap-6 ">
+            <div className=" w-full sm:w-fit flex-col justify-center items-center sm:justify-start sm:items-start  sm:gap-6 inline-flex">
+              <div className="text-violet-950 text-xs sm:text-2xl  font-semibold leading-loose font-inter">
+                Joined
+              </div>
+              <div className="sm:px-8 sm:py-2 sm:bg-white rounded-[100px] inline-flex">
+                <div className="text-violet-950 font-bricolage text-3xl sm:text-5xl font-normal leading-[64px]">
+                  {outreaches}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="w-fit text-violet-950 text-xs sm:text-xl font-medium sm:py-2 md:ml-[-12px] inline-flex ">
-            Outreaches
-          </div>
-        </div>
-        {/*  */}
-
-        <div className=" sm:flex grow sm:rounded-br-2xl rounded-bl-none sm:rounded-b-2xl rounded-r-2xl sm:rounded-r-none lg:rounded-r-2xl  lg:rounded-bl-none shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-sky-200 to-neutral-200 justify-start items-end gap-6 ">
-          <div className="flex-col justify-center items-center sm:justify-start sm:items-start gap-6 inline-flex">
-            <div className="text-violet-950 text-xs sm:text-2xl font-medium leading-loose">
-              Donated
+            <div className="w-full justify-center sm:justify-start text-violet-950 text-xs sm:text-xl font-semibold sm:py-2 md:ml-[-12px] inline-flex ">
+              Outreaches
             </div>
-            <div className="sm:px-8 sm:py-2 sm:bg-white rounded-[100px] inline-flex">
-              <div className="text-violet-950 font-bricolage text-3xl sm:text-5xl font-normal leading-[64px]">
-                72
+          </div>
+          {/*  */}
+
+          <div className=" sm:flex grow sm:rounded-br-2xl rounded-bl-none sm:rounded-b-2xl rounded-r-2xl sm:rounded-r-none lg:rounded-r-2xl  lg:rounded-bl-none shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-sky-200 to-neutral-200 justify-start items-end gap-6 ">
+            <div className=" w-full sm:w-fit flex-col justify-center items-center sm:justify-start sm:items-start sm:gap-6 inline-flex">
+              <div className="text-violet-950 text-xs sm:text-2xl font-semibold leading-loose font-inter">
+                Donated
+              </div>
+              <div className="sm:px-8 sm:py-2 sm:bg-white rounded-[100px] inline-flex">
+                <div className="text-violet-950 font-bricolage text-3xl sm:text-5xl font-normal leading-[64px]">
+                  72
+                </div>
               </div>
             </div>
+            <div className="w-full justify-center sm:justify-start  text-violet-950 text-xs sm:text-xl font-semibold sm:py-2 md:ml-[-8px] inline-flex">
+              items
+            </div>
           </div>
-          <div className="w-fit text-violet-950 text-xs sm:text-xl font-medium sm:py-2 md:ml-[-8px] inline-flex">
-            items
-          </div>
+          {/*  */}
         </div>
-        {/*  */}
       </div>
     </div>
   );
