@@ -83,8 +83,8 @@ function Profile() {
         </div>
 
         <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black mb-10">
-          <div className="flex flex-col gap-4 lg:gap-14 lg:p-28 pt-4 pb-4 pl-4">
-            <div className="inline-flex flex-col sm:flex-row lg:space-x-16">
+          <div className="flex flex-col gap-4 lg:gap-14 lg:p-28 pt-4 pb-4 ">
+            <div className="inline-flex flex-col sm:flex-row lg:space-x-16 pl-4">
               <div class="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage leading-[52px]">
                 My Outreaches
               </div>
@@ -95,9 +95,9 @@ function Profile() {
                 </button>
               </div>
             </div>
-            <div className=" hidden sm:block">
+            <div className="  hidden sm:block">
               <div className="w-full inline-flex bg-[#F2F6D8] p-4 rounded-xl space-x-4">
-                <div className="text-neutral-800 text-[16px] font-medium font-['Bricolage Grotesque'] leading-loose">
+                <div className="text-neutral-800 text-[16px] font-medium font-bricolage leading-loose">
                   Congratulations! You have attended more than 1 outreach event.
                   Now you can host your own.
                 </div>
@@ -110,7 +110,7 @@ function Profile() {
               </div>
             </div>
             <div className="sm:hidden overflow-x-auto">
-              <div className="flex space-x-4 lg:p-4">
+              <div className="flex space-x-4 lg:p-4 pl-4">
                 {cardData.map((cardData, index) => (
                   <div key={index}>
                     <UserProfileCard cardData={cardData} />

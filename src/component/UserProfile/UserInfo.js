@@ -60,15 +60,17 @@ const UserInfo = () => {
             className="rounded-full md:h-56 md:w-56 lg:w-60 lg:h-60 border-none md:mt-12 h-32 w-32 mx-auto mt-8 mb-4 "
           />
         </div>
-        <div className="px-4 py-4 md:mt-12 lg:mt-20">
-          <h1 className="font-bricolage md:text-[52px] font-medium md:h-16 text-[#212121] h-12 text-4xl">
-            Mandy Klose
-          </h1>
-          <h3 className="py-4 text-[#212121] font-bricolage text-sm pt-0">
-            Joined 12/20/23
-          </h3>
+        <div className="py-4 md:mt-12 lg:mt-20">
+          <div className="px-4">
+            <h1 className="font-bricolage md:text-[52px] font-medium md:h-16 text-[#212121] h-12 text-4xl">
+              Mandy Klose
+            </h1>
+            <h3 className="py-4 text-[#212121] font-bricolage text-sm pt-0">
+              Joined 12/20/23
+            </h3>
+          </div>
 
-          <div className="pb-2 flex overflow-x-auto md:grid md:grid-rows-2 md:grid-cols-2 md:gap-y-2 lg:flex lg:flex-wrap">
+          <div className=" w-full px-4 pb-2 flex overflow-x-auto md:grid  md:grid-cols-2 md:gap-y-2 lg:flex lg:flex-wrap">
             <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold">
               <h6 className="text-[#212121] w-[130px]">Spanish Speaker</h6>
             </div>
