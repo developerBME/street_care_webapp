@@ -2,6 +2,9 @@ import React from "react";
 
 import Landing from "../HomePage/Landing";
 import Success from "../HomePage/Success";
+import OutreachEventCard from "./OutreachEventCard";
+import arrowDown from "../../images/arrowDown.png";
+import CommunityOutreachEvent from "./CommunityOutreachEvent";
 
 function Community() {
   return (
@@ -15,8 +18,7 @@ function Community() {
         </div>
         {/* Vishnu */}
         <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
-          <Success />
-          {/* Remove this component and create a new one for your code  */}
+          <CommunityOutreachEvent/>
         </div>
         <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
           <Success />
