@@ -5,7 +5,7 @@ import wavingHand from "../../images/waving_hand.png"
 
 const OutreachEventCard = () => {
     return(
-        <div className="bg-[#F5EEFE] w-full rounded-2xl">
+        <div className="bg-[#F5EEFE] w-full rounded-2xl mb-4">
             <div className="inline-flex items-center px-6 pt-9 pb-3 space-x-2">
                 <img src={userImg} className="w-9 h-9 rounded-full"/>
                 <div className="font-normal font-['Inter'] text-[15px] ">William Smith</div>
