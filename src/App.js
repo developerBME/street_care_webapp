@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 
 import Home from "./component/Home";
 import NavBar from "./component/Navbar";
@@ -11,10 +12,11 @@ import Community from "./component/Community/Community";
 import About from "./component/About/About";
 import Contact from "./component/Contact/Contact";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import React, { useEffect, useState } from "react";
 import CommOutForm from "./component/UserProfile/CommOutForm";
 import PersonalOutForm from "./component/UserProfile/PersonalOutForm";
 import Documenting from "./component/UserProfile/Documenting";
+import OutreachSignup from "./component/Community/OutreachSignup";
+
 
 function App() {
   const fAuth = getAuth();
@@ -47,6 +49,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/documenting" element={<Documenting />} />
           <Route path="/profile/commoutform" element={<CommOutForm />} />
+          <Route path="/outreachsignup" element={<OutreachSignup />} />
           <Route
             path="/profile/personaloutform"
             element={<PersonalOutForm />}
