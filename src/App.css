@@ -52,3 +52,33 @@
 .font-roboto {
   font-family: "Roboto", sans-serif;
 }
+
+
+/* Community Hub */
+.banner1{
+  background-image: url("./images/community_bg1.png");
+}
+.banner2{
+  background-image: url("./images/community_bg2.png");
+}
+.middle{
+  position: relative;
+}
+.middle:before{
+  content: '';
+  border: 1px solid #F2F2F2;
+  position: absolute;
+  z-index: 999;
+  height: 70px;
+  left: 0;
+  top: 30%;
+}
+.middle:after{
+  content: '';
+  border: 1px solid #F2F2F2;
+  position: absolute;
+  z-index: 999;
+  height: 70px;
+  right: 0;
+  top: 30%;
+}

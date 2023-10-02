@@ -6,6 +6,7 @@ import OutreachEventCard from "./OutreachEventCard";
 import arrowDown from "../../images/arrowDown.png";
 import CommunityOutreachEvent from "./CommunityOutreachEvent";
 import HelpRequest from "./HelpRequest";
+import Banner from "./Banner";
 
 function Community() {
   return (
@@ -14,7 +15,7 @@ function Community() {
         {/* Shivani */}
         <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-32 rounded-2xl bg-white text-black ">
           {" "}
-          <Landing />
+          <Banner />
           {/* Remove this component and create a new one for your code  */}
         </div>
         {/* Vishnu */}
