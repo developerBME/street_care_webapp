@@ -23,11 +23,15 @@ const CommunityOutreachEvent = () => {
         </div>
 
         <div className="inline-flex cursor-pointer gap-3 items-center">
-          <div className="font-medium text-[8px] lg:text-[13px] font-bricolage">View all</div>
+          <div className="font-medium text-[8px] lg:text-[13px] font-bricolage">
+            View all
+          </div>
           <img src={arrowRight} className="w-2 h-2 lg:w-4 lg:h-4 " />
         </div>
       </div>
-      <div className="p-6 lg:px-28 lg:py-12 space-y-9"> {/* Changed the padding here*/}
+      <div className="p-4 lg:px-28 lg:py-12 space-y-9">
+        {" "}
+        {/* Changed the padding here*/}
         <div className="inline-flex gap-4">
           <div className="font-medium text-[15px] lg:text-[28px] text-[#1F0A58] font-bricolage">
             Upcoming Outreach Events
@@ -36,12 +40,27 @@ const CommunityOutreachEvent = () => {
             Create an Outreach
           </button>
         </div>
+        {/*
         <div className="w-full inline-flex flex-col items-center sm:inline-flex sm:flex-row sm:space-x-4">
             <OutreachEventCard />
             <OutreachEventCard />
             <OutreachEventCard />
         </div>
+  */}
+  <div className="w-full inline-flex flex-col items-center sm:inline-flex sm:flex-row sm:space-x-4 hidden sm:block">
+          <OutreachEventCard />
+          <OutreachEventCard />
+          <OutreachEventCard />
+        </div>
 
+        
+        <div className="overflow-x-scroll sm:overflow-x-hidden block sm:hidden">
+          <div className="w-fit lg:w-full flex space-x-4">
+            <OutreachEventCard />
+            <OutreachEventCard />
+            <OutreachEventCard />
+          </div>
+        </div>
       </div>
     </div>
   );
