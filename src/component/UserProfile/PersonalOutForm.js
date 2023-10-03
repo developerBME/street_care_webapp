@@ -1,10 +1,17 @@
 import React from "react";
-import { useRef, useState } from "react";
-
+import { useState, useRef, useEffect } from "react";
 import Rating from "@mui/material/Rating";
 import { IoIosArrowBack, IoIosArrowDown } from "react-icons/io";
 import { AiOutlineStar, AiTwotoneStar, AiFillStar } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../firebase";
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+} from "firebase/auth";
 
 const starStyle = {
   width: 60,
@@ -12,11 +19,133 @@ const starStyle = {
 };
 
 function PersonalOutForm() {
-  const ratingChanged = (newRating) => {
-    console.log(newRating);
+  const navigate = useNavigate();
+  // const ratingChanged = (newRating) => {
+  //   console.log(newRating);
+  // };
+  const helpedName = useRef("");
+  const date = useRef("");
+  const time = useRef("");
+  const cityRef = useRef("");
+  const stateRef = useRef("");
+  const checkboxes = useRef([]);
+  const [itemArray, setItemArray] = useState([]);
+  const [rating, setRating] = useState(0);
+  const [success, setSuccess] = useState(false);
+  const [stateList, setStateList] = useState({});
+  const [stateNames, setStateNames] = useState([]);
+  const [cityNames, setCityNames] = useState([]);
+  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
+  {
+    /* Firebase */
+  }
+  const fAuth = getAuth();
+  onAuthStateChanged(fAuth, (user) => {
+    if (user) {
+      console.log("Found user");
+    } else {
+      console.log("USER NOT FOUND!");
+      navigate("/login");
+    }
+  });
+
+  useEffect(() => {
+    async function getStates() {
+      const response = await fetch(
+        "https://parseapi.back4app.com/classes/Usabystate_States?keys=name,postalAbreviation",
+        {
+          headers: {
+            "X-Parse-Application-Id":
+              "vahnMBqbmIbxOw8R3qtsEMoYrZMljfClGvc1aMyp",
+            "X-Parse-REST-API-Key": "LBjkDrxuUKEfb8liRPgZyv1Lu5WsPIvTx2FWgTpi",
+          },
+        }
+      );
+      const data = await response.json();
+
+      const filteredData = data.results?.map((x) => {
+        return x.name;
+      });
+      setStateList(data.results);
+      setStateNames(filteredData);
+    }
+    getStates();
+  }, []);
+
+  async function getCities(e) {
+    const stateCode = stateList.filter((x) => x.name == e.target.value)[0]
+      .postalAbreviation;
+    const response = await fetch(
+      "https://parseapi.back4app.com/classes/Usabystate_" +
+        stateCode +
+        "?limit=1000&keys=name",
+      {
+        headers: {
+          "X-Parse-Application-Id": "vahnMBqbmIbxOw8R3qtsEMoYrZMljfClGvc1aMyp",
+          "X-Parse-REST-API-Key": "LBjkDrxuUKEfb8liRPgZyv1Lu5WsPIvTx2FWgTpi",
+        },
+      }
+    );
+    const data = await response.json();
+    const filteredData = data.results?.map((x) => {
+      return x.name;
+    });
+    console.log("Unfiltered: " + data.results.length);
+    console.log("Filtered: " + filteredData.length);
+    setState(e.target.value);
+    setCityNames(filteredData);
+  }
+
+  function handleItemArray(e) {
+    if (e.target.checked) {
+      setItemArray([...itemArray, e.target.value]);
+    } else {
+      setItemArray(itemArray.filter((item) => item !== e.target.value));
+    }
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    let obj = {
+      uid: fAuth.currentUser.uid,
+      name: helpedName.current.value,
+      whatGiven: itemArray,
+      date: date.current.value,
+      time: time.current.value,
+      state: state,
+      city: city,
+      rating: rating,
+    };
+
+    try {
+      const logRef = collection(db, "testLog");
+      const docRef = await addDoc(logRef, obj);
+      if (docRef.id) {
+        console.log(docRef.id);
+        setSuccess(true);
+        clearFields();
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
-  const [value, setValue] = useState(0);
+  const clearFields = () => {
+    date.current.value = "";
+    helpedName.current.value = "";
+    setItemArray([]);
+    checkboxes.current.forEach((x) => {
+      x.checked = false;
+    });
+    time.current.value = "";
+    setRating(0);
+    setState("");
+    setCity("");
+    cityRef.current.value = "";
+    stateRef.current.value = "";
+  };
+
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center ">
@@ -56,7 +185,8 @@ function PersonalOutForm() {
                           id="name"
                           placeholder="Name"
                           className="text-zinc-900 w-full h-full pl-4 rounded-[4px] border border-zinc-500 text-base  font-normal font-roboto leading-normal tracking-wide"
-                          // onChange={(e) => setEmail(e.target.value)}
+                          required={true}
+                          ref={helpedName}
                         ></input>
                       </div>
                     </div>
@@ -77,9 +207,11 @@ function PersonalOutForm() {
                       <input
                         type="checkbox"
                         id="food-option"
-                        value=""
+                        value="Food and Drink"
                         class="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
+                        ref={(el) => (checkboxes.current[0] = el)}
+                        onChange={handleItemArray}
                       ></input>
                       <label
                         for="food-option"
@@ -97,9 +229,11 @@ function PersonalOutForm() {
                       <input
                         type="checkbox"
                         id="clothing-option"
-                        value=""
+                        value="Clothing"
                         class="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
+                        ref={(el) => (checkboxes.current[1] = el)}
+                        onChange={handleItemArray}
                       ></input>
                       <label
                         for="clothing-option"
@@ -116,9 +250,11 @@ function PersonalOutForm() {
                       <input
                         type="checkbox"
                         id="hygiene-option"
-                        value=""
+                        value="Hygiene Products"
                         class="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
+                        ref={(el) => (checkboxes.current[2] = el)}
+                        onChange={handleItemArray}
                       ></input>
                       <label
                         for="hygiene-option"
@@ -134,9 +270,11 @@ function PersonalOutForm() {
                       <input
                         type="checkbox"
                         id="wellness-option"
-                        value=""
+                        value="Wellness/ Emotional Support"
                         class="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
+                        ref={(el) => (checkboxes.current[3] = el)}
+                        onChange={handleItemArray}
                       ></input>
                       <label
                         for="wellness-option"
@@ -154,7 +292,9 @@ function PersonalOutForm() {
                         id="medical-option"
                         value=""
                         class="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
-                        required=""
+                        required="Medical Help"
+                        ref={(el) => (checkboxes.current[4] = el)}
+                        onChange={handleItemArray}
                       ></input>
                       <label
                         for="medical-option"
@@ -172,9 +312,11 @@ function PersonalOutForm() {
                       <input
                         type="checkbox"
                         id="social-option"
-                        value=""
+                        value="Social Worker /Psychiatrist"
                         class="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
+                        ref={(el) => (checkboxes.current[5] = el)}
+                        onChange={handleItemArray}
                       ></input>
                       <label
                         for="social-option"
@@ -191,9 +333,11 @@ function PersonalOutForm() {
                       <input
                         type="checkbox"
                         id="legal-option"
-                        value=""
+                        value="Legal/Lawyer"
                         class="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
+                        ref={(el) => (checkboxes.current[6] = el)}
+                        onChange={handleItemArray}
                       ></input>
                       <label
                         for="legal-option"
@@ -209,9 +353,11 @@ function PersonalOutForm() {
                       <input
                         type="checkbox"
                         id="other-option"
-                        value=""
+                        value="Other"
                         class="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
+                        ref={(el) => (checkboxes.current[7] = el)}
+                        onChange={handleItemArray}
                       ></input>
                       <label
                         for="other-option"
@@ -234,7 +380,7 @@ function PersonalOutForm() {
                   <div className="self-stretch w-full h-fit flex-col  flex ">
                     <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
                       <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
-                        Area
+                        State
                       </div>
                     </div>
                     <div className="self-stretch h-fit  border-collapse     ">
@@ -242,17 +388,60 @@ function PersonalOutForm() {
                         <select
                           className="text-zinc-900  w-full h-full px-4 rounded-[4px] border border-zinc-500 text-base font-normal font-roboto leading-normal tracking-wide"
                           defaultValue=""
+                          ref={stateRef}
+                          onChange={getCities}
                         >
                           <option value="" disabled>
                             Please select from the list
                           </option>
-                          <option className="w-fit" value="outreach">
-                            area 1
+                          {stateNames &&
+                            stateNames.map((stateName, index) => {
+                              return (
+                                <option
+                                  className="w-fit"
+                                  value={stateName}
+                                  key={"state_" + index}
+                                >
+                                  {stateName}
+                                </option>
+                              );
+                            })}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="self-stretch w-full h-fit flex-col  flex ">
+                    <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
+                      <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
+                        City
+                      </div>
+                    </div>
+                    <div className="self-stretch h-fit  border-collapse     ">
+                      <div className=" h-14 inline-flex w-full">
+                        <select
+                          className="text-zinc-900  w-full h-full px-4 rounded-[4px] border border-zinc-500 text-base font-normal font-roboto leading-normal tracking-wide"
+                          defaultValue=""
+                          disabled={!cityNames}
+                          ref={cityRef}
+                          onChange={(e) => {
+                            setCity(e.target.value);
+                          }}
+                        >
+                          <option value="" disabled>
+                            Please select from the list
                           </option>
-                          <option value="outreach2">are two</option>
-                          <option value="outreach2">area two</option>
-                          <option value="outreach2">area two</option>
-                          <option value="outreach2">area two</option>
+                          {cityNames &&
+                            cityNames.map((cityName, index) => {
+                              return (
+                                <option
+                                  className="w-fit"
+                                  value={cityName}
+                                  key={"city_" + index}
+                                >
+                                  {cityName}
+                                </option>
+                              );
+                            })}
                         </select>
                       </div>
                     </div>
@@ -279,7 +468,7 @@ function PersonalOutForm() {
                             id="-itemnumber"
                             placeholder="Number"
                             className="text-zinc-900 w-full h-full pl-4 rounded-[4px] border border-zinc-500 text-base  font-normal font-roboto leading-normal tracking-wide"
-                            // onChange={(e) => setEmail(e.target.value)}
+                            ref={date}
                           ></input>
                         </div>
                       </div>
@@ -298,24 +487,13 @@ function PersonalOutForm() {
                             id="-itemnumber"
                             placeholder="Number"
                             className="text-zinc-900 w-full h-full pl-4 rounded-[4px] border border-zinc-500 text-base  font-normal font-roboto leading-normal tracking-wide"
-                            // onChange={(e) => setEmail(e.target.value)}
+                            ref={time}
                           ></input>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                {/*  */}
-                <div className="justify-start items-start gap-4 inline-flex">
-                  <div className="justify-start items-start gap-4 flex">
-                    <div className="px-8 py-4 bg-violet-700 rounded-[100px] justify-center items-center gap-2.5 flex">
-                      <div className="text-center text-stone-100 text-lg font-semibold font-open-sans leading-normal">
-                        Done
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {/*  */}
 
                 <div className="self-stretch grow shrink basis-0 px-8 pt-[54px] pb-[55px] bg-stone-50 rounded-[30px] border border-stone-300 flex-col justify-start items-center gap-[29px] flex">
                   <div className="self-stretch text-center text-black text-[22px] font-bold font-bricolage leading-7">
@@ -328,14 +506,35 @@ function PersonalOutForm() {
                         <AiFillStar className=" w-10 h-10 text-yellow-300 " />
                       }
                       emptyIcon={<AiOutlineStar className=" w-10 h-10" />}
-                      value={value}
+                      value={rating}
                       size={"large"}
                       onChange={(event, newValue) => {
-                        setValue(newValue);
+                        setRating(newValue);
                       }}
                     />
                   </div>
                 </div>
+                {/*  */}
+                <div className="justify-start items-start gap-4 inline-flex">
+                  <div className="justify-start items-start gap-4 flex">
+                    <div
+                      className="px-8 py-4 bg-violet-700 rounded-[100px] justify-center items-center gap-2.5 flex"
+                      onClick={handleSubmit}
+                    >
+                      <div className="text-center text-stone-100 text-lg font-semibold font-open-sans leading-normal">
+                        Done
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {/*  */}
+                {success && (
+                  <div className="justify-start items-start gap-4 inline-flex">
+                    <div className="justify-start items-start gap-4 flex">
+                      Success!
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
