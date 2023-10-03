@@ -3,7 +3,34 @@ import OutreachEventCard from "./OutreachEventCard";
 import arrowDown from "../../images/arrowDown.png";
 import arrowRight from "../../images/arrowRight.png";
 
+
+
 const CommunityOutreachEvent = () => {
+
+    const cardData = [
+        {
+            name:"William Smith",
+            eventName: "BK Fort Green Outreach",
+            eventDate: "Sept 9, 2023 SAT 5:00pm",
+            location:"200 Eastern Pkwy, Brooklyn, NY 11238",
+            req:"Childcare Specialist needed"
+        },
+        {
+            name:"William Smith",
+            eventName: "BK Fort Green Outreach",
+            eventDate: "Sept 9, 2023 SAT 5:00pm",
+            location:"200 Eastern Pkwy, Brooklyn, NY 11238",
+            req:"Childcare Specialist needed"
+        },
+        {
+            name:"William Smith",
+            eventName: "BK Fort Green Outreach",
+            eventDate: "Sept 9, 2023 SAT 5:00pm",
+            location:"200 Eastern Pkwy, Brooklyn, NY 11238",
+            req:"Childcare Specialist needed"
+        },
+    ];
+
   return (
     <div>
       <div className="w-full flex justify-between rounded-t-xl items-center space-x-2 bg-gradient-to-br from-purple-300 to-zinc-200 p-4 lg:px-28 lg:py-12">
@@ -47,20 +74,18 @@ const CommunityOutreachEvent = () => {
             <OutreachEventCard />
         </div>
   */}
-  <div className="w-full inline-flex flex-col items-center sm:inline-flex sm:flex-row sm:space-x-4 hidden sm:block">
-          <OutreachEventCard />
-          <OutreachEventCard />
-          <OutreachEventCard />
+        <div className="w-full inline-flex flex-col items-center sm:inline-flex sm:flex-row sm:space-x-4 hidden sm:block">
+            {cardData.map((item, index)=>(
+                <OutreachEventCard key={index} cardData={item} />
+        ))}
         </div>
-
-        
         <div className="overflow-x-scroll sm:overflow-x-hidden block sm:hidden">
           <div className="w-fit lg:w-full flex space-x-4">
-            <OutreachEventCard />
-            <OutreachEventCard />
-            <OutreachEventCard />
+          {cardData.map((item, index)=>(
+            <OutreachEventCard key={index} cardData={item} />
+    ))}
           </div>
-        </div>
+            </div>
       </div>
     </div>
   );

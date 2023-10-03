@@ -16,6 +16,7 @@ import Map from "./HomePage/Map";
 import Process from "./HomePage/Process";
 import MoreAboutUs from "./HomePage/MoreAboutUs";
 import Navbar from "./Navbar";
+import OutreachEventCard from "./Community/OutreachEventCard";
 
 function HomePage() {
   const fAuth = getAuth();
@@ -31,6 +32,30 @@ function HomePage() {
       // ...
     }
   });
+
+  const cardData = [
+    {
+        name:"William Smith",
+        eventName: "BK Fort Green Outreach",
+        eventDate: "Sept 9, 2023 SAT 5:00pm",
+        location:"200 Eastern Pkwy, Brooklyn, NY 11238",
+        req:"Childcare Specialist needed"
+    },
+    {
+        name:"William Smith",
+        eventName: "BK Fort Green Outreach",
+        eventDate: "Sept 9, 2023 SAT 5:00pm",
+        location:"200 Eastern Pkwy, Brooklyn, NY 11238",
+        req:"Childcare Specialist needed"
+    },
+    {
+        name:"William Smith",
+        eventName: "BK Fort Green Outreach",
+        eventDate: "Sept 9, 2023 SAT 5:00pm",
+        location:"200 Eastern Pkwy, Brooklyn, NY 11238",
+        req:"Childcare Specialist needed"
+    },
+];
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center ">
@@ -48,13 +73,19 @@ function HomePage() {
               {" "}
               Upcoming outreach events
             </p>
-            <div className=" w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+            {/*<div className=" w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
               <Eventcard />
               <Eventcard />
               <div className=" md:col-span-2 lg:col-span-1">
                 <Eventcard />
               </div>
+  </div> */}
+            <div className=" w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+            {cardData.map((item, index)=>(
+              <OutreachEventCard key={index} cardData={item} />
+      ))}
             </div>
+            
           </div>
         </div>
         {/* Vishnu */}
