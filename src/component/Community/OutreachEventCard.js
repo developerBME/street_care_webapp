@@ -2,6 +2,7 @@ import React from "react"
 import userImg from "../../images/user.jpeg"
 import verifiedImg from "../../images/verified_purple.png"
 import wavingHand from "../../images/waving_hand.png"
+import CustomButton from "../Buttons/CustomButton";
 
 const OutreachEventCard = ({cardData}) => {
     const {name,eventName,eventDate,location,req} = cardData
@@ -23,7 +24,7 @@ const OutreachEventCard = ({cardData}) => {
                 </div>
             </div>
             <div className="flex items-center justify-between px-5 pt-2 pb-4 gap-16">
-                <button className="font-semibold text-[11px] text-[#181818] rounded-full px-4 py-2 bg-[#E6DCFF]">RSVP</button>
+                <CustomButton label="RSVP" name="buttonlight" />
                 <div className="font-normal font-['Inter'] text-[12px]">Open Spots: 8/20</div>
     </div> 
         </div>

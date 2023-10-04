@@ -1,3 +1,5 @@
+import CustomButton from "../Buttons/CustomButton";
+
 const News = () => {
   return (
     <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
@@ -74,10 +76,9 @@ const News = () => {
           </div>
         </article>
       </div>
-      <button className="bg-violet-600 rounded-full w-32 px-4 py-3 mt-16 text-white hover:bg-opacity-80 font-inter">
-
-        More News
-      </button>
+      <div className="mt-16">
+        <CustomButton label="More News" name="buttondefault" />
+      </div>
     </div>
   );
 };

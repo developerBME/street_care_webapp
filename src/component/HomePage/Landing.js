@@ -2,6 +2,7 @@ import React from "react";
 import one from "../../images/one.png";
 import two from "../../images/two.png";
 import three from "../../images/three.png";
+import CustomButton from "../Buttons/CustomButton";
 
 function Landing() {
   return (
@@ -20,10 +21,9 @@ function Landing() {
             Make a difference.
           </p>
         </p>
-
-        <button class=" bg-violet-700 text-base text-white font-normal py-3 px-6 mt-12 mb-6 lg:mb-0 rounded-full">
-          Browse Outreach Events
-        </button>
+        <div className="mt-12 mb-6 lg:mb-0">
+          <CustomButton label="Browse Outreach Events" name="buttondefault" />
+        </div>
       </div>
       <div className=" grid grid-cols-1 gap-y-4">
         <div className=" grid grid-cols-5 gap-x-4">
