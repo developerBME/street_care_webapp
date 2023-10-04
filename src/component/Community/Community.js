@@ -22,10 +22,6 @@ function Community() {
         <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
           <CommunityOutreachEvent />
         </div>
-        <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
-          <Success />
-          {/* Remove this component and create a new one for your code  */}
-        </div>
         {/* Aniket */}
         <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-8 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
           <HelpRequest />

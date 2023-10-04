@@ -23,7 +23,7 @@ const OutreachEventCard = ({cardData}) => {
                     <div className="font-normal font-['Inter'] text-[12px] text-[#181818]">{req}</div>
                 </div>
             </div>
-            <div className="flex items-center justify-between px-5 pt-2 pb-4 gap-16">
+            <div className="flex items-center justify-between px-5 pt-2 pb-4">
                 <CustomButton label="RSVP" name="buttonlight" />
                 <div className="font-normal font-['Inter'] text-[12px]">Open Spots: 8/20</div>
     </div> 
