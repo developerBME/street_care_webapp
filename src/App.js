@@ -16,7 +16,7 @@ import CommOutForm from "./component/UserProfile/CommOutForm";
 import PersonalOutForm from "./component/UserProfile/PersonalOutForm";
 import Documenting from "./component/UserProfile/Documenting";
 import OutreachSignup from "./component/Community/OutreachSignup";
-
+import CreateOutreach from "./component/Community/CreateOutreach";
 
 function App() {
   const fAuth = getAuth();
@@ -50,6 +50,7 @@ function App() {
           <Route path="/profile/documenting" element={<Documenting />} />
           <Route path="/profile/commoutform" element={<CommOutForm />} />
           <Route path="/outreachsignup" element={<OutreachSignup />} />
+          <Route path="/createOutreach" element={<CreateOutreach />} />
           <Route
             path="/profile/personaloutform"
             element={<PersonalOutForm />}

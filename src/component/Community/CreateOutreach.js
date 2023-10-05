@@ -4,7 +4,7 @@ import Landing from "../HomePage/Landing";
 import Form from "./Form";
 import arrowBack from "../../images/arrowBack.png";
 
-function Community() {
+function CreateOutreach() {
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center ">
@@ -36,4 +36,4 @@ function Community() {
   );
 }
 
-export default Community;
+export default CreateOutreach;
