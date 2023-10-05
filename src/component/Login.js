@@ -7,6 +7,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { AiFillApple } from "react-icons/ai";
 
+import { handleGoogleSignIn, handleFacebookSignIn, handleTwitterSignIn } from "./Signup2"
+
+
 function Login() {
   const navigate = useNavigate();
 
@@ -54,16 +57,36 @@ function Login() {
               <div className=" h-fit mt-14 flex flex-col justify-start items-start gap-9 ">
                 <div className="flex-col justify-start items-start gap-4 flex">
                   <div className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200">
-                    <div className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal">
+                    <div className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal" onClick={handleGoogleSignIn}>
+                    <button
+                      type="submit"
+                    >
                       Continue with Google
+                    </button>
                     </div>
                     <div className="w-8 h-8 left-[22.50px] top-[12px] absolute">
                       <FcGoogle size={32} />
                     </div>
                   </div>
                   <div className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200">
-                    <div className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal">
-                      Continue with Apple
+                    <div className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal" onClick={handleFacebookSignIn}>
+                    <button
+                      type="submit"
+                    >
+                      Continue with Facebook
+                    </button>
+                    </div>
+                    <div className="w-8 h-8 left-[22.50px] top-[12px] absolute">
+                      <FcGoogle size={32} />
+                    </div>
+                  </div>
+                  <div className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200">
+                    <div className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal" onClick={handleTwitterSignIn}>
+                    <button
+                      type="submit"
+                    >  
+                      Continue with Twitter
+                      </button>
                     </div>
                     <div className="w-8 h-8 left-[22.50px] top-[12px] absolute">
                       <AiFillApple size={32} />
