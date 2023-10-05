@@ -176,10 +176,10 @@ const handleSignUp = async (e) => {
                 {loginSuccess && <p className="text-green-500">{loginSuccess}</p>}
               </div>
               <div className="self-stretch my-14 h-14 flex-col justify-start items-start gap-4 flex">
-                <div className="self-stretch h-14 px-8 py-4 bg-violet-700 rounded-[100px] justify-center items-center gap-2.5 inline-flex">
+                <div className="self-stretch justify-center items-center gap-2.5 inline-flex">
                   <button
                     type="submit"
-                    className="grow shrink basis-0 text-center text-neutral-100 text-lg font-semibold font-inter leading-normal"
+                    className="grow shrink basis-0 h-14 px-8 py-4 bg-violet-700 rounded-[100px] text-center text-neutral-100 text-lg font-semibold font-inter leading-normal"
                   >
                     Sign up with email
                   </button>
@@ -189,7 +189,9 @@ const handleSignUp = async (e) => {
                 <span className="text-zinc-700 text-base font-normal font-open-sans leading-normal">
                   Already have an account?{" "}
                 </span>
-                <span className="text-violet-600 text-base font-normal font-open-sans leading-normal cursor-pointer">
+                <span  onClick={() => {
+                    navigate("/login");
+                  }} className="text-violet-600 text-base font-normal font-open-sans leading-normal cursor-pointer">
                   Log in
                 </span>
               </div>

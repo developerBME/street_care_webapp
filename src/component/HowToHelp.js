@@ -1,4 +1,5 @@
 import React from "react";
+import CustomButton from "../component/Buttons/CustomButton";
 
 function HowToHelp() {
   return (
@@ -41,11 +42,8 @@ function HowToHelp() {
             <div className="w-fit my-16  text-gray-800 text-[57px] font-medium font-bricolage leading-[64px]">
               "I Learned, Now I'll Share."
             </div>
-            <button className="px-8 py-4 bg-violet-700 rounded-[100px] justify-center items-center gap-2.5 inline-flex ">
-              <div className="text-center text-neutral-100 text-lg font-semibold font-open-sans leading-normal">
-                Send the guide to a friend
-              </div>
-            </button>
+            <CustomButton label="Send the guide to a friend" name="buttondefault" />
+            {/*  */}
           </div>
         </div>
       </div>

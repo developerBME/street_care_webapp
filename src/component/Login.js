@@ -137,13 +137,8 @@ function Login() {
                 </div>
               </div>
               <div className="self-stretch my-14 h-14 flex-col justify-start items-start gap-4 flex">
-                <div className="self-stretch h-14 px-8 py-4 bg-violet-700 rounded-[100px] justify-center items-center gap-2.5 inline-flex">
-                  <button
-                    type="submit"
-                    className="grow shrink basis-0 text-center text-neutral-100 text-lg font-semibold font-inter leading-normal"
-                  >
-                    Log in
-                  </button>
+                <div className="self-stretch justify-center items-center gap-2.5 inline-flex">
+                  <button type="submit" className="grow shrink basis-0 text-center text-neutral-100 text-lg font-semibold font-inter leading-normal h-14 px-8 py-4 bg-violet-700 rounded-[100px]"> Log in </button>
                 </div>
               </div>
               <div className="w-fit text-center mx-auto">

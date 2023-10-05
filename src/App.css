@@ -82,3 +82,8 @@
   right: 0;
   top: 30%;
 }
+@media (max-width: 640px) {
+  .middle:before, .middle:after{
+    height: 40px;
+  }
+}
