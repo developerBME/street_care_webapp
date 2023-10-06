@@ -28,6 +28,7 @@ function PersonalOutForm() {
   const time = useRef("");
   const cityRef = useRef("");
   const stateRef = useRef("");
+  const itemQtyRef = useRef("");
   const checkboxes = useRef([]);
   const [itemArray, setItemArray] = useState([]);
   const [rating, setRating] = useState(0);
@@ -111,6 +112,7 @@ function PersonalOutForm() {
       uid: fAuth.currentUser.uid,
       name: helpedName.current.value,
       whatGiven: itemArray,
+      itemQty: itemQtyRef.current.value,
       date: date.current.value,
       time: time.current.value,
       state: state,
@@ -134,6 +136,7 @@ function PersonalOutForm() {
   const clearFields = () => {
     date.current.value = "";
     helpedName.current.value = "";
+    itemQtyRef.current.value = "";
     setItemArray([]);
     checkboxes.current.forEach((x) => {
       x.checked = false;
@@ -450,9 +453,6 @@ function PersonalOutForm() {
 
                 {/*  */}
                 <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
-                  <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
-                    Total number of items donated by you?
-                  </div>
                   {/* Grid 2 */}
                   <div className="w-full h-full grid grid-cols-2 gap-4 ">
                     <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
@@ -490,6 +490,29 @@ function PersonalOutForm() {
                             ref={time}
                           ></input>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/**/}
+                  <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
+                    Total number of items donated by you?
+                  </div>
+                  <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
+                    <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
+                      <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
+                        Number of Items
+                      </div>
+                    </div>
+                    <div className="self-stretch h-fit  border-collapse     ">
+                      <div className=" h-14  justify-center items-start ">
+                        <input
+                          type="number"
+                          id="itemsNumber"
+                          placeholder="Number of Items"
+                          className="text-zinc-900 w-full h-full pl-4 rounded-[4px] border border-zinc-500 text-base  font-normal font-roboto leading-normal tracking-wide"
+                          required={true}
+                          ref={itemQtyRef}
+                        ></input>
                       </div>
                     </div>
                   </div>

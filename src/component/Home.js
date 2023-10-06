@@ -35,27 +35,27 @@ function HomePage() {
 
   const cardData = [
     {
-        name:"William Smith",
-        eventName: "BK Fort Green Outreach",
-        eventDate: "Sept 9, 2023 SAT 5:00pm",
-        location:"200 Eastern Pkwy, Brooklyn, NY 11238",
-        req:"Childcare Specialist needed"
+      name: "William Smith",
+      eventName: "BK Fort Green Outreach",
+      eventDate: "Sept 9, 2023 SAT 5:00pm",
+      location: "200 Eastern Pkwy, Brooklyn, NY 11238",
+      req: "Childcare Specialist needed",
     },
     {
-        name:"William Smith",
-        eventName: "BK Fort Green Outreach",
-        eventDate: "Sept 9, 2023 SAT 5:00pm",
-        location:"200 Eastern Pkwy, Brooklyn, NY 11238",
-        req:"Childcare Specialist needed"
+      name: "William Smith",
+      eventName: "BK Fort Green Outreach",
+      eventDate: "Sept 9, 2023 SAT 5:00pm",
+      location: "200 Eastern Pkwy, Brooklyn, NY 11238",
+      req: "Childcare Specialist needed",
     },
     {
-        name:"William Smith",
-        eventName: "BK Fort Green Outreach",
-        eventDate: "Sept 9, 2023 SAT 5:00pm",
-        location:"200 Eastern Pkwy, Brooklyn, NY 11238",
-        req:"Childcare Specialist needed"
+      name: "William Smith",
+      eventName: "BK Fort Green Outreach",
+      eventDate: "Sept 9, 2023 SAT 5:00pm",
+      location: "200 Eastern Pkwy, Brooklyn, NY 11238",
+      req: "Childcare Specialist needed",
     },
-];
+  ];
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center ">
@@ -81,16 +81,15 @@ function HomePage() {
               </div>
   </div> */}
             <div className=" w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-            {cardData.map((item, index)=>(
-              <OutreachEventCard key={index} cardData={item} />
-      ))}
+              {cardData.map((item, index) => (
+                <OutreachEventCard key={index} cardData={item} />
+              ))}
             </div>
-            
           </div>
         </div>
         {/* Vishnu */}
-
-        <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
+        {/* BME Official Gathering  */}
+        {/* <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
           <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
             <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
               {" "}
@@ -104,7 +103,7 @@ function HomePage() {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
         {/* Aniket */}
         <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8  rounded-2xl bg-white text-black ">
           <Process />

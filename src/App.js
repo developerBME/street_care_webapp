@@ -17,6 +17,7 @@ import PersonalOutForm from "./component/UserProfile/PersonalOutForm";
 import Documenting from "./component/UserProfile/Documenting";
 import OutreachSignup from "./component/Community/OutreachSignup";
 import CreateOutreach from "./component/Community/CreateOutreach";
+import HelpRequestForm from "./component/Community/HelpRequstForm"
 
 
 function App() {
@@ -56,6 +57,7 @@ function App() {
             path="/profile/personaloutform"
             element={<PersonalOutForm />}
           />
+          <Route path="/helpRequestForm" element={<HelpRequestForm/>} />
           <Route path="/*" element={<Home />} />
         </Routes>
         <Footer />
