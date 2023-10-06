@@ -81,9 +81,7 @@ function HomePage() {
               </div>
   </div> */}
             <div className=" w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-              {cardData.map((item, index) => (
-                <OutreachEventCard key={index} cardData={item} />
-              ))}
+              <OutreachEventCard />
             </div>
           </div>
         </div>
