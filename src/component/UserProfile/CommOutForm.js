@@ -1,10 +1,13 @@
 import React from "react";
-import { useRef, useState } from "react";
-
+import { useRef, useState, useEffect } from "react";
 import Rating from "@mui/material/Rating";
 import { IoIosArrowBack, IoIosArrowDown } from "react-icons/io";
 import { AiOutlineStar, AiTwotoneStar, AiFillStar } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../firebase";
+
 
 const starStyle = {
   width: 60,
@@ -12,11 +15,74 @@ const starStyle = {
 };
 
 function CommOutForm() {
-  const ratingChanged = (newRating) => {
-    console.log(newRating);
+  const navigate = useNavigate();
+  // const ratingChanged = (newRating) => {
+  //   console.log(newRating);
+  // };
+  
+  const helpedName = useRef("");
+  const [itemArray, setItemArray] = useState([]);
+  const NumberOfItems = useRef("");
+  const [rating, setRating] = useState(0);
+  const checkboxes = useRef([]);
+  const [success, setSuccess] = useState(false);
+  {
+    /* Firebase */
+  }
+
+  const fAuth = getAuth();
+  onAuthStateChanged(fAuth, (user) => {
+    if (user) {
+      console.log("Found user");
+      console.log(fAuth.currentUser.uid)
+    } else {
+      console.log("USER NOT FOUND!");
+      navigate("/login");
+    }
+  });
+
+
+  function handleItemArray(e) {
+    if (e.target.checked) {
+      setItemArray([...itemArray, e.target.value]);
+    } else {
+      setItemArray(itemArray.filter((item) => item !== e.target.value));
+    }
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    let obj = {
+      uid: fAuth.currentUser.uid,
+      name: helpedName.current.value,
+      whatGiven: itemArray,
+      NumberOfItems: NumberOfItems.current.value,
+      rating: rating,
+    };
+
+    try {
+      const logRef = collection(db, "testLog");
+      const docRef = await addDoc(logRef, obj);
+      if (docRef.id) {
+        console.log(docRef.id);
+        setSuccess(true);
+        clearFields();
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
-  const [value, setValue] = useState(0);
+  const clearFields = () => {
+    NumberOfItems.current.value = "";
+    helpedName.current.value = "";
+    setItemArray([]);
+    checkboxes.current.forEach((x) => {
+      x.checked = false;
+    });
+    setRating(0);
+  };
+
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center ">
@@ -56,7 +122,8 @@ function CommOutForm() {
                           id="name"
                           placeholder="Name"
                           className="text-zinc-900 w-full h-full pl-4 rounded-[4px] border border-zinc-500 text-base  font-normal font-roboto leading-normal tracking-wide"
-                          // onChange={(e) => setEmail(e.target.value)}
+                          required={true}
+                          ref={helpedName}
                         ></input>
                       </div>
                     </div>
@@ -109,9 +176,11 @@ function CommOutForm() {
                       <input
                         type="checkbox"
                         id="food-option"
-                        value=""
+                        value="Food and Drink"
                         class="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
+                        ref={(el) => (checkboxes.current[0] = el)}
+                        onChange={handleItemArray}
                       ></input>
                       <label
                         for="food-option"
@@ -129,9 +198,11 @@ function CommOutForm() {
                       <input
                         type="checkbox"
                         id="clothing-option"
-                        value=""
+                        value="Clothing"
                         class="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
+                        ref={(el) => (checkboxes.current[1] = el)}
+                        onChange={handleItemArray}
                       ></input>
                       <label
                         for="clothing-option"
@@ -148,9 +219,11 @@ function CommOutForm() {
                       <input
                         type="checkbox"
                         id="hygiene-option"
-                        value=""
+                        value="Hygiene Products"
                         class="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
+                        ref={(el) => (checkboxes.current[2] = el)}
+                        onChange={handleItemArray}
                       ></input>
                       <label
                         for="hygiene-option"
@@ -166,9 +239,11 @@ function CommOutForm() {
                       <input
                         type="checkbox"
                         id="wellness-option"
-                        value=""
+                        value="Wellness/ Emotional Support"
                         class="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
+                        ref={(el) => (checkboxes.current[3] = el)}
+                        onChange={handleItemArray}
                       ></input>
                       <label
                         for="wellness-option"
@@ -184,9 +259,11 @@ function CommOutForm() {
                       <input
                         type="checkbox"
                         id="medical-option"
-                        value=""
+                        value="Medical Help"
                         class="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
+                        ref={(el) => (checkboxes.current[4] = el)}
+                        onChange={handleItemArray}
                       ></input>
                       <label
                         for="medical-option"
@@ -204,9 +281,11 @@ function CommOutForm() {
                       <input
                         type="checkbox"
                         id="social-option"
-                        value=""
+                        value="Social Worker /Psychiatrist"
                         class="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
+                        ref={(el) => (checkboxes.current[5] = el)}
+                        onChange={handleItemArray}
                       ></input>
                       <label
                         for="social-option"
@@ -223,9 +302,11 @@ function CommOutForm() {
                       <input
                         type="checkbox"
                         id="legal-option"
-                        value=""
+                        value="Legal/Lawyer"
                         class="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
+                        ref={(el) => (checkboxes.current[6] = el)}
+                        onChange={handleItemArray}
                       ></input>
                       <label
                         for="legal-option"
@@ -241,9 +322,11 @@ function CommOutForm() {
                       <input
                         type="checkbox"
                         id="other-option"
-                        value=""
+                        value="Other"
                         class="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
+                        ref={(el) => (checkboxes.current[7] = el)}
+                        onChange={handleItemArray}
                       ></input>
                       <label
                         for="other-option"
@@ -270,10 +353,10 @@ function CommOutForm() {
                         <AiFillStar className=" w-10 h-10 text-yellow-300 " />
                       }
                       emptyIcon={<AiOutlineStar className=" w-10 h-10" />}
-                      value={value}
+                      value={rating}
                       size={"large"}
                       onChange={(event, newValue) => {
-                        setValue(newValue);
+                        setRating(newValue);
                       }}
                     />
                   </div>
@@ -297,6 +380,7 @@ function CommOutForm() {
                           id="-itemnumber"
                           placeholder="Number"
                           className="text-zinc-900 w-full h-full pl-4 rounded-[4px] border border-zinc-500 text-base  font-normal font-roboto leading-normal tracking-wide"
+                          ref={NumberOfItems}
                           // onChange={(e) => setEmail(e.target.value)}
                         ></input>
                       </div>
@@ -306,13 +390,23 @@ function CommOutForm() {
                 {/*  */}
                 <div className="justify-start items-start gap-4 inline-flex">
                   <div className="justify-start items-start gap-4 flex">
-                    <div className="px-8 py-4 bg-violet-700 rounded-[100px] justify-center items-center gap-2.5 flex">
+                    <div className="px-8 py-4 bg-violet-700 rounded-[100px] justify-center items-center gap-2.5 flex"
+                    onClick={handleSubmit}
+                    > 
                       <div className="text-center text-stone-100 text-lg font-semibold font-open-sans leading-normal">
                         Done
                       </div>
                     </div>
                   </div>
                 </div>
+                {/*  */}
+                {success && (
+                  <div className="justify-start items-start gap-4 inline-flex">
+                    <div className="justify-start items-start gap-4 flex">
+                      Success!
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
