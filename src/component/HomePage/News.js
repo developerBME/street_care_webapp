@@ -76,9 +76,9 @@ const News = () => {
           </div>
         </article>
       </div>
-      <div className="mt-16">
+      {/* <div className="mt-16">
         <CustomButton label="More News" name="buttondefault" />
-      </div>
+      </div> */}
     </div>
   );
 };

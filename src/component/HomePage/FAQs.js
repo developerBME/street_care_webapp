@@ -34,20 +34,12 @@ export default function FAQs() {
           </AccordionSummary>
           <AccordionDetails>
             <p className="font-bricolage ">
-              At vero eos et accusamus et iusto odio dignissimos ducimus qui
-              blanditiis praesentium voluptatum deleniti atque corrupti quos
-              dolores et quas molestias excepturi sint occaecati cupiditate non
-              provident, similique sunt in culpa qui officia deserunt mollitia
-              animi, id est laborum et dolorum fuga. Et harum quidem rerum
-              facilis est et expedita distinctio. Nam libero tempore, cum soluta
-              nobis est eligendi optio cumque nihil impedit quo minus id quod
-              maxime placeat facere possimus, omnis voluptas assumenda est,
-              omnis dolor repellendus. Temporibus autem quibusdam et aut
-              officiis debitis aut rerum necessitatibus saepe eveniet ut et
-              voluptates repudiandae sint et molestiae non recusandae. Itaque
-              earum rerum hic tenetur a sapiente delectus, ut aut reiciendis
-              voluptatibus maiores alias consequatur aut perferendis doloribus
-              asperiores repellat
+              Street Care provides volunteers with a psychological toolkit and
+              instructional resources to empower them to assist homeless
+              individuals. The app offers guidance on providing resources,
+              counseling, and emotional support. It also facilitates community
+              engagement and offers a platform for users to seek or offer help
+              within homeless population.
             </p>
           </AccordionDetails>
         </Accordion>
@@ -68,20 +60,11 @@ export default function FAQs() {
           </AccordionSummary>
           <AccordionDetails>
             <p className="font-bricolage">
-              At vero eos et accusamus et iusto odio dignissimos ducimus qui
-              blanditiis praesentium voluptatum deleniti atque corrupti quos
-              dolores et quas molestias excepturi sint occaecati cupiditate non
-              provident, similique sunt in culpa qui officia deserunt mollitia
-              animi, id est laborum et dolorum fuga. Et harum quidem rerum
-              facilis est et expedita distinctio. Nam libero tempore, cum soluta
-              nobis est eligendi optio cumque nihil impedit quo minus id quod
-              maxime placeat facere possimus, omnis voluptas assumenda est,
-              omnis dolor repellendus. Temporibus autem quibusdam et aut
-              officiis debitis aut rerum necessitatibus saepe eveniet ut et
-              voluptates repudiandae sint et molestiae non recusandae. Itaque
-              earum rerum hic tenetur a sapiente delectus, ut aut reiciendis
-              voluptatibus maiores alias consequatur aut perferendis doloribus
-              asperiores repellat
+              No, Street Care primarily focuses on equipping volunteers with the
+              tools and knowledge to support homeless individuals but does not
+              provide emergency shelter services. It serves as a resource for
+              those who want to make a positive impact in the lives of homeless
+              people.
             </p>
           </AccordionDetails>
         </Accordion>
@@ -102,20 +85,11 @@ export default function FAQs() {
           </AccordionSummary>
           <AccordionDetails>
             <p className="font-bricolage">
-              At vero eos et accusamus et iusto odio dignissimos ducimus qui
-              blanditiis praesentium voluptatum deleniti atque corrupti quos
-              dolores et quas molestias excepturi sint occaecati cupiditate non
-              provident, similique sunt in culpa qui officia deserunt mollitia
-              animi, id est laborum et dolorum fuga. Et harum quidem rerum
-              facilis est et expedita distinctio. Nam libero tempore, cum soluta
-              nobis est eligendi optio cumque nihil impedit quo minus id quod
-              maxime placeat facere possimus, omnis voluptas assumenda est,
-              omnis dolor repellendus. Temporibus autem quibusdam et aut
-              officiis debitis aut rerum necessitatibus saepe eveniet ut et
-              voluptates repudiandae sint et molestiae non recusandae. Itaque
-              earum rerum hic tenetur a sapiente delectus, ut aut reiciendis
-              voluptatibus maiores alias consequatur aut perferendis doloribus
-              asperiores repellat
+              Street Care is a web and mobile app and is not location-specific.
+              It can be used by volunteers and individuals anywhere in the world
+              who want to assist homeless people. It transcends geographical
+              boundaries and aims to create a global community of volunteers
+              dedicated to helping homeless people.
             </p>
           </AccordionDetails>
         </Accordion>
@@ -136,20 +110,24 @@ export default function FAQs() {
           </AccordionSummary>
           <AccordionDetails>
             <p className="font-bricolage">
-              At vero eos et accusamus et iusto odio dignissimos ducimus qui
-              blanditiis praesentium voluptatum deleniti atque corrupti quos
-              dolores et quas molestias excepturi sint occaecati cupiditate non
-              provident, similique sunt in culpa qui officia deserunt mollitia
-              animi, id est laborum et dolorum fuga. Et harum quidem rerum
-              facilis est et expedita distinctio. Nam libero tempore, cum soluta
-              nobis est eligendi optio cumque nihil impedit quo minus id quod
-              maxime placeat facere possimus, omnis voluptas assumenda est,
-              omnis dolor repellendus. Temporibus autem quibusdam et aut
-              officiis debitis aut rerum necessitatibus saepe eveniet ut et
-              voluptates repudiandae sint et molestiae non recusandae. Itaque
-              earum rerum hic tenetur a sapiente delectus, ut aut reiciendis
-              voluptatibus maiores alias consequatur aut perferendis doloribus
-              asperiores repellat
+              Yes, volunteers are always needed to make a difference in the
+              lives of homeless individuals. To explore volunteer opportunities,
+              create an account on our platform, and explore the resources and
+              tools available to assist homeless people. Click
+              <a
+                href="https://street-care-feature.vercel.app/signup2"
+                className="underline px-1 text-blue-500"
+              >
+                here
+              </a>
+              to sign up to start as a volunteer and the app will guide you
+              through the volunteering process. For a smoother experience,
+              consider
+              <a className="underline px-1 text-blue-500">
+                downloading our app
+              </a>
+              for real-time updates and easy sign-ups. Your help can make a big
+              difference in the lives of those in need. Thank you!
             </p>
           </AccordionDetails>
         </Accordion>
@@ -168,20 +146,20 @@ export default function FAQs() {
           </AccordionSummary>
           <AccordionDetails>
             <p className="font-bricolage">
-              At vero eos et accusamus et iusto odio dignissimos ducimus qui
-              blanditiis praesentium voluptatum deleniti atque corrupti quos
-              dolores et quas molestias excepturi sint occaecati cupiditate non
-              provident, similique sunt in culpa qui officia deserunt mollitia
-              animi, id est laborum et dolorum fuga. Et harum quidem rerum
-              facilis est et expedita distinctio. Nam libero tempore, cum soluta
-              nobis est eligendi optio cumque nihil impedit quo minus id quod
-              maxime placeat facere possimus, omnis voluptas assumenda est,
-              omnis dolor repellendus. Temporibus autem quibusdam et aut
-              officiis debitis aut rerum necessitatibus saepe eveniet ut et
-              voluptates repudiandae sint et molestiae non recusandae. Itaque
-              earum rerum hic tenetur a sapiente delectus, ut aut reiciendis
-              voluptatibus maiores alias consequatur aut perferendis doloribus
-              asperiores repellat
+              At Street Care, we truly believe in the extraordinary power of
+              generosity. Visit our website
+              <a
+                href="https://street-care-feature.vercel.app/"
+                className="underline px-1 text-blue-500"
+              >
+                homepage
+              </a>
+              and click the "Donate" button. On the donation page, you can
+              choose your preferred donation and provide the necessary payment
+              information. Your support is greatly appreciated, and your
+              contribution will go a long way in helping Street Care continue
+              its mission to assist those in need. Thank you for creating a
+              difference in our community!
             </p>
           </AccordionDetails>
         </Accordion>
@@ -202,20 +180,10 @@ export default function FAQs() {
           </AccordionSummary>
           <AccordionDetails>
             <p className="font-bricolage">
-              At vero eos et accusamus et iusto odio dignissimos ducimus qui
-              blanditiis praesentium voluptatum deleniti atque corrupti quos
-              dolores et quas molestias excepturi sint occaecati cupiditate non
-              provident, similique sunt in culpa qui officia deserunt mollitia
-              animi, id est laborum et dolorum fuga. Et harum quidem rerum
-              facilis est et expedita distinctio. Nam libero tempore, cum soluta
-              nobis est eligendi optio cumque nihil impedit quo minus id quod
-              maxime placeat facere possimus, omnis voluptas assumenda est,
-              omnis dolor repellendus. Temporibus autem quibusdam et aut
-              officiis debitis aut rerum necessitatibus saepe eveniet ut et
-              voluptates repudiandae sint et molestiae non recusandae. Itaque
-              earum rerum hic tenetur a sapiente delectus, ut aut reiciendis
-              voluptatibus maiores alias consequatur aut perferendis doloribus
-              asperiores repellat
+              Street Care may feature inspirational stories of volunteers and
+              their experiences in the app or on their website. These stories
+              can provide insights into the impact volunteers have made in the
+              lives of homeless individuals and inspire others to get involved.
             </p>
           </AccordionDetails>
         </Accordion>

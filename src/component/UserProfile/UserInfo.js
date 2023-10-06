@@ -25,6 +25,8 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 
+import SuperpowerModal from "./SuperpowerModal";
+
 const UserInfo = () => {
   const navigate = useNavigate();
   // const userId = "Uej8TTFv5aXghZ6S8JfzhTo0nWw2";
@@ -41,6 +43,16 @@ const UserInfo = () => {
       navigate("/login");
     }
   });
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
 
   useEffect(() => {
     const getValues = async () => {
@@ -108,9 +120,13 @@ const UserInfo = () => {
             <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold">
               <h3 className="text-[#212121]">Childcare</h3>
             </div>
-            <button className="px-2 py-2 mr-2 h-10 rounded-md border border-[#CACACA] hover:bg-[#DEF6EB] text-[#212121] font-semibold">
+            <button
+              className="px-2 py-2 mr-2 h-10 rounded-md border border-[#CACACA] hover:bg-[#DEF6EB] text-[#212121] font-semibold"
+              onClick={openModal}
+            >
               <h6 className="text-[#212121] w-[160px]">Add my superpower</h6>
             </button>
+            <SuperpowerModal isOpen={modalIsOpen} closeModal={closeModal} />
           </div>
         </div>
       </div>
