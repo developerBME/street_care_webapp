@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import user from "../../images/user.png";
 import crown from "../../images/crown.png";
@@ -17,35 +18,62 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+} from "firebase/auth";
+
 const UserInfo = () => {
-  const userId = "Uej8TTFv5aXghZ6S8JfzhTo0nWw2";
+  const navigate = useNavigate();
+  // const userId = "Uej8TTFv5aXghZ6S8JfzhTo0nWw2";
   const [helped, setHelped] = useState("");
   const [donations, setDonations] = useState("");
   const [outreaches, setOutreaches] = useState("");
-  const logOfUserRef = query(
-    collection(db, "visitLog"),
-    where("uid", "==", userId)
-  );
+
+  const fAuth = getAuth();
+  onAuthStateChanged(fAuth, (user) => {
+    if (user) {
+      console.log("Found user");
+    } else {
+      console.log("USER NOT FOUND!");
+      navigate("/login");
+    }
+  });
 
   useEffect(() => {
     const getValues = async () => {
       try {
+        const logOfUserRef = query(
+          collection(db, "testLog"),
+          where("uid", "==", fAuth?.currentUser?.uid)
+        );
         const data = await getDocs(logOfUserRef);
         let totalHelped = 0;
         let totalDonations = 0;
+        let totalItemsDonated = 0;
         data.docs.map((doc) => {
-          totalHelped = totalHelped + doc.data().numberPeopleHelped;
-          // totalDonations = totalDonations + doc.data().numberIt;
+          totalHelped = isNaN(doc.data().numberPeopleHelped)
+            ? totalHelped
+            : totalHelped + doc.data().numberPeopleHelped;
+          totalDonations = isNaN(doc.data().itemQty)
+            ? totalDonations
+            : totalDonations + doc.data().itemQty;
           return null;
         });
-        setHelped(totalHelped);
+        console.log(totalDonations);
+        setHelped(isNaN(parseInt(totalHelped)) ? 0 : parseInt(totalHelped));
+        setDonations(
+          isNaN(parseInt(totalDonations)) ? 0 : parseInt(totalDonations)
+        );
         setOutreaches(data.docs.length);
       } catch (err) {
         console.log(err);
       }
     };
     getValues();
-  }, []);
+  }, [fAuth.currentUser]);
 
   useEffect(() => {
     console.log(helped);
@@ -207,7 +235,7 @@ const UserInfo = () => {
               </div>
               <div className="sm:px-8 sm:py-2 sm:bg-white rounded-[100px] inline-flex">
                 <div className="text-violet-950 font-bricolage text-3xl sm:text-5xl font-normal leading-[64px]">
-                  72
+                  {donations}
                 </div>
               </div>
             </div>

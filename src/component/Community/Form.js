@@ -36,6 +36,8 @@ const Form = () => {
   const dateRef = useRef("");
   const startTimeRef = useRef("");
   const endTimeRef = useRef("");
+  const [helpType, setHelpType] = useState([]);
+  const [clear, setClear] = useState(false);
 
   //
   const fAuth = getAuth();
@@ -50,12 +52,19 @@ const Form = () => {
     descRef.current.value = "";
     maxCapRef.current.value = "";
     streetRef.current.value = "";
-
-    // setItemArray([]);
-    // checkboxes.current.forEach((x) => {
-    //   x.checked = false;
-    // });
+    setHelpType([]);
+    setClear(true);
   };
+
+  // This function is drilled to child component: Chips
+  function handleHelpTypeArray(val, checked) {
+    if (checked) {
+      setHelpType([...helpType, val]);
+    } else {
+      setHelpType(helpType.filter((item) => item !== val));
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     let obj = {
@@ -68,6 +77,10 @@ const Form = () => {
       totalSlots: maxCapRef.current.value,
       state: stateRef.current.value,
       street: streetRef.current.value,
+      skills: helpType,
+      createdAt: Date(),
+      interests: 0,
+      participants: [],
       approved: false,
     };
 
@@ -245,7 +258,12 @@ const Form = () => {
           </div>
           <div className="lg:w-[587px] space-y-2">
             {chipList.map((value, index) => (
-              <Chip key={index} val={value} />
+              <Chip
+                keyName={"chip-" + index}
+                val={value}
+                setter={handleHelpTypeArray}
+                clear={clear}
+              />
             ))}
           </div>
         </div>
@@ -256,6 +274,13 @@ const Form = () => {
           <button className="px-8 py-4 border rounded-full bg-violet-700 text-[#F8F9F0]">
             Publish
           </button>
+          {success && (
+            <div className="justify-start items-start gap-4 inline-flex">
+              <div className="justify-start items-start gap-4 flex">
+                Success!
+              </div>
+            </div>
+          )}
         </div>
       </form>
     </div>
