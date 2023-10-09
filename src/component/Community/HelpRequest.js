@@ -3,11 +3,11 @@ import wavingHand from "../../images/waving_hand2.png";
 import HelpRequestCard from "./HelpRequestCard";
 
 const HelpRequest = () => {
-  const [visibleItems, setVisibleItems] = useState(5);
+  // const [visibleItems, setVisibleItems] = useState(5);
 
-  const loadMore = () => {
-    setVisibleItems((prev) => prev + 5);
-  };
+  // const loadMore = () => {
+  //   setVisibleItems((prev) => prev + 5);
+  // };
   const helpRequestData = [
     {
       helpStatus: "Need Help",
@@ -212,25 +212,31 @@ const HelpRequest = () => {
           <div className="text-[#212121] text-2xl lg:text-4xl font-medium font-bricolage lg:leading-[44px]">
             Help Requests
           </div>
-          <button className="my-2 bg-[#6840E0] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex text-neutral-100 text-md font-semibold font-inter leading-tight self-stretch px-6 py-2.5">
+          <button className="my-2 bg-[#6840E0] hover:bg-[#36295E] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex text-neutral-100 text-md font-semibold font-inter leading-tight self-stretch px-6 py-2.5">
             Add New Request
           </button>
         </div>
       </div>
       <div className="p-4 lg:px-28 lg:py-12 flex flex-col bg-[#F7F7F7] gap-4 lg:gap-8 rounded-b-2xl">
         <div>
-          {helpRequestData.slice(0, visibleItems).map((item, index) => (
+          {/* {helpRequestData.slice(0, visibleItems).map((item, index) => (
+            <HelpRequestCard key={index} helpRequestCardData={item} />
+          ))} */}
+          {helpRequestData.map((item, index) => (
             <HelpRequestCard key={index} helpRequestCardData={item} />
           ))}
         </div>
-        {visibleItems < helpRequestData.length && (
+        {/* {visibleItems < helpRequestData.length && (
           <button
             className="w-fit rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 flex text-center text-[#1F0A58] hover:bg-[#1F0A58] hover:text-white text-[11px] font-semibold font-inter leading-tight self-stretch px-6 py-2.5"
             onClick={loadMore}
           >
             Load 5 More
           </button>
-        )}
+        )} */}
+        <button className="w-fit rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 flex text-center text-[#1F0A58] hover:bg-[#1F0A58] hover:text-white text-[11px] font-semibold font-inter leading-tight self-stretch px-6 py-2.5">
+          Load 5 More
+        </button>
       </div>
     </div>
   );

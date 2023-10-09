@@ -1,5 +1,4 @@
 import React from "react";
-import Chip from "../Community/Chip";
 import ChipSuperpower from "../Community/ChipSuperpower";
 
 const chipList = [
@@ -26,14 +25,14 @@ const SuperpowerModal = ({ isOpen, closeModal }) => {
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-opacity-50 bg-gray-800 z-50">
-      <div className="w-[2750px] sm:w-[550px] md:w-[650px] lg:w-[800px] bg-white rounded-2xl sm:p-12 p-6">
+      <div className="w-[350px] sm:w-[550px] md:w-[650px] lg:w-[800px] bg-white rounded-2xl sm:p-12 p-6">
         <div className="w-fit h-fit flex-col justify-start items-start gap-16 inline-flex">
           <div className="self-stretch h-fit flex-col justify-start items-start gap-6 flex">
-            <div className="justify-normal items-start gap-6 inline-flex">
-              <div className="w-[225px] sm:w-[400px] md:w-[500px] lg:w-[650px] text-[#212121] text-4xl font-medium font-bricolage leading-[44px]">
+            <div className="justify-self-end items-start gap-20 sm:gap-6 inline-flex">
+              <div className="sm:w-[400px] md:w-[500px] lg:w-[650px] text-[#212121] text-4xl font-medium font-bricolage leading-[44px]">
                 Specialized Volunteers
               </div>
-              <div className="flex w-12 h-12 relative">
+              <div className="flex w-8 h-12 m-auto">
                 <button className="text-5xl" onClick={closeModal}>
                   &times;
                 </button>
