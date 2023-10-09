@@ -17,7 +17,8 @@ import PersonalOutForm from "./component/UserProfile/PersonalOutForm";
 import Documenting from "./component/UserProfile/Documenting";
 import OutreachSignup from "./component/Community/OutreachSignup";
 import CreateOutreach from "./component/Community/CreateOutreach";
-import HelpRequestForm from "./component/Community/HelpRequstForm"
+import HelpRequestForm from "./component/Community/HelpRequstForm";
+import HelpRequestEventWindow from "./component/Community/HelpRequestEventWindow";
 
 
 function App() {
@@ -53,6 +54,7 @@ function App() {
           <Route path="/profile/commoutform" element={<CommOutForm />} />
           <Route path="/outreachsignup" element={<OutreachSignup />} />
           <Route path="/createOutreach" element={<CreateOutreach />} />
+          <Route path="/helpRequestEventWindow" element={<HelpRequestEventWindow />} />
           <Route
             path="/profile/personaloutform"
             element={<PersonalOutForm />}
