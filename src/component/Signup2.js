@@ -1,23 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { createUserWithEmailAndPassword, getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, FacebookAuthProvider, TwitterAuthProvider } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  FacebookAuthProvider,
+  TwitterAuthProvider,
+} from "firebase/auth";
 import { auth, db } from "./firebase"; // Importing the auth instance
 import { useNavigate } from "react-router-dom";
 import { collection, doc, setDoc, getDoc } from "firebase/firestore";
 
-
-
 import { FcGoogle } from "react-icons/fc";
-import { AiFillApple } from "react-icons/ai";
+import { AiFillApple, AiFillFacebook } from "react-icons/ai";
+import { BiLogoFacebookCircle } from "react-icons/bi";
 
-const handleGoogleSignIn = async(e) => {
+import { RiTwitterXFill } from "react-icons/ri";
+
+const handleGoogleSignIn = async (e) => {
   e.preventDefault();
-  console.log("Google Signup")
+  console.log("Google Signup");
 
   try {
     const provider = new GoogleAuthProvider();
     const auth = getAuth();
     const result = await signInWithPopup(auth, provider);
-    
+
     // This gives you a Google Access Token. You can use it to access the Google API.
     // const credential = GoogleAuthProvider.credentialFromResult(result);
     // const token = credential.accessToken;
@@ -25,35 +34,32 @@ const handleGoogleSignIn = async(e) => {
     const user = result.user;
 
     // Check if document exists in the user collection:
-    const ref = doc(db, 'users', user.uid);
+    const ref = doc(db, "users", user.uid);
     const docSnap = await getDoc(ref);
     if (docSnap.exists()) {
       // No need to update, just leave a logged in state
-      console.log("User exists in the collection")
+      console.log("User exists in the collection");
       // console.log("Document data:", docSnap.data());
-
     } else {
       // Create the document and leave a logged in state
       console.log("User does not exist in the collection");
       const userData = {
         dateCreated: new Date(),
-        deviceType: 'Web',
+        deviceType: "Web",
         email: user.email,
         isValid: true,
         //organization: company,
         username: user.displayName,
-        uid: user.uid
+        uid: user.uid,
       };
-      const userRef = doc(db, 'users', user.uid);
+      const userRef = doc(db, "users", user.uid);
       setDoc(userRef, userData);
     }
 
     // setTimeout(() => {
     //   navigate("/profile");
     // }, 6000); // Wait for 2 seconds to let the user see the success message
-
-  }catch (error){
-    
+  } catch (error) {
     const errorCode = error.code;
     const errorMessage = error.message;
     // The email of the user's account used.
@@ -61,51 +67,47 @@ const handleGoogleSignIn = async(e) => {
     // The AuthCredential type that was used.
     const credential = GoogleAuthProvider.credentialFromError(error);
   }
+};
 
-}
-
-const handleFacebookSignIn = async(e) => {
+const handleFacebookSignIn = async (e) => {
   e.preventDefault();
-  console.log("Facebook Signup")
+  console.log("Facebook Signup");
 
   try {
     const provider = new FacebookAuthProvider();
     const auth = getAuth();
     const result = await signInWithPopup(auth, provider);
-    
+
     // This gives you a Google Access Token. You can use it to access the Google API.
     const user = result.user;
 
     // Check if document exists in the user collection:
-    const ref = doc(db, 'users', user.uid);
+    const ref = doc(db, "users", user.uid);
     const docSnap = await getDoc(ref);
     if (docSnap.exists()) {
       // No need to update, just leave a logged in state
-      console.log("User exists in the collection")
+      console.log("User exists in the collection");
       // console.log("Document data:", docSnap.data());
-
     } else {
       // Create the document and leave a logged in state
       console.log("User does not exist in the collection");
       const userData = {
         dateCreated: new Date(),
-        deviceType: 'Web',
+        deviceType: "Web",
         email: user.email,
         isValid: true,
         //organization: company,
         username: user.displayName,
-        uid: user.uid
+        uid: user.uid,
       };
-      const userRef = doc(db, 'users', user.uid);
+      const userRef = doc(db, "users", user.uid);
       setDoc(userRef, userData);
     }
 
     // setTimeout(() => {
     //   navigate("/profile");
     // }, 6000); // Wait for 2 seconds to let the user see the success message
-
-  }catch (error){
-    
+  } catch (error) {
     const errorCode = error.code;
     const errorMessage = error.message;
     // The email of the user's account used.
@@ -113,51 +115,48 @@ const handleFacebookSignIn = async(e) => {
     // The AuthCredential type that was used.
     const credential = FacebookAuthProvider.credentialFromError(error);
   }
+};
 
-}
-
-const handleTwitterSignIn = async(e) => {e.preventDefault();
-  console.log("Twitter Signup")
+const handleTwitterSignIn = async (e) => {
+  e.preventDefault();
+  console.log("Twitter Signup");
 
   try {
     const provider = new TwitterAuthProvider();
     const auth = getAuth();
     const result = await signInWithPopup(auth, provider);
-    
+
     // This gives you a Google Access Token. You can use it to access the Google API.
     const user = result.user;
-    console.log(user)
+    console.log(user);
 
     // Check if document exists in the user collection:
-    const ref = doc(db, 'users', user.uid);
+    const ref = doc(db, "users", user.uid);
     const docSnap = await getDoc(ref);
     if (docSnap.exists()) {
       // No need to update, just leave a logged in state
-      console.log("User exists in the collection")
+      console.log("User exists in the collection");
       // console.log("Document data:", docSnap.data());
-
     } else {
       // Create the document and leave a logged in state
       console.log("User does not exist in the collection");
       const userData = {
         dateCreated: new Date(),
-        deviceType: 'Web',
+        deviceType: "Web",
         email: user.email,
         isValid: true,
         //organization: company,
         username: user.displayName,
-        uid: user.uid
+        uid: user.uid,
       };
-      const userRef = doc(db, 'users', user.uid);
+      const userRef = doc(db, "users", user.uid);
       setDoc(userRef, userData);
     }
 
     // setTimeout(() => {
     //   navigate("/profile");
     // }, 6000); // Wait for 2 seconds to let the user see the success message
-
-  }catch (error){
-    
+  } catch (error) {
     const errorCode = error.code;
     const errorMessage = error.message;
     // The email of the user's account used.
@@ -165,9 +164,7 @@ const handleTwitterSignIn = async(e) => {e.preventDefault();
     // The AuthCredential type that was used.
     const credential = TwitterAuthProvider.credentialFromError(error);
   }
-
-}
-
+};
 
 function Signup2() {
   const [email, setEmail] = useState("");
@@ -178,10 +175,10 @@ function Signup2() {
   const [error, setError] = useState(null);
   const [loginSuccess, setLoginSuccess] = useState("");
 
-  
   // Check if user is already logged in:
   const fAuth = getAuth();
-  onAuthStateChanged(fAuth, (user) => { // Checks Login status for Redirection
+  onAuthStateChanged(fAuth, (user) => {
+    // Checks Login status for Redirection
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/auth.user
@@ -193,223 +190,62 @@ function Signup2() {
     }
   });
 
-  // const handleGoogleSignIn = async(e) => {
-  //     e.preventDefault();
-  //     console.log("Google Signup")
-
-  //     try {
-  //       const provider = new GoogleAuthProvider();
-  //       const auth = getAuth();
-  //       const result = await signInWithPopup(auth, provider);
-        
-  //       // This gives you a Google Access Token. You can use it to access the Google API.
-  //       // const credential = GoogleAuthProvider.credentialFromResult(result);
-  //       // const token = credential.accessToken;
-  //       // The signed-in user info.
-  //       const user = result.user;
-  
-  //       // Check if document exists in the user collection:
-  //       const ref = doc(db, 'users', user.uid);
-  //       const docSnap = await getDoc(ref);
-  //       if (docSnap.exists()) {
-  //         // No need to update, just leave a logged in state
-  //         console.log("User exists in the collection")
-  //         // console.log("Document data:", docSnap.data());
-
-  //       } else {
-  //         // Create the document and leave a logged in state
-  //         console.log("User does not exist in the collection");
-  //         const userData = {
-  //           dateCreated: new Date(),
-  //           deviceType: 'Web',
-  //           email: user.email,
-  //           isValid: true,
-  //           //organization: company,
-  //           username: user.displayName,
-  //           uid: user.uid
-  //         };
-  //         const userRef = doc(db, 'users', user.uid);
-  //         setDoc(userRef, userData);
-  //       }
-  
-  //       setTimeout(() => {
-  //         navigate("/profile");
-  //       }, 6000); // Wait for 2 seconds to let the user see the success message
-
-  //     }catch (error){
-        
-  //       const errorCode = error.code;
-  //       const errorMessage = error.message;
-  //       // The email of the user's account used.
-  //       const email = error.customData.email;
-  //       // The AuthCredential type that was used.
-  //       const credential = GoogleAuthProvider.credentialFromError(error);
-  //     }
-  
-  //   }
-
-  // const handleFacebookSignIn = async(e) => {
-  //     e.preventDefault();
-  //     console.log("Facebook Signup")
-
-  //     try {
-  //       const provider = new FacebookAuthProvider();
-  //       const auth = getAuth();
-  //       const result = await signInWithPopup(auth, provider);
-        
-  //       // This gives you a Google Access Token. You can use it to access the Google API.
-  //       const user = result.user;
-  
-  //       // Check if document exists in the user collection:
-  //       const ref = doc(db, 'users', user.uid);
-  //       const docSnap = await getDoc(ref);
-  //       if (docSnap.exists()) {
-  //         // No need to update, just leave a logged in state
-  //         console.log("User exists in the collection")
-  //         // console.log("Document data:", docSnap.data());
-
-  //       } else {
-  //         // Create the document and leave a logged in state
-  //         console.log("User does not exist in the collection");
-  //         const userData = {
-  //           dateCreated: new Date(),
-  //           deviceType: 'Web',
-  //           email: user.email,
-  //           isValid: true,
-  //           //organization: company,
-  //           username: user.displayName,
-  //           uid: user.uid
-  //         };
-  //         const userRef = doc(db, 'users', user.uid);
-  //         setDoc(userRef, userData);
-  //       }
-  
-  //       // setTimeout(() => {
-  //       //   navigate("/profile");
-  //       // }, 6000); // Wait for 2 seconds to let the user see the success message
-
-  //     }catch (error){
-        
-  //       const errorCode = error.code;
-  //       const errorMessage = error.message;
-  //       // The email of the user's account used.
-  //       const email = error.customData.email;
-  //       // The AuthCredential type that was used.
-  //       const credential = FacebookAuthProvider.credentialFromError(error);
-  //     }
-  
-  //   }
-
-  // const handleTwitterSignIn = async(e) => {e.preventDefault();
-  //   console.log("Twitter Signup")
-
-  //   try {
-  //     const provider = new TwitterAuthProvider();
-  //     const auth = getAuth();
-  //     const result = await signInWithPopup(auth, provider);
-      
-  //     // This gives you a Google Access Token. You can use it to access the Google API.
-  //     const user = result.user;
-  //     console.log(user)
-
-  //     // Check if document exists in the user collection:
-  //     const ref = doc(db, 'users', user.uid);
-  //     const docSnap = await getDoc(ref);
-  //     if (docSnap.exists()) {
-  //       // No need to update, just leave a logged in state
-  //       console.log("User exists in the collection")
-  //       // console.log("Document data:", docSnap.data());
-
-  //     } else {
-  //       // Create the document and leave a logged in state
-  //       console.log("User does not exist in the collection");
-  //       const userData = {
-  //         dateCreated: new Date(),
-  //         deviceType: 'Web',
-  //         email: user.email,
-  //         isValid: true,
-  //         //organization: company,
-  //         username: user.displayName,
-  //         uid: user.uid
-  //       };
-  //       const userRef = doc(db, 'users', user.uid);
-  //       setDoc(userRef, userData);
-  //     }
-
-  //     // setTimeout(() => {
-  //     //   navigate("/profile");
-  //     // }, 6000); // Wait for 2 seconds to let the user see the success message
-
-  //   }catch (error){
-      
-  //     const errorCode = error.code;
-  //     const errorMessage = error.message;
-  //     // The email of the user's account used.
-  //     const email = error.customData.email;
-  //     // The AuthCredential type that was used.
-  //     const credential = TwitterAuthProvider.credentialFromError(error);
-  //   }
-
-  // }
-
-
-const handleSignUp = async (e) => {
-  e.preventDefault();
-  if (!userName) {
-    setError('Username is Mandatory');
-    return;
-  }
-  if (!email || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
-    setError('Enter Valid Email Address');
-    return;
-  }
-  if (!password) {
-    setError('Password is Mandatory');
-    return;
-  }
-  try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const currentUser = userCredential.user;
-
-    const userData = {
-      dateCreated: new Date(),
-      deviceType: 'Web',
-      email: email,
-      isValid: true,
-      //organization: company,
-      username: userName,
-      uid: currentUser.uid
-    };
-
-    //await firestore.collection('users').doc(currentUser.uid).set(userData);
-    const userRef = doc(db, 'users', currentUser.uid);
-    await setDoc(userRef, userData);
-
-
-
-    // Clear inputs or navigate to a different page
-    setUserName('');
-    setEmail('');
-    setPassword('');
-    //setCompany('');
-    setLoginSuccess("Successfully signed up!");
-    setError(""); // Clear out any existing error messages
-
-    setTimeout(() => {
-      navigate("/profile");
-    }, 6000); // Wait for 2 seconds to let the user see the success message
-
-  } catch (error) {
-    if (error.message === "Firebase: Error (auth/email-already-in-use).") {
-      setError("Account already exists, please Log in.");
-    } else {
-      setError(error.message);
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    if (!userName) {
+      setError("Username is Mandatory");
+      return;
     }
-    setLoginSuccess(""); // Clear out any success messages
-  }
-};
+    if (!email || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
+      setError("Enter Valid Email Address");
+      return;
+    }
+    if (!password) {
+      setError("Password is Mandatory");
+      return;
+    }
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const currentUser = userCredential.user;
 
+      const userData = {
+        dateCreated: new Date(),
+        deviceType: "Web",
+        email: email,
+        isValid: true,
+        //organization: company,
+        username: userName,
+        uid: currentUser.uid,
+      };
 
+      //await firestore.collection('users').doc(currentUser.uid).set(userData);
+      const userRef = doc(db, "users", currentUser.uid);
+      await setDoc(userRef, userData);
+
+      // Clear inputs or navigate to a different page
+      setUserName("");
+      setEmail("");
+      setPassword("");
+      //setCompany('');
+      setLoginSuccess("Successfully signed up!");
+      setError(""); // Clear out any existing error messages
+
+      setTimeout(() => {
+        navigate("/profile");
+      }, 6000); // Wait for 2 seconds to let the user see the success message
+    } catch (error) {
+      if (error.message === "Firebase: Error (auth/email-already-in-use).") {
+        setError("Account already exists, please Log in.");
+      } else {
+        setError(error.message);
+      }
+      setLoginSuccess(""); // Clear out any success messages
+    }
+  };
 
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
@@ -424,39 +260,36 @@ const handleSignUp = async (e) => {
               <div className=" h-fit mt-14 flex flex-col justify-start items-start gap-9 ">
                 <div className="flex-col justify-start items-start gap-4 flex">
                   <div className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200">
-                    <div className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal" onClick={handleGoogleSignIn}>
-                    <button
-                      type="submit"
+                    <div
+                      className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal"
+                      onClick={handleGoogleSignIn}
                     >
-                      Continue with Google
-                    </button>
+                      <button type="submit">Continue with Google</button>
                     </div>
                     <div className="w-8 h-8 left-[22.50px] top-[12px] absolute">
                       <FcGoogle size={32} />
                     </div>
                   </div>
                   <div className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200">
-                    <div className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal" onClick={handleFacebookSignIn}>
-                    <button
-                      type="submit"
+                    <div
+                      className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal"
+                      onClick={handleFacebookSignIn}
                     >
-                      Continue with Facebook
-                    </button>
+                      <button type="submit">Continue with Facebook</button>
                     </div>
                     <div className="w-8 h-8 left-[22.50px] top-[12px] absolute">
-                      <AiFillApple size={32} />
+                      <BiLogoFacebookCircle size={32} color=" #0163E0" />
                     </div>
                   </div>
                   <div className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200">
-                    <div className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal" onClick={handleTwitterSignIn}>
-                    <button
-                      type="submit"
+                    <div
+                      className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal"
+                      onClick={handleTwitterSignIn}
                     >
-                      Continue with Twitter
-                    </button>
+                      <button type="submit">Continue with Twitter</button>
                     </div>
                     <div className="w-8 h-8 left-[22.50px] top-[12px] absolute">
-                      <FcGoogle size={32} />
+                      <RiTwitterXFill size={32} />
                     </div>
                   </div>
                   {/* <div className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200">
@@ -529,7 +362,9 @@ const handleSignUp = async (e) => {
               </div>
               <div className="self-stretch text-center mt-4 mb-4">
                 {error && <p className="text-red-500">{error}</p>}
-                {loginSuccess && <p className="text-green-500">{loginSuccess}</p>}
+                {loginSuccess && (
+                  <p className="text-green-500">{loginSuccess}</p>
+                )}
               </div>
               <div className="self-stretch my-14 h-14 flex-col justify-start items-start gap-4 flex">
                 <div className="self-stretch justify-center items-center gap-2.5 inline-flex">
@@ -545,9 +380,12 @@ const handleSignUp = async (e) => {
                 <span className="text-zinc-700 text-base font-normal font-open-sans leading-normal">
                   Already have an account?{" "}
                 </span>
-                <span  onClick={() => {
+                <span
+                  onClick={() => {
                     navigate("/login");
-                  }} className="text-violet-600 text-base font-normal font-open-sans leading-normal cursor-pointer">
+                  }}
+                  className="text-violet-600 text-base font-normal font-open-sans leading-normal cursor-pointer"
+                >
                   Log in
                 </span>
               </div>
@@ -560,4 +398,4 @@ const handleSignUp = async (e) => {
 }
 
 export default Signup2;
-export { handleGoogleSignIn, handleFacebookSignIn, handleTwitterSignIn};
+export { handleGoogleSignIn, handleFacebookSignIn, handleTwitterSignIn };

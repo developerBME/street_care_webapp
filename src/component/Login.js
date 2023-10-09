@@ -1,14 +1,25 @@
 import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./firebase"; // Importing the auth instance
-import { getAuth, signInWithPopup, GoogleAuthProvider , onAuthStateChanged} from "firebase/auth";
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+} from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 
 import { FcGoogle } from "react-icons/fc";
-import { AiFillApple } from "react-icons/ai";
+import { AiFillApple, AiFillFacebook } from "react-icons/ai";
+import { BiLogoFacebookCircle } from "react-icons/bi";
 
-import { handleGoogleSignIn, handleFacebookSignIn, handleTwitterSignIn } from "./Signup2"
+import { RiTwitterXFill } from "react-icons/ri";
 
+import {
+  handleGoogleSignIn,
+  handleFacebookSignIn,
+  handleTwitterSignIn,
+} from "./Signup2";
 
 function Login() {
   const navigate = useNavigate();
@@ -17,9 +28,10 @@ function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [loginSuccess, setLoginSuccess] = useState("");
-  
+
   const fAuth = getAuth();
-  onAuthStateChanged(fAuth, (user) => { // Checks Login status for Redirection
+  onAuthStateChanged(fAuth, (user) => {
+    // Checks Login status for Redirection
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/auth.user
@@ -43,7 +55,6 @@ function Login() {
     }
   };
 
-
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center ">
@@ -57,39 +68,36 @@ function Login() {
               <div className=" h-fit mt-14 flex flex-col justify-start items-start gap-9 ">
                 <div className="flex-col justify-start items-start gap-4 flex">
                   <div className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200">
-                    <div className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal" onClick={handleGoogleSignIn}>
-                    <button
-                      type="submit"
+                    <div
+                      className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal"
+                      onClick={handleGoogleSignIn}
                     >
-                      Continue with Google
-                    </button>
+                      <button type="submit">Continue with Google</button>
                     </div>
                     <div className="w-8 h-8 left-[22.50px] top-[12px] absolute">
                       <FcGoogle size={32} />
                     </div>
                   </div>
                   <div className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200">
-                    <div className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal" onClick={handleFacebookSignIn}>
-                    <button
-                      type="submit"
+                    <div
+                      className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal"
+                      onClick={handleFacebookSignIn}
                     >
-                      Continue with Facebook
-                    </button>
+                      <button type="submit">Continue with Facebook</button>
                     </div>
                     <div className="w-8 h-8 left-[22.50px] top-[12px] absolute">
-                      <FcGoogle size={32} />
+                      <BiLogoFacebookCircle size={32} color="#0163E0" />
                     </div>
                   </div>
                   <div className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200">
-                    <div className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal" onClick={handleTwitterSignIn}>
-                    <button
-                      type="submit"
-                    >  
-                      Continue with Twitter
-                      </button>
+                    <div
+                      className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal"
+                      onClick={handleTwitterSignIn}
+                    >
+                      <button type="submit">Continue with Twitter</button>
                     </div>
                     <div className="w-8 h-8 left-[22.50px] top-[12px] absolute">
-                      <AiFillApple size={32} />
+                      <RiTwitterXFill size={32} />
                     </div>
                   </div>
                   {/* <div className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200">
@@ -161,7 +169,13 @@ function Login() {
               </div>
               <div className="self-stretch my-14 h-14 flex-col justify-start items-start gap-4 flex">
                 <div className="self-stretch justify-center items-center gap-2.5 inline-flex">
-                  <button type="submit" className="grow shrink basis-0 text-center text-neutral-100 text-lg font-semibold font-inter leading-normal h-14 px-8 py-4 bg-violet-700 rounded-[100px]"> Log in </button>
+                  <button
+                    type="submit"
+                    className="grow shrink basis-0 text-center text-neutral-100 text-lg font-semibold font-inter leading-normal h-14 px-8 py-4 bg-violet-700 rounded-[100px]"
+                  >
+                    {" "}
+                    Log in{" "}
+                  </button>
                 </div>
               </div>
               <div className="w-fit text-center mx-auto">
