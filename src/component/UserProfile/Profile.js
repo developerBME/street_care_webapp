@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import UserProfileCard from "./UserProfileCard";
 import icon from "../../images/icon.png";
 import add from "../../images/add.png";
 import UserInfo from "./UserInfo";
 import axc from "./CommOutForm";
+
+import OutreachEventCard from "../Community/OutreachEventCard";
+import { fetchEvents } from "../EventCardService";
 
 function Profile() {
   const cardData = [
@@ -74,6 +77,23 @@ function Profile() {
     },
   ];
 
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const eventsData = await fetchEvents();
+      // Sort the events based on the eventDate (from soonest to latest)
+      eventsData.sort((date1, date2) => {
+        const date_1 = new Date(date1.eventDate.seconds * 1000);
+        const date_2 = new Date(date2.eventDate.seconds * 1000);
+        return date_1 - date_2;
+      });
+      setEvents(eventsData);
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center ">
@@ -81,7 +101,7 @@ function Profile() {
         <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 mt-24  lg:mx-40 lg:mt-32 rounded-2xl bg-white text-black ">
           <UserInfo />
         </div>
-
+        {/* Vishnu */}
         <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black mb-10">
           <div className="flex flex-col gap-4 lg:gap-14 lg:p-28 pt-4 pb-4 ">
             <div className="inline-flex flex-col sm:flex-row lg:space-x-16 pl-4">
@@ -111,17 +131,15 @@ function Profile() {
             </div>
             <div className="sm:hidden overflow-x-auto">
               <div className="flex space-x-4 lg:p-4 pl-4">
-                {cardData.map((cardData, index) => (
-                  <div key={index}>
-                    <UserProfileCard cardData={cardData} />
-                  </div>
+                {events.map((eventData) => (
+                  <OutreachEventCard key={eventData.id} cardData={eventData} />
                 ))}
               </div>
             </div>
             <div className="hidden sm:block sm:overflow-x-auto">
               <div className="grid grid-cols-4 gap-2 gap-y-16">
-                {cardData.map((cardData, index) => (
-                  <UserProfileCard key={index} cardData={cardData} />
+                {events.map((eventData) => (
+                  <OutreachEventCard key={eventData.id} cardData={eventData} />
                 ))}
               </div>
             </div>
