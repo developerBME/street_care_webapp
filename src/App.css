@@ -41,10 +41,6 @@
   background-color: #36295e;
 }
 
-.fontb {
-  font-family: "Bricolage Grotesque", sans-serif;
-}
-
 .font-open-sans {
   font-family: "Open Sans", sans-serif;
 }
@@ -53,29 +49,28 @@
   font-family: "Roboto", sans-serif;
 }
 
-
 /* Community Hub */
-.banner1{
+.banner1 {
   background-image: url("./images/community_bg1.png");
 }
-.banner2{
+.banner2 {
   background-image: url("./images/community_bg2.png");
 }
-.middle{
+.middle {
   position: relative;
 }
-.middle:before{
-  content: '';
-  border: 1px solid #F2F2F2;
+.middle:before {
+  content: "";
+  border: 1px solid #f2f2f2;
   position: absolute;
   z-index: 999;
   height: 70px;
   left: 0;
   top: 30%;
 }
-.middle:after{
-  content: '';
-  border: 1px solid #F2F2F2;
+.middle:after {
+  content: "";
+  border: 1px solid #f2f2f2;
   position: absolute;
   z-index: 999;
   height: 70px;
@@ -83,7 +78,8 @@
   top: 30%;
 }
 @media (max-width: 640px) {
-  .middle:before, .middle:after{
+  .middle:before,
+  .middle:after {
     height: 40px;
   }
 }

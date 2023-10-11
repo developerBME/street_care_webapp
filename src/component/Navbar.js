@@ -1,25 +1,33 @@
 import "../App.css";
-import React, { useState, useEffect } from "react";
-import { FaBars, FaTimes } from "react-icons/fa";
+import React, { useState, useEffect, useRef } from "react";
+
 import Avatar from "@mui/material/Avatar";
+
+import { FaBars, FaTimes } from "react-icons/fa";
+import {
+  RiAccountCircleFill,
+  RiUserSettingsLine,
+  RiLogoutBoxRLine,
+} from "react-icons/ri";
 
 import { Link, useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
-
 
 const NavBar = (props) => {
   const [nav, setNav] = useState(false);
   const fAuth = getAuth();
   const fireBaseSignOut = async () => {
-    signOut(fAuth).then(() => {
-      console.log("success")
-    }).catch((error) => {
-      console.log(error)
-      // An error happened.
-    })
-  }
+    signOut(fAuth)
+      .then(() => {
+        console.log("success");
+      })
+      .catch((error) => {
+        console.log(error);
+        // An error happened.
+      });
+  };
   useEffect(() => {
-    console.log(props)
+    console.log(props);
   }, []);
   const links = [
     {
@@ -44,9 +52,46 @@ const NavBar = (props) => {
     },
   ];
 
-  // Login state
-  // const [Loggedin, setLoggedin] = useState(false);
+  const dropdownitems = [
+    {
+      id: 1,
+      label: "My Profile",
+      link: "/profile",
+      icons: RiAccountCircleFill,
+    },
+    {
+      id: 2,
+      label: "Account Settings",
+      link: "/profile",
+      icons: RiUserSettingsLine,
+    },
+    {
+      id: 3,
+      label: "Log out",
+      fireBaseSignOut,
+      icons: RiLogoutBoxRLine,
+    },
+  ];
+
   const navigate = useNavigate();
+
+  const [open, setOpen] = useState(false);
+
+  let menuRef = useRef();
+
+  useEffect(() => {
+    let handler = (e) => {
+      if (!menuRef?.current?.contains(e.target)) {
+        setOpen(false);
+        console.log(menuRef.current);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
+  }, [menuRef]);
 
   return (
     <div className=" z-10 flex justify-between items-center w-full h-[85px]  text-white fixed bg-nav px-2">
@@ -79,14 +124,53 @@ const NavBar = (props) => {
             Login
           </li>
         )}
+        {/*  */}
+
+        {/*  */}
         {props.loggedIn && (
           <li>
-            <Avatar onClick={()=>{fireBaseSignOut()}}
-              className="ml-4 mr-4 "
-              alt="S"
-              src="avatar.jpg"
-              sx={{ width: 58, height: 56 }}
-            />
+            {/*  */}
+            <div className="" ref={menuRef}>
+              <Avatar
+                onClick={() => {
+                  setOpen(!open);
+                }}
+                className="ml-4 mr-4 cursor-pointer"
+                alt="S"
+                src="avatar.jpg"
+                sx={{ width: 58, height: 56 }}
+              />
+
+              <div
+                className={`  absolute top-20 right-7 py-4 bg-neutral-100 rounded-2xl  ${
+                  open ? " visible " : " invisible"
+                } text-black`}
+              >
+                <ul className=" ">
+                  {dropdownitems.map((e, i) => {
+                    const Icon = e.icons;
+
+                    return (
+                      <>
+                        <li className=" px-3 cursor-pointer hover:bg-slate-200">
+                          <Link
+                            to={e.link}
+                            onClick={() => {
+                              e.fireBaseSignOut();
+                            }}
+                            className=" w-[200px] h-10 inline-flex font-inter text-base font-normal leading-6 tracking-wide gap-3  items-center"
+                          >
+                            <Icon size={24} />
+                            {e.label}
+                          </Link>
+                        </li>
+                      </>
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
+            {/*  */}
           </li>
         )}
       </ul>
