@@ -119,22 +119,18 @@ const SuperpowerModal = ({
             </div>
           </div>
           <div className="w-fit justify-start items-start gap-4 inline-flex">
-            <div className="h-10 bg-[#6840E0] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex self-stretch px-6 py-2.5 text-[#F7F7F7] hover:bg-[#36295E] cursor-pointer">
-              <button
-                className="text-center text-[15px] font-semibold font-inter leading-tight"
-                onClick={handleSubmit}
-              >
-                Save
-              </button>
-            </div>
-            <div
-              className="h-10 rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 inline-flex self-stretch px-6 py-2.5 text-[#6840E0] hover:text-[#36295E] cursor-pointer"
+            <button
+              className="w-full text-center text-[15px] font-semibold font-inter leading-tight h-10 bg-[#6840E0] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex self-stretch px-6 py-2.5 text-[#F7F7F7] hover:bg-[#36295E] cursor-pointer"
+              onClick={handleSubmit}
+            >
+              Save
+            </button>
+            <button
+              className="w-full text-center text-[15px] font-semibold font-inter leading-tight h-10 rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 inline-flex self-stretch px-6 py-2.5 text-[#6840E0] hover:text-[#36295E] cursor-pointer"
               onClick={closeModal}
             >
-              <button className="text-center text-[15px] font-semibold font-inter leading-tight">
-                Cancel
-              </button>
-            </div>
+              Cancel
+            </button>
           </div>
         </div>
       </div>

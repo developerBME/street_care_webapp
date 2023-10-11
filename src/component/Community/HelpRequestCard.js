@@ -2,6 +2,7 @@ import React from "react";
 import help_announcement from "../../images/help_announcement.png";
 import help_pending from "../../images/help_pending.png";
 import help_received from "../../images/help_received.png";
+import CustomButton from "../Buttons/CustomButton";
 
 const HelpRequestCard = ({ helpRequestCardData }) => {
   const {
@@ -174,6 +175,9 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
             <button className="w-fit bg-[#E6DCFF] hover:bg-[#6840E0] text-[#181818] hover:text-white rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight">
               I can help
             </button>
+            {/* <div className="w-fit flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight">
+              <CustomButton label="I can help" name="buttonlight" />
+            </div> */}
           </div>
         )}
         {helpStatus === "Help on the way" && (
@@ -184,6 +188,12 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
             <button className="w-fit bg-[#6840E0] hover:bg-[#E6DCFF] text-white hover:text-[#181818] rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight">
               Reopen Help Request
             </button>
+            {/* <div className="w-fit flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight">
+              <CustomButton label="Mark as Help Received" name="buttonlight" />
+            </div>
+            <div className="w-fit flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight">
+              <CustomButton label="Reopen Help Request" name="button" />
+            </div> */}
           </div>
         )}
       </div>

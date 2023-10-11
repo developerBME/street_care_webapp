@@ -128,12 +128,14 @@ const UserInfo = () => {
             </h3>
           </div>
 
-          <div className=" w-full px-4 pb-2 flex overflow-x-auto md:grid  md:grid-cols-2 md:gap-y-2 lg:flex lg:flex-wrap">
+          <div className=" w-full px-4 pb-2 flex overflow-x-auto md:grid md:grid-cols-2 md:gap-y-2 lg:flex lg:flex-wrap">
             {superpowers &&
               superpowers.map((superpower) => {
                 return (
-                  <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold">
-                    <h6 className="text-[#212121] w-[130px]">{superpower}</h6>
+                  <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold whitespace-nowrap">
+                    <h6 className="text-[#212121] w-fit text-[14px]">
+                      {superpower}
+                    </h6>
                   </div>
                 );
               })}
@@ -150,7 +152,9 @@ const UserInfo = () => {
               className="px-2 py-2 mr-2 h-10 rounded-md border border-[#CACACA] hover:bg-[#DEF6EB] text-[#212121] font-semibold"
               onClick={openModal}
             >
-              <h6 className="text-[#212121] w-[160px]">Add my superpower</h6>
+              <h6 className="text-[#212121] w-[160px] text-[14px]">
+                Add my superpower
+              </h6>
             </button>
             <SuperpowerModal
               isOpen={modalIsOpen}

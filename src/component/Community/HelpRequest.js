@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import wavingHand from "../../images/waving_hand2.png";
 import HelpRequestCard from "./HelpRequestCard";
+import CustomButton from "../Buttons/CustomButton";
 
 const HelpRequest = () => {
   const [visibleItems, setVisibleItems] = useState(5);
@@ -250,9 +251,12 @@ const HelpRequest = () => {
           </div>
         </div>
         <div className="flex-col">
-          <button className="my-2 bg-[#6840E0] hover:bg-[#36295E] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex text-neutral-100 text-md font-semibold font-inter leading-tight self-stretch px-6 py-2.5">
+          {/* <button className="my-2 bg-[#6840E0] hover:bg-[#36295E] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex text-neutral-100 text-md font-semibold font-inter leading-tight self-stretch px-6 py-2.5">
             Add New Request
-          </button>
+          </button> */}
+          <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-semibold font-inter leading-tight self-stretch">
+            <CustomButton label="Add New Request" name="buttondefault" />
+          </div>
         </div>
       </div>
       <div className="p-4 lg:px-28 lg:py-12 flex flex-col bg-[#F7F7F7] gap-4 lg:gap-8 rounded-b-2xl">
