@@ -1,6 +1,7 @@
 import { collection, getDocs, getDoc, doc } from 'firebase/firestore';
 import { db } from "./firebase";
 
+
 export const fetchEvents = async () => {
     const eventCollection = collection(db, "outreachEvents");
     const eventSnapshot = await getDocs(eventCollection);
@@ -30,6 +31,36 @@ const fetchUserName = async (uid) => {
         console.error("No user found with uid:", uid);
         return ''; 
     }
+}
+
+
+export const fetchUserEvents = async (uid) => {
+    const userRef = doc(db, "users", uid);
+    const userDoc = await getDoc(userRef);
+
+    if (!userDoc.exists()) {
+        console.error("User not found:", uid);
+        return [];
+    }
+
+    const eventIds = userDoc.data().outreachEvents || [];
+    const eventsData = [];
+
+    for (let eventId of eventIds) {
+        const eventRef = doc(db, "outreachEvents", eventId);
+        const eventDoc = await getDoc(eventRef);
+
+        if (eventDoc.exists()) {
+            const eventData = eventDoc.data();
+            eventsData.push({
+                ...eventData,
+                id: eventDoc.id,
+                eventDate: formatDate(new Date(eventData.eventDate.seconds * 1000))
+            });
+        }
+    }
+
+    return eventsData;
 }
 
 export function formatDate(dateObj) {

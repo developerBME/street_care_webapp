@@ -7,7 +7,8 @@ import UserInfo from "./UserInfo";
 import axc from "./CommOutForm";
 
 import OutreachEventCard from "../Community/OutreachEventCard";
-import { fetchEvents } from "../EventCardService";
+import { fetchUserEvents } from "../EventCardService";
+import { auth } from "../firebase";
 
 function Profile() {
   const cardData = [
@@ -81,14 +82,24 @@ function Profile() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const eventsData = await fetchEvents();
-      // Sort the events based on the eventDate (from soonest to latest)
-      eventsData.sort((date1, date2) => {
-        const date_1 = new Date(date1.eventDate.seconds * 1000);
-        const date_2 = new Date(date2.eventDate.seconds * 1000);
-        return date_1 - date_2;
-      });
-      setEvents(eventsData);
+      const user = auth.currentUser;
+
+      if (user) {
+        const uid = user.uid;
+        console.log("UID is ", uid);
+        const eventsData = await fetchUserEvents(uid);
+
+        // Sort the events based on the eventDate (from soonest to latest)
+        eventsData.sort((date1, date2) => {
+          const date_1 = new Date(date1.eventDate.seconds * 1000);
+          const date_2 = new Date(date2.eventDate.seconds * 1000);
+          return date_1 - date_2;
+        });
+        setEvents(eventsData);
+      } else {
+        console.log("No user is signed in.");
+        setEvents([]);
+      }
     };
 
     fetchData();
