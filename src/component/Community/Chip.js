@@ -15,6 +15,9 @@ const Chip = (props) => {
     props.setter(props.val, !clicked);
     setClicked(!clicked);
   };
+
+
+ 
   return (
     <div
       onClick={handleClick}
