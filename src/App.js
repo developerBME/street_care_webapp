@@ -20,7 +20,6 @@ import CreateOutreach from "./component/Community/CreateOutreach";
 import HelpRequestForm from "./component/Community/HelpRequstForm";
 import HelpRequestEventWindow from "./component/Community/HelpRequestEventWindow";
 
-
 function App() {
   const fAuth = getAuth();
   const [loggedIn, setLoggedIn] = useState(false);
@@ -50,16 +49,19 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup2" element={<Signup2 />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/profile/documenting" element={<Documenting />} />
+          <Route path="/profile/select-outreach" element={<Documenting />} />
           <Route path="/profile/commoutform" element={<CommOutForm />} />
           <Route path="/outreachsignup" element={<OutreachSignup />} />
           <Route path="/createOutreach" element={<CreateOutreach />} />
-          <Route path="/helpRequestEventWindow" element={<HelpRequestEventWindow />} />
+          <Route
+            path="/helpRequestEventWindow"
+            element={<HelpRequestEventWindow />}
+          />
           <Route
             path="/profile/personaloutform"
             element={<PersonalOutForm />}
           />
-          <Route path="/helpRequestForm" element={<HelpRequestForm/>} />
+          <Route path="/helpRequestForm" element={<HelpRequestForm />} />
           <Route path="/*" element={<Home />} />
         </Routes>
         <Footer />

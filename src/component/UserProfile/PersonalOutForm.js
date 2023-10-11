@@ -23,7 +23,7 @@ function PersonalOutForm() {
   // const ratingChanged = (newRating) => {
   //   console.log(newRating);
   // };
-  const helpedName = useRef("");
+  const numberHelped = useRef("");
   const date = useRef("");
   const time = useRef("");
   const cityRef = useRef("");
@@ -110,7 +110,7 @@ function PersonalOutForm() {
     e.preventDefault();
     let obj = {
       uid: fAuth.currentUser.uid,
-      name: helpedName.current.value,
+      numberPeopleHelped: numberHelped.current.value,
       whatGiven: itemArray,
       itemQty: itemQtyRef.current.value,
       date: date.current.value,
@@ -135,7 +135,7 @@ function PersonalOutForm() {
 
   const clearFields = () => {
     date.current.value = "";
-    helpedName.current.value = "";
+    numberHelped.current.value = "";
     itemQtyRef.current.value = "";
     setItemArray([]);
     checkboxes.current.forEach((x) => {
@@ -178,18 +178,18 @@ function PersonalOutForm() {
                   <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
                     <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
                       <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
-                        Name
+                        Number of people helped
                       </div>
                     </div>
                     <div className="self-stretch h-fit  border-collapse     ">
                       <div className=" h-14  justify-center items-start ">
                         <input
-                          type="name"
-                          id="name"
-                          placeholder="Name"
+                          type="number"
+                          id="numberHelped"
+                          placeholder="Number of people helped"
                           className="text-zinc-900 w-full h-full pl-4 rounded-[4px] border border-zinc-500 text-base  font-normal font-roboto leading-normal tracking-wide"
                           required={true}
-                          ref={helpedName}
+                          ref={numberHelped}
                         ></input>
                       </div>
                     </div>

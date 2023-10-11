@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { Link } from "react-router-dom";
 import UserProfileCard from "./UserProfileCard";
 import icon from "../../images/icon.png";
 import add from "../../images/add.png";
@@ -121,9 +121,12 @@ function Profile() {
               </div>
               <div className="inline-flex bg-violet-600 rounded-full gap-2 items-center p-2 lg:p-4 mr-44 mt-2 lg:mt-0">
                 <img src={icon} className="w-4 h-4 mt-1" />
-                <button className="w-fit rounded-full text-neutral-100 text-[10px] lg:text-[14px] ">
+                <Link
+                  to={"/profile/select-outreach"}
+                  className="w-fit rounded-full text-neutral-100 text-[10px] lg:text-[14px] "
+                >
                   Document my Outreach
-                </button>
+                </Link>
               </div>
             </div>
             <div className="  hidden sm:block">
@@ -134,9 +137,9 @@ function Profile() {
                 </div>
                 <div className="px-3 py-2 inline-flex bg-violet-600 rounded-full gap-2">
                   <img src={add} className="w-4 h-4" />
-                  <button className="rounded-full text-neutral-100 text-[10px]">
+                  <Link className="rounded-full text-neutral-100 text-[10px]">
                     Create Outreach
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>

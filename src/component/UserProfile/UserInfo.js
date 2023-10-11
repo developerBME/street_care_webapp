@@ -81,7 +81,6 @@ const UserInfo = () => {
         const data = await getDocs(logOfUserRef);
         let totalHelped = 0;
         let totalDonations = 0;
-        let totalItemsDonated = 0;
         data.docs.map((doc) => {
           totalHelped = isNaN(doc.data().numberPeopleHelped)
             ? totalHelped

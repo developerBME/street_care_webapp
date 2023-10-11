@@ -8,7 +8,6 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebase";
 
-
 const starStyle = {
   width: 60,
   height: 60,
@@ -19,8 +18,8 @@ function CommOutForm() {
   // const ratingChanged = (newRating) => {
   //   console.log(newRating);
   // };
-  
-  const helpedName = useRef("");
+
+  const numberHelped = useRef("");
   const [itemArray, setItemArray] = useState([]);
   const NumberOfItems = useRef("");
   const [rating, setRating] = useState(0);
@@ -34,13 +33,12 @@ function CommOutForm() {
   onAuthStateChanged(fAuth, (user) => {
     if (user) {
       console.log("Found user");
-      console.log(fAuth.currentUser.uid)
+      console.log(fAuth.currentUser.uid);
     } else {
       console.log("USER NOT FOUND!");
       navigate("/login");
     }
   });
-
 
   function handleItemArray(e) {
     if (e.target.checked) {
@@ -54,7 +52,7 @@ function CommOutForm() {
     e.preventDefault();
     let obj = {
       uid: fAuth.currentUser.uid,
-      name: helpedName.current.value,
+      numberPeopleHelped: numberHelped.current.value,
       whatGiven: itemArray,
       itemQty: NumberOfItems.current.value,
       rating: rating,
@@ -75,7 +73,7 @@ function CommOutForm() {
 
   const clearFields = () => {
     NumberOfItems.current.value = "";
-    helpedName.current.value = "";
+    numberHelped.current.value = "";
     setItemArray([]);
     checkboxes.current.forEach((x) => {
       x.checked = false;
@@ -112,18 +110,18 @@ function CommOutForm() {
                   <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
                     <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
                       <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
-                        Name
+                        How many people did you help?
                       </div>
                     </div>
                     <div className="self-stretch h-fit  border-collapse     ">
                       <div className=" h-14  justify-center items-start ">
                         <input
-                          type="name"
-                          id="name"
-                          placeholder="Name"
+                          type="number"
+                          id="numberHelped"
+                          placeholder="How many people did you help?"
                           className="text-zinc-900 w-full h-full pl-4 rounded-[4px] border border-zinc-500 text-base  font-normal font-roboto leading-normal tracking-wide"
                           required={true}
-                          ref={helpedName}
+                          ref={numberHelped}
                         ></input>
                       </div>
                     </div>
@@ -390,9 +388,10 @@ function CommOutForm() {
                 {/*  */}
                 <div className="justify-start items-start gap-4 inline-flex">
                   <div className="justify-start items-start gap-4 flex">
-                    <div className="px-8 py-4 bg-violet-700 rounded-[100px] justify-center items-center gap-2.5 flex"
-                    onClick={handleSubmit}
-                    > 
+                    <div
+                      className="px-8 py-4 bg-violet-700 rounded-[100px] justify-center items-center gap-2.5 flex"
+                      onClick={handleSubmit}
+                    >
                       <div className="text-center text-stone-100 text-lg font-semibold font-open-sans leading-normal">
                         Done
                       </div>
