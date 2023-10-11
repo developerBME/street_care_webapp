@@ -56,7 +56,7 @@ function CommOutForm() {
       uid: fAuth.currentUser.uid,
       name: helpedName.current.value,
       whatGiven: itemArray,
-      NumberOfItems: NumberOfItems.current.value,
+      itemQty: NumberOfItems.current.value,
       rating: rating,
     };
 

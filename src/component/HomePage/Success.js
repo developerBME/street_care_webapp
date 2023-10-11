@@ -1,8 +1,50 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import Campaign from "../../images/campaign.svg";
+import { getDocs, collection, query } from "firebase/firestore";
+import { db } from "../firebase";
 
 function Success() {
+
+  const [donations, setDonations] = useState("");
+  const [helpedBy, setHelpedBy] = useState("");
+  // const [helpedPeople, setHelpedPeople] = useState("");
+  useEffect(() => {
+    const getValues = async () => {
+      try {
+        const logOfUserRef = query(
+          collection(db, "testLog")
+        );
+        const data = await getDocs(logOfUserRef);
+        let totalDonations = 0;
+        // let totalHelpedPeople = 0;
+        let uniqueID = new Set();
+        data.docs.map((doc) => {
+          uniqueID.add(doc.data().uid);
+          totalDonations = (isNaN(doc.data().itemQty) || typeof doc.data().itemQty === 'undefined' || doc.data().itemQty === '')
+            ? totalDonations
+            : totalDonations + parseInt(doc.data().itemQty);
+
+            // Assuming field is called peopleHelped in the collection
+          // totalHelpedPeople = (isNaN(doc.data().peopleHelped))
+          //   ? totalHelpedPeople
+          //   : totalHelpedPeople + parseInt(doc.data().peopleHelped)
+          
+          return null;
+        });
+        setDonations(
+          isNaN(parseInt(totalDonations)) ? 0 : parseInt(totalDonations)
+        );
+        setHelpedBy(uniqueID.size)
+        // setHelpedPeople(totalHelpedPeople)
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getValues();
+  }, []);
+
+
   return (
     <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
       <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
@@ -58,6 +100,7 @@ function Success() {
             <div className="px-8 py-2 bg-white rounded-[100px] inline-flex">
               <div className="text-violet-950 font-bricolage text-5xl font-normal leading-[64px]">
                 103
+                {/* {helpedPeople} */}
               </div>
             </div>
           </div>
@@ -74,7 +117,7 @@ function Success() {
             </div>
             <div className="px-6 py-2 bg-white rounded-[100px] inline-flex">
               <div className="text-violet-950 font-bricolage text-5xl font-normal leading-[64px]">
-                264
+                {helpedBy}
               </div>
             </div>
           </div>
@@ -92,7 +135,7 @@ function Success() {
             </div>
             <div className="px-6 py-2 bg-white rounded-[100px] inline-flex">
               <div className="text-violet-950 font-bricolage text-5xl font-normal leading-[64px]">
-                1172{" "}
+                {donations}
               </div>
             </div>
           </div>
