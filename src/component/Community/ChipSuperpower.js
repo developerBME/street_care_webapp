@@ -3,9 +3,9 @@ import add2 from "../../images/add2.png";
 import close from "../../images/close.png";
 
 const ChipSuperpower = (props) => {
-  const [isActive, setIsActive] = useState(false);
-
+  const [isActive, setIsActive] = useState(props.checked);
   const handleAddClick = () => {
+    props.setter(props.val, !isActive);
     setIsActive(!isActive);
   };
   return (

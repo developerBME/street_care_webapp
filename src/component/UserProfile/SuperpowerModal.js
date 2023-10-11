@@ -1,6 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Chip from "../Community/Chip";
 import ChipSuperpower from "../Community/ChipSuperpower";
-
+import { getAuth } from "firebase/auth";
+import {
+  doc,
+  updateDoc,
+  query,
+  collection,
+  where,
+  getDocs,
+} from "firebase/firestore";
+import { db } from "../firebase";
 const chipList = [
   "Childcare",
   "Clothing",
@@ -20,7 +30,54 @@ const chipList = [
   "Pet Care",
 ];
 
-const SuperpowerModal = ({ isOpen, closeModal }) => {
+const SuperpowerModal = ({
+  isOpen,
+  closeModal,
+  currSupPow,
+  refreshUserQuery,
+}) => {
+  const [superpowers, setSuperpowers] = useState(currSupPow);
+  const [success, setSuccess] = useState(false);
+
+  const fAuth = getAuth();
+
+  useEffect(() => {
+    setSuperpowers(currSupPow);
+  }, [currSupPow]);
+
+  // This function is drilled to child component: Chips
+  function handleArray(val, checked) {
+    if (checked) {
+      setSuperpowers([...superpowers, val]);
+    } else {
+      setSuperpowers(superpowers.filter((item) => item !== val));
+    }
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const userQuery = query(
+        collection(db, "users"),
+        where("uid", "==", fAuth?.currentUser?.uid)
+      );
+      const userDocRef = await getDocs(userQuery);
+      const userDocID = userDocRef.docs[0].id;
+      const userDocUpdate = doc(db, "users", userDocID);
+      const updateRef = await updateDoc(userDocUpdate, {
+        superpowers: superpowers,
+      });
+      if (updateRef == undefined) {
+        // WEIRD CODE! but works, should be replaced with proper pormise resolve catching if possible
+        closeModal();
+        refreshUserQuery();
+        // setSuccess(true);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -42,14 +99,31 @@ const SuperpowerModal = ({ isOpen, closeModal }) => {
               Used your Superpower to help us build the community.
             </div>
             <div className="w-fit space-y-2">
-              {chipList.map((value, index) => (
-                <ChipSuperpower key={index} val={value} />
-              ))}
+              {chipList.map((value, index) =>
+                currSupPow.find((e) => e == value) ? (
+                  <ChipSuperpower
+                    key={index}
+                    val={value}
+                    checked={true}
+                    setter={handleArray}
+                  />
+                ) : (
+                  <ChipSuperpower
+                    key={index}
+                    val={value}
+                    checked={false}
+                    setter={handleArray}
+                  />
+                )
+              )}
             </div>
           </div>
           <div className="w-fit justify-start items-start gap-4 inline-flex">
             <div className="h-10 bg-[#6840E0] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex self-stretch px-6 py-2.5 text-[#F7F7F7] hover:bg-[#36295E] cursor-pointer">
-              <button className="text-center text-[15px] font-semibold font-inter leading-tight">
+              <button
+                className="text-center text-[15px] font-semibold font-inter leading-tight"
+                onClick={handleSubmit}
+              >
                 Save
               </button>
             </div>
