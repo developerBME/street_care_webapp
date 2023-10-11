@@ -11,11 +11,44 @@ const CommunityOutreachEvent = () => {
   };
   const cardData = [
     {
-      name: "William Smith",
-      eventName: "BK Fort Green Outreach",
+      userName: "William Smith",
+      title: "BK Fort Green Outreach",
       eventDate: "Sept 9, 2023 SAT 5:00pm",
-      location: "200 Eastern Pkwy, Brooklyn, NY 11238",
-      req: "Childcare Specialist needed",
+      location: {
+        add1: "200 Eastern Pkwy",
+        add2: "Brooklyn",
+        state: "NY",
+        zipcode: "11238"
+      },
+      helpType: "Childcare Specialist needed",
+      totalSlots: 20,
+      interests: 5
+    },
+    {
+      userName: "William Smith",
+      title: "BK Fort Green Outreach",
+      eventDate: "Sept 9, 2023 SAT 5:00pm",
+      location: {
+        add1: "200 Eastern Pkwy",
+        add2: "Brooklyn",
+        state: "NY",
+        zipcode: "11238"
+      }, helpType: "Childcare Specialist needed",
+      totalSlots: 20,
+      interests: 5
+    },
+    {
+      userName: "William Smith",
+      title: "BK Fort Green Outreach",
+      eventDate: "Sept 9, 2023 SAT 5:00pm",
+      location: {
+        add1: "200 Eastern Pkwy",
+        add2: "Brooklyn",
+        state: "NY",
+        zipcode: "11238"
+      }, helpType: "Childcare Specialist needed",
+      totalSlots: 20,
+      interests: 5
     },
   ];
 

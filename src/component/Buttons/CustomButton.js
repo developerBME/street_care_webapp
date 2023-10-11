@@ -9,7 +9,7 @@ function CustomButton({ label, name }) {
     );
   } else if (name == "buttondefault") {
     return (
-      <button className="bg-[#6840E0] font-semibold text-base text-white font-normal py-[8px] px-[24px] rounded-full hover:bg-[#36295E] transition ease-in-out delay-300">
+      <button className="bg-[#6840E0] font-semibold text-base text-white font-normal py-[8px] px-[24px] rounded-full hover:bg-[#504279] transition ease-in-out delay-300">
         {label}
       </button>
     );
@@ -31,6 +31,14 @@ function CustomButton({ label, name }) {
         {label}
       </button>
     );
+
+  } else if (name == "buttonmediumlight") {
+    return (
+      <button className="bg-[#f1f3f2] font-semibold text-base text-black font-normal py-[8px] px-[24px] border-slate-950 rounded-full transition ease-in-out delay-300">
+        {label}
+      </button>
+    );
+
   } else if (name == "buttonsmallborder") {
     return (
       <button className="text-[#1F0A58] font-semibold text-base font-normal py-[3px] px-[24px] border-[1px] border-[#C8C8C8] rounded-full hover:bg-violet-200 transition ease-in-out delay-300">

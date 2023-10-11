@@ -175,11 +175,9 @@ function Footer() {
           </div>
         </div>
         <hr class=" bg-gray-800 mx-4" />
-        <div class="px-4 py-6 bg-nav dark:bg-nav md:flex md:items-center md:justify-between">
+        <div class="px-4 pt-6 pb-12 sm:py-6 bg-nav md:flex md:items-center md:justify-between">
           <span class="text-sm text-gray-300 sm:text-center"></span>
-          <div class=" float-right text-white mt-4 space-x-5 md:mt-0">
-            Terms & Policies
-          </div>
+          <div class=" float-right text-white space-x-5 ">Terms & Policies</div>
         </div>
       </div>
     </footer>

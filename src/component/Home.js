@@ -17,6 +17,8 @@ import Process from "./HomePage/Process";
 import MoreAboutUs from "./HomePage/MoreAboutUs";
 import Navbar from "./Navbar";
 import OutreachEventCard from "./Community/OutreachEventCard";
+import { fetchEvents } from "./EventCardService";
+
 
 function HomePage() {
   const fAuth = getAuth();
@@ -35,27 +37,65 @@ function HomePage() {
 
   const cardData = [
     {
-      name: "William Smith",
-      eventName: "BK Fort Green Outreach",
+      userName: "William Smith",
+      title: "BK Fort Green Outreach",
       eventDate: "Sept 9, 2023 SAT 5:00pm",
-      location: "200 Eastern Pkwy, Brooklyn, NY 11238",
-      req: "Childcare Specialist needed",
+      location: {
+        add1: "200 Eastern Pkwy",
+        add2: "Brooklyn",
+        state: "NY",
+        zipcode: "11238"
+      },
+      helpType: "Childcare Specialist needed",
+      totalSlots: 20,
+      interests: 5
     },
     {
-      name: "William Smith",
-      eventName: "BK Fort Green Outreach",
+      userName: "William Smith",
+      title: "BK Fort Green Outreach",
       eventDate: "Sept 9, 2023 SAT 5:00pm",
-      location: "200 Eastern Pkwy, Brooklyn, NY 11238",
-      req: "Childcare Specialist needed",
+      location: {
+        add1: "200 Eastern Pkwy",
+        add2: "Brooklyn",
+        state: "NY",
+        zipcode: "11238"
+      }, helpType: "Childcare Specialist needed",
+      totalSlots: 20,
+      interests: 5
     },
     {
-      name: "William Smith",
-      eventName: "BK Fort Green Outreach",
+      userName: "William Smith",
+      title: "BK Fort Green Outreach",
       eventDate: "Sept 9, 2023 SAT 5:00pm",
-      location: "200 Eastern Pkwy, Brooklyn, NY 11238",
-      req: "Childcare Specialist needed",
+      location: {
+        add1: "200 Eastern Pkwy",
+        add2: "Brooklyn",
+        state: "NY",
+        zipcode: "11238"
+      }, helpType: "Childcare Specialist needed",
+      totalSlots: 20,
+      interests: 5
     },
+
   ];
+
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const eventsData = await fetchEvents();
+      // Sort the events based on the eventDate (from soonest to latest)
+      eventsData.sort((date1, date2) => {
+        const date_1 = new Date(date1.eventDate.seconds * 1000);
+        const date_2 = new Date(date2.eventDate.seconds * 1000);
+        return date_1 - date_2;
+      });
+      setEvents(eventsData);
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center ">
@@ -80,8 +120,10 @@ function HomePage() {
                 <Eventcard />
               </div>
   </div> */}
-            <div className=" w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-              <OutreachEventCard />
+            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+              {events.map(eventData => (
+                <OutreachEventCard key={eventData.id} cardData={eventData} />
+              ))}
             </div>
           </div>
         </div>

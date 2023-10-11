@@ -1,5 +1,6 @@
 import React from "react";
 import CustomButton from "../component/Buttons/CustomButton";
+import CarePackage from "./CarePackage";
 
 function HowToHelp() {
   return (
@@ -32,6 +33,11 @@ function HowToHelp() {
             </div>
           </div>
           {/*  */}
+        </div>
+        <div className=" w-[95%] md:w-[90%] lg:w-[75%] mx-2 lg:mx-40 mt-8 rounded-2xl text-black ">
+          {" "}
+          <CarePackage />
+          {/* Remove this component and create a new one for your code  */}
         </div>
         <div className="  w-[95%] md:w-[90%] lg:w-[75%] mx-2 lg:mx-40 mt-8 mb-20 rounded-2xl bg-white text-black ">
           {/* section 2 */}

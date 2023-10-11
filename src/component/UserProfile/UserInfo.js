@@ -18,6 +18,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
+
 import {
   getAuth,
   signInWithPopup,
@@ -33,6 +34,7 @@ const UserInfo = () => {
   const [helped, setHelped] = useState("");
   const [donations, setDonations] = useState("");
   const [outreaches, setOutreaches] = useState("");
+  const [superpowers, setSuperpowers] = useState([]);
 
   const fAuth = getAuth();
   onAuthStateChanged(fAuth, (user) => {
@@ -54,8 +56,23 @@ const UserInfo = () => {
     setModalIsOpen(false);
   };
 
+  const getUserData = async () => {
+    try {
+      const userRef = query(
+        collection(db, "users"),
+        where("uid", "==", fAuth?.currentUser?.uid)
+      );
+      const data = await getDocs(userRef);
+      setSuperpowers(
+        data.docs[0].data().superpowers ? data.docs[0].data().superpowers : []
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
-    const getValues = async () => {
+    const getDeedValues = async () => {
       try {
         const logOfUserRef = query(
           collection(db, "testLog"),
@@ -84,7 +101,9 @@ const UserInfo = () => {
         console.log(err);
       }
     };
-    getValues();
+
+    getDeedValues();
+    getUserData();
   }, [fAuth.currentUser]);
 
   useEffect(() => {
@@ -111,7 +130,15 @@ const UserInfo = () => {
           </div>
 
           <div className=" w-full px-4 pb-2 flex overflow-x-auto md:grid  md:grid-cols-2 md:gap-y-2 lg:flex lg:flex-wrap">
-            <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold">
+            {superpowers &&
+              superpowers.map((superpower) => {
+                return (
+                  <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold">
+                    <h6 className="text-[#212121] w-[130px]">{superpower}</h6>
+                  </div>
+                );
+              })}
+            {/* <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold">
               <h6 className="text-[#212121] w-[130px]">Spanish Speaker</h6>
             </div>
             <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold">
@@ -119,14 +146,19 @@ const UserInfo = () => {
             </div>
             <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold">
               <h3 className="text-[#212121]">Childcare</h3>
-            </div>
+            </div> */}
             <button
               className="px-2 py-2 mr-2 h-10 rounded-md border border-[#CACACA] hover:bg-[#DEF6EB] text-[#212121] font-semibold"
               onClick={openModal}
             >
               <h6 className="text-[#212121] w-[160px]">Add my superpower</h6>
             </button>
-            <SuperpowerModal isOpen={modalIsOpen} closeModal={closeModal} />
+            <SuperpowerModal
+              isOpen={modalIsOpen}
+              closeModal={closeModal}
+              currSupPow={superpowers}
+              refreshUserQuery={getUserData}
+            />
           </div>
         </div>
       </div>
