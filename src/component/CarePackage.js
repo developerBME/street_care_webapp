@@ -23,6 +23,7 @@ import twenty1 from "../images/rectangle-21.png";
 import twenty2 from "../images/rectangle-22.png";
 import twenty3 from "../images/rectangle-23.png";
 import twenty4 from "../images/rectangle-24.png";
+import icon_howtoprep from "../images/icon_howtoprep.png";
 
 
 function CarePackage({ label, name }) {
@@ -137,13 +138,14 @@ function CarePackage({ label, name }) {
     
     return(
         <>
-        <div className="lg:bg-none sm:bg-gradient-to-tr from-[#D3F2CE] to-[#E7E7E7] to-90% bg-fixed items-center justify-center px-8 pt-8 lg:pt-24 lg:px-36 h-full w-full lg:rounded-t-2xl lg:rounded-b-none rounded-2xl bg-[#F7F7F7] lg:m-0 mb-[10px]">
-            <p className="text-[24px]">Upcoming outreach events</p>
-            <h2 className="text-neutral-800 text-[57px] font-medium font-bricolage leading-[64px] py-[64px]">How To Help</h2>
+        <div className="lg:bg-none bg-gradient-to-tr from-[#D3F2CE] to-[#E7E7E7] to-90% bg-fixed items-center justify-center px-4 py-8 lg:pt-24 lg:px-36 h-full w-full lg:rounded-t-2xl lg:rounded-b-none rounded-2xl bg-[#F7F7F7] lg:m-0 mb-[10px]">
+            <p className="text-[24px] lg:block hidden">Upcoming outreach events</p>
+            <img src={icon_howtoprep} className="block lg:hidden" />
+            <h2 className="text-neutral-800 lg:text-[57px] text-[36px] font-medium font-bricolage lg:leading-[64px] leading-[44px] lg:py-[64px] pt-[24px]">How to prepare the Care Package?</h2>
         </div>
-        <div className="items-center justify-center p-8 lg:pb-[25px] lg:px-36 h-full w-full lg:rounded-none rounded-2xl bg-[#F7F7F7] lg:m-0 mb-[10px]">
+        <div className="items-center justify-center px-4 py-8 lg:pb-[25px] lg:px-36 h-full w-full lg:rounded-none rounded-2xl bg-[#F7F7F7] lg:m-0 mb-[10px]">
             <p className="text-[24px] mb-[18px]">Items to Skip in Your Homeless Care Kits</p>
-            <div className="overflow-x-scroll">
+            <div className="overflow-x-scroll lg:overflow-none">
                 <div className="w-fit flex lg:flex-wrap">
                     {skipItems.map((item, index) => (
                         <div key={index} className="image-container px-[8px] lg:max-w-[90px] lg:min-w-[90px] w-[120px] mb-[25px]">
@@ -154,7 +156,7 @@ function CarePackage({ label, name }) {
                 </div>
             </div>
         </div>
-        <div className="items-center justify-center p-8 lg:pb-[25px] lg:px-36 h-full w-full lg:rounded-none rounded-2xl bg-[#F7F7F7] lg:m-0 mb-[10px]">
+        <div className="items-center justify-center px-4 py-8 lg:pb-[25px] lg:px-36 h-full w-full lg:rounded-none rounded-2xl bg-[#F7F7F7] lg:m-0 mb-[10px]">
             <p className="text-[24px] mb-[18px]">Personal Care</p>
             <ul className="list-disc ml-[20px] mb-[30px] text-[#616161]">
                 <li className="text-[15px]">Strong Fragrances: Avoid strongly scented products as some individuals may have sensitivities or allergies.</li>
@@ -171,7 +173,7 @@ function CarePackage({ label, name }) {
                 </div>
             </div>
         </div>
-        <div className="items-center justify-center p-8 lg:pb-[25px] lg:px-36 h-full w-full lg:rounded-none rounded-2xl bg-[#F7F7F7] lg:m-0 mb-[10px]">
+        <div className="items-center justify-center px-4 py-8 lg:pb-[25px] lg:px-36 h-full w-full lg:rounded-none rounded-2xl bg-[#F7F7F7] lg:m-0 mb-[10px]">
             <p className="text-[24px] mb-[18px]">Clothes</p>
             <ul className="list-disc ml-[20px] mb-[30px] text-[#616161]">
                 <li className="text-[15px]">Clothing in Poor Condition: While donating clothing is a great idea, make sure it's clean and in good condition.</li>
@@ -187,7 +189,7 @@ function CarePackage({ label, name }) {
                 </div>
             </div>
         </div>
-        <div className="items-center justify-center p-8 pb-8 lg:pb-24 lg:px-36 h-full w-full lg:rounded-b-2xl lg:rounded-t-none rounded-2xl bg-[#F7F7F7] ">
+        <div className="items-center justify-center px-4 py-8 lg:pb-24 lg:px-36 h-full w-full lg:rounded-b-2xl lg:rounded-t-none rounded-2xl bg-[#F7F7F7] ">
             <p className="text-[24px] mb-[18px]">Food</p>
             <ul className="list-disc ml-[20px] mb-[30px] text-[#616161]">
                 <li className="text-[15px]">Perishable Foods: Avoid giving items that can spoil quickly, such as fresh fruits or prepared meals, unless you're able to distribute them immediately.</li>

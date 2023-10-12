@@ -3,11 +3,12 @@ import '../../App.css';
 
 import banner from "../../images/community_banner.png";
 import one from "../../images/community_bg1.png";
+import two from "../../images/community_bg2.png";
 
 
 function Banner() {
     return(
-        <div className="items-center justify-center h-full w-full rounded-2xl bg-[#F7F7F7] bg-pattern banner2 bg-[left_bottom_-100px] bg-no-repeat relative">
+        <div className="items-center justify-center h-full w-full rounded-2xl bg-pattern bg-[url('images/community_bg2.png')] bg-[left_bottom_-100px] bg-no-repeat relative">
 
             <div className="absolute bottom-0 right-0 z-[9]">
                 <img src={one} className="rounded-br-3xl" />
@@ -32,7 +33,7 @@ function Banner() {
                         </div>
 
                         {/* Column 2 */}
-                        <div className="w-1/3 sm:w-1/3 md:w-1/3 lg:w-1/3 lg:px-[28px] lg:py-[20px] md:p-[18px] p-[18px] middle border-[#F2F2F2] lg:text-left md:text-center sm:text-center text-center">
+                        <div className="w-1/3 sm:w-1/3 md:w-1/3 lg:w-1/3 lg:px-[28px] lg:py-[20px] md:p-[18px] p-[18px] relative border-[#F2F2F2] lg:text-left md:text-center sm:text-center text-center before:content-[''] before:absolute before:border-[1px] before:border-[#F2F2F2] before:border-solid before:top-[30%] before:left-0 lg:before:h-[60px] md:before:h-[60px] before:h-[40px] after:content-[''] after:absolute after:border-[1px] after:border-[#F2F2F2] after:border-solid after:top-[30%] after:right-0 lg:after:h-[60px] md:after:h-[60px] after:h-[40px]">
                             {/* Column content */}
                             <p className="font-bold text-violet-800 lg:mb-[24px] md:mb-[10px] sm:mb-[15px]">Helped by</p>
                             <p><span className="text-xl font-bold lg:text-[38px] md:text-[28px] sm:text-[38px] lg:inline-block md:block block sm:mb-[10px]">264</span> volunteers</p>
