@@ -52,8 +52,8 @@ const BMEcardnew = () => {
                             </div>
                             <div className="self-stretch h-20 px-6 pt-4 pb-6 flex-col justify-start items-start gap-2.5 flex">
                             <div className="self-stretch justify-start items-center gap-2.5 inline-flex">
-                              <div className="h-10 rounded-full flex-col justify-center items-center gap-2 inline-flex">
-                                <div className="self-stretch grow shrink basis-0 px-6 py-2.5 bg-zinc-300 justify-center items-center gap-2 inline-flex">
+                              <div className="h-10  flex-col justify-center items-center gap-2 inline-flex">
+                                <div className="self-stretch grow rounded-full shrink basis-0 px-6 py-2.5 bg-zinc-300 justify-center items-center gap-2 inline-flex">
                                     <div className="opacity-40 text-center text-neutral-600 text-sm font-medium font-['DM Sans'] leading-tight">Stay Tuned</div>
                                 </div>
                               </div>
@@ -82,7 +82,7 @@ const BMEcardnew = () => {
                                 <div className="self-stretch h-20 px-6 pt-4 pb-6 flex-col justify-start items-start gap-2.5 flex">
                                 <div className="self-stretch justify-start items-center gap-2.5 inline-flex">
                                     <div className="h-10 rounded-full flex-col justify-center items-center gap-2 inline-flex">
-                                    <div className="self-stretch grow shrink basis-0 px-6 py-2.5 bg-zinc-300 justify-center items-center gap-2 inline-flex">
+                                    <div className="self-stretch grow rounded-full shrink basis-0 px-6 py-2.5 bg-zinc-300 justify-center items-center gap-2 inline-flex">
                                         <div className="opacity-40 text-center text-neutral-600 text-sm font-medium font-['DM Sans'] leading-tight">Stay Tuned</div>
                                     </div>
                                     </div>
