@@ -27,7 +27,11 @@ function Community() {
 
         {/* Vishnu */}
         <div className="block sm:hidden w-full p-4">
-          <div className={`inline-flex w-full rounded-full ${activeTab === "outreach" ? "bg-violet-50":"bg-[#E2FAFF]" }`}>
+          <div
+            className={`inline-flex w-full rounded-full ${
+              activeTab === "outreach" ? "bg-violet-50" : "bg-[#E2FAFF]"
+            }`}
+          >
             <button
               className={`${
                 activeTab === "outreach"
@@ -51,16 +55,16 @@ function Community() {
           </div>
         </div>
         <div className="block sm:hidden">
-    {activeTab === "outreach" ? (
-      <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
-        <CommunityOutreachEvent />
-      </div>
-    ) : (
-      <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-8 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
-        <HelpRequest />
-      </div>
-    )}
-  </div>
+          {activeTab === "outreach" ? (
+            <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
+              <CommunityOutreachEvent />
+            </div>
+          ) : (
+            <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-8 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
+              <HelpRequest />
+            </div>
+          )}
+        </div>
 
         <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black hidden md:block">
           <CommunityOutreachEvent />

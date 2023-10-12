@@ -110,15 +110,15 @@ const UserInfo = () => {
   }, [helped]);
   return (
     <div className="lg:px-24 lg:py-12 ">
-      <div className="flex flex-col pt-0 px-0 pb-2 md:flex md:flex-row md:px-8  md:pb-8 lg:px-0  lg:pb-12">
-        <div className="md:mr-12 lg:mr-12 pr-0 bg-gradient-to-tr from-[#C0F4FF] from-10% via-[#C0F4FF] via-60% to-[#DDD] to-90% bg-fixed rounded-t-2xl md:bg-none">
+      <div className="flex flex-col pt-0 px-0 pb-2 md:flex md:flex-row md:px-8  md:pb-8 lg:px-0  lg:pb-12 md:gap-x-8 lg:gap-x-16">
+        <div className="pr-0 bg-gradient-to-tr from-[#C0F4FF] from-10% via-[#C0F4FF] via-60% to-[#DDD] to-90% bg-fixed rounded-t-2xl md:bg-none">
           <img
             src={user}
             alt="..."
-            className="rounded-full md:h-56 md:w-56 lg:w-60 lg:h-60 border-none md:mt-12 h-32 w-32 mx-auto mt-8 mb-4 "
+            className="rounded-full md:w-56 md:h-48 lg:w-64 lg:h-56 border-none md:mt-16 lg:mt-20 h-32 w-32 mx-auto mt-8 mb-4 "
           />
         </div>
-        <div className="py-4 md:mt-12 lg:mt-20">
+        <div className="w-[99%] py-4 md:mt-16 lg:mt-20">
           <div className="px-4">
             <h1 className="font-bricolage md:text-[52px] font-medium md:h-16 text-[#212121] h-12 text-4xl">
               Mandy Klose
