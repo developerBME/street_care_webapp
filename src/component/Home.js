@@ -9,7 +9,7 @@ import { useNavigate, Link } from "react-router-dom";
 import FAQs from "./HomePage/FAQs";
 import Eventcard from "./HomePage/Eventcard";
 import BMEcard from "./HomePage/BMEcard";
-import BMEcardnew from "./HomePage/BMEcard_new";
+import BMEcardnew from "./HomePage/BMEofficialCard";
 import Landing from "./HomePage/Landing";
 import Success from "./HomePage/Success";
 import News from "./HomePage/News";
