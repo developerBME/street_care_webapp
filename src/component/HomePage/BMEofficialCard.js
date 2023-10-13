@@ -7,7 +7,7 @@ import imgBME from "../../images/imgBME.png";
 
 const BMEcardnew = () => {
   return (
-    <div className=" w-[340px] lg:w-full h-fit grid grid-cols-1 md:grid-cols-2 md:w-full lg:grid-cols-3 pt-9 gap-5">
+    <div className=" w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
       <div className=" grow shrink basis-0 bg-sky-100 rounded-3xl flex-col justify-start items-start inline-flex">
         <img className=" self-stretch h-56 rounded-t-3xl" src={img} />
         <div className=" self-stretch px-6 pt-6 pb-3 justify-start items-center gap-2 inline-flex">
