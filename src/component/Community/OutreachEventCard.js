@@ -3,9 +3,10 @@ import userImg from "../../images/user.jpeg"
 import verifiedImg from "../../images/verified_purple.png"
 import wavingHand from "../../images/waving_hand.png"
 import CustomButton from "../Buttons/CustomButton";
+import { handleRsvp } from "../EventCardService";
 
 const OutreachEventCard = ({ cardData }) => {
-    const { userName, title, eventDate, location, helpType, totalSlots, interests } = cardData
+    const { id, label, userName, title, eventDate, location, helpType, totalSlots, interests } = cardData
 
     return (
         <div className="bg-[#F5EEFE] w-[340px] lg:w-full rounded-2xl mb-4">
@@ -24,7 +25,7 @@ const OutreachEventCard = ({ cardData }) => {
                 </div>
             </div>
             <div className="flex items-center justify-between px-5 pt-2 pb-4 gap-16">
-                <CustomButton label="RSVP" name="buttonlight" />
+                <CustomButton label={label} name="buttonlight" onClick = {(e) => handleRsvp(e, id, label)} />
                 <div className="font-normal font-['Inter'] text-[12px]">Open Spots: {totalSlots - interests}/{totalSlots}</div>
             </div>
         </div>
