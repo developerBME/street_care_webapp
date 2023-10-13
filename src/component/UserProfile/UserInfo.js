@@ -110,12 +110,12 @@ const UserInfo = () => {
   }, [helped]);
   return (
     <div className="lg:px-24 lg:py-12 ">
-      <div className="flex flex-col pt-0 px-0 pb-2 md:flex md:flex-row md:px-8  md:pb-8 lg:px-0  lg:pb-12 md:gap-x-8 lg:gap-x-16">
+      <div className="flex flex-col pt-0 px-0 pb-2 md:flex md:flex-row md:px-8  md:pb-8 lg:px-0  lg:pb-12 md:gap-x-6 lg:gap-x-12">
         <div className="pr-0 bg-gradient-to-tr from-[#C0F4FF] from-10% via-[#C0F4FF] via-60% to-[#DDD] to-90% bg-fixed rounded-t-2xl md:bg-none">
           <img
             src={user}
             alt="..."
-            className="rounded-full md:w-56 md:h-48 lg:w-64 lg:h-56 border-none md:mt-16 lg:mt-20 h-32 w-32 mx-auto mt-8 mb-4 "
+            className="rounded-full md:w-64 md:h-48 lg:w-72 lg:h-56 border-none md:mt-16 lg:mt-20 h-32 w-32 mx-auto mt-8 mb-4 "
           />
         </div>
         <div className="w-[99%] py-4 md:mt-16 lg:mt-20">
@@ -132,7 +132,7 @@ const UserInfo = () => {
             {superpowers &&
               superpowers.map((superpower) => {
                 return (
-                  <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold whitespace-nowrap">
+                  <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold whitespace-nowrap flex justify-center items-center">
                     <h6 className="text-[#212121] w-fit text-[14px]">
                       {superpower}
                     </h6>
