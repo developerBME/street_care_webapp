@@ -138,12 +138,12 @@ function CarePackage({ label, name }) {
     
     return(
         <>
-        <div className="lg:bg-none bg-gradient-to-tr from-[#D3F2CE] to-[#E7E7E7] to-90% bg-fixed items-center justify-center px-4 py-8 lg:pt-24 lg:px-36 h-full w-full lg:rounded-t-2xl lg:rounded-b-none rounded-2xl bg-[#F7F7F7] lg:m-0 mb-[10px]">
+        <div className="lg:bg-none bg-gradient-to-tr from-[#D3F2CE] to-[#E7E7E7] to-90% bg-fixed items-center justify-center px-4 py-8 lg:pt-24 lg:pb-0 lg:px-36 h-full w-full lg:rounded-t-2xl lg:rounded-b-none rounded-2xl bg-[#F7F7F7] lg:m-0 mb-[10px]">
             <p className="text-[24px] lg:block hidden">Upcoming outreach events</p>
             <img src={icon_howtoprep} className="block lg:hidden" />
             <h2 className="text-neutral-800 lg:text-[57px] text-[36px] font-medium font-bricolage lg:leading-[64px] leading-[44px] lg:py-[64px] pt-[24px]">How to prepare the Care Package?</h2>
         </div>
-        <div className="items-center justify-center px-4 py-8 lg:pb-[25px] lg:px-36 h-full w-full lg:rounded-none rounded-2xl bg-[#F7F7F7] lg:m-0 mb-[10px]">
+        <div className="items-center justify-center px-4 py-8 lg:pb-[25px] lg:pt-0 lg:px-36 h-full w-full lg:rounded-none rounded-2xl bg-[#F7F7F7] lg:m-0 mb-[10px]">
             <p className="text-[24px] mb-[18px]">Items to Skip in Your Homeless Care Kits</p>
             <div className="overflow-x-scroll lg:overflow-none">
                 <div className="w-fit flex lg:flex-wrap">
