@@ -1,53 +1,51 @@
 import React from "react";
 
-function CustomButton({ label, name }) {
+function CustomButton({ label, name, onClick }) {
   if (name == "buttonborder") {
     return (
-      <button className="text-[#1F0A58] font-semibold text-base font-normal py-[8px] px-[24px] border-[1px] border-[#C8C8C8] rounded-full hover:bg-violet-200 transition ease-in-out delay-300">
+      <button onClick={onClick} className="text-[#1F0A58]  text-base  font-medium py-[8px] px-[24px] border-[1px] border-[#C8C8C8] rounded-full hover:bg-violet-200 transition ease-in-out delay-300">
         {label}
       </button>
     );
   } else if (name == "buttondefault") {
     return (
-      <button className="bg-[#6840E0] font-semibold text-base text-white font-normal py-[8px] px-[24px] rounded-full hover:bg-[#504279] transition ease-in-out delay-300">
+      <button onClick={onClick} className="bg-[#6840E0]   text-base text-white  font-medium py-[8px] px-[24px] rounded-full hover:bg-[#504279] transition ease-in-out delay-300">
         {label}
       </button>
     );
   } else if (name == "buttonlight") {
     return (
-      <button className="bg-violet-200 font-semibold text-base text-[#181818] font-normal py-[8px] px-[24px] rounded-full hover:bg-violet-300 transition ease-in-out delay-300">
+      <button onClick={onClick} className="bg-violet-200   text-base text-[#181818]  font-medium py-[8px] px-[24px] rounded-full hover:bg-violet-300 transition ease-in-out delay-300">
         {label}
       </button>
     );
   } else if (name == "buttonsmall") {
     return (
-      <button className="bg-violet-700 font-semibold text-base text-white font-normal py-[3px] px-[24px] rounded-full hover:bg-[#36295E] transition ease-in-out delay-300">
+      <button onClick={onClick} className="bg-violet-700   text-base text-white  font-medium py-[3px] px-[24px] rounded-full hover:bg-[#36295E] transition ease-in-out delay-300">
         {label}
       </button>
     );
   } else if (name == "buttonsmallight") {
     return (
-      <button className="bg-violet-200 font-semibold text-base text-[#181818] font-normal py-[3px] px-[24px] rounded-full hover:bg-violet-300 transition ease-in-out delay-300">
+      <button onClick={onClick} className="bg-violet-200   text-base text-[#181818]  font-medium py-[3px] px-[24px] rounded-full hover:bg-violet-300 transition ease-in-out delay-300">
         {label}
       </button>
     );
-
   } else if (name == "buttonmediumlight") {
     return (
-      <button className="bg-[#f1f3f2] font-semibold text-base text-black font-normal py-[8px] px-[24px] border-slate-950 rounded-full transition ease-in-out delay-300">
+      <button onClick={onClick} className="bg-[#f1f3f2]   text-base text-black  font-medium py-[8px] px-[24px] border-slate-950 rounded-full transition ease-in-out delay-300">
         {label}
       </button>
     );
-
   } else if (name == "buttonsmallborder") {
     return (
-      <button className="text-[#1F0A58] font-semibold text-base font-normal py-[3px] px-[24px] border-[1px] border-[#C8C8C8] rounded-full hover:bg-violet-200 transition ease-in-out delay-300">
+      <button onClick={onClick} className="text-[#1F0A58]   text-base  font-medium py-[3px] px-[24px] border-[1px] border-[#C8C8C8] rounded-full hover:bg-violet-200 transition ease-in-out delay-300">
         {label}
       </button>
     );
   } else {
     return (
-      <button className="bg-violet-700 font-semibold text-base text-white font-normal py-[8px] px-[24px] rounded-full hover:bg-[#36295E] transition ease-in-out delay-300">
+      <button onClick={onClick} className="bg-violet-700   text-base text-white  font-medium py-[8px] px-[24px] rounded-full hover:bg-[#36295E] transition ease-in-out delay-300">
         {label}
       </button>
     );

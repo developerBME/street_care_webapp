@@ -3,18 +3,12 @@ import userImg from "../../images/user.jpeg";
 import verifiedImg from "../../images/verified_purple.png";
 import wavingHand from "../../images/waving_hand.png";
 import CustomButton from "../Buttons/CustomButton";
+import { handleRsvp } from "../EventCardService";
+
 
 const OutreachEventCard = ({ cardData, isProfilePage }) => {
-  const {
-    userName,
-    title,
-    eventDate,
-    location,
-    helpType,
-    totalSlots,
-    interests,
-  } = cardData;
-
+    const { id, label, userName, title, eventDate, location, helpType, totalSlots, interests } = cardData
+    console.log("what is label",label)
   return (
     <div className="bg-[#F5EEFE] w-[350px] lg:w-full rounded-2xl mb-4">
       {!isProfilePage ? (
@@ -65,7 +59,8 @@ const OutreachEventCard = ({ cardData, isProfilePage }) => {
         {isProfilePage ? (
           <CustomButton label="Edit" name="buttonlight" />
         ) : (
-          <CustomButton label="RSVP" name="buttonlight" />
+            <CustomButton label={label} name="buttonlight" onClick = {(e) => handleRsvp(e, id, label)} />
+
         )}
 
         {!isProfilePage ? (

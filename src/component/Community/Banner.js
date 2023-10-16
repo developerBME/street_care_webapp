@@ -3,15 +3,16 @@ import '../../App.css';
 
 import banner from "../../images/community_banner.png";
 import one from "../../images/community_bg1.png";
-import two from "../../images/community_bg2.png";
+import two from "../../images/community_bg3.png";
 
 
 function Banner() {
     return(
-        <div className="items-center justify-center h-full w-full rounded-2xl bg-pattern bg-[url('images/community_bg2.png')] bg-[left_bottom_-100px] bg-no-repeat relative">
+        <div className="overflow-hidden items-center justify-center h-full w-full rounded-2xl bg-pattern bg-[url('images/community_bg2.png')] bg-[left_bottom_-200px] sm:bg-[left_bottom_-100px] bg-no-repeat relative">
 
             <div className="absolute bottom-0 right-0 z-[9]">
-                <img src={one} className="rounded-br-3xl" />
+                <img src={one} className="rounded-br-3xl hidden sm:block" />
+                <img src={two} className="rounded-br-3xl block sm:hidden" />
             </div>
             <div className="px-[8px] py-6 lg:px-24 lg:pb-[55px] lg:pt-[25px] md:px-[25px] md:py-[25px] bg-[right_bottom_-150px] bg-no-repeat relative">
                 <div className="lg:items-start md:items-center justify-center h-full w-full grid md:grid-cols-4 lg:grid-cols-5 gap-2 mb-[70px]">
@@ -20,7 +21,7 @@ function Banner() {
                         <p className=" lg:text-[28px]">Join us today to make meaningful impact.</p>
                     </div>
                     <div className="lg:col-span-3 md:col-span-2 z-0">
-                        <img src={banner} className=" h-full lg:max-w-[120%] lg:w-[120%] lg:-ml-[50px] md:w-fit mx-auto"></img>
+                        <img src={banner} className=" h-full lg:max-w-[120%] lg:w-[120%] lg:mt-0 mt-[30px] lg:-ml-[50px] md:w-fit mx-auto"></img>
                     </div>
                 </div>
                 <div className="bg-white rounded-3xl lg:text-[18px md:text-[18px] text-[12px] relative z-[9]">

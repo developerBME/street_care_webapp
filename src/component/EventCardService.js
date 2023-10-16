@@ -1,21 +1,42 @@
-import { collection, getDocs, getDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, getDoc, doc, updateDoc, query, where } from 'firebase/firestore';
 import { db } from "./firebase";
+import { getAuth, onAuthStateChanged } from "firebase/auth"
 
 
 export const fetchEvents = async () => {
     const eventCollection = collection(db, "outreachEvents");
     const eventSnapshot = await getDocs(eventCollection);
     let eventsData = [];
+    const fAuth = getAuth();
+    onAuthStateChanged(fAuth, (user) => {
+        if (user) {
+            console.log("Found user");
+        } else {
+            console.log("USER NOT FOUND!");
+        }
+    });
 
     for (const doc of eventSnapshot.docs) {
         const eventData = doc.data();
+        let currentParticipants = eventData.participants;
         const userName = await fetchUserName(eventData.uid);
-        eventsData.push({
-            ...eventData,
-            userName: userName,
-            eventDate: formatDate(new Date(eventData.eventDate.seconds * 1000)),
-            id: doc.id
-        });
+        if (currentParticipants && fAuth.currentUser && currentParticipants.includes(fAuth.currentUser.uid)){
+            eventsData.push({
+                ...eventData,
+                userName: userName,
+                eventDate: formatDate(new Date(eventData.eventDate.seconds * 1000)),
+                id: doc.id,
+                label: "EDIT"
+            });
+        } else {
+            eventsData.push({
+                ...eventData,
+                userName: userName,
+                eventDate: formatDate(new Date(eventData.eventDate.seconds * 1000)),
+                id: doc.id,
+                label: "RSVP"
+            });
+        }
     }
 
     return eventsData;
@@ -81,3 +102,106 @@ export function formatDate(dateObj) {
   
     return `${month} ${day}, ${year} ${weekday} ${formattedTime}`;
   }
+
+
+export const handleRsvp = async (e, id, label) => {
+    
+    if (label === 'RSVP'){
+    e.preventDefault();
+    const fAuth = getAuth();
+    onAuthStateChanged(fAuth, (user) => {
+        if (user) {
+            console.log("Found user");
+        } else {
+            console.log("USER NOT FOUND!");
+        }
+    });
+
+    // console.log("user id ", fAuth.currentUser.uid)
+    // console.log("doc id ", id);
+    // const ref = query(collection(db, "outreachEvents"),where('id', '==',id));
+    try {
+        // const userQuery = query(
+        //     collection(db, "outreachEvents"),
+        //     where("helpType", "==", helpType)
+        //   );
+
+        const ref = doc(db, "outreachEvents", id);
+
+        const userQuery = query(
+            collection(db, "users"),
+            where("uid", "==", fAuth?.currentUser?.uid)
+          );
+        const userDocRef = await getDocs(userQuery);
+        const userDocID = userDocRef.docs[0].id;
+        const userRef = doc(db, "users", userDocID);
+
+        // const userRef = doc(db,"users",fAuth.currentUser.uid);
+
+        // console.log(userQuery)
+        // console.log("posting to db")
+        // console.log(helpType)
+        // const docSnap = await getDocs(userQuery);
+        const docSnap = await getDoc(ref);
+        let currentParticipants = docSnap.data().participants;
+        const userSnap = await getDoc(userRef);
+        console.log(userSnap)
+        let currentEvents = userSnap.data().outreachEvents;
+        console.log(currentParticipants)
+
+        if (currentParticipants.includes(fAuth.currentUser.uid)){
+            console.log("already present")
+            const newParticipants = [...currentParticipants];
+            console.log(newParticipants)
+        } else {
+            console.log("to be added")
+            const newParticipants = [...currentParticipants, fAuth.currentUser.uid];
+            console.log(newParticipants);
+            const eventDocUpdate = doc(db, "outreachEvents", id);
+            const updateRef = await updateDoc(eventDocUpdate, {
+                participants: newParticipants,
+              });
+        }
+
+        if (!currentEvents){
+            const newEvents = [id];
+            const userDocUpdate = doc(db, "user", fAuth.currentUser.uid);
+            const userUpdateRef = await updateDoc(userDocUpdate, {
+                outreachEvents: newEvents,
+              }); 
+        } else if (currentEvents && currentEvents.includes(id)){
+            console.log("Event exists in user collection")
+        } else {
+            const newEvents = [...currentEvents,id];
+            const userDocUpdate = doc(db, "user", fAuth.currentUser.uid);
+            const userUpdateRef = await updateDoc(userDocUpdate, {
+                outreachEvents: newEvents,
+              }); 
+        }
+
+        // if (docSnap.exists()) {
+        //     // No need to update, just leave a logged in state
+        //     console.log("Update can be done");
+        //     console.log(docSnap.data().participants);
+        //     // console.log("Document data:", docSnap.data());
+        //   } else {
+        //     console.log("not found")
+        //   }
+        // const updateRef = await updateDoc(eventDocUpdate, {
+        //     participants: [...participants],
+        //   });
+
+        // const userDocID = docSnap.docs[0].id;
+        // console.log(userDocID)
+
+        // docSnap.forEach((doc) => {
+        //     // doc.data() is never undefined for query doc snapshots
+        //     console.log(doc.id, " => ", doc.data().participants);
+        //   });
+    } catch (error) {
+      console.log(error)
+    }
+  } else {
+    console.log("EDIT BUTTON")
+  }
+}
