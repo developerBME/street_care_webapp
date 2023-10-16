@@ -8,6 +8,10 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebase";
 
+import CustomButton from "../Buttons/CustomButton";
+
+import ConfirmationModal from "./ConfirmationModal";
+
 const starStyle = {
   width: 60,
   height: 60,
@@ -25,9 +29,24 @@ function CommOutForm() {
   const [rating, setRating] = useState(0);
   const checkboxes = useRef([]);
   const [success, setSuccess] = useState(false);
-  {
-    /* Firebase */
-  }
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
+  // const tempsub = async (e) => {
+  //   e.preventDefault();
+
+  //   setSuccess(true);
+  // };
+
+  // Firebase
 
   const fAuth = getAuth();
   onAuthStateChanged(fAuth, (user) => {
@@ -388,23 +407,32 @@ function CommOutForm() {
                 {/*  */}
                 <div className="justify-start items-start gap-4 inline-flex">
                   <div className="justify-start items-start gap-4 flex">
-                    <div
-                      className="px-8 py-4 bg-violet-700 rounded-[100px] justify-center items-center gap-2.5 flex"
+                    <CustomButton
+                      label="Done"
+                      name="buttondefault"
                       onClick={handleSubmit}
+                    />
+                  </div>
+                  {/*  */}
+                  {/* <div className="justify-start items-start gap-4 flex">
+                    <div
+                      className=" cursor-pointer px-8 py-4 bg-violet-700 rounded-[100px] justify-center items-center gap-2.5 flex"
+                      onClick={tempsub}
                     >
                       <div className="text-center text-stone-100 text-lg font-semibold font-open-sans leading-normal">
-                        Done
+                        Temp
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
                 {/*  */}
                 {success && (
-                  <div className="justify-start items-start gap-4 inline-flex">
-                    <div className="justify-start items-start gap-4 flex">
-                      Success!
-                    </div>
-                  </div>
+                  // <div className="justify-start items-start gap-4 inline-flex">
+                  //   <div className="justify-start items-start gap-4 flex">
+                  //     Success!
+                  //   </div>
+                  // </div>
+                  <ConfirmationModal isOpen={true} />
                 )}
               </div>
             </div>

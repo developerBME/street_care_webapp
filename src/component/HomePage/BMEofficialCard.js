@@ -5,7 +5,7 @@ import img2 from "../../images/img123.png";
 import imgBME from "../../images/imgBME.png";
 // import Button from "../Buttons/CustomButton";
 
-const BMEcardnew = () => {
+const BMEofficialCard = () => {
   return (
     <div className=" w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
       <div className=" grow shrink basis-0 bg-sky-100 rounded-3xl flex-col justify-start items-start inline-flex">
@@ -133,4 +133,4 @@ const BMEcardnew = () => {
   );
 };
 
-export default BMEcardnew;
+export default BMEofficialCard;

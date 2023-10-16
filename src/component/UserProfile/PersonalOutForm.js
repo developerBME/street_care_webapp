@@ -13,6 +13,8 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 
+import CustomButton from "../Buttons/CustomButton";
+
 const starStyle = {
   width: 60,
   height: 60,
@@ -540,14 +542,11 @@ function PersonalOutForm() {
                 {/*  */}
                 <div className="justify-start items-start gap-4 inline-flex">
                   <div className="justify-start items-start gap-4 flex">
-                    <div
-                      className="px-8 py-4 bg-violet-700 rounded-[100px] justify-center items-center gap-2.5 flex"
+                    <CustomButton
+                      label="Done"
+                      name="buttondefault"
                       onClick={handleSubmit}
-                    >
-                      <div className="text-center text-stone-100 text-lg font-semibold font-open-sans leading-normal">
-                        Done
-                      </div>
-                    </div>
+                    />
                   </div>
                 </div>
                 {/*  */}

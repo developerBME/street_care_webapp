@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import UserProfileCard from "./UserProfileCard";
 import icon from "../../images/icon.png";
 import add from "../../images/add.png";
@@ -9,6 +9,7 @@ import axc from "./CommOutForm";
 import OutreachEventCard from "../Community/OutreachEventCard";
 import { fetchUserEvents } from "../EventCardService";
 import { auth } from "../firebase";
+import CustomButton from "../Buttons/CustomButton";
 
 function Profile() {
   const cardData = [
@@ -80,6 +81,8 @@ function Profile() {
 
   const [events, setEvents] = useState([]);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchData = async () => {
       const user = auth.currentUser;
@@ -119,15 +122,25 @@ function Profile() {
               <div class="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage leading-[52px]">
                 My Outreaches
               </div>
-              <div className="inline-flex bg-violet-600 rounded-full gap-2 items-center p-2 lg:p-4 mr-44 mt-2 lg:mt-0">
+              <CustomButton
+                label="Document my Outreach"
+                name="buttondefaulticon"
+                icon={icon}
+                onClick={() => {
+                  navigate("/profile/select-outreach");
+                }}
+              />
+
+              {/* <div className="inline-flex bg-violet-600 rounded-full gap-2 items-center p-2 lg:p-4 mr-44 mt-2 lg:mt-0">
                 <img src={icon} className="w-4 h-4 mt-1" />
+
                 <Link
                   to={"/profile/select-outreach"}
                   className="w-fit rounded-full text-neutral-100 text-[10px] lg:text-[14px] "
                 >
                   Document my Outreach
                 </Link>
-              </div>
+              </div> */}
             </div>
             <div className="  hidden sm:block">
               <div className="w-full inline-flex bg-[#F2F6D8] p-4 rounded-xl space-x-4">
@@ -135,25 +148,41 @@ function Profile() {
                   Congratulations! You have attended more than 1 outreach event.
                   Now you can host your own.
                 </div>
-                <div className="px-3 py-2 inline-flex bg-violet-600 rounded-full gap-2">
+                <CustomButton
+                  label="Create Outreach"
+                  name="buttondefaulticon"
+                  icon={add}
+                  onClick={() => {
+                    navigate("/createOutreach");
+                  }}
+                />
+                {/* <div className="px-3 py-2 inline-flex bg-violet-600 rounded-full gap-2">
                   <img src={add} className="w-4 h-4" />
                   <Link className="rounded-full text-neutral-100 text-[10px]">
                     Create Outreach
                   </Link>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="sm:hidden overflow-x-auto">
               <div className="flex space-x-3 w-fit lg:p-4 pl-4">
                 {events.map((eventData) => (
-                  <OutreachEventCard key={eventData.id} cardData={eventData} isProfilePage={true}/>
+                  <OutreachEventCard
+                    key={eventData.id}
+                    cardData={eventData}
+                    isProfilePage={true}
+                  />
                 ))}
               </div>
             </div>
             <div className="hidden sm:block sm:overflow-x-auto">
               <div className="grid grid-cols-3 gap-2 gap-y-16">
                 {events.map((eventData) => (
-                  <OutreachEventCard key={eventData.id} cardData={eventData} isProfilePage={true}/>
+                  <OutreachEventCard
+                    key={eventData.id}
+                    cardData={eventData}
+                    isProfilePage={true}
+                  />
                 ))}
               </div>
             </div>

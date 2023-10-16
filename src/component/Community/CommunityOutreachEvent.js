@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import OutreachEventCard from "./OutreachEventCard";
 import arrowDown from "../../images/arrowDown.png";
 import arrowRight from "../../images/arrowRight.png";
+import CustomButton from "../Buttons/CustomButton";
 
 const CommunityOutreachEvent = () => {
   const [visibleItems, setVisibleItems] = useState(3);
@@ -18,11 +19,11 @@ const CommunityOutreachEvent = () => {
         add1: "200 Eastern Pkwy",
         add2: "Brooklyn",
         state: "NY",
-        zipcode: "11238"
+        zipcode: "11238",
       },
       helpType: "Childcare Specialist needed",
       totalSlots: 20,
-      interests: 5
+      interests: 5,
     },
     {
       userName: "William Smith",
@@ -32,10 +33,11 @@ const CommunityOutreachEvent = () => {
         add1: "200 Eastern Pkwy",
         add2: "Brooklyn",
         state: "NY",
-        zipcode: "11238"
-      }, helpType: "Childcare Specialist needed",
+        zipcode: "11238",
+      },
+      helpType: "Childcare Specialist needed",
       totalSlots: 20,
-      interests: 5
+      interests: 5,
     },
     {
       userName: "William Smith",
@@ -45,10 +47,11 @@ const CommunityOutreachEvent = () => {
         add1: "200 Eastern Pkwy",
         add2: "Brooklyn",
         state: "NY",
-        zipcode: "11238"
-      }, helpType: "Childcare Specialist needed",
+        zipcode: "11238",
+      },
+      helpType: "Childcare Specialist needed",
       totalSlots: 20,
-      interests: 5
+      interests: 5,
     },
   ];
 
@@ -87,9 +90,7 @@ const CommunityOutreachEvent = () => {
           <div className="font-medium text-[15px] lg:text-[28px] text-[#1F0A58] font-bricolage">
             Upcoming Outreach Events
           </div>
-          <button className=" text-[8px] lg:text-[12px] text-white bg-[#6840E0] px-4 py-1 lg:px-6 lg:py-2.5 rounded-full">
-            Create an Outreach
-          </button>
+          <CustomButton label="Create an Outreach" name="buttondefault" />
         </div>
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
           {cardData.slice(0, visibleItems).map((item, index) => (
@@ -106,7 +107,6 @@ const CommunityOutreachEvent = () => {
             Load More
           </button>
         )}
-        
         {/*<div className="w-full inline-flex flex-col items-center sm:inline-flex sm:flex-row sm:space-x-4 hidden sm:block">
           {cardData.map((item, index) => (
             <OutreachEventCard key={index} cardData={item} />
