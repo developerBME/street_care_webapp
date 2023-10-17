@@ -5,6 +5,7 @@ import arrowDown from "../../images/arrowDown.png";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import errorImg from "../../images/error.png"
 
 const chipList = [
   "Clothing",
@@ -38,10 +39,28 @@ const Form = () => {
   const endTimeRef = useRef("");
   const [helpType, setHelpType] = useState([]);
   const [clear, setClear] = useState(false);
+  
+
+  const [error, setError] = useState({
+    nameError:"",
+    streetError:"",
+    stateError:"",
+    zipError:"",
+    dateError:"",
+    stimeError:"",
+    etimeError:"",
+  })
 
   //
   const fAuth = getAuth();
   //
+
+  const updateErrorState = (key, value) => {
+    setError((prevState) => ({
+      ...prevState, // Clone the current state
+      [key]: value   // Update the specific key with the new value
+    }));
+  };
 
   const clearFields = () => {
     dateRef.current.value = "";
@@ -67,6 +86,51 @@ const Form = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Form Validation Start
+    if (!nameRef.current.value) {
+      updateErrorState("nameError", "Name is required");
+    }else{
+      updateErrorState("nameError","")
+    }
+
+    if (!streetRef.current.value) {
+      updateErrorState("streetError", "Street is required");
+    }else{
+      updateErrorState("streetError","");
+    }
+
+    if (!stateRef.current.value) {
+      updateErrorState("stateError", "Street is required");
+    }else{
+      updateErrorState("stateError","");
+    }
+
+    if (!zipcodeRef.current.value) {
+      updateErrorState("zipError", "Zipcode is required");
+    }else{
+      updateErrorState("zipError","");
+    }
+
+    if (!dateRef.current.value) {
+      updateErrorState("dateError", "Date is required");
+    }else{
+      updateErrorState("dateError","");
+    }
+
+    if (!startTimeRef.current.value) {
+      updateErrorState("stimeError", "Start Time is required");
+    }else{
+      updateErrorState("stimeError","");
+    }
+
+    if (!endTimeRef.current.value) {
+      updateErrorState("etimeError", "End Time is required");
+    }else{
+      updateErrorState("eTimeerror","");
+    }
+
+
     let obj = {
       uid: fAuth.currentUser.uid,
       title: nameRef.current.value,
@@ -114,11 +178,20 @@ const Form = () => {
               </p>
               <input
                 type="text"
-                className="px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
+                className={`px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset  ${
+                  error.nameError!=="" ? 'ring-red-500':'ring-gray-300'
+                }`}
                 placeholder="Use Location by default for group meetup"
                 id="event-name"
                 ref={nameRef}
               />
+              {error.nameError && (
+                <div className="inline-flex items-center">
+                <img src={errorImg} className="w-3 h-3"/>
+                  <p className="text-red-600 text-xs">{error.nameError}</p>
+                </div>
+                
+              )}
             </div>
             <div className="space-y-1.5">
               <p className="font-semibold font-['Inter'] text-[15px]">
@@ -155,11 +228,20 @@ const Form = () => {
               </p>
               <input
                 type="text"
-                className="px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
+                className={`px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                  error.streetError!=="" ? 'ring-red-500':'ring-gray-300'
+                }`}
                 placeholder="Street"
                 id="street"
                 ref={streetRef}
               />
+              {error.streetError && (
+                <div className="inline-flex items-center">
+                <img src={errorImg} className="w-3 h-3"/>
+                  <p className="text-red-600 text-xs">{error.streetError}</p>
+                </div>
+                
+              )}
             </div>
             <div className="inline-flex grid grid-cols-2 space-x-4">
               <div className="space-y-1.5">
@@ -168,11 +250,20 @@ const Form = () => {
                 </p>
                 <input
                   type="text"
-                  className="px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
+                  className={`px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                    error.stateError!=="" ? 'ring-red-500':'ring-gray-300'
+                  }`} 
                   placeholder="New York"
                   id="state"
                   ref={stateRef}
                 />
+                {error.stateError && (
+                  <div className="inline-flex items-center">
+                  <img src={errorImg} className="w-3 h-3"/>
+                    <p className="text-red-600 text-xs">{error.stateError}</p>
+                  </div>
+                  
+                )}
               </div>
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
@@ -180,11 +271,20 @@ const Form = () => {
                 </p>
                 <input
                   type="text"
-                  className="px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
+                  className={`px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                    error.zipError!=="" ? 'ring-red-500':'ring-gray-300'
+                  }`}
                   placeholder="11201"
                   id="zipcode"
                   ref={zipcodeRef}
                 />
+                {error.zipError && (
+                  <div className="inline-flex items-center">
+                  <img src={errorImg} className="w-3 h-3"/>
+                    <p className="text-red-600 text-xs">{error.zipError}</p>
+                  </div>
+                  
+                )}
               </div>
             </div>
             <div>
@@ -194,10 +294,19 @@ const Form = () => {
                 </p>
                 <input
                   type="date"
-                  className="px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
+                  className={`px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                    error.dateError!=="" ? 'ring-red-500':'ring-gray-300'
+                  }`}
                   id="date"
                   ref={dateRef}
                 />
+                {error.dateError && (
+                  <div className="inline-flex items-center">
+                  <img src={errorImg} className="w-3 h-3"/>
+                    <p className="text-red-600 text-xs">{error.dateError}</p>
+                  </div>
+                  
+                )}
                 <p className="font-normal font-['Inter'] text-xs">
                   Please follow the format mm/dd/yyyy
                 </p>
@@ -210,10 +319,19 @@ const Form = () => {
                 </p>
                 <input
                   type="time"
-                  className="px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
+                  className={`px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                    error.stimeError!=="" ? 'ring-red-500':'ring-gray-300'
+                  }`} 
                   id="start-time"
                   ref={startTimeRef}
                 />
+                {error.stimeError && (
+                  <div className="inline-flex items-center">
+                  <img src={errorImg} className="w-3 h-3"/>
+                    <p className="text-red-600 text-xs">{error.stimeError}</p>
+                  </div>
+                  
+                )}
               </div>
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
@@ -221,10 +339,19 @@ const Form = () => {
                 </p>
                 <input
                   type="time"
-                  className="px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
+                  className={`px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                    error.nameError!=="" ? 'ring-red-500':'ring-gray-300'
+                  }`} 
                   id="end-time"
                   ref={endTimeRef}
                 />
+                {error.etimeError && (
+                  <div className="inline-flex items-center">
+                  <img src={errorImg} className="w-3 h-3"/>
+                    <p className="text-red-600 text-xs">{error.etimeError}</p>
+                  </div>
+                  
+                )}
               </div>
             </div>
           </div>
