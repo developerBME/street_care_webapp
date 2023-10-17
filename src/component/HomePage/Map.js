@@ -303,17 +303,17 @@ const Map = () => {
             <circle cx="0" cy="50" r="1.5" fill="#172146" />
             <rect
               x="40"
-              y="35"
-              width="45"
-              height="30"
-              rx="10"
-              ry="10"
+              y="37"
+              width="35"
+              height="25"
+              rx="11"
+              ry="14"
               fill="#172146"
               // fillOpacity={0.9}
               // opacity={0.3}
             />
             <text
-              x={50}
+              x={46}
               y={50}
               textAnchor="start"
               alignmentBaseline="middle"
@@ -347,17 +347,17 @@ const Map = () => {
             <rect
               x="40"
               y="35"
-              width="50"
-              height="30"
-              rx="10"
-              ry="10"
+              width="43"
+              height="25"
+              rx="11"
+              ry="14"
               fill="#172146"
               // fillOpacity={0.9}
               // opacity={0.3}
             />
             <text
-              x={50}
-              y={50}
+              x={47}
+              y={48}
               textAnchor="start"
               alignmentBaseline="middle"
               fontSize={10}
@@ -390,17 +390,17 @@ const Map = () => {
             <rect
               x="40"
               y="35"
-              width="50"
-              height="30"
-              rx="10"
-              ry="10"
+              width="45"
+              height="25"
+              rx="11"
+              ry="14"
               fill="#172146"
               // fillOpacity={0.9}
               // opacity={0.3}
             />
             <text
-              x={49}
-              y={50}
+              x={46}
+              y={48}
               textAnchor="start"
               alignmentBaseline="middle"
               fontSize={10}
@@ -434,16 +434,16 @@ const Map = () => {
               x="40"
               y="35"
               width="55"
-              height="30"
-              rx="10"
-              ry="10"
+              height="25"
+              rx="11"
+              ry="14"
               fill="#172146"
               // fillOpacity={0.9}
               // opacity={0.3}
             />
             <text
               x={45}
-              y={50}
+              y={48}
               textAnchor="start"
               alignmentBaseline="middle"
               fontSize={10}
@@ -476,17 +476,17 @@ const Map = () => {
             <rect
               x="-95"
               y="35"
-              width="60"
-              height="30"
-              rx="10"
-              ry="10"
+              width="55"
+              height="25"
+              rx="11"
+              ry="14"
               fill="#172146"
               // fillOpacity={0.9}
               // opacity={0.3}
             />
             <text
-              x={-87}
-              y={50}
+              x={-90}
+              y={48}
               textAnchor="start"
               alignmentBaseline="middle"
               fontSize={10}
@@ -519,17 +519,17 @@ const Map = () => {
             <rect
               x="85"
               y="35"
-              width="50"
-              height="30"
-              rx="10"
-              ry="10"
+              width="46"
+              height="25"
+              rx="11"
+              ry="14"
               fill="#172146"
               // fillOpacity={0.9}
               // opacity={0.3}
             />
             <text
-              x={93}
-              y={50}
+              x={90}
+              y={48}
               textAnchor="start"
               alignmentBaseline="middle"
               fontSize={10}
