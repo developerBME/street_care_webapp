@@ -295,9 +295,9 @@ const Map = () => {
             <line
               x1="0"
               y1="50"
-              x2="40"
+              x2="41"
               y2="50"
-              stroke="black"
+              stroke="#172146"
               strokeWidth="1"
             />
             <circle cx="0" cy="50" r="1.5" fill="#172146" />
@@ -338,15 +338,15 @@ const Map = () => {
             <line
               x1="0"
               y1="50"
-              x2="40"
+              x2="41"
               y2="50"
-              stroke="black"
+              stroke="#172146"
               strokeWidth="1"
             />
             <circle cx="0" cy="50" r="1.5" fill="#172146" />
             <rect
               x="40"
-              y="35"
+              y="36"
               width="43"
               height="25"
               rx="11"
@@ -381,15 +381,15 @@ const Map = () => {
             <line
               x1="0"
               y1="50"
-              x2="40"
+              x2="41"
               y2="50"
-              stroke="black"
+              stroke="#172146"
               strokeWidth="1"
             />
             <circle cx="0" cy="50" r="1.5" fill="#172146" />
             <rect
               x="40"
-              y="35"
+              y="36"
               width="45"
               height="25"
               rx="11"
@@ -400,7 +400,7 @@ const Map = () => {
             />
             <text
               x={46}
-              y={48}
+              y={49}
               textAnchor="start"
               alignmentBaseline="middle"
               fontSize={10}
@@ -424,15 +424,15 @@ const Map = () => {
             <line
               x1="0"
               y1="50"
-              x2="40"
+              x2="41"
               y2="50"
-              stroke="black"
+              stroke="#172146"
               strokeWidth="1"
             />
             <circle cx="0" cy="50" r="1.5" fill="#172146" />
             <rect
               x="40"
-              y="35"
+              y="36"
               width="55"
               height="25"
               rx="11"
@@ -443,7 +443,7 @@ const Map = () => {
             />
             <text
               x={45}
-              y={48}
+              y={49}
               textAnchor="start"
               alignmentBaseline="middle"
               fontSize={10}
@@ -467,9 +467,9 @@ const Map = () => {
             <line
               x1="0"
               y1="50"
-              x2="-40"
+              x2="-41"
               y2="50"
-              stroke="black"
+              stroke="#172146"
               strokeWidth="1"
             />
             <circle cx="0" cy="50" r="1.5" fill="#172146" />
@@ -510,15 +510,15 @@ const Map = () => {
             <line
               x1="0"
               y1="50"
-              x2="85"
+              x2="86"
               y2="50"
-              stroke="black"
+              stroke="#172146"
               strokeWidth="1"
             />
             <circle cx="0" cy="50" r="1.5" fill="#172146" />
             <rect
               x="85"
-              y="35"
+              y="36"
               width="46"
               height="25"
               rx="11"
