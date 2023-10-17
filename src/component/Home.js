@@ -109,7 +109,7 @@ function HomePage() {
       img: BMEcardimg2
     },
     {
-      title: "Community Connection Night",
+      title: "Volunteer December Meetup",
       eventDate: "Oct 12,2023 THU 5:30pm",
       location: {
         add1: "Online"
