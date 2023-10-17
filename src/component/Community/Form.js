@@ -5,7 +5,7 @@ import arrowDown from "../../images/arrowDown.png";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import errorImg from "../../images/error.png"
+import errorImg from "../../images/error.png";
 
 const chipList = [
   "Clothing",
@@ -39,17 +39,16 @@ const Form = () => {
   const endTimeRef = useRef("");
   const [helpType, setHelpType] = useState([]);
   const [clear, setClear] = useState(false);
-  
 
   const [error, setError] = useState({
-    nameError:"",
-    streetError:"",
-    stateError:"",
-    zipError:"",
-    dateError:"",
-    stimeError:"",
-    etimeError:"",
-  })
+    nameError: "",
+    streetError: "",
+    stateError: "",
+    zipError: "",
+    dateError: "",
+    stimeError: "",
+    etimeError: "",
+  });
 
   //
   const fAuth = getAuth();
@@ -58,7 +57,7 @@ const Form = () => {
   const updateErrorState = (key, value) => {
     setError((prevState) => ({
       ...prevState, // Clone the current state
-      [key]: value   // Update the specific key with the new value
+      [key]: value, // Update the specific key with the new value
     }));
   };
 
@@ -90,46 +89,45 @@ const Form = () => {
     // Form Validation Start
     if (!nameRef.current.value) {
       updateErrorState("nameError", "Name is required");
-    }else{
-      updateErrorState("nameError","")
+    } else {
+      updateErrorState("nameError", "");
     }
 
     if (!streetRef.current.value) {
       updateErrorState("streetError", "Street is required");
-    }else{
-      updateErrorState("streetError","");
+    } else {
+      updateErrorState("streetError", "");
     }
 
     if (!stateRef.current.value) {
       updateErrorState("stateError", "Street is required");
-    }else{
-      updateErrorState("stateError","");
+    } else {
+      updateErrorState("stateError", "");
     }
 
     if (!zipcodeRef.current.value) {
       updateErrorState("zipError", "Zipcode is required");
-    }else{
-      updateErrorState("zipError","");
+    } else {
+      updateErrorState("zipError", "");
     }
 
     if (!dateRef.current.value) {
       updateErrorState("dateError", "Date is required");
-    }else{
-      updateErrorState("dateError","");
+    } else {
+      updateErrorState("dateError", "");
     }
 
     if (!startTimeRef.current.value) {
       updateErrorState("stimeError", "Start Time is required");
-    }else{
-      updateErrorState("stimeError","");
+    } else {
+      updateErrorState("stimeError", "");
     }
 
     if (!endTimeRef.current.value) {
       updateErrorState("etimeError", "End Time is required");
-    }else{
-      updateErrorState("eTimeerror","");
+    } else {
+      updateErrorState("eTimeerror", "");
     }
-
 
     let obj = {
       uid: fAuth.currentUser.uid,
@@ -148,17 +146,17 @@ const Form = () => {
       approved: false,
     };
 
-    try {
-      const eventRef = collection(db, "outreachEvents");
-      const docRef = await addDoc(eventRef, obj);
-      if (docRef.id) {
-        console.log(docRef.id);
-        setSuccess(true);
-        clearFields();
-      }
-    } catch (e) {
-      console.log(e);
-    }
+    // try {
+    //   const eventRef = collection(db, "outreachEvents");
+    //   const docRef = await addDoc(eventRef, obj);
+    //   if (docRef.id) {
+    //     console.log(docRef.id);
+    //     setSuccess(true);
+    //     clearFields();
+    //   }
+    // } catch (e) {
+    //   console.log(e);
+    // }
   };
 
   return (
@@ -179,7 +177,7 @@ const Form = () => {
               <input
                 type="text"
                 className={`px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset  ${
-                  error.nameError!=="" ? 'ring-red-500':'ring-gray-300'
+                  error.nameError !== "" ? "ring-red-500" : "ring-gray-300"
                 }`}
                 placeholder="Use Location by default for group meetup"
                 id="event-name"
@@ -187,10 +185,9 @@ const Form = () => {
               />
               {error.nameError && (
                 <div className="inline-flex items-center">
-                <img src={errorImg} className="w-3 h-3"/>
+                  <img src={errorImg} className="w-3 h-3" />
                   <p className="text-red-600 text-xs">{error.nameError}</p>
                 </div>
-                
               )}
             </div>
             <div className="space-y-1.5">
@@ -229,7 +226,7 @@ const Form = () => {
               <input
                 type="text"
                 className={`px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
-                  error.streetError!=="" ? 'ring-red-500':'ring-gray-300'
+                  error.streetError !== "" ? "ring-red-500" : "ring-gray-300"
                 }`}
                 placeholder="Street"
                 id="street"
@@ -237,10 +234,9 @@ const Form = () => {
               />
               {error.streetError && (
                 <div className="inline-flex items-center">
-                <img src={errorImg} className="w-3 h-3"/>
+                  <img src={errorImg} className="w-3 h-3" />
                   <p className="text-red-600 text-xs">{error.streetError}</p>
                 </div>
-                
               )}
             </div>
             <div className="inline-flex grid grid-cols-2 space-x-4">
@@ -251,18 +247,17 @@ const Form = () => {
                 <input
                   type="text"
                   className={`px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
-                    error.stateError!=="" ? 'ring-red-500':'ring-gray-300'
-                  }`} 
+                    error.stateError !== "" ? "ring-red-500" : "ring-gray-300"
+                  }`}
                   placeholder="New York"
                   id="state"
                   ref={stateRef}
                 />
                 {error.stateError && (
                   <div className="inline-flex items-center">
-                  <img src={errorImg} className="w-3 h-3"/>
+                    <img src={errorImg} className="w-3 h-3" />
                     <p className="text-red-600 text-xs">{error.stateError}</p>
                   </div>
-                  
                 )}
               </div>
               <div className="space-y-1.5">
@@ -272,7 +267,7 @@ const Form = () => {
                 <input
                   type="text"
                   className={`px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
-                    error.zipError!=="" ? 'ring-red-500':'ring-gray-300'
+                    error.zipError !== "" ? "ring-red-500" : "ring-gray-300"
                   }`}
                   placeholder="11201"
                   id="zipcode"
@@ -280,10 +275,9 @@ const Form = () => {
                 />
                 {error.zipError && (
                   <div className="inline-flex items-center">
-                  <img src={errorImg} className="w-3 h-3"/>
+                    <img src={errorImg} className="w-3 h-3" />
                     <p className="text-red-600 text-xs">{error.zipError}</p>
                   </div>
-                  
                 )}
               </div>
             </div>
@@ -295,17 +289,16 @@ const Form = () => {
                 <input
                   type="date"
                   className={`px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
-                    error.dateError!=="" ? 'ring-red-500':'ring-gray-300'
+                    error.dateError !== "" ? "ring-red-500" : "ring-gray-300"
                   }`}
                   id="date"
                   ref={dateRef}
                 />
                 {error.dateError && (
                   <div className="inline-flex items-center">
-                  <img src={errorImg} className="w-3 h-3"/>
+                    <img src={errorImg} className="w-3 h-3" />
                     <p className="text-red-600 text-xs">{error.dateError}</p>
                   </div>
-                  
                 )}
                 <p className="font-normal font-['Inter'] text-xs">
                   Please follow the format mm/dd/yyyy
@@ -320,17 +313,16 @@ const Form = () => {
                 <input
                   type="time"
                   className={`px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
-                    error.stimeError!=="" ? 'ring-red-500':'ring-gray-300'
-                  }`} 
+                    error.stimeError !== "" ? "ring-red-500" : "ring-gray-300"
+                  }`}
                   id="start-time"
                   ref={startTimeRef}
                 />
                 {error.stimeError && (
                   <div className="inline-flex items-center">
-                  <img src={errorImg} className="w-3 h-3"/>
+                    <img src={errorImg} className="w-3 h-3" />
                     <p className="text-red-600 text-xs">{error.stimeError}</p>
                   </div>
-                  
                 )}
               </div>
               <div className="space-y-1.5">
@@ -340,17 +332,16 @@ const Form = () => {
                 <input
                   type="time"
                   className={`px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
-                    error.nameError!=="" ? 'ring-red-500':'ring-gray-300'
-                  }`} 
+                    error.nameError !== "" ? "ring-red-500" : "ring-gray-300"
+                  }`}
                   id="end-time"
                   ref={endTimeRef}
                 />
                 {error.etimeError && (
                   <div className="inline-flex items-center">
-                  <img src={errorImg} className="w-3 h-3"/>
+                    <img src={errorImg} className="w-3 h-3" />
                     <p className="text-red-600 text-xs">{error.etimeError}</p>
                   </div>
-                  
                 )}
               </div>
             </div>
@@ -395,12 +386,19 @@ const Form = () => {
           </div>
         </div>
         <div className="space-y-16 space-x-[15px]">
-          <button className="px-8 py-4 border border-[#5F35D5] rounded-full text-violet-700">
+          <button
+            type="button"
+            className="px-8 py-4 border border-[#5F35D5] rounded-full text-violet-700"
+          >
             Cancel
           </button>
-          <button className="px-8 py-4 border rounded-full bg-violet-700 text-[#F8F9F0]">
+          <button
+            type="submit"
+            className="px-8 py-4 border rounded-full bg-violet-700 text-[#F8F9F0]"
+          >
             Publish
           </button>
+
           {success && (
             <div className="justify-start items-start gap-4 inline-flex">
               <div className="justify-start items-start gap-4 flex">
