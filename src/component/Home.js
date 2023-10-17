@@ -19,6 +19,9 @@ import MoreAboutUs from "./HomePage/MoreAboutUs";
 import Navbar from "./Navbar";
 import OutreachEventCard from "./Community/OutreachEventCard";
 import { fetchEvents } from "./EventCardService";
+import BMEcardimg1 from "../images/BMEofficialcardimg1.png";
+import BMEcardimg2 from "../images/BMEofficialcardimg2.png";
+import BMEcardimg3 from "../images/BMEofficialcardimg3.png";
 
 
 
@@ -81,7 +84,44 @@ function HomePage() {
 
   ];
 
-  const [events, setEvents] = useState([]);
+  const BMEcardData = [
+    {
+      title: "Community Connection Night",
+      eventDate: "Oct 12,2023 THU 5:30pm",
+      location: {
+        add1: "One Place Plaza,",
+        add2: "West 2nd Fl,",
+        state: "NY,",
+        zipcode: "10038"
+      },
+      totalSlots: 100,
+      interests: 61,
+      img: BMEcardimg1
+    },
+    {
+      title: "Volunteer November Meetup",
+      eventDate: "Nov 1,2023 THU 6:00pm",
+      location: {
+        add1: "Online"
+      },
+      totalSlots: "Unlimited",
+      interests: "Unlimited",
+      img: BMEcardimg2
+    },
+    {
+      title: "Community Connection Night",
+      eventDate: "Oct 12,2023 THU 5:30pm",
+      location: {
+        add1: "Online"
+      },
+      totalSlots: "Unlimited",
+      interests: "Unlimited",
+      img: BMEcardimg3
+    },
+
+  ];
+
+  const [events,setEvents] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -148,7 +188,7 @@ function HomePage() {
         </div> */}
 
 
-        {/*Vedant*/} {/*BME OFFCIIAL GATHERING BLOCK */}
+        {/*Vedant*/} {/*BME OFFCIIAL GATHERING BLOCK START*/}
 
         <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
           <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
@@ -156,12 +196,16 @@ function HomePage() {
               {" "}
               BME Official Gathering
             </p>
-            <BMEcardnew />
+                <div className=" w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+                    {BMEcardData.map(BMEData => (
+                        <BMEcardnew key={BMEData.x} BMEcardData={BMEData} />
+                      ))}
+                </div>
           </div>
         </div>
 
 
-        {/*Vedant*/}
+        {/*Vedant*/} {/*BME OFFCIIAL GATHERING BLOCK END*/}
 
         {/* Aniket */}
         <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8  rounded-2xl bg-white text-black ">
