@@ -3,8 +3,8 @@ import React from "react";
 function Footer() {
   return (
     <footer class="bg-nav">
-      <div class=" lg:mx-auto py-12 h-fit w-full max-w-screen-xl">
-        <div class="grid mx-7 py-12 grid-cols-2 gap-y-7 lg:gap-20 items-center lg:grid-cols-5">
+      <div class=" lg:mx-auto  h-fit w-full max-w-screen-xl">
+        <div class=" pt-14 pb-6 px-4 grid mx-7 grid-cols-2 gap-y-7 lg:gap-20 items-center lg:grid-cols-5">
           <div className=" col-span-2">
             <h2 class="mb-6 font-bricolage text-6xl text-white dark:text-white">
               Street Care
@@ -175,11 +175,9 @@ function Footer() {
           </div>
         </div>
         <hr class=" bg-gray-800 mx-4" />
-        <div class="px-4 py-6 bg-nav dark:bg-nav md:flex md:items-center md:justify-between">
+        <div class="px-4 pt-6 pb-12 sm:py-6 bg-nav md:flex md:items-center md:justify-between">
           <span class="text-sm text-gray-300 sm:text-center"></span>
-          <div class=" float-right text-white mt-4 space-x-5 md:mt-0">
-            Terms & Policies
-          </div>
+          <div class=" float-right text-white space-x-5 ">Terms & Policies</div>
         </div>
       </div>
     </footer>
