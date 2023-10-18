@@ -111,7 +111,7 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
               <div className="w-6 h-6 relative">
                 <img src={help_announcement}></img>
               </div>
-              <div className="text-center text-[#7E0025] text-lg font-semibold font-bricolage leading-normal">
+              <div className="text-center text-[#7E0025] text-lg font-semibold font-opensans leading-normal">
                 {helpStatus}
               </div>
             </div>
@@ -122,7 +122,7 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
               <div className="w-6 h-6 relative">
                 <img src={help_pending}></img>
               </div>
-              <div className="text-center text-[#836A00] text-lg font-semibold font-bricolage leading-normal">
+              <div className="text-center text-[#836A00] text-lg font-semibold font-opensans leading-normal">
                 {helpStatus}
               </div>
             </div>
@@ -133,7 +133,7 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
               <div className="w-6 h-6 relative">
                 <img src={help_received}></img>
               </div>
-              <div className="text-center text-[#004905] text-lg font-semibold font-bricolage leading-normal">
+              <div className="text-center text-[#004905] text-lg font-semibold font-opensans leading-normal">
                 {helpStatus}
               </div>
             </div>
@@ -145,27 +145,27 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
           <div className="justify-start items-start gap-2 inline-flex">
             {helpTags.map((item, index) => (
               <div className="w-fit px-3 py-1 bg-white rounded-xl border border-[#616161] justify-start items-center gap-4 flex">
-                <div className="opacity-90 justify-start items-center gap-1 flex text-[#616161] text-sm font-semibold font-bricolage leading-tight">
+                <div className="opacity-90 justify-start items-center gap-1 flex text-[#616161] text-sm font-semibold font-opensans leading-tight">
                   {item}
                 </div>
               </div>
             ))}
           </div>
-          <div className="self-stretch text-[#616161] text-[15px] font-normal font-inter leading-normal">
+          <div className="self-stretch text-[#616161] text-[15px] font-normal font-dmsans leading-normal">
             Location: {helpLocation}
             <br />
             How to find: {helpHowToFind}
           </div>
           <div className="self-stretch">
-            <span className="text-[#616161] text-[15px] font-normal font-inter leading-normal">
+            <span className="text-[#616161] text-[15px] font-normal font-dmsans leading-normal">
               {helpDescription}
-            </span>
-            <a className="text-[#6840E0] text-[15px] font-normal font-inter underline leading-normal cursor-pointer">
+            </span>{" "}
+            <a className="text-[#6840E0] text-[15px] font-normal font-dmsans underline leading-normal cursor-pointer">
               Show details
             </a>
           </div>
 
-          <div className="text-[#616161] text-xs font-semibold font-inter leading-[18px]">
+          <div className="text-[#616161] text-xs font-medium font-dmsans leading-[18px]">
             Posted 30 mins ago by user {helpPostingUser}
           </div>
         </div>

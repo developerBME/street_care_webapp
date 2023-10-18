@@ -13,7 +13,7 @@ export default function FAQs() {
   return (
     // <div className="mx-auto max-w-8xl px-6 lg:px-8 p-20 bg-gray-100 rounded-lg h-fit">
     <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
-      <p className="font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
+      <p className="font-dmsans font-medium text-2xl md:text-[45px] text-[#212121]">
         Frequently Asked Questions
       </p>
       <div className=" pt-9">
@@ -26,14 +26,14 @@ export default function FAQs() {
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1bh-content"
             id="panel1bh-header"
-            className="text-lg font-bricolage"
+            className="text-lg font-dmsans"
           >
-            <p className="font-bricolage">
+            <p className="font-dmsans font-medium">
               What does Street Care do to help homeless individuals?
             </p>
           </AccordionSummary>
           <AccordionDetails>
-            <p className="font-bricolage ">
+            <p className="font-dmsans font-normal">
               Street Care provides volunteers with a psychological toolkit and
               instructional resources to empower them to assist homeless
               individuals. The app offers guidance on providing resources,
@@ -52,14 +52,14 @@ export default function FAQs() {
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel2bh-content"
             id="panel2bh-header"
-            className="text-lg font-bricolage"
+            className="text-lg font-dmsans"
           >
-            <p className="font-bricolage">
+            <p className="font-dmsans font-medium">
               Does Street Care offer emergency shelter for homeless individuals?
             </p>
           </AccordionSummary>
           <AccordionDetails>
-            <p className="font-bricolage">
+            <p className="font-dmsans font-normal">
               No, Street Care primarily focuses on equipping volunteers with the
               tools and knowledge to support homeless individuals but does not
               provide emergency shelter services. It serves as a resource for
@@ -77,14 +77,14 @@ export default function FAQs() {
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel3bh-content"
             id="panel3bh-header"
-            className="text-lg font-bricolage"
+            className="text-lg font-dmsans"
           >
-            <p className="font-bricolage">
+            <p className="font-dmsans font-medium">
               Where is Street Care located, and which areas do you serve?
             </p>
           </AccordionSummary>
           <AccordionDetails>
-            <p className="font-bricolage">
+            <p className="font-dmsans font-normal">
               Street Care is a web and mobile app and is not location-specific.
               It can be used by volunteers and individuals anywhere in the world
               who want to assist homeless people. It transcends geographical
@@ -102,14 +102,14 @@ export default function FAQs() {
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel4bh-content"
             id="panel4bh-header"
-            className="text-lg font-bricolage"
+            className="text-lg font-dmsans"
           >
-            <p className="font-bricolage">
+            <p className="font-dmsans font-medium">
               Are volunteers needed, and how can I sign up to help?
             </p>
           </AccordionSummary>
           <AccordionDetails>
-            <p className="font-bricolage">
+            <p className="font-dmsans font-normal">
               Yes, volunteers are always needed to make a difference in the
               lives of homeless individuals. To explore volunteer opportunities,
               create an account on our platform, and explore the resources and
@@ -140,12 +140,14 @@ export default function FAQs() {
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel5bh-content"
             id="panel5bh-header"
-            className="text-lg font-bricolage"
+            className="text-lg font-dmsans"
           >
-            <p className="font-bricolage">How can I donate to Street Care?</p>
+            <p className="font-dmsans font-medium">
+              How can I donate to Street Care?
+            </p>
           </AccordionSummary>
           <AccordionDetails>
-            <p className="font-bricolage">
+            <p className="font-dmsans font-normal">
               At Street Care, we truly believe in the extraordinary power of
               generosity. Visit our website
               <a
@@ -172,14 +174,14 @@ export default function FAQs() {
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel6bh-content"
             id="panel6bh-header"
-            className="text-lg font-bricolage"
+            className="text-lg font-dmsans"
           >
-            <p className="font-bricolage">
+            <p className="font-dmsans font-medium">
               Can you share stories of individuals who have helped in the past?
             </p>
           </AccordionSummary>
           <AccordionDetails>
-            <p className="font-bricolage">
+            <p className="font-dmsans font-normal">
               Street Care may feature inspirational stories of volunteers and
               their experiences in the app or on their website. These stories
               can provide insights into the impact volunteers have made in the

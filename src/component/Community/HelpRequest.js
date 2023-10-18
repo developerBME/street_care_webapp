@@ -246,7 +246,7 @@ const HelpRequest = () => {
               alt="..."
             ></img>
           </div>
-          <div className="text-[#212121] text-2xl lg:text-4xl font-medium font-bricolage lg:leading-[44px]">
+          <div className="text-[#212121] text-2xl lg:text-4xl font-medium font-dmsans lg:leading-[44px]">
             Help Requests
           </div>
         </div>
@@ -254,7 +254,7 @@ const HelpRequest = () => {
           {/* <button className="my-2 bg-[#6840E0] hover:bg-[#36295E] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex text-neutral-100 text-md font-semibold font-inter leading-tight self-stretch px-6 py-2.5">
             Add New Request
           </button> */}
-          <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-semibold font-inter leading-tight self-stretch">
+          <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-medium font-dmsans leading-tight self-stretch">
             <CustomButton label="Add New Request" name="buttondefault" />
           </div>
         </div>
@@ -267,7 +267,7 @@ const HelpRequest = () => {
         </div>
         {visibleItems < helpRequestData.length && (
           <button
-            className="w-fit rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 flex text-center text-[#1F0A58] hover:bg-[#1F0A58] hover:text-white text-[11px] font-semibold font-inter leading-tight self-stretch px-6 py-2.5"
+            className="w-fit rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 flex text-center text-[#1F0A58] hover:bg-[#1F0A58] hover:text-white text-[13px] font-medium font-dmsans leading-tight self-stretch px-6 py-2.5"
             onClick={loadMore}
           >
             Load 5 More

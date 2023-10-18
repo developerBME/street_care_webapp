@@ -120,10 +120,10 @@ const UserInfo = () => {
         </div>
         <div className="w-[99%] py-4 md:mt-16 lg:mt-20">
           <div className="px-4">
-            <h1 className="font-bricolage md:text-[52px] font-medium md:h-16 text-[#212121] h-12 text-4xl">
+            <h1 className="font-bricolage md:text-[54px] font-medium md:h-16 text-[#212121] h-12 text-4xl">
               Mandy Klose
             </h1>
-            <h3 className="py-4 text-[#212121] font-bricolage text-sm pt-0">
+            <h3 className="py-4 text-[#212121] font-opensans font-medium text-sm pt-0">
               Joined 12/20/23
             </h3>
           </div>
@@ -133,7 +133,7 @@ const UserInfo = () => {
               superpowers.map((superpower) => {
                 return (
                   <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold whitespace-nowrap flex justify-center items-center">
-                    <h6 className="text-[#212121] w-fit text-[14px]">
+                    <h6 className="text-[#212121] w-fit text-[14px] font-opensans">
                       {superpower}
                     </h6>
                   </div>
@@ -149,10 +149,10 @@ const UserInfo = () => {
               <h3 className="text-[#212121]">Childcare</h3>
             </div> */}
             <button
-              className="px-2 py-2 mr-2 h-10 rounded-md border border-[#CACACA] hover:bg-[#DEF6EB] text-[#212121] font-semibold"
+              className="px-2 py-2 mr-2 h-10 rounded-md border border-[#CACACA] hover:bg-[#DEF6EB] font-semibold font-opensans"
               onClick={openModal}
             >
-              <h6 className="text-[#212121] w-[160px] text-[14px]">
+              <h6 className="text-[#273164] w-[160px] text-[14px]">
                 Add my superpower
               </h6>
             </button>
@@ -166,38 +166,38 @@ const UserInfo = () => {
         </div>
       </div>
       <div className="px-4 pb-4 grid grid-flow-col overflow-x-auto gap-2 md:px-8 md:pb-12 md:grid md:grid-cols-2 md:grid-rows-3 md:gap-4 lg:px-0 lg:pb-16 lg:grid lg:grid-cols-3 lg:grid-rows-2 lg:gap-4">
-        <div className="p-4 h-24 bg-[#DEF6EB] rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
+        <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
           <img className="w-16 h-16 mr-4" src={crown} alt="..."></img>
           <div className="flex flex-col">
             <h1 className="text-sm font-bold pb-1 font-bricolage text-[#212121]">
               Community Leader
             </h1>
-            <h3 className="text-xs font-semibold pb-1 text-[#616161]">
+            <h3 className="text-xs font-opensans font-semibold pb-1 text-[#616161]">
               Achieved June 3rd, 2023
             </h3>
-            <h3 className="text-xs font-normal text-[#616161]">
+            <h3 className="text-xs font-opensans font-normal text-[#616161]">
               Led Community Outreach
             </h3>
           </div>
         </div>
-        <div className="p-4 h-24 bg-[#DEF6EB] rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
+        <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
           <img className="w-16 h-16 mr-4" src={notes} alt="..."></img>
           <div className="flex flex-col">
             <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121]">
               Volunteer Trainers
             </h1>
-            <h3 className="text-xs mb-2 font-normal text-[#616161]">
+            <h3 className="text-xs mb-2 font-opensans font-normal text-[#616161]">
               Led Community Orientation
             </h3>
           </div>
         </div>
-        <div className="p-4 h-24 bg-[#DEF6EB] rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
+        <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
           <img className="w-16 h-16 mr-4" src={announcement} alt="..."></img>
           <div className="flex flex-col">
             <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121]">
               Ambassador
             </h1>
-            <h3 className="text-xs mb-2 font-normal text-[#616161]">
+            <h3 className="text-xs mb-2 font-opensans font-normal text-[#616161]">
               Had invited friend to join
             </h3>
           </div>
@@ -208,7 +208,7 @@ const UserInfo = () => {
             <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121]">
               Neighborhood Leader
             </h1>
-            <h3 className="text-xs mb-2 font-normal text-[#616161]">
+            <h3 className="text-xs mb-2 font-opensans font-normal text-[#616161]">
               Joined {">"} 3 Outreach in the same neighborhood.
             </h3>
           </div>
@@ -219,7 +219,7 @@ const UserInfo = () => {
             <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121]">
               Information Sharer
             </h1>
-            <h3 className="text-xs mb-2 font-normal text-[#616161]">
+            <h3 className="text-xs mb-2 font-opensans font-normal text-[#616161]">
               Finish the 10 min how to Streetcare program
             </h3>
           </div>
@@ -230,7 +230,7 @@ const UserInfo = () => {
             <h1 className="text-sm font-bold mt-1 pb-1 font-bricolage text-[#212121]">
               Seasoned Volunteer
             </h1>
-            <h3 className="text-[11px] mb-2 font-normal text-[#616161]">
+            <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161]">
               Joined more than 4 outreaches or has helped more than 8 people.
             </h3>
           </div>
@@ -238,7 +238,7 @@ const UserInfo = () => {
       </div>
       {/* Impact */}
       <div className="">
-        <p className="text-neutral-800 text-[28px] font-medium font-bricolage leading-9">
+        <p className="text-[#212121] text-[42px] font-medium font-dmsans leading-9">
           My Impact
         </p>
         <div className="w-full h-fit justify-center items-center lg:justify-start lg:items-start  grid grid-cols-3 sm:grid-cols-1 lg:grid-cols-3 font-bricolage py-6 px-2 md:px-8 lg:px-0 md:pt-8 md:pb-8  lg:pt-16 lg:pb-12">

@@ -41,7 +41,7 @@ const ChipSuperpower = (props) => {
       }`}
     >
       <div
-        className={`text-sm font-semibold font-['Open Sans'] ${
+        className={`text-sm font-semibold font-opensans ${
           isActive ? "text-[#5F36D6]" : "text-[#616161]"
         }`}
       >
