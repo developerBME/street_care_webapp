@@ -9,6 +9,7 @@ module.exports = {
       dmsans: ["DM Sans", "sans-serif"],
       opensans: ["Open Sans", "sans-serif"],
       roboto: ["Roboto", "sans-serif"],
+      lato: ["Lato", "sans-serif"],
     },
   },
   plugins: [],
