@@ -28,12 +28,12 @@ export default function FAQs() {
             id="panel1bh-header"
             className="text-lg font-dmsans"
           >
-            <p className="font-dmsans font-medium">
+            <p className="font-dmsans font-medium text-[#2C3B3C]">
               What does Street Care do to help homeless individuals?
             </p>
           </AccordionSummary>
           <AccordionDetails>
-            <p className="font-dmsans font-normal">
+            <p className="font-dmsans font-normal text-[#2C3B3C]">
               Street Care provides volunteers with a psychological toolkit and
               instructional resources to empower them to assist homeless
               individuals. The app offers guidance on providing resources,
@@ -54,12 +54,12 @@ export default function FAQs() {
             id="panel2bh-header"
             className="text-lg font-dmsans"
           >
-            <p className="font-dmsans font-medium">
+            <p className="font-dmsans font-medium text-[#2C3B3C]">
               Does Street Care offer emergency shelter for homeless individuals?
             </p>
           </AccordionSummary>
           <AccordionDetails>
-            <p className="font-dmsans font-normal">
+            <p className="font-dmsans font-normal text-[#2C3B3C]">
               No, Street Care primarily focuses on equipping volunteers with the
               tools and knowledge to support homeless individuals but does not
               provide emergency shelter services. It serves as a resource for
@@ -79,12 +79,12 @@ export default function FAQs() {
             id="panel3bh-header"
             className="text-lg font-dmsans"
           >
-            <p className="font-dmsans font-medium">
+            <p className="font-dmsans font-medium text-[#2C3B3C]">
               Where is Street Care located, and which areas do you serve?
             </p>
           </AccordionSummary>
           <AccordionDetails>
-            <p className="font-dmsans font-normal">
+            <p className="font-dmsans font-normal text-[#2C3B3C]">
               Street Care is a web and mobile app and is not location-specific.
               It can be used by volunteers and individuals anywhere in the world
               who want to assist homeless people. It transcends geographical
@@ -104,12 +104,12 @@ export default function FAQs() {
             id="panel4bh-header"
             className="text-lg font-dmsans"
           >
-            <p className="font-dmsans font-medium">
+            <p className="font-dmsans font-medium text-[#2C3B3C]">
               Are volunteers needed, and how can I sign up to help?
             </p>
           </AccordionSummary>
           <AccordionDetails>
-            <p className="font-dmsans font-normal">
+            <p className="font-dmsans font-normal text-[#2C3B3C]">
               Yes, volunteers are always needed to make a difference in the
               lives of homeless individuals. To explore volunteer opportunities,
               create an account on our platform, and explore the resources and
@@ -142,12 +142,12 @@ export default function FAQs() {
             id="panel5bh-header"
             className="text-lg font-dmsans"
           >
-            <p className="font-dmsans font-medium">
+            <p className="font-dmsans font-medium text-[#2C3B3C]">
               How can I donate to Street Care?
             </p>
           </AccordionSummary>
           <AccordionDetails>
-            <p className="font-dmsans font-normal">
+            <p className="font-dmsans font-normal text-[#2C3B3C]">
               At Street Care, we truly believe in the extraordinary power of
               generosity. Visit our website
               <a
@@ -176,12 +176,12 @@ export default function FAQs() {
             id="panel6bh-header"
             className="text-lg font-dmsans"
           >
-            <p className="font-dmsans font-medium">
+            <p className="font-dmsans font-medium text-[#2C3B3C]">
               Can you share stories of individuals who have helped in the past?
             </p>
           </AccordionSummary>
           <AccordionDetails>
-            <p className="font-dmsans font-normal">
+            <p className="font-dmsans font-normal text-[#2C3B3C]">
               Street Care may feature inspirational stories of volunteers and
               their experiences in the app or on their website. These stories
               can provide insights into the impact volunteers have made in the
