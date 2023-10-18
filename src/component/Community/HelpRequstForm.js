@@ -25,8 +25,11 @@ function HelpRequestForm() {
     "Social Integration",
     "Pet Care",
   ];
+
   return (
+
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
+    <form>
       <div className="relative flex flex-col items-center ">
         <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-32 rounded-2xl text-black ">
           <div className="inline-flex pl-3 lg:pl-40 cursor-pointer pb-[19px]">
@@ -62,7 +65,7 @@ function HelpRequestForm() {
                     <div className="text-zinc-700 font-semibold text-[15px] font-['Inter']">Additional Notes</div>
                     <input
                       type="text"
-                      className="px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
+                      className="h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
                       placeholder="Description"
                     />
                   </div>
@@ -77,7 +80,7 @@ function HelpRequestForm() {
                         </p>
                         <input
                         type="text"
-                        className="px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
+                        className="h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
                         placeholder="Street"
                         />
                     </div>
@@ -87,7 +90,7 @@ function HelpRequestForm() {
                         </p>
                         <input
                         type="text"
-                        className="px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
+                        className="h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
                         placeholder="11201"
                         />
                     </div>
@@ -96,7 +99,7 @@ function HelpRequestForm() {
                     <div className="font-semibold font-['Inter'] text-[15px]">How can we identify this person?*</div>
                     <input
                       type="text"
-                      className="px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
+                      className="h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
                       placeholder="Blue Shirt"
                     />
                   </div>
@@ -117,6 +120,7 @@ function HelpRequestForm() {
           </div>
         </div>
       </div>
+      </form>
     </div>
   );
 }

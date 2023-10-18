@@ -176,7 +176,7 @@ const Form = () => {
               </p>
               <input
                 type="text"
-                className={`px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset  ${
+                className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset  ${
                   error.nameError !== "" ? "ring-red-500" : "ring-gray-300"
                 }`}
                 placeholder="Use Location by default for group meetup"
@@ -196,7 +196,7 @@ const Form = () => {
               </p>
               <input
                 type="text"
-                className="px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
+                className="h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
                 placeholder="Details"
                 id="event-desc"
                 ref={descRef}
@@ -208,7 +208,7 @@ const Form = () => {
               </p>
               <input
                 type="text"
-                className="w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
+                className="h-12 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
                 id="max-cap"
                 ref={maxCapRef}
               />
@@ -225,7 +225,7 @@ const Form = () => {
               </p>
               <input
                 type="text"
-                className={`px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
                   error.streetError !== "" ? "ring-red-500" : "ring-gray-300"
                 }`}
                 placeholder="Street"
@@ -246,7 +246,7 @@ const Form = () => {
                 </p>
                 <input
                   type="text"
-                  className={`px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
                     error.stateError !== "" ? "ring-red-500" : "ring-gray-300"
                   }`}
                   placeholder="New York"
@@ -266,7 +266,7 @@ const Form = () => {
                 </p>
                 <input
                   type="text"
-                  className={`px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
                     error.zipError !== "" ? "ring-red-500" : "ring-gray-300"
                   }`}
                   placeholder="11201"
@@ -288,7 +288,7 @@ const Form = () => {
                 </p>
                 <input
                   type="date"
-                  className={`px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
                     error.dateError !== "" ? "ring-red-500" : "ring-gray-300"
                   }`}
                   id="date"
@@ -312,7 +312,7 @@ const Form = () => {
                 </p>
                 <input
                   type="time"
-                  className={`px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
                     error.stimeError !== "" ? "ring-red-500" : "ring-gray-300"
                   }`}
                   id="start-time"
@@ -331,7 +331,7 @@ const Form = () => {
                 </p>
                 <input
                   type="time"
-                  className={`px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
                     error.nameError !== "" ? "ring-red-500" : "ring-gray-300"
                   }`}
                   id="end-time"
@@ -356,7 +356,7 @@ const Form = () => {
               Is this Event related to any Help Request?
             </p>
             <select
-              className="px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring focus:ring-indigo-400 appearance-none"
+              className="h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring focus:ring-indigo-400 appearance-none"
               defaultValue=""
               id="help-req"
             >
