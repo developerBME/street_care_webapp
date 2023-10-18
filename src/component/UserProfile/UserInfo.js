@@ -43,6 +43,7 @@ const UserInfo = () => {
     } else {
       console.log("USER NOT FOUND!");
       navigate("/login");
+      console.log("shouldve navigated");
     }
   });
 

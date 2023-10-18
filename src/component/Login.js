@@ -1,5 +1,9 @@
-import React, { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import React, { useCallback, useState, useEffect } from "react";
+import {
+  signInWithEmailAndPassword,
+  setPersistence,
+  browserSessionPersistence,
+} from "firebase/auth";
 import { auth } from "./firebase"; // Importing the auth instance
 import {
   getAuth,
@@ -28,9 +32,14 @@ function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [loginSuccess, setLoginSuccess] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
 
+  useEffect(() => {
+    console.log(rememberMe);
+  }, [rememberMe]);
   const fAuth = getAuth();
   onAuthStateChanged(fAuth, (user) => {
+    console.log(fAuth);
     // Checks Login status for Redirection
     if (user) {
       // User is signed in, see docs for a list of available properties
@@ -45,13 +54,28 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      setLoginSuccess("Successfully logged in!");
-      setError(""); // Clearing out any existing error messages
-    } catch (error) {
-      setError(error.message);
-      setLoginSuccess(""); // Clearing out any success messages
+    if (rememberMe) {
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        console.log("used LOCAL login");
+        setLoginSuccess("Successfully logged in!");
+        setError(""); // Clearing out any existing error messages
+      } catch (error) {
+        setError(error.message);
+        setLoginSuccess(""); // Clearing out any success messages
+      }
+    } else {
+      setPersistence(auth, browserSessionPersistence)
+        .then(async () => {
+          await signInWithEmailAndPassword(auth, email, password);
+          console.log("used session login");
+          setLoginSuccess("Successfully logged in!");
+          setError(""); // Clearing out any existing error messages
+        })
+        .catch((error) => {
+          setError(error.message);
+          setLoginSuccess("");
+        });
     }
   };
 
@@ -161,6 +185,10 @@ function Login() {
                     name="remember"
                     id="remember"
                     className="w-[18px] h-[18px] left-0 top-0 absolute bg-violet-700 rounded-sm cursor-pointer "
+                    checked={rememberMe}
+                    onChange={(e) => {
+                      setRememberMe(e.target.checked);
+                    }}
                   ></input>
                 </div>
                 <div className="text-black text-sm font-normal font-open-sans leading-tight">

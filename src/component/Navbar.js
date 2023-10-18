@@ -68,7 +68,7 @@ const NavBar = (props) => {
     {
       id: 3,
       label: "Log out",
-      fireBaseSignOut,
+      signOut: fireBaseSignOut,
       icons: RiLogoutBoxRLine,
     },
   ];
@@ -156,7 +156,7 @@ const NavBar = (props) => {
                           <Link
                             to={e.link}
                             onClick={() => {
-                              e.fireBaseSignOut();
+                              e.signOut();
                             }}
                             className=" w-[200px] h-10 inline-flex font-inter text-base font-normal leading-6 tracking-wide gap-3  items-center"
                           >
