@@ -165,7 +165,8 @@ const UserInfo = () => {
           </div>
         </div>
       </div>
-      <div className="px-4 pb-4 grid grid-flow-col overflow-x-auto gap-2 md:px-8 md:pb-12 md:grid md:grid-cols-2 md:grid-rows-3 md:gap-4 lg:px-0 lg:pb-16 lg:grid lg:grid-cols-3 lg:grid-rows-2 lg:gap-4">
+      <div className="px-4 pb-4 grid grid-flow-col overflow-x-auto gap-2 md:px-8 md:pb-12 md:grid md:grid-cols-2 md:grid-rows-3 md:gap-y-4 md:gap-x-6 xl:px-0 xl:pb-16 xl:grid xl:grid-cols-3 xl:grid-rows-2 xl:gap-4">
+        {/* <div className="px-4 pb-4 grid grid-flow-col overflow-x-auto gap-2 md:px-8 md:pb-12 md:grid md:grid-cols-2 md:grid-rows-3 md:gap-4 lg:px-0 lg:pb-16 lg:grid lg:grid-cols-3 lg:grid-rows-2 lg:gap-4"> */}
         <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
           <img className="w-16 h-16 mr-4" src={crown} alt="..."></img>
           <div className="flex flex-col">
@@ -238,12 +239,12 @@ const UserInfo = () => {
       </div>
       {/* Impact */}
       <div className="">
-        <p className="text-[#212121] text-[42px] font-medium font-dmsans leading-9">
+        <p className="text-[#212121] pl-2 pt-4 md:pl-8 md:pt-0 lg:pl-0 lg:pt-0 text-4xl font-medium font-dmsans leading-9">
           My Impact
         </p>
         <div className="w-full h-fit justify-center items-center lg:justify-start lg:items-start  grid grid-cols-3 sm:grid-cols-1 lg:grid-cols-3 font-bricolage py-6 px-2 md:px-8 lg:px-0 md:pt-8 md:pb-8  lg:pt-16 lg:pb-12">
           {/*  */}
-          <div className=" sm:flex grow rounded-l-2xl sm:rounded-t-2xl lg:rounded-tr-none lg:rounded-l-2xl shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-emerald-100 to-neutral-200 justify-center items-center sm:justify-start sm:items-end gap-6 ">
+          <div className=" sm:flex grow rounded-l-2xl sm:rounded-t-2xl sm:rounded-b-none lg:rounded-tr-none lg:rounded-l-2xl shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-emerald-100 to-neutral-200 justify-center items-center sm:justify-start sm:items-end gap-6 ">
             <div className=" w-full sm:w-fit flex-col  justify-center items-center sm:justify-start sm:items-start sm:gap-6 inline-flex">
               <div className="text-violet-950 text-xs sm:text-2xl font-semibold leading-loose font-inter">
                 Helped
