@@ -37,6 +37,7 @@ const Form = () => {
   const dateRef = useRef("");
   const startTimeRef = useRef("");
   const endTimeRef = useRef("");
+  const cityRef = useRef("");
   const [helpType, setHelpType] = useState([]);
   const [clear, setClear] = useState(false);
 
@@ -70,6 +71,7 @@ const Form = () => {
     descRef.current.value = "";
     maxCapRef.current.value = "";
     streetRef.current.value = "";
+    zipcodeRef.current.value = "";
     setHelpType([]);
     setClear(true);
   };
@@ -97,6 +99,12 @@ const Form = () => {
       updateErrorState("streetError", "Street is required");
     } else {
       updateErrorState("streetError", "");
+    }
+
+    if (!cityRef.current.value) {
+      updateErrorState("cityError", "City is required");
+    } else {
+      updateErrorState("cityError", "");
     }
 
     if (!stateRef.current.value) {
@@ -137,8 +145,12 @@ const Form = () => {
       eventEndTime: startTimeRef.current.value,
       eventStartTime: endTimeRef.current.value,
       totalSlots: maxCapRef.current.value,
-      state: stateRef.current.value,
-      street: streetRef.current.value,
+      location: {
+        street: streetRef.current.value,
+        city: cityRef.current.value,
+        state: stateRef.current.value,
+        zipcode: zipcodeRef.current.value,
+      },
       skills: helpType,
       createdAt: Date(),
       interests: 0,
@@ -146,17 +158,17 @@ const Form = () => {
       approved: false,
     };
 
-    // try {
-    //   const eventRef = collection(db, "outreachEvents");
-    //   const docRef = await addDoc(eventRef, obj);
-    //   if (docRef.id) {
-    //     console.log(docRef.id);
-    //     setSuccess(true);
-    //     clearFields();
-    //   }
-    // } catch (e) {
-    //   console.log(e);
-    // }
+    try {
+      const eventRef = collection(db, "outreachEvents");
+      const docRef = await addDoc(eventRef, obj);
+      if (docRef.id) {
+        console.log(docRef.id);
+        setSuccess(true);
+        clearFields();
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -236,6 +248,24 @@ const Form = () => {
                 <div className="inline-flex items-center">
                   <img src={errorImg} className="w-3 h-3" />
                   <p className="text-red-600 text-xs">{error.streetError}</p>
+                </div>
+              )}
+            </div>
+            <div className="space-y-1.5">
+              <p className="font-semibold font-['Inter'] text-[15px]">City*</p>
+              <input
+                type="text"
+                className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                  error.streetError !== "" ? "ring-red-500" : "ring-gray-300"
+                }`}
+                placeholder="City"
+                id="city"
+                ref={cityRef}
+              />
+              {error.CityError && (
+                <div className="inline-flex items-center">
+                  <img src={errorImg} className="w-3 h-3" />
+                  <p className="text-red-600 text-xs">{error.CityError}</p>
                 </div>
               )}
             </div>

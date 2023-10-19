@@ -3,6 +3,7 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import "../../App.css";
 
 export default function FAQs() {
   const [expanded, setExpanded] = React.useState(false);
@@ -18,9 +19,14 @@ export default function FAQs() {
       </p>
       <div className=" pt-9">
         <Accordion
-          className="p-3 mb-2 bg-white flex flex-col rounded-lg w-full"
+          className="p-3 mb-2 bg-white flex flex-col w-full"
           expanded={expanded === "panel1"}
           onChange={handleChange("panel1")}
+          style={
+            expanded === "panel1"
+              ? { backgroundColor: "#E6DCFF", borderRadius: "12px" }
+              : { borderRadius: "12px" }
+          }
         >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -44,9 +50,14 @@ export default function FAQs() {
           </AccordionDetails>
         </Accordion>
         <Accordion
-          className="p-3 mb-2 bg-white flex flex-col rounded-lg w-full"
+          className="p-3 mb-2 bg-white flex flex-col w-full"
           expanded={expanded === "panel2"}
           onChange={handleChange("panel2")}
+          style={
+            expanded === "panel2"
+              ? { backgroundColor: "#E6DCFF", borderRadius: "12px" }
+              : { borderRadius: "12px" }
+          }
         >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -69,9 +80,14 @@ export default function FAQs() {
           </AccordionDetails>
         </Accordion>
         <Accordion
-          className="p-3 mb-2 bg-white flex flex-col rounded-lg w-full"
+          className="p-3 mb-2 bg-white flex flex-col w-full"
           expanded={expanded === "panel3"}
           onChange={handleChange("panel3")}
+          style={
+            expanded === "panel3"
+              ? { backgroundColor: "#E6DCFF", borderRadius: "12px" }
+              : { borderRadius: "12px" }
+          }
         >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -94,9 +110,14 @@ export default function FAQs() {
           </AccordionDetails>
         </Accordion>
         <Accordion
-          className="p-3 mb-2 bg-white flex flex-col rounded-lg w-full"
+          className="p-3 mb-2 bg-white flex flex-col w-full"
           expanded={expanded === "panel4"}
           onChange={handleChange("panel4")}
+          style={
+            expanded === "panel4"
+              ? { backgroundColor: "#E6DCFF", borderRadius: "12px" }
+              : { borderRadius: "12px" }
+          }
         >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -132,9 +153,14 @@ export default function FAQs() {
           </AccordionDetails>
         </Accordion>
         <Accordion
-          className="p-3 mb-2 bg-white flex flex-col rounded-lg w-full"
+          className="p-3 mb-2 bg-white flex flex-col w-full"
           expanded={expanded === "panel5"}
           onChange={handleChange("panel5")}
+          style={
+            expanded === "panel5"
+              ? { backgroundColor: "#E6DCFF", borderRadius: "12px" }
+              : { borderRadius: "12px" }
+          }
         >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -166,9 +192,14 @@ export default function FAQs() {
           </AccordionDetails>
         </Accordion>
         <Accordion
-          className="p-3 mb-2 bg-white flex flex-col rounded-lg w-full"
+          className="p-3 mb-2 bg-white flex flex-col w-full"
           expanded={expanded === "panel6"}
           onChange={handleChange("panel6")}
+          style={
+            expanded === "panel6"
+              ? { backgroundColor: "#E6DCFF", borderRadius: "12px" }
+              : { borderRadius: "12px" }
+          }
         >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
