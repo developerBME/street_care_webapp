@@ -66,6 +66,22 @@ export const fetchEvents = async () => {
     return eventsData;
 }
 
+export const fetchOfficialEvents = async () => {
+    const officialEventsRef = collection(db, "officialEvents");
+    const snapshot = await getDocs(officialEventsRef);
+    const officialEvents = [];
+    for (const doc of snapshot.docs) {
+        const eventData = doc.data();
+        officialEvents.push({
+            ...eventData,
+            eventDate: formatDate(new Date(eventData.eventDate.seconds * 1000)),
+            id: doc.id,
+            label:"RSVP"
+        });
+    }
+    return officialEvents;
+}
+
 const fetchUserName = async (uid) => {
     const userRef = doc(db, "users", uid);
     const userDoc = await getDoc(userRef);

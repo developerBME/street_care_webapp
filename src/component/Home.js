@@ -18,7 +18,7 @@ import Process from "./HomePage/Process";
 import MoreAboutUs from "./HomePage/MoreAboutUs";
 import Navbar from "./Navbar";
 import OutreachEventCard from "./Community/OutreachEventCard";
-import { fetchEvents } from "./EventCardService";
+import { fetchEvents, fetchOfficialEvents } from "./EventCardService";
 import BMEcardimg1 from "../images/BMEofficialcardimg1.png";
 import BMEcardimg2 from "../images/BMEofficialcardimg2.png";
 import BMEcardimg3 from "../images/BMEofficialcardimg3.png";
@@ -138,6 +138,23 @@ function HomePage() {
     fetchData();
   }, []);
 
+  const [offevents,setOffevents] = useState([]);
+
+  useEffect(() => {
+    const fetchOfficialData = async () => {
+      const eventsData = await fetchOfficialEvents();
+      // Sort the events based on the eventDate (from soonest to latest)
+      eventsData.sort((date1, date2) => {
+        const date_1 = new Date(date1.eventDate.seconds * 1000);
+        const date_2 = new Date(date2.eventDate.seconds * 1000);
+        return date_1 - date_2;
+      });
+      setOffevents(eventsData);
+    };
+
+    fetchOfficialData();
+  }, []);
+
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center ">
@@ -196,11 +213,14 @@ function HomePage() {
               {" "}
               BME Official Gathering
             </p>
-                <div className=" w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-                    {BMEcardData.map(BMEData => (
+            <div className=" w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+              {/* {BMEcardData.map(BMEData => (
                         <BMEcardnew key={BMEData.x} BMEcardData={BMEData} />
-                      ))}
-                </div>
+                      ))} */}
+                {offevents.map(eventData => (
+                  <BMEcardnew key={eventData.id} BMEcardData={eventData} />
+                ))}
+            </div>
           </div>
         </div>
 
