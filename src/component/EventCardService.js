@@ -14,55 +14,32 @@ export const fetchEvents = async () => {
             console.log("USER NOT FOUND!");
         }
     });
-    
 
     for (const doc of eventSnapshot.docs) {
         const eventData = doc.data();
-        let currentParticipants = eventData.participants;
         const userName = await fetchUserName(eventData.uid);
 
-        // Fix this 
-
-        
-
-        if (currentParticipants && fAuth.currentUser){
-
-            const userQuery = query(
-            collection(db, "users"),
-            where("uid", "==", fAuth?.currentUser?.uid)
-            );
-            const userDocRef = await getDocs(userQuery);
-            const userDocID = userDocRef.docs[0].id;
-            
-            if (currentParticipants.includes(userDocID)) {
+        let currentParticipants = eventData.participants || [];
+        if (fAuth.currentUser && currentParticipants.includes(fAuth?.currentUser?.uid)){
             eventsData.push({
                 ...eventData,
                 userName: userName,
                 eventDate: formatDate(new Date(eventData.eventDate.seconds * 1000)),
                 id: doc.id,
-                label: "EDIT"
+                label: "EDIT",
+                nop: currentParticipants.length
             });
-            }
-            else{
-                eventsData.push({
-                    ...eventData,
-                    userName: userName,
-                    eventDate: formatDate(new Date(eventData.eventDate.seconds * 1000)),
-                    id: doc.id,
-                    label: "RSVP"
-                });
-            }
         } else {
             eventsData.push({
                 ...eventData,
                 userName: userName,
                 eventDate: formatDate(new Date(eventData.eventDate.seconds * 1000)),
                 id: doc.id,
-                label: "RSVP"
+                label: "RSVP",
+                nop: currentParticipants.length
             });
         }
     }
-
     return eventsData;
 }
 
@@ -83,9 +60,16 @@ export const fetchOfficialEvents = async () => {
 }
 
 const fetchUserName = async (uid) => {
-    const userRef = doc(db, "users", uid);
+    // Reference to the uid instead of the docid of the user.
+    const userQuery = query(
+        collection(db, "users"),
+        where("uid", "==", uid)
+      );
+    const userDocRef = await getDocs(userQuery);
+    const userDocID = userDocRef.docs[0].id;
+    // reference for the userdoc
+    const userRef = doc(db, "users", userDocID);
     const userDoc = await getDoc(userRef);
-
     if (userDoc.exists()) {
         return userDoc.data().username || ''; 
     } else {
@@ -96,7 +80,14 @@ const fetchUserName = async (uid) => {
 
 
 export const fetchUserEvents = async (uid) => {
-    const userRef = doc(db, "users", uid);
+    const userQuery = query(
+        collection(db, "users"),
+        where("uid", "==", uid)
+      );
+    const userDocRef = await getDocs(userQuery);
+    const userDocID = userDocRef.docs[0].id;
+    // reference for the userdoc
+    const userRef = doc(db, "users", userDocID);
     const userDoc = await getDoc(userRef);
 
     if (!userDoc.exists()) {
@@ -110,7 +101,6 @@ export const fetchUserEvents = async (uid) => {
     for (let eventId of eventIds) {
         const eventRef = doc(db, "outreachEvents", eventId);
         const eventDoc = await getDoc(eventRef);
-
         if (eventDoc.exists()) {
             const eventData = eventDoc.data();
             eventsData.push({
@@ -146,56 +136,48 @@ export function formatDate(dateObj) {
 
 export const handleRsvp = async (e, id, label, navigate) => {
     
+    // check if button is going to RSVP or EDIT
     if (label === 'RSVP'){
     e.preventDefault();
     const fAuth = getAuth();
+
+    // if user exists, check user.outreachevents, else navigate to login page.
     onAuthStateChanged(fAuth, async (user) => {
         if (user) {
-            console.log("Found user");
-
             try {
-                const ref = doc(db, "outreachEvents", id);
-        
+                // reference for the event clicked on
+                const eventRef = doc(db, "outreachEvents", id);
+                // find the userdoc with uid of the current user
                 const userQuery = query(
                     collection(db, "users"),
                     where("uid", "==", fAuth?.currentUser?.uid)
                   );
                 const userDocRef = await getDocs(userQuery);
                 const userDocID = userDocRef.docs[0].id;
-                console.log(userDocID)
+                // reference for the userdoc
                 const userRef = doc(db, "users", userDocID);
-        
-                // const userRef = doc(db,"users",fAuth.currentUser.uid);
-        
-                // console.log(userQuery)
-                // console.log("posting to db")
-                // console.log(helpType)
-                // const docSnap = await getDocs(userQuery);
-
                 // outreach event collection
-                const docSnap = await getDoc(ref);
+                const docSnap = await getDoc(eventRef);
+                // current participants in the eventdoc
                 let currentParticipants = docSnap.data().participants || [];
                 
-                // users collection
+                // current events in userdoc
                 const userSnap = await getDoc(userRef);
                 let currentEvents = userSnap.data().outreachEvents || [];
-                // console.log(currentParticipants)
-                // console.log(currentEvents)
-        
-                if (currentParticipants.includes(userDocID)){
-                    console.log("user exists in event")
-                    const newParticipants = [...currentParticipants];
-                    console.log(newParticipants)
+
+                // check if user exists in current participants and add if not
+                if (currentParticipants.includes(fAuth.currentUser.uid)){
                 } else {
-                    const newParticipants = [...currentParticipants, userDocID];
+                    const newParticipants = [...currentParticipants, fAuth.currentUser.uid];
                     console.log(newParticipants);
                     const eventDocUpdate = doc(db, "outreachEvents", id);
                     const updateRef = await updateDoc(eventDocUpdate, {
                         participants: newParticipants,
                       });
-                    console.log("successfully added to outreach events collection");
+                    console.log("successfully added to user to outreach collection")
                 }
-        
+
+                // check if event exists in current user and add if not 
                 if (currentEvents.includes(id)){
                     console.log("Event exists for this user")
                 } else {
@@ -204,118 +186,79 @@ export const handleRsvp = async (e, id, label, navigate) => {
                     const userUpdateRef = await updateDoc(userDocUpdate, {
                         outreachEvents: newEvents,
                       });
-                    console.log("successfully added to outreach users collection")
+                    console.log("successfully added outreach to users collection")
                 }
-        
-                // if (docSnap.exists()) {
-                //     // No need to update, just leave a logged in state
-                //     console.log("Update can be done");
-                //     console.log(docSnap.data().participants);
-                //     // console.log("Document data:", docSnap.data());
-                //   } else {
-                //     console.log("not found")
-                //   }
-                // const updateRef = await updateDoc(eventDocUpdate, {
-                //     participants: [...participants],
-                //   });
-        
-                // const userDocID = docSnap.docs[0].id;
-                // console.log(userDocID)
-        
-                // docSnap.forEach((doc) => {
-                //     // doc.data() is never undefined for query doc snapshots
-                //     console.log(doc.id, " => ", doc.data().participants);
-                //   });
             } catch (error) {
               console.log(error)
             }
-
         } else {
             console.log("USER NOT FOUND!");
             navigate("/login", { replace: true });
         }
     });
-
-    // console.log("user id ", fAuth.currentUser.uid)
-    // console.log("doc id ", id);
-    // const ref = query(collection(db, "outreachEvents"),where('id', '==',id));
-    // try {
-    //     const ref = doc(db, "outreachEvents", id);
-
-    //     const userQuery = query(
-    //         collection(db, "users"),
-    //         where("uid", "==", fAuth?.currentUser?.uid)
-    //       );
-    //     const userDocRef = await getDocs(userQuery);
-    //     const userDocID = userDocRef.docs[0].id;
-    //     const userRef = doc(db, "users", userDocID);
-
-    //     // const userRef = doc(db,"users",fAuth.currentUser.uid);
-
-    //     // console.log(userQuery)
-    //     // console.log("posting to db")
-    //     // console.log(helpType)
-    //     // const docSnap = await getDocs(userQuery);
-    //     const docSnap = await getDoc(ref);
-    //     let currentParticipants = docSnap.data().participants || [];
-    //     const userSnap = await getDoc(userRef);
-    //     console.log(userSnap)
-    //     let currentEvents = userSnap.data().outreachEvents;
-    //     console.log(currentParticipants)
-
-    //     if (currentParticipants.includes(fAuth.currentUser.uid)){
-    //         console.log("already present")
-    //         const newParticipants = [...currentParticipants];
-    //         console.log(newParticipants)
-    //     } else {
-    //         console.log("to be added")
-    //         const newParticipants = [...currentParticipants, fAuth.currentUser.uid];
-    //         console.log(newParticipants);
-    //         const eventDocUpdate = doc(db, "outreachEvents", id);
-    //         const updateRef = await updateDoc(eventDocUpdate, {
-    //             participants: newParticipants,
-    //           });
-    //     }
-
-    //     if (!currentEvents){
-    //         const newEvents = [id];
-    //         const userDocUpdate = doc(db, "users", fAuth.currentUser.uid);
-    //         const userUpdateRef = await updateDoc(userDocUpdate, {
-    //             outreachEvents: newEvents,
-    //           }); 
-    //     } else if (currentEvents && currentEvents.includes(id)){
-    //         console.log("Event exists in user collection")
-    //     } else {
-    //         const newEvents = [...currentEvents,id];
-    //         const userDocUpdate = doc(db, "users", fAuth.currentUser.uid);
-    //         const userUpdateRef = await updateDoc(userDocUpdate, {
-    //             outreachEvents: newEvents,
-    //           }); 
-    //     }
-
-    //     // if (docSnap.exists()) {
-    //     //     // No need to update, just leave a logged in state
-    //     //     console.log("Update can be done");
-    //     //     console.log(docSnap.data().participants);
-    //     //     // console.log("Document data:", docSnap.data());
-    //     //   } else {
-    //     //     console.log("not found")
-    //     //   }
-    //     // const updateRef = await updateDoc(eventDocUpdate, {
-    //     //     participants: [...participants],
-    //     //   });
-
-    //     // const userDocID = docSnap.docs[0].id;
-    //     // console.log(userDocID)
-
-    //     // docSnap.forEach((doc) => {
-    //     //     // doc.data() is never undefined for query doc snapshots
-    //     //     console.log(doc.id, " => ", doc.data().participants);
-    //     //   });
-    // } catch (error) {
-    //   console.log(error)
-    // }
-  } else {
+} else {
     console.log("EDIT BUTTON")
-  }
+    const fAuth = getAuth();
+    onAuthStateChanged(fAuth, async (user) => {
+        if (user) {
+            console.log("Found user");
+            try {
+                // reference for the event clicked on
+                const eventRef = doc(db, "outreachEvents", id);
+                // find the userdoc with uid of the current user
+                const userQuery = query(
+                    collection(db, "users"),
+                    where("uid", "==", fAuth?.currentUser?.uid)
+                  );
+                const userDocRef = await getDocs(userQuery);
+                const userDocID = userDocRef.docs[0].id;
+                // reference for the userdoc
+                const userRef = doc(db, "users", userDocID);
+                // outreach event collection
+                const docSnap = await getDoc(eventRef);
+                // current participants in the eventdoc
+                let currentParticipants = docSnap.data().participants || [];
+                
+                // current events in userdoc
+                const userSnap = await getDoc(userRef);
+                let currentEvents = userSnap.data().outreachEvents || [];
+
+                // check if user exists in current participants and remove if exists
+                if (currentParticipants.includes(fAuth.currentUser.uid)){
+                    console.log("removing from event")
+                    const eventDocUpdate = doc(db, "outreachEvents", id);
+                    const i = currentParticipants.indexOf(fAuth.currentUser.uid)
+                    if (i > -1){
+                        currentParticipants.splice(i,1);
+                        const updateRef = await updateDoc(eventDocUpdate, {
+                            participants: currentParticipants,
+                          });
+                    }
+                } else {
+                    console.log("User not found in the event")
+                }
+
+                // check if event exists in current user and remove if exists
+                if (currentEvents.includes(id)){
+                    console.log("removing from user")
+                    const userDocUpdate = doc(db, "users", userDocID);
+                    const i = currentEvents.indexOf(id)
+                    if (i > -1){
+                        currentEvents.splice(i,1);
+                        const userUpdateRef = await updateDoc(userDocUpdate, {
+                            outreachEvents: currentEvents,
+                          });
+                        }
+                } else {
+                    console.log("event not found in the user")
+                }
+            } catch (error) {
+              console.log(error)
+            }
+        } else {
+            navigate("/login", { replace: true });
+        }
+    });
+    
+}
 }

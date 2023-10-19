@@ -7,7 +7,7 @@ import { handleRsvp } from "../EventCardService";
 import { useNavigate } from "react-router-dom";
 
 const OutreachEventCard = ({ cardData, isProfilePage }) => {
-    const { id, label, userName, title, eventDate, location, helpType, totalSlots, interests } = cardData
+    const { id, label, userName, title, eventDate, location, helpType, totalSlots, interests, nop } = cardData
     const navigate = useNavigate();
     console.log("what is label",label)
   return (
@@ -58,7 +58,7 @@ const OutreachEventCard = ({ cardData, isProfilePage }) => {
       </div>}
       <div className="flex items-center justify-between px-5 pt-2 pb-4 gap-16">
         {isProfilePage ? (
-          <CustomButton label="Edit" name="buttonlight" />
+          <CustomButton label="Edit" name="buttonlight" onClick = {(e) => handleRsvp(e, id, label, navigate)} />
         ) : (
             <CustomButton label={label} name="buttonlight" onClick = {(e) => handleRsvp(e, id, label, navigate)} />
 
@@ -66,7 +66,7 @@ const OutreachEventCard = ({ cardData, isProfilePage }) => {
 
         {!isProfilePage ? (
           <div className="font-normal font-['Inter'] text-[12px]">
-            Open Spots: {totalSlots - interests}/{totalSlots}
+            Open Spots: {totalSlots - nop}/{totalSlots}
           </div>
         ) : (
           <div></div>
