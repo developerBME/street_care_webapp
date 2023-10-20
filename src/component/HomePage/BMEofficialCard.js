@@ -4,7 +4,7 @@ import imgBME from "../../images/imgBME.png";
 const BMEofficialCard = ({BMEcardData}) => {
 
   const { id, label, title, eventDate, location, totalSlots, interests, img} = BMEcardData
-
+ 
   return (
     
       <div className=" grow shrink basis-0 bg-sky-100 rounded-3xl flex-col justify-start items-start inline-flex">
