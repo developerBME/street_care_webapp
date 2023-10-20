@@ -1,6 +1,6 @@
 import React from "react";
 import imgBME from "../../images/imgBME.png";
-
+{/* Vedant */}
 const BMEofficialCard = ({BMEcardData}) => {
 
   const { id, label, title, eventDate, location, totalSlots, interests, img} = BMEcardData
@@ -47,5 +47,5 @@ const BMEofficialCard = ({BMEcardData}) => {
     
   );
 };
-
+{/* Vedant */}
 export default BMEofficialCard;
