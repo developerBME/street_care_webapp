@@ -1,7 +1,7 @@
 import React from "react";
 import CustomButton from  "../Buttons/CustomButton";
 import Needhelp from "../../images/help_announcement.png";
-
+{/* Vedant */}
 function HelpRequestEventWindow() {
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
@@ -81,3 +81,5 @@ function HelpRequestEventWindow() {
 }
 
 export default HelpRequestEventWindow;
+
+{/* Vedant */}
