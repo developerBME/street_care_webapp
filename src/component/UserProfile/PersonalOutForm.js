@@ -14,6 +14,7 @@ import {
 } from "firebase/auth";
 
 import CustomButton from "../Buttons/CustomButton";
+import errorImg from "../../images/error.png";
 
 const starStyle = {
   width: 60,
@@ -40,6 +41,25 @@ function PersonalOutForm() {
   const [cityNames, setCityNames] = useState([]);
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
+
+  const [error, setError] = useState({
+    numberHelpedError: "",
+    cityError: "",
+    stateError: "",
+    checkboxesError: "",
+    itemQtyError:"",
+    dateError: "",
+    timeError: "",
+  });
+
+  const updateErrorState = (key, value) => {
+    setError((prevState) => ({
+      ...prevState, // Clone the current state
+      [key]: value, // Update the specific key with the new value
+    }));
+  };
+
+
   {
     /* Firebase */
   }
@@ -110,6 +130,44 @@ function PersonalOutForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Form Validation Start
+    if (!numberHelped.current.value) {
+      updateErrorState("numberHelpedError", "Number is required");
+    } else {
+      updateErrorState("numberHelpedError", "");
+    }
+
+    if (!stateRef.current.value) {
+      updateErrorState("stateError", "Select State");
+    } else {
+      updateErrorState("stateError", "");
+    }
+
+    if (!cityRef.current.value) {
+      updateErrorState("cityError", "Select City");
+    } else {
+      updateErrorState("cityError", "");
+    }
+
+    if (!date.current.value) {
+      updateErrorState("dateError", "Enter a date");
+    } else {
+      updateErrorState("dateError", "");
+    }
+
+    if (!time.current.value) {
+      updateErrorState("timeError", "Enter a time");
+    } else {
+      updateErrorState("timeError", "");
+    }
+
+    if (!itemQtyRef.current.value) {
+      updateErrorState("itemQtyError", "Enter Quantity");
+    } else {
+      updateErrorState("itemQtyError", "");
+    }
+
     let obj = {
       uid: fAuth.currentUser.uid,
       numberPeopleHelped: numberHelped.current.value,
@@ -189,10 +247,16 @@ function PersonalOutForm() {
                           type="number"
                           id="numberHelped"
                           placeholder="Number of people helped"
-                          className="text-zinc-900 w-full h-full pl-4 rounded-[4px] border border-zinc-500 text-base  font-normal font-roboto leading-normal tracking-wide"
+                          className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border-0 text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.numberHelpedError !== "" ? "ring-red-500" : "ring-gray-300"}`}
                           required={true}
                           ref={numberHelped}
                         ></input>
+                        {error.numberHelpedError && (
+                          <div className="inline-flex items-center">
+                            <img src={errorImg} className="w-3 h-3" />
+                            <p className="text-red-600 text-xs">{error.numberHelpedError}</p>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -391,7 +455,7 @@ function PersonalOutForm() {
                     <div className="self-stretch h-fit  border-collapse     ">
                       <div className=" h-14 inline-flex w-full">
                         <select
-                          className="text-zinc-900  w-full h-full px-4 rounded-[4px] border border-zinc-500 text-base font-normal font-roboto leading-normal tracking-wide"
+                          className={`text-zinc-900  w-full h-full px-4 rounded-[4px] border border-zinc-500 text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.stateError !== "" ? "ring-red-500" : "ring-gray-300"}`}
                           defaultValue=""
                           ref={stateRef}
                           onChange={getCities}
@@ -413,6 +477,12 @@ function PersonalOutForm() {
                             })}
                         </select>
                       </div>
+                        {error.stateError && (
+                          <div className="inline-flex items-center">
+                            <img src={errorImg} className="w-3 h-3" />
+                            <p className="text-red-600 text-xs">{error.stateError}</p>
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div className="self-stretch w-full h-fit flex-col  flex ">
@@ -424,7 +494,7 @@ function PersonalOutForm() {
                     <div className="self-stretch h-fit  border-collapse     ">
                       <div className=" h-14 inline-flex w-full">
                         <select
-                          className="text-zinc-900  w-full h-full px-4 rounded-[4px] border border-zinc-500 text-base font-normal font-roboto leading-normal tracking-wide"
+                          className={`text-zinc-900  w-full h-full px-4 rounded-[4px] border border-zinc-500 text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.cityError !== "" ? "ring-red-500" : "ring-gray-300"}`}
                           defaultValue=""
                           disabled={!cityNames}
                           ref={cityRef}
@@ -449,6 +519,12 @@ function PersonalOutForm() {
                             })}
                         </select>
                       </div>
+                        {error.cityError && (
+                          <div className="inline-flex items-center">
+                            <img src={errorImg} className="w-3 h-3" />
+                            <p className="text-red-600 text-xs">{error.cityError}</p>
+                          </div>
+                        )}
                     </div>
                   </div>
                 </div>
@@ -469,9 +545,15 @@ function PersonalOutForm() {
                             type="date"
                             id="-itemnumber"
                             placeholder="Number"
-                            className="text-zinc-900 w-full h-full pl-4 rounded-[4px] border border-zinc-500 text-base  font-normal font-roboto leading-normal tracking-wide"
+                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border border-zinc-500 text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.dateError !== "" ? "ring-red-500" : "ring-gray-300"}`}
                             ref={date}
                           ></input>
+                          {error.dateError && (
+                            <div className="inline-flex items-center">
+                              <img src={errorImg} className="w-3 h-3" />
+                              <p className="text-red-600 text-xs">{error.dateError}</p>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -488,9 +570,15 @@ function PersonalOutForm() {
                             type="time"
                             id="-itemnumber"
                             placeholder="Number"
-                            className="text-zinc-900 w-full h-full pl-4 rounded-[4px] border border-zinc-500 text-base  font-normal font-roboto leading-normal tracking-wide"
+                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border border-zinc-500 text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.timeError !== "" ? "ring-red-500" : "ring-gray-300"}`}
                             ref={time}
                           ></input>
+                          {error.timeError && (
+                            <div className="inline-flex items-center">
+                              <img src={errorImg} className="w-3 h-3" />
+                              <p className="text-red-600 text-xs">{error.timeError}</p>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -511,10 +599,16 @@ function PersonalOutForm() {
                           type="number"
                           id="itemsNumber"
                           placeholder="Number of Items"
-                          className="text-zinc-900 w-full h-full pl-4 rounded-[4px] border border-zinc-500 text-base  font-normal font-roboto leading-normal tracking-wide"
+                          className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border border-zinc-500 text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.itemQtyError !== "" ? "ring-red-500" : "ring-gray-300"}`}
                           required={true}
                           ref={itemQtyRef}
                         ></input>
+                        {error.itemQtyError && (
+                            <div className="inline-flex items-center">
+                              <img src={errorImg} className="w-3 h-3" />
+                              <p className="text-red-600 text-xs">{error.itemQtyError}</p>
+                            </div>
+                          )}
                       </div>
                     </div>
                   </div>
