@@ -33,7 +33,7 @@ const BMEofficialCard = ({BMEcardData}) => {
             </div>
           </div>
         </div>
-        <div className="self-stretch h-20 px-6 pt-4 pb-6 flex-col justify-start items-start gap-2.5 flex">
+        <div className="self-stretch h-20 px-6 pt-4 mt-10 lg:mt-0 flex-col justify-start items-start gap-2.5 flex">
           <div className="self-stretch justify-start items-center gap-2.5 inline-flex">
             <button className="h-10 bg-cyan-200 px-6 py-2.5 rounded-full flex-col justify-center items-center gap-2 inline-flex text-center text-neutral-900 text-sm font-medium font-['DM Sans'] leading-tight">
               RSVP
