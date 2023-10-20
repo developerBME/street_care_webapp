@@ -109,8 +109,9 @@ const UserInfo = () => {
     console.log(helped);
   }, [helped]);
   return (
-    <div className="lg:px-24 lg:py-12 ">
-      <div className="flex flex-col pt-0 px-0 pb-2 md:flex md:flex-row md:px-8  md:pb-8 lg:px-0  lg:pb-12 md:gap-x-6 lg:gap-x-12">
+    // <div className="lg:px-24 lg:py-12 ">
+    <div className="xl:px-24 xl:py-12 ">
+      <div className="flex flex-col pt-0 px-0 pb-2 md:flex md:flex-row md:px-8  md:pb-8 xl:px-0  xl:pb-12 md:gap-x-6 xl:gap-x-12">
         <div className="pr-0 bg-gradient-to-tr from-[#C0F4FF] from-10% via-[#C0F4FF] via-60% to-[#DDD] to-90% bg-fixed rounded-t-2xl md:bg-none">
           <img
             src={user}
@@ -128,7 +129,8 @@ const UserInfo = () => {
             </h3>
           </div>
 
-          <div className=" w-full px-4 pb-2 flex overflow-x-auto md:grid md:grid-cols-2 md:gap-y-2 lg:flex lg:flex-wrap">
+          {/* <div className=" w-full px-4 pb-2 flex overflow-x-auto md:grid md:grid-cols-2 md:gap-y-2 lg:flex lg:flex-wrap"> */}
+          <div className=" w-full px-4 pb-2 flex overflow-x-auto md:flex md:flex-wrap md:gap-y-2">
             {superpowers &&
               superpowers.map((superpower) => {
                 return (
@@ -139,15 +141,6 @@ const UserInfo = () => {
                   </div>
                 );
               })}
-            {/* <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold">
-              <h6 className="text-[#212121] w-[130px]">Spanish Speaker</h6>
-            </div>
-            <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold">
-              <h3 className="text-[#212121]">Healthcare</h3>
-            </div>
-            <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold">
-              <h3 className="text-[#212121]">Childcare</h3>
-            </div> */}
             <button
               className="px-2 py-2 mr-2 h-10 rounded-md border border-[#CACACA] hover:bg-[#DEF6EB] font-semibold font-opensans"
               onClick={openModal}
@@ -239,10 +232,11 @@ const UserInfo = () => {
       </div>
       {/* Impact */}
       <div className="">
-        <p className="text-[#212121] pl-2 pt-4 md:pl-8 md:pt-0 lg:pl-0 lg:pt-0 text-4xl font-medium font-dmsans leading-9">
+        <p className="text-[#212121] pl-2 pt-4 md:pl-8 md:pt-0 xl:pl-0 xl:pt-0 text-4xl font-medium font-dmsans leading-9">
           My Impact
         </p>
-        <div className="w-full h-fit justify-center items-center lg:justify-start lg:items-start  grid grid-cols-3 sm:grid-cols-1 lg:grid-cols-3 font-bricolage py-6 px-2 md:px-8 lg:px-0 md:pt-8 md:pb-8  lg:pt-16 lg:pb-12">
+        {/* <div className="w-full h-fit justify-center items-center lg:justify-start lg:items-start  grid grid-cols-3 sm:grid-cols-1 lg:grid-cols-3 font-bricolage py-6 px-2 md:px-8 lg:px-0 md:pt-8 md:pb-8  lg:pt-16 lg:pb-12"> */}
+        <div className="w-full h-fit justify-center items-center lg:justify-start lg:items-start  grid grid-cols-3 sm:grid-cols-1 lg:grid-cols-3 font-bricolage py-6 px-2 md:px-8 xl:px-0 md:pt-8 md:pb-8  lg:pt-16 lg:pb-12">
           {/*  */}
           <div className=" sm:flex grow rounded-l-2xl sm:rounded-t-2xl sm:rounded-b-none lg:rounded-tr-none lg:rounded-l-2xl shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-emerald-100 to-neutral-200 justify-center items-center sm:justify-start sm:items-end gap-6 ">
             <div className=" w-full sm:w-fit flex-col  justify-center items-center sm:justify-start sm:items-start sm:gap-6 inline-flex">
