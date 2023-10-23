@@ -9,8 +9,8 @@ import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebase";
 
 import CustomButton from "../Buttons/CustomButton";
-
 import ConfirmationModal from "./ConfirmationModal";
+import errorImg from "../../images/error.png";
 
 const starStyle = {
   width: 60,
@@ -29,6 +29,22 @@ function CommOutForm() {
   const [rating, setRating] = useState(0);
   const checkboxes = useRef([]);
   const [success, setSuccess] = useState(false);
+  const outreachRef = useRef("");
+  const [outreach, setOutreach] = useState("");
+
+  const [error, setError] = useState({
+    numberHelpedError: "",
+    itemQtyError:"",
+    checkboxesError: "",
+    outreachError: "",
+  });
+
+  const updateErrorState = (key, value) => {
+    setError((prevState) => ({
+      ...prevState, // Clone the current state
+      [key]: value, // Update the specific key with the new value
+    }));
+  };
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -69,6 +85,26 @@ function CommOutForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Form Validation Start
+    if (!numberHelped.current.value) {
+      updateErrorState("numberHelpedError", "Number is required");
+    } else {
+      updateErrorState("numberHelpedError", "");
+    }
+
+    if (!NumberOfItems.current.value) {
+      updateErrorState("itemQtyError", "Enter Quantity");
+    } else {
+      updateErrorState("itemQtyError", "");
+    }
+
+    if (!outreachRef.current.value) {
+      updateErrorState("outreachError", "Enter Outreact Attended");
+    } else {
+      updateErrorState("outreachError", "");
+    }
+
     let obj = {
       uid: fAuth.currentUser.uid,
       numberPeopleHelped: numberHelped.current.value,
@@ -94,6 +130,7 @@ function CommOutForm() {
     NumberOfItems.current.value = "";
     numberHelped.current.value = "";
     setItemArray([]);
+    setOutreach("");
     checkboxes.current.forEach((x) => {
       x.checked = false;
     });
@@ -138,10 +175,16 @@ function CommOutForm() {
                           type="number"
                           id="numberHelped"
                           placeholder="How many people did you help?"
-                          className="text-zinc-900 w-full h-full pl-4 rounded-[4px] border border-zinc-500 text-base  font-normal font-roboto leading-normal tracking-wide"
+                          className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border border-zinc-500 text-base  font-normal font-roboto leading-normal tracking-wide ${error.numberHelpedError !== "" ? "ring-red-500" : "ring-gray-300"}`}
                           required={true}
                           ref={numberHelped}
                         ></input>
+                        {error.numberHelpedError && (
+                          <div className="inline-flex items-center">
+                            <img src={errorImg} className="w-3 h-3" />
+                            <p className="text-red-600 text-xs">{error.numberHelpedError}</p>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -158,11 +201,12 @@ function CommOutForm() {
                         Community Outreach
                       </div>
                     </div>
-                    <div className="self-stretch h-fit  border-collapse     ">
+                    <div className="self-stretch h-fit  border-collapse">
                       <div className=" h-14 inline-flex w-full">
                         <select
-                          className="text-zinc-900  w-full h-full px-4 rounded-[4px] border border-zinc-500 text-base font-normal font-roboto leading-normal tracking-wide"
+                          className={`text-zinc-900  w-full h-full px-4 rounded-[4px] border border-zinc-500 text-base font-normal font-roboto leading-normal tracking-wide ${error.outreachError !== "" ? "ring-red-500" : "ring-gray-300"}`}
                           defaultValue=""
+                          ref={outreachRef}
                         >
                           <option value="" disabled>
                             Select Help Request
@@ -176,6 +220,12 @@ function CommOutForm() {
                           <option value="outreach2">outreach two</option>
                         </select>
                       </div>
+                      {error.outreachError && (
+                        <div className="inline-flex items-center">
+                          <img src={errorImg} className="w-3 h-3" />
+                          <p className="text-red-600 text-xs">{error.outreachError}</p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -396,10 +446,16 @@ function CommOutForm() {
                           type="number"
                           id="-itemnumber"
                           placeholder="Number"
-                          className="text-zinc-900 w-full h-full pl-4 rounded-[4px] border border-zinc-500 text-base  font-normal font-roboto leading-normal tracking-wide"
+                          className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border border-zinc-500 text-base  font-normal font-roboto leading-normal tracking-wide ${error.itemQtyError !== "" ? "ring-red-500" : "ring-gray-300"}`}
                           ref={NumberOfItems}
                           // onChange={(e) => setEmail(e.target.value)}
                         ></input>
+                        {error.itemQtyError && (
+                          <div className="inline-flex items-center">
+                            <img src={errorImg} className="w-3 h-3" />
+                            <p className="text-red-600 text-xs">{error.itemQtyError}</p>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
