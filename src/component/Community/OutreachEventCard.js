@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import userImg from "../../images/user.jpeg";
 import verifiedImg from "../../images/verified_purple.png";
 import wavingHand from "../../images/waving_hand.png";
@@ -9,7 +9,8 @@ import { useNavigate } from "react-router-dom";
 const OutreachEventCard = ({ cardData, isProfilePage }) => {
     const { id, label, userName, title, eventDate, location, helpType, totalSlots, interests, nop } = cardData
     const navigate = useNavigate();
-    console.log("what is label",label)
+    const [label2, setLabel2] = useState(label);
+    console.log(label2)
   return (
     <div className="bg-[#F5EEFE] w-[350px] lg:w-full rounded-2xl mb-4">
       {!isProfilePage ? (
@@ -58,9 +59,9 @@ const OutreachEventCard = ({ cardData, isProfilePage }) => {
       </div>}
       <div className="flex items-center justify-between px-5 pt-2 pb-4 gap-16">
         {isProfilePage ? (
-          <CustomButton label="Edit" name="buttonlight" onClick = {(e) => handleRsvp(e, id, label, navigate)} />
+          <CustomButton label="Edit" name="buttonlight" onClick = {(e) => handleRsvp(e, id, label, navigate, label2, setLabel2)} />
         ) : (
-            <CustomButton label={label} name="buttonlight" onClick = {(e) => handleRsvp(e, id, label, navigate)} />
+            <CustomButton label={label2} name="buttonlight" onClick = {(e) => handleRsvp(e, id, label, navigate, label2, setLabel2)} />
 
         )}
 
