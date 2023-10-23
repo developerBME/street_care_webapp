@@ -48,3 +48,7 @@
 .font-roboto {
   font-family: "Roboto", sans-serif;
 }
+
+.borderAccordion::before {
+  @apply border border-2 border-[#F7F7F7];
+}
