@@ -295,13 +295,14 @@ function HelpRequestForm() {
                         placeholder="Blue Shirt"
                         ref={idRef}
                       />
+                      {error.idError && (
+                        <div className="inline-flex items-center">
+                          <img src={errorImg} className="w-3 h-3" />
+                          <p className="text-red-600 text-xs">{error.idError}</p>
+                        </div>
+                      )}
                     </div>
-                    {error.idRef && (
-                      <div className="inline-flex items-center">
-                        <img src={errorImg} className="w-3 h-3" />
-                        <p className="text-red-600 text-xs">{error.idRef}</p>
-                      </div>
-                    )}
+                    
                   </div>
                   <div className="inline-flex gap-2 items-center mt-6">
                     <input type="checkbox"></input>
