@@ -32,7 +32,7 @@ const OutreachEventCard = ({ cardData, isProfilePage }) => {
         {eventDate}
       </div>
       <div className="font-normal font-['Inter'] text-[#444746] text-[13px]">
-        {location.add1}, {location.add2}, {location.state}, {location.zipcode}
+        {location.street}, {location.city}, {location.state}, {location.zipcode}
       </div>
       <div className="w-full inline-flex items-center bg-white px-4 py-2 space-x-2.5 rounded-2xl">
         <img src={wavingHand} />
@@ -48,7 +48,7 @@ const OutreachEventCard = ({ cardData, isProfilePage }) => {
           {eventDate}
         </div>
         <div className="font-normal font-['Inter'] text-[#444746] text-[12px]">
-          {location.add1}, {location.add2}, {location.state}, {location.zipcode}
+          {location.street}, {location.city}, {location.state}, {location.zipcode}
         </div>
         <div className="w-full inline-flex items-center bg-white px-4 py-2 space-x-2.5 rounded-2xl">
           <img src={wavingHand} />

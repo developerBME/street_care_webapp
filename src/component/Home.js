@@ -46,8 +46,8 @@ function HomePage() {
       title: "BK Fort Green Outreach",
       eventDate: "Sept 9, 2023 SAT 5:00pm",
       location: {
-        add1: "200 Eastern Pkwy",
-        add2: "Brooklyn",
+        street: "200 Eastern Pkwy",
+        city: "Brooklyn",
         state: "NY",
         zipcode: "11238"
       },
@@ -60,8 +60,8 @@ function HomePage() {
       title: "BK Fort Green Outreach",
       eventDate: "Sept 9, 2023 SAT 5:00pm",
       location: {
-        add1: "200 Eastern Pkwy",
-        add2: "Brooklyn",
+        street: "200 Eastern Pkwy",
+        city: "Brooklyn",
         state: "NY",
         zipcode: "11238"
       }, helpType: "Childcare Specialist needed",
@@ -73,8 +73,8 @@ function HomePage() {
       title: "BK Fort Green Outreach",
       eventDate: "Sept 9, 2023 SAT 5:00pm",
       location: {
-        add1: "200 Eastern Pkwy",
-        add2: "Brooklyn",
+        street: "200 Eastern Pkwy",
+        city: "Brooklyn",
         state: "NY",
         zipcode: "11238"
       }, helpType: "Childcare Specialist needed",
@@ -89,8 +89,8 @@ function HomePage() {
       title: "Community Connection Night",
       eventDate: "Oct 12,2023 THU 5:30pm",
       location: {
-        add1: "One Place Plaza,",
-        add2: "West 2nd Fl,",
+        street: "One Place Plaza,",
+        city: "West 2nd Fl,",
         state: "NY,",
         zipcode: "10038"
       },
@@ -102,7 +102,7 @@ function HomePage() {
       title: "Volunteer November Meetup",
       eventDate: "Nov 1,2023 THU 6:00pm",
       location: {
-        add1: "Online"
+        street: "Online"
       },
       totalSlots: "Unlimited",
       interests: "Unlimited",
@@ -112,7 +112,7 @@ function HomePage() {
       title: "Volunteer December Meetup",
       eventDate: "Oct 12,2023 THU 5:30pm",
       location: {
-        add1: "Online"
+        street: "Online"
       },
       totalSlots: "Unlimited",
       interests: "Unlimited",

@@ -34,7 +34,7 @@ const BMEofficialCard = ({BMEcardData}) => {
           </div>
           <div className=" h-5 flex-col justify-start items-start gap-1 flex">
             <div className=" self-stretch text-zinc-700 text-sm font-normal font-['DM Sans'] leading-snug">
-              {location.add1}, {location.add2}, {location.state}, {location.zipcode}
+              {location.street}, {location.city}, {location.state}, {location.zipcode}
             </div>
           </div>
         </div>

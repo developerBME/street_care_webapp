@@ -16,8 +16,8 @@ const CommunityOutreachEvent = () => {
       title: "BK Fort Green Outreach",
       eventDate: "Sept 9, 2023 SAT 5:00pm",
       location: {
-        add1: "200 Eastern Pkwy",
-        add2: "Brooklyn",
+        street: "200 Eastern Pkwy",
+        city: "Brooklyn",
         state: "NY",
         zipcode: "11238",
       },
@@ -30,8 +30,8 @@ const CommunityOutreachEvent = () => {
       title: "BK Fort Green Outreach",
       eventDate: "Sept 9, 2023 SAT 5:00pm",
       location: {
-        add1: "200 Eastern Pkwy",
-        add2: "Brooklyn",
+        street: "200 Eastern Pkwy",
+        city: "Brooklyn",
         state: "NY",
         zipcode: "11238",
       },
@@ -44,8 +44,8 @@ const CommunityOutreachEvent = () => {
       title: "BK Fort Green Outreach",
       eventDate: "Sept 9, 2023 SAT 5:00pm",
       location: {
-        add1: "200 Eastern Pkwy",
-        add2: "Brooklyn",
+        street: "200 Eastern Pkwy",
+        city: "Brooklyn",
         state: "NY",
         zipcode: "11238",
       },
