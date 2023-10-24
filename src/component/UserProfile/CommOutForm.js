@@ -175,7 +175,7 @@ function CommOutForm() {
                           type="number"
                           id="numberHelped"
                           placeholder="How many people did you help?"
-                          className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border border-zinc-500 text-base  font-normal font-roboto leading-normal tracking-wide ${error.numberHelpedError !== "" ? "ring-red-500" : "ring-gray-300"}`}
+                          className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.numberHelpedError !== "" ? "ring-red-500" : "ring-gray-300"}`}
                           required={true}
                           ref={numberHelped}
                         ></input>
@@ -204,7 +204,7 @@ function CommOutForm() {
                     <div className="self-stretch h-fit  border-collapse">
                       <div className=" h-14 inline-flex w-full">
                         <select
-                          className={`text-zinc-900  w-full h-full px-4 rounded-[4px] border border-zinc-500 text-base font-normal font-roboto leading-normal tracking-wide ${error.outreachError !== "" ? "ring-red-500" : "ring-gray-300"}`}
+                          className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.outreachError !== "" ? "ring-red-500" : "ring-gray-300"}`}
                           defaultValue=""
                           ref={outreachRef}
                         >
@@ -446,7 +446,7 @@ function CommOutForm() {
                           type="number"
                           id="-itemnumber"
                           placeholder="Number"
-                          className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border border-zinc-500 text-base  font-normal font-roboto leading-normal tracking-wide ${error.itemQtyError !== "" ? "ring-red-500" : "ring-gray-300"}`}
+                          className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.itemQtyError !== "" ? "ring-red-500" : "ring-gray-300"}`}
                           ref={NumberOfItems}
                           // onChange={(e) => setEmail(e.target.value)}
                         ></input>
