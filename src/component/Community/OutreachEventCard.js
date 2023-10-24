@@ -61,7 +61,7 @@ const OutreachEventCard = ({ cardData, isProfilePage }) => {
         {isProfilePage ? (
           <CustomButton label="Edit" name="buttonlight" onClick = {(e) => handleRsvp(e, id, label, navigate, label2, setLabel2, false)} />
         ) : (
-            <CustomButton label={label2} name="buttonlight" onClick = {(e) => handleRsvp(e, id, label, navigate, label2, setLabel2)} />
+            <CustomButton label={label2} name="buttonlight" onClick = {(e) => handleRsvp(e, id, label, navigate, label2, setLabel2, false)} />
 
         )}
 
