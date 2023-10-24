@@ -58,9 +58,9 @@ const OutreachEventCard = ({ cardData, isProfilePage }) => {
       </div>}
       <div className="flex items-center justify-between px-5 pt-2 pb-4 gap-16">
         {isProfilePage ? (
-          <CustomButton label="Edit" name="buttonlight" onClick = {(e) => handleRsvp(e, id, label, navigate)} />
+          <CustomButton label="Edit" name="buttonlight" onClick = {(e) => handleRsvp(e, id, label, navigate, false)} />
         ) : (
-            <CustomButton label={label} name="buttonlight" onClick = {(e) => handleRsvp(e, id, label, navigate)} />
+            <CustomButton label={label} name="buttonlight" onClick = {(e) => handleRsvp(e, id, label, navigate, false)} />
 
         )}
 

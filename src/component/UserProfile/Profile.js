@@ -154,6 +154,7 @@ function Profile() {
                   icon={add}
                   onClick={() => {
                     navigate("/createOutreach");
+                    window.scrollTo(0, 0);
                   }}
                 />
                 {/* <div className="px-3 py-2 inline-flex bg-violet-600 rounded-full gap-2">

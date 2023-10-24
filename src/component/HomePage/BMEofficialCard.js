@@ -1,10 +1,14 @@
 import React from "react";
 import imgBME from "../../images/imgBME.png";
+import CustomButton from "../Buttons/CustomButton";
+import { handleRsvp } from "../EventCardService";
+import { useNavigate } from "react-router-dom";
+
 {/* Vedant */}
 const BMEofficialCard = ({BMEcardData}) => {
 
-  const { id, label, title, eventDate, location, totalSlots, interests, img} = BMEcardData
- 
+  const { id, label, title, eventDate, location, totalSlots, interests, img, nop} = BMEcardData
+  const navigate = useNavigate();
   return (
     
       <div className=" grow shrink basis-0 bg-sky-100 rounded-3xl flex-col justify-start items-start inline-flex">
@@ -35,11 +39,11 @@ const BMEofficialCard = ({BMEcardData}) => {
         </div>
         <div className="self-stretch h-20 px-6 pt-4 mt-10 lg:mt-0 flex-col justify-start items-start gap-2.5 flex">
           <div className="self-stretch justify-start items-center gap-2.5 inline-flex">
-            <button className="h-10 bg-cyan-200 px-6 py-2.5 rounded-full flex-col justify-center items-center gap-2 inline-flex text-center text-neutral-900 text-sm font-medium font-['DM Sans'] leading-tight">
-              RSVP
-            </button>
+            {/* <button label={label} name="buttonlight" onClick = {(e) => handleRsvp(e, id, label, navigate, true)} className="h-10 bg-cyan-200 px-6 py-2.5 rounded-full flex-col justify-center items-center gap-2 inline-flex text-center text-neutral-900 text-sm font-medium font-['DM Sans'] leading-tight"> */}
+            {<CustomButton label={label} name="buttonlight" onClick = {(e) => handleRsvp(e, id, label, navigate, true)} />}
+            {/* </button> */}
             <div className="grow shrink basis-0 text-right text-zinc-700 text-sm font-normal font-['DM Sans'] leading-snug">
-               Open Spots: {totalSlots - interests}/{totalSlots}
+               Open Spots: {totalSlots - nop}/{totalSlots}
             </div>
           </div>
         </div>
