@@ -149,12 +149,12 @@ export function formatDate(dateObj) {
 }
 
 
-export const handleRsvp = async (e, id, label, navigate, isBMEFlow) => {
-
+export const handleRsvp = async (e, id, label, navigate, label2, setLabel2, isBMEFlow) => {
+    
     // check if button is going to RSVP or EDIT
-    if (label === 'RSVP') {
-        e.preventDefault();
-        const fAuth = getAuth();
+    if (label2 === 'RSVP'){
+    e.preventDefault();
+    const fAuth = getAuth();
 
         // if user exists, check user.outreachevents, else navigate to login page.
         onAuthStateChanged(fAuth, async (user) => {
@@ -210,6 +210,7 @@ export const handleRsvp = async (e, id, label, navigate, isBMEFlow) => {
                         
                         console.log("successfully added outreach to users collection")
                     }
+                    setLabel2("EDIT");
                 } catch (error) {
                     console.log(error)
                 }
@@ -280,6 +281,7 @@ export const handleRsvp = async (e, id, label, navigate, isBMEFlow) => {
                     } else {
                         console.log("event not found in the user")
                     }
+                setLabel2("RSVP");
                 } catch (error) {
                     console.log(error)
                 }

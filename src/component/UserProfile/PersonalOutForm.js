@@ -455,7 +455,7 @@ function PersonalOutForm() {
                     <div className="self-stretch h-fit  border-collapse     ">
                       <div className=" h-14 inline-flex w-full">
                         <select
-                          className={`text-zinc-900  w-full h-full px-4 rounded-[4px] border border-zinc-500 text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.stateError !== "" ? "ring-red-500" : "ring-gray-300"}`}
+                          className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.stateError !== "" ? "ring-red-500" : "ring-gray-300"}`}
                           defaultValue=""
                           ref={stateRef}
                           onChange={getCities}
@@ -494,7 +494,7 @@ function PersonalOutForm() {
                     <div className="self-stretch h-fit  border-collapse     ">
                       <div className=" h-14 inline-flex w-full">
                         <select
-                          className={`text-zinc-900  w-full h-full px-4 rounded-[4px] border border-zinc-500 text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.cityError !== "" ? "ring-red-500" : "ring-gray-300"}`}
+                          className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.cityError !== "" ? "ring-red-500" : "ring-gray-300"}`}
                           defaultValue=""
                           disabled={!cityNames}
                           ref={cityRef}
@@ -545,7 +545,7 @@ function PersonalOutForm() {
                             type="date"
                             id="-itemnumber"
                             placeholder="Number"
-                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border border-zinc-500 text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.dateError !== "" ? "ring-red-500" : "ring-gray-300"}`}
+                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.dateError !== "" ? "ring-red-500" : "ring-gray-300"}`}
                             ref={date}
                           ></input>
                           {error.dateError && (
@@ -570,7 +570,7 @@ function PersonalOutForm() {
                             type="time"
                             id="-itemnumber"
                             placeholder="Number"
-                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border border-zinc-500 text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.timeError !== "" ? "ring-red-500" : "ring-gray-300"}`}
+                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.timeError !== "" ? "ring-red-500" : "ring-gray-300"}`}
                             ref={time}
                           ></input>
                           {error.timeError && (
@@ -599,7 +599,7 @@ function PersonalOutForm() {
                           type="number"
                           id="itemsNumber"
                           placeholder="Number of Items"
-                          className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border border-zinc-500 text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.itemQtyError !== "" ? "ring-red-500" : "ring-gray-300"}`}
+                          className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.itemQtyError !== "" ? "ring-red-500" : "ring-gray-300"}`}
                           required={true}
                           ref={itemQtyRef}
                         ></input>

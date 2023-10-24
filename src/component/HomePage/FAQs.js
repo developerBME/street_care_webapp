@@ -19,7 +19,7 @@ export default function FAQs() {
       </p>
       <div className=" pt-9">
         <Accordion
-          className="p-3 mb-2 bg-white flex flex-col w-full"
+          className="p-3 mb-2 bg-white flex flex-col w-full borderAccordion"
           expanded={expanded === "panel1"}
           onChange={handleChange("panel1")}
           style={
@@ -50,7 +50,7 @@ export default function FAQs() {
           </AccordionDetails>
         </Accordion>
         <Accordion
-          className="p-3 mb-2 bg-white flex flex-col w-full"
+          className="p-3 mb-2 bg-white flex flex-col w-full borderAccordion"
           expanded={expanded === "panel2"}
           onChange={handleChange("panel2")}
           style={
@@ -80,7 +80,7 @@ export default function FAQs() {
           </AccordionDetails>
         </Accordion>
         <Accordion
-          className="p-3 mb-2 bg-white flex flex-col w-full"
+          className="p-3 mb-2 bg-white flex flex-col w-full borderAccordion"
           expanded={expanded === "panel3"}
           onChange={handleChange("panel3")}
           style={
@@ -110,7 +110,7 @@ export default function FAQs() {
           </AccordionDetails>
         </Accordion>
         <Accordion
-          className="p-3 mb-2 bg-white flex flex-col w-full"
+          className="p-3 mb-2 bg-white flex flex-col w-full borderAccordion"
           expanded={expanded === "panel4"}
           onChange={handleChange("panel4")}
           style={
@@ -153,7 +153,7 @@ export default function FAQs() {
           </AccordionDetails>
         </Accordion>
         <Accordion
-          className="p-3 mb-2 bg-white flex flex-col w-full"
+          className="p-3 mb-2 bg-white flex flex-col w-full borderAccordion"
           expanded={expanded === "panel5"}
           onChange={handleChange("panel5")}
           style={
@@ -192,7 +192,7 @@ export default function FAQs() {
           </AccordionDetails>
         </Accordion>
         <Accordion
-          className="p-3 mb-2 bg-white flex flex-col w-full"
+          className="p-3 mb-2 bg-white flex flex-col w-full borderAccordion"
           expanded={expanded === "panel6"}
           onChange={handleChange("panel6")}
           style={

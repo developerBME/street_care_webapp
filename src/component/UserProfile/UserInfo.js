@@ -232,12 +232,11 @@ const UserInfo = () => {
       </div>
       {/* Impact */}
       <div className="">
-        <p className="text-[#212121] pl-2 pt-4 md:pl-8 md:pt-0 xl:pl-0 xl:pt-0 text-4xl font-medium font-dmsans leading-9">
+        <p className="text-[#212121] pl-4 pt-4 text-3xl md:pl-8 md:pt-0 xl:pl-0 xl:pt-0 sm:text-4xl font-medium font-dmsans leading-9">
           My Impact
         </p>
         {/* <div className="w-full h-fit justify-center items-center lg:justify-start lg:items-start  grid grid-cols-3 sm:grid-cols-1 lg:grid-cols-3 font-bricolage py-6 px-2 md:px-8 lg:px-0 md:pt-8 md:pb-8  lg:pt-16 lg:pb-12"> */}
-        <div className="w-full h-fit justify-center items-center lg:justify-start lg:items-start  grid grid-cols-3 sm:grid-cols-1 lg:grid-cols-3 font-bricolage py-6 px-2 md:px-8 xl:px-0 md:pt-8 md:pb-8  lg:pt-16 lg:pb-12">
-          {/*  */}
+        <div className="w-full h-fit justify-center items-center lg:justify-start lg:items-start  grid grid-cols-3 sm:grid-cols-1 lg:grid-cols-3 font-bricolage py-6 px-4 md:px-8 xl:px-0 md:pt-8 md:pb-8  lg:pt-16 lg:pb-12">
           <div className=" sm:flex grow rounded-l-2xl sm:rounded-t-2xl sm:rounded-b-none lg:rounded-tr-none lg:rounded-l-2xl shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-emerald-100 to-neutral-200 justify-center items-center sm:justify-start sm:items-end gap-6 ">
             <div className=" w-full sm:w-fit flex-col  justify-center items-center sm:justify-start sm:items-start sm:gap-6 inline-flex">
               <div className="text-violet-950 text-xs sm:text-2xl font-semibold leading-loose font-inter">
@@ -254,7 +253,6 @@ const UserInfo = () => {
               People
             </div>
           </div>
-          {/*  */}
 
           <div className=" sm:flex grow shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-purple-300 to-zinc-200 justify-center items-center sm:justify-start sm:items-end gap-6 ">
             <div className=" w-full sm:w-fit flex-col justify-center items-center sm:justify-start sm:items-start  sm:gap-6 inline-flex">
@@ -272,7 +270,6 @@ const UserInfo = () => {
               Outreaches
             </div>
           </div>
-          {/*  */}
 
           <div className=" sm:flex grow sm:rounded-br-2xl rounded-bl-none sm:rounded-b-2xl rounded-r-2xl sm:rounded-r-none lg:rounded-r-2xl  lg:rounded-bl-none shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-sky-200 to-neutral-200 justify-start items-end gap-6 ">
             <div className=" w-full sm:w-fit flex-col justify-center items-center sm:justify-start sm:items-start sm:gap-6 inline-flex">
@@ -286,10 +283,9 @@ const UserInfo = () => {
               </div>
             </div>
             <div className="w-full justify-center sm:justify-start  text-violet-950 text-xs sm:text-xl font-semibold sm:py-2 md:ml-[-8px] inline-flex">
-              items
+              Items
             </div>
           </div>
-          {/*  */}
         </div>
       </div>
     </div>
