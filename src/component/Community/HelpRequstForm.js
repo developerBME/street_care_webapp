@@ -5,6 +5,7 @@ import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import arrowBack from "../../images/arrowBack.png";
 import arrowDown from "../../images/arrowDown.png";
+import errorImg from "../../images/error.png"
 
 function HelpRequestForm() {
   const [success, setSuccess] = useState(false);
@@ -59,8 +60,56 @@ function HelpRequestForm() {
     setClear(true);
   };
 
+  const [isAtLeastOneChipSelected, setIsAtLeastOneChipSelected] = useState(false);
+  
+  const handleChipClick = (value, isSelected) => {
+    setIsAtLeastOneChipSelected(isSelected);
+  };
+
+  const [error, setError] = useState({
+    streetError: "",
+    zipError: "",
+    idError : "",
+    cityError:"",
+    stateError:"",
+  });
+
+  const updateErrorState = (key, value) => {
+    setError((prevState) => ({
+      ...prevState, // Clone the current state
+      [key]: value, // Update the specific key with the new value
+    }));
+  };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!streetRef.current.value) {
+      updateErrorState("streetError", "Street is required");
+    } else {
+      updateErrorState("streetError", "");
+    }
+    if (!zipRef.current.value) {
+      updateErrorState("zipError", "Zipcode is required");
+    } else {
+      updateErrorState("zipError", "");
+    }
+    if(!cityRef.current.value){
+      updateErrorState("cityError","City is required");
+    }else{
+      updateErrorState("cityError","");
+    }
+    if (!idRef.current.value) {
+      updateErrorState("idError", "This field is required");
+    } else {
+      updateErrorState("idError", "");
+    }
+    if(!stateRef.current.value){
+      updateErrorState("stateError","Sate is required");
+    }else{
+      updateErrorState("stateError","")
+    }
 
     let obj = {
       uid: fAuth.currentUser.uid,
@@ -123,7 +172,7 @@ function HelpRequestForm() {
                     <div className="text-black font-bold font-bricolage text-sm">
                       What kind of help they need?*
                     </div>
-                    <div className="lg:w-[580px] space-y-2">
+                    <div className="space-y-2">
                       {chipList.map((value, index) => (
                         <Chip
                           key={"chip-" + index}
@@ -133,6 +182,14 @@ function HelpRequestForm() {
                         />
                       ))}
                     </div>
+                    {isAtLeastOneChipSelected ? (
+                      ""
+                    ) : (
+                      <div className="inline-flex items-center">
+                        <img src={errorImg} className="w-3 h-3" />
+                        <div className="text-red-500">Please select at least one option</div>
+                      </div>
+                    )}
                     <div className="space-y-1.5">
                       <div className="text-zinc-700 font-semibold text-[15px] font-['Inter']">
                         Additional Notes
@@ -164,7 +221,14 @@ function HelpRequestForm() {
                           placeholder="Street"
                           ref={streetRef}
                         />
+                        {error.streetError && (
+                          <div className="inline-flex items-center">
+                            <img src={errorImg} className="w-3 h-3" />
+                            <p className="text-red-600 text-xs">{error.streetError}</p>
+                          </div>
+                        )}
                       </div>
+                      
                       <div className="space-y-1.5">
                         <p className="font-semibold font-['Inter'] text-[15px]">
                           City*
@@ -175,8 +239,17 @@ function HelpRequestForm() {
                           placeholder="City"
                           ref={cityRef}
                         />
+                        {error.cityError && (
+                          <div className="inline-flex items-center">
+                            <img src={errorImg} className="w-3 h-3" />
+                            <p className="text-red-600 text-xs">{error.cityError}</p>
+                          </div>
+                        )}
                       </div>
-                      <div className="space-y-1.5">
+                      
+                    </div>
+                    <div className="inline-flex grid grid-cols-2 space-x-4">
+                    <div className="space-y-1.5">
                         <p className="font-semibold font-['Inter'] text-[15px]">
                           State*
                         </p>
@@ -186,6 +259,12 @@ function HelpRequestForm() {
                           placeholder="State"
                           ref={stateRef}
                         />
+                        {error.stateError && (
+                          <div className="inline-flex items-center">
+                            <img src={errorImg} className="w-3 h-3" />
+                            <p className="text-red-600 text-xs">{error.stateError}</p>
+                          </div>
+                        )}
                       </div>
                       <div className="space-y-1.5">
                         <p className="font-semibold font-['Inter'] text-[15px]">
@@ -197,7 +276,14 @@ function HelpRequestForm() {
                           placeholder="Zipcode"
                           ref={zipRef}
                         />
+                        {error.zipError && (
+                          <div className="inline-flex items-center">
+                            <img src={errorImg} className="w-3 h-3" />
+                            <p className="text-red-600 text-xs">{error.zipError}</p>
+                          </div>
+                        )}
                       </div>
+                      
                     </div>
                     <div className="space-y-1.5">
                       <div className="font-semibold font-['Inter'] text-[15px]">
@@ -210,6 +296,12 @@ function HelpRequestForm() {
                         ref={idRef}
                       />
                     </div>
+                    {error.idRef && (
+                      <div className="inline-flex items-center">
+                        <img src={errorImg} className="w-3 h-3" />
+                        <p className="text-red-600 text-xs">{error.idRef}</p>
+                      </div>
+                    )}
                   </div>
                   <div className="inline-flex gap-2 items-center mt-6">
                     <input type="checkbox"></input>
