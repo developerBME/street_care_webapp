@@ -18,7 +18,7 @@ import Process from "./HomePage/Process";
 import MoreAboutUs from "./HomePage/MoreAboutUs";
 import Navbar from "./Navbar";
 import OutreachEventCard from "./Community/OutreachEventCard";
-import { fetchEvents, fetchOfficialEvents } from "./EventCardService";
+import { formatDate, fetchEvents, fetchOfficialEvents } from "./EventCardService";
 import BMEcardimg1 from "../images/BMEofficialcardimg1.png";
 import BMEcardimg2 from "../images/BMEofficialcardimg2.png";
 import BMEcardimg3 from "../images/BMEofficialcardimg3.png";
@@ -126,12 +126,10 @@ function HomePage() {
   useEffect(() => {
     const fetchData = async () => {
       const eventsData = await fetchEvents();
-      // Sort the events based on the eventDate (from soonest to latest)
-      eventsData.sort((date1, date2) => {
-        const date_1 = new Date(date1.eventDate.seconds * 1000);
-        const date_2 = new Date(date2.eventDate.seconds * 1000);
-        return date_1 - date_2;
-      });
+      
+      // Sort events in place based on their date
+      eventsData.sort((a, b) => a.eventDate - b.eventDate);
+
       setEvents(eventsData);
     };
 
@@ -143,12 +141,8 @@ function HomePage() {
   useEffect(() => {
     const fetchOfficialData = async () => {
       const eventsData = await fetchOfficialEvents();
-      // Sort the events based on the eventDate (from soonest to latest)
-      eventsData.sort((date1, date2) => {
-        const date_1 = new Date(date1.eventDate.seconds * 1000);
-        const date_2 = new Date(date2.eventDate.seconds * 1000);
-        return date_1 - date_2;
-      });
+      // Sort events in place based on their date
+      eventsData.sort((a, b) => a.eventDate - b.eventDate);
       setOffevents(eventsData);
     };
 
@@ -181,7 +175,7 @@ function HomePage() {
   </div> */}
             <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
               {events.map(eventData => (
-                <OutreachEventCard key={eventData.id} cardData={eventData} />
+                <OutreachEventCard key={eventData.id} cardData={{ ...eventData, eventDate: formatDate(new Date(eventData.eventDate.seconds * 1000)) }} />
               ))}
             </div>
           </div>
@@ -218,7 +212,7 @@ function HomePage() {
                         <BMEcardnew key={BMEData.x} BMEcardData={BMEData} />
                       ))} */}
                 {offevents.map(eventData => (
-                  <BMEcardnew key={eventData.id} BMEcardData={eventData} />
+                  <BMEcardnew key={eventData.id} BMEcardData={{ ...eventData, eventDate: formatDate(new Date(eventData.eventDate.seconds * 1000)) }} />
                 ))}
             </div>
           </div>

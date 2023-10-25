@@ -29,7 +29,6 @@ export const fetchEvents = async () => {
             eventsData.push({
                 ...eventData,
                 userName: userName,
-                eventDate: formatDate(new Date(eventData.eventDate.seconds * 1000)),
                 id: doc.id,
                 label: "EDIT",
                 nop: currentParticipants.length
@@ -38,7 +37,6 @@ export const fetchEvents = async () => {
             eventsData.push({
                 ...eventData,
                 userName: userName,
-                eventDate: formatDate(new Date(eventData.eventDate.seconds * 1000)),
                 id: doc.id,
                 label: "RSVP",
                 nop: currentParticipants.length
@@ -65,7 +63,6 @@ export const fetchOfficialEvents = async () => {
         let currentParticipants = eventData.participants || [];
         officialEvents.push({
             ...eventData,
-            eventDate: formatDate(new Date(eventData.eventDate.seconds * 1000)),
             id: doc.id,
             label: (fAuth.currentUser && currentParticipants.includes(fAuth?.currentUser?.uid)) ? "EDIT" : "RSVP",
             nop: currentParticipants.length
@@ -120,8 +117,7 @@ export const fetchUserEvents = async (uid) => {
             const eventData = eventDoc.data();
             eventsData.push({
                 ...eventData,
-                id: eventDoc.id,
-                eventDate: formatDate(new Date(eventData.eventDate.seconds * 1000))
+                id: eventDoc.id
             });
         }
     }
