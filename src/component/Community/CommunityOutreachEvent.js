@@ -63,11 +63,36 @@ const CommunityOutreachEvent = () => {
           <p className="font-medium text-sm lg:text-3xl text-[#212121] font-bricolage">
             Upcoming events in
           </p>
-          <div className="relative md:inline-block">
-            <select className="appearance-none py-1 px-3 pr-8 text-[#181818] text-2xl lg:text-3xl font-bricolage border-b border-[#181818] bg-transparent ">
-              <option value="location1">New York, USA</option>
-              <option value="location2">Location 2</option>
-            </select>
+          <div className="relative md:inline-block z-10">
+                  <div class="p-4">
+                            <div class="group relative">
+                                <button class="appearance-none py-1 px-3 pr-8 text-[#181818] text-2xl lg:text-3xl font-bricolage border-b border-[#181818] bg-transparent h-10">Select Country</button>
+                                <nav tabindex="0" class="border-2 bg-white shadow invisible border-gray-100 rounded-2xl w-60 absolute left-0 top-full transition-all opacity-0 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-1">
+                                    <ul class="py-1">
+                                        <li>
+                                            <a href="#" class=" px-4 py-2 hover:bg-gray-100 flex-col justify-center items-start flex">
+                                                New York, USA
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class=" px-4 py-2 hover:bg-gray-100 flex-col justify-center items-start flex">
+                                                Ottawa, Canada
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class=" px-4 py-2 hover:bg-gray-100 flex-col justify-center items-start flex">
+                                                Maryland, USA
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class=" px-4 py-2 hover:bg-gray-100 flex-col justify-center items-start flex">
+                                                Florida, USA
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                  </div>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-[#181818] gap-4">
               <img src={arrowDown} />
             </div>
@@ -91,15 +116,45 @@ const CommunityOutreachEvent = () => {
             <p className="font-medium text-sm lg:text-3xl text-[#212121] font-bricolage">
               Upcoming events in
             </p>
+
+
             <div className="relative md:inline-block">
-              <select className="appearance-none py-1 px-3 pr-8 text-[#181818] text-2xl lg:text-3xl font-bricolage border-b border-[#181818] bg-transparent ">
-                <option value="location1">New York, USA</option>
-                <option value="location2">Location 2</option>
-              </select>
+                  <div class="p-4">
+                            <div class="group relative">
+                                <button class="appearance-none py-1 px-3 pr-8 text-[#181818] text-2xl lg:text-3xl font-bricolage border-b border-[#181818] bg-transparent h-10">Select Country</button>
+                                <nav tabindex="0" class="border-2 bg-white shadow invisible border-gray-100 rounded-2xl w-60 absolute left-0 top-full transition-all opacity-0 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-1">
+                                    <ul class="py-1">
+                                        <li>
+                                            <a href="#" class=" px-4 py-2 hover:bg-gray-100 flex-col justify-center items-start flex">
+                                                New York, USA
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class=" px-4 py-2 hover:bg-gray-100 flex-col justify-center items-start flex">
+                                                Ottawa, Canada
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class=" px-4 py-2 hover:bg-gray-100 flex-col justify-center items-start flex">
+                                                Maryland, USA
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class=" px-4 py-2 hover:bg-gray-100 flex-col justify-center items-start flex">
+                                                Florida, USA
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                  </div>
+
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-[#181818] gap-4">
                 <img src={arrowDown} />
               </div>
             </div>
+
+
             <button className="text-sm font-medium font-['DM Sans'] leading-tight lg:text-[12px] text-white bg-[#6840E0] px-6 py-2.5 lg:px-6 lg:py-2.5 rounded-full sm:hidden">
               Create an Outreach
             </button>

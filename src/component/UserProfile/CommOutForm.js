@@ -93,6 +93,12 @@ function CommOutForm() {
       updateErrorState("numberHelpedError", "");
     }
 
+    if (itemArray == "") {
+      updateErrorState("checkboxesError", "Please provide the kind of help provided");
+    } else {
+      updateErrorState("checkboxesError", "");
+    }
+
     if (!NumberOfItems.current.value) {
       updateErrorState("itemQtyError", "Enter Quantity");
     } else {
@@ -244,16 +250,16 @@ function CommOutForm() {
                         type="checkbox"
                         id="food-option"
                         value="Food and Drink"
-                        class="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
+                        className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
                         ref={(el) => (checkboxes.current[0] = el)}
                         onChange={handleItemArray}
                       ></input>
                       <label
                         for="food-option"
-                        class="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal"
+                        className={`inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ${error.checkboxesError !== "" ? "ring-red-500" : "ring-gray-300"}`}
                       >
-                        <div class="w-full h-full mb-6 text-base font-semibold">
+                        <div className="w-full h-full mb-6 text-base font-semibold">
                           {" "}
                           Food and Drink
                         </div>
@@ -266,16 +272,16 @@ function CommOutForm() {
                         type="checkbox"
                         id="clothing-option"
                         value="Clothing"
-                        class="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
+                        className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
                         ref={(el) => (checkboxes.current[1] = el)}
                         onChange={handleItemArray}
                       ></input>
                       <label
                         for="clothing-option"
-                        class="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal"
+                        className="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300"
                       >
-                        <div class="w-full h-full mb-6  text-base font-semibold ">
+                        <div className="w-full h-full mb-6  text-base font-semibold ">
                           Clothing
                         </div>
                       </label>
@@ -287,16 +293,16 @@ function CommOutForm() {
                         type="checkbox"
                         id="hygiene-option"
                         value="Hygiene Products"
-                        class="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
+                        className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
                         ref={(el) => (checkboxes.current[2] = el)}
                         onChange={handleItemArray}
                       ></input>
                       <label
                         for="hygiene-option"
-                        class="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal"
+                        className="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300"
                       >
-                        <div class="w-full h-full mb-6  text-base font-semibold ">
+                        <div className="w-full h-full mb-6  text-base font-semibold ">
                           Hygiene Products
                         </div>
                       </label>
@@ -307,16 +313,16 @@ function CommOutForm() {
                         type="checkbox"
                         id="wellness-option"
                         value="Wellness/ Emotional Support"
-                        class="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
+                        className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
                         ref={(el) => (checkboxes.current[3] = el)}
                         onChange={handleItemArray}
                       ></input>
                       <label
                         for="wellness-option"
-                        class="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal"
+                        className="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300"
                       >
-                        <div class="w-full h-full mb-6 text-base font-semibold">
+                        <div className="w-full h-full mb-6 text-base font-semibold">
                           Wellness/ Emotional Support
                         </div>
                       </label>
@@ -327,16 +333,16 @@ function CommOutForm() {
                         type="checkbox"
                         id="medical-option"
                         value="Medical Help"
-                        class="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
+                        className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
                         ref={(el) => (checkboxes.current[4] = el)}
                         onChange={handleItemArray}
                       ></input>
                       <label
                         for="medical-option"
-                        class="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal"
+                        className="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300"
                       >
-                        <div class="w-full h-full mb-6 text-base font-semibold">
+                        <div className="w-full h-full mb-6 text-base font-semibold">
                           {" "}
                           Medical Help
                         </div>
@@ -349,16 +355,16 @@ function CommOutForm() {
                         type="checkbox"
                         id="social-option"
                         value="Social Worker /Psychiatrist"
-                        class="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
+                        className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
                         ref={(el) => (checkboxes.current[5] = el)}
                         onChange={handleItemArray}
                       ></input>
                       <label
                         for="social-option"
-                        class="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal"
+                        className="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300"
                       >
-                        <div class="w-full h-full mb-6  text-base font-semibold ">
+                        <div className="w-full h-full mb-6  text-base font-semibold ">
                           Social Worker /Psychiatrist
                         </div>
                       </label>
@@ -370,16 +376,16 @@ function CommOutForm() {
                         type="checkbox"
                         id="legal-option"
                         value="Legal/Lawyer"
-                        class="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
+                        className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
                         ref={(el) => (checkboxes.current[6] = el)}
                         onChange={handleItemArray}
                       ></input>
                       <label
                         for="legal-option"
-                        class="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal"
+                        className="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300"
                       >
-                        <div class="w-full h-full mb-6  text-base font-semibold ">
+                        <div className="w-full h-full mb-6  text-base font-semibold ">
                           Legal/Lawyer
                         </div>
                       </label>
@@ -390,22 +396,28 @@ function CommOutForm() {
                         type="checkbox"
                         id="other-option"
                         value="Other"
-                        class="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
+                        className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
                         ref={(el) => (checkboxes.current[7] = el)}
                         onChange={handleItemArray}
                       ></input>
                       <label
                         for="other-option"
-                        class="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal"
+                        className="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300"
                       >
-                        <div class="w-full h-full mb-6 text-base font-semibold">
+                        <div className="w-full h-full mb-6 text-base font-semibold">
                           Other
                         </div>
                       </label>
                     </div>
                     {/*  */}
                   </div>
+                  {error.checkboxesError && (
+                    <div className="inline-flex items-center">
+                      <img src={errorImg} className="w-3 h-3" />
+                      <p className="text-red-600 text-xs">{error.checkboxesError}</p>
+                    </div>
+                  )}
                 </div>
                 {/*  */}
 
