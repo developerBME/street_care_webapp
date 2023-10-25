@@ -62,7 +62,7 @@ const CommunityOutreachEvent = () => {
           <p className="font-medium text-sm lg:text-3xl text-[#212121] font-bricolage">
             Upcoming events in
           </p>
-          <div className="relative md:inline-block">
+          <div className="relative md:inline-block z-10">
                   <div class="p-4">
                             <div class="group relative">
                                 <button class="appearance-none py-1 px-3 pr-8 text-[#181818] text-2xl lg:text-3xl font-bricolage border-b border-[#181818] bg-transparent h-10">Select Country</button>
