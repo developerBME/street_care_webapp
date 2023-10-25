@@ -85,12 +85,62 @@ const CommunityOutreachEvent = () => {
       </div>
 
       <div className="p-4 lg:px-28 lg:py-12 space-y-9">
-        {" "}
-        <div className="p-4 hidden md:inline-flex gap-4 ">
-          <div className="font-medium text-[15px] lg:text-[28px] text-[#1F0A58] font-bricolage">
-            Upcoming Outreach Events
+        <div className="flex items-center justify-between">
+          <div className="md:inline-flex items-center text-center space-y-2 md:space-y-0">
+            <p className="font-medium text-sm lg:text-3xl text-[#212121] font-bricolage">
+              Upcoming events in
+            </p>
+            <div className="relative md:inline-block">
+              <select className="appearance-none py-1 px-3 pr-8 text-[#181818] text-2xl lg:text-3xl font-bricolage border-b border-[#181818] bg-transparent ">
+                <option value="location1">New York, USA</option>
+                <option value="location2">Location 2</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-[#181818] gap-4">
+                <img src={arrowDown} />
+              </div>
+            </div>
+            <button className="text-sm font-medium font-['DM Sans'] leading-tight lg:text-[12px] text-white bg-[#6840E0] px-6 py-2.5 lg:px-6 lg:py-2.5 rounded-full sm:hidden">
+              Create an Outreach
+            </button>
           </div>
-          <CustomButton label="Create an Outreach" name="buttondefault" />
+          <div className="hidden lg:flex md:inline-flex cursor-pointer gap-3 items-center text-center">
+            <div className="font-medium text-[8px] lg:text-[13px] font-bricolage">
+              View all
+            </div>
+            <img src={arrowRight} className="w-2 h-2 lg:w-4 lg:h-4 " />
+          </div>
+        </div>
+
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
+          {cardData.slice(0, visibleItems).map((item, index) => (
+            <div key={index}>
+              <OutreachEventCard cardData={item} />
+            </div>
+          ))}
+        </div>
+        {visibleItems < cardData.length && (
+          <button
+            className="w-full px-6 py-2.5 rounded-full text-sm font-medium text-violet-950 font-['DM Sans'] border border-stone-300"
+            onClick={loadMore}
+          >
+            Load More
+          </button>
+        )}
+        <div className="flex items-center justify-between">
+          <div className="md:inline-flex items-center text-center space-y-2 md:space-y-0">
+            <p className="font-medium text-sm lg:text-3xl text-[#212121] font-bricolage">
+              Outreach Visit Log
+            </p>
+            <button className="text-sm font-medium font-['DM Sans'] leading-tight lg:text-[12px] text-white bg-[#6840E0] px-6 py-2.5 lg:px-6 lg:py-2.5 rounded-full sm:hidden">
+              Create an Outreach
+            </button>
+          </div>
+          <div className="hidden lg:flex md:inline-flex cursor-pointer gap-3 items-center text-center">
+            <div className="font-medium text-[8px] lg:text-[13px] font-bricolage">
+              View all
+            </div>
+            <img src={arrowRight} className="w-2 h-2 lg:w-4 lg:h-4 " />
+          </div>
         </div>
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
           {cardData.slice(0, visibleItems).map((item, index) => (

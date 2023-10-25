@@ -26,9 +26,9 @@ function Community() {
         </div>
 
         {/* Vishnu */}
-        <div className="block sm:hidden w-full p-4">
+        <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl">
           <div
-            className={`inline-flex w-full rounded-full ${
+            className={`h-[63px] inline-flex w-full rounded-2xl ${
               activeTab === "outreach" ? "bg-violet-50" : "bg-[#E2FAFF]"
             }`}
           >
@@ -37,7 +37,7 @@ function Community() {
                 activeTab === "outreach"
                   ? "bg-[#1F0A58] text-white"
                   : "bg-[#E2FAFF] text-[#005363]"
-              } px-4 py-2 w-1/2 rounded-full `}
+              } text-xl font-medium px-4 py-2 w-1/2 rounded-2xl `}
               onClick={() => handleTabClick("outreach")}
             >
               Outreach
@@ -45,16 +45,16 @@ function Community() {
             <button
               className={`${
                 activeTab === "helpRequest"
-                  ? "bg-[#005363] text-[#E2FAFF] rounded-full"
+                  ? "bg-[#005363] text-[#E2FAFF] rounded-2xl"
                   : "bg-violet-50 text-violet-950 rounded-r-2xl "
-              } px-4 py-2 w-1/2 `}
+              } text-xl font-medium px-4 py-2 w-1/2 `}
               onClick={() => handleTabClick("helpRequest")}
             >
               Help Request
             </button>
           </div>
         </div>
-        <div className="block sm:hidden">
+       {/* <div className="block sm:hidden">
           {activeTab === "outreach" ? (
             <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
               <CommunityOutreachEvent />
@@ -64,15 +64,24 @@ function Community() {
               <HelpRequest />
             </div>
           )}
-        </div>
+          </div>*/}
+        {activeTab === "outreach" ? (
+          <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black">
+            <CommunityOutreachEvent />
+          </div>
+        ) : (
+          <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-8 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
+            <HelpRequest />
+          </div>
+        )}
 
-        <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black hidden md:block">
+        {/*<div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black hidden md:block">
           <CommunityOutreachEvent />
         </div>
-        {/* Aniket */}
+
         <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-8 lg:mx-40 mt-8 rounded-2xl bg-white text-black hidden md:block">
           <HelpRequest />
-        </div>
+        </div>*/}
       </div>
     </div>
   );
