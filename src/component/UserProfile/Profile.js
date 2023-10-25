@@ -83,6 +83,27 @@ function Profile() {
 
   const navigate = useNavigate();
 
+  const fetchData = async () => {
+    const user = auth.currentUser;
+
+    if (user) {
+      const uid = user.uid;
+      console.log("UID is ", uid);
+      const eventsData = await fetchUserEvents(uid);
+
+      // Sort the events based on the eventDate (from soonest to latest)
+      eventsData.sort((date1, date2) => {
+        const date_1 = new Date(date1.eventDate.seconds * 1000);
+        const date_2 = new Date(date2.eventDate.seconds * 1000);
+        return date_1 - date_2;
+      });
+      setEvents(eventsData);
+    } else {
+      console.log("No user is signed in.");
+      setEvents([]);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       const user = auth.currentUser;
@@ -172,6 +193,7 @@ function Profile() {
                     key={eventData.id}
                     cardData={eventData}
                     isProfilePage={true}
+                    refresh={fetchData}
                   />
                 ))}
               </div>
@@ -183,6 +205,7 @@ function Profile() {
                     key={eventData.id}
                     cardData={eventData}
                     isProfilePage={true}
+                    refresh={fetchData}
                   />
                 ))}
               </div>

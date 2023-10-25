@@ -23,8 +23,6 @@ import BMEcardimg1 from "../images/BMEofficialcardimg1.png";
 import BMEcardimg2 from "../images/BMEofficialcardimg2.png";
 import BMEcardimg3 from "../images/BMEofficialcardimg3.png";
 
-
-
 function HomePage() {
   const fAuth = getAuth();
   useEffect(() => {}, []);
@@ -49,11 +47,11 @@ function HomePage() {
         street: "200 Eastern Pkwy",
         city: "Brooklyn",
         state: "NY",
-        zipcode: "11238"
+        zipcode: "11238",
       },
       helpType: "Childcare Specialist needed",
       totalSlots: 20,
-      interests: 5
+      interests: 5,
     },
     {
       userName: "William Smith",
@@ -63,10 +61,11 @@ function HomePage() {
         street: "200 Eastern Pkwy",
         city: "Brooklyn",
         state: "NY",
-        zipcode: "11238"
-      }, helpType: "Childcare Specialist needed",
+        zipcode: "11238",
+      },
+      helpType: "Childcare Specialist needed",
       totalSlots: 20,
-      interests: 5
+      interests: 5,
     },
     {
       userName: "William Smith",
@@ -76,12 +75,12 @@ function HomePage() {
         street: "200 Eastern Pkwy",
         city: "Brooklyn",
         state: "NY",
-        zipcode: "11238"
-      }, helpType: "Childcare Specialist needed",
+        zipcode: "11238",
+      },
+      helpType: "Childcare Specialist needed",
       totalSlots: 20,
-      interests: 5
+      interests: 5,
     },
-
   ];
 
   const BMEcardData = [
@@ -92,36 +91,36 @@ function HomePage() {
         street: "One Place Plaza,",
         city: "West 2nd Fl,",
         state: "NY,",
-        zipcode: "10038"
+        zipcode: "10038",
       },
       totalSlots: 100,
       interests: 61,
-      img: BMEcardimg1
+      img: BMEcardimg1,
     },
     {
       title: "Volunteer November Meetup",
       eventDate: "Nov 1,2023 THU 6:00pm",
       location: {
-        street: "Online"
+        street: "Online",
       },
       totalSlots: "Unlimited",
       interests: "Unlimited",
-      img: BMEcardimg2
+      img: BMEcardimg2,
     },
     {
       title: "Volunteer December Meetup",
       eventDate: "Oct 12,2023 THU 5:30pm",
       location: {
-        street: "Online"
+        street: "Online",
       },
       totalSlots: "Unlimited",
       interests: "Unlimited",
-      img: BMEcardimg3
+      img: BMEcardimg3,
     },
-
   ];
 
-  const [events,setEvents] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [offevents, setOffevents] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -132,13 +131,6 @@ function HomePage() {
 
       setEvents(eventsData);
     };
-
-    fetchData();
-  }, []);
-
-  const [offevents,setOffevents] = useState([]);
-
-  useEffect(() => {
     const fetchOfficialData = async () => {
       const eventsData = await fetchOfficialEvents();
       // Sort events in place based on their date
@@ -146,6 +138,7 @@ function HomePage() {
       setOffevents(eventsData);
     };
 
+    fetchData();
     fetchOfficialData();
   }, []);
 
@@ -159,7 +152,6 @@ function HomePage() {
         <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
           <Success />
         </div>
-
         <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
           <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
             <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
@@ -197,10 +189,7 @@ function HomePage() {
             </div>
           </div>
         </div> */}
-
-
         {/*Vedant*/} {/*BME OFFCIIAL GATHERING BLOCK START*/}
-
         <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
           <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
             <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
@@ -217,21 +206,16 @@ function HomePage() {
             </div>
           </div>
         </div>
-
-
         {/*Vedant*/} {/*BME OFFCIIAL GATHERING BLOCK END*/}
-
         {/* Aniket */}
         <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8  rounded-2xl bg-white text-black ">
           <Process />
         </div>
-
         {/* Meet */}
         <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black">
           <MoreAboutUs />
         </div>
         {/* Aniket */}
-
         <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
           <Map />
         </div>
