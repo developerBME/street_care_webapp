@@ -257,7 +257,7 @@ function CommOutForm() {
                       ></input>
                       <label
                         for="food-option"
-                        className={`inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ${error.checkboxesError !== "" ? "ring-red-500" : "ring-gray-300"}`}
+                        className="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300"
                       >
                         <div className="w-full h-full mb-6 text-base font-semibold">
                           {" "}
