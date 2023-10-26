@@ -15,9 +15,9 @@ const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
 const USERS_COLLECTION = "users";
 
 export const fetchEvents = async () => {
-  const eventCollection = collection(db, OUTREACH_EVENTS_COLLECTION);
-  const eventSnapshot = await getDocs(eventCollection);
-  let eventsData = [];
+  const oureachEventsRef = collection(db, OUTREACH_EVENTS_COLLECTION);
+  const eventSnapshot = await getDocs(oureachEventsRef);
+  let outreachEvents = [];
   const fAuth = getAuth();
   onAuthStateChanged(fAuth, (user) => {
     if (user) {
@@ -26,34 +26,24 @@ export const fetchEvents = async () => {
       console.log("USER NOT FOUND!");
     }
   });
-
   for (const doc of eventSnapshot.docs) {
     const eventData = doc.data();
     const userName = await fetchUserName(eventData.uid);
 
     let currentParticipants = eventData.participants || [];
-    if (
-      fAuth.currentUser &&
-      currentParticipants.includes(fAuth?.currentUser?.uid)
-    ) {
-      eventsData.push({
-        ...eventData,
-        userName: userName,
-        id: doc.id,
-        label: "EDIT",
-        nop: currentParticipants.length,
-      });
-    } else {
-      eventsData.push({
-        ...eventData,
-        userName: userName,
-        id: doc.id,
-        label: "RSVP",
-        nop: currentParticipants.length,
-      });
-    }
+    outreachEvents.push({
+      ...eventData,
+      userName: userName,
+      id: doc.id,
+      label:
+        fAuth.currentUser &&
+        currentParticipants.includes(fAuth?.currentUser?.uid)
+          ? "EDIT"
+          : "RSVP",
+      nop: currentParticipants.length,
+    });
   }
-  return eventsData;
+  return outreachEvents;
 };
 
 export const fetchOfficialEvents = async () => {
@@ -330,7 +320,9 @@ export const handleRsvp = async (
             console.log("event not found in the user");
           }
           setLabel2("RSVP");
-          refresh();
+          if (typeof refresh == "function"){
+            refresh();
+          }
         } catch (error) {
           console.log(error);
         }
