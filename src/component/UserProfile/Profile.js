@@ -7,7 +7,7 @@ import UserInfo from "./UserInfo";
 import axc from "./CommOutForm";
 
 import OutreachEventCard from "../Community/OutreachEventCard";
-import { fetchUserEvents } from "../EventCardService";
+import { formatDate, fetchUserEvents } from "../EventCardService";
 import { auth } from "../firebase";
 import CustomButton from "../Buttons/CustomButton";
 
@@ -90,13 +90,7 @@ function Profile() {
       const uid = user.uid;
       console.log("UID is ", uid);
       const eventsData = await fetchUserEvents(uid);
-
-      // Sort the events based on the eventDate (from soonest to latest)
-      eventsData.sort((date1, date2) => {
-        const date_1 = new Date(date1.eventDate.seconds * 1000);
-        const date_2 = new Date(date2.eventDate.seconds * 1000);
-        return date_1 - date_2;
-      });
+      eventsData.sort((a, b) => a.eventDate - b.eventDate);
       setEvents(eventsData);
     } else {
       console.log("No user is signed in.");
@@ -113,12 +107,7 @@ function Profile() {
         console.log("UID is ", uid);
         const eventsData = await fetchUserEvents(uid);
 
-        // Sort the events based on the eventDate (from soonest to latest)
-        eventsData.sort((date1, date2) => {
-          const date_1 = new Date(date1.eventDate.seconds * 1000);
-          const date_2 = new Date(date2.eventDate.seconds * 1000);
-          return date_1 - date_2;
-        });
+        eventsData.sort((a, b) => a.eventDate - b.eventDate);
         setEvents(eventsData);
       } else {
         console.log("No user is signed in.");
@@ -191,7 +180,7 @@ function Profile() {
                 {events.map((eventData) => (
                   <OutreachEventCard
                     key={eventData.id}
-                    cardData={eventData}
+                    cardData={{ ...eventData, eventDate: formatDate(new Date(eventData.eventDate.seconds * 1000)) }}
                     isProfilePage={true}
                     refresh={fetchData}
                   />
@@ -203,7 +192,7 @@ function Profile() {
                 {events.map((eventData) => (
                   <OutreachEventCard
                     key={eventData.id}
-                    cardData={eventData}
+                    cardData={{ ...eventData, eventDate: formatDate(new Date(eventData.eventDate.seconds * 1000)) }}
                     isProfilePage={true}
                     refresh={fetchData}
                   />
