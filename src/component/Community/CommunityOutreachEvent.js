@@ -122,25 +122,25 @@ const CommunityOutreachEvent = () => {
                   <div class="p-4">
                             <div class="group relative">
                                 <button class="appearance-none py-1 px-3 pr-8 text-[#181818] text-2xl lg:text-3xl font-bricolage border-b border-[#181818] bg-transparent h-10">Select Country</button>
-                                <nav tabindex="0" class="border-2 bg-white shadow invisible border-gray-100 rounded-2xl w-60 absolute left-0 top-full transition-all opacity-0 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-1">
+                                <nav tabindex="0" class="border-2 bg-white shadow invisible border-[#E6E2EE] rounded-2xl w-60 absolute left-0 top-full transition-all opacity-0 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-1">
                                     <ul class="py-1">
                                         <li>
-                                            <a href="#" class=" px-4 py-2 hover:bg-gray-100 flex-col justify-center items-start flex">
+                                            <a href="#" class=" px-4 py-2 hover:bg-[#E6E2EE] flex-col justify-center items-start flex">
                                                 New York, USA
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#" class=" px-4 py-2 hover:bg-gray-100 flex-col justify-center items-start flex">
+                                            <a href="#" class=" px-4 py-2 hover:bg-[#E6E2EE] flex-col justify-center items-start flex">
                                                 Ottawa, Canada
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#" class=" px-4 py-2 hover:bg-gray-100 flex-col justify-center items-start flex">
+                                            <a href="#" class=" px-4 py-2 hover:bg-[#E6E2EE] flex-col justify-center items-start flex">
                                                 Maryland, USA
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#" class=" px-4 py-2 hover:bg-gray-100 flex-col justify-center items-start flex">
+                                            <a href="#" class=" px-4 py-2 hover:bg-[#E6E2EE] flex-col justify-center items-start flex">
                                                 Florida, USA
                                             </a>
                                         </li>
