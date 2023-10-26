@@ -82,12 +82,12 @@ const UserInfo = () => {
         let totalHelped = 0;
         let totalDonations = 0;
         data.docs.map((doc) => {
-          totalHelped = isNaN(doc.data().numberPeopleHelped)
+          totalHelped = isNaN(parseInt(doc.data().numberPeopleHelped))
             ? totalHelped
-            : totalHelped + doc.data().numberPeopleHelped;
-          totalDonations = isNaN(doc.data().itemQty)
+            : totalHelped + parseInt(doc.data().numberPeopleHelped);
+          totalDonations = isNaN(parseInt(doc.data().itemQty))
             ? totalDonations
-            : totalDonations + doc.data().itemQty;
+            : totalDonations + parseInt(doc.data().itemQty);
           return null;
         });
         console.log(totalDonations);
