@@ -19,6 +19,8 @@ import OutreachSignup from "./component/Community/OutreachSignup";
 import CreateOutreach from "./component/Community/CreateOutreach";
 import HelpRequestForm from "./component/Community/HelpRequstForm";
 import HelpRequestEventWindow from "./component/Community/HelpRequestEventWindow";
+import DonateForm from "./component/Donate/DonateForm";
+import CreditCardPayment from "./component/Donate/CreditCardPayment";
 
 function App() {
   const fAuth = getAuth();
@@ -63,6 +65,7 @@ function App() {
           />
           <Route path="/helpRequestForm" element={<HelpRequestForm />} />
           <Route path="/*" element={<Home />} />
+          <Route path="/donateForm" element={<DonateForm />} />
         </Routes>
         <Footer />
       </Router>

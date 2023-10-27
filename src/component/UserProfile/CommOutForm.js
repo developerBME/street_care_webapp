@@ -34,7 +34,7 @@ function CommOutForm() {
 
   const [error, setError] = useState({
     numberHelpedError: "",
-    itemQtyError:"",
+    itemQtyError: "",
     checkboxesError: "",
     outreachError: "",
   });
@@ -94,7 +94,10 @@ function CommOutForm() {
     }
 
     if (itemArray == "") {
-      updateErrorState("checkboxesError", "Please provide the kind of help provided");
+      updateErrorState(
+        "checkboxesError",
+        "Please provide the kind of help provided"
+      );
     } else {
       updateErrorState("checkboxesError", "");
     }
@@ -181,14 +184,20 @@ function CommOutForm() {
                           type="number"
                           id="numberHelped"
                           placeholder="How many people did you help?"
-                          className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.numberHelpedError !== "" ? "ring-red-500" : "ring-gray-300"}`}
+                          className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
+                            error.numberHelpedError !== ""
+                              ? "ring-red-500"
+                              : "ring-gray-300"
+                          }`}
                           required={true}
                           ref={numberHelped}
                         ></input>
                         {error.numberHelpedError && (
                           <div className="inline-flex items-center">
                             <img src={errorImg} className="w-3 h-3" />
-                            <p className="text-red-600 text-xs">{error.numberHelpedError}</p>
+                            <p className="text-red-600 text-xs">
+                              {error.numberHelpedError}
+                            </p>
                           </div>
                         )}
                       </div>
@@ -210,7 +219,11 @@ function CommOutForm() {
                     <div className="self-stretch h-fit  border-collapse">
                       <div className=" h-14 inline-flex w-full">
                         <select
-                          className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.outreachError !== "" ? "ring-red-500" : "ring-gray-300"}`}
+                          className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
+                            error.outreachError !== ""
+                              ? "ring-red-500"
+                              : "ring-gray-300"
+                          }`}
                           defaultValue=""
                           ref={outreachRef}
                         >
@@ -229,7 +242,9 @@ function CommOutForm() {
                       {error.outreachError && (
                         <div className="inline-flex items-center">
                           <img src={errorImg} className="w-3 h-3" />
-                          <p className="text-red-600 text-xs">{error.outreachError}</p>
+                          <p className="text-red-600 text-xs">
+                            {error.outreachError}
+                          </p>
                         </div>
                       )}
                     </div>
@@ -253,7 +268,6 @@ function CommOutForm() {
                         className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
                         ref={(el) => (checkboxes.current[0] = el)}
-                        onChange={handleItemArray}
                       ></input>
                       <label
                         for="food-option"
@@ -415,7 +429,9 @@ function CommOutForm() {
                   {error.checkboxesError && (
                     <div className="inline-flex items-center">
                       <img src={errorImg} className="w-3 h-3" />
-                      <p className="text-red-600 text-xs">{error.checkboxesError}</p>
+                      <p className="text-red-600 text-xs">
+                        {error.checkboxesError}
+                      </p>
                     </div>
                   )}
                 </div>
@@ -458,14 +474,20 @@ function CommOutForm() {
                           type="number"
                           id="-itemnumber"
                           placeholder="Number"
-                          className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.itemQtyError !== "" ? "ring-red-500" : "ring-gray-300"}`}
+                          className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
+                            error.itemQtyError !== ""
+                              ? "ring-red-500"
+                              : "ring-gray-300"
+                          }`}
                           ref={NumberOfItems}
                           // onChange={(e) => setEmail(e.target.value)}
                         ></input>
                         {error.itemQtyError && (
                           <div className="inline-flex items-center">
                             <img src={errorImg} className="w-3 h-3" />
-                            <p className="text-red-600 text-xs">{error.itemQtyError}</p>
+                            <p className="text-red-600 text-xs">
+                              {error.itemQtyError}
+                            </p>
                           </div>
                         )}
                       </div>
