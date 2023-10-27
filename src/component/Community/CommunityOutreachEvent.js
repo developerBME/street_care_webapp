@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import OutreachEventCard from "./OutreachEventCard";
 import arrowDown from "../../images/arrowDown.png";
 import arrowRight from "../../images/arrowRight.png";
 import CustomButton from "../Buttons/CustomButton";
 import OutreachVisitLogCard from "./OutreachVisitLogCard";
+import { fetchEvents, formatDate } from "../EventCardService";
 
 const CommunityOutreachEvent = () => {
   const [visibleItems, setVisibleItems] = useState(3);
@@ -55,6 +56,21 @@ const CommunityOutreachEvent = () => {
       interests: 5,
     },
   ];
+
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const eventsData = await fetchEvents();
+      
+      // Sort events in place based on their date
+      eventsData.sort((a, b) => a.eventDate - b.eventDate);
+
+      setEvents(eventsData);
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div>
@@ -168,10 +184,8 @@ const CommunityOutreachEvent = () => {
         </div>
 
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
-          {cardData.slice(0, visibleItems).map((item, index) => (
-            <div key={index}>
-              <OutreachEventCard cardData={item} />
-            </div>
+          {events.slice(0, visibleItems).map(eventData => (
+              <OutreachEventCard key={eventData.id} cardData={{ ...eventData, eventDate: formatDate(new Date(eventData.eventDate.seconds * 1000)) }} />
           ))}
         </div>
         {visibleItems < cardData.length && (
