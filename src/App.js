@@ -20,7 +20,6 @@ import CreateOutreach from "./component/Community/CreateOutreach";
 import HelpRequestForm from "./component/Community/HelpRequstForm";
 import HelpRequestEventWindow from "./component/Community/HelpRequestEventWindow";
 import DonateForm from "./component/Donate/DonateForm";
-import CreditCardPayment from "./component/Donate/CreditCardPayment";
 
 function App() {
   const fAuth = getAuth();

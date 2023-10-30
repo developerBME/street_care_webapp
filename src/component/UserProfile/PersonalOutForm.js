@@ -47,7 +47,7 @@ function PersonalOutForm() {
     cityError: "",
     stateError: "",
     checkboxesError: "",
-    itemQtyError:"",
+    itemQtyError: "",
     dateError: "",
     timeError: "",
   });
@@ -139,7 +139,10 @@ function PersonalOutForm() {
     }
 
     if (itemArray == "") {
-      updateErrorState("checkboxesError", "Please provide the kind of help provided");
+      updateErrorState(
+        "checkboxesError",
+        "Please provide the kind of help provided"
+      );
     } else {
       updateErrorState("checkboxesError", "");
     }
@@ -253,14 +256,20 @@ function PersonalOutForm() {
                           type="number"
                           id="numberHelped"
                           placeholder="Number of people helped"
-                          className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border-0 text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.numberHelpedError !== "" ? "ring-red-500" : "ring-gray-300"}`}
+                          className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border-0 text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
+                            error.numberHelpedError !== ""
+                              ? "ring-red-500"
+                              : "ring-gray-300"
+                          }`}
                           required={true}
                           ref={numberHelped}
                         ></input>
                         {error.numberHelpedError && (
                           <div className="inline-flex items-center">
                             <img src={errorImg} className="w-3 h-3" />
-                            <p className="text-red-600 text-xs">{error.numberHelpedError}</p>
+                            <p className="text-red-600 text-xs">
+                              {error.numberHelpedError}
+                            </p>
                           </div>
                         )}
                       </div>
@@ -448,7 +457,9 @@ function PersonalOutForm() {
                   {error.checkboxesError && (
                     <div className="inline-flex items-center">
                       <img src={errorImg} className="w-3 h-3" />
-                      <p className="text-red-600 text-xs">{error.checkboxesError}</p>
+                      <p className="text-red-600 text-xs">
+                        {error.checkboxesError}
+                      </p>
                     </div>
                   )}
                 </div>
@@ -467,7 +478,11 @@ function PersonalOutForm() {
                     <div className="self-stretch h-fit  border-collapse     ">
                       <div className=" h-14 inline-flex w-full">
                         <select
-                          className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.stateError !== "" ? "ring-red-500" : "ring-gray-300"}`}
+                          className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
+                            error.stateError !== ""
+                              ? "ring-red-500"
+                              : "ring-gray-300"
+                          }`}
                           defaultValue=""
                           ref={stateRef}
                           onChange={getCities}
@@ -489,12 +504,14 @@ function PersonalOutForm() {
                             })}
                         </select>
                       </div>
-                        {error.stateError && (
-                          <div className="inline-flex items-center">
-                            <img src={errorImg} className="w-3 h-3" />
-                            <p className="text-red-600 text-xs">{error.stateError}</p>
-                          </div>
-                        )}
+                      {error.stateError && (
+                        <div className="inline-flex items-center">
+                          <img src={errorImg} className="w-3 h-3" />
+                          <p className="text-red-600 text-xs">
+                            {error.stateError}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="self-stretch w-full h-fit flex-col  flex ">
@@ -506,7 +523,11 @@ function PersonalOutForm() {
                     <div className="self-stretch h-fit  border-collapse     ">
                       <div className=" h-14 inline-flex w-full">
                         <select
-                          className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.cityError !== "" ? "ring-red-500" : "ring-gray-300"}`}
+                          className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
+                            error.cityError !== ""
+                              ? "ring-red-500"
+                              : "ring-gray-300"
+                          }`}
                           defaultValue=""
                           disabled={!cityNames}
                           ref={cityRef}
@@ -531,12 +552,14 @@ function PersonalOutForm() {
                             })}
                         </select>
                       </div>
-                        {error.cityError && (
-                          <div className="inline-flex items-center">
-                            <img src={errorImg} className="w-3 h-3" />
-                            <p className="text-red-600 text-xs">{error.cityError}</p>
-                          </div>
-                        )}
+                      {error.cityError && (
+                        <div className="inline-flex items-center">
+                          <img src={errorImg} className="w-3 h-3" />
+                          <p className="text-red-600 text-xs">
+                            {error.cityError}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -557,13 +580,19 @@ function PersonalOutForm() {
                             type="date"
                             id="-itemnumber"
                             placeholder="Number"
-                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.dateError !== "" ? "ring-red-500" : "ring-gray-300"}`}
+                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
+                              error.dateError !== ""
+                                ? "ring-red-500"
+                                : "ring-gray-300"
+                            }`}
                             ref={date}
                           ></input>
                           {error.dateError && (
                             <div className="inline-flex items-center">
                               <img src={errorImg} className="w-3 h-3" />
-                              <p className="text-red-600 text-xs">{error.dateError}</p>
+                              <p className="text-red-600 text-xs">
+                                {error.dateError}
+                              </p>
                             </div>
                           )}
                         </div>
@@ -582,13 +611,19 @@ function PersonalOutForm() {
                             type="time"
                             id="-itemnumber"
                             placeholder="Number"
-                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.timeError !== "" ? "ring-red-500" : "ring-gray-300"}`}
+                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
+                              error.timeError !== ""
+                                ? "ring-red-500"
+                                : "ring-gray-300"
+                            }`}
                             ref={time}
                           ></input>
                           {error.timeError && (
                             <div className="inline-flex items-center">
                               <img src={errorImg} className="w-3 h-3" />
-                              <p className="text-red-600 text-xs">{error.timeError}</p>
+                              <p className="text-red-600 text-xs">
+                                {error.timeError}
+                              </p>
                             </div>
                           )}
                         </div>
@@ -611,16 +646,22 @@ function PersonalOutForm() {
                           type="number"
                           id="itemsNumber"
                           placeholder="Number of Items"
-                          className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.itemQtyError !== "" ? "ring-red-500" : "ring-gray-300"}`}
+                          className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
+                            error.itemQtyError !== ""
+                              ? "ring-red-500"
+                              : "ring-gray-300"
+                          }`}
                           required={true}
                           ref={itemQtyRef}
                         ></input>
                         {error.itemQtyError && (
-                            <div className="inline-flex items-center">
-                              <img src={errorImg} className="w-3 h-3" />
-                              <p className="text-red-600 text-xs">{error.itemQtyError}</p>
-                            </div>
-                          )}
+                          <div className="inline-flex items-center">
+                            <img src={errorImg} className="w-3 h-3" />
+                            <p className="text-red-600 text-xs">
+                              {error.itemQtyError}
+                            </p>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
