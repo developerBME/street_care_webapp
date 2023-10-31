@@ -52,6 +52,20 @@ function PersonalOutForm() {
     timeError: "",
   });
 
+  const handleNumChange = (e) => {
+    updateErrorState("numberHelpedError", "");
+  };
+  const handleItemQtyChange = (e) => {
+    updateErrorState("itemQtyError", "");
+  };
+  const handleDateChange = (e) => {
+    updateErrorState("dateError", "");
+  };
+  const handleTimeChange = (e) => {
+    updateErrorState("timeError", "");
+  };
+
+
   const updateErrorState = (key, value) => {
     setError((prevState) => ({
       ...prevState, // Clone the current state
@@ -117,6 +131,8 @@ function PersonalOutForm() {
     console.log("Filtered: " + filteredData.length);
     setState(e.target.value);
     setCityNames(filteredData);
+    updateErrorState("stateError", "");
+    updateErrorState("cityError", "");
   }
 
   function handleItemArray(e) {
@@ -125,7 +141,7 @@ function PersonalOutForm() {
     } else {
       setItemArray(itemArray.filter((item) => item !== e.target.value));
     }
-    console.log(itemArray);
+    updateErrorState("checkboxesError", "");
   }
 
   const handleSubmit = async (e) => {
@@ -263,6 +279,7 @@ function PersonalOutForm() {
                           }`}
                           required={true}
                           ref={numberHelped}
+                          onChange={handleNumChange}
                         ></input>
                         {error.numberHelpedError && (
                           <div className="inline-flex items-center">
@@ -586,6 +603,7 @@ function PersonalOutForm() {
                                 : "ring-gray-300"
                             }`}
                             ref={date}
+                            onChange={handleDateChange}
                           ></input>
                           {error.dateError && (
                             <div className="inline-flex items-center">
@@ -617,6 +635,7 @@ function PersonalOutForm() {
                                 : "ring-gray-300"
                             }`}
                             ref={time}
+                            onChange={handleTimeChange}
                           ></input>
                           {error.timeError && (
                             <div className="inline-flex items-center">
@@ -653,6 +672,7 @@ function PersonalOutForm() {
                           }`}
                           required={true}
                           ref={itemQtyRef}
+                          onChange={handleItemQtyChange}
                         ></input>
                         {error.itemQtyError && (
                           <div className="inline-flex items-center">
