@@ -15,6 +15,7 @@ import {
 
 import CustomButton from "../Buttons/CustomButton";
 import errorImg from "../../images/error.png";
+import ConfirmationModal from "./ConfirmationModal";
 
 const starStyle = {
   width: 60,
@@ -718,11 +719,12 @@ function PersonalOutForm() {
                 </div>
                 {/*  */}
                 {success && (
-                  <div className="justify-start items-start gap-4 inline-flex">
-                    <div className="justify-start items-start gap-4 flex">
-                      Success!
-                    </div>
-                  </div>
+                  // <div className="justify-start items-start gap-4 inline-flex">
+                  //   <div className="justify-start items-start gap-4 flex">
+                  //     Success!
+                  //   </div>
+                  // </div>
+                  <ConfirmationModal isOpen={true} />
                 )}
               </div>
             </div>
