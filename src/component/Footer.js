@@ -2,7 +2,7 @@ import React from "react";
 
 function Footer() {
   return (
-    <footer class="bg-nav">
+    <footer class="bg-nav mb-20 md:mb-0">
       <div class=" lg:mx-auto  h-fit w-full max-w-screen-xl">
         <div class=" pt-14 pb-6 px-4 grid mx-7 grid-cols-2 gap-y-7 lg:gap-20 items-center lg:grid-cols-5">
           <div className=" col-span-2">
