@@ -73,6 +73,81 @@ const OutreachEventCard = ({ cardData, isProfilePage, refresh }) => {
       )}
       <div className="flex items-center justify-between px-5 pt-2 pb-4 gap-16">
         {isProfilePage ? (
+              <div class="group relative">
+                  <button class="bg-violet-200 text-[#181818] text-[14px] font-medium py-[10px] px-[24px] rounded-full hover:bg-violet-300 transition ease-in-out delay-300" >Edit</button>
+                  <nav tabindex="0" class="border-2 text-[12px]  hover:bg-violet-300 bg-violet-200 shadow invisible border-violet-300 rounded-2xl w-32 absolute left-0 top-full transition-all opacity-0 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-1">
+                      <ul class="py-1">
+                          <li>
+                              <a href="#" class=" px-4 py-2  rounded-2xl  flex-col justify-center items-start flex" onClick={(e) =>
+                                handleRsvp(
+                                  e,
+                                  id,
+                                  label,
+                                  navigate,
+                                  label2,
+                                  setLabel2,
+                                  false,
+                                  refresh
+                                )
+                              }>
+                                  Remove RSVP
+                              </a>
+                          </li>
+                      </ul>
+                  </nav>
+              </div>
+        ) : (
+          <div class="group relative">
+                  <CustomButton
+                  label={label2}
+                  name="buttonlight"
+                  onClick={(e) =>
+                    handleRsvp(
+                      e,
+                      id,
+                      label,
+                      navigate,
+                      label2,
+                      setLabel2,
+                      false,
+                      refresh
+                    )
+                  }
+                />
+                  {/*<nav tabindex="0" class="border-2 text-[12px]  hover:bg-violet-300 bg-violet-200 shadow invisible border-violet-300 rounded-2xl w-32 absolute left-0 top-full transition-all opacity-0 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-1">
+                      <ul class="py-1">
+                          <li>
+                              <a href="#" class=" px-4 py-2  rounded-2xl  flex-col justify-center items-start flex" onClick={(e) =>
+                                handleRsvp(
+                                  e,
+                                  id,
+                                  label,
+                                  navigate,
+                                  label2,
+                                  setLabel2,
+                                  false,
+                                  refresh
+                                )
+                              }>
+                                  Remove RSVP
+                              </a>
+                          </li>
+                      </ul>
+                            </nav>*/}
+              </div>
+          
+        )}
+
+        {!isProfilePage ? (
+          <div className="font-normal font-['Inter'] text-[12px]">
+            Open Spots: {totalSlots - nop}/{totalSlots}
+          </div>
+        ) : (
+          <div></div>
+        )}
+      </div>
+      {/*<div className="flex items-center justify-between px-5 pt-2 pb-4 gap-16">
+        {isProfilePage ? (
           <CustomButton
             label="Edit"
             name="buttonlight"
@@ -115,7 +190,7 @@ const OutreachEventCard = ({ cardData, isProfilePage, refresh }) => {
         ) : (
           <div></div>
         )}
-      </div>
+        </div>*/}
     </div>
   );
 };

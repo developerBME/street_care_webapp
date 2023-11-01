@@ -172,8 +172,8 @@ const Form = () => {
   };
 
   return (
-    <div>
-      <form className="space-y-6" onSubmit={handleSubmit}>
+    <div >
+      <form className="space-y-6 " onSubmit={handleSubmit}>
         <div>
           <div className="lg:text-5xl text-3xl font-medium font-bricolage pb-4 lg:pb-16">
             Create Outreach Event
@@ -404,7 +404,7 @@ const Form = () => {
           <div className="font-semibold font-bricolage text-[15px]">
             Select skills it would require to provide the help
           </div>
-          <div className="lg:w-[587px] space-y-2">
+          <div className=" space-y-2">
             {chipList.map((value, index) => (
               <Chip
                 keyName={"chip-" + index}

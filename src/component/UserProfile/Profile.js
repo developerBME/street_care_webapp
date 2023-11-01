@@ -175,8 +175,8 @@ function Profile() {
                 </div> */}
               </div>
             </div>
-            <div className="sm:hidden overflow-x-auto">
-              <div className="flex space-x-3 w-fit lg:p-4 pl-4">
+            <div className="sm:hidden overflow-x-auto overflow-y-hidden">
+              <div className="flex space-x-3 w-fit lg:p-4 pl-4 ">
                 {events.map((eventData) => (
                   <OutreachEventCard
                     key={eventData.id}
@@ -187,7 +187,7 @@ function Profile() {
                 ))}
               </div>
             </div>
-            <div className="hidden sm:block sm:overflow-x-auto">
+            <div className="hidden sm:block sm:overflow-x-auto overflow-y-hidden">
               <div className="grid grid-cols-3 gap-2 gap-y-16">
                 {events.map((eventData) => (
                   <OutreachEventCard
