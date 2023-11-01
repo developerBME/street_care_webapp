@@ -21,6 +21,8 @@ import HelpRequestForm from "./component/Community/HelpRequstForm";
 import HelpRequestEventWindow from "./component/Community/HelpRequestEventWindow";
 import DonateForm from "./component/Donate/DonateForm";
 
+import ScrollToTop from "./component/helper/ScrollToTop";
+
 function App() {
   const fAuth = getAuth();
   const [loggedIn, setLoggedIn] = useState(false);
@@ -40,6 +42,7 @@ function App() {
   return (
     <div>
       <Router>
+        <ScrollToTop />
         <NavBar loggedIn={loggedIn} />
         <Routes>
           <Route path="/" element={<Home />} />
