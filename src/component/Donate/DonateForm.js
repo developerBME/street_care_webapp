@@ -3,9 +3,7 @@ import CustomButton from "../Buttons/CustomButton";
 import creditCard from "../../images/credit_card.svg";
 import paypal from "../../images/paypal.svg";
 import selectedIcon from "../../images/selected_icon.svg";
-import CreditCardPayment from "./CreditCardPayment";
 import errorImg from "../../images/error.png";
-import PaypalPayment from "./PaypalPayment";
 
 function DonateForm() {
   const [isFrequencyDivActive, setIsFrequencyDivActive] = useState(true);
@@ -17,6 +15,7 @@ function DonateForm() {
   const [selectedAmount, setSelectedAmount] = useState(null);
   const [otherAmount, setOtherAmount] = useState("");
   const [selectedPaymentDiv, setSelectedPaymentDiv] = useState(null);
+  const [isDonationBehalfChecked, setIsDonationBehalfChecked] = useState(false);
 
   const handleFrequencyDivClick = () => {
     setIsFrequencyDivActive((prevState) => !prevState);
@@ -24,6 +23,7 @@ function DonateForm() {
 
   const handleAgreementCheckboxChange = () => {
     setIsAgreementCheckboxChecked((prevState) => !prevState);
+    updateErrorState("agreementCheckboxError", "");
   };
 
   const handleNameDivCheckboxChange = () => {
@@ -40,28 +40,97 @@ function DonateForm() {
     if (amount === selectedAmount) {
       setSelectedAmount(null);
     }
+    updateErrorState("otherAmountError", "");
   };
 
   const handleOtherAmountInputChange = (e) => {
     setOtherAmount(e.target.value);
+    updateErrorState("otherAmountError", "");
+    setSelectedAmount(null);
   };
 
   const handlePaymentDivSelection = (divNumber) => {
     setSelectedPaymentDiv(divNumber);
+    updateErrorState("paymentMethodError", "");
+  };
+
+  const handleDonationBehalfCheckboxChange = () => {
+    setIsDonationBehalfChecked((prevState) => !prevState);
+    updateErrorState("companyNameError", "");
+  };
+
+  const handleCompanyNametInputChange = (e) => {
+    updateErrorState("companyNameError", "");
+  };
+
+  const handleFirstNametInputChange = (e) => {
+    updateErrorState("firstNameError", "");
+  };
+
+  const handleLastNametInputChange = (e) => {
+    updateErrorState("lastNameError", "");
+  };
+
+  const handleStreetAddressInputChange = (e) => {
+    updateErrorState("streetAddressError", "");
+  };
+
+  const handleZipCodeInputChange = (e) => {
+    updateErrorState("zipCodeError", "");
+  };
+
+  const handleContactInputChange = (e) => {
+    updateErrorState("contactError", "");
+  };
+
+  const handleCardNumberInputChange = (e) => {
+    updateErrorState("cardNumberError", "");
+  };
+
+  const handleExpirationDateInputChange = (e) => {
+    updateErrorState("expirationDateError", "");
+  };
+
+  const handleCVVInputChange = (e) => {
+    updateErrorState("cvvError", "");
+  };
+
+  const handleFirstNametPPInputChange = (e) => {
+    updateErrorState("firstNameErrorPP", "");
   };
 
   const totalAmount =
-    (selectedAmount || 0) + (otherAmount ? parseInt(otherAmount) : 0);
+    (selectedAmount || 0) + (otherAmount ? parseFloat(otherAmount) : 0);
 
   // Error handling
   const agreementCheckbox = useRef(null);
   const otherAmountError = useRef("");
   const paymentMethodError = useRef(null);
+  const companyNameError = useRef("");
+  const firstNameError = useRef("");
+  const lastNameError = useRef("");
+  const streetAddressError = useRef("");
+  const zipCodeError = useRef("");
+  const contactError = useRef("");
+  const cardNumberError = useRef("");
+  const expirationDateError = useRef("");
+  const cvvError = useRef("");
+  const firstNameErrorPP = useRef("");
 
   const [error, setError] = useState({
     agreementCheckboxError: "",
     otherAmountError: "",
     paymentMethodError: "",
+    companyNameError: "",
+    firstNameError: "",
+    lastNameError: "",
+    streetAddressError: "",
+    zipCodeError: "",
+    contactError: "",
+    cardNumberError: "",
+    expirationDateError: "",
+    cvvError: "",
+    firstNameErrorPP: "",
   });
 
   const updateErrorState = (key, value) => {
@@ -95,6 +164,105 @@ function DonateForm() {
       } else {
         updateErrorState("paymentMethodError", "");
       }
+    }
+
+    if (isDonationBehalfChecked && !companyNameError.current.value) {
+      updateErrorState(
+        "companyNameError",
+        "Company/Organization Name is required"
+      );
+    } else {
+      updateErrorState("companyNameError", "");
+    }
+
+    if (
+      selectedPaymentDiv !== null &&
+      selectedPaymentDiv === 1 &&
+      !firstNameError.current.value
+    ) {
+      updateErrorState("firstNameErrorPP", "First Name is required");
+    } else {
+      updateErrorState("firstNameErrorPP", "");
+    }
+
+    if (
+      selectedPaymentDiv !== null &&
+      selectedPaymentDiv === 2 &&
+      !firstNameError.current.value
+    ) {
+      updateErrorState("firstNameError", "First Name is required");
+    } else {
+      updateErrorState("firstNameError", "");
+    }
+
+    if (
+      selectedPaymentDiv !== null &&
+      selectedPaymentDiv === 2 &&
+      !lastNameError.current.value
+    ) {
+      updateErrorState("lastNameError", "Last Name is required");
+    } else {
+      updateErrorState("lastNameError", "");
+    }
+
+    if (
+      selectedPaymentDiv !== null &&
+      selectedPaymentDiv === 2 &&
+      !streetAddressError.current.value
+    ) {
+      updateErrorState("streetAddressError", "Street Address is required");
+    } else {
+      updateErrorState("streetAddressError", "");
+    }
+
+    if (
+      selectedPaymentDiv !== null &&
+      selectedPaymentDiv === 2 &&
+      !zipCodeError.current.value
+    ) {
+      updateErrorState("zipCodeError", "Zip/Postal Code is required");
+    } else {
+      updateErrorState("zipCodeError", "");
+    }
+
+    if (
+      selectedPaymentDiv !== null &&
+      selectedPaymentDiv === 2 &&
+      !contactError.current.value
+    ) {
+      updateErrorState("contactError", "Contact is required");
+    } else {
+      updateErrorState("contactError", "");
+    }
+
+    if (
+      selectedPaymentDiv !== null &&
+      selectedPaymentDiv === 2 &&
+      !cardNumberError.current.value
+    ) {
+      updateErrorState("cardNumberError", "Card Number is required");
+    } else {
+      updateErrorState("cardNumberError", "");
+    }
+
+    if (
+      selectedPaymentDiv !== null &&
+      selectedPaymentDiv === 2 &&
+      !expirationDateError.current.value
+    ) {
+      updateErrorState("expirationDateError", "Expiration Date is required");
+    } else {
+      updateErrorState("expirationDateError", "");
+    }
+
+    if (
+      selectedPaymentDiv !== null &&
+      selectedPaymentDiv === 2 &&
+      !cvvError.current.value
+    ) {
+      updateErrorState("cvvError", "CVV is required");
+    } else {
+      updateErrorState("cvvError", "");
     }
   };
 
@@ -221,7 +389,11 @@ function DonateForm() {
                           type="number"
                           value={otherAmount}
                           onChange={handleOtherAmountInputChange}
-                          className={`text-[#444746] w-full h-full pl-7 rounded-[4px] text-sm font-normal font-dmsans leading-normal tracking-wide`}
+                          className={`text-[#444746] w-full h-full pl-7 rounded-[4px] text-sm font-normal font-dmsans leading-normal tracking-wide ring-1 ring-inset ${
+                            error.otherAmountError !== ""
+                              ? "ring-red-500"
+                              : "ring-gray-100"
+                          }`}
                           placeholder=""
                           id="otherAmount"
                           ref={otherAmountError}
@@ -387,8 +559,704 @@ function DonateForm() {
                   </div>
                 )}
               </div>
-              {selectedPaymentDiv === 1 && <PaypalPayment />}
-              {selectedPaymentDiv === 2 && <CreditCardPayment />}
+              {selectedPaymentDiv === 1 && (
+                <>
+                  <div className="w-full h-fit flex-col justify-start items-start gap-4 inline-flex">
+                    <div className="self-stretch text-black text-[22px] font-bold font-dmsans leading-7">
+                      Billing Information
+                    </div>
+                    <div className="self-stretch justify-start items-start gap-4 inline-flex">
+                      <div className="w-[18px] h-[18px] justify-center items-center flex">
+                        <div className="p-[11px] rounded-[100px] justify-center items-center flex">
+                          {/* <div className="w-[18px] h-[18px] bg-slate-500 rounded-sm" />
+              <div className="w-6 h-6 left-[8px] top-[8px] absolute" /> */}
+                          <input
+                            type="checkbox"
+                            id="donationbehalf-option"
+                            value="donationbehalf"
+                            class="w-[18px] h-[18px] cursor-pointer accent-[#5F36D6]"
+                            required=""
+                            checked={isDonationBehalfChecked}
+                            onChange={handleDonationBehalfCheckboxChange}
+                          ></input>
+                        </div>
+                      </div>
+                      <div className="grow shrink basis-0 text-black text-sm font-normal font-dmsans leading-snug">
+                        I am donating on behalf of a company or organization
+                      </div>
+                    </div>
+                    {isDonationBehalfChecked && (
+                      <div className="self-stretch justify-start items-start gap-4 inline-flex">
+                        <div className="grow shrink basis-0 h-fit rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 inline-flex">
+                          <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
+                            Company/Organization Name
+                          </div>
+                          <div className="self-stretch h-12 bg-white rounded border border-[#C8C8C8] justify-start items-center gap-2 inline-flex">
+                            <div className="grow shrink basis-0 h-full flex-col justify-center items-start inline-flex">
+                              <div className="justify-start items-center inline-flex w-full h-full">
+                                <div className="w-full h-full">
+                                  <input
+                                    type="text"
+                                    id="companyName"
+                                    placeholder=""
+                                    className="text-[#444746] w-full h-full pl-2 rounded-[4px] text-base font-normal font-dmsans leading-normal tracking-wide border-none"
+                                  ></input>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    <div className="self-stretch justify-start items-start gap-4 inline-flex">
+                      <div className="grow shrink basis-0 h-fit rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 inline-flex">
+                        <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
+                          First Name
+                        </div>
+                        <div className="self-stretch h-12 bg-white rounded border border-[#C8C8C8] justify-start items-center gap-2 inline-flex">
+                          <div className="grow shrink basis-0 h-full flex-col justify-center items-start inline-flex">
+                            <div className="justify-start items-center inline-flex w-full h-full">
+                              <div className="w-full h-full">
+                                <input
+                                  type="text"
+                                  id="firstName"
+                                  placeholder=""
+                                  className={`text-[#444746] w-full h-full pl-2 rounded-[4px] text-base font-normal font-dmsans leading-normal tracking-wide border-none ring-1 ring-inset ${
+                                    error.firstNameErrorPP !== ""
+                                      ? "ring-red-500"
+                                      : "ring-gray-100"
+                                  }`}
+                                  ref={firstNameErrorPP}
+                                  onChange={handleFirstNametPPInputChange}
+                                ></input>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {error.firstNameErrorPP && (
+                          <div className="inline-flex items-center">
+                            <img src={errorImg} className="w-3 h-3" />
+                            <p className="text-red-600 text-xs ml-1">
+                              {error.firstNameErrorPP}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                      <div className="grow shrink basis-0 h-fit rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 inline-flex">
+                        <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
+                          Last Name
+                        </div>
+                        <div className="self-stretch h-12 bg-white rounded border border-[#C8C8C8] justify-start items-center gap-2 inline-flex">
+                          <div className="grow shrink basis-0 h-full flex-col justify-center items-start inline-flex">
+                            <div className="justify-start items-center inline-flex w-full h-full">
+                              <div className="w-full h-full">
+                                <input
+                                  type="text"
+                                  id="lastName"
+                                  placeholder=""
+                                  className="text-[#444746] w-full h-full pl-2 rounded-[4px] text-base font-normal font-dmsans leading-normal tracking-wide border-none"
+                                ></input>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="self-stretch h-fit rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex">
+                      <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
+                        Street Address
+                      </div>
+                      <div className="self-stretch h-12 bg-white rounded border border-[#C8C8C8] justify-start items-center gap-2 inline-flex">
+                        <div className="grow shrink basis-0 h-full flex-col justify-center items-start inline-flex">
+                          <div className="justify-start items-center inline-flex w-full h-full">
+                            <div className="w-full h-full">
+                              <input
+                                type="text"
+                                id="streetAddress"
+                                placeholder=""
+                                className="text-[#444746] w-full h-full pl-2 rounded-[4px] text-base font-normal font-dmsans leading-normal tracking-wide border-none"
+                              ></input>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="self-stretch h-fit rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex">
+                      <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
+                        Country
+                      </div>
+                      <div className="self-stretch h-12 bg-white rounded border border-[#C8C8C8] justify-start items-center gap-2 inline-flex w-full">
+                        {/* <div className="grow shrink basis-0 h-full flex-col justify-center items-start inline-flex w-full"> */}
+                        {/* <div className="justify-start items-center inline-flex h-full w-full"> */}
+                        <div className="self-stretch h-full border-collapse w-full">
+                          {/* <div className="h-full inline-flex w-full"> */}
+                          <select
+                            className="text-zinc-900  w-full h-full px-4 rounded-[4px] text-[14px] font-normal font-dmsans leading-normal tracking-wide"
+                            defaultValue=""
+                          >
+                            <option value="" disabled>
+                              Select Country
+                            </option>
+                            <option value="option1">Option 1</option>
+                            <option value="option2">Option 2</option>
+                            <option value="option3">Option 3</option>
+                          </select>
+                          {/* </div> */}
+                        </div>
+                        {/* </div> */}
+                        {/* </div> */}
+                      </div>
+                    </div>
+                    <div className="self-stretch justify-start items-start gap-4 inline-flex">
+                      <div className="grow shrink basis-0 rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 inline-flex">
+                        <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
+                          City
+                        </div>
+                        <div className="self-stretch h-12 bg-white rounded border border-[#C8C8C8] justify-start items-center gap-2 inline-flex w-full">
+                          {/* <div className="grow shrink basis-0 h-full flex-col justify-center items-start inline-flex w-full"> */}
+                          {/* <div className="justify-start items-center inline-flex h-full w-full"> */}
+                          <div className="self-stretch h-full border-collapse w-full">
+                            {/* <div className="h-full inline-flex w-full"> */}
+                            <select
+                              className="text-zinc-900  w-full h-full px-4 rounded-[4px] text-[14px] font-normal font-dmsans leading-normal tracking-wide"
+                              defaultValue=""
+                            >
+                              <option value="" disabled>
+                                Select City
+                              </option>
+                              <option value="option1">Option 1</option>
+                              <option value="option2">Option 2</option>
+                              <option value="option3">Option 3</option>
+                            </select>
+                            {/* </div> */}
+                          </div>
+                          {/* </div> */}
+                          {/* </div> */}
+                        </div>
+                      </div>
+                      <div className="grow shrink basis-0 rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 inline-flex">
+                        <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
+                          State
+                        </div>
+                        <div className="self-stretch h-12 bg-white rounded border border-[#C8C8C8] justify-start items-center gap-2 inline-flex w-full">
+                          {/* <div className="grow shrink basis-0 h-full flex-col justify-center items-start inline-flex w-full"> */}
+                          {/* <div className="justify-start items-center inline-flex h-full w-full"> */}
+                          <div className="self-stretch h-full border-collapse w-full">
+                            {/* <div className="h-full inline-flex w-full"> */}
+                            <select
+                              className="text-zinc-900  w-full h-full px-4 rounded-[4px] text-[14px] font-normal font-dmsans leading-normal tracking-wide"
+                              defaultValue=""
+                            >
+                              <option value="" disabled>
+                                Select State
+                              </option>
+                              <option value="option1">Option 1</option>
+                              <option value="option2">Option 2</option>
+                              <option value="option3">Option 3</option>
+                            </select>
+                            {/* </div> */}
+                          </div>
+                          {/* </div> */}
+                          {/* </div> */}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="self-stretch justify-start items-start gap-4 inline-flex">
+                      <div className="grow shrink basis-0 rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 inline-flex">
+                        <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
+                          Zip/Postal Code
+                        </div>
+                        <div className="self-stretch h-12 bg-white rounded border border-[#C8C8C8] justify-start items-center gap-2 inline-flex">
+                          <div className="grow shrink basis-0 h-full flex-col justify-center items-start inline-flex">
+                            <div className="justify-start items-center inline-flex w-full h-full">
+                              <div className="w-full h-full">
+                                <input
+                                  type="number"
+                                  id="zipCode"
+                                  placeholder=""
+                                  className="text-[#444746] w-full h-full pl-2 rounded-[4px] text-base font-normal font-dmsans leading-normal tracking-wide border-none"
+                                ></input>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="grow shrink basis-0 rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 inline-flex">
+                        <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
+                          Contact (Phone, Email)
+                        </div>
+                        <div className="self-stretch h-12 bg-white rounded border border-[#C8C8C8] justify-start items-center gap-2 inline-flex">
+                          <div className="grow shrink basis-0 h-full flex-col justify-center items-start inline-flex">
+                            <div className="justify-start items-center inline-flex w-full h-full">
+                              <div className="w-full h-full">
+                                <input
+                                  type="text"
+                                  id="contactInfo"
+                                  placeholder=""
+                                  className="text-[#444746] w-full h-full pl-2 rounded-[4px] text-base font-normal font-dmsans leading-normal tracking-wide border-none"
+                                ></input>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="self-stretch h-fit flex-col justify-start items-start gap-4 flex">
+                    <div className="self-stretch text-black text-[22px] font-bold font-dmsans leading-7">
+                      Payment Information
+                    </div>
+                    <div className="self-stretch justify-start items-start gap-4 inline-flex">
+                      <div className="grow shrink basis-0 h-fit rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 inline-flex">
+                        <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
+                          Paypal ID
+                        </div>
+                        <div className="self-stretch h-12 bg-white rounded border border-[#C8C8C8] justify-start items-center gap-2 inline-flex">
+                          <div className="grow shrink basis-0 h-full flex-col justify-center items-start inline-flex">
+                            <div className="justify-start items-center inline-flex w-full h-full">
+                              <div className="w-full h-full">
+                                <input
+                                  type="text"
+                                  id="cardNumber"
+                                  placeholder=""
+                                  className="text-[#444746] w-full h-full pl-2 rounded-[4px] text-base font-normal font-dmsans leading-normal tracking-wide border-none"
+                                ></input>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {selectedPaymentDiv === 2 && (
+                <>
+                  <div className="w-full h-fit flex-col justify-start items-start gap-4 inline-flex">
+                    <div className="self-stretch text-black text-[22px] font-bold font-dmsans leading-7">
+                      Billing Information
+                    </div>
+                    <div className="self-stretch justify-start items-start gap-4 inline-flex">
+                      <div className="w-[18px] h-[18px] justify-center items-center flex">
+                        <div className="p-[11px] rounded-[100px] justify-center items-center flex">
+                          {/* <div className="w-[18px] h-[18px] bg-slate-500 rounded-sm" />
+              <div className="w-6 h-6 left-[8px] top-[8px] absolute" /> */}
+                          <input
+                            type="checkbox"
+                            id="donationbehalf-option"
+                            value="donationbehalf"
+                            class="w-[18px] h-[18px] cursor-pointer accent-[#5F36D6]"
+                            required=""
+                            checked={isDonationBehalfChecked}
+                            onChange={handleDonationBehalfCheckboxChange}
+                          ></input>
+                        </div>
+                      </div>
+                      <div className="grow shrink basis-0 text-black text-sm font-normal font-dmsans leading-snug">
+                        I am donating on behalf of a company or organization
+                      </div>
+                    </div>
+                    {isDonationBehalfChecked && (
+                      <div className="self-stretch justify-start items-start gap-4 inline-flex">
+                        <div className="grow shrink basis-0 h-fit rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 inline-flex">
+                          <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
+                            Company/Organization Name
+                          </div>
+                          <div className="self-stretch h-12 bg-white rounded border border-[#C8C8C8] justify-start items-center gap-2 inline-flex">
+                            <div className="grow shrink basis-0 h-full flex-col justify-center items-start inline-flex">
+                              <div className="justify-start items-center inline-flex w-full h-full">
+                                <div className="w-full h-full">
+                                  <input
+                                    type="text"
+                                    id="companyName"
+                                    placeholder=""
+                                    className={`text-[#444746] w-full h-full pl-2 rounded-[4px] text-base font-normal font-dmsans leading-normal tracking-wide border-none ring-1 ring-inset ${
+                                      error.companyNameError !== ""
+                                        ? "ring-red-500"
+                                        : "ring-gray-100"
+                                    }`}
+                                    ref={companyNameError}
+                                    onChange={handleCompanyNametInputChange}
+                                  ></input>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          {error.companyNameError && (
+                            <div className="inline-flex items-center">
+                              <img src={errorImg} className="w-3 h-3" />
+                              <p className="text-red-600 text-xs ml-1">
+                                {error.companyNameError}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                    <div className="self-stretch justify-start items-start gap-4 inline-flex">
+                      <div className="grow shrink basis-0 h-fit rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 inline-flex">
+                        <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
+                          First Name
+                        </div>
+                        <div className="self-stretch h-12 bg-white rounded border border-[#C8C8C8] justify-start items-center gap-2 inline-flex">
+                          <div className="grow shrink basis-0 h-full flex-col justify-center items-start inline-flex">
+                            <div className="justify-start items-center inline-flex w-full h-full">
+                              <div className="w-full h-full">
+                                <input
+                                  type="text"
+                                  id="firstName"
+                                  placeholder=""
+                                  className={`text-[#444746] w-full h-full pl-2 rounded-[4px] text-base font-normal font-dmsans leading-normal tracking-wide border-none ring-1 ring-inset ${
+                                    error.firstNameError !== ""
+                                      ? "ring-red-500"
+                                      : "ring-gray-100"
+                                  }`}
+                                  ref={firstNameError}
+                                  onChange={handleFirstNametInputChange}
+                                ></input>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {error.firstNameError && (
+                          <div className="inline-flex items-center">
+                            <img src={errorImg} className="w-3 h-3" />
+                            <p className="text-red-600 text-xs ml-1">
+                              {error.firstNameError}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="grow shrink basis-0 h-fit rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 inline-flex">
+                        <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
+                          Last Name
+                        </div>
+                        <div className="self-stretch h-12 bg-white rounded border border-[#C8C8C8] justify-start items-center gap-2 inline-flex">
+                          <div className="grow shrink basis-0 h-full flex-col justify-center items-start inline-flex">
+                            <div className="justify-start items-center inline-flex w-full h-full">
+                              <div className="w-full h-full">
+                                <input
+                                  type="text"
+                                  id="lastName"
+                                  placeholder=""
+                                  className={`text-[#444746] w-full h-full pl-2 rounded-[4px] text-base font-normal font-dmsans leading-normal tracking-wide border-none ring-1 ring-inset ${
+                                    error.lastNameError !== ""
+                                      ? "ring-red-500"
+                                      : "ring-gray-100"
+                                  } `}
+                                  ref={lastNameError}
+                                  onChange={handleLastNametInputChange}
+                                ></input>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {error.lastNameError && (
+                          <div className="inline-flex items-center">
+                            <img src={errorImg} className="w-3 h-3" />
+                            <p className="text-red-600 text-xs ml-1">
+                              {error.lastNameError}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="self-stretch h-fit rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex">
+                      <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
+                        Street Address
+                      </div>
+                      <div className="self-stretch h-12 bg-white rounded border border-[#C8C8C8] justify-start items-center gap-2 inline-flex">
+                        <div className="grow shrink basis-0 h-full flex-col justify-center items-start inline-flex">
+                          <div className="justify-start items-center inline-flex w-full h-full">
+                            <div className="w-full h-full">
+                              <input
+                                type="text"
+                                id="streetAddress"
+                                placeholder=""
+                                className={`text-[#444746] w-full h-full pl-2 rounded-[4px] text-base font-normal font-dmsans leading-normal tracking-wide border-none ring-1 ring-inset ${
+                                  error.streetAddressError !== ""
+                                    ? "ring-red-500"
+                                    : "ring-gray-100"
+                                } `}
+                                ref={streetAddressError}
+                                onChange={handleStreetAddressInputChange}
+                              ></input>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      {error.streetAddressError && (
+                        <div className="inline-flex items-center">
+                          <img src={errorImg} className="w-3 h-3" />
+                          <p className="text-red-600 text-xs ml-1">
+                            {error.streetAddressError}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                    <div className="self-stretch h-fit rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex">
+                      <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
+                        Country
+                      </div>
+                      <div className="self-stretch h-12 bg-white rounded border border-[#C8C8C8] justify-start items-center gap-2 inline-flex w-full">
+                        {/* <div className="grow shrink basis-0 h-full flex-col justify-center items-start inline-flex w-full"> */}
+                        {/* <div className="justify-start items-center inline-flex h-full w-full"> */}
+                        <div className="self-stretch h-full border-collapse w-full">
+                          {/* <div className="h-full inline-flex w-full"> */}
+                          <select
+                            className="text-zinc-900  w-full h-full px-4 rounded-[4px] text-[14px] font-normal font-dmsans leading-normal tracking-wide"
+                            defaultValue=""
+                          >
+                            <option value="" disabled>
+                              Select Country
+                            </option>
+                            <option value="option1">Option 1</option>
+                            <option value="option2">Option 2</option>
+                            <option value="option3">Option 3</option>
+                          </select>
+                          {/* </div> */}
+                        </div>
+                        {/* </div> */}
+                        {/* </div> */}
+                      </div>
+                    </div>
+                    <div className="self-stretch justify-start items-start gap-4 inline-flex">
+                      <div className="grow shrink basis-0 rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 inline-flex">
+                        <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
+                          City
+                        </div>
+                        <div className="self-stretch h-12 bg-white rounded border border-[#C8C8C8] justify-start items-center gap-2 inline-flex w-full">
+                          {/* <div className="grow shrink basis-0 h-full flex-col justify-center items-start inline-flex w-full"> */}
+                          {/* <div className="justify-start items-center inline-flex h-full w-full"> */}
+                          <div className="self-stretch h-full border-collapse w-full">
+                            {/* <div className="h-full inline-flex w-full"> */}
+                            <select
+                              className="text-zinc-900  w-full h-full px-4 rounded-[4px] text-[14px] font-normal font-dmsans leading-normal tracking-wide"
+                              defaultValue=""
+                            >
+                              <option value="" disabled>
+                                Select City
+                              </option>
+                              <option value="option1">Option 1</option>
+                              <option value="option2">Option 2</option>
+                              <option value="option3">Option 3</option>
+                            </select>
+                            {/* </div> */}
+                          </div>
+                          {/* </div> */}
+                          {/* </div> */}
+                        </div>
+                      </div>
+                      <div className="grow shrink basis-0 rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 inline-flex">
+                        <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
+                          State
+                        </div>
+                        <div className="self-stretch h-12 bg-white rounded border border-[#C8C8C8] justify-start items-center gap-2 inline-flex w-full">
+                          {/* <div className="grow shrink basis-0 h-full flex-col justify-center items-start inline-flex w-full"> */}
+                          {/* <div className="justify-start items-center inline-flex h-full w-full"> */}
+                          <div className="self-stretch h-full border-collapse w-full">
+                            {/* <div className="h-full inline-flex w-full"> */}
+                            <select
+                              className="text-zinc-900  w-full h-full px-4 rounded-[4px] text-[14px] font-normal font-dmsans leading-normal tracking-wide"
+                              defaultValue=""
+                            >
+                              <option value="" disabled>
+                                Select State
+                              </option>
+                              <option value="option1">Option 1</option>
+                              <option value="option2">Option 2</option>
+                              <option value="option3">Option 3</option>
+                            </select>
+                            {/* </div> */}
+                          </div>
+                          {/* </div> */}
+                          {/* </div> */}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="self-stretch justify-start items-start gap-4 inline-flex">
+                      <div className="grow shrink basis-0 rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 inline-flex">
+                        <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
+                          Zip/Postal Code
+                        </div>
+                        <div className="self-stretch h-12 bg-white rounded border border-[#C8C8C8] justify-start items-center gap-2 inline-flex">
+                          <div className="grow shrink basis-0 h-full flex-col justify-center items-start inline-flex">
+                            <div className="justify-start items-center inline-flex w-full h-full">
+                              <div className="w-full h-full">
+                                <input
+                                  type="number"
+                                  id="zipCode"
+                                  placeholder=""
+                                  className={`text-[#444746] w-full h-full pl-2 rounded-[4px] text-base font-normal font-dmsans leading-normal tracking-wide border-none ring-1 ring-inset ${
+                                    error.zipCodeError !== ""
+                                      ? "ring-red-500"
+                                      : "ring-gray-100"
+                                  } `}
+                                  onChange={handleZipCodeInputChange}
+                                ></input>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {error.zipCodeError && (
+                          <div className="inline-flex items-center">
+                            <img src={errorImg} className="w-3 h-3" />
+                            <p className="text-red-600 text-xs ml-1">
+                              {error.zipCodeError}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                      <div className="grow shrink basis-0 rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 inline-flex">
+                        <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
+                          Contact (Phone, Email)
+                        </div>
+                        <div className="self-stretch h-12 bg-white rounded border border-[#C8C8C8] justify-start items-center gap-2 inline-flex">
+                          <div className="grow shrink basis-0 h-full flex-col justify-center items-start inline-flex">
+                            <div className="justify-start items-center inline-flex w-full h-full">
+                              <div className="w-full h-full">
+                                <input
+                                  type="text"
+                                  id="contactInfo"
+                                  placeholder=""
+                                  className={`text-[#444746] w-full h-full pl-2 rounded-[4px] text-base font-normal font-dmsans leading-normal tracking-wide border-none ring-1 ring-inset ${
+                                    error.contactError !== ""
+                                      ? "ring-red-500"
+                                      : "ring-gray-100"
+                                  }`}
+                                  onChange={handleContactInputChange}
+                                ></input>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {error.contactError && (
+                          <div className="inline-flex items-center">
+                            <img src={errorImg} className="w-3 h-3" />
+                            <p className="text-red-600 text-xs ml-1">
+                              {error.contactError}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="self-stretch h-fit flex-col justify-start items-start gap-4 flex">
+                    <div className="self-stretch text-black text-[22px] font-bold font-dmsans leading-7">
+                      Payment Information
+                    </div>
+                    <div className="self-stretch justify-start items-start gap-4 inline-flex">
+                      <div className="grow shrink basis-0 h-fit rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 inline-flex">
+                        <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
+                          Card Number
+                        </div>
+                        <div className="self-stretch h-12 bg-white rounded border border-[#C8C8C8] justify-start items-center gap-2 inline-flex">
+                          <div className="grow shrink basis-0 h-full flex-col justify-center items-start inline-flex">
+                            <div className="justify-start items-center inline-flex w-full h-full">
+                              <div className="w-full h-full">
+                                <input
+                                  type="number"
+                                  id="cardNumber"
+                                  placeholder=""
+                                  className={`text-[#444746] w-full h-full pl-2 rounded-[4px] text-base font-normal font-dmsans leading-normal tracking-wide border-none ring-1 ring-inset ${
+                                    error.cardNumberError !== ""
+                                      ? "ring-red-500"
+                                      : "ring-gray-100"
+                                  }`}
+                                  onChange={handleCardNumberInputChange}
+                                ></input>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {error.cardNumberError && (
+                          <div className="inline-flex items-center">
+                            <img src={errorImg} className="w-3 h-3" />
+                            <p className="text-red-600 text-xs ml-1">
+                              {error.cardNumberError}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="self-stretch justify-start items-start gap-4 inline-flex">
+                      <div className="grow shrink basis-0 rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 inline-flex">
+                        <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
+                          Expiration Date
+                        </div>
+                        <div className="self-stretch h-12 bg-white rounded border border-[#C8C8C8] justify-start items-center gap-2 inline-flex">
+                          <div className="grow shrink basis-0 h-full flex-col justify-center items-start inline-flex">
+                            <div className="justify-start items-center inline-flex w-full h-full">
+                              <div className="w-full h-full">
+                                <input
+                                  type="text"
+                                  id="expirationDate"
+                                  placeholder=""
+                                  className={`text-[#444746] w-full h-full pl-2 rounded-[4px] text-base font-normal font-dmsans leading-normal tracking-wide border-none ring-1 ring-inset ${
+                                    error.expirationDateError !== ""
+                                      ? "ring-red-500"
+                                      : "ring-gray-100"
+                                  }`}
+                                  onChange={handleExpirationDateInputChange}
+                                ></input>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="self-stretch h-[18px] text-[#444746] text-xs font-normal font-dmsans leading-[18px] tracking-tight">
+                          Please follow this format: MM/YY
+                        </div>
+                        {error.expirationDateError && (
+                          <div className="inline-flex items-center">
+                            <img src={errorImg} className="w-3 h-3" />
+                            <p className="text-red-600 text-xs ml-1">
+                              {error.expirationDateError}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                      <div className="grow shrink basis-0 rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 inline-flex">
+                        <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
+                          CVV
+                        </div>
+                        <div className="self-stretch h-12 bg-white rounded border border-[#C8C8C8] justify-start items-center gap-2 inline-flex">
+                          <div className="grow shrink basis-0 h-full flex-col justify-center items-start inline-flex">
+                            <div className="justify-start items-center inline-flex w-full h-full">
+                              <div className="w-full h-full">
+                                <input
+                                  type="text"
+                                  id="cvv"
+                                  placeholder=""
+                                  className={`text-[#444746] w-full h-full pl-2 rounded-[4px] text-base font-normal font-dmsans leading-normal tracking-wide border-none ring-1 ring-inset ${
+                                    error.cvvError !== ""
+                                      ? "ring-red-500"
+                                      : "ring-gray-100"
+                                  }`}
+                                  onChange={handleCVVInputChange}
+                                ></input>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="self-stretch h-[18px] text-[#444746] text-xs font-normal font-dmsans leading-[18px] tracking-tight">
+                          3 digit on back of your card
+                        </div>
+                        {error.cvvError && (
+                          <div className="inline-flex items-center">
+                            <img src={errorImg} className="w-3 h-3" />
+                            <p className="text-red-600 text-xs ml-1">
+                              {error.cvvError}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
 
               <div className="justify-start items-start gap-4 inline-flex">
                 <div className="justify-start items-start gap-4 flex">
@@ -408,3 +1276,66 @@ function DonateForm() {
 }
 
 export default DonateForm;
+
+// import React, { useState } from "react";
+
+// function DonateForm() {
+//   const [isChecked, setIsChecked] = useState(false);
+//   const [inputValue, setInputValue] = useState("");
+//   const [error, setError] = useState("");
+
+//   const handleCheckboxChange = () => {
+//     setIsChecked(!isChecked);
+//     if (!isChecked) {
+//       setError("");
+//     }
+//   };
+
+//   const handleInputChange = (e) => {
+//     const value = e.target.value;
+//     setInputValue(value);
+
+//     if (!value.trim()) {
+//       setError("Input cannot be empty");
+//     } else {
+//       setError("");
+//     }
+//   };
+
+//   return (
+//     <div>
+//       <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
+//         <div className="relative flex flex-col items-center ">
+//           <div className="w-full sm:w-[590px] md:w-[750px] lg:w-[930px] mt-32 mb-16 md:mt-40 md:mb-16 lg:mt-48 lg:mb-16 rounded-2xl bg-[#F7F7F7] h-fit">
+//             <div className="w-full h-fit px-8 py-8 md:px-28 md:py-16 lg:px-40 lg:py-24 flex-col justify-start items-start gap-16 inline-flex">
+//               <label>
+//                 <input
+//                   type="checkbox"
+//                   checked={isChecked}
+//                   onChange={handleCheckboxChange}
+//                 />
+//                 Checkbox
+//               </label>
+
+//               {isChecked && (
+//                 <div>
+//                   <label>
+//                     Input:
+//                     <input
+//                       type="text"
+//                       value={inputValue}
+//                       onChange={handleInputChange}
+//                     />
+//                   </label>
+//                   {error && <div style={{ color: "red" }}>{error}</div>}
+//                 </div>
+//               )}
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default DonateForm;
