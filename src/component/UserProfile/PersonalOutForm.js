@@ -718,14 +718,14 @@ function PersonalOutForm() {
                   </div>
                 </div>
                 {/*  */}
-                {success && (
+                {/*success && (
                   // <div className="justify-start items-start gap-4 inline-flex">
                   //   <div className="justify-start items-start gap-4 flex">
                   //     Success!
                   //   </div>
                   // </div>
                   <ConfirmationModal isOpen={true} />
-                )}
+                )*/}
               </div>
             </div>
           </div>

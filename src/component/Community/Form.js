@@ -85,6 +85,31 @@ const Form = () => {
     }
   }
 
+  const handleNameChange = (e)=>{
+    updateErrorState("nameError","")
+  }
+  const handleStreetChange = (e)=>{
+    updateErrorState("streetError","")
+  }
+  const handleCityChange = (e)=>{
+    updateErrorState("cityError","")
+  }
+  const handleStateChange = (e)=>{
+    updateErrorState("stateError","")
+  }
+  const handleZipChange = (e)=>{
+    updateErrorState("zipError","")
+  }
+  const handleDateChange = (e)=>{
+    updateErrorState("dateError","")
+  }
+  const handleStimeChange = (e)=>{
+    updateErrorState("stimeError","")
+  }
+  const handleEtimeChange = (e)=>{
+    updateErrorState("etimeError","")
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -194,6 +219,7 @@ const Form = () => {
                 placeholder="Use Location by default for group meetup"
                 id="event-name"
                 ref={nameRef}
+                onChange={handleNameChange}
               />
               {error.nameError && (
                 <div className="inline-flex items-center">
@@ -243,6 +269,7 @@ const Form = () => {
                 placeholder="Street"
                 id="street"
                 ref={streetRef}
+                onChange={handleStreetChange}
               />
               {error.streetError && (
                 <div className="inline-flex items-center">
@@ -261,6 +288,7 @@ const Form = () => {
                 placeholder="City"
                 id="city"
                 ref={cityRef}
+                onChange={handleCityChange}
               />
               {error.CityError && (
                 <div className="inline-flex items-center">
@@ -282,6 +310,7 @@ const Form = () => {
                   placeholder="New York"
                   id="state"
                   ref={stateRef}
+                  onChange={handleStateChange}
                 />
                 {error.stateError && (
                   <div className="inline-flex items-center">
@@ -302,6 +331,7 @@ const Form = () => {
                   placeholder="11201"
                   id="zipcode"
                   ref={zipcodeRef}
+                  onChange={handleZipChange}
                 />
                 {error.zipError && (
                   <div className="inline-flex items-center">
@@ -323,6 +353,7 @@ const Form = () => {
                   }`}
                   id="date"
                   ref={dateRef}
+                  onChange={handleDateChange}
                 />
                 {error.dateError && (
                   <div className="inline-flex items-center">
@@ -347,6 +378,7 @@ const Form = () => {
                   }`}
                   id="start-time"
                   ref={startTimeRef}
+                  onChange={handleStimeChange}
                 />
                 {error.stimeError && (
                   <div className="inline-flex items-center">
@@ -366,6 +398,7 @@ const Form = () => {
                   }`}
                   id="end-time"
                   ref={endTimeRef}
+                  onChange={handleEtimeChange}
                 />
                 {error.etimeError && (
                   <div className="inline-flex items-center">
