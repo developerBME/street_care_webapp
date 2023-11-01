@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-const CreditCardPayment = () => {
+const PaypalPayment = () => {
   const [isDonationBehalfChecked, setIsDonationBehalfChecked] = useState(false);
 
   const handleDonationBehalfCheckboxChange = () => {
@@ -242,14 +242,14 @@ const CreditCardPayment = () => {
         <div className="self-stretch justify-start items-start gap-4 inline-flex">
           <div className="grow shrink basis-0 h-[74px] rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 inline-flex">
             <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
-              Card Number
+              Paypal ID
             </div>
             <div className="self-stretch h-12 bg-white rounded border border-[#C8C8C8] justify-start items-center gap-2 inline-flex">
               <div className="grow shrink basis-0 h-full flex-col justify-center items-start inline-flex">
                 <div className="justify-start items-center inline-flex w-full h-full">
                   <div className="w-full h-full">
                     <input
-                      type="number"
+                      type="text"
                       id="cardNumber"
                       placeholder=""
                       className="text-[#444746] w-full h-full pl-2 rounded-[4px] text-base font-normal font-dmsans leading-normal tracking-wide border-none"
@@ -260,55 +260,9 @@ const CreditCardPayment = () => {
             </div>
           </div>
         </div>
-        <div className="self-stretch justify-start items-start gap-4 inline-flex">
-          <div className="grow shrink basis-0 rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 inline-flex">
-            <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
-              Expiration Date
-            </div>
-            <div className="self-stretch h-12 bg-white rounded border border-[#C8C8C8] justify-start items-center gap-2 inline-flex">
-              <div className="grow shrink basis-0 h-full flex-col justify-center items-start inline-flex">
-                <div className="justify-start items-center inline-flex w-full h-full">
-                  <div className="w-full h-full">
-                    <input
-                      type="text"
-                      id="expirationDate"
-                      placeholder=""
-                      className="text-[#444746] w-full h-full pl-2 rounded-[4px] text-base font-normal font-dmsans leading-normal tracking-wide border-none"
-                    ></input>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="self-stretch h-[18px] text-[#444746] text-xs font-normal font-dmsans leading-[18px] tracking-tight">
-              Please follow this format: MM/YY
-            </div>
-          </div>
-          <div className="grow shrink basis-0 rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 inline-flex">
-            <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
-              CVV
-            </div>
-            <div className="self-stretch h-12 bg-white rounded border border-[#C8C8C8] justify-start items-center gap-2 inline-flex">
-              <div className="grow shrink basis-0 h-full flex-col justify-center items-start inline-flex">
-                <div className="justify-start items-center inline-flex w-full h-full">
-                  <div className="w-full h-full">
-                    <input
-                      type="text"
-                      id="cvv"
-                      placeholder=""
-                      className="text-[#444746] w-full h-full pl-2 rounded-[4px] text-base font-normal font-dmsans leading-normal tracking-wide border-none"
-                    ></input>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="self-stretch h-[18px] text-[#444746] text-xs font-normal font-dmsans leading-[18px] tracking-tight">
-              3 digit on back of your card
-            </div>
-          </div>
-        </div>
       </div>
     </>
   );
 };
 
-export default CreditCardPayment;
+export default PaypalPayment;

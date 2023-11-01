@@ -39,6 +39,16 @@ function CommOutForm() {
     outreachError: "",
   });
 
+  const handleNumChange = (e) => {
+    updateErrorState("numberHelpedError", "");
+  };
+  const handleItemQtyChange = (e) => {
+    updateErrorState("itemQtyError", "");
+  };
+  const handleOutreachChange = (e) => {
+    updateErrorState("outreachError", "");
+  };
+
   const updateErrorState = (key, value) => {
     setError((prevState) => ({
       ...prevState, // Clone the current state
@@ -81,6 +91,7 @@ function CommOutForm() {
     } else {
       setItemArray(itemArray.filter((item) => item !== e.target.value));
     }
+    updateErrorState("checkboxesError", "");
   }
 
   const handleSubmit = async (e) => {
@@ -191,6 +202,7 @@ function CommOutForm() {
                           }`}
                           required={true}
                           ref={numberHelped}
+                          onChange={handleNumChange}
                         ></input>
                         {error.numberHelpedError && (
                           <div className="inline-flex items-center">
@@ -226,6 +238,7 @@ function CommOutForm() {
                           }`}
                           defaultValue=""
                           ref={outreachRef}
+                          onChange={handleOutreachChange}
                         >
                           <option value="" disabled>
                             Select Help Request
@@ -480,7 +493,7 @@ function CommOutForm() {
                               : "ring-gray-300"
                           }`}
                           ref={NumberOfItems}
-                          // onChange={(e) => setEmail(e.target.value)}
+                          onChange={handleItemQtyChange}
                         ></input>
                         {error.itemQtyError && (
                           <div className="inline-flex items-center">

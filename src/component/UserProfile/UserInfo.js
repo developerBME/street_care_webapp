@@ -35,6 +35,8 @@ const UserInfo = () => {
   const [donations, setDonations] = useState("");
   const [outreaches, setOutreaches] = useState("");
   const [superpowers, setSuperpowers] = useState([]);
+  const [displayName, setDisplayName] = useState("");
+  const [dateCreated, setDateCreated] = useState("");
 
   const fAuth = getAuth();
   onAuthStateChanged(fAuth, (user) => {
@@ -63,6 +65,8 @@ const UserInfo = () => {
         where("uid", "==", fAuth?.currentUser?.uid)
       );
       const data = await getDocs(userRef);
+      setDisplayName(data.docs[0].data().username)
+      setDateCreated(((data.docs[0].data().dateCreated).toDate().getMonth() + 1) + '/' + (data.docs[0].data().dateCreated).toDate().getDate() + '/' + (data.docs[0].data().dateCreated).toDate().getFullYear());
       setSuperpowers(
         data.docs[0].data().superpowers ? data.docs[0].data().superpowers : []
       );
@@ -122,10 +126,10 @@ const UserInfo = () => {
         <div className="w-[99%] py-4 md:mt-16 lg:mt-20">
           <div className="px-4">
             <h1 className="font-bricolage md:text-[54px] font-medium md:h-16 text-[#212121] h-12 text-4xl">
-              Mandy Klose
+              {displayName}
             </h1>
             <h3 className="py-4 text-[#212121] font-opensans font-medium text-sm pt-0">
-              Joined 12/20/23
+              Joined {dateCreated}
             </h3>
           </div>
 

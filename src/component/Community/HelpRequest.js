@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import wavingHand from "../../images/waving_hand2.png";
 import HelpRequestCard from "./HelpRequestCard";
 import CustomButton from "../Buttons/CustomButton";
+import { formatDate, fetchHelpRequests } from "../HelpRequestService";
 
 const HelpRequest = () => {
   const [visibleItems, setVisibleItems] = useState(5);
@@ -199,6 +200,21 @@ const HelpRequest = () => {
     },
   ];
 
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const eventsData = await fetchHelpRequests();
+      
+      // Sort events in place based on their date
+      eventsData.sort((a, b) => a.createdAt - b.createdAt);
+
+      setEvents(eventsData);
+    };
+
+    fetchData();
+  }, []);
+
   return (
     // <div>
     //   <div className="p-4 lg:px-28 lg:py-12 bg-gradient-to-br from-[#C0F4FF] to-[#DDD] rounded-t-2xl">
@@ -261,11 +277,11 @@ const HelpRequest = () => {
       </div>
       <div className="p-4 lg:px-28 lg:py-12 flex flex-col bg-[#F7F7F7] gap-4 lg:gap-8 rounded-b-2xl">
         <div>
-          {helpRequestData.slice(0, visibleItems).map((item, index) => (
+          {events.slice(0, visibleItems).map((item, index) => (
             <HelpRequestCard key={index} helpRequestCardData={item} />
           ))}
         </div>
-        {visibleItems < helpRequestData.length && (
+        {visibleItems < events.length && (
           <button
             className="w-fit rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 flex text-center text-[#1F0A58] hover:bg-[#1F0A58] hover:text-white text-[13px] font-medium font-dmsans leading-tight self-stretch px-6 py-2.5"
             onClick={loadMore}
