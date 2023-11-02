@@ -29,6 +29,20 @@ function Login() {
   const [error, setError] = useState(null);
   const [loginSuccess, setLoginSuccess] = useState("");
 
+  const [errormsg, setErrors] = useState({
+    PassError: "",
+    UsernameError: "",
+    EmailError: "",
+  }
+  );
+
+  const updateErrorState = (key, value) => {
+    setErrors((prevState) => ({
+      ...prevState, 
+      [key]: value, 
+    }));
+  };
+
   const fAuth = getAuth();
   onAuthStateChanged(fAuth, (user) => {
     // Checks Login status for Redirection
@@ -45,6 +59,21 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!email || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
+      updateErrorState("EmailError", "Email is required!");
+      return;
+    } else if (email){
+      updateErrorState("EmailError", "");
+    }
+    if (!password) {
+      setError("Password is Mandatory");
+      updateErrorState("PassError", "Password is required!");
+      return;
+    } else if (password){
+      updateErrorState("PassError", "");
+    }
+
     try {
       await signInWithEmailAndPassword(auth, email, password);
       setLoginSuccess("Successfully logged in!");
@@ -127,11 +156,16 @@ function Login() {
                           type="email"
                           id="email"
                           placeholder="Enter your email"
-                          className="text-zinc-700 w-full h-full px-4 text-[15px] font-normal font-inter leading-snug"
+                          className={`text-zinc-700 w-full h-full px-4 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
+                            errormsg.EmailError !== ""
+                              ? "ring-red-500"
+                              : "ring-gray-300"
+                          }`}
                           onChange={(e) => setEmail(e.target.value)}
                         ></input>
                       </div>
                     </div>
+                    {errormsg.EmailError && <div className="text-red-700">{errormsg.EmailError}</div>}
                   </div>
                   <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
                     <div className="self-stretch text-zinc-700 text-[15px]  font-semibold font-inter leading-tight">
@@ -143,11 +177,16 @@ function Login() {
                           type="password"
                           id="password"
                           placeholder="Enter your password"
-                          className="text-zinc-700 w-full h-full px-4 text-[15px] font-normal font-inter leading-snug"
+                          className={`text-zinc-700 w-full h-full px-4 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
+                            errormsg.PassError !== ""
+                              ? "ring-red-500"
+                              : "ring-gray-300"
+                          }`}
                           onChange={(e) => setPassword(e.target.value)}
                         ></input>
                       </div>
                     </div>
+                    {errormsg.PassError && <div className="text-red-700">{errormsg.PassError}</div>}
                   </div>
                   <div className="w-fit text-violet-600 text-[15px] font-normal font-inter leading-snug hover:underline cursor-pointer">
                     Forgot your password?

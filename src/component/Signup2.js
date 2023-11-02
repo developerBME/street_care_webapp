@@ -171,8 +171,28 @@ function Signup2() {
   const [password, setPassword] = useState("");
   const [userName, setUserName] = useState("");
   const navigate = useNavigate();
-
   const [error, setError] = useState(null);
+
+//star start
+
+  const [errormsg, setErrors] = useState({
+    PassError: "",
+    UsernameError: "",
+    EmailError: "",
+  }
+  );
+
+  const updateErrorState = (key, value) => {
+    setErrors((prevState) => ({
+      ...prevState, 
+      [key]: value, 
+    }));
+  };
+
+
+
+//star end
+
   const [loginSuccess, setLoginSuccess] = useState("");
 
   // Check if user is already logged in:
@@ -194,15 +214,24 @@ function Signup2() {
     e.preventDefault();
     if (!userName) {
       setError("Username is Mandatory");
+      updateErrorState("UsernameError", "UserName is required!");
       return;
+    } else if (userName){
+      updateErrorState("UsernameError", "");
     }
     if (!email || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
       setError("Enter Valid Email Address");
+      updateErrorState("EmailError", "Email is required!");
       return;
+    } else if (email){
+      updateErrorState("EmailError", "");
     }
     if (!password) {
       setError("Password is Mandatory");
+      updateErrorState("PassError", "Password is required!");
       return;
+    } else if (password){
+      updateErrorState("PassError", "");
     }
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -319,11 +348,16 @@ function Signup2() {
                           type="email"
                           id="email"
                           placeholder="Enter your email"
-                          className="text-zinc-700 w-full h-full px-4 text-[15px] font-normal font-inter leading-snug"
+                          className={`text-zinc-700 w-full h-full px-4 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
+                            errormsg.EmailError !== ""
+                              ? "ring-red-500"
+                              : "ring-gray-300"
+                          }`}
                           onChange={(e) => setEmail(e.target.value)}
                         ></input>
                       </div>
                     </div>
+                    {errormsg.EmailError && <div className="text-red-700">{errormsg.EmailError}</div>}
                   </div>
                   <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
                     <div className="self-stretch text-zinc-700 text-[15px]  font-semibold font-inter leading-tight">
@@ -335,11 +369,17 @@ function Signup2() {
                           type="password"
                           id="password"
                           placeholder="Enter your password"
-                          className="text-zinc-700 w-full h-full px-4 text-[15px] font-normal font-inter leading-snug"
+                          className={`text-zinc-700 w-full h-full px-4 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
+                            errormsg.PassError !== ""
+                              ? "ring-red-500"
+                              : "ring-gray-300"
+                          }`}
                           onChange={(e) => setPassword(e.target.value)}
                         ></input>
+                        
                       </div>
                     </div>
+                    {errormsg.PassError && <div className="text-red-700">{errormsg.PassError}</div>}
                   </div>
                   {/*  */}
                   <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
@@ -352,20 +392,26 @@ function Signup2() {
                           type="text"
                           id="name"
                           placeholder="Enter your profile name"
-                          className="text-zinc-700 w-full h-full px-4 text-[15px] font-normal font-inter leading-snug"
+                          className={`text-zinc-700 w-full h-full px-4 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
+                            errormsg.UsernameError !== ""
+                              ? "ring-red-500"
+                              : "ring-gray-300"
+                          }`}
                           onChange={(e) => setUserName(e.target.value)}
                         ></input>
                       </div>
                     </div>
+                    {errormsg.UsernameError && <div className="text-red-700">{errormsg.UsernameError}</div>}
                   </div>
                 </div>
               </div>
+             
               <div className="self-stretch text-center mt-4 mb-4">
-                {error && <p className="text-red-500">{error}</p>}
+                {error && <p className="text-red-500">{error}</p>}    
                 {loginSuccess && (
                   <p className="text-green-500">{loginSuccess}</p>
                 )}
-              </div>
+              </div> 
               <div className="self-stretch my-14 h-14 flex-col justify-start items-start gap-4 flex">
                 <div className="self-stretch justify-center items-center gap-2.5 inline-flex">
                   <button
