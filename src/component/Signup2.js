@@ -299,6 +299,7 @@ function Signup2() {
                       <FcGoogle size={32} />
                     </div>
                   </div>
+                  {/*
                   <div className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200">
                     <div
                       className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal"
@@ -310,6 +311,7 @@ function Signup2() {
                       <BiLogoFacebookCircle size={32} color=" #0163E0" />
                     </div>
                   </div>
+                  */}
                   <div className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200">
                     <div
                       className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal"

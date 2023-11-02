@@ -31,7 +31,6 @@ function Login() {
 
   const [errormsg, setErrors] = useState({
     PassError: "",
-    UsernameError: "",
     EmailError: "",
   }
   );
@@ -107,17 +106,21 @@ function Login() {
                       <FcGoogle size={32} />
                     </div>
                   </div>
+                  {/*
                   <div className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200">
+                    
                     <div
                       className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal"
                       onClick={handleFacebookSignIn}
                     >
                       <button type="submit">Continue with Facebook</button>
                     </div>
+                    
                     <div className="w-8 h-8 left-[22.50px] top-[12px] absolute">
                       <BiLogoFacebookCircle size={32} color="#0163E0" />
                     </div>
                   </div>
+                  */}
                   <div className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200">
                     <div
                       className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal"
@@ -193,7 +196,9 @@ function Login() {
                   </div>
                 </div>
               </div>
+              
               <div className="justify-start items-center mt-14 gap-4 inline-flex">
+                {/*
                 <div className="w-[18px] h-[18px] relative">
                   <input
                     type="checkbox"
@@ -202,9 +207,11 @@ function Login() {
                     className="w-[18px] h-[18px] left-0 top-0 absolute bg-violet-700 rounded-sm cursor-pointer "
                   ></input>
                 </div>
+                
                 <div className="text-black text-sm font-normal font-open-sans leading-tight">
                   Remember me
                 </div>
+                */}
               </div>
               <div className="self-stretch my-14 h-14 flex-col justify-start items-start gap-4 flex">
                 <div className="self-stretch justify-center items-center gap-2.5 inline-flex">
