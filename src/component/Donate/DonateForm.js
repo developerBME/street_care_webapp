@@ -16,6 +16,8 @@ function DonateForm() {
   const [otherAmount, setOtherAmount] = useState("");
   const [selectedPaymentDiv, setSelectedPaymentDiv] = useState(null);
   const [isDonationBehalfChecked, setIsDonationBehalfChecked] = useState(false);
+  const [isDonationBehalfCheckedPP, setIsDonationBehalfCheckedPP] =
+    useState(false);
 
   const handleFrequencyDivClick = () => {
     setIsFrequencyDivActive((prevState) => !prevState);
@@ -95,10 +97,18 @@ function DonateForm() {
     updateErrorState("cvvError", "");
   };
 
-  const handleFirstNametPPInputChange = (e) => {
+  const handleFirstNametInputChangePP = (e) => {
     updateErrorState("firstNameErrorPP", "");
   };
 
+  const handleDonationBehalfCheckboxChangePP = () => {
+    setIsDonationBehalfCheckedPP((prevState) => !prevState);
+    updateErrorState("companyNameErrorPP", "");
+  };
+
+  const handleCompanyNametInputChangePP = (e) => {
+    updateErrorState("companyNameErrorPP", "");
+  };
   const totalAmount =
     (selectedAmount || 0) + (otherAmount ? parseFloat(otherAmount) : 0);
 
@@ -110,11 +120,15 @@ function DonateForm() {
   const firstNameError = useRef("");
   const lastNameError = useRef("");
   const streetAddressError = useRef("");
+  const countryError = useRef("");
+  const stateError = useRef("");
+  const cityError = useRef("");
   const zipCodeError = useRef("");
   const contactError = useRef("");
   const cardNumberError = useRef("");
   const expirationDateError = useRef("");
   const cvvError = useRef("");
+  const companyNameErrorPP = useRef("");
   const firstNameErrorPP = useRef("");
 
   const [error, setError] = useState({
@@ -125,11 +139,15 @@ function DonateForm() {
     firstNameError: "",
     lastNameError: "",
     streetAddressError: "",
+    countryError: "",
+    stateError: "",
+    cityError: "",
     zipCodeError: "",
     contactError: "",
     cardNumberError: "",
     expirationDateError: "",
     cvvError: "",
+    companyNameErrorPP: "",
     firstNameErrorPP: "",
   });
 
@@ -177,16 +195,6 @@ function DonateForm() {
 
     if (
       selectedPaymentDiv !== null &&
-      selectedPaymentDiv === 1 &&
-      !firstNameError.current.value
-    ) {
-      updateErrorState("firstNameErrorPP", "First Name is required");
-    } else {
-      updateErrorState("firstNameErrorPP", "");
-    }
-
-    if (
-      selectedPaymentDiv !== null &&
       selectedPaymentDiv === 2 &&
       !firstNameError.current.value
     ) {
@@ -213,6 +221,46 @@ function DonateForm() {
       updateErrorState("streetAddressError", "Street Address is required");
     } else {
       updateErrorState("streetAddressError", "");
+    }
+
+    if (
+      selectedPaymentDiv !== null &&
+      selectedPaymentDiv === 2 &&
+      !countryError.current.value
+    ) {
+      updateErrorState("countryError", "Select a country");
+    } else {
+      updateErrorState("countryError", "");
+    }
+
+    if (
+      selectedPaymentDiv !== null &&
+      selectedPaymentDiv === 2 &&
+      !stateError.current.value
+    ) {
+      updateErrorState("stateError", "Select a state");
+    } else {
+      updateErrorState("stateError", "");
+    }
+
+    if (
+      selectedPaymentDiv !== null &&
+      selectedPaymentDiv === 2 &&
+      !countryError.current.value
+    ) {
+      updateErrorState("countryError", "Select a country");
+    } else {
+      updateErrorState("countryError", "");
+    }
+
+    if (
+      selectedPaymentDiv !== null &&
+      selectedPaymentDiv === 2 &&
+      !cityError.current.value
+    ) {
+      updateErrorState("cityError", "Select a city");
+    } else {
+      updateErrorState("cityError", "");
     }
 
     if (
@@ -263,6 +311,30 @@ function DonateForm() {
       updateErrorState("cvvError", "CVV is required");
     } else {
       updateErrorState("cvvError", "");
+    }
+
+    if (
+      selectedPaymentDiv !== null &&
+      selectedPaymentDiv === 1 &&
+      isDonationBehalfCheckedPP &&
+      !companyNameErrorPP.current.value
+    ) {
+      updateErrorState(
+        "companyNameErrorPP",
+        "Company/Organization Name is required"
+      );
+    } else {
+      updateErrorState("companyNameErrorPP", "");
+    }
+
+    if (
+      selectedPaymentDiv !== null &&
+      selectedPaymentDiv === 1 &&
+      !firstNameError.current.value
+    ) {
+      updateErrorState("firstNameErrorPP", "First Name is required");
+    } else {
+      updateErrorState("firstNameErrorPP", "");
     }
   };
 
@@ -576,8 +648,8 @@ function DonateForm() {
                             value="donationbehalf"
                             class="w-[18px] h-[18px] cursor-pointer accent-[#5F36D6]"
                             required=""
-                            checked={isDonationBehalfChecked}
-                            onChange={handleDonationBehalfCheckboxChange}
+                            checked={isDonationBehalfCheckedPP}
+                            onChange={handleDonationBehalfCheckboxChangePP}
                           ></input>
                         </div>
                       </div>
@@ -585,7 +657,7 @@ function DonateForm() {
                         I am donating on behalf of a company or organization
                       </div>
                     </div>
-                    {isDonationBehalfChecked && (
+                    {isDonationBehalfCheckedPP && (
                       <div className="self-stretch justify-start items-start gap-4 inline-flex">
                         <div className="grow shrink basis-0 h-fit rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 inline-flex">
                           <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
@@ -597,14 +669,28 @@ function DonateForm() {
                                 <div className="w-full h-full">
                                   <input
                                     type="text"
-                                    id="companyName"
+                                    id="companyNamePP"
                                     placeholder=""
-                                    className="text-[#444746] w-full h-full pl-2 rounded-[4px] text-base font-normal font-dmsans leading-normal tracking-wide border-none"
+                                    className={`text-[#444746] w-full h-full pl-2 rounded-[4px] text-base font-normal font-dmsans leading-normal tracking-wide border-none ring-1 ring-inset ${
+                                      error.companyNameErrorPP !== ""
+                                        ? "ring-red-500"
+                                        : "ring-gray-100"
+                                    }`}
+                                    onChange={handleCompanyNametInputChangePP}
+                                    ref={companyNameErrorPP}
                                   ></input>
                                 </div>
                               </div>
                             </div>
                           </div>
+                          {error.companyNameErrorPP && (
+                            <div className="inline-flex items-center">
+                              <img src={errorImg} className="w-3 h-3" />
+                              <p className="text-red-600 text-xs ml-1">
+                                {error.companyNameErrorPP}
+                              </p>
+                            </div>
+                          )}
                         </div>
                       </div>
                     )}
@@ -627,7 +713,7 @@ function DonateForm() {
                                       : "ring-gray-100"
                                   }`}
                                   ref={firstNameErrorPP}
-                                  onChange={handleFirstNametPPInputChange}
+                                  onChange={handleFirstNametInputChangePP}
                                 ></input>
                               </div>
                             </div>
@@ -1006,8 +1092,13 @@ function DonateForm() {
                         <div className="self-stretch h-full border-collapse w-full">
                           {/* <div className="h-full inline-flex w-full"> */}
                           <select
-                            className="text-zinc-900  w-full h-full px-4 rounded-[4px] text-[14px] font-normal font-dmsans leading-normal tracking-wide"
+                            className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-[14px] font-normal font-dmsans leading-normal tracking-wide ring-1 ring-inset ${
+                              error.countryError !== ""
+                                ? "ring-red-500"
+                                : "ring-gray-100"
+                            }`}
                             defaultValue=""
+                            ref={countryError}
                           >
                             <option value="" disabled>
                               Select Country
@@ -1021,6 +1112,14 @@ function DonateForm() {
                         {/* </div> */}
                         {/* </div> */}
                       </div>
+                      {error.countryError && (
+                        <div className="inline-flex items-center">
+                          <img src={errorImg} className="w-3 h-3" />
+                          <p className="text-red-600 text-xs ml-1">
+                            {error.countryError}
+                          </p>
+                        </div>
+                      )}
                     </div>
                     <div className="self-stretch justify-start items-start gap-4 inline-flex">
                       <div className="grow shrink basis-0 rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 inline-flex">
@@ -1033,8 +1132,13 @@ function DonateForm() {
                           <div className="self-stretch h-full border-collapse w-full">
                             {/* <div className="h-full inline-flex w-full"> */}
                             <select
-                              className="text-zinc-900  w-full h-full px-4 rounded-[4px] text-[14px] font-normal font-dmsans leading-normal tracking-wide"
+                              className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-[14px] font-normal font-dmsans leading-normal tracking-wide ring-1 ring-inset ${
+                                error.cityError !== ""
+                                  ? "ring-red-500"
+                                  : "ring-gray-100"
+                              }`}
                               defaultValue=""
+                              ref={cityError}
                             >
                               <option value="" disabled>
                                 Select City
@@ -1048,6 +1152,14 @@ function DonateForm() {
                           {/* </div> */}
                           {/* </div> */}
                         </div>
+                        {error.cityError && (
+                          <div className="inline-flex items-center">
+                            <img src={errorImg} className="w-3 h-3" />
+                            <p className="text-red-600 text-xs ml-1">
+                              {error.cityError}
+                            </p>
+                          </div>
+                        )}
                       </div>
                       <div className="grow shrink basis-0 rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 inline-flex">
                         <div className="self-stretch text-[#444746] text-sm font-medium font-dmsans leading-tight">
@@ -1059,8 +1171,13 @@ function DonateForm() {
                           <div className="self-stretch h-full border-collapse w-full">
                             {/* <div className="h-full inline-flex w-full"> */}
                             <select
-                              className="text-zinc-900  w-full h-full px-4 rounded-[4px] text-[14px] font-normal font-dmsans leading-normal tracking-wide"
+                              className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-[14px] font-normal font-dmsans leading-normal tracking-wide ring-1 ring-inset ${
+                                error.stateError !== ""
+                                  ? "ring-red-500"
+                                  : "ring-gray-100"
+                              }`}
                               defaultValue=""
+                              ref={stateError}
                             >
                               <option value="" disabled>
                                 Select State
@@ -1074,6 +1191,14 @@ function DonateForm() {
                           {/* </div> */}
                           {/* </div> */}
                         </div>
+                        {error.stateError && (
+                          <div className="inline-flex items-center">
+                            <img src={errorImg} className="w-3 h-3" />
+                            <p className="text-red-600 text-xs ml-1">
+                              {error.stateError}
+                            </p>
+                          </div>
+                        )}
                       </div>
                     </div>
                     <div className="self-stretch justify-start items-start gap-4 inline-flex">
@@ -1276,66 +1401,3 @@ function DonateForm() {
 }
 
 export default DonateForm;
-
-// import React, { useState } from "react";
-
-// function DonateForm() {
-//   const [isChecked, setIsChecked] = useState(false);
-//   const [inputValue, setInputValue] = useState("");
-//   const [error, setError] = useState("");
-
-//   const handleCheckboxChange = () => {
-//     setIsChecked(!isChecked);
-//     if (!isChecked) {
-//       setError("");
-//     }
-//   };
-
-//   const handleInputChange = (e) => {
-//     const value = e.target.value;
-//     setInputValue(value);
-
-//     if (!value.trim()) {
-//       setError("Input cannot be empty");
-//     } else {
-//       setError("");
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
-//         <div className="relative flex flex-col items-center ">
-//           <div className="w-full sm:w-[590px] md:w-[750px] lg:w-[930px] mt-32 mb-16 md:mt-40 md:mb-16 lg:mt-48 lg:mb-16 rounded-2xl bg-[#F7F7F7] h-fit">
-//             <div className="w-full h-fit px-8 py-8 md:px-28 md:py-16 lg:px-40 lg:py-24 flex-col justify-start items-start gap-16 inline-flex">
-//               <label>
-//                 <input
-//                   type="checkbox"
-//                   checked={isChecked}
-//                   onChange={handleCheckboxChange}
-//                 />
-//                 Checkbox
-//               </label>
-
-//               {isChecked && (
-//                 <div>
-//                   <label>
-//                     Input:
-//                     <input
-//                       type="text"
-//                       value={inputValue}
-//                       onChange={handleInputChange}
-//                     />
-//                   </label>
-//                   {error && <div style={{ color: "red" }}>{error}</div>}
-//                 </div>
-//               )}
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default DonateForm;
