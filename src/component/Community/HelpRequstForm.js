@@ -15,6 +15,7 @@ function HelpRequestForm() {
   const stateRef = useRef("");
   const zipRef = useRef("");
   const idRef = useRef("");
+  const titleRef = useRef("");
   const [clear, setClear] = useState(false);
   const [helpType, setHelpType] = useState([]);
 
@@ -26,6 +27,7 @@ function HelpRequestForm() {
     } else {
       setHelpType(helpType.filter((item) => item !== val));
     }
+    updateErrorState("checkboxesError", "");
   }
 
   const chipList = [
@@ -56,6 +58,7 @@ function HelpRequestForm() {
     stateRef.current.value = "";
     zipRef.current.value = "";
     idRef.current.value = "";
+    titleRef.current.value = "";
     setHelpType([]);
     setClear(true);
   };
@@ -68,10 +71,12 @@ function HelpRequestForm() {
 
   const [error, setError] = useState({
     streetError: "",
-    zipError: "",
-    idError : "",
     cityError:"",
     stateError:"",
+    zipError: "",
+    idError : "",
+    checkboxesError: "",
+    titleError: "",
   });
 
   const updateErrorState = (key, value) => {
@@ -81,32 +86,69 @@ function HelpRequestForm() {
     }));
   };
 
+  
+  const handleTitleChange = (e) => {
+    updateErrorState("titleError", "");
+  };
+  const handleStreetChange = (e) => {
+    updateErrorState("streetError", "");
+  };
+  const handleCityChange = (e) => {
+    updateErrorState("cityError", "");
+  };
+  const handleStateChange = (e) => {
+    updateErrorState("stateError", "");
+  };
+  const handleZipChange = (e) => {
+    updateErrorState("zipError", "");
+  };
+  const handleIDChange = (e) => {
+    updateErrorState("idError", "");
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!titleRef.current.value) {
+      updateErrorState("titleError", "Title is required");
+      setSuccess(false);
+    } else {
+      updateErrorState("titleError", "");
+    }
+    if (helpType == "") {
+      updateErrorState("checkboxesError", "Please provide the kind of help is needed");
+      setSuccess(false);
+    } else {
+      updateErrorState("checkboxesError", "");
+    }
     if (!streetRef.current.value) {
       updateErrorState("streetError", "Street is required");
+      setSuccess(false);
     } else {
       updateErrorState("streetError", "");
     }
     if (!zipRef.current.value) {
       updateErrorState("zipError", "Zipcode is required");
+      setSuccess(false);
     } else {
       updateErrorState("zipError", "");
     }
     if(!cityRef.current.value){
       updateErrorState("cityError","City is required");
+      setSuccess(false);
     }else{
       updateErrorState("cityError","");
     }
     if (!idRef.current.value) {
       updateErrorState("idError", "This field is required");
+      setSuccess(false);
     } else {
       updateErrorState("idError", "");
     }
     if(!stateRef.current.value){
       updateErrorState("stateError","Sate is required");
+      setSuccess(false);
     }else{
       updateErrorState("stateError","")
     }
@@ -169,6 +211,27 @@ function HelpRequestForm() {
                         the community and rally support to help them.
                       </div>
                     </div>
+                    <div className="space-y-1.5">
+                      <div className="text-zinc-700 font-semibold text-[15px] font-['Inter']">
+                        Title
+                      </div>
+                      <input
+                        type="text"
+                        className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${ error.titleError !== "" ? "ring-red-500" : "ring-gray-300" }`}
+                        placeholder="Title"
+                        required
+                        ref={titleRef}
+                        onChange={handleTitleChange}
+                      />
+                    </div>
+                    {error.titleError && (
+                      <div className="inline-flex items-center">
+                        <img src={errorImg} className="w-3 h-3" />
+                        <p className="text-red-600 text-xs">
+                          {error.titleError}
+                        </p>
+                      </div>
+                    )}
                     <div className="text-black font-bold font-bricolage text-sm">
                       What kind of help they need?*
                     </div>
@@ -182,12 +245,12 @@ function HelpRequestForm() {
                         />
                       ))}
                     </div>
-                    {isAtLeastOneChipSelected ? (
-                      ""
-                    ) : (
+                    {error.checkboxesError && (
                       <div className="inline-flex items-center">
                         <img src={errorImg} className="w-3 h-3" />
-                        <div className="text-red-500">Please select at least one option</div>
+                        <p className="text-red-600 text-xs">
+                          {error.checkboxesError}
+                        </p>
                       </div>
                     )}
                     <div className="space-y-1.5">
@@ -217,9 +280,10 @@ function HelpRequestForm() {
                         </p>
                         <input
                           type="text"
-                          className="h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
+                          className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${ error.streetError !== "" ? "ring-red-500" : "ring-gray-300" }`}
                           placeholder="Street"
                           ref={streetRef}
+                          onChange={handleStreetChange}
                         />
                         {error.streetError && (
                           <div className="inline-flex items-center">
@@ -228,16 +292,16 @@ function HelpRequestForm() {
                           </div>
                         )}
                       </div>
-                      
                       <div className="space-y-1.5">
                         <p className="font-semibold font-['Inter'] text-[15px]">
                           City*
                         </p>
                         <input
                           type="text"
-                          className="h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
+                          className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${ error.cityError !== "" ? "ring-red-500" : "ring-gray-300" }`}
                           placeholder="City"
                           ref={cityRef}
+                          onChange={handleCityChange}
                         />
                         {error.cityError && (
                           <div className="inline-flex items-center">
@@ -246,18 +310,18 @@ function HelpRequestForm() {
                           </div>
                         )}
                       </div>
-                      
                     </div>
                     <div className="inline-flex grid grid-cols-2 space-x-4">
-                    <div className="space-y-1.5">
+                      <div className="space-y-1.5">
                         <p className="font-semibold font-['Inter'] text-[15px]">
                           State*
                         </p>
                         <input
                           type="text"
-                          className="h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
+                          className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${ error.stateError !== "" ? "ring-red-500" : "ring-gray-300" }`}
                           placeholder="State"
                           ref={stateRef}
+                          onChange={handleStateChange}
                         />
                         {error.stateError && (
                           <div className="inline-flex items-center">
@@ -272,9 +336,10 @@ function HelpRequestForm() {
                         </p>
                         <input
                           type="text"
-                          className="h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
+                          className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${ error.zipError !== "" ? "ring-red-500" : "ring-gray-300" }`}
                           placeholder="Zipcode"
                           ref={zipRef}
+                          onChange={handleZipChange}
                         />
                         {error.zipError && (
                           <div className="inline-flex items-center">
@@ -291,9 +356,10 @@ function HelpRequestForm() {
                       </div>
                       <input
                         type="text"
-                        className="h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
+                        className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${ error.idError !== "" ? "ring-red-500" : "ring-gray-300" }`}
                         placeholder="Blue Shirt"
                         ref={idRef}
+                        onChange={handleIDChange}
                       />
                       {error.idError && (
                         <div className="inline-flex items-center">

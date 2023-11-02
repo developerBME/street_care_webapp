@@ -3,8 +3,22 @@ import help_announcement from "../../images/help_announcement.png";
 import help_pending from "../../images/help_pending.png";
 import help_received from "../../images/help_received.png";
 import CustomButton from "../Buttons/CustomButton";
+import {
+  getAuth,
+  onAuthStateChanged,
+} from "firebase/auth";
 
 const HelpRequestCard = ({ helpRequestCardData }) => {
+
+  const fAuth = getAuth();
+  onAuthStateChanged(fAuth, (user) => {
+    if (user) {
+      console.log(user);
+    } else {
+      console.log("USER NOT FOUND!");
+    }
+  });
+
   const {
     status : helpStatus,
     title : helpTitle,
@@ -13,7 +27,10 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
     identification : helpHowToFind,
     description : helpDescription,
     userName : helpPostingUser,
+    uid: helpUid,
   } = helpRequestCardData;
+
+
   return (
 
     // Updated
@@ -81,7 +98,7 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
           </div>
 
           <div className="text-[#616161] text-xs font-medium font-dmsans leading-[18px]">
-            Posted 30 mins ago by user {helpPostingUser}
+            Posted 30 mins ago by user {helpPostingUser} || {helpUid} || {fAuth.currentUser.uid}
           </div>
         </div>
 
@@ -100,15 +117,17 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
             <button className="w-fit bg-[#E6DCFF] hover:bg-[#6840E0] text-[#181818] hover:text-white rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight">
               Mark as Help Recieved
             </button>
-            <button className="w-fit bg-[#6840E0] hover:bg-[#E6DCFF] text-white hover:text-[#181818] rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight">
+            {/* <button className="w-fit bg-[#6840E0] hover:bg-[#E6DCFF] text-white hover:text-[#181818] rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight">
               Reopen Help Request
             </button>
-            {/* <div className="w-fit flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight">
-              <CustomButton label="Mark as Help Received" name="buttonlight" />
-            </div>
             <div className="w-fit flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight">
-              <CustomButton label="Reopen Help Request" name="button" />
+              <CustomButton label="Mark as Help Received" name="buttonlight" />
             </div> */}
+            {helpUid === fAuth.currentUser.uid && (
+            <div className="w-fit flex-col justify-start gap-2 flex text-center text-[12px] font-semibold font-inter leading-tight">
+              <CustomButton label="Reopen Help Request" name="buttonborder" />
+            </div>
+            )}
           </div>
         )}
       </div>

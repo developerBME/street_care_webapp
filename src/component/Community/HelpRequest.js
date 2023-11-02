@@ -3,8 +3,10 @@ import wavingHand from "../../images/waving_hand2.png";
 import HelpRequestCard from "./HelpRequestCard";
 import CustomButton from "../Buttons/CustomButton";
 import { formatDate, fetchHelpRequests } from "../HelpRequestService";
+import { Link, useNavigate } from "react-router-dom";
 
 const HelpRequest = () => {
+  const navigate = useNavigate();
   const [visibleItems, setVisibleItems] = useState(5);
 
   const loadMore = () => {
@@ -271,7 +273,7 @@ const HelpRequest = () => {
             Add New Request
           </button> */}
           <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-medium font-dmsans leading-tight self-stretch">
-            <CustomButton label="Add New Request" name="buttondefault" />
+            <CustomButton label="Add New Request" name="buttondefault" onClick={() => {navigate("/helpRequestForm");}} />
           </div>
         </div>
       </div>
