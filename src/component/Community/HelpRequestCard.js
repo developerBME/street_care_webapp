@@ -28,7 +28,20 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
     description : helpDescription,
     userName : helpPostingUser,
     uid: helpUid,
+    createdAt: createdAt,
   } = helpRequestCardData;
+
+  const currentTimestamp = new Date().getTime();
+  const timeDifference = currentTimestamp - Date.parse(createdAt);
+  // Convert the time difference to seconds, minutes, hours, and days
+  const seconds = Math.floor(timeDifference / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  // Calculate the remaining hours, minutes, and seconds
+  const remainingHours = hours % 24;
+  const remainingMinutes = minutes % 60;
+  const remainingSeconds = seconds % 60;
 
 
   return (
@@ -98,7 +111,16 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
           </div>
 
           <div className="text-[#616161] text-xs font-medium font-dmsans leading-[18px]">
-            Posted 30 mins ago by user {helpPostingUser} || {helpUid} || {fAuth.currentUser.uid}
+            Posted 
+            {days > 0 ? (
+              <span> {days} {days === 1 ? 'day' : 'days'}</span>
+            ) : remainingHours > 0 ? (
+              <span> {remainingHours} {remainingHours === 1 ? 'hour' : 'hours'}</span>
+            ) : remainingMinutes > 0 ? (
+              <span> {remainingMinutes} {remainingMinutes === 1 ? 'minute' : 'minutes'}</span>
+            ) : (
+              <span> {remainingSeconds} {remainingSeconds === 1 ? 'second' : 'seconds'}</span>
+            )} ago by user {helpPostingUser}
           </div>
         </div>
 

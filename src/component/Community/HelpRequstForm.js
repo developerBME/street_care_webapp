@@ -5,9 +5,11 @@ import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import arrowBack from "../../images/arrowBack.png";
 import arrowDown from "../../images/arrowDown.png";
-import errorImg from "../../images/error.png"
+import errorImg from "../../images/error.png";
+import { useNavigate } from "react-router-dom";
 
 function HelpRequestForm() {
+  const navigate = useNavigate();
   const [success, setSuccess] = useState(false);
   const addDescRef = useRef("");
   const streetRef = useRef("");
@@ -187,7 +189,7 @@ function HelpRequestForm() {
           <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-32 rounded-2xl text-black ">
             <div className="inline-flex pl-3 lg:pl-40 cursor-pointer pb-[19px]">
               <img src={arrowBack} />
-              <p className="font-semibold font-bricolage text-[22px]">
+              <p className="font-semibold font-bricolage text-[22px]" onClick={() => {navigate("/community");}}>
                 Return to Profile
               </p>
             </div>

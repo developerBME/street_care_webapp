@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const HelpRequest = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
   const [visibleItems, setVisibleItems] = useState(5);
 
   const loadMore = () => {
@@ -217,6 +218,15 @@ const HelpRequest = () => {
     fetchData();
   }, []);
 
+  // Simulate an API call or data loading
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000); // Simulate a 3-second loading time (adjust as needed)
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     // <div>
     //   <div className="p-4 lg:px-28 lg:py-12 bg-gradient-to-br from-[#C0F4FF] to-[#DDD] rounded-t-2xl">
@@ -277,6 +287,18 @@ const HelpRequest = () => {
           </div>
         </div>
       </div>
+
+      {isLoading ? (
+        <div role="status" class=" animate-pulse p-12">
+          <div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-[30%] mb-4"></div>
+          <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 w-fit mb-2.5"></div>
+          <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 w-[90%] mb-2.5"></div>
+          <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 w-[80%] mb-2.5"></div>
+          <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 w-[90%] mb-2.5"></div>
+          <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 w-[70%]"></div>
+          <span class="sr-only">Loading...</span>
+      </div>
+      ) : (
       <div className="p-4 lg:px-28 lg:py-12 flex flex-col bg-[#F7F7F7] gap-4 lg:gap-8 rounded-b-2xl">
         <div>
           {events.slice(0, visibleItems).map((item, index) => (
@@ -292,6 +314,7 @@ const HelpRequest = () => {
           </button>
         )}
       </div>
+      )}
     </div>
   );
 };
