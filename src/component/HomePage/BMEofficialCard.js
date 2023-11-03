@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 {/* Vedant */}
 const BMEofficialCard = ({BMEcardData}) => {
 
-  const { id, label, title, eventDate, location, totalSlots, interests, img, nop} = BMEcardData
+  const { id, label, title, eventDate, location, totalSlots, interests, img, nop} = BMEcardData;
   const navigate = useNavigate();
   const [label2, setLabel2] = useState(label);
   return (
