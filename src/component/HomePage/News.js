@@ -10,7 +10,7 @@ const News = ({NewsCardData}) => {
           className="flex max-w-2xl flex-col items-start justify-normal border-t-4 border-[#6840E0] bg-white h-full "
         >
           <div className="h-full">
-            <h1 className="text-[#212121] text-xl pt-4 pb-2 px-2 font-bricolage font-medium">
+            <h1 className="text-[#1f1e1e] text-xl pt-4 pb-2 px-2 font-bricolage font-medium">
               {NewsTitle}
             </h1>
             <h3 className="text-[#212121] text-xs py-1 px-2 font-opensans font-normal">
