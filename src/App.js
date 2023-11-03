@@ -7,7 +7,7 @@ import Footer from "./component/Footer";
 import Login from "./component/Login";
 import Profile from "./component/UserProfile/Profile";
 import Signup2 from "./component/Signup2";
-import HowToHelp from "./component/HowToHelp";
+import HowToHelp from "./component/HowtoHelp/HowToHelp";
 import Community from "./component/Community/Community";
 import About from "./component/About/About";
 import Contact from "./component/Contact/Contact";
@@ -40,7 +40,7 @@ function App() {
     }
   });
   return (
-    <div>
+    <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <Router>
         <ScrollToTop />
         <NavBar loggedIn={loggedIn} />
