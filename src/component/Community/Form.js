@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 import Chip from "../Community/Chip";
 import arrowDown from "../../images/arrowDown.png";
@@ -6,6 +6,11 @@ import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import errorImg from "../../images/error.png";
+import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from 'react-datepicker';
+import { Timestamp } from 'firebase/firestore';
+
+
 
 const chipList = [
   "Clothing",
@@ -26,29 +31,45 @@ const chipList = [
   "Pet Care",
 ];
 
+const CustomInput = ({ value, onClick, onChange, id, className }) => (
+  <div>
+    <input
+      type="text"
+      onClick={onClick}
+      onChange={onChange}
+      value={value}
+      id={id}
+      className={className}
+    />
+  </div>
+);
+
+
 const Form = () => {
   const [success, setSuccess] = useState(false);
   const nameRef = useRef("");
   const descRef = useRef("");
   const maxCapRef = useRef("");
   const streetRef = useRef("");
+  const cityRef = useRef("");
   const stateRef = useRef("");
   const zipcodeRef = useRef("");
-  const dateRef = useRef("");
+  const helpRef = useRef("");
   const startTimeRef = useRef("");
   const endTimeRef = useRef("");
-  const cityRef = useRef("");
   const [helpType, setHelpType] = useState([]);
   const [clear, setClear] = useState(false);
 
   const [error, setError] = useState({
     nameError: "",
     streetError: "",
+    cityError: "",
     stateError: "",
     zipError: "",
     dateError: "",
     stimeError: "",
     etimeError: "",
+    helpError: ""
   });
 
   //
@@ -63,15 +84,17 @@ const Form = () => {
   };
 
   const clearFields = () => {
-    dateRef.current.value = "";
-    startTimeRef.current.value = "";
-    endTimeRef.current.value = "";
+    //dateRef.current.value = "";
+    setStartDate(null);
+    setEndDate(null);
     stateRef.current.value = "";
     nameRef.current.value = "";
     descRef.current.value = "";
     maxCapRef.current.value = "";
     streetRef.current.value = "";
+    cityRef.current.value = "";
     zipcodeRef.current.value = "";
+    helpRef.current.value = "";
     setHelpType([]);
     setClear(true);
   };
@@ -84,6 +107,57 @@ const Form = () => {
       setHelpType(helpType.filter((item) => item !== val));
     }
   }
+  const [shouldSubmit, setShouldSubmit] = useState(false);
+
+  useEffect(() => {
+    const submitForm = async () => {
+      const hasErrors = Object.values(error).some(errorMessage => errorMessage !== "");
+  
+      if (hasErrors) {
+        console.log("There are errors in the form");
+        setShouldSubmit(false); // Reset the submission flag
+      } else {
+        // Proceed with form submission logic
+        try {
+          let obj = {
+            uid: fAuth.currentUser.uid,
+            title: nameRef.current.value,
+            description: descRef.current.value,
+            eventDate: Timestamp.fromDate(startDate),
+            eventEndTime: Timestamp.fromDate(endDate),
+            eventStartTime: Timestamp.fromDate(startDate),
+            totalSlots: maxCapRef.current.value,
+            location: {
+              street: streetRef.current.value,
+              city: cityRef.current.value,
+              state: stateRef.current.value,
+              zipcode: zipcodeRef.current.value,
+            },
+            helpType:helpRef.current.value,
+            skills: helpType,
+            createdAt: Date(),
+            interests: 0,
+            participants: [],
+            approved: false,
+          };
+          const eventRef = collection(db, "outreachEvents");
+          const docRef = await addDoc(eventRef, obj);
+          if (docRef.id) {
+            console.log(docRef.id);
+            setSuccess(true);
+            clearFields();
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    };
+  
+    if (shouldSubmit) {
+      submitForm();
+    }
+  }, [shouldSubmit, error]);
+    
 
   const handleNameChange = (e)=>{
     updateErrorState("nameError","")
@@ -100,8 +174,8 @@ const Form = () => {
   const handleZipChange = (e)=>{
     updateErrorState("zipError","")
   }
-  const handleDateChange = (e)=>{
-    updateErrorState("dateError","")
+  const handleHelpChange = (e)=>{
+    updateErrorState("helpError","")
   }
   const handleStimeChange = (e)=>{
     updateErrorState("stimeError","")
@@ -112,6 +186,8 @@ const Form = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setShouldSubmit(true); 
+
 
     // Form Validation Start
     if (!nameRef.current.value) {
@@ -144,57 +220,29 @@ const Form = () => {
       updateErrorState("zipError", "");
     }
 
-    if (!dateRef.current.value) {
-      updateErrorState("dateError", "Date is required");
-    } else {
-      updateErrorState("dateError", "");
-    }
-
-    if (!startTimeRef.current.value) {
+    if (!startDate) {
       updateErrorState("stimeError", "Start Time is required");
     } else {
       updateErrorState("stimeError", "");
     }
 
-    if (!endTimeRef.current.value) {
+    if (!endDate) {
       updateErrorState("etimeError", "End Time is required");
     } else {
-      updateErrorState("eTimeerror", "");
+      updateErrorState("etimeError", "");
     }
 
-    let obj = {
-      uid: fAuth.currentUser.uid,
-      title: nameRef.current.value,
-      description: descRef.current.value,
-      eventDate: dateRef.current.value,
-      eventEndTime: startTimeRef.current.value,
-      eventStartTime: endTimeRef.current.value,
-      totalSlots: maxCapRef.current.value,
-      location: {
-        street: streetRef.current.value,
-        city: cityRef.current.value,
-        state: stateRef.current.value,
-        zipcode: zipcodeRef.current.value,
-      },
-      skills: helpType,
-      createdAt: Date(),
-      interests: 0,
-      participants: [],
-      approved: false,
-    };
-
-    try {
-      const eventRef = collection(db, "outreachEvents");
-      const docRef = await addDoc(eventRef, obj);
-      if (docRef.id) {
-        console.log(docRef.id);
-        setSuccess(true);
-        clearFields();
-      }
-    } catch (e) {
-      console.log(e);
+    if (!helpRef.current.value) {
+      updateErrorState("helpError", "Help Type is required");
+    } else {
+      updateErrorState("helpError", "");
     }
+
   };
+
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
+
 
   return (
     <div >
@@ -283,17 +331,17 @@ const Form = () => {
               <input
                 type="text"
                 className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
-                  error.streetError !== "" ? "ring-red-500" : "ring-gray-300"
+                  error.cityError !== "" ? "ring-red-500" : "ring-gray-300"
                 }`}
                 placeholder="City"
                 id="city"
                 ref={cityRef}
                 onChange={handleCityChange}
               />
-              {error.CityError && (
+              {error.cityError && (
                 <div className="inline-flex items-center">
                   <img src={errorImg} className="w-3 h-3" />
-                  <p className="text-red-600 text-xs">{error.CityError}</p>
+                  <p className="text-red-600 text-xs">{error.cityError}</p>
                 </div>
               )}
             </div>
@@ -344,41 +392,23 @@ const Form = () => {
             <div>
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
-                  Date*
+                  Start DateTime*
                 </p>
-                <input
-                  type="date"
-                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
-                    error.dateError !== "" ? "ring-red-500" : "ring-gray-300"
-                  }`}
-                  id="date"
-                  ref={dateRef}
-                  onChange={handleDateChange}
-                />
-                {error.dateError && (
-                  <div className="inline-flex items-center">
-                    <img src={errorImg} className="w-3 h-3" />
-                    <p className="text-red-600 text-xs">{error.dateError}</p>
-                  </div>
-                )}
-                <p className="font-normal font-['Inter'] text-xs">
-                  Please follow the format mm/dd/yyyy
-                </p>
-              </div>
-            </div>
-            <div className="inline-flex space-x-4 grid grid-cols-2">
-              <div className="space-y-1.5">
-                <p className="font-semibold font-['Inter'] text-[15px]">
-                  Start Time*
-                </p>
-                <input
-                  type="time"
-                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
-                    error.stimeError !== "" ? "ring-red-500" : "ring-gray-300"
-                  }`}
-                  id="start-time"
-                  ref={startTimeRef}
-                  onChange={handleStimeChange}
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => {setStartDate(date); handleStimeChange(date)}}
+                  showTimeSelect
+                  timeFormat="HH:mm"
+                  timeIntervals={15}
+                  dateFormat="Pp"
+                  customInput={
+                    <CustomInput
+                      id="date"
+                      className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${error.stimeError !== "" ? "ring-red-500" : "ring-gray-300"
+                        }`}
+                      ref={startTimeRef}
+                    />
+                  }
                 />
                 {error.stimeError && (
                   <div className="inline-flex items-center">
@@ -386,19 +416,31 @@ const Form = () => {
                     <p className="text-red-600 text-xs">{error.stimeError}</p>
                   </div>
                 )}
+                {/* <p className="font-normal font-['Inter'] text-xs">
+                  Please follow the format mm/dd/yyyy
+                </p> */}
               </div>
+            </div>
+            <div>
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
-                  End Time*
+                  End DateTime*
                 </p>
-                <input
-                  type="time"
-                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
-                    error.nameError !== "" ? "ring-red-500" : "ring-gray-300"
-                  }`}
-                  id="end-time"
-                  ref={endTimeRef}
-                  onChange={handleEtimeChange}
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date) => {setEndDate(date); handleEtimeChange(date)}}
+                  showTimeSelect
+                  timeFormat="HH:mm"
+                  timeIntervals={15}
+                  dateFormat="Pp"
+                  customInput={
+                    <CustomInput
+                      id="date"
+                      className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${error.etimeError !== "" ? "ring-red-500" : "ring-gray-300"
+                        }`}
+                      ref={endTimeRef}
+                    />
+                  }
                 />
                 {error.etimeError && (
                   <div className="inline-flex items-center">
@@ -406,6 +448,9 @@ const Form = () => {
                     <p className="text-red-600 text-xs">{error.etimeError}</p>
                   </div>
                 )}
+                {/* <p className="font-normal font-['Inter'] text-xs">
+                  Please follow the format mm/dd/yyyy
+                </p> */}
               </div>
             </div>
           </div>
@@ -415,7 +460,7 @@ const Form = () => {
             What kind of help they need?
           </div>
           <div className="space-y-1.5 relative">
-            <p className="font-semibold font-['Inter'] text-[15px]">
+            {/* <p className="font-semibold font-['Inter'] text-[15px]">
               Is this Event related to any Help Request?
             </p>
             <select
@@ -431,9 +476,27 @@ const Form = () => {
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 pt-5 text-gray-700">
               <img src={arrowDown} />
-            </div>
+            </div> */}
+             <p className="font-semibold font-['Inter'] text-[15px]">
+              Help Type Required*
+            </p>
+            <input
+                type="text"
+                className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset  ${
+                  error.helpError !== "" ? "ring-red-500" : "ring-gray-300"
+                }`}
+                placeholder="Eg. Children Specialist Needed"
+                id="help-type"
+                ref={helpRef}
+                onChange={handleHelpChange}
+              />
+              {error.helpError && (
+                <div className="inline-flex items-center">
+                  <img src={errorImg} className="w-3 h-3" />
+                  <p className="text-red-600 text-xs">{error.helpError}</p>
+                </div>
+              )}
           </div>
-
           <div className="font-semibold font-bricolage text-[15px]">
             Select skills it would require to provide the help
           </div>

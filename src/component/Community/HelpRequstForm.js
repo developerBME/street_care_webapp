@@ -159,6 +159,7 @@ function HelpRequestForm() {
       uid: fAuth.currentUser.uid,
       description: addDescRef.current.value,
       identification: idRef.current.value,
+      title:titleRef.current.value,
       location: {
         street: streetRef.current.value,
         city: cityRef.current.value,
@@ -167,6 +168,7 @@ function HelpRequestForm() {
       },
       skills: helpType,
       createdAt: Date(),
+      status: "Need Help" // This is default for every new HR
     };
 
     try {
