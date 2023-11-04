@@ -9,6 +9,8 @@ import errorImg from "../../images/error.png";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from 'react-datepicker';
 import { Timestamp } from 'firebase/firestore';
+import {checkString,checkNumber} from "../helper/validator"
+import { UpdateDisabledRounded } from "@mui/icons-material";
 
 
 
@@ -69,7 +71,9 @@ const Form = () => {
     dateError: "",
     stimeError: "",
     etimeError: "",
-    helpError: ""
+    helpError: "",
+    descError:"",
+    maxCapError:"",
   });
 
   //
@@ -192,8 +196,27 @@ const Form = () => {
     // Form Validation Start
     if (!nameRef.current.value) {
       updateErrorState("nameError", "Name is required");
-    } else {
-      updateErrorState("nameError", "");
+    } else {  
+      try{
+        checkString(nameRef.current.value,"Event Name");
+        updateErrorState("nameError","");
+      }catch(e){
+        updateErrorState("nameError","Description should consist only characters")
+      }
+    }
+    
+    try{
+      checkString(descRef.current.value,"Event Name");
+      updateErrorState("descError","");
+    }catch(e){
+      updateErrorState("descError","Should consist only characters")
+    }
+
+    try{
+      checkNumber(maxCapRef.current.value,"Event Name");
+      updateErrorState("maxCapError","");
+    }catch(e){
+      updateErrorState("maxCapError","Should consist only Numbers")
     }
 
     if (!streetRef.current.value) {
@@ -287,7 +310,14 @@ const Form = () => {
                 id="event-desc"
                 ref={descRef}
               />
+              {error.descError && (
+                <div className="inline-flex items-center">
+                  <img src={errorImg} className="w-3 h-3" />
+                  <p className="text-red-600 text-xs">{error.descError}</p>
+                </div>
+              )}
             </div>
+            
             <div className="space-y-1.5">
               <p className="font-semibold font-['Inter'] text-[15px]">
                 Maximum capacity of participants allowed
@@ -301,6 +331,12 @@ const Form = () => {
               <p className="font-normal font-['Inter'] text-xs">
                 Please provide a numerical value.
               </p>
+              {error.maxCapError && (
+                <div className="inline-flex items-center">
+                  <img src={errorImg} className="w-3 h-3" />
+                  <p className="text-red-600 text-xs">{error.descError}</p>
+                </div>
+              )}
             </div>
             <div className="text-[22px] font-semibold font-bricolage">
               Meet up Details
@@ -389,7 +425,7 @@ const Form = () => {
                 )}
               </div>
             </div>
-            <div>
+            <div className="inline-flex grid grid-cols-2 space-x-4">
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
                   Start DateTime*
@@ -408,6 +444,7 @@ const Form = () => {
                         }`}
                       ref={startTimeRef}
                     />
+                  
                   }
                 />
                 {error.stimeError && (
@@ -420,6 +457,7 @@ const Form = () => {
                   Please follow the format mm/dd/yyyy
                 </p> */}
               </div>
+              
             </div>
             <div>
               <div className="space-y-1.5">
@@ -441,6 +479,7 @@ const Form = () => {
                       ref={endTimeRef}
                     />
                   }
+                  
                 />
                 {error.etimeError && (
                   <div className="inline-flex items-center">
