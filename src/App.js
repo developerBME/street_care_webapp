@@ -20,9 +20,10 @@ import CreateOutreach from "./component/Community/CreateOutreach";
 import HelpRequestForm from "./component/Community/HelpRequstForm";
 import HelpRequestEventWindow from "./component/Community/HelpRequestEventWindow";
 import DonateForm from "./component/Donate/DonateForm";
+import AllOutreachEvents from "./component/AllOutreachEvents";
 
 import ScrollToTop from "./component/helper/ScrollToTop";
-import AllOutreachEvents from "./component/AllOutreachEvents";
+import Not404 from "./component/404";
 
 function App() {
   const fAuth = getAuth();
@@ -68,7 +69,8 @@ function App() {
             element={<PersonalOutForm />}
           />
           <Route path="/helpRequestForm" element={<HelpRequestForm />} />
-          <Route path="/*" element={<Home />} />
+          <Route path="/*" element={<Not404 />} />
+
           <Route path="/donateForm" element={<DonateForm />} />
           <Route path="/allOutreachEvents" element={<AllOutreachEvents />} />
         </Routes>
