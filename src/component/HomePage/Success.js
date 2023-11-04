@@ -5,37 +5,37 @@ import { getDocs, collection, query } from "firebase/firestore";
 import { db } from "../firebase";
 
 function Success() {
-
   const [donations, setDonations] = useState("");
   const [helpedBy, setHelpedBy] = useState("");
   // const [helpedPeople, setHelpedPeople] = useState("");
   useEffect(() => {
     const getValues = async () => {
       try {
-        const logOfUserRef = query(
-          collection(db, "testLog")
-        );
+        const logOfUserRef = query(collection(db, "testLog"));
         const data = await getDocs(logOfUserRef);
         let totalDonations = 0;
         // let totalHelpedPeople = 0;
         let uniqueID = new Set();
         data.docs.map((doc) => {
           uniqueID.add(doc.data().uid);
-          totalDonations = (isNaN(doc.data().itemQty) || typeof doc.data().itemQty === 'undefined' || doc.data().itemQty === '')
-            ? totalDonations
-            : totalDonations + parseInt(doc.data().itemQty);
+          totalDonations =
+            isNaN(doc.data().itemQty) ||
+            typeof doc.data().itemQty === "undefined" ||
+            doc.data().itemQty === ""
+              ? totalDonations
+              : totalDonations + parseInt(doc.data().itemQty);
 
-            // Assuming field is called peopleHelped in the collection
+          // Assuming field is called peopleHelped in the collection
           // totalHelpedPeople = (isNaN(doc.data().peopleHelped))
           //   ? totalHelpedPeople
           //   : totalHelpedPeople + parseInt(doc.data().peopleHelped)
-          
+
           return null;
         });
         setDonations(
           isNaN(parseInt(totalDonations)) ? 0 : parseInt(totalDonations)
         );
-        setHelpedBy(uniqueID.size)
+        setHelpedBy(uniqueID.size);
         // setHelpedPeople(totalHelpedPeople)
       } catch (err) {
         console.log(err);
@@ -43,7 +43,6 @@ function Success() {
     };
     getValues();
   }, []);
-
 
   return (
     <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
@@ -89,61 +88,57 @@ function Success() {
       </div>
       {/* Grid */}
 
-      <div className="w-full h-fit justify-start items-start  grid grid-cols-1 lg:grid-cols-3 font-bricolage">
+      <div className=" mt-10 w-full h-fit justify-start items-start   grid grid-cols-1 lg:grid-cols-3 font-bricolage">
         {/*  */}
-        <div className="grow rounded-t-2xl  lg:rounded-tr-none lg:rounded-l-2xl shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-emerald-100 to-neutral-200 justify-start items-end gap-6 flex">
-          <div className="flex-col justify-start items-start gap-6 inline-flex">
-            <div className="text-violet-950 text-2xl font-medium leading-loose">
-              We helped
-            </div>
-
-            <div className="px-8 py-2 bg-white rounded-[100px] inline-flex">
-              <div className="text-violet-950 font-bricolage text-5xl font-normal leading-[64px]">
-                103
-                {/* {helpedPeople} */}
+        <div className="grow items-start  lg:items-center xl:items-start flex-col rounded-t-2xl  lg:rounded-tr-none lg:rounded-l-2xl shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-emerald-100 to-neutral-200 gap-6 flex">
+          <div className="text-violet-950 text-2xl font-medium leading-loose">
+            We helped
+          </div>
+          <div className="flex lg:flex-col xl:flex-row gap-4 items-start  lg:items-center xl:items-start ">
+            <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
+              <div className="text-violet-950  font-bricolage text-5xl font-normal leading-[64px]">
+                9{/* {helpedPeople} */}
               </div>
             </div>
-          </div>
-          <div className="w-fit text-violet-950 text-xl font-medium py-2 md:ml-[-8px] inline-flex">
-            homeless people
+            <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
+              homeless people
+            </div>
           </div>
         </div>
         {/*  */}
 
-        <div className="grow shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-purple-300 to-zinc-200 justify-start items-end gap-6 flex">
-          <div className="flex-col justify-start items-start gap-6 inline-flex">
-            <div className="text-violet-950 text-2xl font-medium leading-loose">
-              Helped by{" "}
-            </div>
-            <div className="px-6 py-2 bg-white rounded-[100px] inline-flex">
-              <div className="text-violet-950 font-bricolage text-5xl font-normal leading-[64px]">
+        <div className="grow shrink items-start  lg:items-center xl:items-start flex-col basis-0 h-fit px-8 py-4 bg-gradient-to-br from-purple-300 to-zinc-200 justify-start  gap-6 flex">
+          <div className="text-violet-950 text-2xl font-medium leading-loose">
+            We helped
+          </div>
+          <div className="flex lg:flex-col xl:flex-row gap-4">
+            <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
+              <div className="text-violet-950  font-bricolage text-5xl font-normal leading-[64px]">
                 {helpedBy}
               </div>
             </div>
-          </div>
-
-          <div className="w-fit text-violet-950 text-xl font-medium py-2 md:ml-[-12px] inline-flex ">
-            volunteers
+            <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
+              volunteers
+            </div>
           </div>
         </div>
         {/*  */}
 
-        <div className="grow rounded-b-2xl lg:rounded-r-2xl lg:rounded-bl-none shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-sky-200 to-neutral-200 justify-start items-end gap-6 flex">
-          <div className="flex-col justify-start items-start gap-6 inline-flex">
-            <div className="text-violet-950 text-2xl font-medium leading-loose">
-              Donated
-            </div>
-            <div className="px-6 py-2 bg-white rounded-[100px] inline-flex">
-              <div className="text-violet-950 font-bricolage text-5xl font-normal leading-[64px]">
+        <div className="grow items-start  lg:items-center xl:items-start flex-col rounded-b-2xl lg:rounded-r-2xl lg:rounded-bl-none shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-sky-200 to-neutral-200 justify-start  gap-6 flex">
+          <div className="text-violet-950 text-2xl font-medium leading-loose">
+            We helped
+          </div>
+          <div className="flex lg:flex-col xl:flex-row gap-4">
+            <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
+              <div className="text-violet-950  font-bricolage text-5xl font-normal leading-[64px]">
                 {donations}
               </div>
             </div>
-          </div>
-          <div className="w-fit text-violet-950 text-xl font-medium py-2 md:ml-[-8px] inline-flex">
-            items
+            <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
+              volunteers
+            </div>
           </div>
         </div>
-        {/*  */}
       </div>
       {/* grid over */}
     </div>

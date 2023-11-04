@@ -238,7 +238,7 @@ const NavBar = (props) => {
             >
               <AiFillHome className="w-6 h-6 text-[#1F0A58]" />
             </NavLink>
-            <div className="self-stretch text-center text-zinc-900 text-xs font-semibold font-['Roboto'] leading-none tracking-wide">
+            <div className="self-stretch text-center text-zinc-900 text-xs font-semibold font-roboto leading-none tracking-wide">
               Home
             </div>
           </div>
@@ -249,7 +249,7 @@ const NavBar = (props) => {
             >
               <img src={communityicon} className="w-6 h-6 " />
             </NavLink>
-            <div className="self-stretch text-center text-zinc-700 text-xs font-medium font-['Roboto'] leading-none tracking-wide">
+            <div className="self-stretch text-center text-zinc-700 text-xs font-medium font-roboto leading-none tracking-wide">
               Community
             </div>
           </div>
@@ -260,7 +260,7 @@ const NavBar = (props) => {
             >
               <GiGraduateCap className="w-6 h-6  text-[#1F0A58]" />
             </NavLink>
-            <div className="self-stretch text-center text-zinc-700 text-xs font-medium font-['Roboto'] leading-none tracking-wide">
+            <div className="self-stretch text-center text-zinc-700 text-xs font-medium font-roboto leading-none tracking-wide">
               How to help
             </div>
           </div>
@@ -272,7 +272,7 @@ const NavBar = (props) => {
               <RiAccountCircleFill className="w-6 h-6  text-[#1F0A58]" />
             </NavLink>
 
-            <div className="self-stretch text-center text-zinc-700 text-xs font-medium font-['Roboto'] leading-none tracking-wide">
+            <div className="self-stretch text-center text-zinc-700 text-xs font-medium font-roboto leading-none tracking-wide">
               Me
             </div>
           </div>
