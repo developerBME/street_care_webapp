@@ -7,7 +7,7 @@ import Footer from "./component/Footer";
 import Login from "./component/Login";
 import Profile from "./component/UserProfile/Profile";
 import Signup2 from "./component/Signup2";
-import HowToHelp from "./component/HowToHelp";
+import HowToHelp from "./component/HowtoHelp/HowToHelp";
 import Community from "./component/Community/Community";
 import About from "./component/About/About";
 import Contact from "./component/Contact/Contact";
@@ -22,6 +22,7 @@ import HelpRequestEventWindow from "./component/Community/HelpRequestEventWindow
 import DonateForm from "./component/Donate/DonateForm";
 
 import ScrollToTop from "./component/helper/ScrollToTop";
+import AllOutreachEvents from "./component/AllOutreachEvents";
 
 function App() {
   const fAuth = getAuth();
@@ -40,7 +41,7 @@ function App() {
     }
   });
   return (
-    <div>
+    <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <Router>
         <ScrollToTop />
         <NavBar loggedIn={loggedIn} />
@@ -56,6 +57,7 @@ function App() {
           <Route path="/profile/select-outreach" element={<Documenting />} />
           <Route path="/profile/commoutform" element={<CommOutForm />} />
           <Route path="/outreachsignup" element={<OutreachSignup />} />
+          <Route path="/outreachsignup/:id" element={<OutreachSignup />} />
           <Route path="/createOutreach" element={<CreateOutreach />} />
           <Route
             path="/helpRequestEventWindow"
@@ -68,6 +70,7 @@ function App() {
           <Route path="/helpRequestForm" element={<HelpRequestForm />} />
           <Route path="/*" element={<Home />} />
           <Route path="/donateForm" element={<DonateForm />} />
+          <Route path="/allOutreachEvents" element={<AllOutreachEvents />} />
         </Routes>
         <Footer />
       </Router>

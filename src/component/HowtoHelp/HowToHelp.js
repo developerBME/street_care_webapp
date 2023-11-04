@@ -1,5 +1,6 @@
 import React from "react";
-import CustomButton from "../component/Buttons/CustomButton";
+import CustomButton from "../Buttons/CustomButton";
+
 import CarePackage from "./CarePackage";
 
 function HowToHelp() {
@@ -20,16 +21,14 @@ function HowToHelp() {
                 Building genuine connections and fostering trust is key to
                 making a positive impact.
               </div>
-              <div className="px-8 py-4 bg-white rounded-[100px] border border-stone-300 justify-center items-center gap-2.5 inline-flex">
-                <div className="text-center text-slate-700 text-lg font-semibold font-open-sans leading-normal">
-                  How to prepare the Care Package? ↓
-                </div>
+              <div className=" cursor-pointer px-8 py-4 bg-white rounded-[100px] border border-stone-300 justify-center items-center gap-2.5 inline-flex text-center text-slate-700 text-lg font-semibold font-open-sans leading-normal">
+                How to prepare the Care Package? ↓
               </div>
-              <div className="px-8 py-4 bg-white rounded-[100px] border border-stone-300 justify-center items-center gap-2.5 inline-flex">
+              {/* <div className="px-8 py-4 bg-white rounded-[100px] border border-stone-300 justify-center items-center gap-2.5 inline-flex">
                 <div className="text-center text-slate-700 text-lg font-semibold font-open-sans leading-normal">
                   How to prepare for the outreach? ↓
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
           {/*  */}
@@ -41,16 +40,18 @@ function HowToHelp() {
         </div>
         <div className="  w-[95%] md:w-[90%] lg:w-[75%] mx-2 lg:mx-40 mt-8 mb-20 rounded-2xl bg-white text-black ">
           {/* section 2 */}
-          <div className="items-center justify-center p-8 lg:py-24 lg:px-36 h-full w-full rounded-2xl bg-[#F7F7F7] ">
+          {/* <div className="items-center justify-center p-8 lg:py-24 lg:px-36 h-full w-full rounded-2xl bg-[#F7F7F7] ">
             <div className="text-neutral-800 text-2xl font-medium font-bricolage leading-loose">
               Next...
             </div>
             <div className="w-fit my-16  text-gray-800 text-[57px] font-medium font-bricolage leading-[64px]">
               "I Learned, Now I'll Share."
             </div>
-            <CustomButton label="Send the guide to a friend" name="buttondefault" />
-            {/*  */}
-          </div>
+            <CustomButton
+              label="Send the guide to a friend"
+              name="buttondefault"
+            />
+          </div> */}
         </div>
       </div>
     </div>

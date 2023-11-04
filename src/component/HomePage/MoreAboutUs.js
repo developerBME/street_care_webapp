@@ -6,7 +6,8 @@ import CustomButton from "../Buttons/CustomButton";
 function MoreAboutUs() {
   return (
     <div className=" justify-center px-4 py-8 lg:p-24  h-full w-full rounded-2xl bg-[#F7F7F7] flex flex-col">
-      <div className="font-dmsans font-medium  text-[#212121] text-2xl md:text-[30px] leading-8 md:leading-10 tracking-tight">
+      {/* <div className="font-dmsans font-medium  text-[#212121] text-2xl md:text-[30px] leading-8 md:leading-10 tracking-tight"> */}
+      <div className="font-bricolage font-medium  text-[#1F0A58] text-2xl md:text-[30px] leading-8 md:leading-10 tracking-tight">
         <p>
           Fueled by 100% volunteer passion, Growing with 264 dedicated hearts.
         </p>
@@ -56,9 +57,9 @@ function MoreAboutUs() {
           </div>
         </div>
       </div>
-      <div className="mt-2 md:mt-8 flex justify-center md:justify-start min-[320px]:pt-4 ">
+      {/* <div className="mt-2 md:mt-8 flex justify-center md:justify-start min-[320px]:pt-4 ">
         <CustomButton label="Learn More" name="buttondefault" />
-      </div>
+      </div> */}
     </div>
   );
 }

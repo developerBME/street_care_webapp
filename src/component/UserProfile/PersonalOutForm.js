@@ -1,26 +1,15 @@
 import React from "react";
 import { useState, useRef, useEffect } from "react";
 import Rating from "@mui/material/Rating";
-import { IoIosArrowBack, IoIosArrowDown } from "react-icons/io";
-import { AiOutlineStar, AiTwotoneStar, AiFillStar } from "react-icons/ai";
+import { IoIosArrowBack } from "react-icons/io";
+import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebase";
-import {
-  getAuth,
-  signInWithPopup,
-  GoogleAuthProvider,
-  onAuthStateChanged,
-} from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import CustomButton from "../Buttons/CustomButton";
 import errorImg from "../../images/error.png";
-import ConfirmationModal from "./ConfirmationModal";
-
-const starStyle = {
-  width: 60,
-  height: 60,
-};
 
 function PersonalOutForm() {
   const navigate = useNavigate();
@@ -65,7 +54,6 @@ function PersonalOutForm() {
   const handleTimeChange = (e) => {
     updateErrorState("timeError", "");
   };
-
 
   const updateErrorState = (key, value) => {
     setError((prevState) => ({
@@ -572,7 +560,11 @@ function PersonalOutForm() {
                       </div>
                       {error.cityError && (
                         <div className="inline-flex items-center">
-                          <img src={errorImg} className="w-3 h-3" />
+                          <img
+                            src={errorImg}
+                            className="w-3 h-3"
+                            alt="Error Image"
+                          />
                           <p className="text-red-600 text-xs">
                             {error.cityError}
                           </p>
@@ -608,7 +600,11 @@ function PersonalOutForm() {
                           ></input>
                           {error.dateError && (
                             <div className="inline-flex items-center">
-                              <img src={errorImg} className="w-3 h-3" />
+                              <img
+                                src={errorImg}
+                                className="w-3 h-3"
+                                alt="Date Error"
+                              />
                               <p className="text-red-600 text-xs">
                                 {error.dateError}
                               </p>

@@ -18,12 +18,18 @@ import Process from "./HomePage/Process";
 import MoreAboutUs from "./HomePage/MoreAboutUs";
 import Navbar from "./Navbar";
 import OutreachEventCard from "./Community/OutreachEventCard";
-import { formatDate, fetchEvents, fetchOfficialEvents } from "./EventCardService";
+import {
+  formatDate,
+  fetchEvents,
+  fetchOfficialEvents,
+} from "./EventCardService";
 import BMEcardimg1 from "../images/BMEofficialcardimg1.png";
 import BMEcardimg2 from "../images/BMEofficialcardimg2.png";
 import BMEcardimg3 from "../images/BMEofficialcardimg3.png";
+import CustomButton from "../component/Buttons/CustomButton";
 
 function HomePage() {
+  const navigate = useNavigate();
   const fAuth = getAuth();
   useEffect(() => {}, []);
   onAuthStateChanged(fAuth, (user) => {
@@ -119,13 +125,34 @@ function HomePage() {
     },
   ];
 
+  const NewsCardData = [
+    {
+      NewsTitle:
+        "Military Families event for Street Care on Giving Tuesday, 12/1!",
+      NewsDate: "Published Sep 1, 2022",
+      NewsContent: "Teams of military families will make care kits for us.",
+    },
+    {
+      NewsTitle: "Thank You to Maryland Team who helps Street Care Monthly!",
+      NewsDate: "Published Jan 18, 2022",
+      NewsContent:
+        "Our Maryland Team is out on the streets in the greater Baltimore area monthly helping those homeless in need",
+    },
+    {
+      NewsTitle: "Thank You to the United Methodist Church for Grant!",
+      NewsDate: "Published Jan 18, 2022",
+      NewsContent:
+        "Thank You to the United Methodist church (Baltimore-Washington DC) for rewarding BME Maryland partners with a grant for SC",
+    },
+  ];
+
   const [events, setEvents] = useState([]);
   const [offevents, setOffevents] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const eventsData = await fetchEvents();
-      
+
       // Sort events in place based on their date
       eventsData.sort((a, b) => a.eventDate - b.eventDate);
 
@@ -166,9 +193,26 @@ function HomePage() {
               </div>
   </div> */}
             <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-              {events.map(eventData => (
-                <OutreachEventCard key={eventData.id} cardData={{ ...eventData, eventDate: formatDate(new Date(eventData.eventDate.seconds * 1000)) }} />
+              {events.map((eventData) => (
+                <OutreachEventCard
+                  key={eventData.id}
+                  cardData={{
+                    ...eventData,
+                    eventDate: formatDate(
+                      new Date(eventData.eventDate.seconds * 1000)
+                    ),
+                  }}
+                />
               ))}
+            </div>
+            <div className="mt-16">
+              <CustomButton
+                label="More Outreach Events"
+                name="buttondefault"
+                onClick={() => {
+                  navigate("/allOutreachEvents");
+                }}
+              />
             </div>
           </div>
         </div>
@@ -200,9 +244,17 @@ function HomePage() {
               {/* {BMEcardData.map(BMEData => (
                         <BMEcardnew key={BMEData.x} BMEcardData={BMEData} />
                       ))} */}
-                {offevents.map(eventData => (
-                  <BMEcardnew key={eventData.id} BMEcardData={{ ...eventData, eventDate: formatDate(new Date(eventData.eventDate.seconds * 1000)) }} />
-                ))}
+              {offevents.map((eventData) => (
+                <BMEcardnew
+                  key={eventData.id}
+                  BMEcardData={{
+                    ...eventData,
+                    eventDate: formatDate(
+                      new Date(eventData.eventDate.seconds * 1000)
+                    ),
+                  }}
+                />
+              ))}
             </div>
           </div>
         </div>
@@ -220,7 +272,21 @@ function HomePage() {
           <Map />
         </div>
         <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
-          <News />
+          {/*<News />*/}
+
+          <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
+            <p className="font-dmsans font-medium md:text-[30px] text-[25px] lg:text-[45px] text-[#212121]">
+              News
+            </p>
+            <div className=" grid grid-cols-1 gap-x-8 gap-y-8 mt-6 sm:pt-4 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+              {NewsCardData.map((NewsData) => (
+                <News key={NewsData.id} NewsCardData={NewsData} />
+              ))}
+              <div className="mt-16">
+                <CustomButton label="More News" name="buttondefault" />
+              </div>
+            </div>
+          </div>
         </div>
         <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-16 rounded-2xl bg-white text-black ">
           <FAQs />
