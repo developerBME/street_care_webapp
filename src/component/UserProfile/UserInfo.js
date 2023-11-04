@@ -38,6 +38,12 @@ const UserInfo = () => {
   const [displayName, setDisplayName] = useState("");
   const [dateCreated, setDateCreated] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
+  const [achievments, setAchievements] = useState({
+    comm_leader: false,
+    neighborhood_leader: false,
+    seasoned_volunteer: false,
+    benevolent_donor: false,
+  });
 
   const fAuth = getAuth();
   onAuthStateChanged(fAuth, (user) => {
@@ -66,17 +72,42 @@ const UserInfo = () => {
         where("uid", "==", fAuth?.currentUser?.uid)
       );
       const data = await getDocs(userRef);
-      setDisplayName(data.docs[0].data().username)
-      setDateCreated(((data.docs[0].data().dateCreated).toDate().getMonth() + 1) + '/' + (data.docs[0].data().dateCreated).toDate().getDate() + '/' + (data.docs[0].data().dateCreated).toDate().getFullYear());
+      setDisplayName(data.docs[0].data().username);
+      setDateCreated(
+        data.docs[0].data().dateCreated.toDate().getMonth() +
+          1 +
+          "/" +
+          data.docs[0].data().dateCreated.toDate().getDate() +
+          "/" +
+          data.docs[0].data().dateCreated.toDate().getFullYear()
+      );
       // Needs update for facebook
-      if (fAuth?.currentUser?.providerData[0].providerId === 'google.com') {
-        setPhotoUrl(fAuth?.currentUser?.photoURL.toString().substring(0,fAuth?.currentUser?.photoURL.toString().indexOf("=")+1) + "s224-c");
-      } else if (fAuth?.currentUser?.providerData[0].providerId === 'twitter.com'){
-        setPhotoUrl(fAuth?.currentUser?.photoURL.toString().substring(0,fAuth?.currentUser?.photoURL.toString().indexOf("_normal")) + ".png");
-      } else if (fAuth?.currentUser?.providerData[0].providerId === 'facebook.com'){
+      if (fAuth?.currentUser?.providerData[0].providerId === "google.com") {
+        setPhotoUrl(
+          fAuth?.currentUser?.photoURL
+            .toString()
+            .substring(
+              0,
+              fAuth?.currentUser?.photoURL.toString().indexOf("=") + 1
+            ) + "s224-c"
+        );
+      } else if (
+        fAuth?.currentUser?.providerData[0].providerId === "twitter.com"
+      ) {
+        setPhotoUrl(
+          fAuth?.currentUser?.photoURL
+            .toString()
+            .substring(
+              0,
+              fAuth?.currentUser?.photoURL.toString().indexOf("_normal")
+            ) + ".png"
+        );
+      } else if (
+        fAuth?.currentUser?.providerData[0].providerId === "facebook.com"
+      ) {
         setPhotoUrl(fAuth?.currentUser?.photoURL.toString());
       } else {
-        setPhotoUrl("")
+        setPhotoUrl("");
       }
       setSuperpowers(
         data.docs[0].data().superpowers ? data.docs[0].data().superpowers : []
@@ -116,9 +147,50 @@ const UserInfo = () => {
       }
     };
 
+    const getCreatedOutreaches = async () => {
+      try {
+        const logOfUserRef = query(
+          collection(db, "outreachEvents"),
+          where("uid", "==", fAuth?.currentUser?.uid)
+        );
+        const data = await getDocs(logOfUserRef);
+        if (data.docs.length > 0) {
+          let achievments_obj = achievments;
+          achievments_obj.comm_leader = true;
+          setAchievements(achievments_obj);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     getDeedValues();
     getUserData();
+    getCreatedOutreaches();
   }, [fAuth.currentUser]);
+
+  // ACHIEVEMENTS LOGIC
+  useEffect(() => {
+    if (donations > 10) {
+      let achievments_obj = achievments;
+      achievments_obj.benevolent_donor = true;
+      setAchievements(achievments_obj);
+    }
+    if (helped > 8 || outreaches > 4) {
+      let achievments_obj = achievments;
+      achievments_obj.seasoned_volunteer = true;
+      setAchievements(achievments_obj);
+    }
+    if (outreaches > 3) {
+      let achievments_obj = achievments;
+      achievments_obj.neighborhood_leader = true;
+      setAchievements(achievments_obj);
+    }
+  }, [donations, helped, outreaches]);
+
+  useEffect(() => {
+    console.log(achievments);
+  }, [achievments]);
 
   useEffect(() => {
     console.log(helped);
@@ -181,15 +253,15 @@ const UserInfo = () => {
             <h1 className="text-sm font-bold pb-1 font-bricolage text-[#212121]">
               Community Leader
             </h1>
-            <h3 className="text-xs font-opensans font-semibold pb-1 text-[#616161]">
+            {/* <h3 className="text-xs font-opensans font-semibold pb-1 text-[#616161]">
               Achieved June 3rd, 2023
-            </h3>
+            </h3> */}
             <h3 className="text-xs font-opensans font-normal text-[#616161]">
               Led Community Outreach
             </h3>
           </div>
         </div>
-        <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
+        {/* <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
           <img className="w-16 h-16 mr-4" src={notes} alt="..."></img>
           <div className="flex flex-col">
             <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121]">
@@ -199,8 +271,8 @@ const UserInfo = () => {
               Led Community Orientation
             </h3>
           </div>
-        </div>
-        <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
+        </div> */}
+        {/* <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
           <img className="w-16 h-16 mr-4" src={announcement} alt="..."></img>
           <div className="flex flex-col">
             <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121]">
@@ -210,7 +282,7 @@ const UserInfo = () => {
               Had invited friend to join
             </h3>
           </div>
-        </div>
+        </div> */}
         <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
           <img className="w-16 h-16 mr-4" src={neighborhood} alt="..."></img>
           <div className="flex flex-col">
@@ -226,10 +298,10 @@ const UserInfo = () => {
           <img className="w-16 h-16 mr-4" src={information} alt="..."></img>
           <div className="flex flex-col">
             <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121]">
-              Information Sharer
+              Benevolent Donor {achievments.benevolent_donor && <> true</>}
             </h1>
             <h3 className="text-xs mb-2 font-opensans font-normal text-[#616161]">
-              Finish the 10 min how to Streetcare program
+              Donated more than 10 items
             </h3>
           </div>
         </div>

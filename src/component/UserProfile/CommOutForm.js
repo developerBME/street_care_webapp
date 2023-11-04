@@ -5,7 +5,12 @@ import { IoIosArrowBack, IoIosArrowDown } from "react-icons/io";
 import { AiOutlineStar, AiTwotoneStar, AiFillStar } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { addDoc, collection } from "firebase/firestore";
+import {
+  addDoc,
+  getDocs,
+  collection,
+  collectionGroup,
+} from "firebase/firestore";
 import { db } from "../firebase";
 
 import CustomButton from "../Buttons/CustomButton";
@@ -16,6 +21,12 @@ const starStyle = {
   width: 60,
   height: 60,
 };
+const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
+function getLastWeeksDate() {
+  const now = new Date();
+
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+}
 
 function CommOutForm() {
   const navigate = useNavigate();
@@ -30,7 +41,7 @@ function CommOutForm() {
   const checkboxes = useRef([]);
   const [success, setSuccess] = useState(false);
   const outreachRef = useRef("");
-  const [outreach, setOutreach] = useState("");
+  const [outreach, setOutreach] = useState([]);
 
   const [error, setError] = useState({
     numberHelpedError: "",
@@ -131,6 +142,7 @@ function CommOutForm() {
       whatGiven: itemArray,
       itemQty: NumberOfItems.current.value,
       rating: rating,
+      outreachEvent: outreachRef.current.value,
     };
 
     try {
@@ -156,6 +168,25 @@ function CommOutForm() {
     });
     setRating(0);
   };
+
+  useEffect(() => {
+    const fetchOutreachEvents = async () => {
+      const oureachEventsRef = collection(db, OUTREACH_EVENTS_COLLECTION);
+      const eventSnapshot = await getDocs(oureachEventsRef);
+      let orevents = [];
+      for (const doc of eventSnapshot.docs) {
+        const eventData = doc.data();
+        let withinLastWeek =
+          getLastWeeksDate() <= new Date(eventData.eventDate);
+        console.log(getLastWeeksDate());
+        if (withinLastWeek) {
+          orevents.push(eventData);
+        }
+      }
+      setOutreach(orevents);
+    };
+    fetchOutreachEvents();
+  }, []);
 
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
@@ -241,15 +272,21 @@ function CommOutForm() {
                           onChange={handleOutreachChange}
                         >
                           <option value="" disabled>
-                            Select Help Request
+                            Select Outreach event
                           </option>
-                          <option className="w-fit" value="outreach">
-                            outreach1
-                          </option>
-                          <option value="outreach2">outreach two</option>
-                          <option value="outreach2">outreach two</option>
-                          <option value="outreach2">outreach two</option>
-                          <option value="outreach2">outreach two</option>
+                          {outreach &&
+                            outreach.map((event) => {
+                              return (
+                                <option
+                                  className="w-fit"
+                                  value={
+                                    event.title + " (" + event.description + ")"
+                                  }
+                                >
+                                  {event.title + " (" + event.description + ")"}
+                                </option>
+                              );
+                            })}
                         </select>
                       </div>
                       {error.outreachError && (
@@ -465,6 +502,7 @@ function CommOutForm() {
                       size={"large"}
                       onChange={(event, newValue) => {
                         setRating(newValue);
+                        console.log(outreach);
                       }}
                     />
                   </div>
