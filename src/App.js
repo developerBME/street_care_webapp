@@ -22,6 +22,7 @@ import HelpRequestEventWindow from "./component/Community/HelpRequestEventWindow
 import DonateForm from "./component/Donate/DonateForm";
 
 import ScrollToTop from "./component/helper/ScrollToTop";
+import AllOutreachEvents from "./component/AllOutreachEvents";
 
 function App() {
   const fAuth = getAuth();
@@ -56,6 +57,7 @@ function App() {
           <Route path="/profile/select-outreach" element={<Documenting />} />
           <Route path="/profile/commoutform" element={<CommOutForm />} />
           <Route path="/outreachsignup" element={<OutreachSignup />} />
+          <Route path="/outreachsignup/:id" element={<OutreachSignup />} />
           <Route path="/createOutreach" element={<CreateOutreach />} />
           <Route
             path="/helpRequestEventWindow"
@@ -68,6 +70,7 @@ function App() {
           <Route path="/helpRequestForm" element={<HelpRequestForm />} />
           <Route path="/*" element={<Home />} />
           <Route path="/donateForm" element={<DonateForm />} />
+          <Route path="/allOutreachEvents" element={<AllOutreachEvents />} />
         </Routes>
         <Footer />
       </Router>

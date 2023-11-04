@@ -29,6 +29,7 @@ import BMEcardimg3 from "../images/BMEofficialcardimg3.png";
 import CustomButton from "../component/Buttons/CustomButton";
 
 function HomePage() {
+  const navigate = useNavigate();
   const fAuth = getAuth();
   useEffect(() => {}, []);
   onAuthStateChanged(fAuth, (user) => {
@@ -126,25 +127,24 @@ function HomePage() {
 
   const NewsCardData = [
     {
-      NewsTitle: "Military Families event for Street Care on Giving Tuesday, 12/1!",
+      NewsTitle:
+        "Military Families event for Street Care on Giving Tuesday, 12/1!",
       NewsDate: "Published Sep 1, 2022",
       NewsContent: "Teams of military families will make care kits for us.",
     },
     {
       NewsTitle: "Thank You to Maryland Team who helps Street Care Monthly!",
       NewsDate: "Published Jan 18, 2022",
-      NewsContent: "Our Maryland Team is out on the streets in the greater Baltimore area monthly helping those homeless in need",
+      NewsContent:
+        "Our Maryland Team is out on the streets in the greater Baltimore area monthly helping those homeless in need",
     },
     {
       NewsTitle: "Thank You to the United Methodist Church for Grant!",
       NewsDate: "Published Jan 18, 2022",
-      NewsContent: "Thank You to the United Methodist church (Baltimore-Washington DC) for rewarding BME Maryland partners with a grant for SC",
+      NewsContent:
+        "Thank You to the United Methodist church (Baltimore-Washington DC) for rewarding BME Maryland partners with a grant for SC",
     },
-    
   ];
-
-
-
 
   const [events, setEvents] = useState([]);
   const [offevents, setOffevents] = useState([]);
@@ -170,46 +170,55 @@ function HomePage() {
   }, []);
 
   return (
-   <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
-    <div className="relative flex flex-col items-center ">
-      <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-32 rounded-2xl bg-white text-black ">
-        {" "}
-        <Landing />
-      </div>
-      <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
-        <Success />
-      </div>
-      <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
-        <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
-          <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
-            {" "}
-            Upcoming outreach events
-          </p>
-          {/*<div className=" w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+    <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
+      <div className="relative flex flex-col items-center ">
+        <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-32 rounded-2xl bg-white text-black ">
+          {" "}
+          <Landing />
+        </div>
+        <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+          <Success />
+        </div>
+        <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
+          <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
+            <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
+              {" "}
+              Upcoming outreach events
+            </p>
+            {/*<div className=" w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
               <Eventcard />
               <Eventcard />
               <div className=" md:col-span-2 lg:col-span-1">
                 <Eventcard />
               </div>
   </div> */}
-          <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-            {events.map((eventData) => (
-              <OutreachEventCard
-                key={eventData.id}
-                cardData={{
-                  ...eventData,
-                  eventDate: formatDate(
-                    new Date(eventData.eventDate.seconds * 1000)
-                  ),
+            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+              {events.map((eventData) => (
+                <OutreachEventCard
+                  key={eventData.id}
+                  cardData={{
+                    ...eventData,
+                    eventDate: formatDate(
+                      new Date(eventData.eventDate.seconds * 1000)
+                    ),
+                  }}
+                />
+              ))}
+            </div>
+            <div className="mt-16">
+              <CustomButton
+                label="More Outreach Events"
+                name="buttondefault"
+                onClick={() => {
+                  navigate("/allOutreachEvents");
                 }}
               />
-            ))}
+            </div>
           </div>
         </div>
-      </div>
-      {/* Vishnu */}
-      {/* BME Official Gathering  */}
-      {/* <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
+        {/* Vishnu */}
+        {/* BME Official Gathering  */}
+        {/* <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
           <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
             <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
               {" "}
@@ -224,20 +233,28 @@ function HomePage() {
             </div>
           </div>
         </div> */}
-      {/*Vedant*/} {/*BME OFFCIIAL GATHERING BLOCK START*/}
-      <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
-        <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
-          <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
-            {" "}
-            BME Official Gathering
-          </p>
-          <div className=" w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-            {/* {BMEcardData.map(BMEData => (
+        {/*Vedant*/} {/*BME OFFCIIAL GATHERING BLOCK START*/}
+        <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
+          <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
+            <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
+              {" "}
+              BME Official Gathering
+            </p>
+            <div className=" w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+              {/* {BMEcardData.map(BMEData => (
                         <BMEcardnew key={BMEData.x} BMEcardData={BMEData} />
                       ))} */}
-                {offevents.map(eventData => (
-                  <BMEcardnew key={eventData.id} BMEcardData={{ ...eventData, eventDate: formatDate(new Date(eventData.eventDate.seconds * 1000)) }} />
-                ))}
+              {offevents.map((eventData) => (
+                <BMEcardnew
+                  key={eventData.id}
+                  BMEcardData={{
+                    ...eventData,
+                    eventDate: formatDate(
+                      new Date(eventData.eventDate.seconds * 1000)
+                    ),
+                  }}
+                />
+              ))}
             </div>
           </div>
         </div>
@@ -258,17 +275,17 @@ function HomePage() {
           {/*<News />*/}
 
           <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
-              <p className="font-dmsans font-medium md:text-[30px] text-[25px] lg:text-[45px] text-[#212121]">
-                News
-              </p>
-              <div className=" grid grid-cols-1 gap-x-8 gap-y-8 mt-6 sm:pt-4 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-                  {NewsCardData.map(NewsData => (
-                                <News  key={NewsData.id} NewsCardData={NewsData} />
-                              ))}
-                              <div className="mt-16">
-                                <CustomButton label="More News" name="buttondefault"  />
-                            </div> 
+            <p className="font-dmsans font-medium md:text-[30px] text-[25px] lg:text-[45px] text-[#212121]">
+              News
+            </p>
+            <div className=" grid grid-cols-1 gap-x-8 gap-y-8 mt-6 sm:pt-4 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+              {NewsCardData.map((NewsData) => (
+                <News key={NewsData.id} NewsCardData={NewsData} />
+              ))}
+              <div className="mt-16">
+                <CustomButton label="More News" name="buttondefault" />
               </div>
+            </div>
           </div>
         </div>
         <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-16 rounded-2xl bg-white text-black ">

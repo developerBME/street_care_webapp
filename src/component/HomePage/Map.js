@@ -28,7 +28,8 @@ const Map = () => {
     //   <img src={mapImage} alt="map" className="w-full h-[550px] pt-8" />
     // </div>
     <div className="items-center justify-center px-4 pt-8 pb-2 lg:px-24 lg:pt-24 lg:pb-4 h-full w-full rounded-2xl bg-[#F7F7F7]">
-      <p className="font-dmsans font-medium md:text-[30px] text-[25px] lg:text-[45px] text-[#212121] tracking-tight leading-8">
+      {/* <p className="font-dmsans font-medium md:text-[30px] text-[25px] lg:text-[45px] text-[#212121] tracking-tight leading-8"> */}
+      <p className="font-bricolage font-medium md:text-[30px] text-[25px] lg:text-[45px] text-[#1F0A58] tracking-tight leading-8">
         We are active across countries and continents
       </p>
       <ComposableMap>
