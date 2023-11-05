@@ -131,6 +131,9 @@ const OutreachEventCard = ({ cardData, isProfilePage, refresh }) => {
                 label2={label2}
                 setLabel2={setLabel2}
                 refresh={refresh}
+                title={title}
+                eventDate={eventDate}
+                location={location}
               />
             )}
           </div>
