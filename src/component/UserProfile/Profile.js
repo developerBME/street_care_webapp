@@ -180,7 +180,12 @@ function Profile() {
                 {events.map((eventData) => (
                   <OutreachEventCard
                     key={eventData.id}
-                    cardData={{ ...eventData, eventDate: formatDate(new Date(eventData.eventDate.seconds * 1000)) }}
+                    cardData={{
+                      ...eventData,
+                      eventDate: formatDate(
+                        new Date(eventData.eventDate.seconds * 1000)
+                      ),
+                    }}
                     isProfilePage={true}
                     refresh={fetchData}
                   />
@@ -188,11 +193,16 @@ function Profile() {
               </div>
             </div>
             <div className="hidden sm:block sm:overflow-x-auto overflow-y-hidden">
-              <div className="grid grid-cols-3 gap-2 gap-y-16">
+              <div className="grid grid-cols-3 gap-2 gap-y-16 mb-6">
                 {events.map((eventData) => (
                   <OutreachEventCard
                     key={eventData.id}
-                    cardData={{ ...eventData, eventDate: formatDate(new Date(eventData.eventDate.seconds * 1000)) }}
+                    cardData={{
+                      ...eventData,
+                      eventDate: formatDate(
+                        new Date(eventData.eventDate.seconds * 1000)
+                      ),
+                    }}
                     isProfilePage={true}
                     refresh={fetchData}
                   />
