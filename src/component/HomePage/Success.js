@@ -7,36 +7,31 @@ import { db } from "../firebase";
 function Success() {
   const [donations, setDonations] = useState("");
   const [helpedBy, setHelpedBy] = useState("");
-  // const [helpedPeople, setHelpedPeople] = useState("");
+  const [helpedPeople, setHelpedPeople] = useState("");
   useEffect(() => {
     const getValues = async () => {
       try {
         const logOfUserRef = query(collection(db, "testLog"));
         const data = await getDocs(logOfUserRef);
         let totalDonations = 0;
-        // let totalHelpedPeople = 0;
+        let totalHelpedPeople = 0;
         let uniqueID = new Set();
         data.docs.map((doc) => {
           uniqueID.add(doc.data().uid);
-          totalDonations =
-            isNaN(doc.data().itemQty) ||
-            typeof doc.data().itemQty === "undefined" ||
-            doc.data().itemQty === ""
-              ? totalDonations
-              : totalDonations + parseInt(doc.data().itemQty);
-
-          // Assuming field is called peopleHelped in the collection
-          // totalHelpedPeople = (isNaN(doc.data().peopleHelped))
-          //   ? totalHelpedPeople
-          //   : totalHelpedPeople + parseInt(doc.data().peopleHelped)
-
+          totalDonations = (isNaN(doc.data().itemQty) || typeof doc.data().itemQty === 'undefined' || doc.data().itemQty === '')
+            ? totalDonations
+            : totalDonations + parseInt(doc.data().itemQty);
+          totalHelpedPeople = (isNaN(doc.data().numberPeopleHelped) || typeof doc.data().numberPeopleHelped === 'undefined' || doc.data().numberPeopleHelped === '')
+            ? totalHelpedPeople
+            : totalHelpedPeople + parseInt(doc.data().numberPeopleHelped)
+          
           return null;
         });
         setDonations(
           isNaN(parseInt(totalDonations)) ? 0 : parseInt(totalDonations)
         );
-        setHelpedBy(uniqueID.size);
-        // setHelpedPeople(totalHelpedPeople)
+        setHelpedBy(uniqueID.size)
+        setHelpedPeople(totalHelpedPeople)
       } catch (err) {
         console.log(err);
       }
