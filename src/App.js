@@ -23,6 +23,7 @@ import DonateForm from "./component/Donate/DonateForm";
 
 import ScrollToTop from "./component/helper/ScrollToTop";
 import AllOutreachEvents from "./component/AllOutreachEvents";
+import Newscard from "./component/HomePage/Newscard"
 
 function App() {
   const fAuth = getAuth();
@@ -71,6 +72,7 @@ function App() {
           <Route path="/*" element={<Home />} />
           <Route path="/donateForm" element={<DonateForm />} />
           <Route path="/allOutreachEvents" element={<AllOutreachEvents />} />
+          <Route path="/newscard" element={<Newscard />} />
         </Routes>
         <Footer />
       </Router>

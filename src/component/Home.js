@@ -18,6 +18,7 @@ import Process from "./HomePage/Process";
 import MoreAboutUs from "./HomePage/MoreAboutUs";
 import Navbar from "./Navbar";
 import OutreachEventCard from "./Community/OutreachEventCard";
+import Newscard from "./HomePage/Newscard";
 import {
   formatDate,
   fetchEvents,
@@ -283,7 +284,10 @@ function HomePage() {
                 <News key={NewsData.id} NewsCardData={NewsData} />
               ))}
               <div className="mt-16">
-                <CustomButton label="More News" name="buttondefault" />
+                <CustomButton label="Load More News" name="buttondefault" 
+                onClick={() => {
+                  navigate("/newscard");
+                }}/>
               </div>
             </div>
           </div>
