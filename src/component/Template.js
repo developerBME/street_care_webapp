@@ -1,7 +1,7 @@
 import React from "react";
 
-import Landing from "./Landing";
-import Success from "./Success";
+import Landing from "./HomePage/Landing";
+import Success from "./HomePage/Success";
 
 function Template() {
   return (

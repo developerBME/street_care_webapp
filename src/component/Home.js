@@ -155,15 +155,25 @@ function HomePage() {
       const eventsData = await fetchEvents();
 
       // Sort events in place based on their date
-      eventsData.sort((a, b) => a.eventDate - b.eventDate);
+      // eventsData.sort((a, b) => a.eventDate - b.eventDate);
 
-      setEvents(eventsData);
+      // setEvents(eventsData);
+
+      // Display 3 upcoming events
+      eventsData.sort((a, b) => a.eventDate - b.eventDate);
+      let limitedData = eventsData.slice(0, 3);
+      setEvents(limitedData);
     };
     const fetchOfficialData = async () => {
       const eventsData = await fetchOfficialEvents();
       // Sort events in place based on their date
+      // eventsData.sort((a, b) => a.eventDate - b.eventDate);
+      // setOffevents(eventsData);
+
+      // Display 3 upcoming events
       eventsData.sort((a, b) => a.eventDate - b.eventDate);
-      setOffevents(eventsData);
+      let limitedData = eventsData.slice(0, 3);
+      setOffevents(limitedData);
     };
 
     fetchData();

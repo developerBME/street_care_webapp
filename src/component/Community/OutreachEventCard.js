@@ -5,6 +5,7 @@ import wavingHand from "../../images/waving_hand.png";
 import CustomButton from "../Buttons/CustomButton";
 import { handleRsvp } from "../EventCardService";
 import { useNavigate } from "react-router-dom";
+import EditModal from "./EditModal";
 
 const OutreachEventCard = ({ cardData, isProfilePage, refresh }) => {
   const {
@@ -22,6 +23,17 @@ const OutreachEventCard = ({ cardData, isProfilePage, refresh }) => {
   const navigate = useNavigate();
   const [label2, setLabel2] = useState(label);
   console.log(label2);
+
+  const [showModal, setShowModal] = useState(false);
+
+  const handleEditClick = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   return (
     <div className="bg-[#F5EEFE] w-[350px] lg:w-full rounded-2xl mb-4">
       {!isProfilePage ? (
@@ -74,10 +86,16 @@ const OutreachEventCard = ({ cardData, isProfilePage, refresh }) => {
       <div className="flex items-center justify-between px-5 pt-2 pb-4 gap-16">
         {isProfilePage ? (
           <div class="group relative">
-            <button class="bg-violet-200 text-[#181818] text-[14px] font-medium py-[10px] px-[24px] rounded-full hover:bg-violet-300 transition ease-in-out delay-300">
+            {/* <button class="bg-violet-200 text-[#181818] text-[14px] font-medium py-[10px] px-[24px] rounded-full hover:bg-violet-300 transition ease-in-out delay-300">
+              Edit
+            </button> */}
+            <button
+              className="bg-violet-200 text-[#181818] text-[14px] font-medium py-[10px] px-[24px] rounded-full hover:bg-violet-300 transition ease-in-out delay-300"
+              onClick={handleEditClick}
+            >
               Edit
             </button>
-            <nav
+            {/* <nav
               tabindex="0"
               class="border-2 text-[12px]  hover:bg-violet-300 bg-violet-200 shadow invisible border-violet-300 rounded-2xl w-32 absolute left-0 top-full transition-all opacity-0 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-1"
             >
@@ -103,7 +121,18 @@ const OutreachEventCard = ({ cardData, isProfilePage, refresh }) => {
                   </a>
                 </li>
               </ul>
-            </nav>
+            </nav> */}
+            {showModal && (
+              <EditModal
+                handleClose={handleCloseModal}
+                id={id}
+                label={label}
+                navigate={navigate}
+                label2={label2}
+                setLabel2={setLabel2}
+                refresh={refresh}
+              />
+            )}
           </div>
         ) : (
           <div class="group relative">
