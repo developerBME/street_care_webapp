@@ -109,11 +109,11 @@ function Footer() {
               Contact
             </h2> */}
                 <ul class="text-white font-medium">
-                  <li class="mb-4">
+                  {/* <li class="mb-4">
                     <a href="#" class="hover:underline">
                       Contact
                     </a>
-                  </li>
+                  </li> */}
                   <li class="mb-4">
                     <a href="#" class="hover:underline">
                       Location: New York, Florida, Maryland, International
@@ -128,10 +128,7 @@ function Footer() {
                 </ul>
               </div>
               <div>
-                {/* <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
-              About
-            </h2> */}
-                <ul class="text-white font-medium">
+                {/* <ul class="text-white font-medium">
                   <li class="mb-4">
                     <a href="#" class="hover:underline">
                       About
@@ -147,7 +144,7 @@ function Footer() {
                       Donate
                     </a>
                   </li>
-                </ul>
+                </ul> */}
               </div>
               <div>
                 {/* <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">

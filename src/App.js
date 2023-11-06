@@ -25,7 +25,8 @@ import AllOutreachEvents from "./component/AllOutreachEvents";
 
 import ScrollToTop from "./component/helper/ScrollToTop";
 import Not404 from "./component/404";
-import Newscard from "./component/HomePage/Newscard"
+import Newscard from "./component/HomePage/Newscard";
+import ComingSoon from "./component/ComingSoon";
 
 function App() {
   const fAuth = getAuth();
@@ -77,6 +78,7 @@ function App() {
           <Route path="/donateForm" element={<DonateForm />} />
           <Route path="/allOutreachEvents" element={<AllOutreachEvents />} />
           <Route path="/newscard" element={<Newscard />} />
+          <Route path="/coming" element={<ComingSoon />} />
         </Routes>
         <Footer />
       </Router>
