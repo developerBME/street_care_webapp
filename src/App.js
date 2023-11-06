@@ -15,6 +15,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import CommOutForm from "./component/UserProfile/CommOutForm";
 import PersonalOutForm from "./component/UserProfile/PersonalOutForm";
 import Documenting from "./component/UserProfile/Documenting";
+import AccSetting from "./component/UserProfile/AccSetting";
 import OutreachSignup from "./component/Community/OutreachSignup";
 import CreateOutreach from "./component/Community/CreateOutreach";
 import HelpRequestForm from "./component/Community/HelpRequstForm";
@@ -61,6 +62,7 @@ function App() {
           <Route path="/outreachsignup" element={<OutreachSignup />} />
           <Route path="/outreachsignup/:id" element={<OutreachSignup />} />
           <Route path="/createOutreach" element={<CreateOutreach />} />
+          <Route path="/profile/accsetting" element={<AccSetting />} />
           <Route
             path="/helpRequestEventWindow"
             element={<HelpRequestEventWindow />}

@@ -1,3 +1,5 @@
+import React from "react";
+
 const Process = () => {
   return (
     <div className="  items-center justify-center px-4 py-8  lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
