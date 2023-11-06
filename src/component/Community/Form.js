@@ -444,8 +444,8 @@ const Form = () => {
                         }`}
                       ref={startTimeRef}
                     />
-                  
                   }
+                  className="w-full"
                 />
                 {error.stimeError && (
                   <div className="inline-flex items-center">
@@ -453,13 +453,7 @@ const Form = () => {
                     <p className="text-red-600 text-xs">{error.stimeError}</p>
                   </div>
                 )}
-                {/* <p className="font-normal font-['Inter'] text-xs">
-                  Please follow the format mm/dd/yyyy
-                </p> */}
               </div>
-              
-            </div>
-            <div>
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
                   End DateTime*
@@ -478,8 +472,7 @@ const Form = () => {
                         }`}
                       ref={endTimeRef}
                     />
-                  }
-                  
+                  }  
                 />
                 {error.etimeError && (
                   <div className="inline-flex items-center">
@@ -487,10 +480,10 @@ const Form = () => {
                     <p className="text-red-600 text-xs">{error.etimeError}</p>
                   </div>
                 )}
-                {/* <p className="font-normal font-['Inter'] text-xs">
-                  Please follow the format mm/dd/yyyy
-                </p> */}
               </div>
+            </div>
+            <div>
+              
             </div>
           </div>
         </div>
