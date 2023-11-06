@@ -172,6 +172,13 @@ const Form = () => {
   const handleCityChange = (e)=>{
     updateErrorState("cityError","")
   }
+  const handleDescChange = (e)=>{
+    updateErrorState("descError","")
+  }
+
+  const handleCapChange = (e)=>{
+    updateErrorState("maxCapError","")
+  }
   const handleStateChange = (e)=>{
     updateErrorState("stateError","")
   }
@@ -186,7 +193,7 @@ const Form = () => {
   }
   const handleEtimeChange = (e)=>{
     updateErrorState("etimeError","")
-  }
+  } 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -309,6 +316,7 @@ const Form = () => {
                 placeholder="Details"
                 id="event-desc"
                 ref={descRef}
+                onChange={handleDescChange}
               />
               {error.descError && (
                 <div className="inline-flex items-center">
@@ -327,6 +335,7 @@ const Form = () => {
                 className="h-12 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
                 id="max-cap"
                 ref={maxCapRef}
+                onChange={handleCapChange}
               />
               <p className="font-normal font-['Inter'] text-xs">
                 Please provide a numerical value.
@@ -334,7 +343,7 @@ const Form = () => {
               {error.maxCapError && (
                 <div className="inline-flex items-center">
                   <img src={errorImg} className="w-3 h-3" />
-                  <p className="text-red-600 text-xs">{error.descError}</p>
+                  <p className="text-red-600 text-xs">{error.maxCapError}</p>
                 </div>
               )}
             </div>
@@ -425,7 +434,7 @@ const Form = () => {
                 )}
               </div>
             </div>
-            <div className="inline-flex grid grid-cols-2 space-x-4">
+            <div className="grid grid-cols-2 space-x-4">
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
                   Start DateTime*
@@ -445,7 +454,6 @@ const Form = () => {
                       ref={startTimeRef}
                     />
                   }
-                  className="w-full"
                 />
                 {error.stimeError && (
                   <div className="inline-flex items-center">
