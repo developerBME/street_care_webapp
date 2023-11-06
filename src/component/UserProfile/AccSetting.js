@@ -2,26 +2,49 @@ import React, { useState, useEffect, useRef } from "react";
 import CustomButton from "../Buttons/CustomButton";
 import errorImg from "../../images/error.png";
 import {getAuth, onAuthStateChanged} from "firebase/auth";
+import imageCompression from 'browser-image-compression';
 
 function AccSetting() {
   const [newUsername, setNewUsername] = useState('');
   const [newProfileImage, setNewProfileImage] = useState(null);
   const [error, setError] = useState("");
+  const [imageError, setImageError] = useState('');
   const username = useRef("");
   const imgRef = useRef("");
   const user = getAuth();
 
   const handleUsernameChange = (e) => {
     setNewUsername(e.target.value);
-    setError("");
+    setImageError("");
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    setNewProfileImage(file);
-    setError("");
-  };
+    if (file) {
+      // Check the file format
+      if (file.type !== 'image/png' && file.type !== 'image/jpeg' && file.type !== 'image/svg+xml') {
+        setImageError('Please select a valid PNG, JPG, or SVG image.');
+        return;
+      }
 
+      // Original image size
+      console.log('Original Image Size:', file.size, 'bytes');
+
+      try {
+        const options = {
+          maxSizeMB: 0.05,
+        };
+
+        const compressedFile = await imageCompression(file, options);
+        // Compressed image size
+        console.log('Compressed Image Size:', compressedFile.size, 'bytes');
+        setNewProfileImage(compressedFile);
+        setImageError('');
+      } catch (error) {
+        setImageError('Image compression failed. Please select a smaller image.');
+      }
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -46,7 +69,7 @@ function AccSetting() {
         <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
           <div className="relative flex flex-col items-center ">
             {/*  */}
-            <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 mt-24  lg:mx-40 lg:mt-32 rounded-2xl bg-white text-black ">
+            <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 mt-24  lg:mx-40 lg:mt-32 lg:mb-12 rounded-2xl bg-white text-black ">
                 <div className="xl:px-24 xl:py-12">
                     <p className="text-[#212121] pl-4 pt-4 text-3xl md:pl-8 md:pt-0 xl:pl-0 xl:pt-0 sm:text-4xl font-medium font-dmsans leading-9 mb-4">Update Your Profile</p>
                     <form>
@@ -87,6 +110,14 @@ function AccSetting() {
                             <img src={errorImg} className="w-3 h-3" />
                             <p className="text-red-600 text-xs">
                               {error}
+                            </p>
+                          </div>
+                        )}
+                        {imageError && (
+                          <div className="inline-flex items-center">
+                            <img src={errorImg} className="w-3 h-3" />
+                            <p className="text-red-600 text-xs">
+                              {imageError}
                             </p>
                           </div>
                         )}
