@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useRef } from "react";
 import CustomButton from "../Buttons/CustomButton";
 
 import CarePackage from "./CarePackage";
 
 function HowToHelp() {
+  const howToHelp = useRef();
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center ">
@@ -21,7 +22,12 @@ function HowToHelp() {
                 Building genuine connections and fostering trust is key to
                 making a positive impact.
               </div>
-              <div className=" cursor-pointer px-8 py-4 bg-white rounded-[100px] border border-stone-300 justify-center items-center gap-2.5 inline-flex text-center text-slate-700 text-lg font-semibold font-open-sans leading-normal">
+              <div
+                className=" cursor-pointer px-8 py-4 bg-white rounded-[100px] border border-stone-300 justify-center items-center gap-2.5 inline-flex text-center text-slate-700 text-lg font-semibold font-open-sans leading-normal"
+                onClick={() =>
+                  howToHelp.current.scrollIntoView({ behavior: "smooth" })
+                }
+              >
                 How to prepare the Care Package? ↓
               </div>
               {/* <div className="px-8 py-4 bg-white rounded-[100px] border border-stone-300 justify-center items-center gap-2.5 inline-flex">
@@ -33,7 +39,10 @@ function HowToHelp() {
           </div>
           {/*  */}
         </div>
-        <div className=" w-[95%] md:w-[90%] lg:w-[75%] mx-2 lg:mx-40 mt-8 rounded-2xl text-black ">
+        <div
+          ref={howToHelp}
+          className=" w-[95%] md:w-[90%] lg:w-[75%] mx-2 lg:mx-40 mt-8 rounded-2xl text-black scroll-m-16  "
+        >
           {" "}
           <CarePackage />
           {/* Remove this component and create a new one for your code  */}
