@@ -94,6 +94,33 @@ const fetchUserName = async (uid) => {
   }
 };
 
+export const fetchEventById = async (eventId) => {
+  // Reference to the specific document in the outreach events collection
+  const eventRef = doc(db, OUTREACH_EVENTS_COLLECTION, eventId);
+  
+  const eventSnap = await getDoc(eventRef);
+  
+  // Check if the document exists
+  if (!eventSnap.exists()) {
+      console.error("Event not found with id:", eventId);
+      return null;
+  }
+  
+  const eventData = eventSnap.data();
+  
+  const userName = eventData.uid ? await fetchUserName(eventData.uid) : "Unknown User";
+  
+  const formattedDate = eventData.eventDate ? formatDate(new Date(eventData.eventDate.seconds * 1000)) : "No Date";
+
+  return {
+      ...eventData,
+      userName,
+      eventDate: formattedDate,
+      id: eventSnap.id
+  };
+};
+
+
 export const fetchUserEvents = async (uid) => {
   const userQuery = query(
     collection(db, USERS_COLLECTION),
