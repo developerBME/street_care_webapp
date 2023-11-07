@@ -199,14 +199,14 @@ const OutreachSignup = () => {
                 <div className="h-10 bg-[#6840E0] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex">
                   <CustomButton label="Sign Up" name="buttondefault" />
                 </div>
-                <div className="h-10 bg-[#000]] rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 inline-flex">
+                <div
+                  className="h-10 bg-[#000]] rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 inline-flex"
+                  onClick={() => {
+                    navigate("/");
+                  }}
+                >
                   <div className="self-stretch grow shrink basis-0 px-6 py-2.5 justify-center items-center gap-2 inline-flex">
-                    <button
-                      className="text-center text-[#1F0A58] text-sm font-medium font-inter leading-tight"
-                      onClick={() => {
-                        navigate("/");
-                      }}
-                    >
+                    <button className="text-center text-[#1F0A58] text-sm font-medium font-inter leading-tight">
                       Cancel
                     </button>
                   </div>
