@@ -156,7 +156,7 @@ const NavBar = (props) => {
                   }}
                   className="ml-4 mr-4 cursor-pointer"
                   alt="S"
-                  src= {props.photoUrl || defaultImage}
+                  src={props.photoUrl || defaultImage}
                   sx={{ width: 58, height: 56 }}
                 />
 
