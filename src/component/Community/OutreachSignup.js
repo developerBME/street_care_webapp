@@ -4,12 +4,13 @@ import userImg from "../../images/user.jpeg";
 import verifiedImg from "../../images/verified_purple.png";
 import wavingHand from "../../images/waving_hand.png";
 import CustomButton from "../Buttons/CustomButton";
-import { fetchEventById } from "../EventCardService";
+import { fetchEventById, handleRsvp } from "../EventCardService";
 import { Co2Sharp } from "@mui/icons-material";
 
 const OutreachSignup = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [label2, setLabel2] = useState("RSVP");
 
   const eventDetails = [
     {
@@ -17,7 +18,7 @@ const OutreachSignup = () => {
       location: "200 Eastern Pkwy, Brooklyn, NY 11238",
     },
   ];
-
+ 
   const [data, setData] = useState(null);
 
   useEffect(() => {
@@ -197,7 +198,17 @@ const OutreachSignup = () => {
                   </div>
                 </div> */}
                 <div className="h-10 bg-[#6840E0] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex">
-                  <CustomButton label="Sign Up" name="buttondefault" />
+                  <CustomButton label="Sign Up" name="buttondefault" onClick={(e) => {
+                        handleRsvp(
+                          e,
+                          id,
+                          "RSVP",
+                          navigate,
+                          "RSVP",
+                          setLabel2,
+                          false
+                        )
+                      }}/>
                 </div>
                 <div className="h-10 bg-[#000]] rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 inline-flex">
                   <div className="self-stretch grow shrink basis-0 px-6 py-2.5 justify-center items-center gap-2 inline-flex">
