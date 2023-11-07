@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import userImg from "../../images/user.jpeg";
 import verifiedImg from "../../images/verified_purple.png";
 import wavingHand from "../../images/waving_hand.png";
 import CustomButton from "../Buttons/CustomButton";
 import { fetchEventById } from "../EventCardService";
 import { Co2Sharp } from "@mui/icons-material";
+import defaultImage from "../../images/default_avatar.svg";
 
 const OutreachSignup = () => {
   const navigate = useNavigate();
@@ -47,7 +47,7 @@ const OutreachSignup = () => {
               <div className="self-stretch h-fit bg-[#F5EDFA] rounded-[30px] flex-col justify-start items-start flex">
                 <div className="self-stretch h-fit px-6 pt-9 pb-3 flex-col justify-start items-start gap-2.5 flex">
                   <div className="justify-start items-center gap-2 inline-flex">
-                    <img className="w-9 h-9 rounded-full" src={userImg} />
+                    <img className="w-9 h-9 rounded-full" src={data?.photoUrl || defaultImage} />
                     <div className="justify-start items-center gap-1 flex">
                       {/* {data && (
                         <div className="text-[#000] text-sm font-normal font-inter leading-snug">
@@ -144,7 +144,8 @@ const OutreachSignup = () => {
                   )} */}
                   {data ? (
                     <div className="text-[#444746] text-sm font-normal font-inter leading-snug">
-                      Open Spots: {data.interests}/{data.totalSlots}
+                      {/* Open Spots: {data.interests}/{data.totalSlots} */}
+                      Open Spots: {data.totalSlots - data.nop}/{data.totalSlots}
                     </div>
                   ) : (
                     <div className="text-[#444746] text-sm font-normal font-inter leading-snug">

@@ -197,15 +197,19 @@ export const fetchEventById = async (eventId) => {
   
   const eventData = eventSnap.data();
   
-  const userName = eventData.uid ? await fetchUserName(eventData.uid) : "Unknown User";
-  
+  const result = eventData.uid ? await fetchUserDetails(eventData.uid) : "Unknown User";
+  const userName = result.username;
+  const photoUrl = result.photoUrl;
+  let currentParticipants = eventData.participants || [];
   const formattedDate = eventData.eventDate ? formatDate(new Date(eventData.eventDate.seconds * 1000)) : "No Date";
 
   return {
       ...eventData,
       userName,
       eventDate: formattedDate,
-      id: eventSnap.id
+      id: eventSnap.id,
+      photoUrl,
+      nop: currentParticipants.length,
   };
 };
 
