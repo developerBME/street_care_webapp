@@ -92,7 +92,7 @@ function Success() {
           <div className="flex lg:flex-col xl:flex-row gap-4 items-start  lg:items-center xl:items-start ">
             <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
               <div className="text-violet-950  font-bricolage text-5xl font-normal leading-[64px]">
-                9{/* {helpedPeople} */}
+                {helpedPeople}
               </div>
             </div>
             <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
