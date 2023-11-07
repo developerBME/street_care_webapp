@@ -39,7 +39,10 @@ const OutreachEventCard = ({ cardData, isProfilePage, refresh }) => {
     <div className="bg-[#F5EEFE] min-w-max sm:min-w-fit lg:w-full rounded-2xl mb-4">
       {!isProfilePage ? (
         <div className="inline-flex items-center px-5 pt-6 pb-3 space-x-2">
-          <img src={photoUrl || defaultImage} className="w-8 h-8 rounded-full" />
+          <img
+            src={photoUrl || defaultImage}
+            className="w-8 h-8 rounded-full"
+          />
           <div className="font-normal font-['Inter'] text-[13px] ">
             {userName}
           </div>
@@ -85,7 +88,7 @@ const OutreachEventCard = ({ cardData, isProfilePage, refresh }) => {
         </div>
       )}
       <div className="flex items-center justify-between px-5 pt-2 pb-4 gap-16">
-        {isProfilePage ? (
+        {isProfilePage || label2 === "EDIT" ? (
           <div class="group relative">
             {/* <button class="bg-violet-200 text-[#181818] text-[14px] font-medium py-[10px] px-[24px] rounded-full hover:bg-violet-300 transition ease-in-out delay-300">
               Edit
@@ -94,7 +97,7 @@ const OutreachEventCard = ({ cardData, isProfilePage, refresh }) => {
               className="bg-violet-200 text-[#181818] text-[14px] font-medium py-[10px] px-[24px] rounded-full hover:bg-violet-300 transition ease-in-out delay-300"
               onClick={handleEditClick}
             >
-              Edit
+              EDIT
             </button>
             {/* <nav
               tabindex="0"
