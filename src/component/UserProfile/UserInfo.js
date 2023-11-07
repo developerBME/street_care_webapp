@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import user from "../../images/grey_avatar.png";
+import defaultImage from "../../images/default_avatar.svg";
 import crown from "../../images/crown.png";
 import notes from "../../images/notes.png";
 import announcement from "../../images/announcement.png";
@@ -81,34 +81,35 @@ const UserInfo = () => {
           "/" +
           data.docs[0].data().dateCreated.toDate().getFullYear()
       );
+      setPhotoUrl(data.docs[0].data().photoUrl)
       // Needs update for facebook
-      if (fAuth?.currentUser?.providerData[0].providerId === "google.com") {
-        setPhotoUrl(
-          fAuth?.currentUser?.photoURL
-            .toString()
-            .substring(
-              0,
-              fAuth?.currentUser?.photoURL.toString().indexOf("=") + 1
-            ) + "s224-c"
-        );
-      } else if (
-        fAuth?.currentUser?.providerData[0].providerId === "twitter.com"
-      ) {
-        setPhotoUrl(
-          fAuth?.currentUser?.photoURL
-            .toString()
-            .substring(
-              0,
-              fAuth?.currentUser?.photoURL.toString().indexOf("_normal")
-            ) + ".png"
-        );
-      } else if (
-        fAuth?.currentUser?.providerData[0].providerId === "facebook.com"
-      ) {
-        setPhotoUrl(fAuth?.currentUser?.photoURL.toString());
-      } else {
-        setPhotoUrl("");
-      }
+      // if (fAuth?.currentUser?.providerData[0].providerId === "google.com") {
+      //   setPhotoUrl(
+      //     fAuth?.currentUser?.photoURL
+      //       .toString()
+      //       .substring(
+      //         0,
+      //         fAuth?.currentUser?.photoURL.toString().indexOf("=") + 1
+      //       ) + "s224-c"
+      //   );
+      // } else if (
+      //   fAuth?.currentUser?.providerData[0].providerId === "twitter.com"
+      // ) {
+      //   setPhotoUrl(
+      //     fAuth?.currentUser?.photoURL
+      //       .toString()
+      //       .substring(
+      //         0,
+      //         fAuth?.currentUser?.photoURL.toString().indexOf("_normal")
+      //       ) + ".png"
+      //   );
+      // } else if (
+      //   fAuth?.currentUser?.providerData[0].providerId === "facebook.com"
+      // ) {
+      //   setPhotoUrl(fAuth?.currentUser?.photoURL.toString());
+      // } else {
+      //   setPhotoUrl("");
+      // }
       setSuperpowers(
         data.docs[0].data().superpowers ? data.docs[0].data().superpowers : []
       );
@@ -201,7 +202,7 @@ const UserInfo = () => {
       <div className="flex flex-col pt-0 px-0 pb-2 md:flex md:flex-row md:px-8  md:pb-8 xl:px-0  xl:pb-12 md:gap-x-6 xl:gap-x-12">
         <div className="pr-0 bg-gradient-to-tr from-[#C0F4FF] from-10% via-[#C0F4FF] via-60% to-[#DDD] to-90% bg-fixed rounded-t-2xl md:bg-none">
           <img
-            src={photoUrl || user}
+            src={photoUrl || defaultImage}
             alt="..."
             className="rounded-full md:w-64 md:h-48 lg:w-72 lg:h-56 border-none md:mt-16 lg:mt-20 h-32 w-32 mx-auto mt-8 mb-4 "
           />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import userImg from "../../images/user.jpeg";
+import defaultImage from "../../images/default_avatar.svg";
 import verifiedImg from "../../images/verified_purple.png";
 import wavingHand from "../../images/waving_hand.png";
 import CustomButton from "../Buttons/CustomButton";
@@ -19,6 +19,7 @@ const OutreachEventCard = ({ cardData, isProfilePage, refresh }) => {
     totalSlots,
     interests,
     nop,
+    photoUrl,
   } = cardData;
   const navigate = useNavigate();
   const [label2, setLabel2] = useState(label);
@@ -38,7 +39,7 @@ const OutreachEventCard = ({ cardData, isProfilePage, refresh }) => {
     <div className="bg-[#F5EEFE] w-[350px] lg:w-full rounded-2xl mb-4">
       {!isProfilePage ? (
         <div className="inline-flex items-center px-5 pt-6 pb-3 space-x-2">
-          <img src={userImg} className="w-8 h-8 rounded-full" />
+          <img src={photoUrl || defaultImage} className="w-8 h-8 rounded-full" />
           <div className="font-normal font-['Inter'] text-[13px] ">
             {userName}
           </div>

@@ -28,7 +28,9 @@ export const fetchEvents = async () => {
   });
   for (const doc of eventSnapshot.docs) {
     const eventData = doc.data();
-    const userName = await fetchUserName(eventData.uid);
+    const result = await fetchUserDetails(eventData.uid);
+    const userName = result.username;
+    const photoUrl = result.photoUrl;
 
     let currentParticipants = eventData.participants || [];
     outreachEvents.push({
@@ -41,6 +43,7 @@ export const fetchEvents = async () => {
           ? "EDIT"
           : "RSVP",
       nop: currentParticipants.length,
+      photoUrl: photoUrl,
     });
   }
   return outreachEvents;
@@ -88,6 +91,28 @@ const fetchUserName = async (uid) => {
   const userDoc = await getDoc(userRef);
   if (userDoc.exists()) {
     return userDoc.data().username || "";
+  } else {
+    console.error("No user found with uid:", uid);
+    return "";
+  }
+};
+
+const fetchUserDetails = async (uid) => {
+  // Reference to the uid instead of the docid of the user.
+  const userQuery = query(
+    collection(db, USERS_COLLECTION),
+    where("uid", "==", uid)
+  );
+  const userDocRef = await getDocs(userQuery);
+  const userDocID = userDocRef.docs[0].id;
+  // reference for the userdoc
+  const userRef = doc(db, USERS_COLLECTION, userDocID);
+  const userDoc = await getDoc(userRef);
+  if (userDoc.exists()) {
+    return {
+      username: userDoc.data().username || "",
+      photoUrl: userDoc.data().photoUrl || ""
+  };
   } else {
     console.error("No user found with uid:", uid);
     return "";
