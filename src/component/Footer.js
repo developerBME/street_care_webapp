@@ -121,9 +121,8 @@ function Footer() {
                   </li>
                   <li class="mb-4">
                     <a href="#" class="hover:underline">
-                      (702) 907 - 7390
+                      {/* (702) 907 - 7390 */}
                     </a>
-                    4
                   </li>
                 </ul>
               </div>
@@ -152,17 +151,17 @@ function Footer() {
             </h2> */}
                 <ul class="text-white font-medium">
                   <li class="mb-4">
-                    <a href="#" class="hover:underline">
+                    <a href="/howtohelp" class="hover:underline">
                       How to help
                     </a>
                   </li>
                   <li class="mb-4">
-                    <a href="#" class="hover:underline">
+                    <a href="/community" class="hover:underline">
                       Community
                     </a>
                   </li>
                   <li class="mb-4">
-                    <a href="#" class="hover:underline">
+                    <a href="/profile" class="hover:underline">
                       My Profile
                     </a>
                   </li>

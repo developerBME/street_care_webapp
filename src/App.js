@@ -85,7 +85,7 @@ function App() {
           <Route path="/community" element={<ComingSoon />} />
           <Route path="/contact" element={<ComingSoon />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/signup2" element={<Signup2 />} />
+          <Route path="/signup" element={<Signup2 />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/select-outreach" element={<Documenting />} />
           <Route path="/profile/commoutform" element={<CommOutForm />} />
