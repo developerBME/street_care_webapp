@@ -36,7 +36,7 @@ const OutreachEventCard = ({ cardData, isProfilePage, refresh }) => {
   };
 
   return (
-    <div className="bg-[#F5EEFE] w-[350px] lg:w-full rounded-2xl mb-4">
+    <div className="bg-[#F5EEFE] min-w-max sm:min-w-fit lg:w-full rounded-2xl mb-4">
       {!isProfilePage ? (
         <div className="inline-flex items-center px-5 pt-6 pb-3 space-x-2">
           <img src={photoUrl || defaultImage} className="w-8 h-8 rounded-full" />
