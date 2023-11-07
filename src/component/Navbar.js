@@ -80,7 +80,7 @@ const NavBar = (props) => {
     {
       id: 2,
       label: "Account Settings",
-      link: "/profile",
+      link: "/profile/accsetting",
       icons: RiUserSettingsLine,
     },
     {
@@ -101,7 +101,6 @@ const NavBar = (props) => {
     let handler = (e) => {
       if (!menuRef?.current?.contains(e.target)) {
         setOpen(false);
-        console.log(menuRef.current);
       }
     };
     document.addEventListener("mousedown", handler);

@@ -54,7 +54,8 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/howtohelp" element={<HowToHelp />} />
           <Route path="/community" element={<Community />} />
-          <Route path="/contact" element={<Contact />} />
+          {/* <Route path="/community" element={<ComingSoon />} /> */}
+          <Route path="/contact" element={<ComingSoon />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup2" element={<Signup2 />} />
           <Route path="/profile" element={<Profile />} />
@@ -78,7 +79,6 @@ function App() {
           <Route path="/donateForm" element={<DonateForm />} />
           <Route path="/allOutreachEvents" element={<AllOutreachEvents />} />
           <Route path="/newscard" element={<Newscard />} />
-          <Route path="/coming" element={<ComingSoon />} />
         </Routes>
         <Footer />
       </Router>
