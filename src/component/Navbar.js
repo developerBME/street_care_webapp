@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from "react";
 
 import Avatar from "@mui/material/Avatar";
 
-import { FaBars, FaTimes } from "react-icons/fa";
 import {
   RiAccountCircleFill,
   RiUserSettingsLine,
