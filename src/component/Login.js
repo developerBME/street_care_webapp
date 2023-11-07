@@ -19,7 +19,7 @@ import {
   handleGoogleSignIn,
   handleFacebookSignIn,
   handleTwitterSignIn,
-} from "./Signup2";
+} from "./Signup";
 
 function Login() {
   const navigate = useNavigate();
@@ -32,13 +32,12 @@ function Login() {
   const [errormsg, setErrors] = useState({
     PassError: "",
     EmailError: "",
-  }
-  );
+  });
 
   const updateErrorState = (key, value) => {
     setErrors((prevState) => ({
-      ...prevState, 
-      [key]: value, 
+      ...prevState,
+      [key]: value,
     }));
   };
 
@@ -62,14 +61,14 @@ function Login() {
     if (!email || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
       updateErrorState("EmailError", "Email is required!");
       return;
-    } else if (email){
+    } else if (email) {
       updateErrorState("EmailError", "");
     }
     if (!password) {
       setError("Password is Mandatory");
       updateErrorState("PassError", "Password is required!");
       return;
-    } else if (password){
+    } else if (password) {
       updateErrorState("PassError", "");
     }
 
@@ -95,12 +94,12 @@ function Login() {
               </div>
               <div className=" h-fit mt-14 flex flex-col justify-start items-start gap-9 ">
                 <div className="flex-col justify-start items-start gap-4 flex">
-                  <div className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200">
-                    <div
-                      className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal"
-                      onClick={handleGoogleSignIn}
-                    >
-                      <button type="submit">Continue with Google</button>
+                  <div
+                    className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200 cursor-pointer"
+                    onClick={handleGoogleSignIn}
+                  >
+                    <div className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal ">
+                      Continue with Google
                     </div>
                     <div className="w-8 h-8 left-[22.50px] top-[12px] absolute">
                       <FcGoogle size={32} />
@@ -121,11 +120,11 @@ function Login() {
                     </div>
                   </div>
                   */}
-                  <div className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200">
-                    <div
-                      className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal"
-                      onClick={handleTwitterSignIn}
-                    >
+                  <div
+                    className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200 cursor-pointer"
+                    onClick={handleTwitterSignIn}
+                  >
+                    <div className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal">
                       <button type="submit">Continue with Twitter</button>
                     </div>
                     <div className="w-8 h-8 left-[22.50px] top-[12px] absolute">
@@ -168,7 +167,9 @@ function Login() {
                         ></input>
                       </div>
                     </div>
-                    {errormsg.EmailError && <div className="text-red-700">{errormsg.EmailError}</div>}
+                    {errormsg.EmailError && (
+                      <div className="text-red-700">{errormsg.EmailError}</div>
+                    )}
                   </div>
                   <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
                     <div className="self-stretch text-zinc-700 text-[15px]  font-semibold font-inter leading-tight">
@@ -189,14 +190,16 @@ function Login() {
                         ></input>
                       </div>
                     </div>
-                    {errormsg.PassError && <div className="text-red-700">{errormsg.PassError}</div>}
+                    {errormsg.PassError && (
+                      <div className="text-red-700">{errormsg.PassError}</div>
+                    )}
                   </div>
                   <div className="w-fit text-violet-600 text-[15px] font-normal font-inter leading-snug hover:underline cursor-pointer">
                     Forgot your password?
                   </div>
                 </div>
               </div>
-              
+
               <div className="justify-start items-center mt-14 gap-4 inline-flex">
                 {/*
                 <div className="w-[18px] h-[18px] relative">

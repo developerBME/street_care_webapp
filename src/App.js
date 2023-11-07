@@ -6,7 +6,7 @@ import NavBar from "./component/Navbar";
 import Footer from "./component/Footer";
 import Login from "./component/Login";
 import Profile from "./component/UserProfile/Profile";
-import Signup2 from "./component/Signup2";
+import Signup2 from "./component/Signup";
 import HowToHelp from "./component/HowtoHelp/HowToHelp";
 import Community from "./component/Community/Community";
 import About from "./component/About/About";
