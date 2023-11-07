@@ -8,6 +8,7 @@ import announcement from "../../images/announcement.png";
 import neighborhood from "../../images/neighboorhood.png";
 import information from "../../images/information.png";
 import star from "../../images/star.png";
+import edit from "../../images/edit.png";
 
 import { db } from "../firebase";
 import {
@@ -27,6 +28,7 @@ import {
 } from "firebase/auth";
 
 import SuperpowerModal from "./SuperpowerModal";
+import CustomButton from "../Buttons/CustomButton";
 
 const UserInfo = () => {
   const navigate = useNavigate();
@@ -200,18 +202,21 @@ const UserInfo = () => {
     // <div className="lg:px-24 lg:py-12 ">
     <div className="xl:px-24 xl:py-12 ">
       <div className="flex flex-col pt-0 px-0 pb-2 md:flex md:flex-row md:px-8  md:pb-8 xl:px-0  xl:pb-12 md:gap-x-6 xl:gap-x-12">
-        <div className="pr-0 bg-gradient-to-tr from-[#C0F4FF] from-10% via-[#C0F4FF] via-60% to-[#DDD] to-90% bg-fixed rounded-t-2xl md:bg-none">
-          <img
-            src={photoUrl || defaultImage}
-            alt="..."
-            className="rounded-full md:w-64 md:h-48 lg:w-72 lg:h-56 border-none md:mt-16 lg:mt-20 h-32 w-32 mx-auto mt-8 mb-4 "
+        <div className="pr-0 bg-gradient-to-tr from-[#C0F4FF] from-10% via-[#C0F4FF] via-60% to-[#DDD] to-90% bg-fixed rounded-t-2xl md:bg-none relative">
+          <img src={photoUrl || defaultImage} alt="..." className="rounded-full md:w-64 md:h-48 lg:w-72 lg:h-56 border-none md:mt-16 lg:mt-20 h-32 w-32 mx-auto mt-8 mb-4 "
           />
+          <div className="absolute left-0 bottom-0">
+            <CustomButton label="" name="buttonicon8" icon={edit} onClick={() => navigate('/profile/accsetting')} />
+          </div>
         </div>
         <div className="w-[99%] py-4 md:mt-16 lg:mt-20">
-          <div className="px-4">
-            <h1 className="font-bricolage md:text-[54px] font-medium md:h-16 text-[#212121] h-12 text-4xl">
+          <div className="px-4 relative inline-block">
+            <h1 className="font-bricolage md:text-[54px] font-medium md:h-16 text-[#212121] h-12 text-4xl ">
               {displayName}
             </h1>
+            <div className="absolute -right-10 top-0">
+              <CustomButton label="" name="buttonicon8" icon={edit} onClick={() => navigate('/profile/accsetting')} />
+            </div>
             <h3 className="py-4 text-[#212121] font-opensans font-medium text-sm pt-0">
               Joined {dateCreated}
             </h3>
