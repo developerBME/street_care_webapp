@@ -30,7 +30,6 @@ import BMEcardimg3 from "../images/BMEofficialcardimg3.png";
 import CustomButton from "../component/Buttons/CustomButton";
 import { NewsCardData } from "../NewsData";
 
-  
 function HomePage() {
   const navigate = useNavigate();
   const fAuth = getAuth();
@@ -46,7 +45,6 @@ function HomePage() {
       // ...
     }
   });
-
 
   const cardData = [
     {
@@ -128,7 +126,7 @@ function HomePage() {
       img: BMEcardimg3,
     },
   ];
- 
+
   const [events, setEvents] = useState([]);
   const [offevents, setOffevents] = useState([]);
   const [newsevents, setnewsevents] = useState([]);
@@ -159,11 +157,11 @@ function HomePage() {
       setOffevents(limitedData);
     };
 
-  const fetchnewsData = async () => {
+    const fetchnewsData = async () => {
       // Display 3 news initially
       let limitedData = NewsCardData.slice(0, 3);
       setnewsevents(limitedData);
-      };
+    };
 
     fetchData();
     fetchOfficialData();
@@ -198,13 +196,7 @@ function HomePage() {
             {" "}
             Upcoming outreach events
           </p>
-          {/*<div className=" w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-              <Eventcard />
-              <Eventcard />
-              <div className=" md:col-span-2 lg:col-span-1">
-                <Eventcard />
-              </div>
-  </div> */}
+
           <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
             {events.map((eventData) => (
               <OutreachEventCard
@@ -229,34 +221,15 @@ function HomePage() {
           </div>
         </div>
       </div>
-      {/* Vishnu */}
-      {/* BME Official Gathering  */}
-      {/* <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
-          <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
-            <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
-              {" "}
-              Upcoming outreach events
-            </p>
-            <div className=" w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-              <BMEcard />
-              <BMEcard />
-              <div className=" md:col-span-2 lg:col-span-1">
-                <BMEcard />
-              </div>
-            </div>
-          </div>
-        </div> */}
       {/*Vedant*/} {/*BME OFFCIIAL GATHERING BLOCK START*/}
-      <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
+      {/* <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
         <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
           <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
             {" "}
             BME Official Gathering
           </p>
           <div className=" w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-            {/* {BMEcardData.map(BMEData => (
-                        <BMEcardnew key={BMEData.x} BMEcardData={BMEData} />
-                      ))} */}
+          
             {offevents.map((eventData) => (
               <BMEcardnew
                 key={eventData.id}
@@ -270,8 +243,7 @@ function HomePage() {
             ))}
           </div>
         </div>
-      </div>
-      {/*Vedant*/} {/*BME OFFCIIAL GATHERING BLOCK END*/}
+      </div> */}
       {/* Aniket */}
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8  rounded-2xl bg-white text-black ">
         <Process />
@@ -287,18 +259,18 @@ function HomePage() {
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
         {/*<News />*/}
 
-          <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
-            <p className="font-dmsans font-medium md:text-[30px] text-[25px] lg:text-[45px] text-[#212121]">
-              News
-            </p>
-            <div className=" grid grid-cols-1 gap-x-8 gap-y-8 mt-6 sm:pt-4 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-               {newsevents.map((eventData) => (
-                <News 
-                key={eventData.id} NewsCardData={eventData}
-                />
-              ))} 
-              <div className="mt-16">
-                <CustomButton label="Load More News" name="buttondefault" 
+        <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
+          <p className="font-dmsans font-medium md:text-[30px] text-[25px] lg:text-[45px] text-[#212121]">
+            News
+          </p>
+          <div className=" grid grid-cols-1 gap-x-8 gap-y-8 mt-6 sm:pt-4 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+            {newsevents.map((eventData) => (
+              <News key={eventData.id} NewsCardData={eventData} />
+            ))}
+            <div className="mt-16">
+              <CustomButton
+                label="Load More News"
+                name="buttondefault"
                 onClick={() => {
                   navigate("/newscard");
                 }}
@@ -314,6 +286,5 @@ function HomePage() {
     // </div>
   );
 }
-
 
 export default HomePage;

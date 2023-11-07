@@ -50,11 +50,11 @@ const NavBar = (props) => {
       label: "Community",
       link: "community",
     },
-    {
-      id: 4,
-      label: "Contact",
-      link: "contact",
-    },
+    // {
+    //   id: 4,
+    //   label: "Contact",
+    //   link: "contact",
+    // },
   ];
 
   const sideNavLinks = [

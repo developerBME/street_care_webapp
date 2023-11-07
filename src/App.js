@@ -79,32 +79,36 @@ function App() {
         <NavBar loggedIn={loggedIn} photoUrl={photoUrl} />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
+          {/* <Route path="/about" element={<About />} /> */}
           <Route path="/howtohelp" element={<HowToHelp />} />
-          <Route path="/community" element={<Community />} />
-          {/* <Route path="/community" element={<ComingSoon />} /> */}
+          {/* <Route path="/community" element={<Community />} /> */}
+          <Route path="/community" element={<ComingSoon />} />
           <Route path="/contact" element={<ComingSoon />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup2" element={<Signup2 />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/select-outreach" element={<Documenting />} />
           <Route path="/profile/commoutform" element={<CommOutForm />} />
-          <Route path="/outreachsignup" element={<OutreachSignup />} />
-          <Route path="/outreachsignup/:id" element={<OutreachSignup />} />
-          <Route path="/createOutreach" element={<CreateOutreach />} />
-          <Route path="/profile/accsetting" element={<AccSetting />} />
-          <Route
-            path="/helpRequestEventWindow"
-            element={<HelpRequestEventWindow />}
-          />
           <Route
             path="/profile/personaloutform"
             element={<PersonalOutForm />}
           />
-          <Route path="/helpRequestForm" element={<HelpRequestForm />} />
+          <Route path="/outreachsignup" element={<OutreachSignup />} />
+          <Route path="/outreachsignup/:id" element={<OutreachSignup />} />
+          <Route path="/createOutreach" element={<CreateOutreach />} />
+          <Route path="/profile/accsetting" element={<AccSetting />} />
+          {/* <Route
+            path="/helpRequestEventWindow"
+            element={<HelpRequestEventWindow />}
+          /> */}
+          <Route path="/helpRequestEventWindow" element={<ComingSoon />} />
+
+          {/* <Route path="/helpRequestForm" element={<HelpRequestForm />} /> */}
+          <Route path="/helpRequestForm" element={<ComingSoon />} />
           <Route path="/*" element={<Not404 />} />
 
-          <Route path="/donateForm" element={<DonateForm />} />
+          {/* <Route path="/donateForm" element={<DonateForm />} /> */}
+          <Route path="/donateForm" element={<ComingSoon />} />
           <Route path="/allOutreachEvents" element={<AllOutreachEvents />} />
           <Route path="/newscard" element={<Newscard />} />
         </Routes>
