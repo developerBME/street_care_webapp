@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import userImg from "../../images/user.jpeg";
 import verifiedImg from "../../images/verified_purple.png";
 import wavingHand from "../../images/waving_hand.png";
 import CustomButton from "../Buttons/CustomButton";
+import { fetchEventById } from "../EventCardService";
+import { Co2Sharp } from "@mui/icons-material";
 
 const OutreachSignup = () => {
   const navigate = useNavigate();
@@ -15,6 +17,23 @@ const OutreachSignup = () => {
       location: "200 Eastern Pkwy, Brooklyn, NY 11238",
     },
   ];
+
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const result = await fetchEventById(id);
+        setData(result);
+        console.log(result);
+        console.log(result.eventDate);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+
+    getData(); // Invoke the async function
+  }, []);
 
   return (
     <div className="bg-gradient-to-tr from-[#D3E0D8] to-[#FDFD5B] bg-fixed">
@@ -30,37 +49,108 @@ const OutreachSignup = () => {
                   <div className="justify-start items-center gap-2 inline-flex">
                     <img className="w-9 h-9 rounded-full" src={userImg} />
                     <div className="justify-start items-center gap-1 flex">
-                      <div className="text-[#000] text-sm font-normal font-inter leading-snug">
-                        William Lee
-                      </div>
+                      {/* {data && (
+                        <div className="text-[#000] text-sm font-normal font-inter leading-snug">
+                          {data.userName}
+                        </div>
+                      )} */}
+                      {data ? (
+                        <div className="text-[#000] text-sm font-normal font-inter leading-snug">
+                          {data.userName}
+                        </div>
+                      ) : (
+                        <div className="text-[#000] text-sm font-normal font-inter leading-snug">
+                          Loading...
+                        </div>
+                      )}
                       <img src={verifiedImg} className="w-6 h-6" />
                     </div>
                   </div>
                 </div>
                 <div className="self-stretch h-fit px-6 py-2 flex-col justify-start items-start gap-4 flex">
-                  <div className="self-stretch text-[#212121] text-2xl font-medium font-inter leading-loose">
-                    {console.log(id)}
-                    BK Fort Green Outreach
-                  </div>
-                  <div className="self-stretch text-[#37168B] text-sm font-medium font-inter leading-tight">
-                    Sept 9, 2023 SAT 12:00pm
-                  </div>
-                  <div className="self-stretch h-[22px] flex-col justify-start items-start gap-1 flex">
-                    <div className="self-stretch text-[#444746] text-sm font-normal font-inter leading-snug">
-                      200 Eastern Pkwy, Brooklyn, NY 11238
+                  {/* {data && (
+                    <div className="self-stretch text-[#212121] text-2xl font-medium font-inter leading-loose">
+                      {console.log(id)}
+                      {data.title}
                     </div>
+                  )} */}
+
+                  {data ? (
+                    <div className="self-stretch text-[#212121] text-2xl font-medium font-inter leading-loose">
+                      {data.title}
+                    </div>
+                  ) : (
+                    <div className="self-stretch text-[#212121] text-2xl font-medium font-inter leading-loose">
+                      Loading...
+                    </div>
+                  )}
+                  {/* {data && (
+                    <div className="self-stretch text-[#37168B] text-sm font-medium font-inter leading-tight">
+                      {data.eventDate}
+                    </div>
+                  )} */}
+
+                  {data ? (
+                    <div className="self-stretch text-[#37168B] text-sm font-medium font-inter leading-tight">
+                      {data.eventDate}
+                    </div>
+                  ) : (
+                    <div className="self-stretch text-[#37168B] text-sm font-medium font-inter leading-tight">
+                      Loading...
+                    </div>
+                  )}
+
+                  <div className="self-stretch h-[22px] flex-col justify-start items-start gap-1 flex">
+                    {/* {data && (
+                      <div className="self-stretch text-[#444746] text-sm font-normal font-inter leading-snug">
+                        {data.location.street}, {data.location.city},{" "}
+                        {data.location.state} {data.location.zipcode}
+                      </div>
+                    )} */}
+                    {data ? (
+                      <div className="self-stretch text-[#444746] text-sm font-normal font-inter leading-snug">
+                        {data.location.street}, {data.location.city},{" "}
+                        {data.location.state} {data.location.zipcode}
+                      </div>
+                    ) : (
+                      <div className="self-stretch text-[#444746] text-sm font-normal font-inter leading-snug">
+                        Loading...
+                      </div>
+                    )}
                   </div>
                   <div className="self-stretch px-4 py-2 bg-white rounded-2xl justify-center items-center gap-2.5 inline-flex">
                     <img src={wavingHand} className="w-6 h-6" />
-                    <div className="grow shrink basis-0 text-[#181818] text-sm font-normal font-inter leading-snug">
-                      Childcare specialist needed
-                    </div>
+                    {/* {data && (
+                      <div className="grow shrink basis-0 text-[#181818] text-sm font-normal font-inter leading-snug">
+                        {data.helpType}
+                      </div>
+                    )} */}
+                    {data ? (
+                      <div className="grow shrink basis-0 text-[#181818] text-sm font-normal font-inter leading-snug">
+                        {data.helpType}
+                      </div>
+                    ) : (
+                      <div className="grow shrink basis-0 text-[#181818] text-sm font-normal font-inter leading-snug">
+                        Loading...
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="self-stretch px-6 pt-4 pb-6 justify-between items-center inline-flex">
-                  <div className="text-[#444746] text-sm font-normal font-inter leading-snug">
-                    Open Spots: 8/20
-                  </div>
+                  {/* {data && (
+                    <div className="text-[#444746] text-sm font-normal font-inter leading-snug">
+                      Open Spots: {data.interests}/{data.totalSlots}
+                    </div>
+                  )} */}
+                  {data ? (
+                    <div className="text-[#444746] text-sm font-normal font-inter leading-snug">
+                      Open Spots: {data.interests}/{data.totalSlots}
+                    </div>
+                  ) : (
+                    <div className="text-[#444746] text-sm font-normal font-inter leading-snug">
+                      Loading...
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="self-stretch h-fit flex-col justify-start items-start gap-8 flex">

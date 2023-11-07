@@ -9,6 +9,7 @@ import neighborhood from "../../images/neighboorhood.png";
 import information from "../../images/information.png";
 import star from "../../images/star.png";
 import edit from "../../images/edit.png";
+import tickMark from "../../images/tickMark.svg";
 
 import { db } from "../firebase";
 import {
@@ -83,7 +84,7 @@ const UserInfo = () => {
           "/" +
           data.docs[0].data().dateCreated.toDate().getFullYear()
       );
-      setPhotoUrl(data.docs[0].data().photoUrl)
+      setPhotoUrl(data.docs[0].data().photoUrl);
       // Needs update for facebook
       // if (fAuth?.currentUser?.providerData[0].providerId === "google.com") {
       //   setPhotoUrl(
@@ -203,10 +204,18 @@ const UserInfo = () => {
     <div className="xl:px-24 xl:py-12 ">
       <div className="flex flex-col pt-0 px-0 pb-2 md:flex md:flex-row md:px-8  md:pb-8 xl:px-0  xl:pb-12 md:gap-x-6 xl:gap-x-12">
         <div className="pr-0 bg-gradient-to-tr from-[#C0F4FF] from-10% via-[#C0F4FF] via-60% to-[#DDD] to-90% bg-fixed rounded-t-2xl md:bg-none relative">
-          <img src={photoUrl || defaultImage} alt="..." className="rounded-full md:w-64 md:h-48 lg:w-72 lg:h-56 border-none md:mt-16 lg:mt-20 h-32 w-32 mx-auto mt-8 mb-4 "
+          <img
+            src={photoUrl || defaultImage}
+            alt="..."
+            className="rounded-full md:w-64 md:h-48 lg:w-72 lg:h-56 border-none md:mt-16 lg:mt-20 h-32 w-32 mx-auto mt-8 mb-4 "
           />
           <div className="absolute left-0 bottom-0">
-            <CustomButton label="" name="buttonicon8" icon={edit} onClick={() => navigate('/profile/accsetting')} />
+            <CustomButton
+              label=""
+              name="buttonicon8"
+              icon={edit}
+              onClick={() => navigate("/profile/accsetting")}
+            />
           </div>
         </div>
         <div className="w-[99%] py-4 md:mt-16 lg:mt-20">
@@ -215,7 +224,12 @@ const UserInfo = () => {
               {displayName}
             </h1>
             <div className="absolute -right-10 top-0">
-              <CustomButton label="" name="buttonicon8" icon={edit} onClick={() => navigate('/profile/accsetting')} />
+              <CustomButton
+                label=""
+                name="buttonicon8"
+                icon={edit}
+                onClick={() => navigate("/profile/accsetting")}
+              />
             </div>
             <h3 className="py-4 text-[#212121] font-opensans font-medium text-sm pt-0">
               Joined {dateCreated}
@@ -251,22 +265,25 @@ const UserInfo = () => {
           </div>
         </div>
       </div>
-      <div className="px-4 pb-4 grid grid-flow-col overflow-x-auto gap-2 md:px-8 md:pb-12 md:grid md:grid-cols-2 md:grid-rows-3 md:gap-y-4 md:gap-x-6 xl:px-0 xl:pb-16 xl:grid xl:grid-cols-3 xl:grid-rows-2 xl:gap-4">
-        {/* <div className="px-4 pb-4 grid grid-flow-col overflow-x-auto gap-2 md:px-8 md:pb-12 md:grid md:grid-cols-2 md:grid-rows-3 md:gap-4 lg:px-0 lg:pb-16 lg:grid lg:grid-cols-3 lg:grid-rows-2 lg:gap-4"> */}
-        <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
-          <img className="w-16 h-16 mr-4" src={crown} alt="..."></img>
-          <div className="flex flex-col">
-            <h1 className="text-sm font-bold pb-1 font-bricolage text-[#212121]">
-              Community Leader
-            </h1>
-            {/* <h3 className="text-xs font-opensans font-semibold pb-1 text-[#616161]">
-              Achieved June 3rd, 2023
-            </h3> */}
-            <h3 className="text-xs font-opensans font-normal text-[#616161]">
-              Led Community Outreach
-            </h3>
+      <div className="px-4 pb-4 grid grid-flow-col overflow-x-auto gap-2 md:px-8 md:pb-12 md:grid md:grid-rows-2 md:grid-cols-2 md:gap-y-4 md:gap-x-6 xl:px-0 xl:pb-16 xl:grid xl:grid-rows-1 xl:grid-cols-3 xl:gap-4">
+        {/* <div className="px-4 pb-4 grid grid-flow-col overflow-x-auto gap-2 md:px-8 md:pb-12 md:grid md:grid-rows-3 md:grid-cols-2 md:gap-y-4 md:gap-x-6 xl:px-0 xl:pb-16 xl:grid xl:grid-rows-2 xl:grid-cols-3 xl:gap-4"> */}
+        {/* {achievments.comm_leader && (
+          <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
+            <img className="w-16 h-16 mr-4" src={crown} alt="..."></img>
+
+            <div className="flex flex-col">
+              <h1 className="text-sm font-bold pb-1 font-bricolage text-[#212121]">
+                Community Leader
+              </h1>
+              <h3 className="text-xs font-opensans font-semibold pb-1 text-[#616161]">
+                Achieved June 3rd, 2023
+              </h3>
+              <h3 className="text-xs font-opensans font-normal text-[#616161]">
+                Led Community Outreach
+              </h3>
+            </div>
           </div>
-        </div>
+        )} */}
         {/* <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
           <img className="w-16 h-16 mr-4" src={notes} alt="..."></img>
           <div className="flex flex-col">
@@ -289,39 +306,122 @@ const UserInfo = () => {
             </h3>
           </div>
         </div> */}
-        <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
-          <img className="w-16 h-16 mr-4" src={neighborhood} alt="..."></img>
-          <div className="flex flex-col">
-            <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121]">
-              Neighborhood Leader
-            </h1>
-            <h3 className="text-xs mb-2 font-opensans font-normal text-[#616161]">
-              Joined {">"} 3 Outreach in the same neighborhood.
-            </h3>
+        {achievments.neighborhood_leader ? (
+          <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto gap-4">
+            <div className="relative inline-block">
+              <img className="w-16 h-16" src={neighborhood} alt="..."></img>
+              <img
+                className="w-[17px] h-[17px] absolute bottom-0 right-0"
+                src={tickMark}
+                alt="..."
+              ></img>
+            </div>
+            <div className="grow shrink basis-0 flex flex-col">
+              <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121] self-stretch">
+                Neighborhood Leader
+              </h1>
+              <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161] self-stretch">
+                Joined {">"} 3 Outreaches in the same neighborhood
+                {/* Joined {">"} 3 Outreaches */}
+              </h3>
+            </div>
           </div>
-        </div>
-        <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
-          <img className="w-16 h-16 mr-4" src={information} alt="..."></img>
-          <div className="flex flex-col">
-            <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121]">
-              Benevolent Donor {achievments.benevolent_donor && <> true</>}
-            </h1>
-            <h3 className="text-xs mb-2 font-opensans font-normal text-[#616161]">
-              Donated more than 10 items
-            </h3>
+        ) : (
+          <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto gap-4">
+            <div className="relative inline-block">
+              <img
+                className="w-16 h-16 grayscale"
+                src={neighborhood}
+                alt="..."
+              ></img>
+            </div>
+            <div className="grow shrink basis-0 flex flex-col">
+              <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121] self-stretch">
+                Neighborhood Leader
+              </h1>
+              <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161] self-stretch">
+                Joined {">"} 3 Outreaches in the same neighborhood
+                {/* Joined {">"} 3 Outreaches */}
+              </h3>
+            </div>
           </div>
-        </div>
-        <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
-          <img className="w-16 h-16 mr-4" src={star} alt="..."></img>
-          <div className="flex flex-col">
-            <h1 className="text-sm font-bold mt-1 pb-1 font-bricolage text-[#212121]">
-              Seasoned Volunteer
-            </h1>
-            <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161]">
-              Joined more than 4 outreaches or has helped more than 8 people.
-            </h3>
+        )}
+        {achievments.benevolent_donor ? (
+          <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto gap-4">
+            <div className="relative inline-block">
+              <img className="w-16 h-16" src={information} alt="..."></img>
+              <img
+                className="w-[17px] h-[17px] absolute bottom-0 right-0"
+                src={tickMark}
+                alt="..."
+              ></img>
+            </div>
+            <div className="grow shrink basis-0 flex flex-col">
+              <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121] self-stretch">
+                Benevolent Donor
+                {/* {achievments.benevolent_donor && <> true</>} */}
+              </h1>
+              <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161] self-stretch">
+                Donated more than 10 items
+              </h3>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto gap-4">
+            <div className="relative inline-block">
+              <img
+                className="w-16 h-16 grayscale"
+                src={information}
+                alt="..."
+              ></img>
+            </div>
+            <div className="grow shrink basis-0 flex flex-col">
+              <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121] self-stretch">
+                Benevolent Donor
+                {/* {achievments.benevolent_donor && <> true</>} */}
+              </h1>
+              <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161] self-stretch">
+                Donated more than 10 items
+              </h3>
+            </div>
+          </div>
+        )}
+        {achievments.seasoned_volunteer ? (
+          <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto gap-4">
+            <div className="relative inline-block">
+              <img className="w-16 h-16" src={star} alt="..."></img>
+              <img
+                className="w-[17px] h-[17px] absolute bottom-0 right-0"
+                src={tickMark}
+                alt="..."
+              ></img>
+            </div>
+            <div className="grow shrink basis-0 flex flex-col">
+              <h1 className="text-sm font-bold mt-1 pb-1 font-bricolage text-[#212121] self-stretch">
+                Seasoned Volunteer
+              </h1>
+              <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161] self-stretch">
+                Joined more than 4 outreaches or has helped more than 8 people
+                {/* Helped more than 8 people */}
+              </h3>
+            </div>
+          </div>
+        ) : (
+          <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto gap-4">
+            <div className="relative inline-block">
+              <img className="w-16 h-16 grayscale" src={star} alt="..."></img>
+            </div>
+            <div className="grow shrink basis-0 flex flex-col">
+              <h1 className="text-sm font-bold mt-1 pb-1 font-bricolage text-[#212121] self-stretch">
+                Seasoned Volunteer
+              </h1>
+              <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161] self-stretch">
+                Joined more than 4 outreaches or has helped more than 8 people.
+                {/* Helped more than 8 people */}
+              </h3>
+            </div>
+          </div>
+        )}
       </div>
       {/* Impact */}
       <div className="">
