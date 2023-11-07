@@ -1,12 +1,17 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import React, { useEffect, useState } from "react";
+import { getDocs,
+  collection,
+  query,
+  where, } from "firebase/firestore";
+  import { db } from "./component/firebase";
 
 import Home from "./component/Home";
 import NavBar from "./component/Navbar";
 import Footer from "./component/Footer";
 import Login from "./component/Login";
 import Profile from "./component/UserProfile/Profile";
-import Signup2 from "./component/Signup2";
+import Signup2 from "./component/Signup";
 import HowToHelp from "./component/HowtoHelp/HowToHelp";
 import Community from "./component/Community/Community";
 import About from "./component/About/About";
@@ -25,17 +30,44 @@ import AllOutreachEvents from "./component/AllOutreachEvents";
 
 import ScrollToTop from "./component/helper/ScrollToTop";
 import Not404 from "./component/404";
-import Newscard from "./component/HomePage/Newscard"
+import Newscard from "./component/HomePage/Newscard";
+import ComingSoon from "./component/ComingSoon";
 
 function App() {
   const fAuth = getAuth();
   const [loggedIn, setLoggedIn] = useState(false);
+  const [photoUrl, setPhotoUrl] = useState("");
   useEffect(() => {}, []);
-  onAuthStateChanged(fAuth, (user) => {
+  onAuthStateChanged(fAuth, async (user) => {
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/auth.user
       setLoggedIn(true);
+      try {
+        const userRef = query(
+          collection(db, "users"),
+          where("uid", "==", fAuth?.currentUser?.uid)
+        );
+        const data = await getDocs(userRef);
+        if (typeof (data.docs[0]) == 'undefined') { 
+          setPhotoUrl("")
+          console.log("UNDEFINED")
+        } else {
+          setPhotoUrl(data.docs[0].data().photoUrl)
+        }
+      } catch (err) {
+        console.log(err)
+      }
+      
+      // if (fAuth?.currentUser?.providerData[0].providerId === 'google.com') {
+      //   setPhotoUrl(fAuth?.currentUser?.photoURL.toString().substring(0,fAuth?.currentUser?.photoURL.toString().indexOf("=")+1) + "s224-c");
+      // } else if (fAuth?.currentUser?.providerData[0].providerId === 'twitter.com'){
+      //   setPhotoUrl(fAuth?.currentUser?.photoURL.toString().substring(0,fAuth?.currentUser?.photoURL.toString().indexOf("_normal")) + ".png");
+      // } else if (fAuth?.currentUser?.providerData[0].providerId === 'facebook.com'){
+      //   setPhotoUrl(fAuth?.currentUser?.photoURL.toString());
+      // } else {
+      //   setPhotoUrl("")
+      // }
       // ...
     } else {
       setLoggedIn(false);
@@ -47,13 +79,14 @@ function App() {
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <Router>
         <ScrollToTop />
-        <NavBar loggedIn={loggedIn} />
+        <NavBar loggedIn={loggedIn} photoUrl = {photoUrl} />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/howtohelp" element={<HowToHelp />} />
           <Route path="/community" element={<Community />} />
-          <Route path="/contact" element={<Contact />} />
+          {/* <Route path="/community" element={<ComingSoon />} /> */}
+          <Route path="/contact" element={<ComingSoon />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup2" element={<Signup2 />} />
           <Route path="/profile" element={<Profile />} />

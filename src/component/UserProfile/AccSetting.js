@@ -1,21 +1,67 @@
 import React, { useState, useEffect, useRef } from "react";
 import CustomButton from "../Buttons/CustomButton";
 import errorImg from "../../images/error.png";
-import {getAuth, onAuthStateChanged} from "firebase/auth";
+import successImg from "../../images/verified.png";
+import {getAuth} from "firebase/auth";
+import {
+  collection,
+  getDocs,
+  getDoc,
+  doc,
+  updateDoc,
+  query,
+  where,
+} from "firebase/firestore";
+import { db, storage } from "../firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import imageCompression from 'browser-image-compression';
+import { useNavigate } from "react-router-dom";
+import arrowBack from "../../images/arrowBack.png";
+
+const USERS_COLLECTION = "users";
+async function uploadProfileImage(file,currentUser,setLoading){
+  const fAuth = getAuth();
+  const fileRef = ref(storage, "webappUserImages/" + fAuth.currentUser.uid);
+  setLoading(true);
+  const snapshot = await uploadBytes(fileRef, file);
+  const photoUrl = await getDownloadURL(fileRef);
+  console.log(photoUrl)
+
+  const userQuery = query(
+    collection(db, USERS_COLLECTION),
+    where("uid", "==", fAuth.currentUser.uid)
+  );
+  const userDocRef = await getDocs(userQuery);
+  const userDocID = userDocRef.docs[0].id;
+  // reference for the userdoc
+  const userRef = doc(db, USERS_COLLECTION, userDocID);
+  await updateDoc(userRef, {
+    photoUrl: photoUrl,
+  });
+  // updateProfile(currentUser,{photoURL:photoUrl})
+  setLoading(false);
+  alert("File Uploaded successfully")
+}
+
+
 
 function AccSetting() {
+  const navigate = useNavigate();
   const [newUsername, setNewUsername] = useState('');
   const [newProfileImage, setNewProfileImage] = useState(null);
+  const [usernameError, setUsernameError] = useState("");
+  const [userimageError, setUserimageError] = useState("");
   const [error, setError] = useState("");
-  const [imageError, setImageError] = useState('');
+  const [success, setSuccess] = useState("");
   const username = useRef("");
   const imgRef = useRef("");
-  const user = getAuth();
+  const fAuth = getAuth();
+  const [loading, setLoading] = useState(false)
 
   const handleUsernameChange = (e) => {
     setNewUsername(e.target.value);
-    setImageError("");
+    setError("");
+    setSuccess("");
   };
 
   const handleImageChange = async (e) => {
@@ -23,7 +69,7 @@ function AccSetting() {
     if (file) {
       // Check the file format
       if (file.type !== 'image/png' && file.type !== 'image/jpeg' && file.type !== 'image/svg+xml') {
-        setImageError('Please select a valid PNG, JPG, or SVG image.');
+        setUserimageError('Please select a valid PNG, JPG, or SVG image.');
         return;
       }
 
@@ -39,22 +85,48 @@ function AccSetting() {
         // Compressed image size
         console.log('Compressed Image Size:', compressedFile.size, 'bytes');
         setNewProfileImage(compressedFile);
-        setImageError('');
+        setUserimageError('');
       } catch (error) {
-        setImageError('Image compression failed. Please select a smaller image.');
+        setUserimageError('Image compression failed. Please select a smaller image.');
       }
+      setError("");
+      setSuccess("");
     }
   };
 
-  const handleSubmit = (e) => {
+  
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!username.current.value && !imgRef.current.value){
+        setError("Please provide a display name or profile image to update");
+        setSuccess("");
+    } else if(username.current.value !== ""){
+        setUsernameError("");
+        const userQuery = query(
+            collection(db, USERS_COLLECTION),
+            where("uid", "==", fAuth.currentUser.uid)
+        );
+        const userDocRef = await getDocs(userQuery);
+        const userDocID = userDocRef.docs[0].id;
+        // reference for the userdoc
+        const userRef = doc(db, USERS_COLLECTION, userDocID);
+        // const userDoc = await getDoc(userRef);
+        await updateDoc(userRef, {
+            username: username.current.value,
+        });
+        setNewUsername("")
+        setSuccess("Successfully updated display name")
+    } else if(imgRef.current.value !== ""){
+        setUserimageError("");
+        uploadProfileImage(newProfileImage,fAuth.currentUser,setLoading);
+        setSuccess("Successfully updated profile image")
+        imgRef.current.value = "";
+        setNewProfileImage(null)
+    }
+  };
 
-    // Form Validation Start
-    if (!username.current.value && !imgRef.current.value) {
-        setError("Please provide username or user image to update!");
-      } else {
-        setError("");
-      }
+  const handleCancel = (e) => {
+    navigate("/profile");
   };
 
   const clearFields = (e) => {
@@ -63,15 +135,17 @@ function AccSetting() {
     setNewUsername('');
     imgRef.current.value = "";
     setNewProfileImage(null)
-  }
+    setError("");
+    setUserimageError("");
+    setUsernameError("");
+    setSuccess("");
+  };
 
     return (
-        <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
-          <div className="relative flex flex-col items-center ">
-            {/*  */}
-            <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 mt-24  lg:mx-40 lg:mt-32 lg:mb-12 rounded-2xl bg-white text-black ">
-                <div className="xl:px-24 xl:py-12">
-                    <p className="text-[#212121] pl-4 pt-4 text-3xl md:pl-8 md:pt-0 xl:pl-0 xl:pt-0 sm:text-4xl font-medium font-dmsans leading-9 mb-4">Update Your Profile</p>
+        <div className="relative flex flex-col items-center ">
+            <div class=" w-full px-16 md:px-0 h-screen flex items-center justify-center">
+                <div class="bg-white border border-gray-200 flex flex-col items-center justify-center px-4 md:px-8 lg:px-24 py-8 rounded-lg shadow-2xl">
+                <p className="text-[#212121] pl-4 pt-4 text-3xl md:pl-8 md:pt-0 xl:pl-0 xl:pt-0 sm:text-4xl font-medium font-dmsans leading-9 mb-4">Update Your Profile </p>
                     <form>
                         <div className="mb-4">
                         <label htmlFor="username" className="block text-gray-600 mb-2">
@@ -104,6 +178,14 @@ function AccSetting() {
                             className="mt-2 max-w-full h-auto"
                             />
                         )}
+                        {userimageError && (
+                          <div className="inline-flex items-center">
+                            <img src={errorImg} className="w-3 h-3" />
+                            <p className="text-red-600 text-xs">
+                              {userimageError}
+                            </p>
+                          </div>
+                        )}
                         </div>
                         {error && (
                           <div className="inline-flex items-center">
@@ -113,30 +195,34 @@ function AccSetting() {
                             </p>
                           </div>
                         )}
-                        {imageError && (
-                          <div className="inline-flex items-center">
-                            <img src={errorImg} className="w-3 h-3" />
-                            <p className="text-red-600 text-xs">
-                              {imageError}
-                            </p>
-                          </div>
-                        )}
-                        <div className="space-y-16 space-x-[15px]">
+                        <div className="space-y-8 space-x-[15px]">
                             <CustomButton
-                                label="Cancel"
+                                label="Clear"
                                 name="buttonborder"
                                 onClick={clearFields}
-                            />
+                            /><CustomButton
+                            label="Cancel"
+                            name="buttonborder"
+                            onClick={handleCancel}
+                        />
                             <CustomButton
                                 label="Update Profile"
                                 name="buttondefault"
-                                onClick={handleSubmit}
+                                onClick={(e) => handleSubmit(e)}
+                                // disabled = {loading || !newProfileImage}
                             />
                         </div>
+                        {success && (
+                          <div className="inline-flex items-center">
+                            <img src={successImg} className="w-3 h-3" />
+                            <p className="text-red-600 text-xs">
+                              {success}
+                            </p>
+                          </div>
+                        )}
                     </form>
                 </div>
             </div>
-          </div>
         </div>
       );
 }

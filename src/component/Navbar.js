@@ -16,6 +16,7 @@ import communityicon from "../images/communityicon.png";
 
 import { Link, useNavigate, NavLink } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
+import defaultImage from "../images/default_avatar.svg";
 
 const NavBar = (props) => {
   const [nav, setNav] = useState(false);
@@ -80,7 +81,7 @@ const NavBar = (props) => {
     {
       id: 2,
       label: "Account Settings",
-      link: "/profile",
+      link: "/profile/accsetting",
       icons: RiUserSettingsLine,
     },
     {
@@ -101,7 +102,6 @@ const NavBar = (props) => {
     let handler = (e) => {
       if (!menuRef?.current?.contains(e.target)) {
         setOpen(false);
-        console.log(menuRef.current);
       }
     };
     document.addEventListener("mousedown", handler);
@@ -156,7 +156,7 @@ const NavBar = (props) => {
                   }}
                   className="ml-4 mr-4 cursor-pointer"
                   alt="S"
-                  src="avatar.jpg"
+                  src= {props.photoUrl || defaultImage}
                   sx={{ width: 58, height: 56 }}
                 />
 

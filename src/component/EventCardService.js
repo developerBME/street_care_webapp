@@ -28,7 +28,9 @@ export const fetchEvents = async () => {
   });
   for (const doc of eventSnapshot.docs) {
     const eventData = doc.data();
-    const userName = await fetchUserName(eventData.uid);
+    const result = await fetchUserDetails(eventData.uid);
+    const userName = result.username;
+    const photoUrl = result.photoUrl;
 
     let currentParticipants = eventData.participants || [];
     outreachEvents.push({
@@ -41,6 +43,7 @@ export const fetchEvents = async () => {
           ? "EDIT"
           : "RSVP",
       nop: currentParticipants.length,
+      photoUrl: photoUrl,
     });
   }
   return outreachEvents;
@@ -157,6 +160,55 @@ const fetchUserName = async (uid) => {
     return "";
   }
 };
+
+const fetchUserDetails = async (uid) => {
+  // Reference to the uid instead of the docid of the user.
+  const userQuery = query(
+    collection(db, USERS_COLLECTION),
+    where("uid", "==", uid)
+  );
+  const userDocRef = await getDocs(userQuery);
+  const userDocID = userDocRef.docs[0].id;
+  // reference for the userdoc
+  const userRef = doc(db, USERS_COLLECTION, userDocID);
+  const userDoc = await getDoc(userRef);
+  if (userDoc.exists()) {
+    return {
+      username: userDoc.data().username || "",
+      photoUrl: userDoc.data().photoUrl || ""
+  };
+  } else {
+    console.error("No user found with uid:", uid);
+    return "";
+  }
+};
+
+export const fetchEventById = async (eventId) => {
+  // Reference to the specific document in the outreach events collection
+  const eventRef = doc(db, OUTREACH_EVENTS_COLLECTION, eventId);
+  
+  const eventSnap = await getDoc(eventRef);
+  
+  // Check if the document exists
+  if (!eventSnap.exists()) {
+      console.error("Event not found with id:", eventId);
+      return null;
+  }
+  
+  const eventData = eventSnap.data();
+  
+  const userName = eventData.uid ? await fetchUserName(eventData.uid) : "Unknown User";
+  
+  const formattedDate = eventData.eventDate ? formatDate(new Date(eventData.eventDate.seconds * 1000)) : "No Date";
+
+  return {
+      ...eventData,
+      userName,
+      eventDate: formattedDate,
+      id: eventSnap.id
+  };
+};
+
 
 export const fetchUserEvents = async (uid) => {
   const userQuery = query(

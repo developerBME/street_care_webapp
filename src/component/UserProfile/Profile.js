@@ -152,7 +152,7 @@ function Profile() {
                 </Link>
               </div> */}
             </div>
-            <div className="  hidden sm:block">
+            <div className="hidden sm:block">
               <div className="w-full inline-flex bg-[#F2F6D8] p-4 rounded-xl space-x-4">
                 <div className="text-neutral-800 text-[16px] font-medium font-bricolage leading-loose">
                   Congratulations! You have attended more than 1 outreach event.
@@ -193,7 +193,7 @@ function Profile() {
               </div>
             </div>
             <div className="hidden sm:block sm:overflow-x-auto overflow-y-hidden">
-              <div className="grid grid-cols-3 gap-2 gap-y-16 mb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2 gap-y-16 mb-6">
                 {events.map((eventData) => (
                   <OutreachEventCard
                     key={eventData.id}
