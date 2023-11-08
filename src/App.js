@@ -89,6 +89,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/select-outreach" element={<Documenting />} />
           <Route path="/profile/commoutform" element={<CommOutForm />} />
+          <Route path="/profile/commoutform" element={<ComingSoon />} />
           <Route
             path="/profile/personaloutform"
             element={<PersonalOutForm />}
