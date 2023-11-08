@@ -51,7 +51,10 @@ const handleGoogleSignIn = async (e) => {
         //organization: company,
         username: user.displayName,
         uid: user.uid,
-        photoUrl: user.photoURL.toString().substring(0,user.photoURL.toString().indexOf("=") +1) + "s224-c",
+        photoUrl:
+          user.photoURL
+            .toString()
+            .substring(0, user.photoURL.toString().indexOf("=") + 1) + "s224-c",
       };
       const userRef = doc(db, "users", user.uid);
       setDoc(userRef, userData);
@@ -149,7 +152,10 @@ const handleTwitterSignIn = async (e) => {
         //organization: company,
         username: user.displayName,
         uid: user.uid,
-        photoUrl: user.photoURL.toString().substring(0,user.photoURL.toString().indexOf("_normal")) + ".png"
+        photoUrl:
+          user.photoURL
+            .toString()
+            .substring(0, user.photoURL.toString().indexOf("_normal")) + ".png",
       };
       const userRef = doc(db, "users", user.uid);
       setDoc(userRef, userData);
@@ -437,7 +443,7 @@ function Signup2() {
                 </span>
                 <span
                   onClick={() => {
-                    navigate("/login");
+                    navigate("/login", { replace: true });
                   }}
                   className="text-violet-600 text-base font-normal font-open-sans leading-normal cursor-pointer"
                 >

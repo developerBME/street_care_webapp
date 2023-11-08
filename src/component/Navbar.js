@@ -34,11 +34,11 @@ const NavBar = (props) => {
     console.log(props);
   }, []);
   const links = [
-    // {
-    //   id: 1,
-    //   label: "About",
-    //   link: "about",
-    // },
+    {
+      id: 1,
+      label: "Home",
+      link: "/",
+    },
     {
       id: 2,
       label: "How to help",
