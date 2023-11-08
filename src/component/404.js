@@ -18,16 +18,27 @@ function Not404() {
             Page Not Found
           </p>
           <p class="text-gray-500 my-4 pb-4 border-b-2 text-center">
-            Sorry, the page you are looking for could not be found.
+            Uh oh, we can’t seem to find the page you’re looking for. Try going
+            back to the previous page or to home page.
           </p>
-          <CustomButton
-            name="buttondefault"
-            class="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 mt-6 rounded transition duration-150"
-            label="Return Home"
-            onClick={() => {
-              navigate("/");
-            }}
-          ></CustomButton>
+          <div className="flex justify-center space-x-2">
+            <CustomButton
+              name="buttondefault"
+              class="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2  rounded transition duration-150"
+              label="Go back"
+              onClick={() => {
+                navigate(-1);
+              }}
+            ></CustomButton>
+            <CustomButton
+              name="buttondefault"
+              class="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 mt-6 rounded transition duration-150"
+              label="Home"
+              onClick={() => {
+                navigate("/");
+              }}
+            ></CustomButton>
+          </div>
         </div>
       </div>
       {/* </div> */}

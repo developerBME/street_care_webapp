@@ -233,7 +233,7 @@ function Login() {
                 </span>
                 <span
                   onClick={() => {
-                    navigate("/signup2");
+                    navigate("/signup");
                   }}
                   className="text-violet-600 text-base font-normal font-open-sans leading-normal cursor-pointer"
                 >

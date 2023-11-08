@@ -103,15 +103,13 @@ function App() {
             element={<HelpRequestEventWindow />}
           /> */}
           <Route path="/helpRequestEventWindow" element={<ComingSoon />} />
-
           {/* <Route path="/helpRequestForm" element={<HelpRequestForm />} /> */}
           <Route path="/helpRequestForm" element={<ComingSoon />} />
-          <Route path="/*" element={<Not404 />} />
-
           {/* <Route path="/donateForm" element={<DonateForm />} /> */}
           <Route path="/donateForm" element={<ComingSoon />} />
           <Route path="/allOutreachEvents" element={<AllOutreachEvents />} />
           <Route path="/newscard" element={<Newscard />} />
+          <Route path="/*" element={<Not404 />} />
         </Routes>
         <Footer />
       </Router>
