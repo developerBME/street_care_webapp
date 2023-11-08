@@ -127,8 +127,8 @@ function Profile() {
         </div>
         {/* Vishnu */}
         <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black mb-10">
-          <div className="flex flex-col gap-4 lg:gap-14 lg:p-28 pt-4 pb-4 ">
-            <div className="inline-flex flex-col sm:flex-row lg:space-x-16 pl-4">
+          <div className="flex flex-col gap-4 lg:gap-14 lg:p-24 pl-8 pt-4 pb-4 pr-8">
+            <div className="inline-flex flex-col sm:flex-row lg:space-x-16 ">
               <div class="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage leading-[52px]">
                 My Outreaches
               </div>
@@ -140,7 +140,6 @@ function Profile() {
                   navigate("/profile/select-outreach");
                 }}
               />
-
               {/* <div className="inline-flex bg-violet-600 rounded-full gap-2 items-center p-2 lg:p-4 mr-44 mt-2 lg:mt-0">
                 <img src={icon} className="w-4 h-4 mt-1" />
 
@@ -176,7 +175,7 @@ function Profile() {
               </div>
             </div>
             <div className="sm:hidden overflow-x-auto overflow-y-hidden">
-              <div className="flex space-x-3 w-fit lg:p-4 pl-4 ">
+              <div className="flex space-x-3 w-fit lg:p-4">
                 {events.map((eventData) => (
                   <OutreachEventCard
                     key={eventData.id}
