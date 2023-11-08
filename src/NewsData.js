@@ -25,7 +25,7 @@ export const NewsCardData = [
       NewsTitle:
         "We were recognized by Vanguard!",
       NewsDate: "Published Jun 18, 2022",
-      NewsContent: "Teams of military families will make care kits for us.",
+      NewsContent: "We were recognized by a leading non-profit sector agency. Thanks to Vanguard Charitable !",
     },
     {
       id: 4,
