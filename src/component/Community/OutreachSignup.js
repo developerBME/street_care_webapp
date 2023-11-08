@@ -6,11 +6,13 @@ import CustomButton from "../Buttons/CustomButton";
 import { fetchEventById, handleRsvp } from "../EventCardService";
 import { Co2Sharp } from "@mui/icons-material";
 import defaultImage from "../../images/default_avatar.svg";
+import RSVPConfirmationModal from "../UserProfile/RSVPConfirmationModal";
 
 const OutreachSignup = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [label2, setLabel2] = useState("RSVP");
+  const [success, setSuccess] = useState(false);
 
   const eventDetails = [
     {
@@ -214,9 +216,11 @@ const OutreachSignup = () => {
                       setLabel2,
                       false
                     );
+                    setSuccess(true);
                   }}
                 />
               </div>
+
               <div
                 className="h-10 bg-[#000]] rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 inline-flex"
                 onClick={() => {
@@ -229,6 +233,7 @@ const OutreachSignup = () => {
                   </button>
                 </div>
               </div>
+              {success && <RSVPConfirmationModal />}
             </div>
           </div>
         </div>
