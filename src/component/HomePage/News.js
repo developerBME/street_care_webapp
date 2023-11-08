@@ -1,8 +1,10 @@
-import React,{useState} from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const News = ({NewsCardData}) => {
 
-  const { NewsTitle, NewsDate, NewsContent } = NewsCardData;
+  const { id, NewsTitle, NewsDate, NewsContent } = NewsCardData;
+  
 
   return (
      <article
@@ -23,9 +25,9 @@ const News = ({NewsCardData}) => {
           <div className="flex flex-col h-full ml-2 mt-6 justify-end">
 
           <div className="mt-16">
-            <a className="text-sm font-opensans font-normal text-[#212121] underline pb-2 cursor-pointer ">
-              Read More → 
-            </a>
+          <Link to={`/readmorenews/${id}`} className="text-sm font-opensans font-normal text-[#212121] underline pb-2">
+            Read More →
+          </Link>
           </div>
       </div>
     </article>
