@@ -137,7 +137,7 @@ export default function FAQs() {
               create an account on our platform, and explore the resources and
               tools available to assist homeless people. Click
               <a
-                href="https://street-care-feature.vercel.app/signup2"
+                href="https://street-care-feature.vercel.app/signup"
                 className="underline px-1 text-blue-500"
               >
                 here
@@ -145,7 +145,10 @@ export default function FAQs() {
               to sign up to start as a volunteer and the app will guide you
               through the volunteering process. For a smoother experience,
               consider
-              <a className="underline px-1 text-blue-500">
+              <a
+                href="https://streetcare.us/app"
+                className="underline px-1 text-blue-500"
+              >
                 downloading our app
               </a>
               for real-time updates and easy sign-ups. Your help can make a big
