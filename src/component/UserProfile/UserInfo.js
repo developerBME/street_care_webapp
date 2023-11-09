@@ -219,18 +219,10 @@ const UserInfo = () => {
           </div>
         </div>
         <div className="w-[99%] py-4 md:mt-16 lg:mt-20">
-          <div className="px-4 relative inline-block">
+          <div className="px-4">
             <h1 className="font-bricolage md:text-[54px] font-medium md:h-16 text-[#212121] h-12 text-4xl ">
               {displayName}
             </h1>
-            <div className="absolute -right-10 top-0">
-              <CustomButton
-                label=""
-                name="buttonicon8"
-                icon={edit}
-                onClick={() => navigate("/profile/accsetting")}
-              />
-            </div>
             <h3 className="py-4 text-[#212121] font-opensans font-medium text-sm pt-0">
               Joined {dateCreated}
             </h3>
