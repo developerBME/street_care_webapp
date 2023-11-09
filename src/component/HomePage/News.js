@@ -5,7 +5,6 @@ const News = ({NewsCardData}) => {
 
   const { id, NewsTitle, NewsDate, NewsContent } = NewsCardData;
   
-
   return (
      <article
           key="123"

@@ -3,8 +3,7 @@ import { useParams } from 'react-router-dom';
 import { NewsCardData } from "../../NewsData";
 
 const Readmorenews = () => {  
-  
-  
+
   const { id } = useParams();
   const selectedNews = NewsCardData.find((news) => news.id === id);
 

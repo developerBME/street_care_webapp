@@ -110,7 +110,6 @@ function App() {
           <Route path="/donateForm" element={<ComingSoon />} />
           <Route path="/allOutreachEvents" element={<AllOutreachEvents />} />
           <Route path="/newscard" element={<Newscard />} />
-          <Route path="/readmorenews" element={<Readmorenews />} />
           <Route path="/readmorenews/:id" element={<Readmorenews />} />
           <Route path="/*" element={<Not404 />} />
         </Routes>

@@ -1,62 +1,62 @@
 export const NewsCardData = [
     {
-      id: 0,
+      id: '0',
       NewsTitle:
         "Military Families event for Street Care on Giving Tuesday, 12/1!",
       NewsDate: "Sep 1,2022",
       NewsContent: "Teams of military families will make care kits for us.",
     },
     {
-      id: 1,
+      id: '1',
       NewsTitle: "Thank You to Maryland Team who helps Street Care Monthly!",
       NewsDate: "Jan 18,2022",
       NewsContent:
         "Our Maryland Team is out on the streets in the greater Baltimore area monthly helping those homeless in need",
     },
     {
-      id: 2,
+      id: '2',
       NewsTitle: "Thank You to the United Methodist Church for Grant!",
       NewsDate: "Jan 18,2022",
       NewsContent:
         "Thank You to the United Methodist church (Baltimore-Washington DC) for rewarding BME Maryland partners with a grant for SC",
     },
     {
-      id: 3,
+      id: '3',
       NewsTitle:
         "We were recognized by Vanguard!",
       NewsDate: "Published Jun 18, 2022",
       NewsContent: "We were recognized by a leading non-profit sector agency. Thanks to Vanguard Charitable !",
     },
     {
-      id: 4,
+      id: '4',
       NewsTitle: "We were recognized for Transparency again!",
       NewsDate: "Published Dec 3, 2021",
       NewsContent:
         "Guidestar, the premier curator of nonprofits, gave us a Silver Seal of transparency after previously giving us their Bronze",
     },
     {
-      id: 5,
+      id: '5',
       NewsTitle: "Web App Now Live on Street Care",
       NewsDate: "Published Oct 31, 2021",
       NewsContent:
         "Our web app is now live on StreetCare: at https://streetcarenow.org. Those who dont use apps or whose phones are too",
     },
     {
-      id: 6,
+      id: '6',
       NewsTitle:
         "Washington D.C. article about Street Care- July 21, 2021",
       NewsDate: "Jul 12, 2021",
       NewsContent: "Bright Mind Enrichment and Schooling (BME), a community wellness education organization, determined that there was a need for a need for a comprehensive platform to educate people about how they can safely help homeless people on a regular basis and forge meaningful connections with them.",
     },
     {
-      id: 7,
+      id: '7',
       NewsTitle: "Join our Jacksonville event on May 8, 1 pm! No experience needed.",
       NewsDate: "Apr 21, 2021",
       NewsContent:
         "Join our Jacksonville event on May 8, 1 pm! No experience needed. Its fine to leave early, too. For More Info Contact Us at info@brightmindenrichment.org. ",
     },
     {
-      id: 8,
+      id: '8',
       NewsTitle: "Street Care Day of Action, 12/12: over 200 people served in 5 hours",
       NewsDate: "Dec 14, 2020",
       NewsContent:
@@ -64,7 +64,7 @@ export const NewsCardData = [
     },
 
     {
-      id: 9,
+      id: '9',
       NewsTitle:
         "Giving Tuesday Part 2 Event: Street Care Day of Action on 12/12",
       NewsDate: "Nov 29, 2020",
@@ -72,7 +72,7 @@ export const NewsCardData = [
     },
 
     {
-      id: 10,
+      id: '10',
       NewsTitle:
         "Street Care Ongoing Events Helping Those in Need",
       NewsDate: "Nov 29, 2020",
@@ -80,7 +80,7 @@ export const NewsCardData = [
     },
 
     {
-      id: 11,
+      id: '11',
       NewsTitle:
         "Florida Street Care Halloween Event  10/31",
       NewsDate: "Nov 29, 2020",
@@ -88,7 +88,7 @@ export const NewsCardData = [
     },
 
     {
-      id: 12,
+      id: '12',
       NewsTitle:
         "Maryland Street Care Halloween Event  10/31",
       NewsDate: "Nov 29, 2020",
@@ -96,7 +96,7 @@ export const NewsCardData = [
     },
 
     {
-      id: 13,
+      id: '13',
       NewsTitle:
         "Florida Street Care pre-Halloween Event",
       NewsDate: "Nov 29, 2020",
@@ -104,7 +104,7 @@ export const NewsCardData = [
     },
 
     {
-      id: 14,
+      id: '14',
       NewsTitle:
         "Day of Street Care Action in Florida… 10/24",
       NewsDate: "Nov 25, 2020",
@@ -112,7 +112,7 @@ export const NewsCardData = [
     },
 
     {
-      id: 15,
+      id: '15',
       NewsTitle:
         "Street Care Honored!",
       NewsDate: "Oct 25, 2020",
