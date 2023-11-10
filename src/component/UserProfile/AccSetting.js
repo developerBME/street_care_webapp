@@ -94,7 +94,7 @@ function AccSetting() {
     }
   };
 
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!username.current.value && !imgRef.current.value){
@@ -143,13 +143,13 @@ function AccSetting() {
 
     return (
         <div className="relative flex flex-col items-center ">
-            <div class=" w-full px-16 md:px-0 h-screen flex items-center justify-center">
+            <div class=" w-full px-10 md:px-0 h-screen flex items-center justify-center">
                 <div class="bg-white border border-gray-200 flex flex-col items-center justify-center px-4 md:px-8 lg:px-24 py-8 rounded-lg shadow-2xl">
-                <p className="text-[#212121] pl-4 pt-4 text-3xl md:pl-8 md:pt-0 xl:pl-0 xl:pt-0 sm:text-4xl font-medium font-dmsans leading-9 mb-4">Update Your Profile </p>
+                <p className="text-[#212121] pl-0 pt-4 text-3xl md:pl-8 md:pt-0 xl:pl-0 xl:pt-0 sm:text-4xl font-medium font-dmsans leading-9 mb-4">Update Your Profile </p>
                     <form>
                         <div className="mb-4">
                         <label htmlFor="username" className="block text-gray-600 mb-2">
-                            Username
+                            Profile Name
                         </label>
                         <input
                             type="text"
@@ -195,7 +195,7 @@ function AccSetting() {
                             </p>
                           </div>
                         )}
-                        <div className="space-y-8 space-x-[15px]">
+                        <div className="space-y-2 md:space-y-8 md:space-x-[15px] space-x-[5px]">
                             <CustomButton
                                 label="Clear"
                                 name="buttonborder"

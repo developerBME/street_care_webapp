@@ -16,7 +16,7 @@ function HowToHelp() {
                 How To Help
               </div>
               <div className="w-fit text-zinc-600 text-lg font-normal font-open-sans leading-normal">
-                Remember that homeless individuals have diverse needs, so it's
+                Remember that homeless people have diverse needs, so it's
                 important to tailor your outreach efforts to their specific
                 situations. <br />
                 Building genuine connections and fostering trust is key to

@@ -34,11 +34,11 @@ const NavBar = (props) => {
     console.log(props);
   }, []);
   const links = [
-    // {
-    //   id: 1,
-    //   label: "About",
-    //   link: "about",
-    // },
+    {
+      id: 1,
+      label: "Home",
+      link: "/",
+    },
     {
       id: 2,
       label: "How to help",
@@ -122,8 +122,8 @@ const NavBar = (props) => {
           {links.map(({ id, link, label }) => (
             <li
               key={id}
-              className=" px-6 py-3 text-lg  font-inter font-medium cursor-pointer  
-        text-white hover:scale-105 duration-200"
+              className=" mx-6 my-3 text-lg  font-inter font-medium   
+        text-white hover:scale-105 hover:text-[#1FCFF0] duration-200"
             >
               <Link to={link}>{label}</Link>
             </li>
@@ -135,8 +135,8 @@ const NavBar = (props) => {
           </li> */}
           {!props.loggedIn && (
             <li
-              className=" px-6 py-3 text-lg font-inter font-medium cursor-pointer  
-        text-white hover:scale-105 duration-200"
+              className=" mx-6 my-3 text-lg font-inter font-medium cursor-pointer  
+        text-white hover:scale-105 hover:text-[#1FCFF0] duration-200"
               onClick={() => navigate("/login")}
             >
               Login

@@ -29,6 +29,7 @@ import ScrollToTop from "./component/helper/ScrollToTop";
 import Not404 from "./component/404";
 import Newscard from "./component/HomePage/Newscard";
 import ComingSoon from "./component/ComingSoon";
+import Readmorenews from "./component/HomePage/Readmorenews";
 
 function App() {
   const fAuth = getAuth();
@@ -88,7 +89,7 @@ function App() {
           <Route path="/signup" element={<Signup2 />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/select-outreach" element={<Documenting />} />
-          <Route path="/profile/commoutform" element={<CommOutForm />} />
+          {/* <Route path="/profile/commoutform" element={<CommOutForm />} /> */}
           <Route path="/profile/commoutform" element={<ComingSoon />} />
           <Route
             path="/profile/personaloutform"
@@ -103,15 +104,14 @@ function App() {
             element={<HelpRequestEventWindow />}
           /> */}
           <Route path="/helpRequestEventWindow" element={<ComingSoon />} />
-
           {/* <Route path="/helpRequestForm" element={<HelpRequestForm />} /> */}
           <Route path="/helpRequestForm" element={<ComingSoon />} />
-          <Route path="/*" element={<Not404 />} />
-
           {/* <Route path="/donateForm" element={<DonateForm />} /> */}
           <Route path="/donateForm" element={<ComingSoon />} />
           <Route path="/allOutreachEvents" element={<AllOutreachEvents />} />
           <Route path="/newscard" element={<Newscard />} />
+          <Route path="/readmorenews/:id" element={<Readmorenews />} />
+          <Route path="/*" element={<Not404 />} />
         </Routes>
         <Footer />
       </Router>

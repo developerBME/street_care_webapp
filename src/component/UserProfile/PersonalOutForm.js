@@ -229,14 +229,16 @@ function PersonalOutForm() {
         <div className=" w-fit md:w-[930px] mx-2    mt-48 mb-16 rounded-2xl bg-[#F8F9F0] text-black ">
           <div className="items-center justify-center  h-full w-full mx-auto rounded-2xl ">
             {/*  */}
-            <div className=" absolute flex mt-[-50px] items-center">
+            <div
+              className=" absolute flex mt-[-50px] items-center cursor-pointer "
+              onClick={() => {
+                navigate("/profile");
+              }}
+            >
               <IoIosArrowBack className=" w-6 h-6" />{" "}
-              <Link
-                to={"/profile"}
-                className=" font-bricolage text-xl font-bold leading-7"
-              >
+              <p className=" font-bricolage text-xl font-bold leading-7">
                 Return to Profile
-              </Link>
+              </p>
             </div>
             {/*  */}
             <div className="w-fit h-fit md:px-[150px] md:py-[100px] flex-col justify-start items-start gap-16 inline-flex">
@@ -472,7 +474,7 @@ function PersonalOutForm() {
                 {/*  */}
                 <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                   <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
-                    Where did you spot the homeless person?
+                    Where did you spot a homeless person?
                   </div>
                   {/*  */}
                   <div className="self-stretch w-full h-fit flex-col  flex ">
