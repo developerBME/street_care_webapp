@@ -137,7 +137,7 @@ export default function FAQs() {
               create an account on our platform, and explore the resources and
               tools available to assist homeless people. Click
               <a
-                href="https://street-care-feature.vercel.app/signup2"
+                href="https://street-care-feature.vercel.app/signup/"
                 className="underline px-1 text-blue-500"
               >
                 here
@@ -145,7 +145,11 @@ export default function FAQs() {
               to sign up to start as a volunteer and the app will guide you
               through the volunteering process. For a smoother experience,
               consider
-              <a className="underline px-1 text-blue-500">
+              <a
+                href="https://streetcare.us/app"
+                className="underline px-1 text-blue-500"
+                target="_blank"
+              >
                 downloading our app
               </a>
               for real-time updates and easy sign-ups. Your help can make a big
@@ -153,7 +157,7 @@ export default function FAQs() {
             </p>
           </AccordionDetails>
         </Accordion>
-        <Accordion
+        {/* <Accordion
           className="p-3 mb-2 bg-white flex flex-col w-full borderAccordion"
           expanded={expanded === "panel5"}
           onChange={handleChange("panel5")}
@@ -191,7 +195,7 @@ export default function FAQs() {
               difference in our community!
             </p>
           </AccordionDetails>
-        </Accordion>
+        </Accordion> */}
         <Accordion
           className="p-3 mb-2 bg-white flex flex-col w-full borderAccordion"
           expanded={expanded === "panel6"}

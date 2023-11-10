@@ -1,39 +1,56 @@
 import React, { useState, useEffect } from "react";
 import News from "../HomePage/News";
 import { NewsCardData } from "../../NewsData";
-const Newscard =  () => {
-  
+import { useNavigate } from "react-router-dom";
+import { IoIosArrowBack } from "react-icons/io";
+
+const Newscard = () => {
+  const navigate = useNavigate();
   const [newsevents, setnewsevents] = useState([]);
 
   useEffect(() => {
-
-  const fetchnewsData = async () => {
-    
-    const eventsData = NewsCardData;
-    setnewsevents(eventsData);
+    const fetchnewsData = async () => {
+      const eventsData = NewsCardData;
+      setnewsevents(eventsData);
     };
 
     fetchnewsData();
-  }, []);  
+  }, []);
 
   return (
-    <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
-      <div className="relative flex flex-col items-center ">
-        {/* <div className=" w-fit md:w-[90%] lg:w-[80%] mx-2 mb-4 lg:mx-20 mt-32 rounded-2xl bg-[#F7F7F7] text-black "> */}
-          {" "} 
-            <div className="w-fit md:w-[90%] lg:w-[80%] mx-2 mt-32 mb-20 rounded-2xl bg-[#F7F7F7] text-black items-center justify-center px-4 py-8 lg:p-24 h-full">
-                                                        {/*<News />*/}
-                  <p className="w-fit font-dmsans font-medium md:text-[30px] text-[25px] lg:text-[45px] text-[#212121]">
-                    News
-                  </p>
-                  <div className=" grid grid-cols-1 gap-x-8 gap-y-8 mt-6 sm:pt-4 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-                        {newsevents.map((eventData) => (
-                            <News key={eventData.id} NewsCardData={eventData} />
-                          ))}
-                 </div>
-          
-             {/* </div> */}
-          
+    <div className="relative flex flex-col items-center ">
+      <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-16 lg:mx-40 mt-48 rounded-2xl bg-white text-black ">
+        {/*  */}
+        <div
+          className=" absolute flex mt-[-50px] items-center cursor-pointer "
+          onClick={() => {
+            navigate("/");
+          }}
+        >
+          <IoIosArrowBack className=" w-6 h-6" />{" "}
+          <p className=" font-bricolage text-xl font-bold leading-7">
+            Return to Home
+          </p>
+        </div>
+        {/*  */}
+
+        <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
+          <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
+            {" "}
+            News
+          </p>
+          {/*<div className=" w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+              <Eventcard />
+              <Eventcard />
+              <div className=" md:col-span-2 lg:col-span-1">
+                <Eventcard />
+              </div>
+  </div> */}
+          <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+            {newsevents.map((eventData) => (
+              <News key={eventData.id} NewsCardData={eventData} />
+            ))}
+          </div>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import React from "react";
 import { handleRsvp } from "../EventCardService";
+import CustomButton from "../Buttons/CustomButton";
 
 const EditModal = ({
   handleClose,
@@ -38,9 +39,9 @@ const EditModal = ({
           {` from your profile?`}
         </h3>
         <div className="flex gap-x-2">
-          <a
-            href="#"
-            className="flex-2 text-center py-2 rounded-2xl flex-col justify-center items-start flex bg-violet-200 text-black hover:bg-[#37168B] hover:text-white w-1/4"
+          <CustomButton
+            name="buttonlight"
+            label="Yes"
             onClick={(e) =>
               handleRsvp(
                 e,
@@ -56,15 +57,11 @@ const EditModal = ({
           >
             <p className="text-center mx-auto">Yes</p>
             {/* Yes */}
-          </a>
-          <a
-            href="#"
-            className="flex-2 text-center py-2 rounded-2xl flex-col justify-center items-start flex bg-violet-200 text-black hover:bg-[#37168B] hover:text-white w-1/4"
-            onClick={handleClose}
-          >
+          </CustomButton>
+          <CustomButton name="buttonlight" label="No" onClick={handleClose}>
             <p className="text-center mx-auto">No</p>
             {/* No */}
-          </a>
+          </CustomButton>
         </div>
       </div>
     </div>

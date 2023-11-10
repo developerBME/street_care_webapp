@@ -6,11 +6,13 @@ import CustomButton from "../Buttons/CustomButton";
 import { fetchEventById, handleRsvp } from "../EventCardService";
 import { Co2Sharp } from "@mui/icons-material";
 import defaultImage from "../../images/default_avatar.svg";
+import RSVPConfirmationModal from "../UserProfile/RSVPConfirmationModal";
 
 const OutreachSignup = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [label2, setLabel2] = useState("RSVP");
+  const [success, setSuccess] = useState(false);
 
   const eventDetails = [
     {
@@ -157,16 +159,16 @@ const OutreachSignup = () => {
                 )}
               </div>
             </div>
-            <div className="self-stretch h-fit flex-col justify-start items-start gap-8 flex">
-              <div className="w-fit text-[#212121] text-[22px] font-bold font-['Bricolage Grotesque'] leading-7">
+            {/* <div className="self-stretch h-fit flex-col justify-start items-start gap-8 flex"> */}
+            {/* <div className="w-fit text-[#212121] text-[22px] font-bold font-['Bricolage Grotesque'] leading-7">
                 Anything you would like to add? The community lead will be able
                 to access this note.
-              </div>
-              <div className="self-stretch w-full h-fit rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex">
+              </div> */}
+            {/* <div className="self-stretch w-full h-fit rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex">
                 <div className="self-stretch text-[#444746] text-sm font-medium font-inter leading-tight">
                   Notes
-                </div>
-                {/* <div className="self-stretch h-12 px-4 py-1 bg-white rounded border border-stone-300 justify-start items-center gap-2 inline-flex">
+                </div> */}
+            {/* <div className="self-stretch h-12 px-4 py-1 bg-white rounded border border-stone-300 justify-start items-center gap-2 inline-flex">
                     <div className="grow shrink basis-0 h-10 flex-col justify-center items-start inline-flex">
                       <div className="justify-start items-center inline-flex">
                         <input
@@ -179,7 +181,7 @@ const OutreachSignup = () => {
                       </div>
                     </div>
                   </div> */}
-                <div className="self-stretch h-fit border-collapse">
+            {/* <div className="self-stretch h-fit border-collapse">
                   <div className="h-14 justify-center items-start">
                     <input
                       type="notes"
@@ -189,9 +191,9 @@ const OutreachSignup = () => {
                       // onChange={(e) => setEmail(e.target.value)}
                     ></input>
                   </div>
-                </div>
-              </div>
-            </div>
+                </div> */}
+            {/* </div> */}
+            {/* </div> */}
             <div className="justify-start items-start gap-[15px] inline-flex">
               {/* <div className="h-10 bg-[#6840E0] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex">
                   <div className="self-stretch grow shrink basis-0 px-6 py-2.5 justify-center items-center gap-2 inline-flex">
@@ -214,9 +216,11 @@ const OutreachSignup = () => {
                       setLabel2,
                       false
                     );
+                    setSuccess(true);
                   }}
                 />
               </div>
+
               <div
                 className="h-10 bg-[#000]] rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 inline-flex"
                 onClick={() => {
@@ -229,6 +233,7 @@ const OutreachSignup = () => {
                   </button>
                 </div>
               </div>
+              {success && <RSVPConfirmationModal />}
             </div>
           </div>
         </div>

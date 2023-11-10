@@ -175,7 +175,6 @@ const Form = () => {
   const handleDescChange = (e)=>{
     updateErrorState("descError","")
   }
-
   const handleCapChange = (e)=>{
     updateErrorState("maxCapError","")
   }
@@ -211,12 +210,13 @@ const Form = () => {
         updateErrorState("nameError","Description should consist only characters")
       }
     }
-    
-    try{
-      checkString(descRef.current.value,"Event Name");
-      updateErrorState("descError","");
-    }catch(e){
-      updateErrorState("descError","Should consist only characters")
+    if(descRef.current.value){
+      try{
+        checkString(descRef.current.value,"Event Name");
+        updateErrorState("descError","");
+      }catch(e){
+        updateErrorState("descError","Should consist only characters")
+      }
     }
 
     try{
@@ -229,25 +229,45 @@ const Form = () => {
     if (!streetRef.current.value) {
       updateErrorState("streetError", "Street is required");
     } else {
-      updateErrorState("streetError", "");
+      try{
+        checkString(streetRef.current.value,"Event Name");
+        updateErrorState("streetError","");
+      }catch(e){
+        updateErrorState("streetError","Street should consist only characters")
+      }
     }
 
     if (!cityRef.current.value) {
       updateErrorState("cityError", "City is required");
     } else {
-      updateErrorState("cityError", "");
+      try{
+        checkString(cityRef.current.value,"Event Name");
+        updateErrorState("cityError","");
+      }catch(e){
+        updateErrorState("cityError","Description should consist only characters")
+      }
     }
 
     if (!stateRef.current.value) {
       updateErrorState("stateError", "Street is required");
     } else {
-      updateErrorState("stateError", "");
+      try{
+        checkString(stateRef.current.value,"Event Name");
+        updateErrorState("stateError","");
+      }catch(e){
+        updateErrorState("stateError","Description should consist only characters")
+      }
     }
 
     if (!zipcodeRef.current.value) {
       updateErrorState("zipError", "Zipcode is required");
     } else {
-      updateErrorState("zipError", "");
+      try{
+        checkNumber(zipcodeRef.current.value,"Event Name");
+        updateErrorState("zipError","");
+      }catch(e){
+        updateErrorState("zipError","Should consist only Numbers")
+      }
     }
 
     if (!startDate) {

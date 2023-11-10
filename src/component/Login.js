@@ -76,6 +76,7 @@ function Login() {
       await signInWithEmailAndPassword(auth, email, password);
       setLoginSuccess("Successfully logged in!");
       setError(""); // Clearing out any existing error messages
+      navigate(-1, { preventScrollReset: true });
     } catch (error) {
       setError(error.message);
       setLoginSuccess(""); // Clearing out any success messages
@@ -233,7 +234,7 @@ function Login() {
                 </span>
                 <span
                   onClick={() => {
-                    navigate("/signup2");
+                    navigate("/signup", { replace: true });
                   }}
                   className="text-violet-600 text-base font-normal font-open-sans leading-normal cursor-pointer"
                 >
