@@ -111,8 +111,8 @@ const fetchUserDetails = async (uid) => {
   if (userDoc.exists()) {
     return {
       username: userDoc.data().username || "",
-      photoUrl: userDoc.data().photoUrl || ""
-  };
+      photoUrl: userDoc.data().photoUrl || "",
+    };
   } else {
     console.error("No user found with uid:", uid);
     return "";
@@ -122,33 +122,36 @@ const fetchUserDetails = async (uid) => {
 export const fetchEventById = async (eventId) => {
   // Reference to the specific document in the outreach events collection
   const eventRef = doc(db, OUTREACH_EVENTS_COLLECTION, eventId);
-  
+
   const eventSnap = await getDoc(eventRef);
-  
+
   // Check if the document exists
   if (!eventSnap.exists()) {
-      console.error("Event not found with id:", eventId);
-      return null;
+    console.error("Event not found with id:", eventId);
+    return null;
   }
-  
+
   const eventData = eventSnap.data();
-  
-  const result = eventData.uid ? await fetchUserDetails(eventData.uid) : "Unknown User";
+
+  const result = eventData.uid
+    ? await fetchUserDetails(eventData.uid)
+    : "Unknown User";
   const userName = result.username;
   const photoUrl = result.photoUrl;
   let currentParticipants = eventData.participants || [];
-  const formattedDate = eventData.eventDate ? formatDate(new Date(eventData.eventDate.seconds * 1000)) : "No Date";
+  const formattedDate = eventData.eventDate
+    ? formatDate(new Date(eventData.eventDate.seconds * 1000))
+    : "No Date";
 
   return {
-      ...eventData,
-      userName,
-      eventDate: formattedDate,
-      id: eventSnap.id,
-      photoUrl,
-      nop: currentParticipants.length,
+    ...eventData,
+    userName,
+    eventDate: formattedDate,
+    id: eventSnap.id,
+    photoUrl,
+    nop: currentParticipants.length,
   };
 };
-
 
 export const fetchUserEvents = async (uid) => {
   const userQuery = query(
@@ -176,7 +179,7 @@ export const fetchUserEvents = async (uid) => {
       const eventData = eventDoc.data();
       eventsData.push({
         ...eventData,
-        id: eventDoc.id
+        id: eventDoc.id,
       });
     }
   }
@@ -303,7 +306,7 @@ export const handleRsvp = async (
         }
       } else {
         console.log("USER NOT FOUND!");
-        navigate("/login", { replace: true });
+        navigate("/login");
       }
     });
   } else {
@@ -376,7 +379,7 @@ export const handleRsvp = async (
             console.log("event not found in the user");
           }
           setLabel2("RSVP");
-          if (typeof refresh == "function"){
+          if (typeof refresh == "function") {
             refresh();
           }
         } catch (error) {
