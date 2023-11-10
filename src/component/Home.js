@@ -272,7 +272,7 @@ function HomePage() {
                 label="Load More News"
                 name="buttondefault"
                 onClick={() => {
-                  navigate("/newscard");
+                  navigate("/allnews");
                 }}
               />
             </div>

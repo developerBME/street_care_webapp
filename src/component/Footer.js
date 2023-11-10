@@ -93,7 +93,13 @@ function Footer() {
                   community wellness initiative of Bright Mind, a 501(c)(3)
                   nonprofit organization recipient of GuideStar's Gold, Silver
                   and Bronze Seals of Transparency, plus recognized by Vanguard
-                  Charitable.
+                  Charitable. Powered by{" "}
+                  <a
+                    href="https://www.interserver.net/"
+                    className=" hover:underline font-bold   "
+                  >
+                    interserver.net
+                  </a>
                 </p>
               </li>
             </ul>

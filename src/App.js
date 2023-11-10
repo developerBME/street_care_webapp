@@ -87,6 +87,8 @@ function App() {
           <Route path="/contact" element={<ComingSoon />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup2 />} />
+          <Route path="/allnews" element={<Newscard />} />
+          <Route path="/allnews/:id" element={<Readmorenews />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/select-outreach" element={<Documenting />} />
           {/* <Route path="/profile/commoutform" element={<CommOutForm />} /> */}
@@ -109,8 +111,7 @@ function App() {
           {/* <Route path="/donateForm" element={<DonateForm />} /> */}
           <Route path="/donateForm" element={<ComingSoon />} />
           <Route path="/allOutreachEvents" element={<AllOutreachEvents />} />
-          <Route path="/newscard" element={<Newscard />} />
-          <Route path="/readmorenews/:id" element={<Readmorenews />} />
+
           <Route path="/*" element={<Not404 />} />
         </Routes>
         <Footer />
