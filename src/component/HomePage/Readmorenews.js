@@ -22,12 +22,12 @@ const Readmorenews = () => {
         <div
           className=" absolute flex mt-[-50px] items-center cursor-pointer "
           onClick={() => {
-            navigate("/");
+            navigate(-1, { preventScrollReset: true });
           }}
         >
           <IoIosArrowBack className=" w-6 h-6" />{" "}
           <p className=" font-bricolage text-xl font-bold leading-7">
-            Return to Home
+            Return to News
           </p>
         </div>
         {/*  */}
