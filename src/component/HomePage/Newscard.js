@@ -22,8 +22,7 @@ const Newscard =  () => {
           {" "} 
             <div className="w-fit md:w-[90%] lg:w-[80%] mx-2 mt-32 mb-20 rounded-2xl bg-[#F7F7F7] text-black items-center justify-center px-4 py-8 lg:p-24 h-full">
                                                         {/*<News />*/}
-                <div className="flex justify-center mb-4">
-                    <img src="/static/media/streetcare-logo.c20bde781e4752881baa.png" alt="Logo" class="object-cover w-20 h-20 rounded-full"></img>
+                <div className="flex justify-left mb-4">
                     <p className="font-dmsans justify-center font-medium md:text-[30px] text-[25px] lg:text-[45px] text-[#212121]">
                     News 
                     </p> 
