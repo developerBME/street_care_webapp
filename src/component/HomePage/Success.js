@@ -18,20 +18,26 @@ function Success() {
         let uniqueID = new Set();
         data.docs.map((doc) => {
           uniqueID.add(doc.data().uid);
-          totalDonations = (isNaN(doc.data().itemQty) || typeof doc.data().itemQty === 'undefined' || doc.data().itemQty === '')
-            ? totalDonations
-            : totalDonations + parseInt(doc.data().itemQty);
-          totalHelpedPeople = (isNaN(doc.data().numberPeopleHelped) || typeof doc.data().numberPeopleHelped === 'undefined' || doc.data().numberPeopleHelped === '')
-            ? totalHelpedPeople
-            : totalHelpedPeople + parseInt(doc.data().numberPeopleHelped)
-          
+          totalDonations =
+            isNaN(doc.data().itemQty) ||
+            typeof doc.data().itemQty === "undefined" ||
+            doc.data().itemQty === ""
+              ? totalDonations
+              : totalDonations + parseInt(doc.data().itemQty);
+          totalHelpedPeople =
+            isNaN(doc.data().numberPeopleHelped) ||
+            typeof doc.data().numberPeopleHelped === "undefined" ||
+            doc.data().numberPeopleHelped === ""
+              ? totalHelpedPeople
+              : totalHelpedPeople + parseInt(doc.data().numberPeopleHelped);
+
           return null;
         });
         setDonations(
           isNaN(parseInt(totalDonations)) ? 0 : parseInt(totalDonations)
         );
-        setHelpedBy(uniqueID.size)
-        setHelpedPeople(totalHelpedPeople)
+        setHelpedBy(uniqueID.size);
+        setHelpedPeople(totalHelpedPeople);
       } catch (err) {
         console.log(err);
       }
@@ -104,7 +110,7 @@ function Success() {
 
         <div className="grow shrink items-start  lg:items-center xl:items-start flex-col basis-0 h-fit px-8 py-4 bg-gradient-to-br from-purple-300 to-zinc-200 justify-start  gap-6 flex">
           <div className="text-violet-950 text-2xl font-medium leading-loose">
-            We helped
+            Helped by
           </div>
           <div className="flex lg:flex-col xl:flex-row gap-4">
             <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
@@ -121,7 +127,7 @@ function Success() {
 
         <div className="grow items-start  lg:items-center xl:items-start flex-col rounded-b-2xl lg:rounded-r-2xl lg:rounded-bl-none shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-sky-200 to-neutral-200 justify-start  gap-6 flex">
           <div className="text-violet-950 text-2xl font-medium leading-loose">
-            We helped
+            Donated
           </div>
           <div className="flex lg:flex-col xl:flex-row gap-4">
             <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
@@ -130,7 +136,7 @@ function Success() {
               </div>
             </div>
             <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
-              volunteers
+              items
             </div>
           </div>
         </div>
