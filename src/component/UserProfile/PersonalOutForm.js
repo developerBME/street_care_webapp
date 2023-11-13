@@ -16,13 +16,13 @@ function PersonalOutForm() {
   // const ratingChanged = (newRating) => {
   //   console.log(newRating);
   // };
-  const numberHelped = useRef("");
   const date = useRef("");
   const time = useRef("");
   const cityRef = useRef("");
   const stateRef = useRef("");
-  const itemQtyRef = useRef("");
   const checkboxes = useRef([]);
+  const [itemQty, setItemQty] = useState("");
+  const [numberHelped, setNumberhelped] = useState("");
   const [itemArray, setItemArray] = useState([]);
   const [rating, setRating] = useState(0);
   const [success, setSuccess] = useState(false);
@@ -43,10 +43,25 @@ function PersonalOutForm() {
   });
 
   const handleNumChange = (e) => {
-    updateErrorState("numberHelpedError", "");
+    const inputValue = e.target.value;
+    if (/^[1-9]+\d*$/.test(inputValue) || inputValue === "") {
+      setNumberhelped(inputValue);
+      updateErrorState("numberHelpedError", "");
+    } else {
+      updateErrorState(
+        "numberHelpedError",
+        "Please enter number more or equal to 1"
+      );
+    }
   };
   const handleItemQtyChange = (e) => {
-    updateErrorState("itemQtyError", "");
+    const inputValue = e.target.value;
+    if (/^[0-9]+\d*$/.test(inputValue) || inputValue === "") {
+      setItemQty(inputValue);
+      updateErrorState("itemQtyError", "");
+    } else {
+      updateErrorState("itemQtyError", "Please enter a number");
+    }
   };
   const handleDateChange = (e) => {
     updateErrorState("dateError", "");
@@ -134,11 +149,13 @@ function PersonalOutForm() {
   }
 
   const handleSubmit = async (e) => {
+    let setReturn = false;
     e.preventDefault();
 
     // Form Validation Start
-    if (!numberHelped.current.value) {
+    if (!numberHelped) {
       updateErrorState("numberHelpedError", "Number is required");
+      setReturn = true;
     } else {
       updateErrorState("numberHelpedError", "");
     }
@@ -148,45 +165,54 @@ function PersonalOutForm() {
         "checkboxesError",
         "Please provide the kind of help provided"
       );
+      setReturn = true;
     } else {
       updateErrorState("checkboxesError", "");
     }
 
     if (!stateRef.current.value) {
       updateErrorState("stateError", "Select State");
+      setReturn = true;
     } else {
       updateErrorState("stateError", "");
     }
 
     if (!cityRef.current.value) {
       updateErrorState("cityError", "Select City");
+      setReturn = true;
     } else {
       updateErrorState("cityError", "");
     }
 
     if (!date.current.value) {
       updateErrorState("dateError", "Enter a date");
+      setReturn = true;
     } else {
       updateErrorState("dateError", "");
     }
 
     if (!time.current.value) {
       updateErrorState("timeError", "Enter a time");
+      setReturn = true;
     } else {
       updateErrorState("timeError", "");
     }
 
-    if (!itemQtyRef.current.value) {
+    if (!itemQty) {
       updateErrorState("itemQtyError", "Enter Quantity");
+      setReturn = true;
     } else {
       updateErrorState("itemQtyError", "");
+    }
+    if (setReturn) {
+      return;
     }
 
     let obj = {
       uid: fAuth.currentUser.uid,
-      numberPeopleHelped: numberHelped.current.value,
+      numberPeopleHelped: numberHelped,
       whatGiven: itemArray,
-      itemQty: itemQtyRef.current.value,
+      itemQty: itemQty,
       date: date.current.value,
       time: time.current.value,
       state: state,
@@ -209,8 +235,8 @@ function PersonalOutForm() {
 
   const clearFields = () => {
     date.current.value = "";
-    numberHelped.current.value = "";
-    itemQtyRef.current.value = "";
+    setNumberhelped("");
+    setItemQty("");
     setItemArray([]);
     checkboxes.current.forEach((x) => {
       x.checked = false;
@@ -260,8 +286,8 @@ function PersonalOutForm() {
                     <div className="self-stretch h-fit  border-collapse     ">
                       <div className=" h-14  justify-center items-start ">
                         <input
-                          type="number"
                           id="numberHelped"
+                          value={numberHelped}
                           placeholder="Number of people helped"
                           className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border-0 text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
                             error.numberHelpedError !== ""
@@ -269,7 +295,6 @@ function PersonalOutForm() {
                               : "ring-gray-300"
                           }`}
                           required={true}
-                          ref={numberHelped}
                           onChange={handleNumChange}
                         ></input>
                         {error.numberHelpedError && (
@@ -661,7 +686,6 @@ function PersonalOutForm() {
                     <div className="self-stretch h-fit  border-collapse     ">
                       <div className=" h-14  justify-center items-start ">
                         <input
-                          type="number"
                           id="itemsNumber"
                           placeholder="Number of Items"
                           className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
@@ -670,7 +694,7 @@ function PersonalOutForm() {
                               : "ring-gray-300"
                           }`}
                           required={true}
-                          ref={itemQtyRef}
+                          value={itemQty}
                           onChange={handleItemQtyChange}
                         ></input>
                         {error.itemQtyError && (
@@ -716,14 +740,14 @@ function PersonalOutForm() {
                   </div>
                 </div>
                 {/*  */}
-                {/*success && (
-                  // <div className="justify-start items-start gap-4 inline-flex">
-                  //   <div className="justify-start items-start gap-4 flex">
-                  //     Success!
-                  //   </div>
-                  // </div>
-                  <ConfirmationModal isOpen={true} />
-                )*/}
+                {success && (
+                  <div className="justify-start items-start gap-4 inline-flex">
+                    <div className="justify-start items-start gap-4 flex">
+                      Success!
+                    </div>
+                  </div>
+                  // <ConfirmationModal isOpen={true} />
+                )}
               </div>
             </div>
           </div>

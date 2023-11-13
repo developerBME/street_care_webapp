@@ -15,8 +15,9 @@ const Process = () => {
             Sign Up/Initiate Group Outreach
           </h1>
 
-          <p className="mt-2 line-clamp-3 text-sm leading-6 text-gray-600 px-4 pb-2 font-inter">
-            Teams of military families will make care kits for us. Stay tuned.
+          <p className="mt-2  text-sm leading-6 text-gray-600 px-4 pb-2 font-inter">
+            Reach out to local volunteers, collaborating on shared goals to
+            create a compassionate community or personal outreach plan.
           </p>
         </article>
         <article
@@ -27,8 +28,10 @@ const Process = () => {
             Pack the care bag
           </h1>
 
-          <p className="mt-2 line-clamp-3 text-sm leading-6 text-gray-600 px-4 pb-2 font-inter">
-            Teams of military families will make care kits for us. Stay tuned.
+          <p className="mt-2 text-sm leading-6 text-gray-600 px-4 pb-2 font-inter">
+            Thoughtfully assemble care bags, ensuring they go beyond basics to
+            include personal touches, recognizing the dignity and worth of each
+            recipient.
           </p>
         </article>{" "}
         <article
@@ -39,8 +42,10 @@ const Process = () => {
             Go to the outreach
           </h1>
 
-          <p className="mt-2 line-clamp-3 text-sm leading-6 text-gray-600 px-4 pb-2 font-inter">
-            Teams of military families will make care kits for us. Stay tuned.
+          <p className="mt-2  text-sm leading-6 text-gray-600 px-4 pb-2 font-inter">
+            Approach the community with empathy, distributing care bags
+            respectfully, and engaging in meaningful conversations to foster a
+            sense of connection and understanding.
           </p>
         </article>
         <article
@@ -51,8 +56,10 @@ const Process = () => {
             Document your experience
           </h1>
 
-          <p className="mt-2 line-clamp-3 text-sm leading-6 text-gray-600 px-4 pb-2 font-inter">
-            Teams of military families will make care kits for us. Stay tuned.
+          <p className="mt-2 text-sm leading-6 text-gray-600 px-4 pb-2 font-inter">
+            Capture the emotional nuances of the outreach through photos and
+            reflective notes. Share your journey to inspire others with the
+            human stories and connections formed during the experience.
           </p>
         </article>
       </div>
