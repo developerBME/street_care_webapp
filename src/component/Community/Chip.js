@@ -24,7 +24,7 @@ const Chip = (props) => {
       className={`inline-flex cursor-pointer items-center gap-1 bg-white border border-[#CACACA] rounded-full px-3 py-1 mr-1 
         ${
           clicked
-            ? "bg-[#F4ECF9] border-[#5F35D5]"
+            ? "bg-[#F5EDFA] border-[#4F35D5]"
             : "bg-white border border-[#CACACA] text-[#616161]"
         }`}
     >
