@@ -38,11 +38,9 @@ const BMEofficialCard = ({BMEcardData}) => {
             </div>
           </div>
         </div>
-        <div className="self-stretch h-20 px-6 pt-4 mt-10 lg:mt-0 flex-col justify-start items-start gap-2.5 flex">
+        <div className="self-stretch h-20 px-6 pt-4 mt-10 lg:mt-20 xl:mt-0  lg:py-20 xl:py-15 2xl:py-0 2xl:mt-0 flex-col justify-start items-start gap-2.5 flex">
           <div className="self-stretch justify-start items-center gap-2.5 inline-flex">
-            {/* <button label={label} name="buttonlight" onClick = {(e) => handleRsvp(e, id, label, navigate, true)} className="h-10 bg-cyan-200 px-6 py-2.5 rounded-full flex-col justify-center items-center gap-2 inline-flex text-center text-neutral-900 text-sm font-medium font-['DM Sans'] leading-tight"> */}
             {<CustomButton label={label} name="buttonlight" onClick = {(e) => handleRsvp(e, id, label, navigate, label2, setLabel2, true)} />}
-            {/* </button> */}
             <div className="grow shrink basis-0 text-right text-zinc-700 text-sm font-normal font-['DM Sans'] leading-snug">
                Open Spots: {totalSlots - nop}/{totalSlots}
             </div>
