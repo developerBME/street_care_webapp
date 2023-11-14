@@ -14,7 +14,7 @@ function MoreAboutUs() {
         <p>Empowered by community support</p>
       </div>
       <div className="flex gap-4 mt-8 flex-col md:flex-row items-center">
-        <div className="md:w-1/2 min-[320px]:max-md:w-full min-h-full place-self-stretch min[320px]:max-flex-col gap-2 flex">
+        {/* <div className="md:w-1/2 min-[320px]:max-md:w-full min-h-full place-self-stretch min[320px]:max-flex-col gap-2 flex">
           <div className="bg-[#F2F6D8] w-full min-h-full rounded-[30px] flex flex-col">
             <img src={pic1} alt="pic1" className="w-full shrink-0 " />
             <div className="p-6">
@@ -35,6 +35,22 @@ function MoreAboutUs() {
               </p>
               <p className="font-bricolage font-medium md:text-[20px] sm:text-md mt-2">
                 Eric Adams
+              </p>
+            </div>
+          </div>
+        </div> */}
+        <div className="md:w-1/2  flex place-self-stretch">
+          <div className="bg-[#F2F6D8] w-full rounded-[30px] h-full flex flex-col justify-end pb-8">
+            <div className="p-7 md:px-8">
+              <p className=" font-bricolage font-medium leading-8 text-2xl md:text-[18px] self-stretch grow shrink basis-0 text-center text-[#212121] md:leading-7 ">
+                “I was very fortunate to attend a program and receive so much
+                support, and to learn a lot. This has increased my confidence
+                moving forward. I want to thank you.”
+              </p>
+            </div>
+            <div className=" mt-6 md:mt-9">
+              <p className="text-center text-[#212121] text-sm italic font-normal font-lato leading-normal ">
+                — YG, Participant and Student since 2019
               </p>
             </div>
           </div>
