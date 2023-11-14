@@ -31,9 +31,9 @@ const CreateOutreachModal = ({
               </div> */}
             </div>
             <div className="self-stretch text-[#616161] text-lg font-semibold font-['Open Sans'] leading-normal">
-              If this person need 🙌 Extra Help, add a request to Community hub
+              {/* If this person need 🙌 Extra Help, add a request to Community hub
               so other volunteers can find this person and provide the care they
-              needed.
+              needed. */}
             </div>
           </div>
           <div className="w-fit justify-start items-start gap-4 inline-flex">
