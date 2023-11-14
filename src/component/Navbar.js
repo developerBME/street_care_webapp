@@ -121,7 +121,7 @@ const NavBar = (props) => {
         {props.loggedIn && (
           <NavLink
             to="/profile"
-            className="hidden aria-[current=page]:block md:hidden mx-6 my-3 text-lg  font-inter font-medium
+            className=" aria-[current=page]:block md:aria-[current=page]:hidden md:hidden mx-6 my-3 text-lg  font-inter font-medium
              text-white hover:scale-105 hover:text-[#1FCFF0] duration-200 "
             onClick={() => {
               fireBaseSignOut();
