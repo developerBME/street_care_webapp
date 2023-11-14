@@ -118,6 +118,20 @@ const NavBar = (props) => {
             Street Care
           </h1>
         </div>
+        {props.loggedIn && (
+          <NavLink
+            to="/profile"
+            className=" aria-[current=page]:block md:aria-[current=page]:hidden md:hidden mx-6 my-3 text-lg  font-inter font-medium
+             text-white hover:scale-105 hover:text-[#1FCFF0] duration-200 "
+            onClick={() => {
+              fireBaseSignOut();
+            }}
+            end
+          >
+            Logout
+          </NavLink>
+        )}
+
         <ul className="hidden items-center md:flex px-2    leading-6">
           {links.map(({ id, link, label }) => (
             <li

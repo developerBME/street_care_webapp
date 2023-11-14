@@ -7,8 +7,10 @@ import {
   getAuth,
   onAuthStateChanged,
 } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 const HelpRequestCard = ({ helpRequestCardData }) => {
+  const navigate = useNavigate();
 
   const fAuth = getAuth();
   onAuthStateChanged(fAuth, (user) => {
@@ -126,7 +128,7 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
 
         {helpStatus === "Need Help" && (
           <div className="w-fit pt-[15px] sm:py-0 sm:w-1/3 h-fit flex-col justify-start sm:items-end gap-4 inline-flex">
-            <button className="w-fit bg-[#E6DCFF] hover:bg-[#6840E0] text-[#181818] hover:text-white rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight">
+            <button onClick={() => {navigate("/icanhelp");}} className="w-fit bg-[#E6DCFF] hover:bg-[#6840E0] text-[#181818] hover:text-white rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight">
               I can help
             </button>
             {/* <div className="w-fit flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight">
