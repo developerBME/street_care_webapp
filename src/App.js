@@ -30,6 +30,7 @@ import Not404 from "./component/404";
 import Newscard from "./component/HomePage/Newscard";
 import ComingSoon from "./component/ComingSoon";
 import Readmorenews from "./component/HomePage/Readmorenews";
+import ICanHelpForm from "./component/Community/ICanHelpForm";
 
 function App() {
   const fAuth = getAuth();
@@ -108,6 +109,8 @@ function App() {
           <Route path="/helpRequestEventWindow" element={<ComingSoon />} />
           {/* <Route path="/helpRequestForm" element={<HelpRequestForm />} /> */}
           <Route path="/helpRequestForm" element={<ComingSoon />} />
+          {/* <Route path="/icanhelp" element={<ICanHelpForm />} /> */}
+          <Route path="/icanhelp" element={<ComingSoon />} />
           <Route path="/donateForm" element={<DonateForm />} />
           {/* <Route path="/donateForm" element={<ComingSoon />} /> */}
           <Route path="/allOutreachEvents" element={<AllOutreachEvents />} />
