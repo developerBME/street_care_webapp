@@ -11,6 +11,7 @@ import DatePicker from 'react-datepicker';
 import { Timestamp } from 'firebase/firestore';
 import {checkString,checkNumber} from "../helper/validator"
 import { UpdateDisabledRounded } from "@mui/icons-material";
+import CreateOutreachModal from "./CreateOutreachModal";
 
 
 
@@ -352,7 +353,7 @@ const Form = () => {
               </p>
               <input
                 type="text"
-                className="h-12 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
+                className="h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
                 id="max-cap"
                 ref={maxCapRef}
                 onChange={handleCapChange}
@@ -586,11 +587,7 @@ const Form = () => {
           </button>
 
           {success && (
-            <div className="justify-start items-start gap-4 inline-flex">
-              <div className="justify-start items-start gap-4 flex">
-                Success!
-              </div>
-            </div>
+            <CreateOutreachModal isOpen={true} />
           )}
         </div>
       </form>
