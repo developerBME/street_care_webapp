@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import CustomButton from "../Buttons/CustomButton";
 import help_announcement from "../../images/help_announcement.png";
+import ConfirmationModal from "./ConfirmationModal";
 import {
   getAuth,
   onAuthStateChanged,
@@ -21,6 +22,14 @@ const ICanHelpForm = () => {
         console.log("USER NOT FOUND!");
         }
     });
+
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const openModal = () => {
+        setModalIsOpen(true);
+    };
+    const closeModal = () => {
+        setModalIsOpen(false);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -85,7 +94,10 @@ const ICanHelpForm = () => {
                 <div className="space-y-16 space-x-[15px]">
                     <CustomButton label="I can help" name="buttondefault" onClick={handleSubmit} />
                     <CustomButton label="Cancel" name="buttonborder" />
-                  </div>
+                </div>
+                {success && (
+                  <ConfirmationModal isOpen={true} />
+                )}
             </div>
           </div>
         </div>
