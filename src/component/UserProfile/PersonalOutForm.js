@@ -3,13 +3,14 @@ import { useState, useRef, useEffect } from "react";
 import Rating from "@mui/material/Rating";
 import { IoIosArrowBack } from "react-icons/io";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import CustomButton from "../Buttons/CustomButton";
 import errorImg from "../../images/error.png";
+import ConfirmationModal from "./ConfirmationModal";
 
 function PersonalOutForm() {
   const navigate = useNavigate();
@@ -274,7 +275,7 @@ function PersonalOutForm() {
                 </div>
                 <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                   <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
-                    Who did you help?
+                    How many people did you help?
                   </div>
                   {/*  */}
                   <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
@@ -741,12 +742,12 @@ function PersonalOutForm() {
                 </div>
                 {/*  */}
                 {success && (
-                  <div className="justify-start items-start gap-4 inline-flex">
-                    <div className="justify-start items-start gap-4 flex">
-                      Success!
-                    </div>
-                  </div>
-                  // <ConfirmationModal isOpen={true} />
+                  // <div className="justify-start items-start gap-4 inline-flex">
+                  //   <div className="justify-start items-start gap-4 flex">
+                  //     Success!
+                  //   </div>
+                  // </div>
+                  <ConfirmationModal isOpen={true} />
                 )}
               </div>
             </div>
