@@ -68,56 +68,63 @@ const UserInfo = () => {
     setModalIsOpen(false);
   };
 
-  const getUserData = async () => {
-    try {
-      const userRef = query(
-        collection(db, "users"),
-        where("uid", "==", fAuth?.currentUser?.uid)
-      );
-      const data = await getDocs(userRef);
-      setDisplayName(data.docs[0].data().username);
-      setDateCreated(
-        data.docs[0].data().dateCreated.toDate().getMonth() +
-          1 +
-          "/" +
-          data.docs[0].data().dateCreated.toDate().getDate() +
-          "/" +
-          data.docs[0].data().dateCreated.toDate().getFullYear()
-      );
-      setPhotoUrl(data.docs[0].data().photoUrl);
-      // Needs update for facebook
-      // if (fAuth?.currentUser?.providerData[0].providerId === "google.com") {
-      //   setPhotoUrl(
-      //     fAuth?.currentUser?.photoURL
-      //       .toString()
-      //       .substring(
-      //         0,
-      //         fAuth?.currentUser?.photoURL.toString().indexOf("=") + 1
-      //       ) + "s224-c"
-      //   );
-      // } else if (
-      //   fAuth?.currentUser?.providerData[0].providerId === "twitter.com"
-      // ) {
-      //   setPhotoUrl(
-      //     fAuth?.currentUser?.photoURL
-      //       .toString()
-      //       .substring(
-      //         0,
-      //         fAuth?.currentUser?.photoURL.toString().indexOf("_normal")
-      //       ) + ".png"
-      //   );
-      // } else if (
-      //   fAuth?.currentUser?.providerData[0].providerId === "facebook.com"
-      // ) {
-      //   setPhotoUrl(fAuth?.currentUser?.photoURL.toString());
-      // } else {
-      //   setPhotoUrl("");
-      // }
-      setSuperpowers(
-        data.docs[0].data().superpowers ? data.docs[0].data().superpowers : []
-      );
-    } catch (err) {
-      console.log(err);
+  const getUserData = async (attempt) => {
+    if (attempt > 4) {
+      return;
+    } else {
+      try {
+        const userRef = query(
+          collection(db, "users"),
+          where("uid", "==", fAuth?.currentUser?.uid)
+        );
+        const data = await getDocs(userRef);
+        if (!data.docs[0]) {
+          getUserData(attempt++);
+        }
+        setDisplayName(data.docs[0].data().username);
+        setDateCreated(
+          data.docs[0].data().dateCreated.toDate().getMonth() +
+            1 +
+            "/" +
+            data.docs[0].data().dateCreated.toDate().getDate() +
+            "/" +
+            data.docs[0].data().dateCreated.toDate().getFullYear()
+        );
+        setPhotoUrl(data.docs[0].data().photoUrl);
+        // Needs update for facebook
+        // if (fAuth?.currentUser?.providerData[0].providerId === "google.com") {
+        //   setPhotoUrl(
+        //     fAuth?.currentUser?.photoURL
+        //       .toString()
+        //       .substring(
+        //         0,
+        //         fAuth?.currentUser?.photoURL.toString().indexOf("=") + 1
+        //       ) + "s224-c"
+        //   );
+        // } else if (
+        //   fAuth?.currentUser?.providerData[0].providerId === "twitter.com"
+        // ) {
+        //   setPhotoUrl(
+        //     fAuth?.currentUser?.photoURL
+        //       .toString()
+        //       .substring(
+        //         0,
+        //         fAuth?.currentUser?.photoURL.toString().indexOf("_normal")
+        //       ) + ".png"
+        //   );
+        // } else if (
+        //   fAuth?.currentUser?.providerData[0].providerId === "facebook.com"
+        // ) {
+        //   setPhotoUrl(fAuth?.currentUser?.photoURL.toString());
+        // } else {
+        //   setPhotoUrl("");
+        // }
+        setSuperpowers(
+          data.docs[0].data().superpowers ? data.docs[0].data().superpowers : []
+        );
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
 
