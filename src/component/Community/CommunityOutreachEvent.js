@@ -146,13 +146,13 @@ const CommunityOutreachEvent = () => {
       <div className="p-4 lg:px-28 lg:py-12 space-y-9">
         <div className="flex items-center justify-between">
           <div className="md:inline-flex items-center text-center space-y-2 md:space-y-0 hidden md:block">
-            <p className="font-medium text-sm lg:text-3xl text-[#212121] font-bricolage">
-              Upcoming events in
+            <p className="font-medium text-sm lg:text-2xl text-[#212121] font-dmsans">
+              Upcoming outreach events in
             </p>
             <div className="relative md:inline-block">
               <div class="p-4">
                 <div class="group relative">
-                  <button class="appearance-none py-1 px-3 pr-8 text-[#181818] text-2xl lg:text-3xl font-bricolage border-b border-[#181818] bg-transparent h-10">
+                  <button class="appearance-none pr-8 text-[#181818] text-2xl lg:text-2xl font-dmsans border-b border-[#181818] bg-transparent h-8">
                     Select Country
                   </button>
                   <nav
@@ -202,7 +202,7 @@ const CommunityOutreachEvent = () => {
               </div>
             </div>
 
-            <button className="text-sm font-medium font-['DM Sans'] leading-tight lg:text-[12px] text-white bg-[#6840E0] px-6 py-2.5 lg:px-6 lg:py-2.5 rounded-full sm:hidden">
+            <button className="text-sm font-medium font-['DM Sans'] leading-tight lg:text-[12px] text-white bg-[#6840E0] px-6 py-2.5 lg:px-6 lg:py-2.5 rounded-full ">
               Create an Outreach
             </button>
           </div>

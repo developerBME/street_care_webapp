@@ -27,6 +27,7 @@ const OutreachVisitLogCard = ()=>{
                 </div>
             </div>
             <div className="pt-2 px-6 pb-6">
+                <CustomButton label="View Details" name="buttonborder"/>
                 <CustomButton label="Offer Help" name="buttonlight"/>
             </div>
         </div>

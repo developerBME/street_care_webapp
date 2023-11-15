@@ -21,10 +21,10 @@ const Chip = (props) => {
   return (
     <div
       onClick={handleClick}
-      className={`inline-flex cursor-pointer items-center gap-1 bg-white border border-[#CACACA] rounded-full px-3 py-1 mr-1 
+      className={`inline-flex cursor-pointer items-center gap-1 rounded-full px-3 py-1 mr-1 
         ${
           clicked
-            ? "bg-[#F5EDFA] border-[#4F35D5]"
+            ? "bg-[#F5EDFA] border border-[#4F35D5]"
             : "bg-white border border-[#CACACA] text-[#616161]"
         }`}
     >
