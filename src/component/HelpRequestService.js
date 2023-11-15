@@ -36,6 +36,24 @@ export const fetchHelpRequests = async () => {
     return helpRequests;
 };
 
+export const fetchHelpReqById = async (helpReqId) => {
+    // Reference to the specific document in the Help Request collection
+    const helpRef = doc(db, HELP_REQ_COLLECTION, helpReqId);
+  
+    const helpSnap = await getDoc(helpRef);
+  
+    // Check if the document exists
+    if (!helpSnap.exists()) {
+      console.error("Help Request not found with id:", helpReqId);
+      return null;
+    }
+
+    const helpData = helpSnap.data();
+    return {
+        ...helpData,
+      };
+};
+  
 
 const fetchUserName = async (uid) => {
     // Reference to the uid instead of the docid of the user.
