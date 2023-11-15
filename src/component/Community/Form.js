@@ -286,7 +286,12 @@ const Form = () => {
     if (!helpRef.current.value) {
       updateErrorState("helpError", "Help Type is required");
     } else {
-      updateErrorState("helpError", "");
+      try{
+        checkString(helpRef.current.value,"Event Name");
+        updateErrorState("helpError","");
+      }catch(e){
+        updateErrorState("helpError","This field should consist only characters")
+      }
     }
 
   };

@@ -128,7 +128,7 @@ function Profile() {
         {/* Vishnu */}
         <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black mb-10">
           <div className="flex flex-col gap-4 lg:gap-14 lg:p-24 pl-8 pt-4 pb-4 pr-8">
-            <div className="inline-flex flex-col sm:flex-row lg:space-x-16 ">
+            <div className="inline-flex flex-col sm:flex-row sm:space-x-16 ">
               <div class="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage leading-[52px]">
                 My Outreaches
               </div>
@@ -151,21 +151,22 @@ function Profile() {
                 </Link>
               </div> */}
             </div>
-            <div className="hidden sm:block">
-              <div className="w-full inline-flex bg-[#F2F6D8] p-4 rounded-xl space-x-4">
-                <div className="text-neutral-800 text-[16px] font-medium font-bricolage leading-loose">
-                  Congratulations! You have attended more than 1 outreach event.
-                  Now you can host your own.
+            <div className="">
+              <div className="w-full flex flex-col sm:flex-row bg-[#F2F6D8] p-4 rounded-xl gap-4  ">
+                <div className="text-neutral-800  text-[20px] font-medium font-bricolage leading-loose  ">
+                  Now you can host your own outreach event.
                 </div>
-                <CustomButton
-                  label="Create Outreach"
-                  name="buttondefaulticon"
-                  icon={add}
-                  onClick={() => {
-                    navigate("/createOutreach");
-                    window.scrollTo(0, 0);
-                  }}
-                />
+                <div className="h-fit">
+                  <CustomButton
+                    label="Create Outreach"
+                    name="buttondefaulticon"
+                    icon={add}
+                    onClick={() => {
+                      navigate("/createOutreach");
+                      window.scrollTo(0, 0);
+                    }}
+                  />
+                </div>
                 {/* <div className="px-3 py-2 inline-flex bg-violet-600 rounded-full gap-2">
                   <img src={add} className="w-4 h-4" />
                   <Link className="rounded-full text-neutral-100 text-[10px]">
