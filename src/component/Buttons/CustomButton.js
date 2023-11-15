@@ -178,6 +178,15 @@ function CustomButton({ label, name, onClick, icon }) {
         {label}
       </button>
     );
+  } else if (name == "buttonsmallblue2") {
+    return (
+      <button
+        onClick={onClick}
+        className="bg-[#79EAFF] text-[#181818] text-[14px] font-medium py-[7px] px-[24px] rounded-full hover:bg-[#75daec] transition ease-in-out delay-300"
+      >
+        {label}
+      </button>
+    );
   } else if (name == "buttonsmallblueicon") {
     return (
       <button

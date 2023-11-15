@@ -245,7 +245,8 @@ function HomePage() {
           </div>
         </div>
       </div> 
-      */}
+        */}
+      
       {/* Aniket */}
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8  rounded-2xl bg-white text-black ">
         <Process />
