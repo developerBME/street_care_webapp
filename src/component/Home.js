@@ -222,7 +222,7 @@ function HomePage() {
         </div>
       </div>
       {/*Vedant*/} {/*BME OFFCIIAL GATHERING BLOCK START*/}
-      {/* <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
+     <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
         <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
           <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
             {" "}
@@ -243,7 +243,7 @@ function HomePage() {
             ))}
           </div>
         </div>
-      </div> */}
+      </div> 
       {/* Aniket */}
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8  rounded-2xl bg-white text-black ">
         <Process />
