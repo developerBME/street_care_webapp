@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import CustomButton from "../Buttons/CustomButton";
 import { useNavigate } from "react-router-dom";
 
-const CreateOutreachModal = ({
+const ConfirmationModal = ({
   isOpen,
   closeModal,
   currSupPow,
@@ -22,7 +22,7 @@ const CreateOutreachModal = ({
           <div className="self-stretch h-fit flex-col justify-start items-start gap-6 flex">
             <div className="justify-self-end items-start gap-20 sm:gap-6 inline-flex w-full">
               <div className="w-fit text-[#212121] text-4xl font-medium font-bricolage leading-[44px]">
-                Outreach Event published to profile!
+                Make sure you are not going alone
               </div>
               {/* <div className="w-fit h-fit  bg-gray-300  justify-end ">
                 <button className="text-6xl " onClick={closeModal}>
@@ -31,24 +31,22 @@ const CreateOutreachModal = ({
               </div> */}
             </div>
             <div className="self-stretch text-[#616161] text-lg font-semibold font-['Open Sans'] leading-normal">
-              {/* If this person need 🙌 Extra Help, add a request to Community hub
-              so other volunteers can find this person and provide the care they
-              needed. */}
+            Group presence offers security and effectiveness in engaging with unfamiliar situations and individuals, benefiting both volunteers and the homeless. <br/> How outreach on Street Care works? <br/> We post the outreach for you and other volunteers can sign up to go with you.
             </div>
           </div>
           <div className="w-fit justify-start items-start gap-4 inline-flex">
             <CustomButton
-              label="All Outreach Events"
+              label="Create an Outreach"
               name="buttondefault"
               onClick={() => {
-                navigate("/allOutreachEvents");
+                navigate("/createOutreach");
               }}
             />
             <CustomButton
-              label="Back to my Profile"
+              label="I will bring a friend"
               name="buttonborder"
               onClick={() => {
-                navigate("/profile");
+                navigate("/");
               }}
             />
           </div>
@@ -58,4 +56,4 @@ const CreateOutreachModal = ({
   );
 };
 
-export default CreateOutreachModal;
+export default ConfirmationModal;
