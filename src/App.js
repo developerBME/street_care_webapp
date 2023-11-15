@@ -111,8 +111,8 @@ function App() {
           <Route path="/helpRequestForm" element={<ComingSoon />} />
           {/* <Route path="/icanhelp" element={<ICanHelpForm />} /> */}
           <Route path="/icanhelp" element={<ComingSoon />} />
-          <Route path="/donateForm" element={<DonateForm />} />
-          {/* <Route path="/donateForm" element={<ComingSoon />} /> */}
+          {/* <Route path="/donateForm" element={<DonateForm />} /> */}
+          <Route path="/donateForm" element={<ComingSoon />} />
           <Route path="/allOutreachEvents" element={<AllOutreachEvents />} />
 
           <Route path="/*" element={<Not404 />} />
