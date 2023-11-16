@@ -68,18 +68,23 @@ const UserInfo = () => {
     setModalIsOpen(false);
   };
 
-  const getUserData = async (attempt) => {
-    if (attempt > 4) {
+  const getUserData = async (attempt = 1) => {
+    if (attempt === null || attempt === undefined) {
+      return;
+    }
+    if (attempt >= 4) {
       return;
     } else {
       try {
+        console.log("Attempt: " + attempt);
         const userRef = query(
           collection(db, "users"),
           where("uid", "==", fAuth?.currentUser?.uid)
         );
         const data = await getDocs(userRef);
         if (!data.docs[0]) {
-          getUserData(attempt++);
+          getUserData(++attempt);
+          return;
         }
         setDisplayName(data.docs[0].data().username);
         setDateCreated(
@@ -147,7 +152,7 @@ const UserInfo = () => {
             : totalDonations + parseInt(doc.data().itemQty);
           return null;
         });
-        console.log(totalDonations);
+        // console.log(totalDonations);
         setHelped(isNaN(parseInt(totalHelped)) ? 0 : parseInt(totalHelped));
         setDonations(
           isNaN(parseInt(totalDonations)) ? 0 : parseInt(totalDonations)
@@ -203,9 +208,9 @@ const UserInfo = () => {
     console.log(achievments);
   }, [achievments]);
 
-  useEffect(() => {
-    console.log(helped);
-  }, [helped]);
+  // useEffect(() => {
+  //   console.log(helped);
+  // }, [helped]);
   return (
     // <div className="lg:px-24 lg:py-12 ">
     <div className="xl:px-24 xl:py-12 ">
