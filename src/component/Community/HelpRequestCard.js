@@ -22,6 +22,7 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
   });
 
   const {
+    id,
     status : helpStatus,
     title : helpTitle,
     skills : helpTags,
