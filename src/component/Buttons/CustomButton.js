@@ -243,6 +243,24 @@ function CustomButton({ label, name, onClick, icon }) {
         <img src={icon} className="w-5 h-5 " />
       </button>
     );
+  }else if (name == "buttonlightsmall") {
+    return (
+      <button
+        onClick={onClick}
+        className="bg-violet-200 text-[#181818] text-[10px] font-medium py-[5px] px-[20px] rounded-full hover:bg-violet-300 transition ease-in-out delay-300"
+      >
+        {label}
+      </button>
+    );
+  }else if (name == "buttonsmallborder2") {
+    return (
+      <button
+        onClick={onClick}
+        className="text-[#1F0A58] text-[10px] font-medium py-[5px] px-[20px] border-[1px] border-[#C8C8C8] rounded-full hover:bg-violet-200 transition ease-in-out delay-300"
+      >
+        {label}
+      </button>
+    );
   } else {
     return (
       <button

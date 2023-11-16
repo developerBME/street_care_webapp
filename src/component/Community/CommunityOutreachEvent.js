@@ -243,8 +243,10 @@ const CommunityOutreachEvent = () => {
               Create an Outreach
             </button>
           </div>
-          <div className="hidden lg:flex md:inline-flex cursor-pointer gap-3 items-center text-center">
-            <div className="font-medium text-[8px] lg:text-[13px] font-bricolage">
+          <div className="hidden lg:flex md:inline-flex cursor-pointer gap-3 items-center text-center" onClick={()=>{
+            navigate("/allOutreachVisitLog")
+          }}>
+            <div className="font-medium text-[8px] lg:text-[13px] font-bricolage" >
               View all
             </div>
             <img src={arrowRight} className="w-2 h-2 lg:w-4 lg:h-4 " />
