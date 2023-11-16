@@ -5,6 +5,7 @@ import {
     doc,
     query,
     where,
+    updateDoc
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -26,11 +27,13 @@ export const fetchHelpRequests = async () => {
     });
     for (const doc of helpSnapshot.docs) {
         const helpData = doc.data();
+        const id = doc.id;
         const userName = await fetchUserName(helpData.uid);
 
         helpRequests.push({
             ...helpData,
-            userName: userName
+            userName: userName,
+            id: id
         });
     }
     return helpRequests;
@@ -108,3 +111,15 @@ export function formatDate(dateObj) {
 
     return `${month} ${day}, ${year} ${weekday} ${formattedTime}`;
 }
+
+export const handleHelpRecieved = async (e,id) => {
+    e.preventDefault();
+    // Reference to the specific document in the Help Request collection
+    console.log("Button click")
+    console.log(id)
+    const helpRequestRef = doc(db, HELP_REQ_COLLECTION, id);
+    const updateRef = await updateDoc(helpRequestRef, {
+        status : "Help Received",
+      });
+    console.log("HELP REQ UPDATED");
+};
