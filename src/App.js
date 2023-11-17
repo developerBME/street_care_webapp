@@ -33,6 +33,7 @@ import Newscard from "./component/HomePage/Newscard";
 import ComingSoon from "./component/ComingSoon";
 import Readmorenews from "./component/HomePage/Readmorenews";
 import ICanHelpForm from "./component/Community/ICanHelpForm";
+import CommunityComingSoon from "./component/CommunityComingSoon";
 
 function App() {
   const fAuth = getAuth();
@@ -86,7 +87,7 @@ function App() {
           {/* <Route path="/about" element={<About />} /> */}
           <Route path="/howtohelp" element={<HowToHelp />} />
           {/* <Route path="/community" element={<Community />} /> */}
-          <Route path="/community" element={<ComingSoon />} />
+          <Route path="/community" element={<CommunityComingSoon />} />
           <Route path="/contact" element={<ComingSoon />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup2 />} />
@@ -111,7 +112,7 @@ function App() {
           <Route path="/helpRequestEventWindow" element={<ComingSoon />} />
           {/* <Route path="/helpRequestForm" element={<HelpRequestForm />} /> */}
           <Route path="/helpRequestForm" element={<ComingSoon />} />
-          {/* <Route path="/icanhelp" element={<ICanHelpForm />} /> */}
+          {/* <Route path="/icanhelp/:id" element={<ICanHelpForm />} /> */}
           <Route path="/icanhelp" element={<ComingSoon />} />
           {/* <Route path="/donateForm" element={<DonateForm />} /> */}
           <Route path="/donateForm" element={<ComingSoon />} />
