@@ -52,8 +52,8 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
 
     // Updated
     <div className="p-4 sm:p-4 lg:p-8 gap-16 bg-white border-y border-[#C8C8C8] sm:justify-end">
-      <div className="flex-row sm:flex sm:gap-x-2 md:gap-x-4 lg:gap-x-8">
-        <div className="w-fit h-fit flex-col justify-start items-start gap-[15px] inline-flex">
+      <div className=" md:grid md:grid-cols-3 md:gap-4">
+        <div className="w-full md:w-fit h-fit flex-col justify-start items-start gap-[15px] inline-flex col-span-2 md:mb-0 mb-4">
           {helpStatus === "Need Help" && (
             <div className="w-fit h-8 px-2 py-1 bg-[#FFECF2] rounded-lg justify-start items-start gap-2 inline-flex">
               <div className="w-6 h-6 relative">
@@ -90,14 +90,18 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
           <div className="self-stretch text-[#273164] text-[28px] font-medium font-bricolage leading-9">
             {helpTitle}
           </div>
-          <div className="justify-start items-start gap-2 inline-flex">
-            {helpTags.map((item, index) => (
-              <div className="w-fit px-3 py-1 bg-white rounded-xl border border-[#616161] justify-start items-center gap-4 flex">
-                <div className="opacity-90 justify-start items-center gap-1 flex text-[#616161] text-sm font-semibold font-opensans leading-tight">
-                  {item}
-                </div>
+          <div className="justify-start items-start">
+            <div className="overflow-x-scroll lg:overflow-none">
+              <div className="w-fit flex inline-flex gap-2">
+                {helpTags.map((item, index) => (
+                  <div className="w-fit px-3 py-1 bg-white rounded-xl border border-[#616161] justify-start items-center gap-4 flex">
+                    <div className="opacity-90 justify-start items-center gap-1 flex text-[#616161] text-sm font-semibold font-opensans leading-tight">
+                      {item}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
           <div className="self-stretch text-[#616161] text-[15px] font-normal font-dmsans leading-normal">
             Location: {helpLocation.street}, {helpLocation.city}, {helpLocation.state},{" "}
@@ -129,8 +133,8 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
         </div>
 
         {helpStatus === "Need Help" && (
-          <div className="w-fit pt-[15px] sm:py-0 sm:w-1/3 h-fit flex-col justify-start sm:items-end gap-4 inline-flex">
-            <button onClick={() => {navigate("/icanhelp");}} className="w-fit bg-[#E6DCFF] hover:bg-[#6840E0] text-[#181818] hover:text-white rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight">
+          <div className="col-span-1">
+            <button onClick={() => {navigate(`/icanhelp/${id}`);}} className="w-fit bg-[#E6DCFF] hover:bg-[#6840E0] text-[#181818] hover:text-white rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight md:float-right">
               I can help
             </button>
             {/* <div className="w-fit flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight">
@@ -152,7 +156,7 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
               <CustomButton label="Mark as Help Received" name="buttonlight" />
             </div> */}
             {helpUid === fAuth.currentUser.uid && (
-            <div className="w-fit flex-col justify-start gap-2 flex text-center text-[12px] font-semibold font-inter leading-tight">
+            <div className="w-fit flex-col justify-start gap-2 flex text-center text-[12px] font-semibold font-inter leading-tight md:float-right mt-2.5">
               <CustomButton label="Reopen Help Request" name="buttonborder" />
             </div>
             )}

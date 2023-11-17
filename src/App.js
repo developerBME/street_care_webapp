@@ -110,7 +110,7 @@ function App() {
           <Route path="/helpRequestEventWindow" element={<ComingSoon />} />
           {/* <Route path="/helpRequestForm" element={<HelpRequestForm />} /> */}
           <Route path="/helpRequestForm" element={<ComingSoon />} />
-          {/* <Route path="/icanhelp" element={<ICanHelpForm />} /> */}
+          {/* <Route path="/icanhelp/:id" element={<ICanHelpForm />} /> */}
           <Route path="/icanhelp" element={<ComingSoon />} />
           {/* <Route path="/donateForm" element={<DonateForm />} /> */}
           <Route path="/donateForm" element={<ComingSoon />} />
