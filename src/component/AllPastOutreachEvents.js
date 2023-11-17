@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import OutreachEventCard from "./Community/OutreachEventCard";
 import {
   formatDate,
@@ -12,6 +12,8 @@ const AllPastOutreachEvents = () => {
   const [events, setEvents] = useState([]);
   const [offevents, setOffevents] = useState([]);
   const navigate = useNavigate();
+  const searchRef = useRef("");
+  const [eventsDisplay, setEventsDisplay] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,6 +34,23 @@ const AllPastOutreachEvents = () => {
     fetchData();
     fetchOfficialData();
   }, []);
+
+  useEffect(() => {
+    setEventsDisplay(events);
+    // searchRef.current = "";
+  }, [events]);
+
+  const searchChange = () => {
+    console.log(searchRef.current.value);
+    console.log(events[0]);
+    setEventsDisplay(
+      events.filter(
+        (x) =>
+          x.title.search(searchRef.current.value) > -1 ||
+          x.userName.search(searchRef.current.value) > -1
+      )
+    );
+  };
 
   return (
     <div className="relative flex flex-col items-center ">
@@ -55,18 +74,30 @@ const AllPastOutreachEvents = () => {
             {" "}
             Past outreach events
           </p>
+
+          <div>
+            <input
+              label="Search"
+              placeholder="Search"
+              ref={searchRef}
+              onChange={searchChange}
+            ></input>
+          </div>
+
           <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-            {events.map((eventData) => (
-              <OutreachEventCard
-                key={eventData.id}
-                cardData={{
-                  ...eventData,
-                  eventDate: formatDate(
-                    new Date(eventData.eventDate.seconds * 1000)
-                  ),
-                }}
-              />
-            ))}
+              {eventsDisplay.length > 0 &&
+                  eventsDisplay.map((eventData) => (
+                    <OutreachEventCard
+                      key={eventData.id}
+                      cardData={{
+                        ...eventData,
+                        eventDate: formatDate(
+                          new Date(eventData.eventDate.seconds * 1000)
+                        ),
+                      }}
+                    />
+                  ))}
+                {eventsDisplay.length < 1 && <p>No results found</p>}
           </div>
         </div>
       </div>
