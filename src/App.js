@@ -32,6 +32,7 @@ import Newscard from "./component/HomePage/Newscard";
 import ComingSoon from "./component/ComingSoon";
 import Readmorenews from "./component/HomePage/Readmorenews";
 import ICanHelpForm from "./component/Community/ICanHelpForm";
+import CommunityComingSoon from "./component/CommunityComingSoon";
 
 function App() {
   const fAuth = getAuth();
@@ -85,7 +86,7 @@ function App() {
           {/* <Route path="/about" element={<About />} /> */}
           <Route path="/howtohelp" element={<HowToHelp />} />
           {/* <Route path="/community" element={<Community />} /> */}
-          <Route path="/community" element={<ComingSoon />} />
+          <Route path="/community" element={<CommunityComingSoon />} />
           <Route path="/contact" element={<ComingSoon />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup2 />} />
