@@ -46,8 +46,11 @@ const AllOutreachEvents = () => {
     setEventsDisplay(
       events.filter(
         (x) =>
-          x.title.search(searchRef.current.value) > -1 ||
-          x.userName.search(searchRef.current.value) > -1
+          x.title.toLowerCase().search(searchRef.current.value.toLowerCase()) >
+            -1 ||
+          x.userName
+            .toLowerCase()
+            .search(searchRef.current.value.toLowerCase()) > -1
       )
     );
   };
