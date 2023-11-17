@@ -277,7 +277,7 @@ const UserInfo = () => {
 
             <div className="flex flex-col">
               <h1 className="text-sm font-bold pb-1 font-bricolage text-[#212121]">
-                Community Leader
+                Community All-Star
               </h1>
               <h3 className="text-xs font-opensans font-semibold pb-1 text-[#616161]">
                 Achieved June 3rd, 2023
@@ -322,7 +322,7 @@ const UserInfo = () => {
             </div>
             <div className="grow shrink basis-0 flex flex-col">
               <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121] self-stretch">
-                Neighborhood Leader
+                Neighborhood All-Star
               </h1>
               <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161] self-stretch">
                 Joined {">"} 3 Outreaches in the same neighborhood
@@ -341,7 +341,7 @@ const UserInfo = () => {
             </div>
             <div className="grow shrink basis-0 flex flex-col">
               <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121] self-stretch">
-                Neighborhood Leader
+                Neighborhood All-Star
               </h1>
               <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161] self-stretch">
                 Joined {">"} 3 Outreaches in the same neighborhood
@@ -402,7 +402,7 @@ const UserInfo = () => {
             </div>
             <div className="grow shrink basis-0 flex flex-col">
               <h1 className="text-sm font-bold mt-1 pb-1 font-bricolage text-[#212121] self-stretch">
-                Seasoned Volunteer
+                Outreach All-Star
               </h1>
               <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161] self-stretch">
                 Joined more than 4 outreaches or has helped more than 8 people

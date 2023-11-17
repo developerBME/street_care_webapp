@@ -500,7 +500,7 @@ function PersonalOutForm() {
                 {/*  */}
                 <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                   <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
-                    Where did you spot a homeless person?
+                    Where did you see a person in need?
                   </div>
                   {/*  */}
                   <div className="self-stretch w-full h-fit flex-col  flex ">
