@@ -24,6 +24,7 @@ import HelpRequestForm from "./component/Community/HelpRequstForm";
 import HelpRequestEventWindow from "./component/Community/HelpRequestEventWindow";
 import DonateForm from "./component/Donate/DonateForm";
 import AllOutreachEvents from "./component/AllOutreachEvents";
+import AllPastOutreachEvents from "./component/AllPastOutreachEvents";
 import AllOutreachVisitLog from "./component/AllOutreachVisitLog";
 
 import ScrollToTop from "./component/helper/ScrollToTop";
@@ -115,6 +116,7 @@ function App() {
           {/* <Route path="/donateForm" element={<DonateForm />} /> */}
           <Route path="/donateForm" element={<ComingSoon />} />
           <Route path="/allOutreachEvents" element={<AllOutreachEvents />} />
+          <Route path="/allPastOutreachEvents" element={<AllPastOutreachEvents/>} />
           <Route path="/allOutreachVisitLog" element={<AllOutreachVisitLog/>} />
           <Route path="/*" element={<Not404 />} />
         </Routes>

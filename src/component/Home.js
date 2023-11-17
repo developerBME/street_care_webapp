@@ -169,9 +169,11 @@ function HomePage() {
   }, []);
 
   const outreachRef = useRef();
+  const pastoutreachRef = useRef();
 
   const handleOutreachRef = () => {
     outreachRef.current.scrollIntoView({ behavior: "smooth" });
+    pastoutreachRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -221,8 +223,49 @@ function HomePage() {
           </div>
         </div>
       </div>
+
+      {/* DIV BLOCK FOR ALL PAST OUTREACH EVENTS*/}
+      <div
+        id="pastoutreach"
+        className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black"
+      >
+            <div
+                className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] scroll-m-16"
+                ref={pastoutreachRef}
+              >
+                <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
+                  {" "}
+                  Past outreach events
+                </p>
+
+                <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+                  {events.map((eventData) => (
+                    <OutreachEventCard
+                      key={eventData.id}
+                      cardData={{
+                        ...eventData,
+                        eventDate: formatDate(
+                          new Date(eventData.eventDate.seconds * 1000)
+                        ),
+                      }}
+                    />
+                  ))}
+                </div>
+                <div className="mt-16">
+                  <CustomButton
+                    label="More Outreach Events"
+                    name="buttondefault"
+                    onClick={() => {
+                      navigate("/allPastOutreachEvents");
+                    }}
+                  />
+                </div>
+              </div>
+        </div>
+      
+
       {/*Vedant*/} {/*BME OFFCIIAL GATHERING BLOCK START*/}
-    {/*
+    
      <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
         <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
           <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
@@ -245,7 +288,7 @@ function HomePage() {
           </div>
         </div>
       </div> 
-        */}
+        
       
       {/* Aniket */}
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8  rounded-2xl bg-white text-black ">
