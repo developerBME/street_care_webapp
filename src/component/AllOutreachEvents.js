@@ -74,7 +74,7 @@ const AllOutreachEvents = () => {
             {" "}
             Upcoming outreach events
           </p>
-          <div>
+          <div className="mt-5">
             <input
               label="Search"
               placeholder="Search"
