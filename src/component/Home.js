@@ -142,8 +142,7 @@ function HomePage() {
 
       // Display 3 upcoming events
       eventsData.sort((a, b) => a.eventDate - b.eventDate);
-      let limitedData = eventsData.slice(0, 3);
-      setEvents(limitedData);
+      setEvents(eventsData);
     };
     const fetchOfficialData = async () => {
       const eventsData = await fetchOfficialEvents();
@@ -180,13 +179,13 @@ function HomePage() {
   const upcomingEvents = events.filter((event) => {
     const eventDate = new Date(event.eventDate.seconds * 1000);
     return eventDate >= new Date(); // Check if the event date is before the current date
-  });
+  }).slice(0, 3);
 
   // Filter events to get only past events
   const pastEvents = events.filter((event) => {
     const eventDate = new Date(event.eventDate.seconds * 1000);
     return eventDate < new Date(); // Check if the event date is before the current date
-  });
+  }).slice(0, 3);
 
   return (
     // <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
