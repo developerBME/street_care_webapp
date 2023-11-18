@@ -200,7 +200,7 @@ function Success() {
               we do.
             </span>
           </div>
-          <div className="self-stretch font-bricolage">
+          <div className="self-stretch font-bricolage text-[24px]">
             {/* <span className="text-neutral-900 text-lg font-normal leading-normal">
               We are excited to share the work our nonprofit does through our{" "}
             </span>
@@ -213,25 +213,23 @@ function Success() {
             <p>
               We are excited to share the work our nonprofit does. Learn how you
               can
-              <b>
-                <a
-                  href="https://brightmindenrichment.org/job-openings/"
-                  target="_blank"
-                >
-                  {" "}
-                  join us{" "}
-                </a>
-              </b>
+              <a
+                href="https://brightmindenrichment.org/job-openings/"
+                target="_blank"
+                className="text-violet-600"
+              >
+                {" "}
+                join us{" "}
+              </a>
               or
-              <b>
-                <a
-                  href="https://brightmindenrichment.org/support-us/"
-                  target="_blank"
-                >
-                  {" "}
-                  support us{" "}
-                </a>
-              </b>{" "}
+              <a
+                href="https://brightmindenrichment.org/support-us/"
+                target="_blank"
+                className="text-violet-600"
+              >
+                {" "}
+                support us{" "}
+              </a>{" "}
               to make a difference.
             </p>
           </div>
