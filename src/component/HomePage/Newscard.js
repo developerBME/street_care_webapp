@@ -35,9 +35,9 @@ const Newscard = () => {
         {/*  */}
 
         <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
-          <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
+          <p className=" text-[25px] lg:text-[45px] font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
             {" "}
-            News
+            Past Events
           </p>
           {/*<div className=" w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
               <Eventcard />

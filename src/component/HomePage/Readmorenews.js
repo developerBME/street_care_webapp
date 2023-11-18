@@ -10,7 +10,7 @@ const Readmorenews = () => {
   const selectedNews = NewsCardData.find((news) => news.id === id);
 
   if (!selectedNews) {
-    return <div>News not found</div>; // Handle case where news article with the provided ID is not found
+    return <div>Past Events not found</div>; // Handle case where news article with the provided ID is not found
   }
 
   const { NewsTitle, NewsDate, NewsContent } = selectedNews;
@@ -27,15 +27,15 @@ const Readmorenews = () => {
         >
           <IoIosArrowBack className=" w-6 h-6" />{" "}
           <p className=" font-bricolage text-xl font-bold leading-7">
-            Return to News
+            Return to Past Events
           </p>
         </div>
         {/*  */}
 
         <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-fit rounded-2xl bg-[#F7F7F7] ">
-          <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
+          <p className=" text-[25px] lg:text-[45px] font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
             {" "}
-            News
+            Past Events
           </p>
 
           <div className="w-full h-fit pt-9 gap-5">

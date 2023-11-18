@@ -7,6 +7,7 @@ import {
 } from "./EventCardService";
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
+import search_icon from "../images/search_icon.png";
 
 const AllPastOutreachEvents = () => {
   const [events, setEvents] = useState([]);
@@ -70,19 +71,22 @@ const AllPastOutreachEvents = () => {
         {/*  */}
 
         <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
-          <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
-            {" "}
-            Past outreach events
-          </p>
-
-          <div className="mt-5">
-            <input
-              label="Search"
-              placeholder="Search"
-              ref={searchRef}
-              onChange={searchChange}
-            ></input>
-          </div>
+          
+        <div className="flex">
+                <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] lg:mt-2">
+                  {" "}
+                  Past outreach events
+                </p>
+                <div className="ml-5 flex">
+                      <label class="relative text-gray-400 focus-within:text-gray-600 block">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 pointer-events-none absolute top-6 transform -translate-y-1/2 left-3">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                          </svg>
+                          <input type="email" name="email" id="email" placeholder="Search" ref={searchRef}
+                            onChange={searchChange} class="form-input border py-3 px-4 bg-white placeholder-gray-400 text-gray-500 appearance-none w-full block pl-12 focus:outline-none rounded-2xl"/>
+                      </label>
+                </div>
+        </div>
 
           <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
               {eventsDisplay.length > 0 &&
