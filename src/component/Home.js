@@ -142,8 +142,7 @@ function HomePage() {
 
       // Display 3 upcoming events
       eventsData.sort((a, b) => a.eventDate - b.eventDate);
-      let limitedData = eventsData.slice(0, 3);
-      setEvents(limitedData);
+      setEvents(eventsData);
     };
     const fetchOfficialData = async () => {
       const eventsData = await fetchOfficialEvents();
@@ -176,6 +175,18 @@ function HomePage() {
     pastoutreachRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
+  // Filter events to get only past events
+  const upcomingEvents = events.filter((event) => {
+    const eventDate = new Date(event.eventDate.seconds * 1000);
+    return eventDate >= new Date(); // Check if the event date is before the current date
+  }).slice(0, 3);
+
+  // Filter events to get only past events
+  const pastEvents = events.filter((event) => {
+    const eventDate = new Date(event.eventDate.seconds * 1000);
+    return eventDate < new Date(); // Check if the event date is before the current date
+  }).slice(0, 3);
+
   return (
     // <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
     <div className="relative flex flex-col items-center ">
@@ -200,7 +211,7 @@ function HomePage() {
           </p>
 
           <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-            {events.map((eventData) => (
+            {upcomingEvents.map((eventData) => (
               <OutreachEventCard
                 key={eventData.id}
                 cardData={{
@@ -239,7 +250,7 @@ function HomePage() {
                 </p>
 
                 <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-                  {events.map((eventData) => (
+                  {pastEvents.map((eventData) => (
                     <OutreachEventCard
                       key={eventData.id}
                       cardData={{

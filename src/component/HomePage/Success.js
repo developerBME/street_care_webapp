@@ -77,7 +77,7 @@ function Success() {
             </div>
           </div>
           <div className="w-full flex items-center justify-center">
-            <div className="text-center text-[10px] md:text-[12px] lg:text-[13px]">
+            <div className="text-center text-[10px] md:text-[12px] lg:text-[13px] font-bricolage">
               As Seen on
             </div>
             <div className="m-1 flex flex-row items-center">
@@ -121,7 +121,7 @@ function Success() {
               </div>
             </div>
           </div>
-          <div className="pt-2"></div>
+          {/* <div className="pt-2"></div>
           <div className="w-full flex justify-center items-center">
             <div className="flex flex-row justify-center items-center gap-2">
               <div className="flex flex-col gap-2">
@@ -171,6 +171,67 @@ function Success() {
                 </div>
               </div>
             </div>
+          </div> */}
+        </div>
+      </div>
+
+      <div className="w-fit h-fit my-2 p-7 bg-white rounded-[30px] justify-start items-start lg:gap-5 lg:inline-flex">
+        <div className="w-20 h-20 p-4 bg-gradient-to-br from-yellow-100 to-neutral-200 rounded-3xl justify-start items-start gap-2.5 flex">
+          <div className="w-12 h-12 relative">
+            <img src={Campaign} className=""></img>
+          </div>
+        </div>
+
+        <div className="grow font-bricolage basis-0 flex-col justify-start items-start gap-8 inline-flex">
+          <div className="self-stretch pt-6 lg:pt-2 text-violet-800 text-[20px] font-bold leading-7">
+            Great News!
+          </div>
+          <div className="self-stretch">
+            <span className="text-neutral-900 text-[24px] font-medium leading-10">
+              We've recently achieved the 2023 Platinum Seal from{" "}
+            </span>
+            <span className="text-violet-600 text-[24px] font-medium leading-10">
+              <a href="https://candid.org/" target="_blank">
+                Candid/Guidestar
+              </a>
+            </span>
+            <span className="text-neutral-900 text-[24px] font-medium leading-10">
+              ! This is our commitment to transparency and accountability in all
+              we do.
+            </span>
+          </div>
+          <div className="self-stretch font-bricolage text-[24px] font-medium">
+            {/* <span className="text-neutral-900 text-lg font-normal leading-normal">
+              We are excited to share the work our nonprofit does through our{" "}
+            </span>
+            <span className="text-violet-600 text-lg font-normal underline leading-normal">
+              Nonprofit Profile
+            </span>
+            <span className="text-neutral-900 text-lg font-normal leading-normal">
+              .{" "}
+            </span>{" "} */}
+            <p>
+              We are excited to share the work our nonprofit does. Learn how you
+              can
+              <a
+                href="https://brightmindenrichment.org/job-openings/"
+                target="_blank"
+                className="text-violet-600"
+              >
+                {" "}
+                join us{" "}
+              </a>
+              or
+              <a
+                href="https://brightmindenrichment.org/support-us/"
+                target="_blank"
+                className="text-violet-600"
+              >
+                {" "}
+                support us{" "}
+              </a>{" "}
+              to make a difference.
+            </p>
           </div>
         </div>
       </div>
@@ -185,7 +246,8 @@ function Success() {
           <div className="flex lg:flex-col xl:flex-row gap-4 items-start  lg:items-center xl:items-start ">
             <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
               <div className="text-violet-950  font-bricolage text-5xl font-normal leading-[64px]">
-                {helpedPeople}
+                {/* {helpedPeople} */}
+                1031
               </div>
             </div>
             <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
@@ -202,7 +264,8 @@ function Success() {
           <div className="flex lg:flex-col xl:flex-row gap-4">
             <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
               <div className="text-violet-950  font-bricolage text-5xl font-normal leading-[64px]">
-                {helpedBy}
+                {/* {helpedBy} */}
+                264
               </div>
             </div>
             <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
@@ -219,7 +282,8 @@ function Success() {
           <div className="flex lg:flex-col xl:flex-row gap-4">
             <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
               <div className="text-violet-950  font-bricolage text-5xl font-normal leading-[64px]">
-                {donations}
+                {/* {donations} */}
+                11753
               </div>
             </div>
             <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">

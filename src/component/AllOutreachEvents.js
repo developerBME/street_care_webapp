@@ -3,7 +3,6 @@ import OutreachEventCard from "./Community/OutreachEventCard";
 import {
   formatDate,
   fetchEvents,
-  fetchOfficialEvents,
 } from "./EventCardService";
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
@@ -11,7 +10,6 @@ import search_icon from "../images/search_icon.png";
 
 const AllOutreachEvents = () => {
   const [events, setEvents] = useState([]);
-  const [offevents, setOffevents] = useState([]);
   const navigate = useNavigate();
   const searchRef = useRef("");
   const [eventsDisplay, setEventsDisplay] = useState([]);
@@ -19,21 +17,17 @@ const AllOutreachEvents = () => {
   useEffect(() => {
     const fetchData = async () => {
       const eventsData = await fetchEvents();
-
+      const upcomingEvents = eventsData.filter((event) => {
+        const eventDate = new Date(event.eventDate.seconds * 1000);
+        return eventDate >= new Date(); // Check if the event date is before the current date
+      });
       // Sort events in place based on their date
-      eventsData.sort((a, b) => a.eventDate - b.eventDate);
+      upcomingEvents.sort((a, b) => a.eventDate - b.eventDate);
 
-      setEvents(eventsData);
-    };
-    const fetchOfficialData = async () => {
-      const eventsData = await fetchOfficialEvents();
-      // Sort events in place based on their date
-      eventsData.sort((a, b) => a.eventDate - b.eventDate);
-      setOffevents(eventsData);
+      setEvents(upcomingEvents);
     };
 
     fetchData();
-    fetchOfficialData();
   }, []);
 
   useEffect(() => {
@@ -47,8 +41,11 @@ const AllOutreachEvents = () => {
     setEventsDisplay(
       events.filter(
         (x) =>
-          x.title.search(searchRef.current.value) > -1 ||
-          x.userName.search(searchRef.current.value) > -1
+          x.title.toLowerCase().search(searchRef.current.value.toLowerCase()) >
+            -1 ||
+          x.userName
+            .toLowerCase()
+            .search(searchRef.current.value.toLowerCase()) > -1
       )
     );
   };
