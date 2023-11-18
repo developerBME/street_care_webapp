@@ -200,7 +200,7 @@ function Success() {
               we do.
             </span>
           </div>
-          <div className="self-stretch font-bricolage text-[24px]">
+          <div className="self-stretch font-bricolage text-[24px] font-medium">
             {/* <span className="text-neutral-900 text-lg font-normal leading-normal">
               We are excited to share the work our nonprofit does through our{" "}
             </span>
