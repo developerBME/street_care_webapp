@@ -8,7 +8,7 @@ function CommunityComingSoon() {
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div class="relative flex flex-col items-center">
-        <div className=" w-[95%] md:w-[90%] lg:w-[50%] mx-2 lg:mx-40 mt-32 px-[8px] py-6 lg:px-24 lg:pb-[55px] lg:pt-[25px] md:px-[25px] md:py-[25px] rounded-2xl bg-white text-black text-center">
+        <div className=" w-[95%] md:w-[90%] lg:w-[50%] mx-2 lg:mx-40 mt-32 mb-4 px-[8px] py-6 lg:px-24 lg:pb-[55px] lg:pt-[55px] md:px-[25px] md:py-[25px] rounded-2xl bg-white text-black text-center">
           <h1 className="text-4xl font-bold mb-4">Upcoming Features:</h1>
           <ul className="text-left text-lg px-4 md:px-0 mb-8 inline-table">
             <li className="list-disc">You can create Help Request</li>
