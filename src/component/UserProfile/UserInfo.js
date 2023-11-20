@@ -68,18 +68,23 @@ const UserInfo = () => {
     setModalIsOpen(false);
   };
 
-  const getUserData = async (attempt) => {
-    if (attempt > 4) {
+  const getUserData = async (attempt = 1) => {
+    if (attempt === null || attempt === undefined) {
+      return;
+    }
+    if (attempt >= 4) {
       return;
     } else {
       try {
+        console.log("Attempt: " + attempt);
         const userRef = query(
           collection(db, "users"),
           where("uid", "==", fAuth?.currentUser?.uid)
         );
         const data = await getDocs(userRef);
         if (!data.docs[0]) {
-          getUserData(attempt++);
+          getUserData(++attempt);
+          return;
         }
         setDisplayName(data.docs[0].data().username);
         setDateCreated(
@@ -147,7 +152,7 @@ const UserInfo = () => {
             : totalDonations + parseInt(doc.data().itemQty);
           return null;
         });
-        console.log(totalDonations);
+        // console.log(totalDonations);
         setHelped(isNaN(parseInt(totalHelped)) ? 0 : parseInt(totalHelped));
         setDonations(
           isNaN(parseInt(totalDonations)) ? 0 : parseInt(totalDonations)
@@ -203,9 +208,9 @@ const UserInfo = () => {
     console.log(achievments);
   }, [achievments]);
 
-  useEffect(() => {
-    console.log(helped);
-  }, [helped]);
+  // useEffect(() => {
+  //   console.log(helped);
+  // }, [helped]);
   return (
     // <div className="lg:px-24 lg:py-12 ">
     <div className="xl:px-24 xl:py-12 ">
@@ -272,7 +277,7 @@ const UserInfo = () => {
 
             <div className="flex flex-col">
               <h1 className="text-sm font-bold pb-1 font-bricolage text-[#212121]">
-                Community Leader
+                Community All-Star
               </h1>
               <h3 className="text-xs font-opensans font-semibold pb-1 text-[#616161]">
                 Achieved June 3rd, 2023
@@ -317,7 +322,7 @@ const UserInfo = () => {
             </div>
             <div className="grow shrink basis-0 flex flex-col">
               <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121] self-stretch">
-                Neighborhood Leader
+                Neighborhood All-Star
               </h1>
               <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161] self-stretch">
                 Joined {">"} 3 Outreaches in the same neighborhood
@@ -336,7 +341,7 @@ const UserInfo = () => {
             </div>
             <div className="grow shrink basis-0 flex flex-col">
               <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121] self-stretch">
-                Neighborhood Leader
+                Neighborhood All-Star
               </h1>
               <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161] self-stretch">
                 Joined {">"} 3 Outreaches in the same neighborhood
@@ -397,10 +402,10 @@ const UserInfo = () => {
             </div>
             <div className="grow shrink basis-0 flex flex-col">
               <h1 className="text-sm font-bold mt-1 pb-1 font-bricolage text-[#212121] self-stretch">
-                Seasoned Volunteer
+                Outreach All-Star
               </h1>
               <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161] self-stretch">
-                Joined more than 4 outreaches or has helped more than 8 people
+                Joined more than 5 outreaches or has helped more than 25 people
                 {/* Helped more than 8 people */}
               </h3>
             </div>
@@ -415,7 +420,7 @@ const UserInfo = () => {
                 Seasoned Volunteer
               </h1>
               <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161] self-stretch">
-                Joined more than 4 outreaches or has helped more than 8 people.
+                Joined more than 5 outreaches or has helped more than 25 people.
                 {/* Helped more than 8 people */}
               </h3>
             </div>

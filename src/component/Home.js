@@ -142,8 +142,7 @@ function HomePage() {
 
       // Display 3 upcoming events
       eventsData.sort((a, b) => a.eventDate - b.eventDate);
-      let limitedData = eventsData.slice(0, 3);
-      setEvents(limitedData);
+      setEvents(eventsData);
     };
     const fetchOfficialData = async () => {
       const eventsData = await fetchOfficialEvents();
@@ -169,10 +168,28 @@ function HomePage() {
   }, []);
 
   const outreachRef = useRef();
+  const pastoutreachRef = useRef();
 
   const handleOutreachRef = () => {
     outreachRef.current.scrollIntoView({ behavior: "smooth" });
+    // pastoutreachRef.current.scrollIntoView({ behavior: "smooth" });
   };
+
+  // Filter events to get only past events
+  const upcomingEvents = events
+    .filter((event) => {
+      const eventDate = new Date(event.eventDate.seconds * 1000);
+      return eventDate >= new Date(); // Check if the event date is before the current date
+    })
+    .slice(0, 3);
+
+  // Filter events to get only past events
+  const pastEvents = events
+    .filter((event) => {
+      const eventDate = new Date(event.eventDate.seconds * 1000);
+      return eventDate < new Date(); // Check if the event date is before the current date
+    })
+    .slice(0, 3);
 
   return (
     // <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
@@ -189,7 +206,7 @@ function HomePage() {
         className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black"
       >
         <div
-          className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] scroll-m-16"
+          className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] scroll-m-24"
           ref={outreachRef}
         >
           <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
@@ -198,7 +215,7 @@ function HomePage() {
           </p>
 
           <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-            {events.map((eventData) => (
+            {upcomingEvents.map((eventData) => (
               <OutreachEventCard
                 key={eventData.id}
                 cardData={{
@@ -221,8 +238,46 @@ function HomePage() {
           </div>
         </div>
       </div>
+      {/* DIV BLOCK FOR ALL PAST OUTREACH EVENTS*/}
+      <div
+        id="pastoutreach"
+        className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black"
+      >
+        <div
+          className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] scroll-m-16"
+          ref={pastoutreachRef}
+        >
+          <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
+            {" "}
+            Past outreach events
+          </p>
+
+          <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+            {pastEvents.map((eventData) => (
+              <OutreachEventCard
+                key={eventData.id}
+                cardData={{
+                  ...eventData,
+                  eventDate: formatDate(
+                    new Date(eventData.eventDate.seconds * 1000)
+                  ),
+                }}
+              />
+            ))}
+          </div>
+          <div className="mt-16">
+            <CustomButton
+              label="More Outreach Events"
+              name="buttondefault"
+              onClick={() => {
+                navigate("/allPastOutreachEvents");
+              }}
+            />
+          </div>
+        </div>
+      </div>
       {/*Vedant*/} {/*BME OFFCIIAL GATHERING BLOCK START*/}
-    {/*
+      {/* 
      <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
         <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
           <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
@@ -245,6 +300,7 @@ function HomePage() {
           </div>
         </div>
       </div> 
+
       */}
       {/* Aniket */}
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8  rounded-2xl bg-white text-black ">
@@ -261,8 +317,8 @@ function HomePage() {
         {/*<News />*/}
 
         <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
-          <p className="font-dmsans font-medium md:text-[30px] text-[25px] lg:text-[45px] text-[#212121]">
-            News
+          <p className=" text-[25px] lg:text-[45px] font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
+            Past Events
           </p>
           <div className=" grid grid-cols-1 gap-x-8 gap-y-8 mt-6 sm:pt-4 lg:mx-0 lg:max-w-none lg:grid-cols-3">
             {newsevents.map((eventData) => (
