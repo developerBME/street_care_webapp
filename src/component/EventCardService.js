@@ -159,6 +159,10 @@ export const fetchUserEvents = async (uid) => {
     where("uid", "==", uid)
   );
   const userDocRef = await getDocs(userQuery);
+  if (userDocRef.docs.length === 0) {
+    console.error("User document not found for uid:", uid);
+    return [];
+  }
   const userDocID = userDocRef.docs[0].id;
   // reference for the userdoc
   const userRef = doc(db, USERS_COLLECTION, userDocID);

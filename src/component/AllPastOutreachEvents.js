@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import search_icon from "../images/search_icon.png";
 
-const AllOutreachEvents = () => {
+const AllPastOutreachEvents = () => {
   const [events, setEvents] = useState([]);
   const navigate = useNavigate();
   const searchRef = useRef("");
@@ -14,14 +14,14 @@ const AllOutreachEvents = () => {
   useEffect(() => {
     const fetchData = async () => {
       const eventsData = await fetchEvents();
-      const upcomingEvents = eventsData.filter((event) => {
+      const pastEvents = eventsData.filter((event) => {
         const eventDate = new Date(event.eventDate.seconds * 1000);
-        return eventDate >= new Date(); // Check if the event date is before the current date
+        return eventDate < new Date(); // Check if the event date is before the current date
       });
       // Sort events in place based on their date
-      upcomingEvents.sort((a, b) => a.eventDate - b.eventDate);
+      pastEvents.sort((a, b) => a.eventDate - b.eventDate);
 
-      setEvents(upcomingEvents);
+      setEvents(pastEvents);
     };
 
     fetchData();
@@ -122,4 +122,4 @@ const AllOutreachEvents = () => {
   );
 };
 
-export default AllOutreachEvents;
+export default AllPastOutreachEvents;

@@ -203,16 +203,16 @@ const HelpRequest = () => {
     },
   ];
 
-  const [events, setEvents] = useState([]);
+  const [helpRequests, setHelpRequests] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const eventsData = await fetchHelpRequests();
+      const helpRequestData = await fetchHelpRequests();
       
-      // Sort events in place based on their date
-      eventsData.sort((a, b) => a.createdAt - b.createdAt);
+      // Sort helpRequests in place based on their date
+      helpRequestData.sort((a, b) => a.createdAt - b.createdAt);
 
-      setEvents(eventsData);
+      setHelpRequests(helpRequestData);
     };
 
     fetchData();
@@ -301,11 +301,11 @@ const HelpRequest = () => {
       ) : (
       <div className="p-4 lg:px-28 lg:py-12 flex flex-col bg-[#F7F7F7] gap-4 lg:gap-8 rounded-b-2xl">
         <div>
-          {events.slice(0, visibleItems).map((item, index) => (
+          {helpRequests.slice(0, visibleItems).map((item, index) => (
             <HelpRequestCard key={index} helpRequestCardData={item} />
           ))}
         </div>
-        {visibleItems < events.length && (
+        {visibleItems < helpRequests.length && (
           <button
             className="w-fit rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 flex text-center text-[#1F0A58] hover:bg-[#1F0A58] hover:text-white text-[13px] font-medium font-dmsans leading-tight self-stretch px-6 py-2.5"
             onClick={loadMore}

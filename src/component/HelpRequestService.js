@@ -5,6 +5,7 @@ import {
     doc,
     query,
     where,
+    updateDoc
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -26,16 +27,36 @@ export const fetchHelpRequests = async () => {
     });
     for (const doc of helpSnapshot.docs) {
         const helpData = doc.data();
+        const id = doc.id;
         const userName = await fetchUserName(helpData.uid);
 
         helpRequests.push({
             ...helpData,
-            userName: userName
+            userName: userName,
+            id: id
         });
     }
     return helpRequests;
 };
 
+export const fetchHelpReqById = async (helpReqId) => {
+    // Reference to the specific document in the Help Request collection
+    const helpRef = doc(db, HELP_REQ_COLLECTION, helpReqId);
+  
+    const helpSnap = await getDoc(helpRef);
+  
+    // Check if the document exists
+    if (!helpSnap.exists()) {
+      console.error("Help Request not found with id:", helpReqId);
+      return null;
+    }
+
+    const helpData = helpSnap.data();
+    return {
+        ...helpData,
+      };
+};
+  
 
 const fetchUserName = async (uid) => {
     // Reference to the uid instead of the docid of the user.
@@ -90,3 +111,15 @@ export function formatDate(dateObj) {
 
     return `${month} ${day}, ${year} ${weekday} ${formattedTime}`;
 }
+
+export const handleHelpRecieved = async (e,id) => {
+    e.preventDefault();
+    // Reference to the specific document in the Help Request collection
+    console.log("Button click")
+    console.log(id)
+    const helpRequestRef = doc(db, HELP_REQ_COLLECTION, id);
+    const updateRef = await updateDoc(helpRequestRef, {
+        status : "Help Received",
+      });
+    console.log("HELP REQ UPDATED");
+};

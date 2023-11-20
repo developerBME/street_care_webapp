@@ -178,6 +178,15 @@ function CustomButton({ label, name, onClick, icon }) {
         {label}
       </button>
     );
+  } else if (name == "buttonsmallblue2") {
+    return (
+      <button
+        onClick={onClick}
+        className="bg-[#79EAFF] text-[#181818] text-[14px] font-medium py-[7px] px-[24px] rounded-full hover:bg-[#75daec] transition ease-in-out delay-300"
+      >
+        {label}
+      </button>
+    );
   } else if (name == "buttonsmallblueicon") {
     return (
       <button
@@ -230,6 +239,136 @@ function CustomButton({ label, name, onClick, icon }) {
       <button
         onClick={onClick}
         className="text-[#1F0A58] text-[14px] w-fit inline-flex gap-2 font-medium py-[5px] px-[5px] border-[1px] border-[#C8C8C8] rounded-full hover:bg-violet-200 transition ease-in-out delay-300"
+      >
+        <img src={icon} className="w-5 h-5 " />
+      </button>
+    );
+  } else if (name == "buttonlightsmall") {
+    return (
+      <button
+        onClick={onClick}
+        className="bg-violet-200 text-[#181818] text-[10px] font-medium py-[5px] px-[20px] rounded-full hover:bg-violet-300 transition ease-in-out delay-300"
+      >
+        {label}
+      </button>
+    );
+  } else if (name == "buttonsmallborder2") {
+    return (
+      <button
+        onClick={onClick}
+        className="text-[#1F0A58] text-[10px] font-medium py-[5px] px-[20px] border-[1px] border-[#C8C8C8] rounded-full hover:bg-violet-200 transition ease-in-out delay-300"
+      >
+        {label}
+      </button>
+    );
+  } else if (name == "buttonlg") {
+    return (
+      <button
+        onClick={onClick}
+        className="bg-[#6840E0] text-white text-[14px] font-medium py-[20px] px-[36px] rounded-full hover:bg-[#504279] transition ease-in-out delay-300"
+      >
+        {label}
+      </button>
+    );
+  } else if (name == "buttonlgicon") {
+    return (
+      <button
+        onClick={onClick}
+        className="bg-[#6840E0] w-fit inline-flex gap-2 items-center text-white text-[14px] font-medium py-[20px] pl-[26px] pr-[36px] rounded-full hover:bg-[#504279] transition ease-in-out delay-300"
+      >
+        <img src={icon} className="w-5 h-5 " />
+        {label}
+      </button>
+    );
+  } else if (name == "buttonicon9") {
+    return (
+      <button
+        onClick={onClick}
+        className="bg-[#6840E0] w-fit inline-flex gap-2 items-center text-white text-[14px] font-medium py-[20px] px-[20px] rounded-full hover:bg-[#504279] transition ease-in-out delay-300"
+      >
+        <img src={icon} className="w-5 h-5 " />
+      </button>
+    );
+  } else if (name == "buttonlgblue") {
+    return (
+      <button
+        onClick={onClick}
+        className="bg-[#79EAFF] text-[#181818] text-[14px] font-medium py-[20px] px-[26px] rounded-full hover:bg-[#75daec] transition ease-in-out delay-300"
+      >
+        {label}
+      </button>
+    );
+  } else if (name == "buttonlgblueicon") {
+    return (
+      <button
+        onClick={onClick}
+        className="bg-[#79EAFF] text-[#181818] text-[14px] w-fit inline-flex gap-2 font-medium py-[20px] pl-[26px] pr-[36px] rounded-full hover:bg-[#75daec] transition ease-in-out delay-300"
+      >
+        <img src={icon} className="w-5 h-5 " />
+        {label}
+      </button>
+    );
+  } else if (name == "buttonicon10") {
+    return (
+      <button
+        onClick={onClick}
+        className="bg-[#79EAFF] text-[#181818] w-fit inline-flex gap-2 items-center text-white text-[14px] font-medium py-[20px] px-[20px] rounded-full hover:bg-[#75daec] transition ease-in-out delay-300"
+      >
+        <img src={icon} className="w-5 h-5 " />
+      </button>
+    );
+  } else if (name == "buttonlglight") {
+    return (
+      <button
+        onClick={onClick}
+        className="bg-violet-200 text-[#181818] text-[14px] font-medium py-[20px] px-[26px] rounded-full hover:bg-violet-300 transition ease-in-out delay-300"
+      >
+        {label}
+      </button>
+    );
+  } else if (name == "buttonlglighticon") {
+    return (
+      <button
+        onClick={onClick}
+        className="bg-violet-200 text-[#181818] w-fit inline-flex gap-2 text-[14px] font-medium py-[20px] pl-[26px] pr-[36px] rounded-full hover:bg-[#d7ccec] transition ease-in-out delay-300"
+      >
+        <img src={icon} className="w-5 h-5 " />
+        {label}
+      </button>
+    );
+  } else if (name == "buttonicon11") {
+    return (
+      <button
+        onClick={onClick}
+        className="bg-violet-200 text-[#181818] w-fit inline-flex gap-2 text-[14px] font-medium py-[20px] px-[20px] rounded-full hover:bg-[#d7ccec] transition ease-in-out delay-300"
+      >
+        <img src={icon} className="w-5 h-5 " />
+      </button>
+    );
+  } else if (name == "buttonlgborder") {
+    return (
+      <button
+        onClick={onClick}
+        className="text-[#1F0A58] text-[14px] font-medium py-[20px] px-[26px] border-[1px] border-[#C8C8C8] rounded-full hover:bg-violet-200 transition ease-in-out delay-300"
+      >
+        {label}
+      </button>
+    );
+  } else if (name == "buttonbordericon") {
+    return (
+      <button
+        onClick={onClick}
+        className="text-[#1F0A58] text-[14px] w-fit inline-flex gap-2 font-medium py-[20px] pl-[26px] pr-[36px] border-[1px] border-[#C8C8C8] rounded-full hover:bg-violet-200 transition ease-in-out delay-300"
+      >
+        <img src={icon} className="w-5 h-5 " />
+        {label}
+      </button>
+    );
+  } else if (name == "buttonicon12") {
+    return (
+      <button
+        onClick={onClick}
+        className="text-[#1F0A58] text-[14px] w-fit inline-flex gap-2 font-medium py-[20px] px-[20px] border-[1px] border-[#C8C8C8] rounded-full hover:bg-violet-200 transition ease-in-out delay-300"
       >
         <img src={icon} className="w-5 h-5 " />
       </button>
