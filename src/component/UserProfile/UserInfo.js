@@ -405,7 +405,7 @@ const UserInfo = () => {
                 Outreach All-Star
               </h1>
               <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161] self-stretch">
-                Joined more than 4 outreaches or has helped more than 8 people
+                Joined more than 5 outreaches or has helped more than 25 people
                 {/* Helped more than 8 people */}
               </h3>
             </div>
@@ -420,7 +420,7 @@ const UserInfo = () => {
                 Seasoned Volunteer
               </h1>
               <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161] self-stretch">
-                Joined more than 4 outreaches or has helped more than 8 people.
+                Joined more than 5 outreaches or has helped more than 25 people.
                 {/* Helped more than 8 people */}
               </h3>
             </div>
