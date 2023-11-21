@@ -275,7 +275,7 @@ function PersonalOutForm() {
                 </div>
                 <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                   <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
-                    How many people did you help?
+                    How many people did you help?*
                   </div>
                   {/*  */}
                   <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
@@ -316,7 +316,7 @@ function PersonalOutForm() {
 
                 <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                   <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
-                    What kind of help did you provide?
+                    What kind of help did you provide?*
                   </div>
 
                   <div className="self-stretch w-full h-fit grid md:grid-cols-4 grid-cols-3 gap-2 ">
@@ -676,7 +676,7 @@ function PersonalOutForm() {
                   </div>
                   {/**/}
                   <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
-                    Total number of items donated by you?
+                    Total number of items donated by you?*
                   </div>
                   <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
                     <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
@@ -684,7 +684,7 @@ function PersonalOutForm() {
                         Number of Items
                       </div>
                     </div>
-                    <div className="self-stretch h-fit  border-collapse     ">
+                    <div className="self-stretch h-fit  border-collapse">
                       <div className=" h-14  justify-center items-start ">
                         <input
                           id="itemsNumber"

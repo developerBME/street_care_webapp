@@ -112,7 +112,7 @@ export function formatDate(dateObj) {
     return `${month} ${day}, ${year} ${weekday} ${formattedTime}`;
 }
 
-export const handleHelpRecieved = async (e,id) => {
+export const handleHelpRecieved = async (e,id,refresh) => {
     e.preventDefault();
     // Reference to the specific document in the Help Request collection
     console.log("Button click")
@@ -122,4 +122,7 @@ export const handleHelpRecieved = async (e,id) => {
         status : "Help Received",
       });
     console.log("HELP REQ UPDATED");
+    if (typeof refresh == "function") {
+        refresh();
+      }
 };

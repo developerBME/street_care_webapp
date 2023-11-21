@@ -15,8 +15,6 @@ const Chip = (props) => {
     props.setter(props.val, !clicked);
     setClicked(!clicked);
   };
-
-
  
   return (
     <div
@@ -50,7 +48,7 @@ const Chip = (props) => {
         <img src={add2} className="w-6 h-6" />
       )}
     </div>
-
+    
     // <div onClick = {handleClick} className={`inline-flex cursor-pointer items-center gap-1 bg-white border border-[#CACACA] rounded-full px-3 py-1 mr-1
     // ${clicked ? "bg-[#F4ECF9] border-[#5F35D5]"
     // :"bg-white border border-[#CACACA] text-[#616161]"}`}>

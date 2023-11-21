@@ -51,25 +51,59 @@ export const fetchEvents = async () => {
   return outreachEvents;
 };
 
-export const fetchPastOutreachEvents = async () => {
-  const pastOureachEventsRef = query(collection(db, PAST_OUTREACH_EVENTS_COLLECTION), limit(20));
-  const eventSnapshot = await getDocs(pastOureachEventsRef);
-  let outreachEvents = [];
-  for (const doc of eventSnapshot.docs) {
-    const eventData = doc.data();
-    const result = await fetchUserDetails(eventData.uid);
-    const userName = result.username;
-    const photoUrl = result.photoUrl;
 
-    let currentParticipants = eventData.participants || [];
-    outreachEvents.push({
-      ...eventData,
-      userName: userName,
-      id: doc.id,
-      nop: currentParticipants.length,
-      photoUrl: photoUrl,
+
+async function fetchUserDetailsBatch(userIds) {
+  const userDetails = {};
+  // Firestore limits 'in' queries to 10 items
+  const chunks = splitArrayIntoChunksOfLen(userIds, 10);
+
+  for (const chunk of chunks) {
+    const userQuery = query(collection(db, USERS_COLLECTION), where("uid", "in", chunk));
+    const querySnapshot = await getDocs(userQuery);
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      userDetails[data.uid] = {
+        username: data.username || "",
+        photoUrl: data.photoUrl || "",
+      };
     });
   }
+
+  return userDetails;
+};
+
+// Helper function to split an array into chunks of a specified length
+function splitArrayIntoChunksOfLen(arr, len) {
+  var chunks = [], i = 0, n = arr.length;
+  while (i < n) {
+    chunks.push(arr.slice(i, i += len));
+  }
+  return chunks;
+}
+
+export const fetchPastOutreachEvents = async () => {
+  const pastOureachEventsRef = collection(db, PAST_OUTREACH_EVENTS_COLLECTION);
+  const eventSnapshot = await getDocs(pastOureachEventsRef);
+  
+  const userIds = new Set();
+  eventSnapshot.docs.forEach(doc => userIds.add(doc.data().uid));
+  
+  // Fetch user details in batch
+  const userDetails = await fetchUserDetailsBatch(Array.from(userIds));
+
+  // Process events
+  let outreachEvents = eventSnapshot.docs.map(doc => {
+    const eventData = doc.data();
+    return {
+      ...eventData,
+      userName: userDetails[eventData.uid]?.username,
+      photoUrl: userDetails[eventData.uid]?.photoUrl,
+      id: doc.id,
+      nop: eventData.participants?.length || 0
+    };
+  });
+
   return outreachEvents;
 };
 
