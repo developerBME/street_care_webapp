@@ -114,11 +114,17 @@ function App() {
           <Route path="/helpRequestForm" element={<ComingSoon />} />
           {/* <Route path="/icanhelp/:id" element={<ICanHelpForm />} /> */}
           <Route path="/icanhelp" element={<ComingSoon />} />
-          {/* <Route path="/donateForm" element={<DonateForm />} /> */}
-          <Route path="/donateForm" element={<ComingSoon />} />
+          <Route path="/donateForm" element={<DonateForm />} />
+          {/* <Route path="/donateForm" element={<ComingSoon />} /> */}
           <Route path="/allOutreachEvents" element={<AllOutreachEvents />} />
-          <Route path="/allPastOutreachEvents" element={<AllPastOutreachEvents/>} />
-          <Route path="/allOutreachVisitLog" element={<AllOutreachVisitLog/>} />
+          <Route
+            path="/allPastOutreachEvents"
+            element={<AllPastOutreachEvents />}
+          />
+          <Route
+            path="/allOutreachVisitLog"
+            element={<AllOutreachVisitLog />}
+          />
           <Route path="/*" element={<Not404 />} />
         </Routes>
         <Footer />
