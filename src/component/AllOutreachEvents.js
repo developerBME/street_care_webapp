@@ -4,12 +4,19 @@ import { formatDate, fetchEvents } from "./EventCardService";
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import search_icon from "../images/search_icon.png";
+import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 
 const AllOutreachEvents = () => {
   const [events, setEvents] = useState([]);
   const navigate = useNavigate();
   const searchRef = useRef("");
   const [eventsDisplay, setEventsDisplay] = useState([]);
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [visibleCards, setVisibleCards] = useState(12);
+  const loadMore = () => {
+    setVisibleCards((prev) => prev + 12);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,6 +38,12 @@ const AllOutreachEvents = () => {
     setEventsDisplay(events);
     // searchRef.current = "";
   }, [events]);
+
+  useEffect(() => {
+    if (eventsDisplay.length > 0) {
+      setIsLoading(false);
+    }
+  }, [eventsDisplay]);
 
   const searchChange = () => {
     console.log(searchRef.current.value);
@@ -69,7 +82,7 @@ const AllOutreachEvents = () => {
             <div className="">
               <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] lg:mt-2">
                 {" "}
-                Past outreach events
+                Upcoming outreach events
               </p>
             </div>
             <div className=" mt-6 lg:mt-0">
@@ -101,21 +114,37 @@ const AllOutreachEvents = () => {
             </div>
           </div>
 
-          <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-            {eventsDisplay.length > 0 &&
-              eventsDisplay.map((eventData) => (
-                <OutreachEventCard
-                  key={eventData.id}
-                  cardData={{
-                    ...eventData,
-                    eventDate: formatDate(
-                      new Date(eventData.eventDate.seconds * 1000)
-                    ),
-                  }}
-                />
-              ))}
-            {eventsDisplay.length < 1 && <p>No results found</p>}
-          </div>
+          {isLoading ? (
+            <div className="flex justify-between items-center w-full h-fit">
+              <EventCardSkeleton />
+              <EventCardSkeleton />
+              <EventCardSkeleton />
+            </div>
+          ) : (
+            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+              {eventsDisplay.length > 0 &&
+                eventsDisplay.map((eventData) => (
+                  <OutreachEventCard
+                    key={eventData.id}
+                    cardData={{
+                      ...eventData,
+                      eventDate: formatDate(
+                        new Date(eventData.eventDate.seconds * 1000)
+                      ),
+                    }}
+                  />
+                ))}
+              {/* {eventsDisplay.length < 1 && <p>No results found</p>} */}
+            </div>
+          )}
+          {visibleCards < eventsDisplay.length && (
+            <button
+              className="w-fit rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 flex text-center text-[#1F0A58] hover:bg-[#1F0A58] hover:text-white text-[13px] font-medium font-dmsans leading-tight self-stretch px-6 py-2.5"
+              onClick={loadMore}
+            >
+              Load More
+            </button>
+          )}
         </div>
       </div>
     </div>
