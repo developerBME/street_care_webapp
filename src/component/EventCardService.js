@@ -6,12 +6,14 @@ import {
   updateDoc,
   query,
   where,
+  limit
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const OFFICIAL_EVENTS_COLLECTION = "officialEvents";
 const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
+const PAST_OUTREACH_EVENTS_COLLECTION = "pastOutreachEvents";
 const USERS_COLLECTION = "users";
 
 export const fetchEvents = async () => {
@@ -42,6 +44,28 @@ export const fetchEvents = async () => {
         currentParticipants.includes(fAuth?.currentUser?.uid)
           ? "EDIT"
           : "RSVP",
+      nop: currentParticipants.length,
+      photoUrl: photoUrl,
+    });
+  }
+  return outreachEvents;
+};
+
+export const fetchPastOutreachEvents = async () => {
+  const pastOureachEventsRef = query(collection(db, PAST_OUTREACH_EVENTS_COLLECTION), limit(20));
+  const eventSnapshot = await getDocs(pastOureachEventsRef);
+  let outreachEvents = [];
+  for (const doc of eventSnapshot.docs) {
+    const eventData = doc.data();
+    const result = await fetchUserDetails(eventData.uid);
+    const userName = result.username;
+    const photoUrl = result.photoUrl;
+
+    let currentParticipants = eventData.participants || [];
+    outreachEvents.push({
+      ...eventData,
+      userName: userName,
+      id: doc.id,
       nop: currentParticipants.length,
       photoUrl: photoUrl,
     });
