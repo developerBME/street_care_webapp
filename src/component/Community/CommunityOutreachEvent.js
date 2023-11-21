@@ -73,6 +73,13 @@ const CommunityOutreachEvent = () => {
     fetchData();
   }, []);
 
+  const upcomingEvents = events
+    .filter((event) => {
+      const eventDate = new Date(event.eventDate.seconds * 1000);
+      return eventDate >= new Date(); // Check if the event date is before the current date
+    })
+    .slice(0, 3);
+
   return (
     <div>
       <div className="w-full flex flex-col justify-center md:justify-between items-center rounded-t-xl bg-gradient-to-br from-purple-300 to-zinc-200 p-4 lg:px-28 lg:py-12 lg:flex-row lg:space-y-0">
@@ -220,6 +227,28 @@ const CommunityOutreachEvent = () => {
         </div>
 
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
+            {upcomingEvents.map((eventData) => (
+              <OutreachEventCard
+                key={eventData.id}
+                cardData={{
+                  ...eventData,
+                  eventDate: formatDate(
+                    new Date(eventData.eventDate.seconds * 1000)
+                  ),
+                }}
+              />
+            ))}
+            {visibleItems < upcomingEvents.length && (
+              <button
+                className="w-full px-6 py-2.5 rounded-full text-sm font-medium text-violet-950 font-['DM Sans'] border border-stone-300"
+                onClick={loadMore}
+              >
+                Load More
+              </button>
+            )}
+          </div>
+
+        {/*<div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
           {cardData.slice(0, visibleItems).map((item, index) => (
             <div key={index}>
               <OutreachEventCard cardData={item} />
@@ -233,7 +262,7 @@ const CommunityOutreachEvent = () => {
           >
             Load More
           </button>
-        )}
+        )}*/}
         <div className="flex items-center justify-between">
           <div className="md:inline-flex items-center text-center space-y-2 md:space-y-0">
             <p className="font-medium text-sm lg:text-3xl text-[#212121] font-bricolage">

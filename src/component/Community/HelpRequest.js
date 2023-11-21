@@ -202,6 +202,15 @@ const HelpRequest = () => {
       helpPostingUser: "K",
     },
   ];
+  
+  const fetchData = async () => {
+    const helpRequestData = await fetchHelpRequests();
+    
+    // Sort helpRequests in place based on their date
+    helpRequestData.sort((a, b) => a.createdAt - b.createdAt);
+
+    setHelpRequests(helpRequestData);
+  };
 
   const [helpRequests, setHelpRequests] = useState([]);
 
@@ -302,7 +311,7 @@ const HelpRequest = () => {
       <div className="p-4 lg:px-28 lg:py-12 flex flex-col bg-[#F7F7F7] gap-4 lg:gap-8 rounded-b-2xl">
         <div>
           {helpRequests.slice(0, visibleItems).map((item, index) => (
-            <HelpRequestCard key={index} helpRequestCardData={item} />
+            <HelpRequestCard key={index} helpRequestCardData={item} refresh = {fetchData} />
           ))}
         </div>
         {visibleItems < helpRequests.length && (
