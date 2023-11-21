@@ -1,11 +1,15 @@
 import React from "react";
 
-function CustomButton({ label, name, onClick, icon }) {
+function CustomButton({ label, name, onClick, icon, disable }) {
   if (name == "buttonborder") {
     return (
       <button
         onClick={onClick}
-        className="text-[#1F0A58] text-[14px] font-medium py-[10px] px-[24px] border-[1px] border-[#C8C8C8] rounded-full hover:bg-violet-200 transition ease-in-out delay-300"
+        className={`text-[14px] font-medium py-[10px] px-[24px] border-[1px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#1F0A58] border-[#C8C8C8] hover:bg-violet-200"
+            : "text-[#bfbfbf] border[#d8d8d8] cursor-not-allowed hover:bg-white"
+        }`}
       >
         {label}
       </button>
@@ -14,7 +18,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="text-[#1F0A58] text-[14px] w-fit inline-flex gap-2 font-medium py-[10px] pl-[16px] pr-[24px] border-[1px] border-[#C8C8C8] rounded-full hover:bg-violet-200 transition ease-in-out delay-300"
+        className={`text-[14px] w-fit inline-flex gap-2 font-medium py-[10px] pl-[16px] pr-[24px] border-[1px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#1F0A58] border-[#C8C8C8] hover:bg-violet-200"
+            : "text-[#bfbfbf] border[#d8d8d8] cursor-not-allowed hover:bg-white"
+        }`}
       >
         <img src={icon} className="w-5 h-5 " />
         {label}
@@ -24,7 +32,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="text-[#1F0A58] text-[14px] w-fit inline-flex gap-2 font-medium py-[10px] px-[10px] border-[1px] border-[#C8C8C8] rounded-full hover:bg-violet-200 transition ease-in-out delay-300"
+        className={`text-[14px] w-fit inline-flex gap-2 font-medium py-[10px] px-[10px] border-[1px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#1F0A58] border-[#C8C8C8] hover:bg-violet-200"
+            : "text-[#bfbfbf] border[#d8d8d8] cursor-not-allowed hover:bg-white"
+        }`}
       >
         <img src={icon} className="w-5 h-5 " />
       </button>
@@ -33,7 +45,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-[#6840E0] text-white text-[14px] font-medium py-[10px] px-[24px] rounded-full hover:bg-[#504279] transition ease-in-out delay-300"
+        className={` text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-white bg-[#6840E0] hover:bg-[#504279]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         {label}
       </button>
@@ -42,7 +58,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-[#6840E0] w-fit inline-flex gap-2 items-center text-white text-[14px] font-medium py-[10px] pl-[16px] pr-[24px] rounded-full hover:bg-[#504279] transition ease-in-out delay-300"
+        className={`w-fit inline-flex gap-2 items-center text-[14px] font-medium py-[10px] pl-[16px] pr-[24px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-white bg-[#6840E0] hover:bg-[#504279]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         <img src={icon} className="w-5 h-5 " />
         {label}
@@ -52,7 +72,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-[#6840E0] w-fit inline-flex gap-2 items-center text-white text-[14px] font-medium py-[10px] px-[10px] rounded-full hover:bg-[#504279] transition ease-in-out delay-300"
+        className={`w-fit inline-flex gap-2 items-center text-[14px] font-medium py-[10px] px-[10px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-white bg-[#6840E0] hover:bg-[#504279]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         <img src={icon} className="w-5 h-5 " />
       </button>
@@ -61,7 +85,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-violet-200 text-[#181818] text-[14px] font-medium py-[10px] px-[24px] rounded-full hover:bg-violet-300 transition ease-in-out delay-300"
+        className={`text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#181818] bg-violet-200 hover:bg-violet-300"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         {label}
       </button>
@@ -70,7 +98,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-violet-200 text-[#181818] w-fit inline-flex gap-2 text-[14px] font-medium py-[10px] pl-[16px] pr-[24px] rounded-full hover:bg-[#d7ccec] transition ease-in-out delay-300"
+        className={`w-fit inline-flex gap-2 text-[14px] font-medium py-[10px] pl-[16px] pr-[24px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#181818] bg-violet-200 hover:bg-[#d7ccec]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         <img src={icon} className="w-5 h-5 " />
         {label}
@@ -80,7 +112,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-violet-200 text-[#181818] w-fit inline-flex gap-2 text-[14px] font-medium py-[10px] px-[10px] rounded-full hover:bg-[#d7ccec] transition ease-in-out delay-300"
+        className={`w-fit inline-flex gap-2 text-[14px] font-medium py-[10px] px-[10px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#181818] bg-violet-200 hover:bg-[#d7ccec]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         <img src={icon} className="w-5 h-5 " />
       </button>
@@ -89,7 +125,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-[#79EAFF] text-[#181818] text-[14px] font-medium py-[10px] px-[24px] rounded-full hover:bg-[#75daec] transition ease-in-out delay-300"
+        className={`text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#181818] bg-[#79EAFF] hover:bg-[#75daec]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         {label}
       </button>
@@ -98,7 +138,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-[#79EAFF] text-[#181818] text-[14px] w-fit inline-flex gap-2 font-medium py-[10px] pl-[16px] pr-[24px] rounded-full hover:bg-[#75daec] transition ease-in-out delay-300"
+        className={`text-[14px] w-fit inline-flex gap-2 font-medium py-[10px] pl-[16px] pr-[24px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#181818] bg-[#79EAFF] hover:bg-[#75daec]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         <img src={icon} className="w-5 h-5 " />
         {label}
@@ -108,7 +152,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-[#79EAFF] text-[#181818] w-fit inline-flex gap-2 text-[14px] font-medium py-[10px] px-[10px] rounded-full hover:bg-[#75daec] transition ease-in-out delay-300"
+        className={`w-fit inline-flex gap-2 text-[14px] font-medium py-[10px] px-[10px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#181818] bg-[#79EAFF] hover:bg-[#75daec]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         <img src={icon} className="w-5 h-5 " />
       </button>
@@ -117,7 +165,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-[#6840E0] text-white text-[14px] font-medium py-[5px] px-[24px] rounded-full hover:bg-[#36295E] transition ease-in-out delay-300"
+        className={`text-[14px] font-medium py-[5px] px-[24px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-white bg-[#6840E0] hover:bg-[#36295E]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         {label}
       </button>
@@ -126,7 +178,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-[#6840E0] text-white w-fit inline-flex gap-2 text-[14px] font-medium py-[5px] pl-[16px] pr-[24px] rounded-full hover:bg-[#36295E] transition ease-in-out delay-300"
+        className={`w-fit inline-flex gap-2 text-[14px] font-medium py-[5px] pl-[16px] pr-[24px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-white bg-[#6840E0] hover:bg-[#36295E]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         <img src={icon} className="w-5 h-5 " />
         {label}
@@ -136,7 +192,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-[#6840E0] text-white text-[14px] font-medium py-[5px] px-[5px] rounded-full hover:bg-[#36295E] transition ease-in-out delay-300"
+        className={`text-[14px] font-medium py-[5px] px-[5px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-white bg-[#6840E0] hover:bg-[#36295E]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         <img src={icon} className="w-5 h-5 " />
       </button>
@@ -145,7 +205,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-violet-200 text-[#181818] text-[14px] font-medium py-[5px] px-[24px] rounded-full hover:bg-violet-300 transition ease-in-out delay-300"
+        className={`text-[14px] font-medium py-[5px] px-[24px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#181818] bg-violet-200 hover:bg-violet-300"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         {label}
       </button>
@@ -154,7 +218,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-violet-200 text-[#181818] text-[14px] w-fit inline-flex gap-2 font-medium py-[5px] pl-[16px] pr-[24px] rounded-full hover:bg-violet-300 transition ease-in-out delay-300"
+        className={`text-[14px] w-fit inline-flex gap-2 font-medium py-[5px] pl-[16px] pr-[24px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#181818] bg-violet-200 hover:bg-violet-300"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         <img src={icon} className="w-5 h-5 " />
         {label}
@@ -164,7 +232,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-violet-200 text-[#181818] text-[14px] w-fit inline-flex gap-2 font-medium py-[5px] px-[5px] rounded-full hover:bg-violet-300 transition ease-in-out delay-300"
+        className={`text-[14px] w-fit inline-flex gap-2 font-medium py-[5px] px-[5px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#181818] bg-violet-200 hover:bg-violet-300"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         <img src={icon} className="w-5 h-5 " />
       </button>
@@ -173,7 +245,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-[#79EAFF] text-[#181818] text-[14px] font-medium py-[5px] px-[24px] rounded-full hover:bg-[#75daec] transition ease-in-out delay-300"
+        className={`text-[14px] font-medium py-[5px] px-[24px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#181818] bg-[#79EAFF] hover:bg-[#75daec]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         {label}
       </button>
@@ -182,7 +258,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-[#79EAFF] text-[#181818] text-[14px] font-medium py-[7px] px-[24px] rounded-full hover:bg-[#75daec] transition ease-in-out delay-300"
+        className={`text-[14px] font-medium py-[7px] px-[24px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#181818] bg-[#79EAFF] hover:bg-[#75daec]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         {label}
       </button>
@@ -191,7 +271,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-[#79EAFF] text-[#181818] text-[14px] w-fit inline-flex gap-2 font-medium py-[5px] pl-[16px] pr-[24px] rounded-full hover:bg-[#75daec] transition ease-in-out delay-300"
+        className={`text-[14px] w-fit inline-flex gap-2 font-medium py-[5px] pl-[16px] pr-[24px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#181818] bg-[#79EAFF] hover:bg-[#75daec]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         <img src={icon} className="w-5 h-5 " />
         {label}
@@ -201,7 +285,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-[#79EAFF] text-[#181818] w-fit inline-flex gap-2 text-[14px] font-medium py-[5px] px-[5px] rounded-full hover:bg-[#75daec] transition ease-in-out delay-300"
+        className={`w-fit inline-flex gap-2 text-[14px] font-medium py-[5px] px-[5px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#181818] bg-[#79EAFF] hover:bg-[#75daec]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         <img src={icon} className="w-5 h-5 " />
       </button>
@@ -210,7 +298,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-[#f1f3f2] text-black text-[14px] font-medium py-[10px] px-[24px] border-slate-950 rounded-full transition ease-in-out delay-300"
+        className={`text-[14px] font-medium py-[10px] px-[24px] border-slate-950 rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-black bg-[#f1f3f2]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         {label}
       </button>
@@ -219,7 +311,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="text-[#1F0A58] text-[14px] font-medium py-[5px] px-[24px] border-[1px] border-[#C8C8C8] rounded-full hover:bg-violet-200 transition ease-in-out delay-300"
+        className={`text-[14px] font-medium py-[5px] px-[24px] border-[1px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#1F0A58] border-[#C8C8C8] hover:bg-violet-200"
+            : "text-[#bfbfbf] border[#d8d8d8] cursor-not-allowed hover:bg-white"
+        }`}
       >
         {label}
       </button>
@@ -228,7 +324,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="text-[#1F0A58] text-[14px] w-fit inline-flex gap-2 font-medium py-[5px] px-[24px] border-[1px] border-[#C8C8C8] rounded-full hover:bg-violet-200 transition ease-in-out delay-300"
+        className={`text-[14px] w-fit inline-flex gap-2 font-medium py-[5px] px-[24px] border-[1px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#1F0A58] border-[#C8C8C8] hover:bg-violet-200"
+            : "text-[#bfbfbf] border[#d8d8d8] cursor-not-allowed hover:bg-white"
+        }`}
       >
         <img src={icon} className="w-5 h-5 " />
         {label}
@@ -238,7 +338,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="text-[#1F0A58] text-[14px] w-fit inline-flex gap-2 font-medium py-[5px] px-[5px] border-[1px] border-[#C8C8C8] rounded-full hover:bg-violet-200 transition ease-in-out delay-300"
+        className={`text-[14px] w-fit inline-flex gap-2 font-medium py-[5px] px-[5px] border-[1px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#1F0A58] border-[#C8C8C8] hover:bg-violet-200"
+            : "text-[#bfbfbf] border[#d8d8d8] cursor-not-allowed hover:bg-white"
+        }`}
       >
         <img src={icon} className="w-5 h-5 " />
       </button>
@@ -247,7 +351,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-violet-200 text-[#181818] text-[10px] font-medium py-[5px] px-[20px] rounded-full hover:bg-violet-300 transition ease-in-out delay-300"
+        className={`text-[10px] font-medium py-[5px] px-[20px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#181818] bg-violet-200 hover:bg-violet-300"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         {label}
       </button>
@@ -256,7 +364,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="text-[#1F0A58] text-[10px] font-medium py-[5px] px-[20px] border-[1px] border-[#C8C8C8] rounded-full hover:bg-violet-200 transition ease-in-out delay-300"
+        className={`text-[10px] font-medium py-[5px] px-[20px] border-[1px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#1F0A58] border-[#C8C8C8] hover:bg-violet-200"
+            : "text-[#bfbfbf] border[#d8d8d8] cursor-not-allowed hover:bg-white"
+        }`}
       >
         {label}
       </button>
@@ -265,7 +377,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-[#6840E0] text-white text-[14px] font-medium py-[20px] px-[36px] rounded-full hover:bg-[#504279] transition ease-in-out delay-300"
+        className={`text-[14px] font-medium py-[20px] px-[36px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-white bg-[#6840E0] hover:bg-[#504279]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         {label}
       </button>
@@ -274,7 +390,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-[#6840E0] w-fit inline-flex gap-2 items-center text-white text-[14px] font-medium py-[20px] pl-[26px] pr-[36px] rounded-full hover:bg-[#504279] transition ease-in-out delay-300"
+        className={`w-fit inline-flex gap-2 items-center text-[14px] font-medium py-[20px] pl-[26px] pr-[36px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-white bg-[#6840E0] hover:bg-[#504279]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         <img src={icon} className="w-5 h-5 " />
         {label}
@@ -284,7 +404,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-[#6840E0] w-fit inline-flex gap-2 items-center text-white text-[14px] font-medium py-[20px] px-[20px] rounded-full hover:bg-[#504279] transition ease-in-out delay-300"
+        className={`w-fit inline-flex gap-2 items-center text-[14px] font-medium py-[20px] px-[20px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-white bg-[#6840E0] hover:bg-[#504279]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         <img src={icon} className="w-5 h-5 " />
       </button>
@@ -293,7 +417,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-[#79EAFF] text-[#181818] text-[14px] font-medium py-[20px] px-[26px] rounded-full hover:bg-[#75daec] transition ease-in-out delay-300"
+        className={`text-[14px] font-medium py-[20px] px-[26px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#181818] bg-[#79EAFF] hover:bg-[#75daec]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         {label}
       </button>
@@ -302,7 +430,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-[#79EAFF] text-[#181818] text-[14px] w-fit inline-flex gap-2 font-medium py-[20px] pl-[26px] pr-[36px] rounded-full hover:bg-[#75daec] transition ease-in-out delay-300"
+        className={`text-[14px] w-fit inline-flex gap-2 font-medium py-[20px] pl-[26px] pr-[36px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#181818] bg-[#79EAFF] hover:bg-[#75daec]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         <img src={icon} className="w-5 h-5 " />
         {label}
@@ -312,7 +444,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-[#79EAFF] text-[#181818] w-fit inline-flex gap-2 items-center text-white text-[14px] font-medium py-[20px] px-[20px] rounded-full hover:bg-[#75daec] transition ease-in-out delay-300"
+        className={`w-fit inline-flex gap-2 items-center text-white text-[14px] font-medium py-[20px] px-[20px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#181818] bg-[#79EAFF] hover:bg-[#75daec]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         <img src={icon} className="w-5 h-5 " />
       </button>
@@ -321,7 +457,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-violet-200 text-[#181818] text-[14px] font-medium py-[20px] px-[26px] rounded-full hover:bg-violet-300 transition ease-in-out delay-300"
+        className={`text-[14px] font-medium py-[20px] px-[26px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#181818] bg-violet-200 hover:bg-violet-300"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         {label}
       </button>
@@ -330,7 +470,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-violet-200 text-[#181818] w-fit inline-flex gap-2 text-[14px] font-medium py-[20px] pl-[26px] pr-[36px] rounded-full hover:bg-[#d7ccec] transition ease-in-out delay-300"
+        className={`w-fit inline-flex gap-2 text-[14px] font-medium py-[20px] pl-[26px] pr-[36px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#181818] bg-violet-200 hover:bg-[#d7ccec]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         <img src={icon} className="w-5 h-5 " />
         {label}
@@ -340,7 +484,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-violet-200 text-[#181818] w-fit inline-flex gap-2 text-[14px] font-medium py-[20px] px-[20px] rounded-full hover:bg-[#d7ccec] transition ease-in-out delay-300"
+        className={`w-fit inline-flex gap-2 text-[14px] font-medium py-[20px] px-[20px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#181818] bg-violet-200 hover:bg-[#d7ccec]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         <img src={icon} className="w-5 h-5 " />
       </button>
@@ -349,7 +497,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="text-[#1F0A58] text-[14px] font-medium py-[20px] px-[26px] border-[1px] border-[#C8C8C8] rounded-full hover:bg-violet-200 transition ease-in-out delay-300"
+        className={`text-[14px] font-medium py-[20px] px-[26px] border-[1px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#1F0A58] border-[#C8C8C8] hover:bg-violet-200"
+            : "text-[#bfbfbf] border[#d8d8d8] cursor-not-allowed hover:bg-white"
+        }`}
       >
         {label}
       </button>
@@ -358,7 +510,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="text-[#1F0A58] text-[14px] w-fit inline-flex gap-2 font-medium py-[20px] pl-[26px] pr-[36px] border-[1px] border-[#C8C8C8] rounded-full hover:bg-violet-200 transition ease-in-out delay-300"
+        className={`text-[14px] w-fit inline-flex gap-2 font-medium py-[20px] pl-[26px] pr-[36px] border-[1px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#1F0A58] border-[#C8C8C8] hover:bg-violet-200"
+            : "text-[#bfbfbf] border[#d8d8d8] cursor-not-allowed hover:bg-white"
+        }`}
       >
         <img src={icon} className="w-5 h-5 " />
         {label}
@@ -368,7 +524,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="text-[#1F0A58] text-[14px] w-fit inline-flex gap-2 font-medium py-[20px] px-[20px] border-[1px] border-[#C8C8C8] rounded-full hover:bg-violet-200 transition ease-in-out delay-300"
+        className={` text-[14px] w-fit inline-flex gap-2 font-medium py-[20px] px-[20px] border-[1px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#1F0A58] border-[#C8C8C8] hover:bg-violet-200"
+            : "text-[#bfbfbf] border[#d8d8d8] cursor-not-allowed hover:bg-white"
+        }`}
       >
         <img src={icon} className="w-5 h-5 " />
       </button>
@@ -377,7 +537,11 @@ function CustomButton({ label, name, onClick, icon }) {
     return (
       <button
         onClick={onClick}
-        className="bg-violet-700 text-white text-[14px] font-medium py-[10px] px-[24px] rounded-full hover:bg-[#36295E] transition ease-in-out delay-300"
+        className={`text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-white bg-violet-700 hover:bg-[#36295E]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
       >
         {label}
       </button>
