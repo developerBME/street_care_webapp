@@ -7,7 +7,12 @@ import { handleRsvp } from "../EventCardService";
 import { useNavigate } from "react-router-dom";
 import EditModal from "./EditModal";
 
-const OutreachEventCard = ({ cardData, isProfilePage, refresh }) => {
+const OutreachEventCard = ({
+  cardData,
+  isProfilePage,
+  refresh,
+  isPastEvent,
+}) => {
   const {
     id,
     label,
@@ -87,160 +92,55 @@ const OutreachEventCard = ({ cardData, isProfilePage, refresh }) => {
           </div>
         </div>
       )}
-      <div className="flex items-center justify-between px-5 pt-2 pb-4 gap-16">
-        {isProfilePage || label2 === "EDIT" ? (
-          <div class="group relative">
-            {/* <button class="bg-violet-200 text-[#181818] text-[14px] font-medium py-[10px] px-[24px] rounded-full hover:bg-violet-300 transition ease-in-out delay-300">
-              Edit
-            </button> */}
-            <button
-              className="bg-violet-200 text-[#181818] text-[14px] font-medium py-[10px] px-[24px] rounded-full hover:bg-violet-300 transition ease-in-out delay-300"
-              onClick={handleEditClick}
-            >
-              EDIT
-            </button>
-            {/* <nav
-              tabindex="0"
-              class="border-2 text-[12px]  hover:bg-violet-300 bg-violet-200 shadow invisible border-violet-300 rounded-2xl w-32 absolute left-0 top-full transition-all opacity-0 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-1"
-            >
-              <ul class="py-1">
-                <li>
-                  <a
-                    href="#"
-                    class=" px-4 py-2  rounded-2xl  flex-col justify-center items-start flex"
-                    onClick={(e) =>
-                      handleRsvp(
-                        e,
-                        id,
-                        label,
-                        navigate,
-                        label2,
-                        setLabel2,
-                        false,
-                        refresh
-                      )
-                    }
-                  >
-                    Remove RSVP
-                  </a>
-                </li>
-              </ul>
-            </nav> */}
-            {showModal && (
-              <EditModal
-                handleClose={handleCloseModal}
-                id={id}
-                label={label}
-                navigate={navigate}
-                label2={label2}
-                setLabel2={setLabel2}
-                refresh={refresh}
-                title={title}
-                eventDate={eventDate}
-                location={location}
+      {!isPastEvent ? (
+        <div className="flex items-center justify-between px-5 pt-2 pb-4 gap-16">
+          {isProfilePage || label2 === "EDIT" ? (
+            <div class="group relative">
+              <button
+                className="bg-violet-200 text-[#181818] text-[14px] font-medium py-[10px] px-[24px] rounded-full hover:bg-violet-300 transition ease-in-out delay-300"
+                onClick={handleEditClick}
+              >
+                EDIT
+              </button>
+
+              {showModal && (
+                <EditModal
+                  handleClose={handleCloseModal}
+                  id={id}
+                  label={label}
+                  navigate={navigate}
+                  label2={label2}
+                  setLabel2={setLabel2}
+                  refresh={refresh}
+                  title={title}
+                  eventDate={eventDate}
+                  location={location}
+                />
+              )}
+            </div>
+          ) : (
+            <div class="group relative">
+              <CustomButton
+                label={label2}
+                name="buttonlight"
+                onClick={() => {
+                  navigate(`/outreachsignup/${id}`);
+                }}
               />
-            )}
-          </div>
-        ) : (
-          <div class="group relative">
-            <CustomButton
-              label={label2}
-              name="buttonlight"
-              // onClick={(e) =>
-              //   handleRsvp(
-              //     e,
-              //     id,
-              //     label,
-              //     navigate,
-              //     label2,
-              //     setLabel2,
-              //     false,
-              //     refresh
-              //   )
-              // }
-              onClick={() => {
-                navigate(`/outreachsignup/${id}`);
-                {
-                  console.log("Outreach event ID in HomePage : " + id);
-                }
-              }}
-            />
-            {/*<nav tabindex="0" class="border-2 text-[12px]  hover:bg-violet-300 bg-violet-200 shadow invisible border-violet-300 rounded-2xl w-32 absolute left-0 top-full transition-all opacity-0 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-1">
-                      <ul class="py-1">
-                          <li>
-                              <a href="#" class=" px-4 py-2  rounded-2xl  flex-col justify-center items-start flex" onClick={(e) =>
-                                handleRsvp(
-                                  e,
-                                  id,
-                                  label,
-                                  navigate,
-                                  label2,
-                                  setLabel2,
-                                  false,
-                                  refresh
-                                )
-                              }>
-                                  Remove RSVP
-                              </a>
-                          </li>
-                      </ul>
-                            </nav>*/}
-          </div>
-        )}
+            </div>
+          )}
 
-        {!isProfilePage ? (
-          <div className="font-normal font-['Inter'] text-[12px]">
-            Open Spots: {totalSlots - nop}/{totalSlots}
-          </div>
-        ) : (
-          <div></div>
-        )}
-      </div>
-      {/*<div className="flex items-center justify-between px-5 pt-2 pb-4 gap-16">
-        {isProfilePage ? (
-          <CustomButton
-            label="Edit"
-            name="buttonlight"
-            onClick={(e) =>
-              handleRsvp(
-                e,
-                id,
-                label,
-                navigate,
-                label2,
-                setLabel2,
-                false,
-                refresh
-              )
-            }
-          />
-        ) : (
-          <CustomButton
-            label={label2}
-            name="buttonlight"
-            onClick={(e) =>
-              handleRsvp(
-                e,
-                id,
-                label,
-                navigate,
-                label2,
-                setLabel2,
-                false,
-                refresh
-              )
-            }
-          />
-        )}
-
-        {!isProfilePage ? (
-          <div className="font-normal font-['Inter'] text-[12px]">
-            Open Spots: {totalSlots - nop}/{totalSlots}
-          </div>
-        ) : (
-          <div></div>
-        )}
-        </div>*/}
+          {!isProfilePage ? (
+            <div className="font-normal font-inter text-[12px]">
+              Open Spots: {totalSlots - nop}/{totalSlots}
+            </div>
+          ) : (
+            <div></div>
+          )}
+        </div>
+      ) : (
+        <div className="mt-5 "></div>
+      )}
     </div>
   );
 };
