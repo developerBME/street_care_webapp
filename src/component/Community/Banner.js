@@ -17,8 +17,8 @@ function Banner() {
             <div className="px-[8px] py-6 lg:px-24 lg:pb-[55px] lg:pt-[25px] md:px-[25px] md:py-[25px] bg-[right_bottom_-150px] bg-no-repeat relative">
                 <div className="lg:items-start md:items-center justify-center h-full w-full grid md:grid-cols-4 lg:grid-cols-5 gap-2 md:mb-[70px] mb-[33px]">
                     <div className="lg:col-span-2 md:col-span-2 lg:mt-[30px]">
-                        <p className="font-bricolage lg:text-[44px] sm:text-[38px] text-[36px]">Community Hub</p>
-                        <p className=" lg:text-[28px]">Join us today to make meaningful impact.</p>
+                        <p className="font-sans font-medium lg:text-[44px] sm:text-[38px] text-[36px]">Community Hub</p>
+                        <p className="font-medium lg:text-[26px]">Join us today to make meaningful impact.</p>
                     </div>
                     <div className="lg:col-span-3 md:col-span-2 z-0">
                         <img src={banner} className=" h-full lg:max-w-[120%] lg:w-[120%] lg:mt-0 md:mt-[30px] mt-[0px] lg:-ml-[50px] md:w-fit mx-auto"></img>
