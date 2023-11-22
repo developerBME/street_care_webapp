@@ -6,6 +6,7 @@ import arrowRight from "../../images/arrowRight.png";
 import CustomButton from "../Buttons/CustomButton";
 import OutreachVisitLogCard from "./OutreachVisitLogCard";
 import { fetchEvents, formatDate } from "../EventCardService";
+import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 
 const CommunityOutreachEvent = () => {
   const [visibleItems, setVisibleItems] = useState(3);
@@ -59,6 +60,8 @@ const CommunityOutreachEvent = () => {
   ];
 
   const [events, setEvents] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [eventsDisplay, setEventsDisplay] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,6 +76,17 @@ const CommunityOutreachEvent = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    setEventsDisplay(events);
+    // searchRef.current = "";
+  }, [events]);
+
+  useEffect(() => {
+    if (eventsDisplay.length > 0) {
+      setIsLoading(false);
+    }
+  }, [eventsDisplay]);
+
   const upcomingEvents = events
     .filter((event) => {
       const eventDate = new Date(event.eventDate.seconds * 1000);
@@ -83,11 +97,21 @@ const CommunityOutreachEvent = () => {
   return (
     <div>
       <div className="w-full flex flex-col justify-center md:justify-between items-center rounded-t-xl bg-gradient-to-br from-purple-300 to-zinc-200 p-4 lg:px-28 lg:py-12 lg:flex-row lg:space-y-0">
-      <div>
-            <div className="text-2xl font-medium font-dmsans">Outreach - extending help, resources, and compassion to those in need</div>
-            <div className="text-sm font-normal font-dmsans">Homeless outreach involves both community-wide and personal efforts to support individuals experiencing homelessness. Community outreach brings together groups and organizations to create systemic change, while personal outreach involves one-on-one assistance. Homeless outreach is crucial because it provides immediate help and fosters empathy, building a more compassionate society.</div>
-          </div>  
-      <div className="md:inline-flex items-center text-center space-y-2 md:space-y-0">
+        <div>
+          <div className="text-2xl font-medium font-dmsans">
+            Outreach - extending help, resources, and compassion to those in
+            need
+          </div>
+          <div className="text-sm font-normal font-dmsans">
+            Homeless outreach involves both community-wide and personal efforts
+            to support individuals experiencing homelessness. Community outreach
+            brings together groups and organizations to create systemic change,
+            while personal outreach involves one-on-one assistance. Homeless
+            outreach is crucial because it provides immediate help and fosters
+            empathy, building a more compassionate society.
+          </div>
+        </div>
+        <div className="md:inline-flex items-center text-center space-y-2 md:space-y-0">
           <div className="block sm:hidden">
             <p className="font-medium text-sm lg:text-3xl text-[#212121] font-bricolage">
               Upcoming events
@@ -226,7 +250,14 @@ const CommunityOutreachEvent = () => {
           </div>
         </div>
 
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
+        {isLoading ? (
+          <div className="flex justify-between items-center w-full h-fit gap-2">
+            <EventCardSkeleton />
+            <EventCardSkeleton />
+            <EventCardSkeleton />
+          </div>
+        ) : (
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
             {upcomingEvents.map((eventData) => (
               <OutreachEventCard
                 key={eventData.id}
@@ -238,15 +269,16 @@ const CommunityOutreachEvent = () => {
                 }}
               />
             ))}
-            {visibleItems < upcomingEvents.length && (
-              <button
-                className="w-full px-6 py-2.5 rounded-full text-sm font-medium text-violet-950 font-['DM Sans'] border border-stone-300"
-                onClick={loadMore}
-              >
-                Load More
-              </button>
-            )}
           </div>
+        )}
+        {visibleItems < upcomingEvents.length && (
+          <button
+            className="w-full px-6 py-2.5 rounded-full text-sm font-medium text-violet-950 font-['DM Sans'] border border-stone-300"
+            onClick={loadMore}
+          >
+            Load More
+          </button>
+        )}
 
         {/*<div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
           {cardData.slice(0, visibleItems).map((item, index) => (
@@ -265,32 +297,42 @@ const CommunityOutreachEvent = () => {
         )}*/}
         <div className="flex items-center justify-between">
           <div className="md:inline-flex items-center text-center space-y-2 md:space-y-0">
-            <p className="font-medium text-sm lg:text-3xl text-[#212121] font-bricolage">
+            <p className="font-medium text-sm lg:text-2xl text-[#212121] font-bricolage">
               Outreach Visit Log
             </p>
             <button className="text-sm font-medium font-['DM Sans'] leading-tight lg:text-[12px] text-white bg-[#6840E0] px-6 py-2.5 lg:px-6 lg:py-2.5 rounded-full sm:hidden">
               Create an Outreach
             </button>
           </div>
-          <div className="hidden lg:flex md:inline-flex cursor-pointer gap-3 items-center text-center" onClick={()=>{
-            navigate("/allOutreachVisitLog")
-          }}>
-            <div className="font-medium text-[8px] lg:text-[13px] font-bricolage" >
+          <div
+            className="hidden lg:flex md:inline-flex cursor-pointer gap-3 items-center text-center"
+            onClick={() => {
+              navigate("/allOutreachVisitLog");
+            }}
+          >
+            <div className="font-medium text-[8px] lg:text-[13px] font-bricolage">
               View all
             </div>
             <img src={arrowRight} className="w-2 h-2 lg:w-4 lg:h-4 " />
           </div>
         </div>
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
-          {/*cardData.slice(0, visibleItems).map((item, index) => (
-            <div key={index}>
-              <OutreachEventCard cardData={item} />
-            </div>z
-          ))*/}
-          <OutreachVisitLogCard />
-          <OutreachVisitLogCard />
-          <OutreachVisitLogCard />
-        </div>
+        {isLoading?(
+          <div className="flex justify-between items-center w-full h-fit gap-2">
+            <EventCardSkeleton />
+            <EventCardSkeleton />
+            <EventCardSkeleton />
+          </div>
+        ):(<div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
+        {/*cardData.slice(0, visibleItems).map((item, index) => (
+          <div key={index}>
+            <OutreachEventCard cardData={item} />
+          </div>z
+        ))*/}
+        <OutreachVisitLogCard />
+        <OutreachVisitLogCard />
+        <OutreachVisitLogCard />
+      </div>)}
+        
         {visibleItems < cardData.length && (
           <button
             className="w-full px-6 py-2.5 rounded-full text-sm font-medium text-violet-950 font-['DM Sans'] border border-stone-300"
