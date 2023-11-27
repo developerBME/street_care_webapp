@@ -91,12 +91,8 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
           <div className="self-stretch text-[#273164] text-[28px] font-medium font-bricolage leading-9">
             {helpTitle}
           </div>
-          <div className="self-stretch text-[#273164] text-[28px] font-medium font-bricolage leading-9">
-            {id}
-          </div>
-          <div className="justify-start items-start">
-            <div className="overflow-x-scroll lg:overflow-none">
-              <div className="w-fit flex inline-flex gap-2">
+          <div className="w-full overflow-x-scroll lg:overflow-x-none">
+            <div className="justify-start items-start gap-2 inline-flex">
                 {helpTags.map((item, index) => (
                   <div className="w-fit px-3 py-1 bg-white rounded-xl border border-[#616161] justify-start items-center gap-4 flex">
                     <div className="opacity-90 justify-start items-center gap-1 flex text-[#616161] text-sm font-semibold font-opensans leading-tight">
@@ -104,7 +100,6 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
                     </div>
                   </div>
                 ))}
-              </div>
             </div>
           </div>
           <div className="self-stretch text-[#616161] text-[15px] font-normal font-dmsans leading-normal">
