@@ -1,19 +1,10 @@
-import React, { useEffect, useState } from "react";
-
+import React from "react";
 import CustomButton from "../Buttons/CustomButton";
 import { useNavigate } from "react-router-dom";
 
-const CreateBMEModal = ({
-  isOpen,
-  closeModal,
-  currSupPow,
-  refreshUserQuery,
-}) => {
-  const [success, setSuccess] = useState(false);
+const CreateBMEModal = () => {
 
   const navigate = useNavigate();
-
-  // This function is drilled to child component: Chips
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-opacity-50 bg-gray-800 z-50">
@@ -22,18 +13,10 @@ const CreateBMEModal = ({
           <div className="self-stretch h-fit flex-col justify-start items-start gap-6 flex">
             <div className="justify-self-end items-start gap-20 sm:gap-6 inline-flex w-full">
               <div className="w-fit text-[#212121] text-4xl font-medium font-bricolage leading-[44px]">
-                Outreach Event published to profile!
+                BME Event published to Admin profile!
               </div>
-              {/* <div className="w-fit h-fit  bg-gray-300  justify-end ">
-                <button className="text-6xl " onClick={closeModal}>
-                  &times;
-                </button>
-              </div> */}
             </div>
             <div className="self-stretch text-[#616161] text-lg font-semibold font-['Open Sans'] leading-normal">
-              {/* If this person need 🙌 Extra Help, add a request to Community hub
-              so other volunteers can find this person and provide the care they
-              needed. */}
             </div>
           </div>
           <div className="w-fit justify-start items-start gap-4 inline-flex">
@@ -41,7 +24,7 @@ const CreateBMEModal = ({
               label="All Outreach Events"
               name="buttondefault"
               onClick={() => {
-                navigate("/allOutreachEvents");
+                navigate("/allOutreachEvents"); //currently only shows outreach events
               }}
             />
             <CustomButton

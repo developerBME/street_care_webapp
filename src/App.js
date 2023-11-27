@@ -117,6 +117,7 @@ function App() {
           {/* <Route path="/donateForm" element={<DonateForm />} /> */}
           <Route path="/donateForm" element={<ComingSoon />} />
           <Route path="/allOutreachEvents" element={<AllOutreachEvents />} />
+          
           <Route
             path="/allPastOutreachEvents"
             element={<AllPastOutreachEvents />}
