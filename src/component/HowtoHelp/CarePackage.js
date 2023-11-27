@@ -147,7 +147,7 @@ function CarePackage({ label, name }) {
         <p className="text-[24px] mb-[18px]">
           Items to Skip in Your Homeless Care Kits
         </p>
-        <div className="overflow-x-scroll lg:overflow-none">
+        <div className="overflow-x-scroll md:overflow-x-none">
           <div className="w-fit flex lg:flex-wrap">
             {skipItems.map((item, index) => (
               <div
@@ -195,7 +195,7 @@ function CarePackage({ label, name }) {
             make sure it's clean and in good condition.
           </li>
         </ul>
-        <div className="overflow-x-scroll">
+        <div className="overflow-x-scroll md:overflow-x-none">
           <div className="w-fit flex lg:flex-wrap">
             {clothesItems.map((item, index) => (
               <div
@@ -224,7 +224,7 @@ function CarePackage({ label, name }) {
             Seed, Fruits (Apples, oranges, bannas, ) Protein (Beef Jerky)]
           </li>
         </ul>
-        <div className="overflow-x-scroll">
+        <div className="overflow-x-scroll md:overflow-x-none">
           <div className="w-fit flex lg:flex-wrap">
             {foodItems.map((item, index) => (
               <div
