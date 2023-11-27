@@ -35,7 +35,7 @@ import PastOutreachEventCardSkeleton from "./Skeletons/PastOutreachEventCardSkel
 function HomePage() {
   const navigate = useNavigate();
   const fAuth = getAuth();
-  useEffect(() => {}, []);
+
   onAuthStateChanged(fAuth, (user) => {
     if (user) {
       // User is signed in, see docs for a list of available properties
@@ -204,6 +204,10 @@ function HomePage() {
       return eventDate < new Date(); // Check if the event date is before the current date
     })
     .slice(0, 3);
+
+  useEffect(() => {
+    document.title = "Home - Street Care";
+  }, []);
 
   return (
     // <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">

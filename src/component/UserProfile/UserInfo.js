@@ -205,12 +205,9 @@ const UserInfo = () => {
   }, [donations, helped, outreaches]);
 
   useEffect(() => {
-    console.log(achievments);
-  }, [achievments]);
+    document.title = `${displayName} - Street Care`;
+  }, [displayName]);
 
-  // useEffect(() => {
-  //   console.log(helped);
-  // }, [helped]);
   return (
     // <div className="lg:px-24 lg:py-12 ">
     <div className="xl:px-24 xl:py-12 ">
