@@ -96,12 +96,17 @@ const OutreachEventCard = ({
         <div className="flex items-center justify-between px-5 pt-2 pb-4 gap-16">
           {isProfilePage || label2 === "EDIT" ? (
             <div class="group relative">
-              <button
+              {/* <button
                 className="bg-violet-200 text-[#181818] text-[14px] font-medium py-[10px] px-[24px] rounded-full hover:bg-violet-300 transition ease-in-out delay-300"
                 onClick={handleEditClick}
               >
                 EDIT
-              </button>
+              </button> */}
+              <CustomButton
+                label="Edit"
+                name="buttonlight"
+                onClick={handleEditClick}
+              ></CustomButton>
 
               {showModal && (
                 <EditModal
