@@ -36,18 +36,6 @@ function CarePackage({ label, name }) {
       image: two,
       content: "Alcohol",
     },
-    {
-      image: three,
-      content: "Drug",
-    },
-    {
-      image: four,
-      content: "Religious Material",
-    },
-    {
-      image: five,
-      content: "Political Mateiral",
-    },
   ];
 
   const personalCareItems = [
@@ -213,15 +201,10 @@ function CarePackage({ label, name }) {
         <p className="text-[24px] mb-[18px]">Food</p>
         <ul className="list-disc ml-[20px] mb-[30px] text-[#616161]">
           <li className="text-[15px]">
-            Perishable Foods: Avoid giving items that can spoil quickly, such as
-            fresh fruits or prepared meals, unless you're able to distribute
-            them immediately.
-          </li>
-          <li className="text-[15px]">
             Remember to read labels for allergen information and encourage
             recipients to do the same. Sensitivity to dietary restrictions is
             essential for safe and helpful assistance. [Nuts, Gluten, Diary,
-            Seed, Fruits (Apples, oranges, bannas, ) Protein (Beef Jerky)]
+            Seed, Fruits (Apples, oranges, bannas, ) Protein Yogurt]
           </li>
         </ul>
         <div className="overflow-x-scroll md:overflow-x-none">
