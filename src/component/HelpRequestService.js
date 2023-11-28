@@ -58,7 +58,7 @@ export const fetchHelpReqById = async (helpReqId) => {
 };
   
 
-const fetchUserName = async (uid) => {
+export const fetchUserName = async (uid) => {
     // Reference to the uid instead of the docid of the user.
     const userQuery = query(
         collection(db, USERS_COLLECTION),

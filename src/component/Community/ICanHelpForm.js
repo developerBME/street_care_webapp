@@ -4,7 +4,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import CustomButton from "../Buttons/CustomButton";
 import help_announcement from "../../images/help_announcement.png";
 import ConfirmationModal from "./ConfirmationModal";
-import { fetchHelpReqById } from "../HelpRequestService";
+import { fetchHelpReqById, fetchUserName } from "../HelpRequestService";
 import {
   getAuth,
   onAuthStateChanged,
@@ -16,12 +16,15 @@ const ICanHelpForm = () => {
     const [success, setSuccess] = useState(false);
     const { id } = useParams();
     const [data, setData] = useState(null);
+    const [username, setUserName] = useState("");
 
     useEffect(() => {
         const getData = async () => {
           try {
             const result = await fetchHelpReqById(id);
+            const user = await fetchUserName(result.uid);
             setData(result);
+            setUserName(user);
             console.log("Result");
             console.log(result);
           } catch (error) {
@@ -89,7 +92,7 @@ const ICanHelpForm = () => {
                 {/* <p className="text-[#616161 font-opensans">{data.createdAt}</p> */}
                 <div className="mt-16">
                     <p className="font-bricolage text-[#000] font-bold text-sm mb-2">Name</p>
-                    <p className="font-normal text-sm text-[#616161]">Lucy</p>
+                    <p className="font-normal text-sm text-[#616161]">{username}</p>
                     {/* <p className="font-normal text-sm text-[#616161]">{data.userName}</p> */}
                 </div>
                 <div className="mt-8">
