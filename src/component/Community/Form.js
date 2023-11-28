@@ -62,7 +62,12 @@ const Form = () => {
   const endTimeRef = useRef("");
   const [helpType, setHelpType] = useState([]);
   const [clear, setClear] = useState(false);
-
+  const [stateList, setStateList] = useState({});
+  const [stateNames, setStateNames] = useState([]);
+  const [cityNames, setCityNames] = useState([]);
+  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
+  
   const [error, setError] = useState({
     nameError: "",
     streetError: "",
@@ -163,6 +168,54 @@ const Form = () => {
     }
   }, [shouldSubmit, error]);
     
+  useEffect(() => {
+    async function getStates() {
+      const response = await fetch(
+        "https://parseapi.back4app.com/classes/Usabystate_States?keys=name,postalAbreviation",
+        {
+          headers: {
+            "X-Parse-Application-Id":
+              "vahnMBqbmIbxOw8R3qtsEMoYrZMljfClGvc1aMyp",
+            "X-Parse-REST-API-Key": "LBjkDrxuUKEfb8liRPgZyv1Lu5WsPIvTx2FWgTpi",
+          },
+        }
+      );
+      const data = await response.json();
+
+      const filteredData = data.results?.map((x) => {
+        return x.name;
+      });
+      setStateList(data.results);
+      setStateNames(filteredData);
+    }
+    getStates();
+  }, []);
+
+  async function getCities(e) {
+    const stateCode = stateList.filter((x) => x.name == e.target.value)[0]
+      .postalAbreviation;
+    const response = await fetch(
+      "https://parseapi.back4app.com/classes/Usabystate_" +
+        stateCode +
+        "?limit=1000&keys=name",
+      {
+        headers: {
+          "X-Parse-Application-Id": "vahnMBqbmIbxOw8R3qtsEMoYrZMljfClGvc1aMyp",
+          "X-Parse-REST-API-Key": "LBjkDrxuUKEfb8liRPgZyv1Lu5WsPIvTx2FWgTpi",
+        },
+      }
+    );
+    const data = await response.json();
+    const filteredData = data.results?.map((x) => {
+      return x.name;
+    });
+    console.log("Unfiltered: " + data.results.length);
+    console.log("Filtered: " + filteredData.length);
+    setState(e.target.value);
+    setCityNames(filteredData);
+    updateErrorState("stateError", "");
+    updateErrorState("cityError", "");
+  }
 
   const handleNameChange = (e)=>{
     updateErrorState("nameError","")
@@ -397,7 +450,7 @@ const Form = () => {
                 </div>
               )}
             </div>
-            <div className="space-y-1.5">
+            {/*<div className="space-y-1.5">
               <p className="font-semibold font-['Inter'] text-[15px]">City*</p>
               <input
                 type="text"
@@ -415,9 +468,47 @@ const Form = () => {
                   <p className="text-red-600 text-xs">{error.cityError}</p>
                 </div>
               )}
+              </div>*/}
+
+            <div className="space-y-1.5">
+              <p className="font-semibold font-['Inter'] text-[15px]">City*</p>
+              <select
+                          className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                            error.cityError !== "" ? "ring-red-500" : "ring-gray-300"
+                          }`}
+                          defaultValue=""
+                          disabled={!cityNames}
+                          ref={cityRef}
+                          onChange={(e) => {
+                            setCity(e.target.value);
+                          }}
+                        >
+                          <option value="" disabled>
+                            Please select from the list
+                          </option>
+                          {cityNames &&
+                            cityNames.map((cityName, index) => {
+                              return (
+                                <option
+                                  className="w-fit"
+                                  value={cityName}
+                                  key={"city_" + index}
+                                >
+                                  {cityName}
+                                </option>
+                              );
+                            })}
+                        </select>
+              {error.cityError && (
+                <div className="inline-flex items-center">
+                  <img src={errorImg} className="w-3 h-3" />
+                  <p className="text-red-600 text-xs">{error.cityError}</p>
+                </div>
+              )}
             </div>
+              
             <div className="inline-flex grid grid-cols-2 space-x-4">
-              <div className="space-y-1.5">
+              {/*<div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
                   State*
                 </p>
@@ -437,7 +528,45 @@ const Form = () => {
                     <p className="text-red-600 text-xs">{error.stateError}</p>
                   </div>
                 )}
-              </div>
+                </div>*/}
+
+                <div className="space-y-1.5">
+                <p className="font-semibold font-['Inter'] text-[15px]">
+                  State*
+                </p>
+                <select
+                          className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                            error.stateError !== "" ? "ring-red-500" : "ring-gray-300"
+                          }`}
+                          defaultValue=""
+                          ref={stateRef}
+                          onChange={getCities}
+                        >
+                          <option value="" disabled>
+                            Please select from the list
+                          </option>
+                          {stateNames &&
+                            stateNames.map((stateName, index) => {
+                              return (
+                                <option
+                                  className="w-fit"
+                                  value={stateName}
+                                  key={"state_" + index}
+                                >
+                                  {stateName}
+                                </option>
+                              );
+                            })}
+                        </select>
+                {error.stateError && (
+                  <div className="inline-flex items-center">
+                    <img src={errorImg} className="w-3 h-3" />
+                    <p className="text-red-600 text-xs">{error.stateError}</p>
+                  </div>
+                )}
+                </div>
+
+
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
                   Zipcode*
