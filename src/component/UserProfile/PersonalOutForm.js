@@ -32,6 +32,10 @@ function PersonalOutForm() {
   const [cityNames, setCityNames] = useState([]);
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
+  const [descriptionHelped, setDescriptionHelped] = useState("");
+  const [furtherHelpDescription, setFurtherHelpDescription] = useState("");
+  const [furtherHelpLocation, setFurtherHelpLocation] = useState("");
+  const [otherInfo, setOtherInfo] = useState("");
 
   const [error, setError] = useState({
     numberHelpedError: "",
@@ -55,6 +59,27 @@ function PersonalOutForm() {
       );
     }
   };
+
+  const handleDescriptionHelpedChange = (e) => {
+    const inputValue = e.target.value;
+    setDescriptionHelped(inputValue);
+  };
+
+  const handleFurtherHelpDescriptionChange = (e) => {
+    const inputValue = e.target.value;
+    setFurtherHelpDescription(inputValue);
+  };
+
+  const handleFurtherHelpLocationChange = (e) => {
+    const inputValue = e.target.value;
+    setFurtherHelpLocation(inputValue);
+  };
+
+  const handleOtherInfoChange = (e) => {
+    const inputValue = e.target.value;
+    setOtherInfo(inputValue);
+  };
+
   const handleItemQtyChange = (e) => {
     const inputValue = e.target.value;
     if (/^[0-9]+\d*$/.test(inputValue) || inputValue === "") {
@@ -78,6 +103,11 @@ function PersonalOutForm() {
     }));
   };
 
+  const [showOptionalQuestions, setShowOptionalQuestions] = useState(false);
+
+  const handleOptionalButtonClick = () => {
+    setShowOptionalQuestions(!showOptionalQuestions);
+  };
   {
     /* Firebase */
   }
@@ -275,9 +305,36 @@ function PersonalOutForm() {
                 </div>
                 <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                   <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
-                    How many people did you help?*
+                    Who did you help (and how many people)?
                   </div>
                   {/*  */}
+                  <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
+                    <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
+                      <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
+                        Description of the people helped
+                      </div>
+                    </div>
+                    <div className="self-stretch h-fit  border-collapse     ">
+                      <div className=" h-14  justify-center items-start ">
+                        <input
+                          id="descriptionHelped"
+                          value={descriptionHelped}
+                          placeholder="E.g. Tommy, a senior citizen in a wheelchair wearing a navy blue top and brown shoes."
+                          className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border-0 text-[15px] font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset`}
+                          required=""
+                          onChange={handleDescriptionHelpedChange}
+                        ></input>
+                        {/* {error.numberHelpedError && (
+                          <div className="inline-flex items-center">
+                            <img src={errorImg} className="w-3 h-3" />
+                            <p className="text-red-600 text-xs">
+                              {error.numberHelpedError}
+                            </p>
+                          </div>
+                        )} */}
+                      </div>
+                    </div>
+                  </div>
                   <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
                     <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
                       <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
@@ -316,7 +373,7 @@ function PersonalOutForm() {
 
                 <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                   <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
-                    What kind of help did you provide?*
+                    What kind of help did you provide?
                   </div>
 
                   <div className="self-stretch w-full h-fit grid md:grid-cols-4 grid-cols-3 gap-2 ">
@@ -730,6 +787,418 @@ function PersonalOutForm() {
                     />
                   </div>
                 </div>
+
+                {/* <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
+                  <p className="self-stretch font-bricolage">
+                    <b>Optional:</b> Would you like to answer more questions? It
+                    will help us better assist people in need. If yes{" "}
+                    <b>
+                      <button
+                        className="hover:text-[#6840E0]"
+                        onClick={handleOptionalButtonClick}
+                      >
+                        click here.
+                      </button>
+                    </b>
+                  </p>
+                </div> */}
+
+                <div>
+                  <p className="self-stretch font-bricolage text-[18px]">
+                    <b>Optional:</b> Would you like to answer more questions? It
+                    will help us better assist people in need. If yes{" "}
+                    <b>
+                      <button
+                        className="hover:text-[#6840E0]"
+                        onClick={handleOptionalButtonClick}
+                      >
+                        click here.
+                      </button>
+                    </b>
+                  </p>
+                </div>
+                {showOptionalQuestions && (
+                  // <div>
+                  <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
+                    <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
+                      Who requires further help?
+                    </div>
+                    <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
+                      <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
+                        <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
+                          Description
+                        </div>
+                      </div>
+                      <div className="self-stretch h-fit  border-collapse">
+                        <div className=" h-14  justify-center items-start ">
+                          <input
+                            id="furtherHelpDescription"
+                            placeholder="E.g. Tommy, a senior citizen in a wheelchair wearing a navy blue top and brown shoes."
+                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset`}
+                            required={true}
+                            value={furtherHelpDescription}
+                            onChange={handleFurtherHelpDescriptionChange}
+                          ></input>
+                          {/* {error.itemQtyError && (
+                            <div className="inline-flex items-center">
+                              <img src={errorImg} className="w-3 h-3" />
+                              <p className="text-red-600 text-xs">
+                                {error.itemQtyError}
+                              </p>
+                            </div>
+                          )} */}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
+                      Can you describe the location or landmark of the person(s)
+                      in need of help?
+                    </div>
+                    <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
+                      {/* <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
+                        <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
+                          Description
+                        </div>
+                      </div> */}
+                      <div className="self-stretch h-fit  border-collapse">
+                        <div className=" h-14  justify-center items-start ">
+                          <input
+                            id="furtherHelpLocation"
+                            placeholder="E.g. 187 Hambridge Street, NY"
+                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset`}
+                            required={true}
+                            value={furtherHelpLocation}
+                            onChange={handleFurtherHelpLocationChange}
+                          ></input>
+                          {/* {error.itemQtyError && (
+                            <div className="inline-flex items-center">
+                              <img src={errorImg} className="w-3 h-3" />
+                              <p className="text-red-600 text-xs">
+                                {error.itemQtyError}
+                              </p>
+                            </div>
+                          )} */}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
+                      What time was the encounter?
+                    </div>
+                    <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
+                      {/* <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
+                        <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
+                          Description
+                        </div>
+                      </div> */}
+                      <div className="self-stretch h-fit  border-collapse">
+                        <div className=" h-14  justify-center items-start ">
+                          <input
+                            id="furtherHelpEncounterTime"
+                            placeholder=""
+                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset`}
+                            required=""
+                            // value={furtherHelpEncounterTime}
+                            // onChange={handleFurtherHelpLocationChange}
+                          ></input>
+                          {/* {error.itemQtyError && (
+                            <div className="inline-flex items-center">
+                              <img src={errorImg} className="w-3 h-3" />
+                              <p className="text-red-600 text-xs">
+                                {error.itemQtyError}
+                              </p>
+                            </div>
+                          )} */}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
+                      <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
+                        What further help is needed?
+                      </div>
+
+                      <div className="self-stretch w-full h-fit grid md:grid-cols-4 grid-cols-3 gap-2 ">
+                        {/* Grid Start */}
+                        <div className=" justify-end items-end inline-flex ">
+                          <input
+                            type="checkbox"
+                            id="food-option"
+                            value="Food and Drink"
+                            className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
+                            required=""
+                            ref={(el) => (checkboxes.current[0] = el)}
+                            onChange={handleItemArray}
+                          ></input>
+                          <label
+                            for="food-option"
+                            className="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer peer-checked:border-[#5F36D6] peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300"
+                          >
+                            <div className="w-full h-full mb-6 text-base font-semibold">
+                              {" "}
+                              Food and Drink
+                            </div>
+                          </label>
+                        </div>
+                        {/*  */}
+
+                        <div className=" justify-end items-end inline-flex ">
+                          <input
+                            type="checkbox"
+                            id="clothing-option"
+                            value="Clothing"
+                            className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
+                            required=""
+                            ref={(el) => (checkboxes.current[1] = el)}
+                            onChange={handleItemArray}
+                          ></input>
+                          <label
+                            for="clothing-option"
+                            className="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300"
+                          >
+                            <div className="w-full h-full mb-6  text-base font-semibold ">
+                              Clothing
+                            </div>
+                          </label>
+                        </div>
+
+                        {/*  */}
+                        <div className=" justify-end items-end inline-flex ">
+                          <input
+                            type="checkbox"
+                            id="hygiene-option"
+                            value="Hygiene Products"
+                            className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
+                            required=""
+                            ref={(el) => (checkboxes.current[2] = el)}
+                            onChange={handleItemArray}
+                          ></input>
+                          <label
+                            for="hygiene-option"
+                            className="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300"
+                          >
+                            <div className="w-full h-full mb-6  text-base font-semibold ">
+                              Hygiene Products
+                            </div>
+                          </label>
+                        </div>
+                        {/*  */}
+                        <div className=" justify-end items-end inline-flex ">
+                          <input
+                            type="checkbox"
+                            id="wellness-option"
+                            value="Wellness/ Emotional Support"
+                            className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
+                            required=""
+                            ref={(el) => (checkboxes.current[3] = el)}
+                            onChange={handleItemArray}
+                          ></input>
+                          <label
+                            for="wellness-option"
+                            className="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300"
+                          >
+                            <div className="w-full h-full mb-6 text-base font-semibold">
+                              Wellness/ Emotional Support
+                            </div>
+                          </label>
+                        </div>
+                        {/*  */}
+                        <div className=" justify-end items-end inline-flex ">
+                          <input
+                            type="checkbox"
+                            id="medical-option"
+                            value=""
+                            className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
+                            required="Medical Help"
+                            ref={(el) => (checkboxes.current[4] = el)}
+                            onChange={handleItemArray}
+                          ></input>
+                          <label
+                            for="medical-option"
+                            className="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300"
+                          >
+                            <div className="w-full h-full mb-6 text-base font-semibold">
+                              {" "}
+                              Medical Help
+                            </div>
+                          </label>
+                        </div>
+                        {/*  */}
+
+                        <div className=" justify-end items-end inline-flex ">
+                          <input
+                            type="checkbox"
+                            id="social-option"
+                            value="Social Worker /Psychiatrist"
+                            className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
+                            required=""
+                            ref={(el) => (checkboxes.current[5] = el)}
+                            onChange={handleItemArray}
+                          ></input>
+                          <label
+                            for="social-option"
+                            className="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300"
+                          >
+                            <div class="w-full h-full mb-6  text-base font-semibold ">
+                              Social Worker /Psychiatrist
+                            </div>
+                          </label>
+                        </div>
+
+                        {/*  */}
+                        <div className=" justify-end items-end inline-flex ">
+                          <input
+                            type="checkbox"
+                            id="legal-option"
+                            value="Legal/Lawyer"
+                            className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
+                            required=""
+                            ref={(el) => (checkboxes.current[6] = el)}
+                            onChange={handleItemArray}
+                          ></input>
+                          <label
+                            for="legal-option"
+                            className="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300"
+                          >
+                            <div className="w-full h-full mb-6  text-base font-semibold ">
+                              Legal/Lawyer
+                            </div>
+                          </label>
+                        </div>
+                        {/*  */}
+                        <div className=" justify-end items-end inline-flex ">
+                          <input
+                            type="checkbox"
+                            id="other-option"
+                            value="Other"
+                            className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
+                            required=""
+                            ref={(el) => (checkboxes.current[7] = el)}
+                            onChange={handleItemArray}
+                          ></input>
+                          <label
+                            for="other-option"
+                            className="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300"
+                          >
+                            <div className="w-full h-full mb-6 text-base font-semibold">
+                              Other
+                            </div>
+                          </label>
+                        </div>
+                        {/*  */}
+                      </div>
+                      {/* {error.checkboxesError && (
+                        <div className="inline-flex items-center">
+                          <img src={errorImg} className="w-3 h-3" />
+                          <p className="text-red-600 text-xs">
+                            {error.checkboxesError}
+                          </p>
+                        </div>
+                      )} */}
+                    </div>
+
+                    <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
+                      When is the follow-up needed?
+                    </div>
+                    <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
+                      {/* <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
+                        <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
+                          Description
+                        </div>
+                      </div> */}
+                      <div className="self-stretch h-fit  border-collapse">
+                        <div className=" h-14  justify-center items-start ">
+                          <input
+                            id="furtherHelpFollowUp"
+                            placeholder=""
+                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset`}
+                            required=""
+                            // value={furtherHelpEncounterTime}
+                            // onChange={handleFurtherHelpLocationChange}
+                          ></input>
+                          {/* {error.itemQtyError && (
+                            <div className="inline-flex items-center">
+                              <img src={errorImg} className="w-3 h-3" />
+                              <p className="text-red-600 text-xs">
+                                {error.itemQtyError}
+                              </p>
+                            </div>
+                          )} */}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
+                      Is there anything else other volunteers should know?
+                    </div>
+                    <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
+                      {/* <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
+                        <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
+                          Description
+                        </div>
+                      </div> */}
+                      <div className="self-stretch h-fit  border-collapse">
+                        <div className=" h-14  justify-center items-start ">
+                          <input
+                            id="furtherHelpDescription"
+                            placeholder="Please specify here"
+                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset`}
+                            required=""
+                            value={otherInfo}
+                            onChange={handleOtherInfoChange}
+                          ></input>
+                          {/* {error.itemQtyError && (
+                            <div className="inline-flex items-center">
+                              <img src={errorImg} className="w-3 h-3" />
+                              <p className="text-red-600 text-xs">
+                                {error.itemQtyError}
+                              </p>
+                            </div>
+                          )} */}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
+                      Choose which information to share with the community to
+                      improve assistance
+                    </div>
+                    <div className=" justify-end items-end inline-flex ">
+                      <input
+                        type="checkbox"
+                        // id="food-option"
+                        value=""
+                        className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
+                        required=""
+                        // ref={(el) => (checkboxes.current[0] = el)}
+                        // onChange={handleItemArray}
+                      ></input>
+                      <label
+                        // for="food-option"
+                        className="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer peer-checked:border-[#5F36D6] peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300"
+                      >
+                        <div className="w-full h-full mb-6 text-base font-semibold">
+                          {" "}
+                          Location where help provided
+                        </div>
+                      </label>
+                    </div>
+                    {/*  */}
+
+                    <div>
+                      <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
+                        In case of a serious situation, dial 911 immediately.
+                      </div>
+                    </div>
+                    <span className="text-gray-500 self-stretch justify-normal font-bricolage">
+                      If you can, it’s most helpful for you to fill out one
+                      visit log per person. This way it enables us to provide
+                      far better services and outreach to each person. That’s
+                      totally optional, any information is great!
+                    </span>
+                  </div>
+                  // </div>
+                )}
                 {/*  */}
                 <div className="justify-start items-start gap-4 inline-flex">
                   <div className="justify-start items-start gap-4 flex">
