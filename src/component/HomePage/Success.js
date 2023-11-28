@@ -239,7 +239,7 @@ function Success() {
 
       <div className=" mt-10 w-full h-fit justify-start items-start   grid grid-cols-1 lg:grid-cols-3 font-bricolage">
         {/*  */}
-        <div className="grow items-start  lg:items-center xl:items-start flex-col rounded-t-2xl  lg:rounded-tr-none lg:rounded-tl-2xl shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-emerald-100 to-neutral-200 gap-6 flex">
+        <div className="grow items-start  lg:items-center xl:items-start flex-col rounded-t-2xl  lg:rounded-tr-none lg:rounded-tl-2xl shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-emerald-300 to-neutral-200 gap-6 flex">
           <div className="text-violet-950 text-2xl font-medium leading-loose">
             Homeless People Aided
           </div>
@@ -275,7 +275,7 @@ function Success() {
         </div>
         {/*  */}
 
-        <div className="grow items-start  lg:items-center xl:items-start flex-col rounded-br-none lg:rounded-tr-2xl lg:rounded-bl-none shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-sky-200 to-neutral-200 justify-start  gap-6 flex">
+        <div className="grow items-start  lg:items-center xl:items-start flex-col rounded-br-none lg:rounded-tr-2xl lg:rounded-bl-none shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-sky-300 to-neutral-200 justify-start  gap-6 flex">
           <div className="text-violet-950 text-2xl font-medium leading-loose">
             Items Shared
           </div>
@@ -293,7 +293,7 @@ function Success() {
         </div>
 
 
-        <div className="grow items-start  lg:items-center xl:items-start flex-col rounded-t-none  lg:rounded-tr-none lg:rounded-bl-2xl shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-violet-100 to-neutral-200 gap-6 flex">
+        <div className="grow items-start  lg:items-center xl:items-start flex-col rounded-t-none  lg:rounded-tr-none lg:rounded-bl-2xl shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-red-300 to-zinc-200 justify-start gap-6 flex">
           <div className="text-violet-950 text-2xl font-medium leading-loose">
             People Mentored
           </div>
@@ -327,7 +327,7 @@ function Success() {
           </div>
         </div>
 
-        <div className="grow items-start  lg:items-center xl:items-start flex-col rounded-b-2xl lg:rounded-tr-none lg:rounded-bl-none shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-orange-200 to-neutral-200 justify-start  gap-6 flex">
+        <div className="grow items-start  lg:items-center xl:items-start flex-col rounded-b-2xl lg:rounded-tr-none lg:rounded-bl-none shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-orange-300 to-neutral-200 justify-start  gap-6 flex">
           <div className="text-violet-950 text-2xl font-medium leading-loose">
             App User Rating
           </div>
