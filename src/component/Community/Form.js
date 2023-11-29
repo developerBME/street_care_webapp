@@ -129,6 +129,10 @@ const Form = (hrid) => {
         setShouldSubmit(false); // Reset the submission flag
       } else {
         // Proceed with form submission logic
+
+        // is this help request flow? 
+        // true if redirected from help request and false for organic outreach event.
+        const isHelpReqFlow = !(typeof hrid.hrid=="undefined")
         try {
           let obj = {
             uid: fAuth.currentUser.uid,
@@ -150,18 +154,24 @@ const Form = (hrid) => {
             interests: 0,
             participants: [],
             approved: false,
+            helpRequest:
+              isHelpReqFlow
+              ? [hrid.hrid]
+              : [] ,
           };
-          // Insert doc in outreach event
-          const eventRef = collection(db, "outreachEvents");
-          const docRef = await addDoc(eventRef, obj);
-
+          
           // check if flow comes from help request
-          if (!(typeof hrid.hrid=="undefined")){
+          if (isHelpReqFlow){
             const helpRequestRef = doc(db, "helpRequests", hrid.hrid);
             const updateRef = await updateDoc(helpRequestRef, {
             status : "Help on the way",
             });
           }
+
+          // Insert doc in outreach event
+          const eventRef = collection(db, "outreachEvents");
+          const docRef = await addDoc(eventRef, obj);
+          
           // Successful if outreach event is updated   
           if (docRef.id) {
             console.log(docRef.id);
