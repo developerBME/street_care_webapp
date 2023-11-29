@@ -8,6 +8,7 @@ const ConfirmationModal = ({
   closeModal,
   currSupPow,
   refreshUserQuery,
+  id,
 }) => {
   const [success, setSuccess] = useState(false);
 
@@ -39,16 +40,16 @@ const ConfirmationModal = ({
               label="Create an Outreach"
               name="buttondefault"
               onClick={() => {
-                navigate("/createOutreach");
+                navigate(`/createOutreach/${id}`);
               }}
             />
-            <CustomButton
+            {/* <CustomButton
               label="I will bring a friend"
               name="buttonborder"
               onClick={() => {
                 navigate("/");
               }}
-            />
+            /> */}
           </div>
         </div>
       </div>

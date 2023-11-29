@@ -115,8 +115,6 @@ export function formatDate(dateObj) {
 export const handleHelpRecieved = async (e,id,refresh) => {
     e.preventDefault();
     // Reference to the specific document in the Help Request collection
-    console.log("Button click")
-    console.log(id)
     const helpRequestRef = doc(db, HELP_REQ_COLLECTION, id);
     const updateRef = await updateDoc(helpRequestRef, {
         status : "Help Received",

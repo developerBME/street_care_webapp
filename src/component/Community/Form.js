@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 
 import Chip from "../Community/Chip";
 import arrowDown from "../../images/arrowDown.png";
-import { addDoc, collection } from "firebase/firestore";
+import { doc, updateDoc, addDoc, collection } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import errorImg from "../../images/error.png";
@@ -48,7 +48,8 @@ const CustomInput = ({ value, onClick, onChange, id, className }) => (
 );
 
 
-const Form = () => {
+const Form = (hrid) => {
+  console.log(hrid.hrid)
   const [success, setSuccess] = useState(false);
   const nameRef = useRef("");
   const descRef = useRef("");
@@ -150,8 +151,18 @@ const Form = () => {
             participants: [],
             approved: false,
           };
+          // Insert doc in outreach event
           const eventRef = collection(db, "outreachEvents");
           const docRef = await addDoc(eventRef, obj);
+
+          // check if flow comes from help request
+          if (!(typeof hrid.hrid=="undefined")){
+            const helpRequestRef = doc(db, "helpRequests", hrid.hrid);
+            const updateRef = await updateDoc(helpRequestRef, {
+            status : "Help on the way",
+            });
+          }
+          // Successful if outreach event is updated   
           if (docRef.id) {
             console.log(docRef.id);
             setSuccess(true);

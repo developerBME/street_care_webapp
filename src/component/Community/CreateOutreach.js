@@ -4,8 +4,10 @@ import { Link } from "react-router-dom";
 import Landing from "../HomePage/Landing";
 import Form from "./Form";
 import arrowBack from "../../images/arrowBack.png";
+import { useParams } from "react-router-dom";
 
-function CreateOutreach() {
+const CreateOutreach = () => {
+  const { helpreqid } = useParams();
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center ">
@@ -20,7 +22,7 @@ function CreateOutreach() {
             </div>
           </Link>
           <div className="max-w-6xl mx-auto rounded-2xl mx-2 mb-32 lg:mx-40 bg-[#F8F9F0] p-4 lg:pt-[100px] lg:pb-[100px] lg:pr-[150px] lg:pl-[150px]">
-            <Form />
+            <Form hrid = {helpreqid}/>
           </div>
           </div>
         </div>
