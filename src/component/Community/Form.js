@@ -471,7 +471,67 @@ const Form = () => {
               </div>*/}
 
             <div className="space-y-1.5">
-              <p className="font-semibold font-['Inter'] text-[15px]">City*</p>
+              
+            <p className="font-semibold font-['Inter'] text-[15px]">
+            State*
+          </p>
+          <select
+                    className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                      error.stateError !== "" ? "ring-red-500" : "ring-gray-300"
+                    }`}
+                    defaultValue=""
+                    ref={stateRef}
+                    onChange={getCities}
+                  >
+                    <option value="" disabled>
+                      Please select from the list
+                    </option>
+                    {stateNames &&
+                      stateNames.map((stateName, index) => {
+                        return (
+                          <option
+                            className="w-fit"
+                            value={stateName}
+                            key={"state_" + index}
+                          >
+                            {stateName}
+                          </option>
+                        );
+                      })}
+                  </select>
+          {error.stateError && (
+            <div className="inline-flex items-center">
+              <img src={errorImg} className="w-3 h-3" />
+              <p className="text-red-600 text-xs">{error.stateError}</p>
+            </div>
+          )}
+            </div>
+              
+            <div className="inline-flex grid grid-cols-2 space-x-4">
+              {/*<div className="space-y-1.5">
+                <p className="font-semibold font-['Inter'] text-[15px]">
+                  State*
+                </p>
+                <input
+                  type="text"
+                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                    error.stateError !== "" ? "ring-red-500" : "ring-gray-300"
+                  }`}
+                  placeholder="New York"
+                  id="state"
+                  ref={stateRef}
+                  onChange={handleStateChange}
+                />
+                {error.stateError && (
+                  <div className="inline-flex items-center">
+                    <img src={errorImg} className="w-3 h-3" />
+                    <p className="text-red-600 text-xs">{error.stateError}</p>
+                  </div>
+                )}
+                </div>*/}
+
+                <div className="space-y-1.5">
+                <p className="font-semibold font-['Inter'] text-[15px]">City*</p>
               <select
                           className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
                             error.cityError !== "" ? "ring-red-500" : "ring-gray-300"
@@ -505,65 +565,6 @@ const Form = () => {
                   <p className="text-red-600 text-xs">{error.cityError}</p>
                 </div>
               )}
-            </div>
-              
-            <div className="inline-flex grid grid-cols-2 space-x-4">
-              {/*<div className="space-y-1.5">
-                <p className="font-semibold font-['Inter'] text-[15px]">
-                  State*
-                </p>
-                <input
-                  type="text"
-                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
-                    error.stateError !== "" ? "ring-red-500" : "ring-gray-300"
-                  }`}
-                  placeholder="New York"
-                  id="state"
-                  ref={stateRef}
-                  onChange={handleStateChange}
-                />
-                {error.stateError && (
-                  <div className="inline-flex items-center">
-                    <img src={errorImg} className="w-3 h-3" />
-                    <p className="text-red-600 text-xs">{error.stateError}</p>
-                  </div>
-                )}
-                </div>*/}
-
-                <div className="space-y-1.5">
-                <p className="font-semibold font-['Inter'] text-[15px]">
-                  State*
-                </p>
-                <select
-                          className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
-                            error.stateError !== "" ? "ring-red-500" : "ring-gray-300"
-                          }`}
-                          defaultValue=""
-                          ref={stateRef}
-                          onChange={getCities}
-                        >
-                          <option value="" disabled>
-                            Please select from the list
-                          </option>
-                          {stateNames &&
-                            stateNames.map((stateName, index) => {
-                              return (
-                                <option
-                                  className="w-fit"
-                                  value={stateName}
-                                  key={"state_" + index}
-                                >
-                                  {stateName}
-                                </option>
-                              );
-                            })}
-                        </select>
-                {error.stateError && (
-                  <div className="inline-flex items-center">
-                    <img src={errorImg} className="w-3 h-3" />
-                    <p className="text-red-600 text-xs">{error.stateError}</p>
-                  </div>
-                )}
                 </div>
 
 
