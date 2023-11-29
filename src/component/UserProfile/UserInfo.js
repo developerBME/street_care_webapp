@@ -308,7 +308,7 @@ const UserInfo = () => {
           </div>
         </div> */}
         {achievments.neighborhood_leader ? (
-          <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto gap-4">
+          <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[268px] md:w-auto gap-4 ">
             <div className="relative inline-block">
               <img className="w-16 h-16" src={neighborhood} alt="..."></img>
               <img
@@ -328,7 +328,7 @@ const UserInfo = () => {
             </div>
           </div>
         ) : (
-          <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto gap-4">
+          <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[268px] md:w-auto gap-4">
             <div className="relative inline-block">
               <img
                 className="w-16 h-16 grayscale"
