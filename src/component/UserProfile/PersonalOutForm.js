@@ -305,7 +305,7 @@ function PersonalOutForm() {
                 </div>
                 <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                   <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
-                    Who did you help (and how many people)?
+                    Who did you help (and how many people)?*
                   </div>
                   {/*  */}
                   <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
@@ -320,7 +320,7 @@ function PersonalOutForm() {
                           id="descriptionHelped"
                           value={descriptionHelped}
                           placeholder="E.g. Tommy, a senior citizen in a wheelchair wearing a navy blue top and brown shoes."
-                          className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border-0 text-[15px] font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset`}
+                          className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border-0 text-[15px] font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
                           required=""
                           onChange={handleDescriptionHelpedChange}
                         ></input>
@@ -675,15 +675,11 @@ function PersonalOutForm() {
                             type="date"
                             id="-itemnumber"
                             placeholder="Number"
-                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
-                              error.dateError !== ""
-                                ? "ring-red-500"
-                                : "ring-gray-300"
-                            }`}
+                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
                             ref={date}
                             onChange={handleDateChange}
                           ></input>
-                          {error.dateError && (
+                          {/* {error.dateError && (
                             <div className="inline-flex items-center">
                               <img
                                 src={errorImg}
@@ -694,7 +690,7 @@ function PersonalOutForm() {
                                 {error.dateError}
                               </p>
                             </div>
-                          )}
+                          )} */}
                         </div>
                       </div>
                     </div>
@@ -711,22 +707,18 @@ function PersonalOutForm() {
                             type="time"
                             id="-itemnumber"
                             placeholder="Number"
-                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
-                              error.timeError !== ""
-                                ? "ring-red-500"
-                                : "ring-gray-300"
-                            }`}
+                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
                             ref={time}
                             onChange={handleTimeChange}
                           ></input>
-                          {error.timeError && (
+                          {/* {error.timeError && (
                             <div className="inline-flex items-center">
                               <img src={errorImg} className="w-3 h-3" />
                               <p className="text-red-600 text-xs">
                                 {error.timeError}
                               </p>
                             </div>
-                          )}
+                          )} */}
                         </div>
                       </div>
                     </div>
@@ -821,7 +813,7 @@ function PersonalOutForm() {
                   // <div>
                   <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                     <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
-                      Who requires further help?
+                      Who requires further help?*
                     </div>
                     <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
                       <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
@@ -834,7 +826,7 @@ function PersonalOutForm() {
                           <input
                             id="furtherHelpDescription"
                             placeholder="E.g. Tommy, a senior citizen in a wheelchair wearing a navy blue top and brown shoes."
-                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset`}
+                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
                             required={true}
                             value={furtherHelpDescription}
                             onChange={handleFurtherHelpDescriptionChange}
@@ -852,7 +844,7 @@ function PersonalOutForm() {
                     </div>
                     <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
                       Can you describe the location or landmark of the person(s)
-                      in need of help?
+                      in need of help?*
                     </div>
                     <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
                       {/* <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
@@ -865,7 +857,7 @@ function PersonalOutForm() {
                           <input
                             id="furtherHelpLocation"
                             placeholder="E.g. 187 Hambridge Street, NY"
-                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset`}
+                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
                             required={true}
                             value={furtherHelpLocation}
                             onChange={handleFurtherHelpLocationChange}
@@ -896,7 +888,7 @@ function PersonalOutForm() {
                           <input
                             id="furtherHelpEncounterTime"
                             placeholder=""
-                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset`}
+                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
                             required=""
                             // value={furtherHelpEncounterTime}
                             // onChange={handleFurtherHelpLocationChange}
@@ -1111,7 +1103,7 @@ function PersonalOutForm() {
                           <input
                             id="furtherHelpFollowUp"
                             placeholder=""
-                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset`}
+                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
                             required=""
                             // value={furtherHelpEncounterTime}
                             // onChange={handleFurtherHelpLocationChange}
@@ -1142,7 +1134,7 @@ function PersonalOutForm() {
                           <input
                             id="furtherHelpDescription"
                             placeholder="Please specify here"
-                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset`}
+                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
                             required=""
                             value={otherInfo}
                             onChange={handleOtherInfoChange}
@@ -1161,7 +1153,7 @@ function PersonalOutForm() {
 
                     <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
                       Choose which information to share with the community to
-                      improve assistance
+                      improve assistance*
                     </div>
                     <div className=" justify-end items-end inline-flex ">
                       <input
