@@ -91,7 +91,7 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
           <div className="self-stretch text-[#273164] text-[28px] font-medium font-bricolage leading-9">
             {helpTitle}
           </div>
-          <div className="w-full overflow-x-scroll lg:overflow-x-none">
+          <div className="w-full overflow-x-auto">
             <div className="justify-start items-start gap-2 inline-flex">
                 {helpTags.map((item, index) => (
                   <div className="w-fit px-3 py-1 bg-white rounded-xl border border-[#616161] justify-start items-center gap-4 flex">

@@ -100,7 +100,7 @@ const ICanHelpForm = () => {
                 {/* </div> */}
                 <div className="mt-8">
                     <p className="font-bricolage text-[#000] font-bold text-sm mb-2">What kind of help they need?</p>
-                    <div className="overflow-x-scroll md:overflow-x-none">
+                    <div className="overflow-x-auto">
                       <div className="justify-start items-start gap-2 inline-flex">
                           {data ? (data.skills.map((item, index) => (
                           <div className="w-fit px-3 py-1 bg-white rounded-xl border border-[#616161] justify-start items-center gap-4 flex">
