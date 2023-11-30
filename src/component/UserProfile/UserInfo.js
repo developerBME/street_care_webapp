@@ -414,10 +414,11 @@ const UserInfo = () => {
             </div>
             <div className="grow shrink basis-0 flex flex-col">
               <h1 className="text-sm font-bold mt-1 pb-1 font-bricolage text-[#212121] self-stretch">
-                Seasoned Volunteer
+                Outreach All-Star
               </h1>
               <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161] self-stretch">
-                Joined more than 15 outreaches or has helped more than 60 people.
+                Joined more than 15 outreaches or has helped more than 60
+                people.
                 {/* Helped more than 8 people */}
               </h3>
             </div>
