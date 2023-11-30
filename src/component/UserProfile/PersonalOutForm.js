@@ -597,7 +597,7 @@ function PersonalOutForm() {
                   {/*  */}
                   <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                     <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
-                      Where did you see a person in need?
+                      Where did you see a person in need?*
                     </div>
                     {/*  */}
                     <div className="self-stretch w-full h-fit flex-col  flex ">
@@ -834,6 +834,7 @@ function PersonalOutForm() {
                     </b>
                   </p>
                 </div>
+
                 {showOptionalQuestions && (
                   <div>
                     {/* <div className="flex-col justify-start items-start gap-16 flex"> */}
@@ -943,7 +944,7 @@ function PersonalOutForm() {
                             <div className=" h-14  justify-center items-start ">
                               <input
                                 id="furtherHelpEncounterTime"
-                                placeholder=""
+                                placeholder="2023-01-01 10:00"
                                 className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
                                 required=""
                               ></input>
@@ -1149,7 +1150,7 @@ function PersonalOutForm() {
                           <div className=" h-14  justify-center items-start ">
                             <input
                               id="furtherHelpFollowUp"
-                              placeholder=""
+                              placeholder="2023-01-01"
                               className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
                               required=""
                             ></input>
@@ -1227,15 +1228,21 @@ function PersonalOutForm() {
                           In case of a serious situation, dial 911 immediately.
                         </div>
                       </div>
-                      <span className="text-gray-500 self-stretch justify-normal font-bricolage">
+                      {/* <span className="text-gray-500 self-stretch justify-normal font-bricolage">
                         If you can, it’s most helpful for you to fill out one
                         visit log per person. This way it enables us to provide
                         far better services and outreach to each person. That’s
                         totally optional, any information is great!
-                      </span>
+                      </span> */}
                     </div>
                   </div>
                 )}
+                <span className="text-gray-500 self-stretch justify-normal font-bricolage">
+                  If you can, it’s most helpful for you to fill out one visit
+                  log per person. This way it enables us to provide far better
+                  services and outreach to each person. That’s totally optional,
+                  any information is great!
+                </span>
                 {/*  */}
                 <div className="justify-start items-start gap-4 inline-flex">
                   <div className="justify-start items-start gap-4 flex">
