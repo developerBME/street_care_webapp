@@ -312,7 +312,7 @@ function Success() {
 
         <div className="grow shrink items-start  lg:items-center xl:items-start flex-col basis-0 h-fit px-8 py-4 bg-gradient-to-br from-yellow-300 to-zinc-200 justify-start  gap-6 flex">
           <div className="text-violet-950 text-2xl font-medium leading-loose">
-            Our Total Outreach
+            Total Outreaches, Up to...
           </div>
           <div className="flex lg:flex-col xl:flex-row gap-4">
             <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
