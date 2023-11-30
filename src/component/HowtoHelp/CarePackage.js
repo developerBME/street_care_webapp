@@ -36,18 +36,6 @@ function CarePackage({ label, name }) {
       image: two,
       content: "Alcohol",
     },
-    {
-      image: three,
-      content: "Drug",
-    },
-    {
-      image: four,
-      content: "Religious Material",
-    },
-    {
-      image: five,
-      content: "Political Mateiral",
-    },
   ];
 
   const personalCareItems = [
@@ -143,25 +131,7 @@ function CarePackage({ label, name }) {
           How to prepare the Care Package?
         </h2>
       </div>
-      <div className="items-center justify-center px-4 py-8 lg:pb-[25px] lg:pt-0 lg:px-36 h-full w-full lg:rounded-none rounded-2xl bg-[#F7F7F7] lg:m-0 mb-[10px]">
-        <p className="text-[24px] mb-[18px]">
-          Items to Skip in Your Homeless Care Kits
-        </p>
-        <div className="overflow-x-scroll lg:overflow-none">
-          <div className="w-fit flex lg:flex-wrap">
-            {skipItems.map((item, index) => (
-              <div
-                key={index}
-                className="image-container px-[8px] lg:max-w-[90px] lg:min-w-[90px] w-[120px] mb-[25px]"
-              >
-                <img src={item.image} alt={`Image ${index}`} />
-                <p className="text-[12px] pt-[10px]">{item.content}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-      <div className="items-center justify-center px-4 py-8 lg:pb-[25px] lg:px-36 h-full w-full lg:rounded-none rounded-2xl bg-[#F7F7F7] lg:m-0 mb-[10px]">
+      <div className="items-center justify-center px-4 py-8 lg:pb-[25px] lg:px-36 lg:pt-0 h-full w-full lg:rounded-none rounded-2xl bg-[#F7F7F7] lg:m-0 mb-[10px]">
         <p className="text-[24px] mb-[18px]">Personal Care</p>
         <ul className="list-disc ml-[20px] mb-[30px] text-[#616161]">
           <li className="text-[15px]">
@@ -173,7 +143,7 @@ function CarePackage({ label, name }) {
             hygiene reasons.
           </li>
         </ul>
-        <div className="overflow-x-scroll">
+        <div className="overflow-x-auto">
           <div className="w-fit flex lg:flex-wrap">
             {personalCareItems.map((item, index) => (
               <div
@@ -195,7 +165,7 @@ function CarePackage({ label, name }) {
             make sure it's clean and in good condition.
           </li>
         </ul>
-        <div className="overflow-x-scroll">
+        <div className="overflow-x-auto">
           <div className="w-fit flex lg:flex-wrap">
             {clothesItems.map((item, index) => (
               <div
@@ -209,24 +179,37 @@ function CarePackage({ label, name }) {
           </div>
         </div>
       </div>
-      <div className="items-center justify-center px-4 py-8 lg:pb-24 lg:px-36 h-full w-full lg:rounded-b-2xl lg:rounded-t-none rounded-2xl bg-[#F7F7F7] ">
+      <div className="items-center justify-center px-4 py-8 lg:pb-[25px] lg:px-36 h-full w-full lg:rounded-b-2xl lg:rounded-t-none rounded-2xl bg-[#F7F7F7] ">
         <p className="text-[24px] mb-[18px]">Food</p>
         <ul className="list-disc ml-[20px] mb-[30px] text-[#616161]">
-          <li className="text-[15px]">
-            Perishable Foods: Avoid giving items that can spoil quickly, such as
-            fresh fruits or prepared meals, unless you're able to distribute
-            them immediately.
-          </li>
           <li className="text-[15px]">
             Remember to read labels for allergen information and encourage
             recipients to do the same. Sensitivity to dietary restrictions is
             essential for safe and helpful assistance. [Nuts, Gluten, Diary,
-            Seed, Fruits (Apples, oranges, bannas, ) Protein (Beef Jerky)]
+            Seed, Protein Yogurt, Fruits (Apples, oranges, bannas, )]
           </li>
         </ul>
-        <div className="overflow-x-scroll">
+        <div className="overflow-x-auto">
           <div className="w-fit flex lg:flex-wrap">
             {foodItems.map((item, index) => (
+              <div
+                key={index}
+                className="image-container px-[8px] lg:max-w-[90px] lg:min-w-[90px] w-[120px] mb-[25px]"
+              >
+                <img src={item.image} alt={`Image ${index}`} />
+                <p className="text-[12px] pt-[10px]">{item.content}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="items-center justify-center px-4 py-8 lg:pb-24 lg:px-36 h-full w-full lg:rounded-none rounded-2xl bg-[#F7F7F7] lg:m-0 mb-[10px]">
+        <p className="text-[24px] mb-[18px]">
+          Items to Skip in Your Homeless Care Kits
+        </p>
+        <div className="overflow-x-auto">
+          <div className="w-fit flex lg:flex-wrap">
+            {skipItems.map((item, index) => (
               <div
                 key={index}
                 className="image-container px-[8px] lg:max-w-[90px] lg:min-w-[90px] w-[120px] mb-[25px]"

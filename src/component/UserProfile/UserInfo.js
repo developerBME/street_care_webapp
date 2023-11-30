@@ -205,12 +205,9 @@ const UserInfo = () => {
   }, [donations, helped, outreaches]);
 
   useEffect(() => {
-    console.log(achievments);
-  }, [achievments]);
+    document.title = `${displayName} - Street Care`;
+  }, [displayName]);
 
-  // useEffect(() => {
-  //   console.log(helped);
-  // }, [helped]);
   return (
     // <div className="lg:px-24 lg:py-12 ">
     <div className="xl:px-24 xl:py-12 ">
@@ -311,7 +308,7 @@ const UserInfo = () => {
           </div>
         </div> */}
         {achievments.neighborhood_leader ? (
-          <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto gap-4">
+          <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[268px] md:w-auto gap-4 ">
             <div className="relative inline-block">
               <img className="w-16 h-16" src={neighborhood} alt="..."></img>
               <img
@@ -331,7 +328,7 @@ const UserInfo = () => {
             </div>
           </div>
         ) : (
-          <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto gap-4">
+          <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[268px] md:w-auto gap-4">
             <div className="relative inline-block">
               <img
                 className="w-16 h-16 grayscale"
@@ -405,7 +402,7 @@ const UserInfo = () => {
                 Outreach All-Star
               </h1>
               <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161] self-stretch">
-                Joined more than 5 outreaches or has helped more than 25 people
+                Joined more than 15 outreaches or has helped more than 60 people
                 {/* Helped more than 8 people */}
               </h3>
             </div>
@@ -417,10 +414,11 @@ const UserInfo = () => {
             </div>
             <div className="grow shrink basis-0 flex flex-col">
               <h1 className="text-sm font-bold mt-1 pb-1 font-bricolage text-[#212121] self-stretch">
-                Seasoned Volunteer
+                Outreach All-Star
               </h1>
               <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161] self-stretch">
-                Joined more than 5 outreaches or has helped more than 25 people.
+                Joined more than 15 outreaches or has helped more than 60
+                people.
                 {/* Helped more than 8 people */}
               </h3>
             </div>

@@ -26,7 +26,7 @@ import DonateForm from "./component/Donate/DonateForm";
 import AllOutreachEvents from "./component/AllOutreachEvents";
 import AllPastOutreachEvents from "./component/AllPastOutreachEvents";
 import AllOutreachVisitLog from "./component/AllOutreachVisitLog";
-
+//import CreateBME from "./component/Community/CreateBME";
 import ScrollToTop from "./component/helper/ScrollToTop";
 import Not404 from "./component/404";
 import Newscard from "./component/HomePage/Newscard";
@@ -104,6 +104,7 @@ function App() {
           <Route path="/outreachsignup" element={<OutreachSignup />} />
           <Route path="/outreachsignup/:id" element={<OutreachSignup />} />
           <Route path="/createOutreach" element={<CreateOutreach />} />
+          {/* <Route path="/createOutreach/:helpreqid" element={<CreateOutreach />} /> */}
           <Route path="/profile/accsetting" element={<AccSetting />} />
           {/* <Route
             path="/helpRequestEventWindow"
@@ -117,6 +118,7 @@ function App() {
           {/* <Route path="/donateForm" element={<DonateForm />} /> */}
           <Route path="/donateForm" element={<ComingSoon />} />
           <Route path="/allOutreachEvents" element={<AllOutreachEvents />} />
+          {/* <Route path="/createBME" element={<CreateBME />} /> */}
           <Route
             path="/allPastOutreachEvents"
             element={<AllPastOutreachEvents />}

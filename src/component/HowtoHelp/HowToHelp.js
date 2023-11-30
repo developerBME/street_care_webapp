@@ -1,10 +1,13 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import CustomButton from "../Buttons/CustomButton";
 
 import CarePackage from "./CarePackage";
 
 function HowToHelp() {
   const howToHelp = useRef();
+  useEffect(() => {
+    document.title = "How to help - Street Care";
+  }, []);
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center ">

@@ -42,7 +42,7 @@ const OutreachEventCard = ({
 
   return (
     <div className="bg-[#F5EEFE] min-w-max sm:min-w-fit lg:w-full rounded-2xl mb-4">
-      {!isProfilePage ? (
+      {(!isProfilePage && !isPastEvent )? (
         <div className="inline-flex items-center px-5 pt-6 pb-3 space-x-2">
           <img
             src={photoUrl || defaultImage}
@@ -80,10 +80,16 @@ const OutreachEventCard = ({
           <div className="font-semibold font-['Inter'] text-[12px] text-[#37168B]">
             {eventDate}
           </div>
-          <div className="font-normal font-['Inter'] text-[#444746] text-[12px]">
-            {location.street}, {location.city}, {location.state},{" "}
-            {location.zipcode}
-          </div>
+            {isPastEvent ? (
+              <div className="font-normal font-['Inter'] text-[#444746] text-[12px]">
+                {location.city}, {location.state}
+              </div>
+            ) : (
+              <div className="font-normal font-['Inter'] text-[#444746] text-[12px]">
+                {location.street}, {location.city}, {location.state},{" "}
+                {location.zipcode}
+              </div>
+            )}
           <div className="w-full inline-flex items-center bg-white px-4 py-2 space-x-2.5 rounded-2xl">
             <img src={wavingHand} />
             <div className="font-normal font-['Inter'] text-[12px] text-[#181818]">
@@ -96,12 +102,17 @@ const OutreachEventCard = ({
         <div className="flex items-center justify-between px-5 pt-2 pb-4 gap-16">
           {isProfilePage || label2 === "EDIT" ? (
             <div class="group relative">
-              <button
+              {/* <button
                 className="bg-violet-200 text-[#181818] text-[14px] font-medium py-[10px] px-[24px] rounded-full hover:bg-violet-300 transition ease-in-out delay-300"
                 onClick={handleEditClick}
               >
                 EDIT
-              </button>
+              </button> */}
+              <CustomButton
+                label="Edit"
+                name="buttonlight"
+                onClick={handleEditClick}
+              ></CustomButton>
 
               {showModal && (
                 <EditModal

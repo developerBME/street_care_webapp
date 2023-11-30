@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
 import Landing from "../HomePage/Landing";
 import Success from "../HomePage/Success";
 import OutreachEventCard from "./OutreachEventCard";
@@ -14,7 +13,10 @@ function Community() {
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
-  
+
+  useEffect(() => {
+    document.title = "Community - Street Care";
+  }, []);
 
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
@@ -55,7 +57,7 @@ function Community() {
             </button>
           </div>
         </div>
-       {/* <div className="block sm:hidden">
+        {/* <div className="block sm:hidden">
           {activeTab === "outreach" ? (
             <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
               <CommunityOutreachEvent />

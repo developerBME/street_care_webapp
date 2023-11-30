@@ -5,6 +5,7 @@ import icon from "../../images/icon.png";
 import add from "../../images/add.png";
 import UserInfo from "./UserInfo";
 import axc from "./CommOutForm";
+import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 
 import OutreachEventCard from "../Community/OutreachEventCard";
 import { formatDate, fetchUserEvents } from "../EventCardService";
@@ -80,7 +81,8 @@ function Profile() {
   ];
 
   const [events, setEvents] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(true);
+  const [eventsDisplay, setEventsDisplay] = useState([]);
   const navigate = useNavigate();
 
   const fetchData = async () => {
@@ -117,6 +119,17 @@ function Profile() {
 
     fetchData();
   }, [auth.currentUser]);
+
+  useEffect(() => {
+    setEventsDisplay(events);
+    // searchRef.current = "";
+  }, [events]);
+
+  useEffect(() => {
+    if (eventsDisplay.length > 0) {
+      setIsLoading(false);
+    }
+  }, [eventsDisplay]);
 
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
@@ -176,6 +189,13 @@ function Profile() {
               </div>
             </div>
             <div className="sm:hidden overflow-x-auto overflow-y-hidden">
+            {isLoading ? (
+              <div className="flex justify-between items-center w-full h-fit gap-2">
+                <EventCardSkeleton />
+                <EventCardSkeleton />
+                <EventCardSkeleton />
+              </div>
+            ):(
               <div className="flex space-x-3 w-fit lg:p-4">
                 {events.map((eventData) => (
                   <OutreachEventCard
@@ -191,8 +211,16 @@ function Profile() {
                   />
                 ))}
               </div>
+            )}
             </div>
             <div className="hidden sm:block sm:overflow-x-auto overflow-y-hidden">
+            {isLoading? (
+              <div className="flex justify-between items-center w-full h-fit gap-2">
+                <EventCardSkeleton />
+                <EventCardSkeleton />
+                <EventCardSkeleton />
+              </div>
+            ):(
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2 gap-y-16 mb-6">
                 {events.map((eventData) => (
                   <OutreachEventCard
@@ -208,6 +236,7 @@ function Profile() {
                   />
                 ))}
               </div>
+            )}
             </div>
           </div>{" "}
         </div>

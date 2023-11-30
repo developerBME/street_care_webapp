@@ -4,7 +4,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import CustomButton from "../Buttons/CustomButton";
 import help_announcement from "../../images/help_announcement.png";
 import ConfirmationModal from "./ConfirmationModal";
-import { fetchHelpReqById } from "../HelpRequestService";
+import { fetchHelpReqById, fetchUserName } from "../HelpRequestService";
 import {
   getAuth,
   onAuthStateChanged,
@@ -16,19 +16,23 @@ const ICanHelpForm = () => {
     const [success, setSuccess] = useState(false);
     const { id } = useParams();
     const [data, setData] = useState(null);
+    const [username, setUserName] = useState("");
 
     useEffect(() => {
         const getData = async () => {
           try {
             const result = await fetchHelpReqById(id);
+            const user = await fetchUserName(result.uid);
             setData(result);
+            setUserName(user);
             console.log("Result");
             console.log(result);
           } catch (error) {
             console.error(error.message);
           }
         };
-    
+        console.log("DATA");
+        console.log(data)
         getData(); // Invoke the async function
       }, []);
 
@@ -70,12 +74,16 @@ const ICanHelpForm = () => {
               </p>
             </div>
             {/*  */}
-            <div className="items-center justify-center mx-2 mb-32 lg:mx-40 p-4 lg:pt-[100px] lg:pb-[100px] lg:pr-[150px] lg:pl-[150px] rounded-2xl bg-[#F7F7F7] ">
-                <h1 className=" font-opensans font-medium text-2xl md:text-[43px] text-[#212121] mb-6">
+            <div className="items-center justify-center mx-2 mb-32 lg:mx-40 p-4 lg:pt-[100px] lg:pb-[100px] lg:pr-[120px] lg:pl-[120px] rounded-2xl bg-[#F7F7F7] ">
+              {data ? (<h1 className=" font-opensans font-medium text-2xl md:text-[43px] text-[#212121] mb-6 leading-[55px]">
                     {" "}
                         {/* Help request in 123 Plaza  */}
                         {data.title}
+                </h1>) :
+                (<h1 className=" font-opensans font-medium text-2xl md:text-[43px] text-[#212121] mb-6 leading-[55px]">
+                  Loading...
                 </h1>
+                )}
                 <div className="w-fit h-8 px-2 py-1 bg-[#FFECF2] rounded-lg justify-start items-start gap-2 inline-flex mb-4">
                     <div className="w-6 h-6 relative">
                         <img src={help_announcement}></img>
@@ -84,37 +92,64 @@ const ICanHelpForm = () => {
                         Need Help
                     </div>
                 </div>
-                <p className="text-[#616161 font-opensans">Posted on July 23, 2023 by Jay K</p> {/* createdAt */}
-                <div className="mt-16">
-                    <p className="font-bricolage text-[#000] font-bold text-sm mb-2">Name</p>
-                    <p className="font-normal text-sm text-[#616161]">Lucy</p>
-                    {/* <p className="font-normal text-sm text-[#616161]">{data.userName}</p> */}
-                </div>
+                {data ? (<p className="text-[#616161 font-opensans">Posted on : {data.createdAt}</p>) : (<p className="text-[#616161 font-opensans">Loading...</p>)}
+                {/* <div className="mt-16"> */}
+                    {/* <p className="font-bricolage text-[#000] font-bold text-sm mb-2">Name</p> */}
+                    {/* <p className="font-normal text-sm text-[#616161]">Lucy</p> */}
+                    {/* {data ? (<p className="font-normal text-sm text-[#616161]">{data.userName}</p>) : (<p className="font-normal text-sm text-[#616161]">Loading...</p>)} */}
+                {/* </div> */}
                 <div className="mt-8">
                     <p className="font-bricolage text-[#000] font-bold text-sm mb-2">What kind of help they need?</p>
-                    <div className="justify-start items-start gap-2 inline-flex">
-                        {data.skills.map((item, index) => (
-                        <div className="w-fit px-3 py-1 bg-white rounded-xl border border-[#616161] justify-start items-center gap-4 flex">
+                    <div className="overflow-x-auto">
+                      <div className="justify-start items-start gap-2 inline-flex">
+                          {data ? (data.skills.map((item, index) => (
+                          <div className="w-fit px-3 py-1 bg-white rounded-xl border border-[#616161] justify-start items-center gap-4 flex">
+                              <div className="opacity-90 justify-start items-center gap-1 flex text-[#616161] text-sm font-semibold font-opensans leading-tight">
+                              {item}
+                              </div>
+                          </div>
+                          ))) : (<div className="w-fit px-3 py-1 bg-white rounded-xl border border-[#616161] justify-start items-center gap-4 flex">
+                                  <div className="opacity-90 justify-start items-center gap-1 flex text-[#616161] text-sm font-semibold font-opensans leading-tight">
+                                  Loading...
+                                  </div>
+                                </div>)} 
+                          {/* <div className="w-fit px-3 py-1 bg-white rounded-xl border border-[#616161] justify-start items-center gap-4 flex">
                             <div className="opacity-90 justify-start items-center gap-1 flex text-[#616161] text-sm font-semibold font-opensans leading-tight">
-                            {item}
+                                Childcare
                             </div>
-                        </div>
-                        ))} 
+                          </div>
+                          <div className="w-fit px-3 py-1 bg-white rounded-xl border border-[#616161] justify-start items-center gap-4 flex">
+                            <div className="opacity-90 justify-start items-center gap-1 flex text-[#616161] text-sm font-semibold font-opensans leading-tight">
+                              Counseling and Support
+                            </div>
+                          </div>
+                          <div className="w-fit px-3 py-1 bg-white rounded-xl border border-[#616161] justify-start items-center gap-4 flex">
+                            <div className="opacity-90 justify-start items-center gap-1 flex text-[#616161] text-sm font-semibold font-opensans leading-tight">
+                              Clothing
+                            </div>
+                          </div>
+                          <div className="w-fit px-3 py-1 bg-white rounded-xl border border-[#616161] justify-start items-center gap-4 flex">
+                            <div className="opacity-90 justify-start items-center gap-1 flex text-[#616161] text-sm font-semibold font-opensans leading-tight">
+                              Healthcare
+                            </div>
+                          </div> */}
+                      </div>
                     </div>
                     {/* <p className="font-normal text-sm text-[#616161] mt-2">Lucy is 26 years old with a 2 year old daughter seeking for childcare support and general counseling. </p> */}
-                    <p className="font-normal text-sm text-[#616161] mt-2">{data.identification}</p>
+                    {data ? (<p className="font-normal text-sm text-[#616161] mt-2">{data.description}</p>) : (<p className="font-normal text-sm text-[#616161] mt-2">Loading...</p>)}
                 </div>
                 <div className="mt-8">
                     <p className="font-bricolage text-[#000] font-bold text-sm mb-2">How can other Volunteers find them?</p>
                     {/* <p className="font-normal text-sm text-[#616161] mt-2">123 Plaza, New York She is around 5’3 tall, with blonde long hair and tattoos on her arm.</p> */}
-                    <p className="font-normal text-sm text-[#616161] mt-2">1{data.description}</p>
+                    {data ? (<p className="font-normal text-sm text-[#616161] mt-2">{data.location.street}, {data.location.city}, {data.location.state}, {data.location.zipcode}</p>) : (<p className="font-normal text-sm text-[#616161] mt-2">Loading...</p>)}
+                    {data ? (<p className="font-normal text-sm text-[#616161] mt-2">{data.identification}</p>) : (<p className="font-normal text-sm text-[#616161] mt-2">Loading...</p>)}
                 </div>
                 <div className="space-y-16 space-x-[15px]">
                     <CustomButton label="I can help" name="buttondefault" onClick={handleSubmit} />
                     <CustomButton label="Cancel" name="buttonborder" />
                 </div>
                 {success && (
-                  <ConfirmationModal isOpen={true} />
+                  <ConfirmationModal isOpen={true} id ={id} />
                 )}
             </div>
           </div>
