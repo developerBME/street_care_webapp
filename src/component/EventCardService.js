@@ -162,19 +162,24 @@ const fetchUserDetails = async (uid) => {
     where("uid", "==", uid)
   );
   const userDocRef = await getDocs(userQuery);
-  const userDocID = userDocRef.docs[0].id;
+  // const userDocID = userDocRef.docs[0].id;
+  const userData = userDocRef.docs[0].data()
+  return {
+        username: userData.username || "",
+        photoUrl: userData.photoUrl || "",
+      };
   // reference for the userdoc
-  const userRef = doc(db, USERS_COLLECTION, userDocID);
-  const userDoc = await getDoc(userRef);
-  if (userDoc.exists()) {
-    return {
-      username: userDoc.data().username || "",
-      photoUrl: userDoc.data().photoUrl || "",
-    };
-  } else {
-    console.error("No user found with uid:", uid);
-    return "";
-  }
+  // const userRef = doc(db, USERS_COLLECTION, userDocID);
+  // const userDoc = await getDoc(userRef);
+  // if (userDoc.exists()) {
+  //   return {
+  //     username: userDoc.data().username || "",
+  //     photoUrl: userDoc.data().photoUrl || "",
+  //   };
+  // } else {
+  //   console.error("No user found with uid:", uid);
+  //   return "";
+  // }
 };
 
 export const fetchEventById = async (eventId) => {
@@ -221,17 +226,19 @@ export const fetchUserEvents = async (uid) => {
     console.error("User document not found for uid:", uid);
     return [];
   }
-  const userDocID = userDocRef.docs[0].id;
+  // const userDocID = userDocRef.docs[0].id;
+  const userData = userDocRef.docs[0].data()
   // reference for the userdoc
-  const userRef = doc(db, USERS_COLLECTION, userDocID);
-  const userDoc = await getDoc(userRef);
+  // const userRef = doc(db, USERS_COLLECTION, userDocID);
+  // const userDoc = await getDoc(userRef);
 
-  if (!userDoc.exists()) {
-    console.error("User not found:", uid);
-    return [];
-  }
+  // if (!userDoc.exists()) {
+  //   console.error("User not found:", uid);
+  //   return [];
+  // }
 
-  const eventIds = userDoc.data().outreachEvents || [];
+  // const eventIds = userDoc.data().outreachEvents || [];
+  const eventIds = userData.outreachEvents || [];
   const eventsData = [];
 
   for (let eventId of eventIds) {

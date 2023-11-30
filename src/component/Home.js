@@ -29,11 +29,13 @@ import BMEcardimg2 from "../images/BMEofficialcardimg2.png";
 import BMEcardimg3 from "../images/BMEofficialcardimg3.png";
 import CustomButton from "../component/Buttons/CustomButton";
 import { NewsCardData } from "../NewsData";
+import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
+import PastOutreachEventCardSkeleton from "./Skeletons/PastOutreachEventCardSkeleton";
 
 function HomePage() {
   const navigate = useNavigate();
   const fAuth = getAuth();
-  useEffect(() => {}, []);
+
   onAuthStateChanged(fAuth, (user) => {
     if (user) {
       // User is signed in, see docs for a list of available properties
@@ -130,6 +132,9 @@ function HomePage() {
   const [events, setEvents] = useState([]);
   const [offevents, setOffevents] = useState([]);
   const [newsevents, setnewsevents] = useState([]);
+  const [eventsDisplay, setEventsDisplay] = useState([]);
+
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -167,6 +172,17 @@ function HomePage() {
     fetchnewsData();
   }, []);
 
+  useEffect(() => {
+    setEventsDisplay(events);
+    // searchRef.current = "";
+  }, [events]);
+
+  useEffect(() => {
+    if (eventsDisplay.length > 0) {
+      setIsLoading(false);
+    }
+  }, [eventsDisplay]);
+
   const outreachRef = useRef();
 
   const handleOutreachRef = () => {
@@ -188,6 +204,10 @@ function HomePage() {
       return eventDate < new Date(); // Check if the event date is before the current date
     })
     .slice(0, 3);
+
+  useEffect(() => {
+    document.title = "Home - Street Care";
+  }, []);
 
   return (
     // <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
@@ -212,19 +232,27 @@ function HomePage() {
             Upcoming outreach events
           </p>
 
-          <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-            {upcomingEvents.map((eventData) => (
-              <OutreachEventCard
-                key={eventData.id}
-                cardData={{
-                  ...eventData,
-                  eventDate: formatDate(
-                    new Date(eventData.eventDate.seconds * 1000)
-                  ),
-                }}
-              />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="flex justify-between items-center w-full h-fit">
+              <EventCardSkeleton />
+              <EventCardSkeleton />
+              <EventCardSkeleton />
+            </div>
+          ) : (
+            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+              {upcomingEvents.map((eventData) => (
+                <OutreachEventCard
+                  key={eventData.id}
+                  cardData={{
+                    ...eventData,
+                    eventDate: formatDate(
+                      new Date(eventData.eventDate.seconds * 1000)
+                    ),
+                  }}
+                />
+              ))}
+            </div>
+          )}
           <div className="mt-16">
             <CustomButton
               label="More Outreach Events"
@@ -247,20 +275,28 @@ function HomePage() {
             Past outreach events
           </p>
 
-          <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-            {pastEvents.map((eventData) => (
-              <OutreachEventCard
-                isPastEvent={true}
-                key={eventData.id}
-                cardData={{
-                  ...eventData,
-                  eventDate: formatDate(
-                    new Date(eventData.eventDate.seconds * 1000)
-                  ),
-                }}
-              />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="flex justify-between items-center w-full h-fit">
+              <PastOutreachEventCardSkeleton />
+              <PastOutreachEventCardSkeleton />
+              <PastOutreachEventCardSkeleton />
+            </div>
+          ) : (
+            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+              {pastEvents.map((eventData) => (
+                <OutreachEventCard
+                  isPastEvent={true}
+                  key={eventData.id}
+                  cardData={{
+                    ...eventData,
+                    eventDate: formatDate(
+                      new Date(eventData.eventDate.seconds * 1000)
+                    ),
+                  }}
+                />
+              ))}
+            </div>
+          )}
           <div className="mt-16">
             <CustomButton
               label="More Outreach Events"

@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CustomButton from "./Buttons/CustomButton";
 
 import { useNavigate } from "react-router-dom";
 
 function Not404() {
   const navigate = useNavigate();
+  useEffect(() => {
+    document.title = "Page not found - Street Care";
+  }, []);
 
   return (
     <div className="relative flex flex-col items-center ">

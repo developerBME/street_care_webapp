@@ -1,38 +1,13 @@
 import React, { useRef, useState, useEffect } from "react";
-
-import Chip from "../Community/Chip";
-import arrowDown from "../../images/arrowDown.png";
-import { doc, updateDoc, addDoc, collection } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebase";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth} from "firebase/auth";
 import errorImg from "../../images/error.png";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from 'react-datepicker';
 import { Timestamp } from 'firebase/firestore';
 import {checkString,checkNumber} from "../helper/validator"
-import { UpdateDisabledRounded } from "@mui/icons-material";
-import CreateOutreachModal from "./CreateOutreachModal";
-
-
-
-const chipList = [
-  "Clothing",
-  "Education",
-  "Personal Care",
-  "Employment and Training",
-  "Food and water",
-  "Healthcare",
-  "Chinese",
-  "Spanish",
-  "Language(please specify)",
-  "Legal",
-  "Shelter",
-  "Transportation",
-  "LGBTQ Support",
-  "Technology Access",
-  "Social Integration",
-  "Pet Care",
-];
+import CreateBMEModal from "./CreateBMEModal";
 
 const CustomInput = ({ value, onClick, onChange, id, className }) => (
   <div>
@@ -47,9 +22,7 @@ const CustomInput = ({ value, onClick, onChange, id, className }) => (
   </div>
 );
 
-
-const Form = (hrid) => {
-  console.log(hrid.hrid)
+const BME_Form = () => {
   const [success, setSuccess] = useState(false);
   const nameRef = useRef("");
   const descRef = useRef("");
@@ -58,17 +31,10 @@ const Form = (hrid) => {
   const cityRef = useRef("");
   const stateRef = useRef("");
   const zipcodeRef = useRef("");
-  const helpRef = useRef("");
   const startTimeRef = useRef("");
   const endTimeRef = useRef("");
-  const [helpType, setHelpType] = useState([]);
-  const [clear, setClear] = useState(false);
-  const [stateList, setStateList] = useState({});
-  const [stateNames, setStateNames] = useState([]);
-  const [cityNames, setCityNames] = useState([]);
-  const [state, setState] = useState("");
-  const [city, setCity] = useState("");
-  
+  const [setClear] = useState(false);
+
   const [error, setError] = useState({
     nameError: "",
     streetError: "",
@@ -78,7 +44,6 @@ const Form = (hrid) => {
     dateError: "",
     stimeError: "",
     etimeError: "",
-    helpError: "",
     descError:"",
     maxCapError:"",
   });
@@ -95,7 +60,6 @@ const Form = (hrid) => {
   };
 
   const clearFields = () => {
-    //dateRef.current.value = "";
     setStartDate(null);
     setEndDate(null);
     stateRef.current.value = "";
@@ -105,19 +69,9 @@ const Form = (hrid) => {
     streetRef.current.value = "";
     cityRef.current.value = "";
     zipcodeRef.current.value = "";
-    helpRef.current.value = "";
-    setHelpType([]);
     setClear(true);
   };
 
-  // This function is drilled to child component: Chips
-  function handleHelpTypeArray(val, checked) {
-    if (checked) {
-      setHelpType([...helpType, val]);
-    } else {
-      setHelpType(helpType.filter((item) => item !== val));
-    }
-  }
   const [shouldSubmit, setShouldSubmit] = useState(false);
 
   useEffect(() => {
@@ -129,10 +83,6 @@ const Form = (hrid) => {
         setShouldSubmit(false); // Reset the submission flag
       } else {
         // Proceed with form submission logic
-
-        // is this help request flow? 
-        // true if redirected from help request and false for organic outreach event.
-        const isHelpReqFlow = !(typeof hrid.hrid=="undefined")
         try {
           let obj = {
             uid: fAuth.currentUser.uid,
@@ -148,31 +98,13 @@ const Form = (hrid) => {
               state: stateRef.current.value,
               zipcode: zipcodeRef.current.value,
             },
-            helpType:helpRef.current.value,
-            skills: helpType,
             createdAt: Date(),
             interests: 0,
             participants: [],
             approved: false,
-            helpRequest:
-              isHelpReqFlow
-              ? [hrid.hrid]
-              : [] ,
           };
-          
-          // check if flow comes from help request
-          if (isHelpReqFlow){
-            const helpRequestRef = doc(db, "helpRequests", hrid.hrid);
-            const updateRef = await updateDoc(helpRequestRef, {
-            status : "Help on the way",
-            });
-          }
-
-          // Insert doc in outreach event
-          const eventRef = collection(db, "outreachEvents");
+          const eventRef = collection(db, "BMEEvents");
           const docRef = await addDoc(eventRef, obj);
-          
-          // Successful if outreach event is updated   
           if (docRef.id) {
             console.log(docRef.id);
             setSuccess(true);
@@ -189,54 +121,6 @@ const Form = (hrid) => {
     }
   }, [shouldSubmit, error]);
     
-  useEffect(() => {
-    async function getStates() {
-      const response = await fetch(
-        "https://parseapi.back4app.com/classes/Usabystate_States?keys=name,postalAbreviation",
-        {
-          headers: {
-            "X-Parse-Application-Id":
-              "vahnMBqbmIbxOw8R3qtsEMoYrZMljfClGvc1aMyp",
-            "X-Parse-REST-API-Key": "LBjkDrxuUKEfb8liRPgZyv1Lu5WsPIvTx2FWgTpi",
-          },
-        }
-      );
-      const data = await response.json();
-
-      const filteredData = data.results?.map((x) => {
-        return x.name;
-      });
-      setStateList(data.results);
-      setStateNames(filteredData);
-    }
-    getStates();
-  }, []);
-
-  async function getCities(e) {
-    const stateCode = stateList.filter((x) => x.name == e.target.value)[0]
-      .postalAbreviation;
-    const response = await fetch(
-      "https://parseapi.back4app.com/classes/Usabystate_" +
-        stateCode +
-        "?limit=1000&keys=name",
-      {
-        headers: {
-          "X-Parse-Application-Id": "vahnMBqbmIbxOw8R3qtsEMoYrZMljfClGvc1aMyp",
-          "X-Parse-REST-API-Key": "LBjkDrxuUKEfb8liRPgZyv1Lu5WsPIvTx2FWgTpi",
-        },
-      }
-    );
-    const data = await response.json();
-    const filteredData = data.results?.map((x) => {
-      return x.name;
-    });
-    console.log("Unfiltered: " + data.results.length);
-    console.log("Filtered: " + filteredData.length);
-    setState(e.target.value);
-    setCityNames(filteredData);
-    updateErrorState("stateError", "");
-    updateErrorState("cityError", "");
-  }
 
   const handleNameChange = (e)=>{
     updateErrorState("nameError","")
@@ -258,9 +142,6 @@ const Form = (hrid) => {
   }
   const handleZipChange = (e)=>{
     updateErrorState("zipError","")
-  }
-  const handleHelpChange = (e)=>{
-    updateErrorState("helpError","")
   }
   const handleStimeChange = (e)=>{
     updateErrorState("stimeError","")
@@ -357,17 +238,6 @@ const Form = (hrid) => {
       updateErrorState("etimeError", "");
     }
 
-    if (!helpRef.current.value) {
-      updateErrorState("helpError", "Help Type is required");
-    } else {
-      try{
-        checkString(helpRef.current.value,"Event Name");
-        updateErrorState("helpError","");
-      }catch(e){
-        updateErrorState("helpError","This field should consist only characters")
-      }
-    }
-
   };
 
   const [startDate, setStartDate] = useState();
@@ -379,11 +249,11 @@ const Form = (hrid) => {
       <form className="space-y-6 " onSubmit={handleSubmit}>
         <div>
           <div className="lg:text-5xl text-3xl font-medium font-bricolage pb-4 lg:pb-16">
-            Create Outreach Event
+            Create BME Official Event
           </div>
           <div className="space-y-4">
             <div className="font-semibold font-bricolage text-[22px]">
-              Event Information
+              BME Official Event Information
             </div>
             <div className="space-y-1.5">
               <p className="font-semibold font-['Inter'] text-[15px]">
@@ -448,7 +318,7 @@ const Form = (hrid) => {
               )}
             </div>
             <div className="text-[22px] font-semibold font-bricolage">
-              Meet up Details
+              Event Meet Up Details
             </div>
             <div className="space-y-1.5">
               <p className="font-semibold font-['Inter'] text-[15px]">
@@ -471,7 +341,7 @@ const Form = (hrid) => {
                 </div>
               )}
             </div>
-            {/*<div className="space-y-1.5">
+            <div className="space-y-1.5">
               <p className="font-semibold font-['Inter'] text-[15px]">City*</p>
               <input
                 type="text"
@@ -489,53 +359,15 @@ const Form = (hrid) => {
                   <p className="text-red-600 text-xs">{error.cityError}</p>
                 </div>
               )}
-              </div>*/}
-
-            <div className="space-y-1.5">
-              
-            <p className="font-semibold font-['Inter'] text-[15px]">
-            State*
-          </p>
-          <select
-                    className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
-                      error.stateError !== "" ? "ring-red-500" : "ring-gray-300"
-                    }`}
-                    defaultValue=""
-                    ref={stateRef}
-                    onChange={getCities}
-                  >
-                    <option value="" disabled>
-                      Please select from the list
-                    </option>
-                    {stateNames &&
-                      stateNames.map((stateName, index) => {
-                        return (
-                          <option
-                            className="w-fit"
-                            value={stateName}
-                            key={"state_" + index}
-                          >
-                            {stateName}
-                          </option>
-                        );
-                      })}
-                  </select>
-          {error.stateError && (
-            <div className="inline-flex items-center">
-              <img src={errorImg} className="w-3 h-3" />
-              <p className="text-red-600 text-xs">{error.stateError}</p>
             </div>
-          )}
-            </div>
-              
-            <div className="inline-flex grid grid-cols-2 space-x-4">
-              {/*<div className="space-y-1.5">
+            <div className="grid-cols-2 space-x-4 flex">
+              <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
                   State*
                 </p>
                 <input
                   type="text"
-                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                  className={`h-12 px-4 w-fit block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
                     error.stateError !== "" ? "ring-red-500" : "ring-gray-300"
                   }`}
                   placeholder="New York"
@@ -549,53 +381,14 @@ const Form = (hrid) => {
                     <p className="text-red-600 text-xs">{error.stateError}</p>
                   </div>
                 )}
-                </div>*/}
-
-                <div className="space-y-1.5">
-                <p className="font-semibold font-['Inter'] text-[15px]">City*</p>
-              <select
-                          className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
-                            error.cityError !== "" ? "ring-red-500" : "ring-gray-300"
-                          }`}
-                          defaultValue=""
-                          disabled={!cityNames}
-                          ref={cityRef}
-                          onChange={(e) => {
-                            setCity(e.target.value);
-                          }}
-                        >
-                          <option value="" disabled>
-                            Please select from the list
-                          </option>
-                          {cityNames &&
-                            cityNames.map((cityName, index) => {
-                              return (
-                                <option
-                                  className="w-fit"
-                                  value={cityName}
-                                  key={"city_" + index}
-                                >
-                                  {cityName}
-                                </option>
-                              );
-                            })}
-                        </select>
-              {error.cityError && (
-                <div className="inline-flex items-center">
-                  <img src={errorImg} className="w-3 h-3" />
-                  <p className="text-red-600 text-xs">{error.cityError}</p>
-                </div>
-              )}
-                </div>
-
-
+              </div>
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
                   Zipcode*
                 </p>
                 <input
                   type="text"
-                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                  className={`h-12 px-4 w-fit block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
                     error.zipError !== "" ? "ring-red-500" : "ring-gray-300"
                   }`}
                   placeholder="11201"
@@ -672,68 +465,26 @@ const Form = (hrid) => {
             </div>
           </div>
         </div>
-        <div className="space-y-6">
-          <div className="font-semibold font-bricolage text-[22px]">
-            What kind of help they need?
-          </div>
-          <div className="space-y-1.5 relative">
-            {/* <p className="font-semibold font-['Inter'] text-[15px]">
-              Is this Event related to any Help Request?
-            </p>
-            <select
-              className="h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring focus:ring-indigo-400 appearance-none"
-              defaultValue=""
-              id="help-req"
-            >
-              <option value="" disabled>
-                Select Help Request
-              </option>
-              <option value="helpRequest1">Help Request 1</option>
-              <option value="helpRequest2">Help Request 2</option>
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 pt-5 text-gray-700">
-              <img src={arrowDown} />
-            </div> */}
-             <p className="font-semibold font-['Inter'] text-[15px]">
-              Help Type Required*
-            </p>
-            <input
-                type="text"
-                className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset  ${
-                  error.helpError !== "" ? "ring-red-500" : "ring-gray-300"
-                }`}
-                placeholder="Eg. Children Specialist Needed"
-                id="help-type"
-                ref={helpRef}
-                onChange={handleHelpChange}
-              />
-              {error.helpError && (
-                <div className="inline-flex items-center">
-                  <img src={errorImg} className="w-3 h-3" />
-                  <p className="text-red-600 text-xs">{error.helpError}</p>
-                </div>
-              )}
-          </div>
-          <div className="font-semibold font-bricolage text-[15px]">
-            Select skills it would require to provide the help
-          </div>
-          <div className=" space-y-2">
-            {chipList.map((value, index) => (
-              <Chip
-                keyName={"chip-" + index}
-                val={value}
-                setter={handleHelpTypeArray}
-                clear={clear}
-              />
-            ))}
-          </div>
-        </div>
-        <div className="space-y-16 space-x-[15px]">
+
+        <div className="mb-3 w-96">
+          <label
+            htmlFor="formFile"
+            className="mb-2 inline-block text-gray-900 font-semibold font-['Inter'] text-[15px]"
+          >
+          Upload BME Event Image
+          </label>
+          <input
+            className="relative m-0 block w-fit min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-gray-900 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-gray-900 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-gray-900 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-700 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
+            type="file"
+           id="formFile"
+          />
+      </div>
+        
+        <div className="space-y-8 space-x-[15px]">
           <button
             type="button"
             className="px-8 py-4 border border-[#5F35D5] rounded-full text-violet-700"
-          >
-            Cancel
+          >Cancel
           </button>
           <button
             type="submit"
@@ -743,7 +494,7 @@ const Form = (hrid) => {
           </button>
 
           {success && (
-            <CreateOutreachModal isOpen={true} />
+            <CreateBMEModal isOpen={true} />
           )}
         </div>
       </form>
@@ -751,4 +502,4 @@ const Form = (hrid) => {
   );
 };
 
-export default Form;
+export default BME_Form;

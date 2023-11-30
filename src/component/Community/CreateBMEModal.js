@@ -1,20 +1,10 @@
-import React, { useEffect, useState } from "react";
-
+import React from "react";
 import CustomButton from "../Buttons/CustomButton";
 import { useNavigate } from "react-router-dom";
 
-const ConfirmationModal = ({
-  isOpen,
-  closeModal,
-  currSupPow,
-  refreshUserQuery,
-  id,
-}) => {
-  const [success, setSuccess] = useState(false);
+const CreateBMEModal = () => {
 
   const navigate = useNavigate();
-
-  // This function is drilled to child component: Chips
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-opacity-50 bg-gray-800 z-50">
@@ -23,33 +13,27 @@ const ConfirmationModal = ({
           <div className="self-stretch h-fit flex-col justify-start items-start gap-6 flex">
             <div className="justify-self-end items-start gap-20 sm:gap-6 inline-flex w-full">
               <div className="w-fit text-[#212121] text-4xl font-medium font-bricolage leading-[44px]">
-                Make sure you are not going alone
+                BME Event published to Admin profile!
               </div>
-              {/* <div className="w-fit h-fit  bg-gray-300  justify-end ">
-                <button className="text-6xl " onClick={closeModal}>
-                  &times;
-                </button>
-              </div> */}
             </div>
             <div className="self-stretch text-[#616161] text-lg font-semibold font-['Open Sans'] leading-normal">
-            Group presence offers security and effectiveness in engaging with unfamiliar situations and individuals, benefiting both volunteers and the homeless. <br/> How outreach on Street Care works? <br/> We post the outreach for you and other volunteers can sign up to go with you.
             </div>
           </div>
           <div className="w-fit justify-start items-start gap-4 inline-flex">
             <CustomButton
-              label="Create an Outreach"
+              label="All Outreach Events"
               name="buttondefault"
               onClick={() => {
-                navigate(`/createOutreach/${id}`);
+                navigate("/allOutreachEvents"); //currently only shows outreach events
               }}
             />
-            {/* <CustomButton
-              label="I will bring a friend"
+            <CustomButton
+              label="Back to my Profile"
               name="buttonborder"
               onClick={() => {
-                navigate("/");
+                navigate("/profile");
               }}
-            /> */}
+            />
           </div>
         </div>
       </div>
@@ -57,4 +41,4 @@ const ConfirmationModal = ({
   );
 };
 
-export default ConfirmationModal;
+export default CreateBMEModal;

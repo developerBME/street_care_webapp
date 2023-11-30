@@ -351,7 +351,7 @@ function CustomButton({ label, name, onClick, icon, disable }) {
     return (
       <button
         onClick={onClick}
-        className={`text-[10px] font-medium py-[5px] px-[20px] rounded-full transition ease-in-out delay-300 ${
+        className={`text-[11px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
           disable !== "true"
             ? "text-[#181818] bg-violet-200 hover:bg-violet-300"
             : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
@@ -364,9 +364,9 @@ function CustomButton({ label, name, onClick, icon, disable }) {
     return (
       <button
         onClick={onClick}
-        className={`text-[10px] font-medium py-[5px] px-[20px] border-[1px] rounded-full transition ease-in-out delay-300 ${
+        className={`text-[11px] font-medium py-[10px] px-[24px] border-[1px] rounded-full transition ease-in-out delay-300 ${
           disable !== "true"
-            ? "text-[#1F0A58] border-[#C8C8C8] hover:bg-violet-200"
+            ? "text-[#1F0A58] border-[#C8C8C8] bg-white hover:bg-violet-200"
             : "text-[#bfbfbf] border[#d8d8d8] cursor-not-allowed hover:bg-white"
         }`}
       >

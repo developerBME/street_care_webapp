@@ -48,6 +48,7 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
   const remainingSeconds = seconds % 60;
 
 
+
   return (
 
     // Updated
@@ -90,9 +91,8 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
           <div className="self-stretch text-[#273164] text-[28px] font-medium font-bricolage leading-9">
             {helpTitle}
           </div>
-          <div className="justify-start items-start">
-            <div className="overflow-x-scroll lg:overflow-none">
-              <div className="w-fit flex inline-flex gap-2">
+          <div className="w-full overflow-x-auto">
+            <div className="justify-start items-start gap-2 inline-flex">
                 {helpTags.map((item, index) => (
                   <div className="w-fit px-3 py-1 bg-white rounded-xl border border-[#616161] justify-start items-center gap-4 flex">
                     <div className="opacity-90 justify-start items-center gap-1 flex text-[#616161] text-sm font-semibold font-opensans leading-tight">
@@ -100,7 +100,6 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
                     </div>
                   </div>
                 ))}
-              </div>
             </div>
           </div>
           <div className="self-stretch text-[#616161] text-[15px] font-normal font-dmsans leading-normal">
@@ -137,14 +136,11 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
             <button onClick={() => {navigate(`/icanhelp/${id}`);}} className="w-fit bg-[#E6DCFF] hover:bg-[#6840E0] text-[#181818] hover:text-white rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight md:float-right">
               I can help
             </button>
-            {/* <div className="w-fit flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight">
-              <CustomButton label="I can help" name="buttonlight" />
-            </div> */}
           </div>
         )}
         {helpStatus === "Help on the way" && (
-          <div className="w-fit pt-[15px] sm:py-0 sm:w-1/3 h-fit flex-row sm:flex-col justify-start sm:items-end gap-4 inline-flex">
-            <button className="w-fit bg-[#E6DCFF] hover:bg-[#6840E0] text-[#181818] hover:text-white rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight"
+          <div className="col-span-1">
+            <button className="w-fit bg-[#E6DCFF] hover:bg-[#6840E0] text-[#181818] hover:text-white rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight md:float-right"
             onClick={(e) => handleHelpRecieved(e,id,refresh)}
             >
               Mark as Help Recieved
@@ -155,6 +151,10 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
             <div className="w-fit flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight">
               <CustomButton label="Mark as Help Received" name="buttonlight" />
             </div> */}
+          </div>
+        )}
+        {helpStatus === "Help Received" && (
+          <div className="col-span-1">
             {helpUid === fAuth.currentUser.uid && (
             <div className="w-fit flex-col justify-start gap-2 flex text-center text-[12px] font-semibold font-inter leading-tight md:float-right mt-2.5">
               <CustomButton label="Reopen Help Request" name="buttonborder" />
