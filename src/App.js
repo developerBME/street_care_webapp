@@ -86,8 +86,8 @@ function App() {
           <Route path="/" element={<Home />} />
           {/* <Route path="/about" element={<About />} /> */}
           <Route path="/howtohelp" element={<HowToHelp />} />
-          <Route path="/community" element={<Community />} />
-          {/* <Route path="/community" element={<CommunityComingSoon />} /> */}
+          {/* <Route path="/community" element={<Community />} /> */}
+          <Route path="/community" element={<CommunityComingSoon />} />
           <Route path="/contact" element={<ComingSoon />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup2 />} />
@@ -115,8 +115,8 @@ function App() {
           <Route path="/helpRequestForm" element={<ComingSoon />} />
           {/* <Route path="/icanhelp/:id" element={<ICanHelpForm />} /> */}
           <Route path="/icanhelp" element={<ComingSoon />} />
-          <Route path="/donateForm" element={<DonateForm />} />
-          {/* <Route path="/donateForm" element={<ComingSoon />} /> */}
+          {/* <Route path="/donateForm" element={<DonateForm />} /> */}
+          <Route path="/donateForm" element={<ComingSoon />} />
           <Route path="/allOutreachEvents" element={<AllOutreachEvents />} />
           {/* <Route path="/createBME" element={<CreateBME />} /> */}
           <Route
