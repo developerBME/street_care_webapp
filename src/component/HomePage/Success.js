@@ -250,7 +250,7 @@ function Success() {
           </div>
           <div className="flex lg:flex-col xl:flex-row gap-4 items-start  lg:items-center xl:items-start ">
             <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
-              <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
+              <div className="text-violet-950  font-bricolage text-[40px] lg:text-[30px] font-normal leading-[64px]">
                 {/* {helpedPeople} */}
                 1500+
               </div>
@@ -268,7 +268,7 @@ function Success() {
           </div>
           <div className="flex lg:flex-col xl:flex-row gap-4">
             <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
-              <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
+              <div className="text-violet-950  font-bricolage text-[40px] lg:text-[30px] font-normal leading-[64px]">
                 {/* {helpedBy} */}
                 700+
               </div>
@@ -286,7 +286,7 @@ function Success() {
           </div>
           <div className="flex lg:flex-col xl:flex-row gap-4">
             <div className=" px-8 w-fit py-2 lg:mt-7 xl:mt-0 bg-white rounded-[100px]">
-              <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
+              <div className="text-violet-950  font-bricolage text-[40px] lg:text-[30px] font-normal leading-[64px]">
                 {/* {donations} */}
                 74000+
               </div>
@@ -306,7 +306,7 @@ function Success() {
           </div>
           <div className="flex lg:flex-col xl:flex-row gap-4">
             <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
-              <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
+              <div className="text-violet-950  font-bricolage text-[40px] lg:text-[30px] font-normal leading-[64px]">
                 {/* {donations} */}
                 2300+
               </div>
@@ -319,13 +319,13 @@ function Success() {
 
         <div className="grow shrink items-start  lg:items-center xl:items-start flex-col basis-0 h-fit px-8 py-4 bg-gradient-to-br from-yellow-300 to-zinc-200 justify-start  gap-6 flex">
           <div className="text-violet-950 text-2xl lg:text-xl font-medium leading-loose">
-            Total Outreaches
+            Total Outreaches, Upto...
           </div>
           <div className="flex lg:flex-col xl:flex-row gap-4">
             <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
-              <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
+              <div className="text-violet-950  font-bricolage text-[40px] lg:text-[30px] font-normal leading-[64px]">
                 {/* {donations} */}
-                67 Million
+                67Million
               </div>
             </div>
             {/* <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
@@ -340,7 +340,7 @@ function Success() {
           </div>
           <div className="flex lg:flex-col xl:flex-row gap-4">
             <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
-              <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
+              <div className="text-violet-950  font-bricolage text-[40px] lg:text-[30px] font-normal leading-[64px]">
                 {/* {donations} */}
                 4.9/5
               </div>
