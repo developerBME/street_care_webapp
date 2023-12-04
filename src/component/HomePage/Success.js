@@ -237,122 +237,116 @@ function Success() {
       </div>
       {/* Grid */}
 
-    
-
       <div className=" mt-10 w-full h-fit justify-start items-start">
         {/*  */}
 
-      <div className="w-full h-fit justify start items-start grid grid-cols-1 lg:grid-cols-3 font-bricolage">
-
-        <div className="grow items-start xl:h-full lg:items-center xl:items-start flex-col rounded-t-2xl  lg:rounded-tr-none lg:rounded-tl-2xl shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-emerald-300 to-neutral-200 gap-6 flex">
-          <div className="text-violet-950 text-2xl lg:text-xl  font-medium leading-loose">
-            Homeless People Aided
-          </div>
-          <div className="flex lg:flex-col xl:flex-row gap-4 items-start  lg:items-center xl:items-start ">
-            <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
-              <div className="text-violet-950  font-bricolage text-[40px] lg:text-[30px] font-normal leading-[64px]">
-                {/* {helpedPeople} */}
-                1500+
-              </div>
+        <div className="w-full h-fit justify start items-start grid grid-cols-1 lg:grid-cols-3 font-bricolage">
+          <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-t-2xl  lg:rounded-tr-none lg:rounded-tl-2xl shrink basis-0  px-8 py-4 bg-gradient-to-br from-emerald-300 to-neutral-200 gap-6 flex">
+            <div className="text-violet-950 text-2xl lg:text-xl  font-medium leading-loose">
+              Homeless People Aided
             </div>
-            {/* <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
+            <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto ">
+              <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
+                <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
+                  {/* {helpedPeople} */}
+                  1500+
+                </div>
+              </div>
+              {/* <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
               homeless people
             </div> */}
-          </div>
-        </div>
-        {/*  */}
-
-        <div className="grow shrink items-start  lg:items-center xl:items-start flex-col basis-0 h-fit lg:h-full px-8 py-4 bg-gradient-to-br from-purple-300 to-zinc-200 justify-start  gap-6 flex">
-          <div className="text-violet-950 text-2xl lg:text-xl font-medium leading-loose">
-            Total Volunteers
-          </div>
-          <div className="flex lg:flex-col xl:flex-row gap-4">
-            <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
-              <div className="text-violet-950  font-bricolage text-[40px] lg:text-[30px] font-normal leading-[64px]">
-                {/* {helpedBy} */}
-                700+
-              </div>
             </div>
-            {/* <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
+          </div>
+          {/*  */}
+
+          <div className="grow shrink items-start h-full lg:items-center xl:items-start flex-col basis-0 px-8 py-4 bg-gradient-to-br from-purple-300 to-zinc-200 justify-start  gap-6 flex">
+            <div className="text-violet-950 text-2xl lg:text-xl font-medium leading-loose">
+              Total Volunteers
+            </div>
+            <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
+              <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
+                <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
+                  {/* {helpedBy} */}
+                  700+
+                </div>
+              </div>
+              {/* <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
               volunteers
             </div> */}
-          </div>
-        </div>
-        {/*  */}
-
-        <div className="grow items-start h-fit lg:h-full lg:items-center xl:items-start flex-col rounded-br-none lg:rounded-tr-2xl lg:rounded-bl-none shrink basis-0 px-8 py-4 bg-gradient-to-br from-sky-300 to-neutral-200 justify-start  gap-6 flex">
-          <div className="text-violet-950 text-2xl lg:text-xl font-medium leading-loose">
-            Items Shared
-          </div>
-          <div className="flex lg:flex-col xl:flex-row gap-4">
-            <div className=" px-8 w-fit py-2 lg:mt-7 xl:mt-0 bg-white rounded-[100px]">
-              <div className="text-violet-950  font-bricolage text-[40px] lg:text-[30px] font-normal leading-[64px]">
-                {/* {donations} */}
-                74000+
-              </div>
             </div>
-            {/* <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
+          </div>
+          {/*  */}
+
+          <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-br-none lg:rounded-tr-2xl lg:rounded-bl-none shrink basis-0 px-8 py-4 bg-gradient-to-br from-sky-300 to-neutral-200 justify-start  gap-6 flex">
+            <div className="text-violet-950 text-2xl lg:text-xl font-medium leading-loose">
+              Items Shared
+            </div>
+            <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
+              <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
+                <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
+                  {/* {donations} */}
+                  74000+
+                </div>
+              </div>
+              {/* <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
               items
             </div> */}
+            </div>
           </div>
         </div>
 
-      </div>
-
-      <div className="w-full h-fit justify start items-start grid grid-cols-1 lg:grid-cols-3 font-bricolage">
-        <div className="grow items-start  lg:items-center xl:items-start flex-col rounded-t-none  lg:rounded-tr-none lg:rounded-bl-2xl shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-red-300 to-zinc-200 justify-start gap-6 flex">
-          <div className="text-violet-950 text-2xl lg:text-xl font-medium leading-loose">
-            People Mentored
-          </div>
-          <div className="flex lg:flex-col xl:flex-row gap-4">
-            <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
-              <div className="text-violet-950  font-bricolage text-[40px] lg:text-[30px] font-normal leading-[64px]">
-                {/* {donations} */}
-                2300+
-              </div>
+        <div className="w-full h-fit justify start items-start grid grid-cols-1 lg:grid-cols-3 font-bricolage">
+          <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-t-none  lg:rounded-tr-none lg:rounded-bl-2xl shrink basis-0 px-8 py-4 bg-gradient-to-br from-red-300 to-zinc-200 justify-start gap-6 flex">
+            <div className="text-violet-950 text-2xl lg:text-xl font-medium leading-loose">
+              People Mentored
             </div>
-            {/* <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
+            <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
+              <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
+                <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
+                  {/* {donations} */}
+                  2300+
+                </div>
+              </div>
+              {/* <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
               items
             </div> */}
-          </div>
-        </div>
-
-        <div className="grow shrink items-start  lg:items-center xl:items-start flex-col basis-0 h-fit px-8 py-4 bg-gradient-to-br from-yellow-300 to-zinc-200 justify-start  gap-6 flex">
-          <div className="text-violet-950 text-2xl lg:text-xl font-medium leading-loose">
-            Total Outreaches, Upto...
-          </div>
-          <div className="flex lg:flex-col xl:flex-row gap-4">
-            <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
-              <div className="text-violet-950  font-bricolage text-[40px] lg:text-[30px] font-normal leading-[64px]">
-                {/* {donations} */}
-                67Million
-              </div>
             </div>
-            {/* <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
+          </div>
+
+          <div className="grow shrink items-start h-full lg:items-center xl:items-start flex-col basis-0 px-8 py-4 bg-gradient-to-br from-yellow-300 to-zinc-200 justify-start  gap-6 flex">
+            <div className="text-violet-950 text-2xl lg:text-xl font-medium leading-loose">
+              Total Outreaches
+            </div>
+            <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
+              <div className=" px-5 xl:px-8 w-fit py-2 bg-white rounded-[100px]">
+                <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px] whitespace-nowrap">
+                  {/* {donations} */}
+                  67 Million
+                </div>
+              </div>
+              {/* <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
               items
             </div> */}
-          </div>
-        </div>
-
-        <div className="grow items-start  lg:items-center xl:items-start flex-col rounded-b-2xl lg:rounded-tr-none lg:rounded-bl-none shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-orange-300 to-neutral-200 justify-start  gap-6 flex">
-          <div className="text-violet-950 text-2xl lg:text-xl font-medium leading-loose">
-            App User Rating
-          </div>
-          <div className="flex lg:flex-col xl:flex-row gap-4">
-            <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
-              <div className="text-violet-950  font-bricolage text-[40px] lg:text-[30px] font-normal leading-[64px]">
-                {/* {donations} */}
-                4.9/5
-              </div>
             </div>
-            {/* <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
+          </div>
+
+          <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-b-2xl lg:rounded-tr-none lg:rounded-bl-none shrink basis-0 px-8 py-4 bg-gradient-to-br from-orange-300 to-neutral-200 justify-start  gap-6 flex">
+            <div className="text-violet-950 text-2xl lg:text-xl font-medium leading-loose">
+              App User Rating
+            </div>
+            <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
+              <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
+                <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
+                  {/* {donations} */}
+                  4.9/5
+                </div>
+              </div>
+              {/* <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
               items
             </div> */}
+            </div>
           </div>
         </div>
-
-      </div>
-
       </div>
       {/* grid over */}
     </div>
