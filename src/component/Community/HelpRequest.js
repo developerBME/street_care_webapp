@@ -266,7 +266,10 @@ const HelpRequest = () => {
       </div>
 
       {isLoading ? (
-        <HelpRequestSkeleton />
+        <>
+          <HelpRequestSkeleton />
+          <HelpRequestSkeleton />
+        </>
       ) : (
         <div className="p-4 lg:px-28 lg:py-12 flex flex-col bg-[#F7F7F7] gap-4 lg:gap-8 rounded-b-2xl">
           <div>
