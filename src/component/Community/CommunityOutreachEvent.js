@@ -135,28 +135,58 @@ const CommunityOutreachEvent = () => {
 
       <div className="p-4 lg:px-28 lg:py-12 space-y-9">
         <div className="flex items-center justify-between">
-          <div className="md:inline-flex items-center text-center space-y-2 md:space-y-0 hidden md:block">
-            <p className="font-medium text-sm lg:text-2xl text-[#212121] font-dmsans">
+          <div className="md:inline-flex items-center text-center space-y-2 md:space-y-0 hidden">
+            <p className="font-medium text-xl lg:text-2xl text-[#212121] font-dmsans">
               Upcoming outreach events in
             </p>
             <div className="relative md:inline-block">
-              <select
-                value={selectedState}
-                onChange={(e) => handleStateSelection(e.target.value)}
-                class="appearance-none py-1 px-3 pr-8 text-[#181818] text-2xl lg:text-2xl font-bricolage border-b border-[#181818] bg-transparent h-10"
-              >
-                <option value="">Select State</option>
-                {states.map((state, index) => (
-                  <option key={index} value={state}>{state}</option>
-                ))}
-              </select>
+              {/* vedant */}
+                        <div className="relative md:inline-block">
+                          <div className="p-4">
+                            <div className="group relative">
+                              <button
+                                className="appearance-none pr-8 text-[#181818] text-2xl lg:text-2xl font-dmsans border-b border-[#181818] bg-transparent h-8"
+                              >
+                                {selectedState || 'Select State'}
+                              </button>
+                              <nav
+                                tabIndex="0"
+                                className="border-2 bg-white shadow invisible border-gray-100 rounded-2xl w-60 absolute left-0 top-full transition-all opacity-0 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-1"
+                              >
+                                <ul className="py-1">
+                                  <li>
+                                    <a
+                                      className="px-4 py-2 hover:bg-[#E6E2EE] font-dmsans flex-col justify-center items-start flex"
+                                      onClick={() => handleStateSelection("")}
+                                    >
+                                      Select State
+                                    </a>
+                                  </li>
+                                  {states.map((state, index) => (
+                                    <li key={index}>
+                                      <a
+                                        className="px-4 py-2 hover:bg-[#E6E2EE] flex-col font-dmsans justify-center items-start flex"
+                                        onClick={() => handleStateSelection(state)}
+                                      >
+                                        {state}
+                                      </a>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </nav>
+                            </div>
+                          </div>
+                        </div>
+              
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-[#181818] gap-4">
                 <img src={arrowDown} />
               </div>
             </div>
+            {/* vedant */}
             <button className="text-sm font-medium font-['DM Sans'] leading-tight lg:text-[12px] text-white bg-[#6840E0] px-6 py-2.5 lg:px-6 lg:py-2.5 rounded-full ">
               Create an Outreach
             </button>
+
           </div>
           <div
             className="hidden lg:flex md:inline-flex cursor-pointer gap-3 items-center text-center"
@@ -214,7 +244,7 @@ const CommunityOutreachEvent = () => {
         )}
         <div className="flex items-center justify-between">
           <div className="md:inline-flex items-center text-center space-y-2 md:space-y-0">
-            <p className="font-medium text-sm lg:text-2xl text-[#212121] font-bricolage">
+            <p className="font-medium text-xl lg:text-2xl text-[#212121] font-bricolage">
               Outreach Visit Log
             </p>
             <button className="text-sm font-medium font-['DM Sans'] leading-tight lg:text-[12px] text-white bg-[#6840E0] px-6 py-2.5 lg:px-6 lg:py-2.5 rounded-full sm:hidden">
