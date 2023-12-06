@@ -139,19 +139,19 @@ const CommunityOutreachEvent = () => {
             <p className="font-medium text-xl lg:text-2xl text-[#212121] font-dmsans">
               Upcoming outreach events in
             </p>
-            <div className="relative md:inline-block">
+            <div className="relative md:inline-block flex">
               {/* vedant */}
                         <div className="relative md:inline-block">
                           <div className="p-4">
                             <div className="group relative">
                               <button
-                                className="appearance-none pr-8 text-[#181818] text-2xl lg:text-2xl font-dmsans border-b border-[#181818] bg-transparent h-8"
+                                className="appearance-none pr-6 text-[#181818] w-36 text-2xl lg:text-2xl font-dmsans border-b border-[#181818] bg-transparent h-8"
                               >
-                                {selectedState || 'Select State'}
+                                {selectedState || 'All States'}
                               </button>
                               <nav
                                 tabIndex="0"
-                                className="border-2 bg-white shadow invisible border-gray-100 rounded-2xl w-60 absolute left-0 top-full transition-all opacity-0 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-1"
+                                className="border-2 bg-white shadow invisible border-gray-100 rounded-2xl w-36 absolute left-0 top-full transition-all opacity-0 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-1"
                               >
                                 <ul className="py-1">
                                   <li>
@@ -159,7 +159,7 @@ const CommunityOutreachEvent = () => {
                                       className="px-4 py-2 hover:bg-[#E6E2EE] font-dmsans flex-col justify-center items-start flex"
                                       onClick={() => handleStateSelection("")}
                                     >
-                                      Select State
+                                      All States
                                     </a>
                                   </li>
                                   {states.map((state, index) => (
@@ -178,7 +178,7 @@ const CommunityOutreachEvent = () => {
                           </div>
                         </div>
               
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-[#181818] gap-4">
+              <div className="pointer-events-none inset-y-0 right-0 absolute flex items-center px-2 text-[#181818] gap-4">
                 <img src={arrowDown} />
               </div>
             </div>
