@@ -8,7 +8,7 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { handleHelpRecieved } from "../HelpRequestService";
+import { handleHelpRecieved, handleReopenHelpRequest } from "../HelpRequestService";
 
 const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
   const navigate = useNavigate();
@@ -157,7 +157,7 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
           <div className="col-span-1">
             {helpUid === fAuth.currentUser.uid && (
             <div className="w-fit flex-col justify-start gap-2 flex text-center text-[12px] font-semibold font-inter leading-tight md:float-right mt-2.5">
-              <CustomButton label="Reopen Help Request" name="buttonborder" />
+              <CustomButton label="Reopen Help Request" name="buttonborder" onClick={(e) => handleReopenHelpRequest(e,id,refresh)} />
             </div>
             )}
           </div>
