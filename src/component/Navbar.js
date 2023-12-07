@@ -111,8 +111,8 @@ const NavBar = (props) => {
   }, [menuRef]);
 
   return (
-    <div className="h-full w-full">
-      <div className=" z-50 flex justify-between items-center w-full h-[85px]  text-white fixed bg-nav px-2">
+    <div className="h-full w-full ">
+      <div className="z-50 mt-4 mr-4 rounded-full flex justify-between items-center h-[85px] w-full text-white fixed bg-nav px-2">
         <div onClick={() => navigate("/")} className=" cursor-pointer">
           <h1 className=" text-[28px]  ml-4 font-bricolage font-medium leading-9">
             Street Care

@@ -12,11 +12,15 @@ import platinumSeal from "../../images/platinumSeal.png";
 import goldSeal from "../../images/goldSeal.png";
 import silverSeal from "../../images/silverSeal.png";
 import bronzeSeal from "../../images/bronzeSeal.png";
+import OutreachVisitLogCard from "../Community/OutreachVisitLogCard";
+import arrowRight from "../../images/arrowRight.png";
+import { useNavigate } from "react-router-dom";
 
 function Success() {
   const [donations, setDonations] = useState("");
   const [helpedBy, setHelpedBy] = useState("");
   const [helpedPeople, setHelpedPeople] = useState("");
+  const navigate = useNavigate();
   useEffect(() => {
     const getValues = async () => {
       try {
@@ -349,6 +353,28 @@ function Success() {
         </div>
       </div>
       {/* grid over */}
+
+      <div className="mt-8 space-y-9">
+        <div className="flex justify-between">
+          <div className="font-medium text-[45px] font-dmsans">
+            Latest Actions - Visit Log
+          </div>
+          <div
+            className="inline-flex items-center gap-2 font-medium text-[8px] lg:text-[13px] hover:cursor-pointer"
+            onClick={() => {
+              navigate("/allOutreachVisitLog");
+            }}
+          >
+            View all
+            <img src={arrowRight} className="w-4 h-4" />
+          </div>
+        </div>
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
+          <OutreachVisitLogCard />
+          <OutreachVisitLogCard />
+          <OutreachVisitLogCard />
+        </div>
+      </div>
     </div>
   );
 }

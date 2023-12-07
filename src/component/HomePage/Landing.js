@@ -14,7 +14,7 @@ const Landing = forwardRef(({ scorllFuntion }, ref) => {
     callParentFunction: handleOnClick,
   }));
   return (
-    <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] grid grid-cols-1 lg:grid-cols-2 gap-3">
+    <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl  grid grid-cols-1 lg:grid-cols-2 gap-3">
       <div className="  ">
         <p className="font-bricolage font-medium text-4xl md:text-[42px] md:leading-[48px]  text-black ">
           {" "}
