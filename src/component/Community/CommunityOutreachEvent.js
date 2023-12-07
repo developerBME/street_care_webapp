@@ -154,8 +154,8 @@ const CommunityOutreachEvent = () => {
                               <img
                                     src={arrowDropDown}
                                     alt="Dropdown Arrow"
-                                    className="absolute pointer-events-none left-28"
-                                  />
+                                    className="absolute pointer-events-none left-28 h-7 w-7 mt-1 ml-1"
+                              />
                             </div>
                              <nav
                                   tabIndex="0"
