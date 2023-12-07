@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import OutreachEventCard from "./OutreachEventCard";
 import { useNavigate } from "react-router-dom";
-import arrowDown from "../../images/arrowDown.png";
+import arrowDropDown from "../../images/arrowDropDown.png";
 import arrowRight from "../../images/arrowRight.png";
 import CustomButton from "../Buttons/CustomButton";
 import OutreachVisitLogCard from "./OutreachVisitLogCard";
@@ -65,6 +65,7 @@ const CommunityOutreachEvent = () => {
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [states, setStates] = useState([]);
   const [selectedState, setSelectedState] = useState("");
+  const [dropdownVisible, setDropdownVisible] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -93,6 +94,7 @@ const CommunityOutreachEvent = () => {
     setSelectedState(state);
     const filtered = events.filter(event => event.location.state === state);
     setFilteredEvents(filtered);
+    setDropdownVisible(false);
   };
 
 
@@ -139,24 +141,32 @@ const CommunityOutreachEvent = () => {
             <p className="font-medium text-xl lg:text-2xl text-[#212121] font-dmsans">
               Upcoming outreach events in
             </p>
-            <div className="relative md:inline-block flex">
+            <div className="relative md:inline-block flex flex-row items-center">
               {/* vedant */}
-                        <div className="relative md:inline-block">
-                          <div className="p-4">
-                            <div className="group relative">
+                        <div className="relative md:inline-block  ">
+                            <div className="group relative flex">
                               <button
-                                className="appearance-none pr-6 text-[#181818] w-36 text-2xl lg:text-2xl font-dmsans border-b border-[#181818] bg-transparent h-8"
+                                onClick={() => setDropdownVisible(!dropdownVisible)}
+                                className="appearance-none underline text-[#181818] w-32 text-2xl lg:text-2xl font-dmsans border-[#181818] bg-transparent h-8"
                               >
                                 {selectedState || 'All States'}
                               </button>
-                              <nav
-                                tabIndex="0"
-                                className="border-2 bg-white shadow invisible border-gray-100 rounded-2xl w-36 absolute left-0 top-full transition-all opacity-0 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-1"
-                              >
+                              <img
+                                    src={arrowDropDown}
+                                    alt="Dropdown Arrow"
+                                    className="absolute pointer-events-none left-28"
+                                  />
+                            </div>
+                             <nav
+                                  tabIndex="0"
+                                  className={`border-2 bg-white shadow border-gray-100 rounded-2xl w-36 absolute left-3 top-full transition-all ${
+                                    dropdownVisible ? 'visible opacity-100 translate-y-1' : 'invisible opacity-0'
+                                  }`}
+                                >
                                 <ul className="py-1">
                                   <li>
                                     <a
-                                      className="px-4 py-2 hover:bg-[#E6E2EE] font-dmsans flex-col justify-center items-start flex"
+                                      className="px-4 py-2 hover:bg-[#E6E2EE] cursor-pointer font-Bricolage  flex-col justify-center items-start flex"
                                       onClick={() => handleStateSelection("")}
                                     >
                                       All States
@@ -165,7 +175,7 @@ const CommunityOutreachEvent = () => {
                                   {states.map((state, index) => (
                                     <li key={index}>
                                       <a
-                                        className="px-4 py-2 hover:bg-[#E6E2EE] flex-col font-dmsans justify-center items-start flex"
+                                        className="px-4 py-2 hover:bg-[#E6E2EE] flex-col cursor-pointer font-dmsans justify-center items-start flex"
                                         onClick={() => handleStateSelection(state)}
                                       >
                                         {state}
@@ -173,17 +183,11 @@ const CommunityOutreachEvent = () => {
                                     </li>
                                   ))}
                                 </ul>
-                              </nav>
-                            </div>
-                          </div>
+                            </nav>
                         </div>
-              
-              <div className="pointer-events-none inset-y-0 right-0 absolute flex items-center px-2 text-[#181818] gap-4">
-                <img src={arrowDown} />
-              </div>
             </div>
             {/* vedant */}
-            <button className="text-sm font-medium font-['DM Sans'] leading-tight lg:text-[12px] text-white bg-[#6840E0] px-6 py-2.5 lg:px-6 lg:py-2.5 rounded-full ">
+            <button className="text-sm font-medium font-['DM Sans'] leading-tight lg:text-[12px] text-white bg-[#6840E0] ml-8 px-6 py-2.5 lg:px-6 lg:py-2.5 rounded-full ">
               Create an Outreach
             </button>
 
@@ -194,7 +198,7 @@ const CommunityOutreachEvent = () => {
               navigate("/allOutreachEvents");
             }}
           >
-            <div className="font-medium text-[8px] lg:text-[13px] font-bricolage">
+            <div className="font-medium text-[12px] lg:text-[16px] font-bricolage">
               View all
             </div>
             <img src={arrowRight} className="w-2 h-2 lg:w-4 lg:h-4 " />
@@ -257,7 +261,7 @@ const CommunityOutreachEvent = () => {
               navigate("/allOutreachVisitLog");
             }}
           >
-            <div className="font-medium text-[8px] lg:text-[13px] font-bricolage">
+            <div className="font-medium text-[12px] lg:text-[16px] font-bricolage">
               View all
             </div>
             <img src={arrowRight} className="w-2 h-2 lg:w-4 lg:h-4 " />
