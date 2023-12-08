@@ -80,20 +80,22 @@ const db = admin.firestore();
 // uploadData().catch(console.error);
 
 
-// Function to generate random time between 12:15 PM to 5:00 PM
-function getRandomTime() {
+// Function to generate a random time between 12:15 PM to 5:00 PM
+function getRandomTime(existingDate) {
   const startHour = 12; // 12 PM
   const endHour = 17;   // 5 PM
-  const startMinutes = 15; // 15 minutes past the hour interval
+  const startMinutes = 15; // 15 minutes past the hour
 
+  // Calculate random hour and minutes
   const randomHour = Math.floor(Math.random() * (endHour - startHour)) + startHour;
   const randomMinutesIndex = Math.floor(Math.random() * 4); // 0 to 3
   const randomMinutes = startMinutes + (randomMinutesIndex * 15); // 15, 30, 45, or 00
 
-  const date = new Date();
-  date.setHours(randomHour, randomMinutes, 0);
+  // Update the existing date with the new time
+  const newDate = new Date(existingDate);
+  newDate.setHours(randomHour, randomMinutes, 0); // Set hours, minutes, seconds
 
-  return admin.firestore.Timestamp.fromDate(date);
+  return admin.firestore.Timestamp.fromDate(newDate);
 }
 
 async function updateEventDates() {
@@ -101,14 +103,22 @@ async function updateEventDates() {
   const snapshot = await eventsRef.get();
 
   snapshot.forEach(async (doc) => {
-      const randomTime = getRandomTime();
-      await eventsRef.doc(doc.id).update({
-        description: 'Giving supplies and providing interpersonal support',
-        date: randomTime
-      });
+      const docData = doc.data();
+      let updateData = {};
+
+      // Conditionally update the description
+      if (docData.title === 'Maryland Street Care' && docData.description) {
+          updateData.description = 'Giving supplies and providing interpersonal support #SocialWork';
+      }
+
+      // Perform the update if there's something to update
+      if (Object.keys(updateData).length > 0) {
+          await eventsRef.doc(doc.id).update(updateData);
+      }
   });
 
-  console.log('All event dates updated.');
+  console.log('All relevant event dates and descriptions updated.');
 }
+
 
 updateEventDates().catch(console.error);
