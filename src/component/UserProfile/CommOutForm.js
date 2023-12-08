@@ -131,7 +131,7 @@ function CommOutForm() {
     }
 
     if (!outreachRef.current.value) {
-      updateErrorState("outreachError", "Enter Outreact Attended");
+      updateErrorState("outreachError", "Enter Outreach Attended");
     } else {
       updateErrorState("outreachError", "");
     }
@@ -173,17 +173,19 @@ function CommOutForm() {
     const fetchOutreachEvents = async () => {
       const oureachEventsRef = collection(db, OUTREACH_EVENTS_COLLECTION);
       const eventSnapshot = await getDocs(oureachEventsRef);
-      let orevents = [];
+      let orEvents = [];
       for (const doc of eventSnapshot.docs) {
         const eventData = doc.data();
         let withinLastWeek =
-          getLastWeeksDate() <= new Date(eventData.eventDate);
-        console.log(getLastWeeksDate());
+          getLastWeeksDate() <= new Date(eventData.eventDate.seconds * 1000) &&
+          new Date(eventData.eventDate.seconds * 1000) <= new Date();
+        let tempObj = eventData;
+        tempObj.id = doc.id;
         if (withinLastWeek) {
-          orevents.push(eventData);
+          orEvents.push(eventData);
         }
       }
-      setOutreach(orevents);
+      setOutreach(orEvents);
     };
     fetchOutreachEvents();
   }, []);
@@ -277,12 +279,7 @@ function CommOutForm() {
                           {outreach &&
                             outreach.map((event) => {
                               return (
-                                <option
-                                  className="w-fit"
-                                  value={
-                                    event.title + " (" + event.description + ")"
-                                  }
-                                >
+                                <option className="w-fit" value={event.id}>
                                   {event.title + " (" + event.description + ")"}
                                 </option>
                               );
