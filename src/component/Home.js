@@ -229,7 +229,7 @@ function HomePage() {
         >
           <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
             {" "}
-            Upcoming outreach events
+            Upcoming Outreach Events:
           </p>
 
           {isLoading ? (
@@ -272,7 +272,7 @@ function HomePage() {
         <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] scroll-m-16">
           <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
             {" "}
-            Past outreach events
+            Past Outreach Events:
           </p>
 
           {isLoading ? (

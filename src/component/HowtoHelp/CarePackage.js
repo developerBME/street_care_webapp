@@ -139,7 +139,7 @@ function CarePackage({ label, name }) {
             individuals may have sensitivities or allergies.
           </li>
           <li className="text-[15px]">
-            It's best to provide new and unused personal care products for
+            It is best to provide new and unused personal care products for
             hygiene reasons.
           </li>
         </ul>
@@ -162,7 +162,7 @@ function CarePackage({ label, name }) {
         <ul className="list-disc ml-[20px] mb-[30px] text-[#616161]">
           <li className="text-[15px]">
             Clothing in Poor Condition: While donating clothing is a great idea,
-            make sure it's clean and in good condition.
+            please make sure they are clean and in good condition.
           </li>
         </ul>
         <div className="overflow-x-auto">
@@ -185,8 +185,8 @@ function CarePackage({ label, name }) {
           <li className="text-[15px]">
             Remember to read labels for allergen information and encourage
             recipients to do the same. Sensitivity to dietary restrictions is
-            essential for safe and helpful assistance. [Nuts, Gluten, Diary,
-            Seed, Protein Yogurt, Fruits (Apples, oranges, bannas, )]
+            essential for safe and helpful assistance. [Nuts, Gluten, Dairy,
+            Seed, Protein Yogurt, Fruits (Apples, oranges, bananas, )]
           </li>
         </ul>
         <div className="overflow-x-auto">

@@ -71,7 +71,7 @@ function Success() {
             <div className="text-center text-[10px] md:text-[12px] lg:text-[13px]">
               <b className="w-full">
                 "Experts say [Bright Mind/Street Care's] app will start those
-                conversations [to get those who aren't vaccinated vaccinated]."
+                conversations [to get those who aren't vaccinated, vaccinated]."
               </b>
             </div>
             <div className="w-16 h-16 items-center justify-center ">
