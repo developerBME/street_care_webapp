@@ -34,6 +34,7 @@ import ComingSoon from "./component/ComingSoon";
 import Readmorenews from "./component/HomePage/Readmorenews";
 import ICanHelpForm from "./component/Community/ICanHelpForm";
 import CommunityComingSoon from "./component/CommunityComingSoon";
+import VisitLogDetails from "./component/Community/VisitLogDetails";
 
 function App() {
   const fAuth = getAuth();
@@ -127,6 +128,7 @@ function App() {
             path="/allOutreachVisitLog"
             element={<AllOutreachVisitLog />}
           />
+          <Route path="visitLogDetails" element={<VisitLogDetails/>} /> 
           <Route path="/*" element={<Not404 />} />
         </Routes>
         <Footer />

@@ -2,8 +2,26 @@ import React from "react"
 import profilePic from "../../images/avatar.jpg"
 import wavingHand from "../../images/waving_hand.png"
 import CustomButton from "../Buttons/CustomButton"
+import { useNavigate } from "react-router-dom";
 
 const OutreachVisitLogCard = ()=>{
+    const navigate = useNavigate();
+
+    const handleViewDetailsClick = () => {
+        const details = {
+          name: "Joshua K",
+          date: "Sept 9, 2023",
+          location: "Brooklyn, NY 11238",
+          description:
+            "Tommy, a senior citizen in a wheelchair wearing a navy blue top and brown shoes.",
+          categories: ["Clothes", "Food and Drinks"],
+          need: "Childcare specialist needed",
+        };
+    
+        navigate(`/VisitLogDetails?${new URLSearchParams(details).toString()}`);
+      };
+
+
     return (
         <div className="bg-[#F5EEFE] rounded-2xl ">
             <div className="inline-flex gap-2 items-center px-4 pt-6 py-2">
@@ -27,8 +45,8 @@ const OutreachVisitLogCard = ()=>{
                 </div>
             </div>
             <div className="pt-2 px-6 pb-6 space-x-2">
-                <CustomButton label="View Details" name="buttonlightsmall"/>
-                <CustomButton label="Offer Help" name="buttonsmallborder2"/>
+                <CustomButton label="View Details" name="buttonlightsmall" onClick={handleViewDetailsClick} />
+                <CustomButton label="Share" name="buttonsmallborder2"/>
             </div>
         </div>
     )
