@@ -155,7 +155,7 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
         )}
         {helpStatus === "Help Received" && (
           <div className="col-span-1">
-            {helpUid === fAuth.currentUser.uid && (
+            {helpUid === fAuth?.currentUser?.uid && (
             <div className="w-fit flex-col justify-start gap-2 flex text-center text-[12px] font-semibold font-inter leading-tight md:float-right mt-2.5">
               <CustomButton label="Reopen Help Request" name="buttonborder" onClick={(e) => handleReopenHelpRequest(e,id,refresh)} />
             </div>
