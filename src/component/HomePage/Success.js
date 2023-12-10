@@ -15,11 +15,13 @@ import bronzeSeal from "../../images/bronzeSeal.png";
 import OutreachVisitLogCard from "../Community/OutreachVisitLogCard";
 import arrowRight from "../../images/arrowRight.png";
 import { useNavigate } from "react-router-dom";
+import { fetchVisitLogs } from "../VisitLogCardService";
 
 function Success() {
   const [donations, setDonations] = useState("");
   const [helpedBy, setHelpedBy] = useState("");
   const [helpedPeople, setHelpedPeople] = useState("");
+  const [visitLogs, setVisitLogs] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
     const getValues = async () => {
@@ -51,6 +53,8 @@ function Success() {
         );
         setHelpedBy(uniqueID.size);
         setHelpedPeople(totalHelpedPeople);
+        const visitLogsData = await fetchVisitLogs();
+        setVisitLogs(visitLogsData)
       } catch (err) {
         console.log(err);
       }
@@ -370,9 +374,9 @@ function Success() {
           </div>
         </div>
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
-          <OutreachVisitLogCard />
-          <OutreachVisitLogCard />
-          <OutreachVisitLogCard />
+        {(visitLogs.map((visitLogData) => (
+          <OutreachVisitLogCard visitLogCardData={visitLogData}/>
+              )))}
         </div>
       </div>
     </div>

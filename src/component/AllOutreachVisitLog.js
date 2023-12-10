@@ -3,10 +3,18 @@ import OutreachVisitLogCard from "./Community/OutreachVisitLogCard";
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import CustomButton from "./Buttons/CustomButton";
-
+import { fetchVisitLogs } from "./VisitLogCardService";
 
 const AllOutreachVisitLog = () => {
   const navigate = useNavigate();
+  const [visitLogs, setVisitLogs] = useState([]);
+  useEffect(() => {
+    const getVisitLogs = async () => {
+        const visitLogsData = await fetchVisitLogs();
+        setVisitLogs(visitLogsData)
+    };
+    getVisitLogs();
+  }, []);
 
   return (
     <div className="relative flex flex-col items-center ">
@@ -30,9 +38,9 @@ const AllOutreachVisitLog = () => {
             All Outreach Visit Logs
           </p>
           <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-            <OutreachVisitLogCard/>
-            <OutreachVisitLogCard/>
-            <OutreachVisitLogCard/>
+          {(visitLogs.map((visitLogData) => (
+          <OutreachVisitLogCard visitLogCardData={visitLogData}/>
+              )))}
           </div>
         </div>
       </div>

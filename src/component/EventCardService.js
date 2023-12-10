@@ -155,7 +155,7 @@ const fetchUserName = async (uid) => {
   }
 };
 
-const fetchUserDetails = async (uid) => {
+export const fetchUserDetails = async (uid) => {
   // Reference to the uid instead of the docid of the user.
   const userQuery = query(
     collection(db, USERS_COLLECTION),
