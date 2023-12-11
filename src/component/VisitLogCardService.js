@@ -52,3 +52,23 @@ const fetchOutreachEventData = async (eid) => {
     location: outReachEventData?.data().location || "",
   }
 };
+
+export const fetchVisitLogById = async (visitLogId) => {
+  // Reference to the specific document in the visitlog collection
+  const visitLogRef = doc(db, VISIT_LOG_COLLECTION, visitLogId);
+  const visitLogSnap = await getDoc(visitLogRef);
+  const visitLogData = visitLogSnap.data();
+  const outreachEventId = visitLogData.outreachEvent || "";  
+  const outreachEventData = await fetchOutreachEventData(outreachEventId);
+  const uid = visitLogData.uid;
+  const userDetails = await fetchUserDetails(uid)
+  return {
+    whatGiven: visitLogData.whatGiven,
+    description: outreachEventData?.description || "",
+    helpType: outreachEventData?.helpType || "",
+    location: outreachEventData?.location || "",
+    eventDate: outreachEventData?.eventDate?.seconds ? formatDate(new Date(outreachEventData?.eventDate?.seconds * 1000)) : "",
+    userName: userDetails.username,
+    photoUrl: userDetails.photoUrl,
+  }
+}
