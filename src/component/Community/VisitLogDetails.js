@@ -19,7 +19,6 @@ const VisitLogDetails = () => {
             <div className="font-medium font-dmsans text-[45px] text-neutral-800 leading-[52px]">
               Visit Log Details
             </div>
-
             <div className="bg-[#F5EEFE] rounded-2xl ">
               <div className="inline-flex gap-2 items-center px-4 pt-6 py-2">
                 <img src={profilePic} className="w-6 h-6 rounded-full" />

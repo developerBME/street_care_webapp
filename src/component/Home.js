@@ -233,7 +233,7 @@ function HomePage() {
           </p>
 
           {isLoading ? (
-            <div className="flex justify-between items-center w-full h-fit">
+            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
               <EventCardSkeleton />
               <EventCardSkeleton />
               <EventCardSkeleton />
@@ -276,7 +276,7 @@ function HomePage() {
           </p>
 
           {isLoading ? (
-            <div className="flex justify-between items-center w-full h-fit">
+            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
               <PastOutreachEventCardSkeleton />
               <PastOutreachEventCardSkeleton />
               <PastOutreachEventCardSkeleton />

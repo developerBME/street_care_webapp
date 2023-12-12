@@ -358,13 +358,13 @@ function Success() {
       </div>
       {/* grid over */}
 
-      <div className="mt-8 space-y-9">
+      <div className="mt-32 space-y-9">
         <div className="flex justify-between">
-          <div className="font-medium text-[45px] font-dmsans">
+          <div className="font-dmsans font-medium text-[22px]  md:text-[45px] text-[#1F0A58]">
             Latest Actions - Visit Log
           </div>
-          <div
-            className="inline-flex items-center gap-2 font-medium text-[8px] lg:text-[13px] hover:cursor-pointer"
+          <div 
+            className="inline-flex items-center gap-2 font-medium text-[12px] lg:text-[13px] hover:cursor-pointer"
             onClick={() => {
               navigate("/allOutreachVisitLog");
             }}
@@ -373,8 +373,8 @@ function Success() {
             <img src={arrowRight} className="w-4 h-4" />
           </div>
         </div>
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
-        {(visitLogs.map((visitLogData) => (
+        <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+        {(visitLogs.slice(0,3).map((visitLogData) => (
           <OutreachVisitLogCard visitLogCardData={visitLogData}/>
               )))}
         </div>
