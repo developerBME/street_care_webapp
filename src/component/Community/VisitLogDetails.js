@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import profilePic from "../../images/avatar.jpg";
 import wavingHand from "../../images/waving_hand.png";
+import { fetchVisitLogById } from "../VisitLogCardService"
 
 const VisitLogDetails = () => {
   const navigate = useNavigate();

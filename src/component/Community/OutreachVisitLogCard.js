@@ -35,7 +35,7 @@ const OutreachVisitLogCard = ({visitLogCardData})=>{
                     <div class="text-violet-900 text-sm font-medium font-['DM Sans'] leading-tight">{visitLogCardData.eventDate || ""} · {visitLogCardData.location.street || ""} {visitLogCardData.location.city || ""} {visitLogCardData.location.state || ""} {visitLogCardData.location.zipcode || ""}</div>
                     {/* <div class="text-violet-900 text-sm font-medium font-['DM Sans'] leading-tight">Sept 9, 2023 · Brooklyn, NY 11238</div> */}
                     {/* <div class="text-zinc-700 text-[10px] font-normal font-['DM Sans'] leading-snug">Tommy, a senior citizen in a wheelchair wearing a navy blue top and brown shoes.</div> */}
-                    <div class="text-zinc-700 text-[10px] font-normal font-['DM Sans'] leading-snug">{visitLogCardData.description}</div>
+                    <div class="text-zinc-700 text-[10px] font-normal font-['DM Sans'] leading-snug">{visitLogCardData.description || ""}</div>
                     <div className="inline-flex items-center gap-2">
                         {visitLogCardData?.whatGiven.map((item, index) => (
                         <div className="py-1 px-3 border border-[#C8C8C8] w-fit rounded-xl text-[10px] text-[#444746]">{item}</div>
