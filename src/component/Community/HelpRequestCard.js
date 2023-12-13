@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import help_announcement from "../../images/help_announcement.png";
 import help_pending from "../../images/help_pending.png";
 import help_received from "../../images/help_received.png";
@@ -12,11 +12,13 @@ import { handleHelpRecieved, handleReopenHelpRequest } from "../HelpRequestServi
 
 const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
   const navigate = useNavigate();
+  const [user, setUser] = useState(false);
 
   const fAuth = getAuth();
   onAuthStateChanged(fAuth, (user) => {
     if (user) {
       console.log(user);
+      setUser(true);
     } else {
       console.log("USER NOT FOUND!");
     }
@@ -133,7 +135,12 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
 
         {helpStatus === "Need Help" && (
           <div className="col-span-1">
-            <button onClick={() => {navigate(`/icanhelp/${id}`);}} className="w-fit bg-[#E6DCFF] hover:bg-[#6840E0] text-[#181818] hover:text-white rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight md:float-right">
+            <button onClick={
+              !user
+              ? () => {navigate(`/login`);}
+              : () => {navigate(`/icanhelp/${id}`);}
+            } 
+            className="w-fit bg-[#E6DCFF] hover:bg-[#6840E0] text-[#181818] hover:text-white rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight md:float-right">
               I can help
             </button>
           </div>
@@ -141,16 +148,13 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
         {helpStatus === "Help on the way" && (
           <div className="col-span-1">
             <button className="w-fit bg-[#E6DCFF] hover:bg-[#6840E0] text-[#181818] hover:text-white rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight md:float-right"
-            onClick={(e) => handleHelpRecieved(e,id,refresh)}
+            onClick={
+              !user
+              ? () => {navigate(`/login`);}
+              : (e) => handleHelpRecieved(e,id,refresh)}
             >
               Mark as Help Recieved
             </button>
-            {/* <button className="w-fit bg-[#6840E0] hover:bg-[#E6DCFF] text-white hover:text-[#181818] rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight">
-              Reopen Help Request
-            </button>
-            <div className="w-fit flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight">
-              <CustomButton label="Mark as Help Received" name="buttonlight" />
-            </div> */}
           </div>
         )}
         {helpStatus === "Help Received" && (
