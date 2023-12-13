@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import OutreachVisitLogCard from "./Community/OutreachVisitLogCard";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import CustomButton from "./Buttons/CustomButton";
 import { fetchVisitLogs } from "./VisitLogCardService";
 
 const AllOutreachVisitLog = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [visitLogs, setVisitLogs] = useState([]);
   useEffect(() => {
     const getVisitLogs = async () => {
@@ -16,6 +17,10 @@ const AllOutreachVisitLog = () => {
     getVisitLogs();
   }, []);
 
+  const returnText =
+  location.state && location.state.from === "home"
+    ? "Return to Home"
+    : "Return to Community";
   return (
     <div className="relative flex flex-col items-center ">
       <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-16 lg:mx-40 mt-48 rounded-2xl bg-white text-black ">
@@ -28,7 +33,7 @@ const AllOutreachVisitLog = () => {
         >
           <IoIosArrowBack className=" w-6 h-6" />{" "}
           <p className=" font-bricolage text-xl font-bold leading-7">
-            Return to Community
+            {returnText}
           </p>
         </div>
 

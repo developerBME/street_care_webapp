@@ -360,13 +360,13 @@ function Success() {
 
       <div className="mt-32 space-y-9">
         <div className="flex justify-between">
-          <div className="font-dmsans font-medium text-[22px]  md:text-[45px] text-[#1F0A58]">
+          <div className="font-dmsans font-medium text-2xl  md:text-[45px] text-[#1F0A58]">
             Latest Actions - Visit Log
           </div>
           <div 
-            className="inline-flex items-center gap-2 font-medium text-[12px] lg:text-[13px] hover:cursor-pointer"
+            className="inline-flex items-center gap-2 font-medium text-[15px] sm:text-[17px] hover:cursor-pointer"
             onClick={() => {
-              navigate("/allOutreachVisitLog");
+              navigate("/allOutreachVisitLog",  { state: { from: "home" } });
             }}
           >
             View all
