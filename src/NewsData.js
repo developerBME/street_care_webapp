@@ -8,7 +8,7 @@ export const NewsCardData = [
     },
     {
       id: '1',
-      NewsTitle: "Thank You to Maryland Team who helps Street Care Monthly!",
+      NewsTitle: "Thank You to the Maryland Team who helps Street Care Monthly!",
       NewsDate: "Jan 18,2022",
       NewsContent:
         "Our Maryland Team is out on the streets in the greater Baltimore area monthly helping those homeless in need",

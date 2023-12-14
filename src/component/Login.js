@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, setPersistence,  browserSessionPersistence, browserLocalPersistence  } from "firebase/auth";
 import { auth } from "./firebase"; // Importing the auth instance
 import {
   getAuth,
@@ -28,6 +28,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [loginSuccess, setLoginSuccess] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
 
   const [errormsg, setErrors] = useState({
     PassError: "",
@@ -41,6 +42,11 @@ function Login() {
     }));
   };
 
+  const handleRememberMeChange = (e) => {
+    setRememberMe(e.target.checked);
+  };
+
+  
   const fAuth = getAuth();
   onAuthStateChanged(fAuth, (user) => {
     // Checks Login status for Redirection
@@ -73,6 +79,10 @@ function Login() {
     }
 
     try {
+      // Set persistence based on the rememberMe state
+      const persistenceType = rememberMe ? browserLocalPersistence : browserSessionPersistence;
+      await setPersistence(auth, persistenceType);
+  
       await signInWithEmailAndPassword(auth, email, password);
       setLoginSuccess("Successfully logged in!");
       setError(""); // Clearing out any existing error messages
@@ -202,12 +212,14 @@ function Login() {
               </div>
 
               <div className="justify-start items-center mt-14 gap-4 inline-flex">
-                {/*
+                
                 <div className="w-[18px] h-[18px] relative">
                   <input
                     type="checkbox"
                     name="remember"
                     id="remember"
+                    checked={rememberMe}
+                    onChange={handleRememberMeChange}
                     className="w-[18px] h-[18px] left-0 top-0 absolute bg-violet-700 rounded-sm cursor-pointer "
                   ></input>
                 </div>
@@ -215,7 +227,6 @@ function Login() {
                 <div className="text-black text-sm font-normal font-open-sans leading-tight">
                   Remember me
                 </div>
-                */}
               </div>
               <div className="self-stretch my-14 h-14 flex-col justify-start items-start gap-4 flex">
                 <div className="self-stretch justify-center items-center gap-2.5 inline-flex">

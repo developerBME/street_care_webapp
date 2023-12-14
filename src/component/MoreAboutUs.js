@@ -7,7 +7,7 @@ function MoreAboutUs() {
     <div className=" justify-center px-4 py-8 lg:p-24  h-full w-full rounded-2xl bg-[#F7F7F7] flex flex-col">
       <div className="font-bricolage  font-medium  text-[#212121] text-2xl md:text-[28px] leading-6 md:leading-10">
         <p>
-          Fueled by 100% volunteer passion, Growing with 264 dedicated hearts.
+          Fuelled by 100% volunteer passion, growing with 264 dedicated hearts.
         </p>
         <p>Empowered by community support</p>
       </div>
