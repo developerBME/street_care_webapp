@@ -16,12 +16,16 @@ import OutreachVisitLogCard from "../Community/OutreachVisitLogCard";
 import arrowRight from "../../images/arrowRight.png";
 import { useNavigate } from "react-router-dom";
 import { fetchVisitLogs } from "../VisitLogCardService";
+import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
+
 
 function Success() {
   const [donations, setDonations] = useState("");
   const [helpedBy, setHelpedBy] = useState("");
   const [helpedPeople, setHelpedPeople] = useState("");
   const [visitLogs, setVisitLogs] = useState([]);
+
+
   const navigate = useNavigate();
   useEffect(() => {
     const getValues = async () => {
@@ -62,6 +66,7 @@ function Success() {
     getValues();
   }, []);
 
+  
   return (
     <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
       <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
@@ -360,7 +365,7 @@ function Success() {
 
       <div className="mt-32 space-y-9">
         <div className="flex justify-between">
-          <div className="font-dmsans font-medium text-2xl  md:text-[45px] text-[#1F0A58]">
+          <div className="font-bricholage font-medium text-2xl  md:text-[45px] text-[#1F0A58]">
             Latest Actions - Visit Log
           </div>
           <div 
@@ -378,6 +383,7 @@ function Success() {
           <OutreachVisitLogCard visitLogCardData={visitLogData}/>
               )))}
         </div>
+        
       </div>
     </div>
   );

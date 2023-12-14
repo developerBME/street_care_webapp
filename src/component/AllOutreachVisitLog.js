@@ -9,6 +9,8 @@ const AllOutreachVisitLog = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [visitLogs, setVisitLogs] = useState([]);
+
+  
   useEffect(() => {
     const getVisitLogs = async () => {
         const visitLogsData = await fetchVisitLogs();
@@ -16,6 +18,9 @@ const AllOutreachVisitLog = () => {
     };
     getVisitLogs();
   }, []);
+
+  const returnTarget =
+    location.state && location.state.from === "home" ? "/" : "/Community";
 
   const returnText =
   location.state && location.state.from === "home"
@@ -28,7 +33,7 @@ const AllOutreachVisitLog = () => {
         <div
           className=" absolute flex mt-[-50px] items-center cursor-pointer "
           onClick={() => {
-            navigate("/Community");
+            navigate(returnTarget);
           }}
         >
           <IoIosArrowBack className=" w-6 h-6" />{" "}
