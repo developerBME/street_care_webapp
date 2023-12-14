@@ -137,7 +137,7 @@ export default function FAQs() {
               create an account on our platform, and explore the resources and
               tools available to assist homeless people. Click
               <a
-                href="https://street-care-feature.vercel.app/signup/"
+                href="https://streetcarenow.org/signup/"
                 className="underline px-1 text-blue-500"
               >
                 here
@@ -182,7 +182,7 @@ export default function FAQs() {
               At Street Care, we truly believe in the extraordinary power of
               generosity. Visit our website
               <a
-                href="https://street-care-feature.vercel.app/"
+                href="https://streetcarenow.org/"
                 className="underline px-1 text-blue-500"
               >
                 homepage
