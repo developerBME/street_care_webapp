@@ -124,3 +124,16 @@ export const handleHelpRecieved = async (e,id,refresh) => {
         refresh();
       }
 };
+
+export const handleReopenHelpRequest = async (e,id,refresh) => {
+    e.preventDefault();
+    // Reference to the specific document in the Help Request collection
+    const helpRequestRef = doc(db, HELP_REQ_COLLECTION, id);
+    const updateRef = await updateDoc(helpRequestRef, {
+        status : "Need Help",
+      });
+    console.log("HELP REQ UPDATED");
+    if (typeof refresh == "function") {
+        refresh();
+      }
+};
