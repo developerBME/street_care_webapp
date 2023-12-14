@@ -186,7 +186,7 @@ function CarePackage({ label, name }) {
             Remember to read labels for allergen information and encourage
             recipients to do the same. Sensitivity to dietary restrictions is
             essential for safe and helpful assistance. [Nuts, Gluten, Dairy,
-            Seed, Protein Yogurt, Fruits (Apples, oranges, bananas, )]
+            Seed, Protein Yogurt, Fruits (Apples, oranges, bananas)]
           </li>
         </ul>
         <div className="overflow-x-auto">

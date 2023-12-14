@@ -18,14 +18,12 @@ import { useNavigate } from "react-router-dom";
 import { fetchVisitLogs } from "../VisitLogCardService";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 
-
 function Success() {
   const [donations, setDonations] = useState("");
   const [helpedBy, setHelpedBy] = useState("");
   const [helpedPeople, setHelpedPeople] = useState("");
   const [visitLogs, setVisitLogs] = useState([]);
 
-  const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -59,21 +57,12 @@ function Success() {
         setHelpedBy(uniqueID.size);
         setHelpedPeople(totalHelpedPeople);
         const visitLogsData = await fetchVisitLogs();
-        setVisitLogs(visitLogsData)
+        setVisitLogs(visitLogsData);
       } catch (err) {
         console.log(err);
       }
     };
     getValues();
-  }, []);
-
-  useEffect(() => {
-    // Set loading to false after 3 seconds
-    const timeoutId = setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
-
-    return () => clearTimeout(timeoutId); // Clear the timeout if the component unmounts
   }, []);
 
   
@@ -373,7 +362,7 @@ function Success() {
       </div>
       {/* grid over */}
 
-      <div className="mt-32 space-y-9">
+      {/* <div className="mt-32 space-y-9">
         <div className="flex justify-between">
           <div className="font-bricholage font-medium text-2xl  md:text-[45px] text-[#1F0A58]">
             Latest Actions - Visit Log
@@ -405,7 +394,7 @@ function Success() {
         }
         
         
-      </div>
+      </div> */}
     </div>
   );
 }
