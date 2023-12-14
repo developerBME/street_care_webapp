@@ -25,6 +25,7 @@ function Success() {
   const [helpedPeople, setHelpedPeople] = useState("");
   const [visitLogs, setVisitLogs] = useState([]);
 
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -64,6 +65,15 @@ function Success() {
       }
     };
     getValues();
+  }, []);
+
+  useEffect(() => {
+    // Set loading to false after 3 seconds
+    const timeoutId = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(timeoutId); // Clear the timeout if the component unmounts
   }, []);
 
   
@@ -378,11 +388,22 @@ function Success() {
             <img src={arrowRight} className="w-4 h-4" />
           </div>
         </div>
-        <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+        {
+          isLoading ? (
+            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+              <EventCardSkeleton />
+              <EventCardSkeleton />
+              <EventCardSkeleton />
+            </div>
+          ) :(
+            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
         {(visitLogs.slice(0,3).map((visitLogData) => (
           <OutreachVisitLogCard visitLogCardData={visitLogData}/>
               )))}
         </div>
+          )
+        }
+        
         
       </div>
     </div>

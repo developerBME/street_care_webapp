@@ -4,11 +4,14 @@ import { useNavigate,useLocation } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import CustomButton from "./Buttons/CustomButton";
 import { fetchVisitLogs } from "./VisitLogCardService";
+import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 
 const AllOutreachVisitLog = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [visitLogs, setVisitLogs] = useState([]);
+  
+  const [isLoading, setIsLoading] = useState(true);
 
   
   useEffect(() => {
@@ -17,6 +20,15 @@ const AllOutreachVisitLog = () => {
         setVisitLogs(visitLogsData)
     };
     getVisitLogs();
+  }, []);
+
+  useEffect(() => {
+    // Set loading to false after 3 seconds
+    const timeoutId = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(timeoutId); // Clear the timeout if the component unmounts
   }, []);
 
   const returnTarget =
@@ -47,11 +59,21 @@ const AllOutreachVisitLog = () => {
             {" "}
             All Outreach Visit Logs
           </p>
-          <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+          {
+            isLoading ? (
+              <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+                <EventCardSkeleton />
+                <EventCardSkeleton />
+                <EventCardSkeleton />
+              </div>
+            ) :(
+              <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
           {(visitLogs.map((visitLogData) => (
           <OutreachVisitLogCard visitLogCardData={visitLogData}/>
               )))}
           </div>
+            )
+          }
         </div>
       </div>
     </div>
