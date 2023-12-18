@@ -7,10 +7,24 @@ import { useNavigate } from "react-router-dom";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-
 import CustomButton from "../Buttons/CustomButton";
 import errorImg from "../../images/error.png";
 import ConfirmationModal from "./ConfirmationModal";
+import DatePicker from "react-datepicker";
+import { Timestamp } from "firebase/firestore";
+
+const CustomInput = ({ value, onClick, onChange, id, className }) => (
+  <div>
+    <input
+      type="text"
+      onClick={onClick}
+      onChange={onChange}
+      value={value}
+      id={id}
+      className={className}
+    />
+  </div>
+);
 
 function PersonalOutForm() {
   const navigate = useNavigate();
@@ -33,12 +47,20 @@ function PersonalOutForm() {
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
   const [descriptionHelped, setDescriptionHelped] = useState("");
-  const [showOptionalQuestions, setShowOptionalQuestions] = useState(false);
   const [isInfoShareCheckboxChecked, setInfoShareCheckboxChecked] =
     useState(false);
-  const furtherHelpDescriptionError = useRef("");
-  const furtherHelpLocationError = useRef("");
   const infoShareCheckbox = useRef(null);
+  const [showOptionalQuestions, setShowOptionalQuestions] = useState(false);
+  // const furtherHelpDescription = useRef("");
+  // const furtherHelpLocation = useRef("");
+  // const [otherInfo, setOtherInfo] = useState("");
+  const optDesc = useRef("");
+  const optLandmark = useRef("");
+  // const optTime = useRef("");
+  // const [optFurtherHelp, setOptFurtherHelp] = useState([]);
+  // const optFollowUpTime = useRef("");
+  // const optInfo = useRef("");
+  // const [optInfoShare, setOptInfoShare] = useState(false);
 
   const [error, setError] = useState({
     numberHelpedError: "",
@@ -48,8 +70,8 @@ function PersonalOutForm() {
     itemQtyError: "",
     dateError: "",
     timeError: "",
-    furtherHelpDescriptionError: "",
-    furtherHelpLocationError: "",
+    optDescError: "",
+    optLandmarkError: "",
     infoShareCheckboxError: "",
   });
 
@@ -71,12 +93,12 @@ function PersonalOutForm() {
     setDescriptionHelped(inputValue);
   };
 
-  const handleFurtherHelpDescriptionChange = (e) => {
-    updateErrorState("furtherHelpDescriptionError", "");
+  const handleOptDescChange = (e) => {
+    updateErrorState("optDescError", "");
   };
 
-  const handleFurtherHelpLocationChange = (e) => {
-    updateErrorState("furtherHelpLocationError", "");
+  const handleOptLandmarkChange = (e) => {
+    updateErrorState("optLandmarkError", "");
   };
 
   const handleInfoShareCheckboxChange = () => {
@@ -238,35 +260,32 @@ function PersonalOutForm() {
       updateErrorState("itemQtyError", "");
     }
     if (showOptionalQuestions) {
-      if (!furtherHelpDescriptionError.current.value) {
+      if (!optDesc.current.value) {
         updateErrorState(
-          "furtherHelpDescriptionError",
+          "optDescError",
           "Enter the description of the people who require further help"
         );
         setReturn = true;
       } else {
-        updateErrorState("furtherHelpDescriptionError", "");
+        updateErrorState("optDescError", "");
       }
-    }
 
-    if (showOptionalQuestions) {
-      if (!furtherHelpLocationError.current.value) {
+      if (!optLandmark.current.value) {
         updateErrorState(
-          "furtherHelpLocationError",
+          "optLandmarkError",
           "Enter the location of the people who require further help"
         );
         setReturn = true;
       } else {
-        updateErrorState("furtherHelpLocationError", "");
+        updateErrorState("optLandmarkError", "");
       }
-    }
 
-    if (showOptionalQuestions) {
       if (!infoShareCheckbox.current.checked) {
         updateErrorState(
           "infoShareCheckboxError",
           "Location sharing is required"
         );
+        setReturn = true;
       } else {
         setInfoShareCheckboxChecked(true);
         updateErrorState("infoShareCheckboxError", "");
@@ -856,20 +875,20 @@ function PersonalOutForm() {
                                 type="text"
                                 placeholder="E.g. Tommy, a senior citizen in a wheelchair wearing a navy blue top and brown shoes."
                                 className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300 ${
-                                  error.furtherHelpDescriptionError !== ""
+                                  error.optDescError !== ""
                                     ? "ring-red-500"
                                     : "ring-gray-300"
                                 }`}
                                 required={true}
                                 // value={furtherHelpDescription}
-                                onChange={handleFurtherHelpDescriptionChange}
-                                ref={furtherHelpDescriptionError}
+                                onChange={handleOptDescChange}
+                                ref={optDesc}
                               ></input>
-                              {error.furtherHelpDescriptionError && (
+                              {error.optDescError && (
                                 <div className="inline-flex items-center">
                                   <img src={errorImg} className="w-3 h-3" />
                                   <p className="text-red-600 text-xs ml-1">
-                                    {error.furtherHelpDescriptionError}
+                                    {error.optDescError}
                                   </p>
                                 </div>
                               )}
@@ -902,33 +921,25 @@ function PersonalOutForm() {
                                 id="furtherHelpLocation"
                                 placeholder="E.g. 187 Hambridge Street, NY"
                                 className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300 ${
-                                  error.furtherHelpLocationError !== ""
+                                  error.optLandmarkError !== ""
                                     ? "ring-red-500"
                                     : "ring-gray-300"
                                 }`}
                                 required={true}
-                                onChange={handleFurtherHelpLocationChange}
-                                ref={furtherHelpLocationError}
+                                onChange={handleOptLandmarkChange}
+                                ref={optLandmark}
                               ></input>
-                              {error.furtherHelpLocationError && (
+                              {error.optLandmarkError && (
                                 <div className="inline-flex items-center">
                                   <img src={errorImg} className="w-3 h-3" />
                                   <p className="text-red-600 text-xs ml-1">
-                                    {error.furtherHelpLocationError}
+                                    {error.optLandmarkError}
                                   </p>
                                 </div>
                               )}
                             </div>
                           </div>
                         </div>
-                        {/* {error.furtherHelpLocationError && (
-                          <div className="inline-flex items-center">
-                            <img src={errorImg} className="w-3 h-3" />
-                            <p className="text-red-600 text-xs ml-1">
-                              {error.furtherHelpLocationError}
-                            </p>
-                          </div>
-                        )} */}
                       </div>
                       <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                         <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
@@ -1201,7 +1212,7 @@ function PersonalOutForm() {
                             // for="food-option"
                             className={`inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer peer-checked:border-[#5F36D6] peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300 ${
                               !isInfoShareCheckboxChecked &&
-                              error.furtherHelpDescriptionError !== ""
+                              error.infoShareCheckboxError !== ""
                                 ? "ring-red-500"
                                 : "ring-gray-300"
                             }`}
