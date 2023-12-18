@@ -9,6 +9,7 @@ import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import arrowDropDown from "../../images/arrowDropDown.png";
 import arrowRight from "../../images/arrowRight.png";
 import OutreachEventCard from "../Community/OutreachEventCard";
+import OutreachVisitLogCard from "../Community/OutreachVisitLogCard";
 import { formatDate, fetchUserEvents } from "../EventCardService";
 import { auth } from "../firebase";
 
@@ -97,9 +98,11 @@ function Profile() {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [visitLogs, setVisitLogs] = useState([]);
   const [visibleItems, setVisibleItems] = useState(3);
-  const loadMore = () => {
-    setVisibleItems((prev) => prev + 3);
-  };
+
+  
+  // const loadMore = () => {
+  //   setVisibleItems((prev) => prev + 3);
+  // };
 
 
   useEffect(() => {
@@ -296,115 +299,51 @@ function Profile() {
           </div>{" "}
         </div>
 
-          <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2  rounded-2xl bg-white text-black ">
-                <div className="p-4 lg:px-28 lg:py-12 space-y-9">
-                  <div className="flex items-center justify-between">
-                    <div className="md:inline-flex items-center text-center space-y-2 md:space-y-0 hidden">
-                                <p className="font-medium text-xl lg:text-2xl text-[#212121] font-bricolage">
-                                  Upcoming outreach events in
-                                </p>
-                          <div className="relative md:inline-block flex flex-row items-center">
-                            {/* vedant */}
-                                      <div className="relative md:inline-block  ">
-                                          <div className="group relative flex">
-                                            <button
-                                              onClick={() => setDropdownVisible(!dropdownVisible)}
-                                              className="appearance-none underline text-[#181818] w-32 text-2xl lg:text-2xl font-dmsans border-[#181818] bg-transparent h-8"
-                                            >
-                                              {selectedState || 'All States'}
-                                            </button>
-                                            <img
-                                                  src={arrowDropDown}
-                                                  alt="Dropdown Arrow"
-                                                  className="absolute pointer-events-none left-28 h-7 w-7 mt-1 ml-1"
-                                            />
-                                          </div>
-                                          <nav
-                                                tabIndex="0"
-                                                className={`border-2 bg-white shadow border-gray-100 rounded-2xl w-36 absolute left-3 top-full transition-all ${
-                                                  dropdownVisible ? 'visible opacity-100 translate-y-1' : 'invisible opacity-0'
-                                                }`}
-                                              >
-                                              <ul className="py-1">
-                                                <li>
-                                                  <a
-                                                    className="px-4 py-2 hover:bg-[#E6E2EE] cursor-pointer font-Bricolage  flex-col justify-center items-start flex"
-                                                    onClick={() => handleStateSelection("")}
-                                                  >
-                                                    All States
-                                                  </a>
-                                                </li>
-                                                {states.map((state, index) => (
-                                                  <li key={index}>
-                                                    <a
-                                                      className="px-4 py-2 hover:bg-[#E6E2EE] flex-col cursor-pointer font-dmsans justify-center items-start flex"
-                                                      onClick={() => handleStateSelection(state)}
-                                                    >
-                                                      {state}
-                                                    </a>
-                                                  </li>
-                                                ))}
-                                              </ul>
-                                          </nav>
-                                      </div>
-                          </div>
-
-                      </div>
-                      <div className="hidden lg:flex md:inline-flex cursor-pointer gap-3 items-center text-center"
-                                onClick={() => {
-                                  navigate("/allOutreachEvents");
-                                }}>
-                                    <div className="font-medium text-[12px] lg:text-[16px] font-bricolage">
-                                      View all
-                                    </div>
-                                <img src={arrowRight} className="w-2 h-2 lg:w-4 lg:h-4 " />
-                            </div>
-                   </div>
-                   {isLoading ? (
-                        <div className="flex justify-between items-center w-full h-fit gap-2">
-                          <EventCardSkeleton />
-                          <EventCardSkeleton />
-                          <EventCardSkeleton />
-                        </div>
-                      ) : (
-                        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
-                          {selectedState === "" ? (
-                            upcomingEvents.map((eventData) => (
-                              <OutreachEventCard
-                                key={eventData.id}
-                                cardData={{
-                                  ...eventData,
-                                  eventDate: formatDate(
-                                    new Date(eventData.eventDate.seconds * 1000)
-                                  ),
-                                }}
-                              />
-                            ))) : (
-                            filteredEvents.map((eventData) => (
-                              <OutreachEventCard
-                                key={eventData.id}
-                                cardData={{
-                                  ...eventData,
-                                  eventDate: formatDate(
-                                    new Date(eventData.eventDate.seconds * 1000)
-                                  ),
-                                }}
-                              />
-                            )))}
-                        </div>
-                      )}
-                  {visibleItems < upcomingEvents.length && (
-                    <button
-                      className="w-full px-6 py-2.5 rounded-full text-sm font-medium text-violet-950 font-['DM Sans'] border border-stone-300"
-                      onClick={loadMore}
-                    >
-                      Load More
-                    </button>
-                  )}
+          <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-10 rounded-2xl bg-white text-black ">
+            <div className="p-4 lg:px-28 lg:py-12 space-y-9">   
+              <div className="flex items-center justify-between">
+                <div className="md:inline-flex items-center text-center space-y-2 md:space-y-0">
+                  <p className="font-medium text-xl lg:text-2xl text-[#212121] font-bricolage">
+                    Outreach Visit Log
+                  </p>
+                  <button className="text-sm font-medium font-['DM Sans'] leading-tight lg:text-[12px] text-white bg-[#6840E0] px-6 py-2.5 lg:px-6 lg:py-2.5 rounded-full sm:hidden">
+                    Create an Outreach
+                  </button>
                 </div>
+                  <div
+                    className="hidden lg:flex md:inline-flex cursor-pointer gap-3 items-center text-center"
+                    onClick={() => {
+                      navigate("/allOutreachVisitLog");
+                    }}
+                  >
+                    <div className="font-medium text-[12px] lg:text-[16px] font-bricolage">
+                      View all
+                    </div>
+                    <img src={arrowRight} className="w-2 h-2 lg:w-4 lg:h-4 " />
+                  </div>
+              </div>
+              {isLoading?(
+                <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
+                  <EventCardSkeleton />
+                  <EventCardSkeleton />
+                  <EventCardSkeleton />
+                </div>
+              ):(<div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
+              {(visitLogs.slice(0,3).map((visitLogData) => (
+                <OutreachVisitLogCard visitLogCardData={visitLogData}/>
+                    )))}
+            </div>)}
+              
+              {/* {visibleItems < cardData.length && (
+                <button
+                  className="w-full px-6 py-2.5 rounded-full text-sm font-medium text-violet-950 font-['DM Sans'] border border-stone-300"
+                  onClick={loadMore}
+                >
+                  Load More
+                </button>
+              )} */}
 
-                      
-                                      
+             </div>                         
           </div>
 
         {/* Vishnu*/}
