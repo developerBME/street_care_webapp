@@ -92,7 +92,6 @@ const CommunityOutreachEvent = () => {
 
     fetchData();
   }, []);
-
   // Handle state selection from dropdown
   const handleStateSelection = (state) => {
     setSelectedState(state);
@@ -210,7 +209,7 @@ const CommunityOutreachEvent = () => {
         </div>
 
         {isLoading ? (
-          <div className="flex justify-between items-center w-full h-fit gap-2">
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
             <EventCardSkeleton />
             <EventCardSkeleton />
             <EventCardSkeleton />
@@ -272,13 +271,13 @@ const CommunityOutreachEvent = () => {
           </div>
         </div>
         {isLoading?(
-          <div className="flex justify-between items-center w-full h-fit gap-2">
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
             <EventCardSkeleton />
             <EventCardSkeleton />
             <EventCardSkeleton />
           </div>
         ):(<div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
-        {(visitLogs.map((visitLogData) => (
+        {(visitLogs.slice(0,3).map((visitLogData) => (
           <OutreachVisitLogCard visitLogCardData={visitLogData}/>
               )))}
       </div>)}
