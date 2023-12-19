@@ -9,6 +9,7 @@ import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import arrowDropDown from "../../images/arrowDropDown.png";
 import arrowRight from "../../images/arrowRight.png";
 import OutreachEventCard from "../Community/OutreachEventCard";
+import OutreachVisitLogCard from "../Community/OutreachVisitLogCard";
 import { formatDate, fetchUserEvents } from "../EventCardService";
 import { auth } from "../firebase";
 
@@ -97,10 +98,12 @@ function Profile() {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [visitLogs, setVisitLogs] = useState([]);
   const [visibleItems, setVisibleItems] = useState(3);
+
   const loadMore = () => {
     setVisibleItems((prev) => prev + 3);
   };
   const [activeTab, setActiveTab] = useState("myoutreach");
+
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -329,6 +332,7 @@ function Profile() {
             </div>
           </div>{" "}
         </div>
+
           ):(
             <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2  rounded-2xl bg-white text-black mt-8">
                 <div className="p-4 lg:px-28 lg:py-12 space-y-9">
@@ -435,21 +439,24 @@ function Profile() {
                       Load More
                     </button>
                   )}
-                </div>
-
-                      
-                                      
           </div>
-          )
-        }
+
         
 
           
 
-        {/* Vishnu*/}
-      </div>
+        {/* Vishnu
+      
+      
+      
+      */}
+  
     </div>
-  );
+  )
+}
+</div>
+</div>
+  )
 }
 
 export default Profile;
