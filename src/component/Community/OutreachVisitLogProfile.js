@@ -1,19 +1,12 @@
 import React, { useState, useEffect } from "react";
-import OutreachEventCard from "./OutreachEventCard";
-import { useNavigate } from "react-router-dom";
-import arrowDropDown from "../../images/arrowDropDown.png";
-import arrowRight from "../../images/arrowRight.png";
-import CustomButton from "../Buttons/CustomButton";
 import OutreachVisitLogCard from "./OutreachVisitLogCard";
-import { fetchEvents, formatDate } from "../EventCardService";
+import { fetchEvents } from "../EventCardService";
 import { fetchVisitLogs } from "../VisitLogCardService";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
    
-
 const OutreachVisitLogProfile = () => {  
 
   const [visibleItems, setVisibleItems] = useState(3);
-  const navigate = useNavigate();
   const loadMore = () => {
     setVisibleItems((prev) => prev + 3);
   };
@@ -67,11 +60,8 @@ const OutreachVisitLogProfile = () => {
   const [visitLogs, setVisitLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [eventsDisplay, setEventsDisplay] = useState([]);
-  const [filteredEvents, setFilteredEvents] = useState([]);
-  const [states, setStates] = useState([]);
-  const [selectedState, setSelectedState] = useState("");
-  const [dropdownVisible, setDropdownVisible] = useState(false);
-
+  const [, setStates] = useState([]);
+  
   useEffect(() => {
     const fetchData = async () => {
       const eventsData = await fetchEvents();
@@ -95,15 +85,7 @@ const OutreachVisitLogProfile = () => {
 
     fetchData();
   }, []);
-  // Handle state selection from dropdown
-  const handleStateSelection = (state) => {
-    setSelectedState(state);
-    const filtered = events.filter(event => event.location.state === state);
-    setFilteredEvents(filtered);
-    setDropdownVisible(false);
-  };
-
-
+ 
   useEffect(() => {
     setEventsDisplay(events);
     // searchRef.current = "";
@@ -115,12 +97,6 @@ const OutreachVisitLogProfile = () => {
     }
   }, [eventsDisplay]);
 
-  const upcomingEvents = events
-    .filter((event) => {
-      const eventDate = new Date(event.eventDate.seconds * 1000);
-      return eventDate >= new Date(); // Check if the event date is before the current date
-    })
-    .slice(0, 3);  
 
   return (
     <div>
@@ -133,17 +109,7 @@ const OutreachVisitLogProfile = () => {
                 Create an Outreach
                 </button>
             </div>
-            {/* <div code for viewall
-                className="hidden lg:flex md:inline-flex cursor-pointer gap-3 items-center text-center"
-                onClick={() => {
-                navigate("/allOutreachVisitLog");
-                }}
-            >
-                <div className="font-medium text-[12px] lg:text-[16px] font-bricolage">
-                View all
-                </div>
-                <img src={arrowRight} className="w-2 h-2 lg:w-4 lg:h-4 " />
-            </div> */}
+
             </div>
             {isLoading?(
             <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
@@ -156,7 +122,6 @@ const OutreachVisitLogProfile = () => {
             <OutreachVisitLogCard visitLogCardData={visitLogData}/>
                 )))}
 
-        
 
         </div>)}
             
