@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { signInWithEmailAndPassword, setPersistence,  browserSessionPersistence, browserLocalPersistence  } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  setPersistence,
+  browserSessionPersistence,
+  browserLocalPersistence,
+} from "firebase/auth";
 import { auth } from "./firebase"; // Importing the auth instance
 import {
   getAuth,
@@ -14,6 +19,7 @@ import { AiFillApple, AiFillFacebook } from "react-icons/ai";
 import { BiLogoFacebookCircle } from "react-icons/bi";
 
 import { RiTwitterXFill } from "react-icons/ri";
+import errorImg from "../images/error.png";
 
 import {
   handleGoogleSignIn,
@@ -46,7 +52,6 @@ function Login() {
     setRememberMe(e.target.checked);
   };
 
-  
   const fAuth = getAuth();
   onAuthStateChanged(fAuth, (user) => {
     // Checks Login status for Redirection
@@ -71,7 +76,6 @@ function Login() {
       updateErrorState("EmailError", "");
     }
     if (!password) {
-      setError("Password is Mandatory");
       updateErrorState("PassError", "Password is required!");
       return;
     } else if (password) {
@@ -80,15 +84,36 @@ function Login() {
 
     try {
       // Set persistence based on the rememberMe state
-      const persistenceType = rememberMe ? browserLocalPersistence : browserSessionPersistence;
+      const persistenceType = rememberMe
+        ? browserLocalPersistence
+        : browserSessionPersistence;
       await setPersistence(auth, persistenceType);
-  
+
       await signInWithEmailAndPassword(auth, email, password);
       setLoginSuccess("Successfully logged in!");
       setError(""); // Clearing out any existing error messages
       navigate(-1, { preventScrollReset: true });
     } catch (error) {
-      setError(error.message);
+      // setError(error.message);
+      if (error.code === "auth/user-not-found") {
+        setError(
+          <div className="flex flex-col">
+            <div className="flex items-center">
+            <img src={errorImg} className="w-3 h-3 mr-2" />
+              <div>User not found.</div>
+            </div>
+            <div className="flex items-center">
+            <img src={errorImg} className="w-3 h-3 mr-2" />
+
+              <div>
+            Please check your email address and password.
+              </div>
+            </div>
+          </div>
+        );
+      } else {
+        setError(error.message);
+      }
       setLoginSuccess(""); // Clearing out any success messages
     }
   };
@@ -179,7 +204,12 @@ function Login() {
                       </div>
                     </div>
                     {errormsg.EmailError && (
-                      <div className="text-red-700">{errormsg.EmailError}</div>
+                      <div className="inline-flex items-center">
+                        <img src={errorImg} className="w-3 h-3" />
+                        <div className="text-red-700">
+                          {errormsg.EmailError}
+                        </div>
+                      </div>
                     )}
                   </div>
                   <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
@@ -202,9 +232,18 @@ function Login() {
                       </div>
                     </div>
                     {errormsg.PassError && (
-                      <div className="text-red-700">{errormsg.PassError}</div>
+                      <div className="inline-flex items-center">
+                        <img src={errorImg} className="w-3 h-3" />
+                        <div className="text-red-700">{errormsg.PassError}</div>
+                      </div>
                     )}
                   </div>
+                  {error && (
+                    <div className="text-red-700 text-base font-normal font-open-sans leading-normal my-2">
+                      {error}
+                      {console.log(error)}
+                    </div>
+                  )}
                   <div className="w-fit text-violet-600 text-[15px] font-normal font-inter leading-snug hover:underline cursor-pointer">
                     Forgot your password?
                   </div>
@@ -212,7 +251,6 @@ function Login() {
               </div>
 
               <div className="justify-start items-center mt-14 gap-4 inline-flex">
-                
                 <div className="w-[18px] h-[18px] relative">
                   <input
                     type="checkbox"
@@ -223,7 +261,7 @@ function Login() {
                     className="w-[18px] h-[18px] left-0 top-0 absolute bg-violet-700 rounded-sm cursor-pointer "
                   ></input>
                 </div>
-                
+
                 <div className="text-black text-sm font-normal font-open-sans leading-tight">
                   Remember me
                 </div>

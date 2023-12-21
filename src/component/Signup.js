@@ -17,6 +17,7 @@ import { AiFillApple, AiFillFacebook } from "react-icons/ai";
 import { BiLogoFacebookCircle } from "react-icons/bi";
 
 import { RiTwitterXFill } from "react-icons/ri";
+import errorImg from "../images/error.png"
 
 const handleGoogleSignIn = async (e) => {
   e.preventDefault();
@@ -217,13 +218,6 @@ function Signup2() {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-    if (!userName) {
-      setError("Username is Mandatory");
-      updateErrorState("UsernameError", "UserName is required!");
-      return;
-    } else if (userName) {
-      updateErrorState("UsernameError", "");
-    }
     if (!email || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
       setError("Enter Valid Email Address");
       updateErrorState("EmailError", "Email is required!");
@@ -237,6 +231,14 @@ function Signup2() {
       return;
     } else if (password) {
       updateErrorState("PassError", "");
+    }
+
+    if (!userName) {
+      setError("Username is Mandatory");
+      updateErrorState("UsernameError", "UserName is required!");
+      return;
+    } else if (userName) {
+      updateErrorState("UsernameError", "");
     }
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -366,7 +368,10 @@ function Signup2() {
                       </div>
                     </div>
                     {errormsg.EmailError && (
-                      <div className="text-red-700">{errormsg.EmailError}</div>
+                      <div className="inline-flex items-center">
+                  <img src={errorImg} className="w-3 h-3" />
+                  <div className="text-red-700">{errormsg.EmailError}</div>
+                </div>
                     )}
                   </div>
                   <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
@@ -389,7 +394,11 @@ function Signup2() {
                       </div>
                     </div>
                     {errormsg.PassError && (
-                      <div className="text-red-700">{errormsg.PassError}</div>
+                      <div className="inline-flex items-center">
+                  <img src={errorImg} className="w-3 h-3" />
+                  <div className="text-red-700">{errormsg.PassError}</div>
+
+                </div>
                     )}
                   </div>
                   {/*  */}
@@ -413,9 +422,14 @@ function Signup2() {
                       </div>
                     </div>
                     {errormsg.UsernameError && (
-                      <div className="text-red-700">
-                        {errormsg.UsernameError}
-                      </div>
+                      
+                      <div className="inline-flex items-center">
+                  <img src={errorImg} className="w-3 h-3" />
+                  <div className="text-red-700">
+                  {errormsg.UsernameError}
+                </div>
+
+                </div>
                     )}
                   </div>
                 </div>
