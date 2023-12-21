@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 
 import CustomButton from "../Buttons/CustomButton";
 import { useNavigate } from "react-router-dom";
+import OutreachEventCard from "./OutreachEventCard";
+import { fetchEventById, formatDate } from "../EventCardService";
 
 const ConfirmationModal = ({
   isOpen,
@@ -9,8 +11,21 @@ const ConfirmationModal = ({
   currSupPow,
   refreshUserQuery,
   id,
+  outreachEvents
 }) => {
   const [success, setSuccess] = useState(false);
+  const [events, setEvents] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const eventsData = []
+      for (let eventId of outreachEvents) {
+        const edata = await fetchEventById(eventId)
+        eventsData.push(edata)
+      } 
+      setEvents(eventsData);
+    };
+    fetchData();
+  }, []);
 
   const navigate = useNavigate();
 
@@ -25,6 +40,18 @@ const ConfirmationModal = ({
               <div className="w-fit text-[#212121] text-4xl font-medium font-bricolage leading-[44px]">
                 Make sure you are not going alone
               </div>
+              {(
+              events.map((eventData) => (
+                <OutreachEventCard
+                  key={eventData.id}
+                  cardData={{
+                    ...eventData,
+                    eventDate: formatDate(
+                      new Date(eventData.eventDate.seconds * 1000)
+                    ),
+                  }}
+                />
+              )))}
               {/* <div className="w-fit h-fit  bg-gray-300  justify-end ">
                 <button className="text-6xl " onClick={closeModal}>
                   &times;
