@@ -16,7 +16,7 @@ import { auth } from "../firebase";
 import CustomButton from "../Buttons/CustomButton";
 
 import { fetchEvents } from "../EventCardService";
-import { fetchVisitLogs } from "../VisitLogCardService";
+import { fetchPersonalVisitLogs } from "../VisitLogCardService";
 import OutreachVisitLogProfile from "../Community/OutreachVisitLogProfile";
 
 
@@ -113,7 +113,8 @@ function Profile() {
   useEffect(() => {
     const fetchData = async () => {
       const eventsData = await fetchEvents();
-      const visitLogsData = await fetchVisitLogs();
+      const visitLogsData = await fetchPersonalVisitLogs(auth?.currentUser?.uid);
+      console.log(visitLogsData)
       setVisitLogs(visitLogsData)
       // Filter events to get only past events
       const upcomingEvents = eventsData
@@ -334,28 +335,28 @@ function Profile() {
           </div>{" "}
         </div>
 
-          ):(
-            <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2  rounded-2xl bg-white text-black mt-8">
-                <div className="p-4 lg:px-28 lg:py-12 space-y-9">
-                  <OutreachVisitLogProfile/>
-          </div>
+):(
+  <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2  rounded-2xl bg-white text-black mt-8">
+      <div className="p-4 lg:px-28 lg:py-12 space-y-9">
+        <OutreachVisitLogProfile/>
+</div>
 
-        
 
-          
 
-        {/* Vishnu
-      
-      
-      
-      */}
-  
-    </div>
-  )
+
+
+{/* Vishnu
+
+
+
+*/}
+
+</div>
+)
 }
 </div>
 </div>
-  )
+)
 }
 
 export default Profile;
