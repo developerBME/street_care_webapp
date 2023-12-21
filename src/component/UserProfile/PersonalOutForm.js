@@ -4,7 +4,7 @@ import Rating from "@mui/material/Rating";
 import { IoIosArrowBack } from "react-icons/io";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, getDocs, getDoc, doc, updateDoc, query, where, limit } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import CustomButton from "../Buttons/CustomButton";
@@ -12,6 +12,7 @@ import errorImg from "../../images/error.png";
 import ConfirmationModal from "./ConfirmationModal";
 import DatePicker from "react-datepicker";
 import { Timestamp } from "firebase/firestore";
+const USERS_COLLECTION = "users";
 
 const CustomInput = ({ value, onClick, onChange, id, className }) => (
   <div>
@@ -309,10 +310,27 @@ function PersonalOutForm() {
     };
 
     try {
-      const logRef = collection(db, "testLog");
+      const logRef = collection(db, "personalVisitLog");
       const docRef = await addDoc(logRef, obj);
       if (docRef.id) {
         console.log(docRef.id);
+
+        const userQuery = query(
+          collection(db, USERS_COLLECTION),
+          where("uid", "==", fAuth?.currentUser?.uid)
+        );
+        const userDocRef = await getDocs(userQuery);
+        const userDocID = userDocRef.docs[0].id;
+        // reference for the userdoc
+        const userRef = doc(db, USERS_COLLECTION, userDocID);
+        // outreach event collection
+        const docSnap = await getDoc(userRef);
+        let personalVisitLogs = docSnap.data().personalVisitLogs || [];
+        personalVisitLogs.push(docRef.id)
+        const updateRef = await updateDoc(userRef, {
+          personalVisitLogs: personalVisitLogs,
+        });
+        
         setSuccess(true);
         clearFields();
       }
