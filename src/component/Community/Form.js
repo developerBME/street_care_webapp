@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 
 import Chip from "../Community/Chip";
 import arrowDown from "../../images/arrowDown.png";
-import { doc, updateDoc, addDoc, collection } from "firebase/firestore";
+import { doc, updateDoc, addDoc, collection, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import errorImg from "../../images/error.png";
@@ -200,21 +200,30 @@ const Form = (hrid) => {
             helpRequest: isHelpReqFlow ? [hrid.hrid] : [],
           };
 
-          // check if flow comes from help request
-          if (isHelpReqFlow) {
-            const helpRequestRef = doc(db, "helpRequests", hrid.hrid);
-            const updateRef = await updateDoc(helpRequestRef, {
-              status: "Help on the way",
-            });
-          }
 
           // Insert doc in outreach event
           const eventRef = collection(db, "outreachEvents");
-          const docRef = await addDoc(eventRef, obj);
+          
+          async function postDoc (ref,obj) {
+            const docRef = await addDoc(ref,obj)
+            return (docRef.id)
+          }
+          const ack = await postDoc(eventRef,obj);
+
+          // check if flow comes from help request
+          if (isHelpReqFlow) {
+            const helpRequestRef = doc(db, "helpRequests", hrid.hrid);
+            const helpData = await fetchHelpReqById(hrid.hrid);
+            let outreachEvent = helpData.outreachEvent || [];
+            outreachEvent.push(ack)
+            const updateRef = await updateDoc(helpRequestRef, {
+              status: "Help on the way",
+              outreachEvent: outreachEvent
+            });
+          }
 
           // Successful if outreach event is updated
-          if (docRef.id) {
-            console.log(docRef.id);
+          if (ack) {
             setSuccess(true);
             clearFields();
           }
