@@ -13,6 +13,7 @@ import { checkString, checkNumber } from "../helper/validator";
 import { UpdateDisabledRounded } from "@mui/icons-material";
 import CreateOutreachModal from "./CreateOutreachModal";
 import { fetchHelpReqById } from "../HelpRequestService";
+import { outreachFormSuccess } from "../EmailService";
 
 const chipList = [
   "Childcare",
@@ -225,6 +226,7 @@ const Form = (hrid) => {
           // Successful if outreach event is updated
           if (ack) {
             setSuccess(true);
+            outreachFormSuccess(fAuth.currentUser.email, fAuth.currentUser.displayName, nameRef.current.value, 'Your Outreach event is successfully added');
             clearFields();
           }
         } catch (e) {
