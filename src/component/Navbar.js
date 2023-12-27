@@ -26,15 +26,14 @@ const NavBar = (props) => {
     signOut(fAuth)
       .then(() => {
         console.log("success");
+        navigate("/login");
       })
       .catch((error) => {
         console.log(error);
         // An error happened.
       });
   };
-  useEffect(() => {
-    console.log(props);
-  }, []);
+
   const links = [
     {
       id: 1,

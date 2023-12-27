@@ -223,10 +223,18 @@ const Form = (hrid) => {
             });
           }
 
+          const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px"><h1>Thank you for creating the outreach</h1><p>Your outreach <b>${nameRef.current.value}</b> has been successfully created and you can view it in your profile.</p>
+          <p>Here are some of the details:</p>
+          <ul>
+          <li>Description: ${descRef.current.value}</li>
+          <li>Location: ${streetRef.current.value}, ${cityRef.current.value}, ${stateRef.current.value}, ${zipcodeRef.current.value}</li>
+          <li>Help Type: ${helpRef.current.value}</li>
+          </ul>
+          </div>`;
           // Successful if outreach event is updated
           if (ack) {
             setSuccess(true);
-            outreachFormSuccess(fAuth.currentUser.email, fAuth.currentUser.displayName, nameRef.current.value, 'Your Outreach event is successfully added');
+            outreachFormSuccess('shivanip@brightmindenrichment.org', fAuth.currentUser.displayName, nameRef.current.value, emailHTML);
             clearFields();
           }
         } catch (e) {
