@@ -172,7 +172,7 @@ function HelpRequestForm() {
       status: "Need Help" // This is default for every new HR
     };
 
-    const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px"><h1>Thank you for creating the outreach</h1><p>Your outreach <b>${titleRef.current.value}</b> has been successfully created and you can view it in your profile.</p>
+    const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px"><h1>Thank you for creating the outreach</h1><p>Your Help Request <b>${titleRef.current.value}</b> has been successfully created and you can view it in your profile.</p>
           <p>Here are some of the details:</p>
           <ul>
           <li>Description: ${addDescRef.current.value}</li>
