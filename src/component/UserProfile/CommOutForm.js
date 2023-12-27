@@ -16,6 +16,7 @@ import { db } from "../firebase";
 import CustomButton from "../Buttons/CustomButton";
 import ConfirmationModal from "./ConfirmationModal";
 import errorImg from "../../images/error.png";
+import { emailConfirmation } from "../EmailService";
 
 const starStyle = {
   width: 60,
@@ -165,12 +166,24 @@ function CommOutForm() {
       outreachEvent: outreachRef.current.value,
     };
 
+    const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px">
+      <h1>Thank you for creating the outreach</h1>
+      <p>Your Community Outreach Form has been successfully created and you can view it in your profile.</p>
+      <p>Here are some of the details:</p>
+      <ul>
+      <li>Number of People Helped: ${numberHelped}</li>
+      <li>Outreach Event: ${outreachRef.current.value}</li>
+      <li>Item Quantity: ${itemQty}</li>
+      </ul>
+    </div>`;
+
     try {
       const logRef = collection(db, "testLog");
       const docRef = await addDoc(logRef, obj);
       if (docRef.id) {
         console.log(docRef.id);
         setSuccess(true);
+        emailConfirmation('shivanip@brightmindenrichment.org', fAuth.currentUser.displayName, '', emailHTML);
         clearFields();
       }
     } catch (e) {

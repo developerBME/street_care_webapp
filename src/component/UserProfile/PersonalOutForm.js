@@ -12,6 +12,8 @@ import errorImg from "../../images/error.png";
 import ConfirmationModal from "./ConfirmationModal";
 import DatePicker from "react-datepicker";
 import { Timestamp } from "firebase/firestore";
+import { emailConfirmation } from "../EmailService";
+
 const USERS_COLLECTION = "users";
 
 const CustomInput = ({ value, onClick, onChange, id, className }) => (
@@ -309,6 +311,18 @@ function PersonalOutForm() {
       rating: rating,
     };
 
+    const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px">
+      <h1>Thank you for creating the outreach</h1>
+      <p>Your Personal Outreach Form has been successfully created and you can view it in your profile.</p>
+      <p>Here are some of the details:</p>
+      <ul>
+        <li>Number of People Helped: ${numberHelped}</li>
+        <li>Location: ${state}, ${city}</li>
+        <li>Item Quantity: ${itemQty}</li>
+        <li>Date: ${date.current.value}</li>
+      </ul>
+    </div>`;
+
     try {
       const logRef = collection(db, "personalVisitLog");
       const docRef = await addDoc(logRef, obj);
@@ -332,6 +346,7 @@ function PersonalOutForm() {
         });
         
         setSuccess(true);
+        emailConfirmation('shivanip@brightmindenrichment.org', fAuth.currentUser.displayName, '', emailHTML);
         clearFields();
       }
     } catch (e) {
