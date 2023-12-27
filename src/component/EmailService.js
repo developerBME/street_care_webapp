@@ -1,5 +1,5 @@
 
-export const outreachFormSuccess = async (userEmail, userName, eventName, htmlEmailBody) => {
+export const emailConfirmation = async (userEmail, userName, eventName, htmlEmailBody) => {
     const data = {
       userEmail,
       userName,

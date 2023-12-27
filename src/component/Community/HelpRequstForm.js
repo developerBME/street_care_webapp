@@ -7,6 +7,7 @@ import arrowBack from "../../images/arrowBack.png";
 import arrowDown from "../../images/arrowDown.png";
 import errorImg from "../../images/error.png";
 import { useNavigate } from "react-router-dom";
+import { emailConfirmation } from "../EmailService";
 
 function HelpRequestForm() {
   const navigate = useNavigate();
@@ -171,12 +172,22 @@ function HelpRequestForm() {
       status: "Need Help" // This is default for every new HR
     };
 
+    const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px"><h1>Thank you for creating the outreach</h1><p>Your outreach <b>${titleRef.current.value}</b> has been successfully created and you can view it in your profile.</p>
+          <p>Here are some of the details:</p>
+          <ul>
+          <li>Description: ${addDescRef.current.value}</li>
+          <li>Location: ${streetRef.current.value}, ${cityRef.current.value}, ${stateRef.current.value}, ${zipRef.current.value}</li>
+          <li>Help Type: ${idRef.current.value}</li>
+          </ul>
+    </div>`;
+
     try {
       const reqRef = collection(db, "helpRequests");
       const docRef = await addDoc(reqRef, obj);
       if (docRef.id) {
         console.log(docRef.id);
         setSuccess(true);
+        emailConfirmation('shivanip@brightmindenrichment.org', fAuth.currentUser.displayName, titleRef.current.value, emailHTML);
         clearFields();
       }
     } catch (e) {
