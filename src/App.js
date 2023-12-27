@@ -87,8 +87,8 @@ function App() {
           <Route path="/" element={<Home />} />
           {/* <Route path="/about" element={<About />} /> */}
           <Route path="/howtohelp" element={<HowToHelp />} />
-          {/* <Route path="/community" element={<Community />} /> */}
-          <Route path="/community" element={<CommunityComingSoon />} />
+          <Route path="/community" element={<Community />} />
+          {/* <Route path="/community" element={<CommunityComingSoon />} /> */}
           <Route path="/contact" element={<ComingSoon />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup2 />} />
@@ -96,8 +96,8 @@ function App() {
           <Route path="/allnews/:id" element={<Readmorenews />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/select-outreach" element={<Documenting />} />
-          {/* <Route path="/profile/commoutform" element={<CommOutForm />} /> */}
-          <Route path="/profile/commoutform" element={<ComingSoon />} />
+          <Route path="/profile/commoutform" element={<CommOutForm />} />
+          {/* <Route path="/profile/commoutform" element={<ComingSoon />} /> */}
           <Route
             path="/profile/personaloutform"
             element={<PersonalOutForm />}
@@ -107,13 +107,13 @@ function App() {
           <Route path="/createOutreach" element={<CreateOutreach />} />
           {/* <Route path="/createOutreach/:helpreqid" element={<CreateOutreach />} /> */}
           <Route path="/profile/accsetting" element={<AccSetting />} />
-          {/* <Route
+          <Route
             path="/helpRequestEventWindow"
             element={<HelpRequestEventWindow />}
-          /> */}
-          <Route path="/helpRequestEventWindow" element={<ComingSoon />} />
-          {/* <Route path="/helpRequestForm" element={<HelpRequestForm />} /> */}
-          <Route path="/helpRequestForm" element={<ComingSoon />} />
+          />
+          {/* <Route path="/helpRequestEventWindow" element={<ComingSoon />} /> */}
+          <Route path="/helpRequestForm" element={<HelpRequestForm />} />
+          {/* <Route path="/helpRequestForm" element={<ComingSoon />} /> */}
           {/* <Route path="/icanhelp/:id" element={<ICanHelpForm />} /> */}
           <Route path="/icanhelp" element={<ComingSoon />} />
           {/* <Route path="/donateForm" element={<DonateForm />} /> */}
@@ -128,7 +128,7 @@ function App() {
             path="/allOutreachVisitLog"
             element={<AllOutreachVisitLog />}
           />
-          <Route path="visitLogDetails" element={<VisitLogDetails/>} /> 
+          <Route path="visitLogDetails" element={<VisitLogDetails />} />
           <Route path="/*" element={<Not404 />} />
         </Routes>
         <Footer />
