@@ -20,6 +20,7 @@ import { BiLogoFacebookCircle } from "react-icons/bi";
 
 import { RiTwitterXFill } from "react-icons/ri";
 import errorImg from "../images/error.png";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 import {
   handleGoogleSignIn,
@@ -99,15 +100,13 @@ function Login() {
         setError(
           <div className="flex flex-col">
             <div className="flex items-center">
-            <img src={errorImg} className="w-3 h-3 mr-2" />
+              <img src={errorImg} className="w-3 h-3 mr-2" />
               <div>User not found.</div>
             </div>
             <div className="flex items-center">
-            <img src={errorImg} className="w-3 h-3 mr-2" />
+              <img src={errorImg} className="w-3 h-3 mr-2" />
 
-              <div>
-            Please check your email address and password.
-              </div>
+              <div>Please check your email address and password.</div>
             </div>
           </div>
         );
@@ -116,6 +115,12 @@ function Login() {
       }
       setLoginSuccess(""); // Clearing out any success messages
     }
+  };
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleTogglePassword = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
   return (
@@ -185,7 +190,7 @@ function Login() {
                 </div>
                 <div className="self-stretch h-fit flex-col justify-start items-start gap-4 flex">
                   <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
-                    <div className="self-stretch text-zinc-700 text-[15px] font-semibold font-inter leading-tight">
+                    <div className="self-stretch text-zinc-700 text-[15px] font-dmsans font-semibold font-inter leading-tight">
                       Email
                     </div>
                     <div className="self-stretch  bg-white rounded border border-stone-300 justify-start items-center gap-2 inline-flex">
@@ -213,13 +218,13 @@ function Login() {
                     )}
                   </div>
                   <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
-                    <div className="self-stretch text-zinc-700 text-[15px]  font-semibold font-inter leading-tight">
+                    <div className="self-stretch text-zinc-700 text-[15px] font-dmsans font-semibold font-inter leading-tight">
                       Password
                     </div>
-                    <div className="self-stretch  bg-white rounded border border-stone-300 justify-start items-center gap-2 inline-flex">
-                      <div className="grow shrink basis-0 h-10 flex-col justify-center items-start inline-flex">
+                    {/*<div className="self-stretch  bg-white rounded border border-stone-300 justify-start items-center gap-2 inline-flex">
+                      <div className="grow shrink basis-0 h-10 justify-center items-start inline-flex">
                         <input
-                          type="password"
+                          type={showPassword ? "text" : "password"}
                           id="password"
                           placeholder="Enter your password"
                           className={`text-zinc-700 w-full h-full px-4 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
@@ -229,8 +234,32 @@ function Login() {
                           }`}
                           onChange={(e) => setPassword(e.target.value)}
                         ></input>
+                        <div
+                          className="cursor-pointer relative right-6 top-2/4 transform -translate-y-2/4"
+                          onClick={handleTogglePassword}
+                        >
+                          {showPassword ? <FaEyeSlash /> : <FaEye />}
+                        </div>
                       </div>
-                    </div>
+                        </div>*/}
+                        <div className="relative self-stretch bg-white rounded-md border-0 border-stone-300 justify-start items-center gap-2 inline-flex">
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          id="password"
+                          placeholder="Enter your password"
+                          className={`text-zinc-700 w-full h-10 px-4 text-[15px] rounded-md border-0 font-normal font-inter leading-snug tracking-wide outline-none ring-1 ring-inset ${
+                            errormsg.PassError !== "" ? "ring-red-500" : "ring-gray-300"
+                          }`}
+                          onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <div
+                          className="absolute right-4 top-2/4 transform -translate-y-2/4 cursor-pointer"
+                          onClick={handleTogglePassword}
+                        >
+                          {showPassword ? <FaEyeSlash /> : <FaEye />}
+                        </div>
+                      </div>
+                      
                     {errormsg.PassError && (
                       <div className="inline-flex items-center">
                         <img src={errorImg} className="w-3 h-3" />

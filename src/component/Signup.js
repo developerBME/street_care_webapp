@@ -352,13 +352,13 @@ function Signup2() {
                     <div className="self-stretch text-zinc-700 text-[15px] font-semibold font-inter leading-tight">
                       Email*
                     </div>
-                    <div className="self-stretch  bg-white rounded border border-stone-300 justify-start items-center gap-2 inline-flex">
+                    <div className="self-stretch  bg-white rounded-md border-0 border-stone-300 justify-start items-center gap-2 inline-flex">
                       <div className="grow shrink basis-0 h-10 flex-col justify-center items-start inline-flex">
                         <input
                           type="email"
                           id="email"
                           placeholder="Enter your email"
-                          className={`text-zinc-700 w-full h-full px-4 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
+                          className={`text-zinc-700 w-full h-full rounded-md border-0 px-4 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
                             errormsg.EmailError !== ""
                               ? "ring-red-500"
                               : "ring-gray-300"
@@ -378,13 +378,13 @@ function Signup2() {
                     <div className="self-stretch text-zinc-700 text-[15px]  font-semibold font-inter leading-tight">
                       Password*
                     </div>
-                    <div className="self-stretch  bg-white rounded border border-stone-300 justify-start items-center gap-2 inline-flex">
+                    <div className="self-stretch  bg-white rounded-md border-0 border-stone-300 justify-start items-center gap-2 inline-flex">
                       <div className="grow shrink basis-0 h-10 flex-col justify-center items-start inline-flex">
                         <input
                           type="password"
                           id="password"
                           placeholder="Enter your password"
-                          className={`text-zinc-700 w-full h-full px-4 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
+                          className={`text-zinc-700 w-full h-full px-4 text-[15px] border-0 rounded-md font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
                             errormsg.PassError !== ""
                               ? "ring-red-500"
                               : "ring-gray-300"
@@ -406,13 +406,13 @@ function Signup2() {
                     <div className="self-stretch text-zinc-700 text-[15px]  font-semibold font-inter leading-tight">
                       What should we call you?*
                     </div>
-                    <div className="self-stretch  bg-white rounded border border-stone-300 justify-start items-center gap-2 inline-flex">
+                    <div className="self-stretch  bg-white rounded-md border-0 border-stone-300 justify-start items-center gap-2 inline-flex">
                       <div className="grow shrink basis-0 h-10 flex-col justify-center items-start inline-flex">
                         <input
                           type="text"
                           id="name"
                           placeholder="Enter your profile name"
-                          className={`text-zinc-700 w-full h-full px-4 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
+                          className={`text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
                             errormsg.UsernameError !== ""
                               ? "ring-red-500"
                               : "ring-gray-300"
