@@ -368,9 +368,9 @@ function Signup2() {
                       </div>
                     </div>
                     {errormsg.EmailError && (
-                      <div className="inline-flex items-center">
+                      <div className="inline-flex items-center gap-1.5">
                   <img src={errorImg} className="w-3 h-3" />
-                  <div className="text-red-700">{errormsg.EmailError}</div>
+                  <div className="text-red-700 font-dmsaans">{errormsg.EmailError}</div>
                 </div>
                     )}
                   </div>
@@ -394,9 +394,9 @@ function Signup2() {
                       </div>
                     </div>
                     {errormsg.PassError && (
-                      <div className="inline-flex items-center">
+                      <div className="inline-flex items-center gap-1.5">
                   <img src={errorImg} className="w-3 h-3" />
-                  <div className="text-red-700">{errormsg.PassError}</div>
+                  <div className="text-red-700 font-dmsans">{errormsg.PassError}</div>
 
                 </div>
                     )}
@@ -423,9 +423,9 @@ function Signup2() {
                     </div>
                     {errormsg.UsernameError && (
                       
-                      <div className="inline-flex items-center">
+                      <div className="inline-flex items-center gap-1.5">
                   <img src={errorImg} className="w-3 h-3" />
-                  <div className="text-red-700">
+                  <div className="text-red-700 font-dmsans" >
                   {errormsg.UsernameError}
                 </div>
 
@@ -435,12 +435,12 @@ function Signup2() {
                 </div>
               </div>
 
-              <div className="self-stretch text-center mt-4 mb-4">
+              {/*<div className="self-stretch text-center mt-4 mb-4">
                 {error && <p className="text-red-500">{error}</p>}
                 {loginSuccess && (
                   <p className="text-green-500">{loginSuccess}</p>
                 )}
-              </div>
+                </div>*/}
               <div className="self-stretch my-14 h-14 flex-col justify-start items-start gap-4 flex">
                 <div className="self-stretch justify-center items-center gap-2.5 inline-flex">
                   <button

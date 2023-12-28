@@ -193,13 +193,13 @@ function Login() {
                     <div className="self-stretch text-zinc-700 text-[15px] font-dmsans font-semibold font-inter leading-tight">
                       Email
                     </div>
-                    <div className="self-stretch  bg-white rounded border border-stone-300 justify-start items-center gap-2 inline-flex">
-                      <div className="grow shrink basis-0 h-10 flex-col justify-center items-start inline-flex">
+                    <div className="self-stretch  bg-white border-stone-300 justify-start items-center gap-2 inline-flex">
+                      <div className="grow shrink basis-0 h-10 flex-col rounded-md border-0 justify-center items-start inline-flex">
                         <input
                           type="email"
                           id="email"
                           placeholder="Enter your email"
-                          className={`text-zinc-700 w-full h-full px-4 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
+                          className={`text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
                             errormsg.EmailError !== ""
                               ? "ring-red-500"
                               : "ring-gray-300"
@@ -209,9 +209,9 @@ function Login() {
                       </div>
                     </div>
                     {errormsg.EmailError && (
-                      <div className="inline-flex items-center">
+                      <div className="inline-flex items-center gap-1.5">
                         <img src={errorImg} className="w-3 h-3" />
-                        <div className="text-red-700">
+                        <div className="text-red-700 font-dmsans">
                           {errormsg.EmailError}
                         </div>
                       </div>
@@ -261,9 +261,9 @@ function Login() {
                       </div>
                       
                     {errormsg.PassError && (
-                      <div className="inline-flex items-center">
+                      <div className="inline-flex items-center gap-1.5">
                         <img src={errorImg} className="w-3 h-3" />
-                        <div className="text-red-700">{errormsg.PassError}</div>
+                        <div className="text-red-700 font-dmsans">{errormsg.PassError}</div>
                       </div>
                     )}
                   </div>
