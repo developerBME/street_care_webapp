@@ -15,11 +15,16 @@ import bronzeSeal from "../../images/bronzeSeal.png";
 import OutreachVisitLogCard from "../Community/OutreachVisitLogCard";
 import arrowRight from "../../images/arrowRight.png";
 import { useNavigate } from "react-router-dom";
+import { fetchVisitLogs } from "../VisitLogCardService";
+import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 
 function Success() {
   const [donations, setDonations] = useState("");
   const [helpedBy, setHelpedBy] = useState("");
   const [helpedPeople, setHelpedPeople] = useState("");
+  const [visitLogs, setVisitLogs] = useState([]);
+
+
   const navigate = useNavigate();
   useEffect(() => {
     const getValues = async () => {
@@ -51,6 +56,8 @@ function Success() {
         );
         setHelpedBy(uniqueID.size);
         setHelpedPeople(totalHelpedPeople);
+        const visitLogsData = await fetchVisitLogs();
+        setVisitLogs(visitLogsData);
       } catch (err) {
         console.log(err);
       }
@@ -58,6 +65,7 @@ function Success() {
     getValues();
   }, []);
 
+  
   return (
     <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
       <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
@@ -71,7 +79,7 @@ function Success() {
             <div className="text-center text-[10px] md:text-[12px] lg:text-[13px]">
               <b className="w-full">
                 "Experts say [Bright Mind/Street Care's] app will start those
-                conversations [to get those who aren't vaccinated vaccinated]."
+                conversations [to get those who aren't vaccinated, vaccinated]."
               </b>
             </div>
             <div className="w-16 h-16 items-center justify-center ">
@@ -354,27 +362,39 @@ function Success() {
       </div>
       {/* grid over */}
 
-      <div className="mt-8 space-y-9">
+      {/* <div className="mt-32 space-y-9">
         <div className="flex justify-between">
-          <div className="font-medium text-[45px] font-dmsans">
+          <div className="font-bricholage font-medium text-2xl  md:text-[45px] text-[#1F0A58]">
             Latest Actions - Visit Log
           </div>
-          <div
-            className="inline-flex items-center gap-2 font-medium text-[8px] lg:text-[13px] hover:cursor-pointer"
+          <div 
+            className="inline-flex items-center gap-2 font-medium text-[15px] sm:text-[17px] hover:cursor-pointer"
             onClick={() => {
-              navigate("/allOutreachVisitLog");
+              navigate("/allOutreachVisitLog",  { state: { from: "home" } });
             }}
           >
             View all
             <img src={arrowRight} className="w-4 h-4" />
           </div>
         </div>
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
-          <OutreachVisitLogCard />
-          <OutreachVisitLogCard />
-          <OutreachVisitLogCard />
+        {
+          isLoading ? (
+            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+              <EventCardSkeleton />
+              <EventCardSkeleton />
+              <EventCardSkeleton />
+            </div>
+          ) :(
+            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+        {(visitLogs.slice(0,3).map((visitLogData) => (
+          <OutreachVisitLogCard visitLogCardData={visitLogData}/>
+              )))}
         </div>
-      </div>
+          )
+        }
+        
+        
+      </div> */}
     </div>
   );
 }

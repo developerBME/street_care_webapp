@@ -25,8 +25,6 @@ const ICanHelpForm = () => {
             const user = await fetchUserName(result.uid);
             setData(result);
             setUserName(user);
-            console.log("Result");
-            console.log(result);
           } catch (error) {
             console.error(error.message);
           }
@@ -149,7 +147,7 @@ const ICanHelpForm = () => {
                     <CustomButton label="Cancel" name="buttonborder" />
                 </div>
                 {success && (
-                  <ConfirmationModal isOpen={true} id ={id} />
+                  <ConfirmationModal isOpen={true} id = {id} outreachEvents ={data.outreachEvent}/>
                 )}
             </div>
           </div>

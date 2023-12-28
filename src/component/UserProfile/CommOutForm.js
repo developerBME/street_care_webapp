@@ -16,6 +16,7 @@ import { db } from "../firebase";
 import CustomButton from "../Buttons/CustomButton";
 import ConfirmationModal from "./ConfirmationModal";
 import errorImg from "../../images/error.png";
+import { emailConfirmation } from "../EmailService";
 
 const starStyle = {
   width: 60,
@@ -34,9 +35,9 @@ function CommOutForm() {
   //   console.log(newRating);
   // };
 
-  const numberHelped = useRef("");
+  const [numberHelped, setNumberHelped] = useState(null);
   const [itemArray, setItemArray] = useState([]);
-  const NumberOfItems = useRef("");
+  const [itemQty, setItemQty] = useState("");
   const [rating, setRating] = useState(0);
   const checkboxes = useRef([]);
   const [success, setSuccess] = useState(false);
@@ -50,12 +51,26 @@ function CommOutForm() {
     outreachError: "",
   });
 
-  const handleNumChange = (e) => {
-    updateErrorState("numberHelpedError", "");
-  };
   const handleItemQtyChange = (e) => {
-    updateErrorState("itemQtyError", "");
+    const inputValue = e.target.value;
+    if (/^[1-9]+\d*$/.test(inputValue) || inputValue === "") {
+      setItemQty(inputValue);
+      updateErrorState("itemQtyError", "");
+    } else {
+      updateErrorState("itemQtyError", "Please enter a number");
+    }
   };
+
+  const handleNumChange = (e) => {
+    const inputValue = e.target.value;
+    if (/^[1-9]+\d*$/.test(inputValue) || inputValue === "") {
+      setNumberHelped(inputValue);
+      updateErrorState("numberHelpedError", "");
+    } else {
+      updateErrorState("numberHelpedError", "Please enter a number");
+    }
+  };
+
   const handleOutreachChange = (e) => {
     updateErrorState("outreachError", "");
   };
@@ -107,43 +122,60 @@ function CommOutForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    let setReturn = false;
     // Form Validation Start
-    if (!numberHelped.current.value) {
+    if (!numberHelped) {
       updateErrorState("numberHelpedError", "Number is required");
+      setReturn = true;
     } else {
       updateErrorState("numberHelpedError", "");
     }
 
-    if (itemArray == "") {
+    if (itemArray == "" || itemArray == []) {
       updateErrorState(
         "checkboxesError",
         "Please provide the kind of help provided"
       );
+      setReturn = true;
     } else {
       updateErrorState("checkboxesError", "");
     }
 
-    if (!NumberOfItems.current.value) {
+    if (!itemQty) {
       updateErrorState("itemQtyError", "Enter Quantity");
+      setReturn = true;
     } else {
       updateErrorState("itemQtyError", "");
     }
 
     if (!outreachRef.current.value) {
       updateErrorState("outreachError", "Enter Outreach Attended");
+      setReturn = true;
     } else {
       updateErrorState("outreachError", "");
     }
-
+    if (setReturn) {
+      return;
+    }
     let obj = {
       uid: fAuth.currentUser.uid,
-      numberPeopleHelped: numberHelped.current.value,
+      numberPeopleHelped: numberHelped,
       whatGiven: itemArray,
-      itemQty: NumberOfItems.current.value,
+      itemQty: itemQty,
       rating: rating,
       outreachEvent: outreachRef.current.value,
     };
+
+    const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px">
+      <h1>Thank you for creating the outreach</h1>
+      <p>Your Community Outreach Form has been successfully created and you can view it in your profile.</p>
+      <p>Here are some of the details:</p>
+      <ul>
+      <li>Number of People Helped: ${numberHelped}</li>
+      <li>Outreach Event: ${outreachRef.current.value}</li>
+      <li>Item Quantity: ${itemQty}</li>
+      </ul>
+    </div>`;
 
     try {
       const logRef = collection(db, "testLog");
@@ -151,6 +183,7 @@ function CommOutForm() {
       if (docRef.id) {
         console.log(docRef.id);
         setSuccess(true);
+        emailConfirmation('shivanip@brightmindenrichment.org', fAuth.currentUser.displayName, '', emailHTML);
         clearFields();
       }
     } catch (e) {
@@ -159,7 +192,7 @@ function CommOutForm() {
   };
 
   const clearFields = () => {
-    NumberOfItems.current.value = "";
+    setItemQty(null);
     numberHelped.current.value = "";
     setItemArray([]);
     setOutreach("");
@@ -225,17 +258,16 @@ function CommOutForm() {
                     <div className="self-stretch h-fit  border-collapse     ">
                       <div className=" h-14  justify-center items-start ">
                         <input
-                          type="number"
                           id="numberHelped"
+                          value={numberHelped}
                           placeholder="How many people did you help?"
+                          onChange={handleNumChange}
                           className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
                             error.numberHelpedError !== ""
                               ? "ring-red-500"
                               : "ring-gray-300"
                           }`}
                           required={true}
-                          ref={numberHelped}
-                          onChange={handleNumChange}
                         ></input>
                         {error.numberHelpedError && (
                           <div className="inline-flex items-center">
@@ -315,6 +347,7 @@ function CommOutForm() {
                         className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
                         ref={(el) => (checkboxes.current[0] = el)}
+                        onChange={handleItemArray}
                       ></input>
                       <label
                         for="food-option"
@@ -521,13 +554,12 @@ function CommOutForm() {
                         <input
                           type="number"
                           id="-itemnumber"
-                          placeholder="Number"
+                          placeholder="Number of Items donated"
                           className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
                             error.itemQtyError !== ""
                               ? "ring-red-500"
                               : "ring-gray-300"
                           }`}
-                          ref={NumberOfItems}
                           onChange={handleItemQtyChange}
                         ></input>
                         {error.itemQtyError && (

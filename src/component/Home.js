@@ -229,11 +229,11 @@ function HomePage() {
         >
           <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
             {" "}
-            Upcoming outreach events
+            Upcoming Outreach Events:
           </p>
 
           {isLoading ? (
-            <div className="flex justify-between items-center w-full h-fit">
+            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
               <EventCardSkeleton />
               <EventCardSkeleton />
               <EventCardSkeleton />
@@ -272,11 +272,11 @@ function HomePage() {
         <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] scroll-m-16">
           <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
             {" "}
-            Past outreach events
+            Past Outreach Events:
           </p>
 
           {isLoading ? (
-            <div className="flex justify-between items-center w-full h-fit">
+            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
               <PastOutreachEventCardSkeleton />
               <PastOutreachEventCardSkeleton />
               <PastOutreachEventCardSkeleton />

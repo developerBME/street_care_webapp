@@ -9,7 +9,7 @@ const News = ({ NewsCardData }) => {
       key="123"
       className="flex max-w-2xl flex-col items-start justify-normal border-t-4 border-[#6840E0] bg-white h-full "
     >
-      <div className="h-full">
+      <div className="">
         <h1 className="text-[#1f1e1e] text-xl pt-4 pb-2 px-2 font-bricolage font-medium">
           {NewsTitle}
         </h1>
@@ -21,7 +21,7 @@ const News = ({ NewsCardData }) => {
         </p>
       </div>
       <div className="flex flex-col h-full ml-2 mt-6 justify-end">
-        <div className="mt-16">
+        <div className="mt-8">
           <Link
             to={`/allnews/${id}`}
             className="text-sm font-opensans font-normal text-[#212121] underline pb-2"

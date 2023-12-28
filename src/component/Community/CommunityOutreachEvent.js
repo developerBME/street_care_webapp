@@ -6,6 +6,7 @@ import arrowRight from "../../images/arrowRight.png";
 import CustomButton from "../Buttons/CustomButton";
 import OutreachVisitLogCard from "./OutreachVisitLogCard";
 import { fetchEvents, formatDate } from "../EventCardService";
+import { fetchVisitLogs } from "../VisitLogCardService";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 
 const CommunityOutreachEvent = () => {
@@ -60,6 +61,7 @@ const CommunityOutreachEvent = () => {
   ];
 
   const [events, setEvents] = useState([]);
+  const [visitLogs, setVisitLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [eventsDisplay, setEventsDisplay] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
@@ -70,6 +72,8 @@ const CommunityOutreachEvent = () => {
   useEffect(() => {
     const fetchData = async () => {
       const eventsData = await fetchEvents();
+      const visitLogsData = await fetchVisitLogs();
+      setVisitLogs(visitLogsData)
       // Filter events to get only past events
       const upcomingEvents = eventsData
         .filter((event) => {
@@ -88,7 +92,6 @@ const CommunityOutreachEvent = () => {
 
     fetchData();
   }, []);
-
   // Handle state selection from dropdown
   const handleStateSelection = (state) => {
     setSelectedState(state);
@@ -206,7 +209,7 @@ const CommunityOutreachEvent = () => {
         </div>
 
         {isLoading ? (
-          <div className="flex justify-between items-center w-full h-fit gap-2">
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
             <EventCardSkeleton />
             <EventCardSkeleton />
             <EventCardSkeleton />
@@ -268,15 +271,15 @@ const CommunityOutreachEvent = () => {
           </div>
         </div>
         {isLoading?(
-          <div className="flex justify-between items-center w-full h-fit gap-2">
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
             <EventCardSkeleton />
             <EventCardSkeleton />
             <EventCardSkeleton />
           </div>
         ):(<div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
-        <OutreachVisitLogCard />
-        <OutreachVisitLogCard />
-        <OutreachVisitLogCard />
+        {(visitLogs.slice(0,3).map((visitLogData) => (
+          <OutreachVisitLogCard visitLogCardData={visitLogData}/>
+              )))}
       </div>)}
         
         {visibleItems < cardData.length && (

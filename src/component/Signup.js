@@ -17,6 +17,7 @@ import { AiFillApple, AiFillFacebook } from "react-icons/ai";
 import { BiLogoFacebookCircle } from "react-icons/bi";
 
 import { RiTwitterXFill } from "react-icons/ri";
+import errorImg from "../images/error.png"
 
 const handleGoogleSignIn = async (e) => {
   e.preventDefault();
@@ -217,13 +218,6 @@ function Signup2() {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-    if (!userName) {
-      setError("Username is Mandatory");
-      updateErrorState("UsernameError", "UserName is required!");
-      return;
-    } else if (userName) {
-      updateErrorState("UsernameError", "");
-    }
     if (!email || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
       setError("Enter Valid Email Address");
       updateErrorState("EmailError", "Email is required!");
@@ -237,6 +231,14 @@ function Signup2() {
       return;
     } else if (password) {
       updateErrorState("PassError", "");
+    }
+
+    if (!userName) {
+      setError("Username is Mandatory");
+      updateErrorState("UsernameError", "UserName is required!");
+      return;
+    } else if (userName) {
+      updateErrorState("UsernameError", "");
     }
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -350,13 +352,13 @@ function Signup2() {
                     <div className="self-stretch text-zinc-700 text-[15px] font-semibold font-inter leading-tight">
                       Email*
                     </div>
-                    <div className="self-stretch  bg-white rounded border border-stone-300 justify-start items-center gap-2 inline-flex">
+                    <div className="self-stretch  bg-white rounded-md border-0 border-stone-300 justify-start items-center gap-2 inline-flex">
                       <div className="grow shrink basis-0 h-10 flex-col justify-center items-start inline-flex">
                         <input
                           type="email"
                           id="email"
                           placeholder="Enter your email"
-                          className={`text-zinc-700 w-full h-full px-4 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
+                          className={`text-zinc-700 w-full h-full rounded-md border-0 px-4 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
                             errormsg.EmailError !== ""
                               ? "ring-red-500"
                               : "ring-gray-300"
@@ -366,20 +368,23 @@ function Signup2() {
                       </div>
                     </div>
                     {errormsg.EmailError && (
-                      <div className="text-red-700">{errormsg.EmailError}</div>
+                      <div className="inline-flex items-center gap-1.5">
+                  <img src={errorImg} className="w-3 h-3" />
+                  <div className="text-red-700 font-dmsaans">{errormsg.EmailError}</div>
+                </div>
                     )}
                   </div>
                   <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
                     <div className="self-stretch text-zinc-700 text-[15px]  font-semibold font-inter leading-tight">
                       Password*
                     </div>
-                    <div className="self-stretch  bg-white rounded border border-stone-300 justify-start items-center gap-2 inline-flex">
+                    <div className="self-stretch  bg-white rounded-md border-0 border-stone-300 justify-start items-center gap-2 inline-flex">
                       <div className="grow shrink basis-0 h-10 flex-col justify-center items-start inline-flex">
                         <input
                           type="password"
                           id="password"
                           placeholder="Enter your password"
-                          className={`text-zinc-700 w-full h-full px-4 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
+                          className={`text-zinc-700 w-full h-full px-4 text-[15px] border-0 rounded-md font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
                             errormsg.PassError !== ""
                               ? "ring-red-500"
                               : "ring-gray-300"
@@ -389,7 +394,11 @@ function Signup2() {
                       </div>
                     </div>
                     {errormsg.PassError && (
-                      <div className="text-red-700">{errormsg.PassError}</div>
+                      <div className="inline-flex items-center gap-1.5">
+                  <img src={errorImg} className="w-3 h-3" />
+                  <div className="text-red-700 font-dmsans">{errormsg.PassError}</div>
+
+                </div>
                     )}
                   </div>
                   {/*  */}
@@ -397,13 +406,13 @@ function Signup2() {
                     <div className="self-stretch text-zinc-700 text-[15px]  font-semibold font-inter leading-tight">
                       What should we call you?*
                     </div>
-                    <div className="self-stretch  bg-white rounded border border-stone-300 justify-start items-center gap-2 inline-flex">
+                    <div className="self-stretch  bg-white rounded-md border-0 border-stone-300 justify-start items-center gap-2 inline-flex">
                       <div className="grow shrink basis-0 h-10 flex-col justify-center items-start inline-flex">
                         <input
                           type="text"
                           id="name"
                           placeholder="Enter your profile name"
-                          className={`text-zinc-700 w-full h-full px-4 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
+                          className={`text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
                             errormsg.UsernameError !== ""
                               ? "ring-red-500"
                               : "ring-gray-300"
@@ -413,20 +422,25 @@ function Signup2() {
                       </div>
                     </div>
                     {errormsg.UsernameError && (
-                      <div className="text-red-700">
-                        {errormsg.UsernameError}
-                      </div>
+                      
+                      <div className="inline-flex items-center gap-1.5">
+                  <img src={errorImg} className="w-3 h-3" />
+                  <div className="text-red-700 font-dmsans" >
+                  {errormsg.UsernameError}
+                </div>
+
+                </div>
                     )}
                   </div>
                 </div>
               </div>
 
-              <div className="self-stretch text-center mt-4 mb-4">
+              {/*<div className="self-stretch text-center mt-4 mb-4">
                 {error && <p className="text-red-500">{error}</p>}
                 {loginSuccess && (
                   <p className="text-green-500">{loginSuccess}</p>
                 )}
-              </div>
+                </div>*/}
               <div className="self-stretch my-14 h-14 flex-col justify-start items-start gap-4 flex">
                 <div className="self-stretch justify-center items-center gap-2.5 inline-flex">
                   <button

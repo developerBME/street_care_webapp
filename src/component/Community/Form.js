@@ -2,20 +2,22 @@ import React, { useRef, useState, useEffect } from "react";
 
 import Chip from "../Community/Chip";
 import arrowDown from "../../images/arrowDown.png";
-import { doc, updateDoc, addDoc, collection } from "firebase/firestore";
+import { doc, updateDoc, addDoc, collection, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import errorImg from "../../images/error.png";
 import "react-datepicker/dist/react-datepicker.css";
-import DatePicker from 'react-datepicker';
-import { Timestamp } from 'firebase/firestore';
-import {checkString,checkNumber} from "../helper/validator"
+import DatePicker from "react-datepicker";
+import { Timestamp } from "firebase/firestore";
+import { checkString, checkNumber } from "../helper/validator";
 import { UpdateDisabledRounded } from "@mui/icons-material";
 import CreateOutreachModal from "./CreateOutreachModal";
-
-
+import { fetchHelpReqById } from "../HelpRequestService";
+import { emailConfirmation } from "../EmailService";
 
 const chipList = [
+  "Childcare",
+  "Counseling and Support",
   "Clothing",
   "Education",
   "Personal Care",
@@ -47,9 +49,8 @@ const CustomInput = ({ value, onClick, onChange, id, className }) => (
   </div>
 );
 
-
 const Form = (hrid) => {
-  console.log(hrid.hrid)
+  console.log(hrid.hrid);
   const [success, setSuccess] = useState(false);
   const nameRef = useRef("");
   const descRef = useRef("");
@@ -66,9 +67,12 @@ const Form = (hrid) => {
   const [stateList, setStateList] = useState({});
   const [stateNames, setStateNames] = useState([]);
   const [cityNames, setCityNames] = useState([]);
-  const [state, setState] = useState("");
-  const [city, setCity] = useState("");
-  
+  // const [state, setState] = useState("");
+  // const [city, setCity] = useState("");
+  const [helpBool, setHelpBool] = useState(false);
+  const [helpDetails, setHelpDetails] = useState({});
+  const [helpReqError, setHelpReqError] = useState(false);
+
   const [error, setError] = useState({
     nameError: "",
     streetError: "",
@@ -79,8 +83,8 @@ const Form = (hrid) => {
     stimeError: "",
     etimeError: "",
     helpError: "",
-    descError:"",
-    maxCapError:"",
+    descError: "",
+    maxCapError: "",
   });
 
   //
@@ -113,7 +117,7 @@ const Form = (hrid) => {
   // This function is drilled to child component: Chips
   function handleHelpTypeArray(val, checked) {
     if (checked) {
-      setHelpType([...helpType, val]);
+      setHelpType((helpType) => [...helpType, val]);
     } else {
       setHelpType(helpType.filter((item) => item !== val));
     }
@@ -121,18 +125,58 @@ const Form = (hrid) => {
   const [shouldSubmit, setShouldSubmit] = useState(false);
 
   useEffect(() => {
+    if (hrid.hrid) {
+      setHelpBool(true);
+      const getHelpDetails = async () => {
+        try {
+          const helpData = await fetchHelpReqById(hrid.hrid);
+          setHelpDetails(helpData);
+        } catch (e) {
+          setHelpReqError(true);
+        }
+      };
+      getHelpDetails();
+    } else {
+      setHelpBool(false);
+    }
+  }, [hrid.hrid]);
+
+  useEffect(() => {
+    if (helpDetails.title) {
+      nameRef.current.value = helpDetails.title;
+    }
+    if (helpDetails?.location?.street) {
+      streetRef.current.value = helpDetails?.location?.street;
+    }
+    if (helpDetails?.location?.zipcode) {
+      zipcodeRef.current.value = helpDetails?.location?.zipcode;
+    }
+    if (helpDetails?.location?.state && stateRef.current) {
+      stateRef.current.value = helpDetails?.location?.state;
+    }
+    if (helpDetails?.location?.city && cityRef.current) {
+      cityRef.current.value = helpDetails?.location?.city;
+    }
+  }, [helpDetails]);
+
+  useEffect(() => {
+    console.log(helpDetails);
+  }, [helpDetails]);
+  useEffect(() => {
     const submitForm = async () => {
-      const hasErrors = Object.values(error).some(errorMessage => errorMessage !== "");
-  
+      const hasErrors = Object.values(error).some(
+        (errorMessage) => errorMessage !== ""
+      );
+
       if (hasErrors) {
         console.log("There are errors in the form");
         setShouldSubmit(false); // Reset the submission flag
       } else {
         // Proceed with form submission logic
 
-        // is this help request flow? 
+        // is this help request flow?
         // true if redirected from help request and false for organic outreach event.
-        const isHelpReqFlow = !(typeof hrid.hrid=="undefined")
+        const isHelpReqFlow = !(typeof hrid.hrid == "undefined");
         try {
           let obj = {
             uid: fAuth.currentUser.uid,
@@ -148,34 +192,49 @@ const Form = (hrid) => {
               state: stateRef.current.value,
               zipcode: zipcodeRef.current.value,
             },
-            helpType:helpRef.current.value,
+            helpType: helpRef.current.value,
             skills: helpType,
             createdAt: Date(),
             interests: 0,
             participants: [],
             approved: false,
-            helpRequest:
-              isHelpReqFlow
-              ? [hrid.hrid]
-              : [] ,
+            helpRequest: isHelpReqFlow ? [hrid.hrid] : [],
           };
-          
-          // check if flow comes from help request
-          if (isHelpReqFlow){
-            const helpRequestRef = doc(db, "helpRequests", hrid.hrid);
-            const updateRef = await updateDoc(helpRequestRef, {
-            status : "Help on the way",
-            });
-          }
+
 
           // Insert doc in outreach event
           const eventRef = collection(db, "outreachEvents");
-          const docRef = await addDoc(eventRef, obj);
           
-          // Successful if outreach event is updated   
-          if (docRef.id) {
-            console.log(docRef.id);
+          async function postDoc (ref,obj) {
+            const docRef = await addDoc(ref,obj)
+            return (docRef.id)
+          }
+          const ack = await postDoc(eventRef,obj);
+
+          // check if flow comes from help request
+          if (isHelpReqFlow) {
+            const helpRequestRef = doc(db, "helpRequests", hrid.hrid);
+            const helpData = await fetchHelpReqById(hrid.hrid);
+            let outreachEvent = helpData.outreachEvent || [];
+            outreachEvent.push(ack)
+            const updateRef = await updateDoc(helpRequestRef, {
+              status: "Help on the way",
+              outreachEvent: outreachEvent
+            });
+          }
+
+          const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px"><h1>Thank you for creating the outreach</h1><p>Your outreach <b>${nameRef.current.value}</b> has been successfully created and you can view it in your profile.</p>
+          <p>Here are some of the details:</p>
+          <ul>
+          <li>Description: ${descRef.current.value}</li>
+          <li>Location: ${streetRef.current.value}, ${cityRef.current.value}, ${stateRef.current.value}, ${zipcodeRef.current.value}</li>
+          <li>Help Type: ${helpRef.current.value}</li>
+          </ul>
+          </div>`;
+          // Successful if outreach event is updated
+          if (ack) {
             setSuccess(true);
+            emailConfirmation('shivanip@brightmindenrichment.org', fAuth.currentUser.displayName, nameRef.current.value, emailHTML);
             clearFields();
           }
         } catch (e) {
@@ -183,12 +242,12 @@ const Form = (hrid) => {
         }
       }
     };
-  
+
     if (shouldSubmit) {
       submitForm();
     }
   }, [shouldSubmit, error]);
-    
+
   useEffect(() => {
     async function getStates() {
       const response = await fetch(
@@ -212,6 +271,10 @@ const Form = (hrid) => {
     getStates();
   }, []);
 
+  useEffect(() => {
+    console.log(helpType);
+  }, [helpType]);
+
   async function getCities(e) {
     const stateCode = stateList.filter((x) => x.name == e.target.value)[0]
       .postalAbreviation;
@@ -232,116 +295,127 @@ const Form = (hrid) => {
     });
     console.log("Unfiltered: " + data.results.length);
     console.log("Filtered: " + filteredData.length);
-    setState(e.target.value);
+    // setState(e.target.value);
     setCityNames(filteredData);
     updateErrorState("stateError", "");
     updateErrorState("cityError", "");
   }
 
-  const handleNameChange = (e)=>{
-    updateErrorState("nameError","")
-  }
-  const handleStreetChange = (e)=>{
-    updateErrorState("streetError","")
-  }
-  const handleCityChange = (e)=>{
-    updateErrorState("cityError","")
-  }
-  const handleDescChange = (e)=>{
-    updateErrorState("descError","")
-  }
-  const handleCapChange = (e)=>{
-    updateErrorState("maxCapError","")
-  }
-  const handleStateChange = (e)=>{
-    updateErrorState("stateError","")
-  }
-  const handleZipChange = (e)=>{
-    updateErrorState("zipError","")
-  }
-  const handleHelpChange = (e)=>{
-    updateErrorState("helpError","")
-  }
-  const handleStimeChange = (e)=>{
-    updateErrorState("stimeError","")
-  }
-  const handleEtimeChange = (e)=>{
-    updateErrorState("etimeError","")
-  } 
+  const handleNameChange = (e) => {
+    updateErrorState("nameError", "");
+  };
+  const handleStreetChange = (e) => {
+    updateErrorState("streetError", "");
+  };
+  const handleCityChange = (e) => {
+    updateErrorState("cityError", "");
+  };
+  const handleDescChange = (e) => {
+    updateErrorState("descError", "");
+  };
+  const handleCapChange = (e) => {
+    updateErrorState("maxCapError", "");
+  };
+  const handleStateChange = (e) => {
+    updateErrorState("stateError", "");
+  };
+  const handleZipChange = (e) => {
+    updateErrorState("zipError", "");
+  };
+  const handleHelpChange = (e) => {
+    updateErrorState("helpError", "");
+  };
+  const handleStimeChange = (e) => {
+    updateErrorState("stimeError", "");
+  };
+  const handleEtimeChange = (e) => {
+    updateErrorState("etimeError", "");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setShouldSubmit(true); 
-
+    setShouldSubmit(true);
 
     // Form Validation Start
     if (!nameRef.current.value) {
       updateErrorState("nameError", "Name is required");
-    } else {  
-      try{
-        checkString(nameRef.current.value,"Event Name");
-        updateErrorState("nameError","");
-      }catch(e){
-        updateErrorState("nameError","Description should consist only characters")
+    } else {
+      try {
+        checkString(nameRef.current.value, "Event Name");
+        updateErrorState("nameError", "");
+      } catch (e) {
+        updateErrorState(
+          "nameError",
+          "Description should consist only characters"
+        );
       }
     }
-    if(descRef.current.value){
-      try{
-        checkString(descRef.current.value,"Event Name");
-        updateErrorState("descError","");
-      }catch(e){
-        updateErrorState("descError","Should consist only characters")
+    if (descRef.current.value) {
+      try {
+        checkString(descRef.current.value, "Event Name");
+        updateErrorState("descError", "");
+      } catch (e) {
+        updateErrorState("descError", "Should consist only characters");
       }
     }
 
-    try{
-      checkNumber(maxCapRef.current.value,"Event Name");
-      updateErrorState("maxCapError","");
-    }catch(e){
-      updateErrorState("maxCapError","Should consist only Numbers")
+    try {
+      checkNumber(maxCapRef.current.value, "Event Name");
+      updateErrorState("maxCapError", "");
+    } catch (e) {
+      updateErrorState("maxCapError", "Should consist only Numbers");
     }
 
     if (!streetRef.current.value) {
       updateErrorState("streetError", "Street is required");
     } else {
-      try{
-        checkString(streetRef.current.value,"Event Name");
-        updateErrorState("streetError","");
-      }catch(e){
-        updateErrorState("streetError","Street should consist only characters")
+      try {
+        checkString(streetRef.current.value, "Event Name");
+        updateErrorState("streetError", "");
+      } catch (e) {
+        updateErrorState(
+          "streetError",
+          "Street should consist only characters"
+        );
       }
     }
 
     if (!cityRef.current.value) {
       updateErrorState("cityError", "City is required");
     } else {
-      try{
-        checkString(cityRef.current.value,"Event Name");
-        updateErrorState("cityError","");
-      }catch(e){
-        updateErrorState("cityError","Description should consist only characters")
+      try {
+        checkString(cityRef.current.value, "Event Name");
+        updateErrorState("cityError", "");
+      } catch (e) {
+        updateErrorState(
+          "cityError",
+          "Description should consist only characters"
+        );
       }
     }
 
     if (!stateRef.current.value) {
       updateErrorState("stateError", "Street is required");
     } else {
-      try{
-        checkString(stateRef.current.value,"Event Name");
-        updateErrorState("stateError","");
-      }catch(e){
-        updateErrorState("stateError","Description should consist only characters")
+      try {
+        checkString(stateRef.current.value, "Event Name");
+        updateErrorState("stateError", "");
+      } catch (e) {
+        updateErrorState(
+          "stateError",
+          "Description should consist only characters"
+        );
       }
     }
 
     if (!zipcodeRef.current.value) {
       updateErrorState("zipError", "Zipcode is required");
     } else {
-      try{
-        checkNumber(zipcodeRef.current.value,"Event Name");
-        updateErrorState("zipError","");
-      }catch(e){
-        updateErrorState("zipError","Should consist only Numbers")
+      try {
+        checkNumber(zipcodeRef.current.value, "Event Name");
+        updateErrorState("zipError", "");
+      } catch (e) {
+        updateErrorState("zipError", "Should consist only Numbers");
       }
     }
 
@@ -360,22 +434,23 @@ const Form = (hrid) => {
     if (!helpRef.current.value) {
       updateErrorState("helpError", "Help Type is required");
     } else {
-      try{
-        checkString(helpRef.current.value,"Event Name");
-        updateErrorState("helpError","");
-      }catch(e){
-        updateErrorState("helpError","This field should consist only characters")
+      try {
+        checkString(helpRef.current.value, "Event Name");
+        updateErrorState("helpError", "");
+      } catch (e) {
+        updateErrorState(
+          "helpError",
+          "This field should consist only characters"
+        );
       }
     }
-
   };
 
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
 
-
   return (
-    <div >
+    <div>
       <form className="space-y-6 " onSubmit={handleSubmit}>
         <div>
           <div className="lg:text-5xl text-3xl font-medium font-bricolage pb-4 lg:pb-16">
@@ -396,6 +471,7 @@ const Form = (hrid) => {
                 }`}
                 placeholder="Use Location by default for group meetup"
                 id="event-name"
+                disabled={helpBool}
                 ref={nameRef}
                 onChange={handleNameChange}
               />
@@ -425,7 +501,7 @@ const Form = (hrid) => {
                 </div>
               )}
             </div>
-            
+
             <div className="space-y-1.5">
               <p className="font-semibold font-['Inter'] text-[15px]">
                 Maximum capacity of participants allowed
@@ -461,6 +537,7 @@ const Form = (hrid) => {
                 }`}
                 placeholder="Street"
                 id="street"
+                disabled={helpBool}
                 ref={streetRef}
                 onChange={handleStreetChange}
               />
@@ -492,42 +569,47 @@ const Form = (hrid) => {
               </div>*/}
 
             <div className="space-y-1.5">
-              
-            <p className="font-semibold font-['Inter'] text-[15px]">
-            State*
-          </p>
-          <select
-                    className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
-                      error.stateError !== "" ? "ring-red-500" : "ring-gray-300"
-                    }`}
-                    defaultValue=""
-                    ref={stateRef}
-                    onChange={getCities}
-                  >
-                    <option value="" disabled>
-                      Please select from the list
-                    </option>
-                    {stateNames &&
-                      stateNames.map((stateName, index) => {
-                        return (
-                          <option
-                            className="w-fit"
-                            value={stateName}
-                            key={"state_" + index}
-                          >
-                            {stateName}
-                          </option>
-                        );
-                      })}
-                  </select>
-          {error.stateError && (
-            <div className="inline-flex items-center">
-              <img src={errorImg} className="w-3 h-3" />
-              <p className="text-red-600 text-xs">{error.stateError}</p>
+              <p className="font-semibold font-['Inter'] text-[15px]">State*</p>
+              {helpBool && (
+                <input
+                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300`}
+                  ref={stateRef}
+                  disabled={true}
+                ></input>
+              )}
+              {!helpBool && (
+                <select
+                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                    error.stateError !== "" ? "ring-red-500" : "ring-gray-300"
+                  }`}
+                  ref={stateRef}
+                  onChange={getCities}
+                >
+                  <option value="" disabled>
+                    Please select from the list
+                  </option>
+                  {stateNames &&
+                    stateNames.map((stateName, index) => {
+                      return (
+                        <option
+                          className="w-fit"
+                          value={stateName}
+                          key={"state_" + index}
+                        >
+                          {stateName}
+                        </option>
+                      );
+                    })}
+                </select>
+              )}
+              {error.stateError && (
+                <div className="inline-flex items-center">
+                  <img src={errorImg} className="w-3 h-3" />
+                  <p className="text-red-600 text-xs">{error.stateError}</p>
+                </div>
+              )}
             </div>
-          )}
-            </div>
-              
+
             <div className="inline-flex grid grid-cols-2 space-x-4">
               {/*<div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
@@ -551,43 +633,53 @@ const Form = (hrid) => {
                 )}
                 </div>*/}
 
-                <div className="space-y-1.5">
-                <p className="font-semibold font-['Inter'] text-[15px]">City*</p>
-              <select
-                          className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
-                            error.cityError !== "" ? "ring-red-500" : "ring-gray-300"
-                          }`}
-                          defaultValue=""
-                          disabled={!cityNames}
-                          ref={cityRef}
-                          onChange={(e) => {
-                            setCity(e.target.value);
-                          }}
-                        >
-                          <option value="" disabled>
-                            Please select from the list
+              <div className="space-y-1.5">
+                <p className="font-semibold font-['Inter'] text-[15px]">
+                  City*
+                </p>
+                {helpBool && (
+                  <input
+                    className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300`}
+                    ref={cityRef}
+                    disabled={true}
+                  ></input>
+                )}
+                {!helpBool && (
+                  <select
+                    className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                      error.cityError !== "" ? "ring-red-500" : "ring-gray-300"
+                    }`}
+                    defaultValue=""
+                    disabled={!cityNames}
+                    ref={cityRef}
+                    // onChange={(e) => {
+                    //   setCity(e.target.value);
+                    // }}
+                  >
+                    <option value="" disabled>
+                      Please select from the list
+                    </option>
+                    {cityNames &&
+                      cityNames.map((cityName, index) => {
+                        return (
+                          <option
+                            className="w-fit"
+                            value={cityName}
+                            key={"city_" + index}
+                          >
+                            {cityName}
                           </option>
-                          {cityNames &&
-                            cityNames.map((cityName, index) => {
-                              return (
-                                <option
-                                  className="w-fit"
-                                  value={cityName}
-                                  key={"city_" + index}
-                                >
-                                  {cityName}
-                                </option>
-                              );
-                            })}
-                        </select>
-              {error.cityError && (
-                <div className="inline-flex items-center">
-                  <img src={errorImg} className="w-3 h-3" />
-                  <p className="text-red-600 text-xs">{error.cityError}</p>
-                </div>
-              )}
-                </div>
-
+                        );
+                      })}
+                  </select>
+                )}
+                {error.cityError && (
+                  <div className="inline-flex items-center">
+                    <img src={errorImg} className="w-3 h-3" />
+                    <p className="text-red-600 text-xs">{error.cityError}</p>
+                  </div>
+                )}
+              </div>
 
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
@@ -600,6 +692,7 @@ const Form = (hrid) => {
                   }`}
                   placeholder="11201"
                   id="zipcode"
+                  disabled={helpBool}
                   ref={zipcodeRef}
                   onChange={handleZipChange}
                 />
@@ -618,7 +711,10 @@ const Form = (hrid) => {
                 </p>
                 <DatePicker
                   selected={startDate}
-                  onChange={(date) => {setStartDate(date); handleStimeChange(date)}}
+                  onChange={(date) => {
+                    setStartDate(date);
+                    handleStimeChange(date);
+                  }}
                   showTimeSelect
                   timeFormat="HH:mm"
                   timeIntervals={15}
@@ -626,8 +722,11 @@ const Form = (hrid) => {
                   customInput={
                     <CustomInput
                       id="date"
-                      className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${error.stimeError !== "" ? "ring-red-500" : "ring-gray-300"
-                        }`}
+                      className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                        error.stimeError !== ""
+                          ? "ring-red-500"
+                          : "ring-gray-300"
+                      }`}
                       ref={startTimeRef}
                     />
                   }
@@ -645,7 +744,10 @@ const Form = (hrid) => {
                 </p>
                 <DatePicker
                   selected={endDate}
-                  onChange={(date) => {setEndDate(date); handleEtimeChange(date)}}
+                  onChange={(date) => {
+                    setEndDate(date);
+                    handleEtimeChange(date);
+                  }}
                   showTimeSelect
                   timeFormat="HH:mm"
                   timeIntervals={15}
@@ -653,11 +755,14 @@ const Form = (hrid) => {
                   customInput={
                     <CustomInput
                       id="date"
-                      className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${error.etimeError !== "" ? "ring-red-500" : "ring-gray-300"
-                        }`}
+                      className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                        error.etimeError !== ""
+                          ? "ring-red-500"
+                          : "ring-gray-300"
+                      }`}
                       ref={endTimeRef}
                     />
-                  }  
+                  }
                 />
                 {error.etimeError && (
                   <div className="inline-flex items-center">
@@ -667,9 +772,7 @@ const Form = (hrid) => {
                 )}
               </div>
             </div>
-            <div>
-              
-            </div>
+            <div></div>
           </div>
         </div>
         <div className="space-y-6">
@@ -694,25 +797,25 @@ const Form = (hrid) => {
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 pt-5 text-gray-700">
               <img src={arrowDown} />
             </div> */}
-             <p className="font-semibold font-['Inter'] text-[15px]">
+            <p className="font-semibold font-['Inter'] text-[15px]">
               Help Type Required*
             </p>
             <input
-                type="text"
-                className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset  ${
-                  error.helpError !== "" ? "ring-red-500" : "ring-gray-300"
-                }`}
-                placeholder="Eg. Children Specialist Needed"
-                id="help-type"
-                ref={helpRef}
-                onChange={handleHelpChange}
-              />
-              {error.helpError && (
-                <div className="inline-flex items-center">
-                  <img src={errorImg} className="w-3 h-3" />
-                  <p className="text-red-600 text-xs">{error.helpError}</p>
-                </div>
-              )}
+              type="text"
+              className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset  ${
+                error.helpError !== "" ? "ring-red-500" : "ring-gray-300"
+              }`}
+              placeholder="Eg. Children Specialist Needed"
+              id="help-type"
+              ref={helpRef}
+              onChange={handleHelpChange}
+            />
+            {error.helpError && (
+              <div className="inline-flex items-center">
+                <img src={errorImg} className="w-3 h-3" />
+                <p className="text-red-600 text-xs">{error.helpError}</p>
+              </div>
+            )}
           </div>
           <div className="font-semibold font-bricolage text-[15px]">
             Select skills it would require to provide the help
@@ -724,6 +827,7 @@ const Form = (hrid) => {
                 val={value}
                 setter={handleHelpTypeArray}
                 clear={clear}
+                autofillBool={helpDetails.skills?.includes(value)}
               />
             ))}
           </div>
@@ -742,9 +846,7 @@ const Form = (hrid) => {
             Publish
           </button>
 
-          {success && (
-            <CreateOutreachModal isOpen={true} />
-          )}
+          {success && <CreateOutreachModal isOpen={true} />}
         </div>
       </form>
     </div>

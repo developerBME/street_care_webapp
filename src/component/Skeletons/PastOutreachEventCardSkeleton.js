@@ -4,7 +4,7 @@ function PastOutreachEventCardSkeleton() {
   return (
     <div
       role="status"
-      class="w-fit p-4 my-9 border border-gray-200 rounded-xl shadow animate-pulse md:p-6 dark:border-gray-700"
+      class="w-full p-4 my-9 border border-gray-200 rounded-xl shadow animate-pulse md:p-6 dark:border-gray-700"
     >
       <div class="flex items-center mb-4">
         <svg
