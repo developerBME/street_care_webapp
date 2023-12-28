@@ -85,7 +85,7 @@ function App() {
         <NavBar loggedIn={loggedIn} photoUrl={photoUrl} />
         <Routes>
           <Route path="/" element={<Home />} />
-          {/* <Route path="/about" element={<About />} /> */}
+          <Route path="/about" element={<About />} />
           <Route path="/howtohelp" element={<HowToHelp />} />
           <Route path="/community" element={<Community />} />
           {/* <Route path="/community" element={<CommunityComingSoon />} /> */}
