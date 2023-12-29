@@ -45,7 +45,7 @@ function About() {
           </div>
           {/* End */}
         </div>
-        <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-4 rounded-2xl bg-white text-black ">
+        <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
           {/* Start */}
           <div className="w-full h-full px-4 py-6 md:p-16 bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
             <div className="flex-col lg:flex-row justify-start items-center gap-8 md:gap-12 lg:gap-y-[172px] lg:gap-x-[40px] inline-flex">
@@ -81,6 +81,118 @@ function About() {
                 {/* <div className="w-[164px] h-[296px] bg-[#F3F3F3] rounded-2xl" /> */}
                 <div className="w-[164px] h-[296px] lg:w-[144px] lg:h-[296px] bg-[#F3F3F3] rounded-2xl" />
               </div>
+            </div>
+          </div>
+          {/* End */}
+        </div>
+        <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+          {/* Start */}
+          <div className="w-full h-full px-4 py-6 md:p-16 bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
+            <div className="w-full flex-col justify-start items-start gap-8 flex">
+              <div className="w-full text-black text-4xl md:text-[45px] font-medium font-dmsans sm:leading-[44px] md:leading-[52px]">
+                With Street Care you can make a deep impact on the lives of
+                those in need, in the following ways:
+              </div>
+
+              {/* Grid Start*/}
+              <div className="w-full h-full justify-start items-start">
+                {/*  */}
+
+                <div className="w-full h-fit justify start items-start grid grid-cols-2 font-bricolage">
+                  <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-tr-none rounded-tl-2xl shrink basis-0  px-8 py-4 bg-gradient-to-br from-purple-300 to-zinc-200 gap-6 flex">
+                    <div className="w-full h-fit justify-start items-start lg:items-center gap-3 lg:gap-6 inline-flex flex-col lg:flex-row">
+                      <div className="lg:w-[140px] lg:h-[140px] lg:relative">
+                        <div className="lg:w-[140px] lg:h-[140px] lg:left-0 lg:top-0 lg:absolute lg:bg-white lg:rounded-full" />
+                        <img
+                          className="w-12 h-12 left-0 top-0 rounded-full bg-white lg:w-16 lg:h-16 lg:left-[38px] lg:top-[38px] lg:absolute"
+                          src={donation}
+                        />
+                      </div>
+
+                      <div className="flex-col justify-start items-start gap-2 flex lg:gap-4 lg:inline-flex">
+                        <div className="text-violet-950 text-4xl font-medium font-dmsans leading-[44px]">
+                          Give
+                        </div>
+                        <div className="w-fit text-violet-950 text-base font-normal font-dmsans leading-normal tracking-wide">
+                          need-based care items based on our team’s longstanding
+                          experience.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/*  */}
+
+                  <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-tr-2xl rounded-bl-none shrink basis-0 px-8 py-4 bg-gradient-to-br from-emerald-100 to-neutral-200 justify-start  gap-6 flex">
+                    <div className="w-full h-fit justify-start items-start lg:items-center gap-3 lg:gap-6 inline-flex flex-col lg:flex-row">
+                      <div className="lg:w-[140px] lg:h-[140px] lg:relative">
+                        <div className="lg:w-[140px] lg:h-[140px] lg:left-0 lg:top-0 lg:absolute lg:bg-white lg:rounded-full" />
+                        <img
+                          className="w-12 h-12 left-0 top-0 rounded-full bg-white lg:w-16 lg:h-16 lg:left-[38px] lg:top-[38px] lg:absolute"
+                          src={donation}
+                        />
+                      </div>
+
+                      <div className="flex-col justify-start items-start gap-2 flex lg:gap-4 lg:inline-flex">
+                        <div className="text-violet-950 text-4xl font-medium font-dmsans leading-[44px]">
+                          Help
+                        </div>
+                        <div className="w-full text-violet-950 text-base font-normal font-dmsans leading-normal tracking-wide">
+                          with Goal Reinforcement (crucial for bringing about
+                          transformation)
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/*  */}
+                </div>
+
+                <div className="w-full h-fit justify start items-start grid grid-cols-2 font-bricolage">
+                  <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-tr-none rounded-bl-2xl shrink basis-0 px-8 py-4 bg-gradient-to-br from-red-200 to-neutral-200 justify-start gap-6 flex">
+                    <div className="w-full h-fit justify-start items-start lg:items-center gap-3 lg:gap-6 inline-flex flex-col lg:flex-row">
+                      <div className="lg:w-[140px] lg:h-[140px] lg:relative">
+                        <div className="lg:w-[140px] lg:h-[140px] lg:left-0 lg:top-0 lg:absolute lg:bg-white lg:rounded-full" />
+                        <img
+                          className="w-12 h-12 left-0 top-0 rounded-full bg-white lg:w-16 lg:h-16 lg:left-[38px] lg:top-[38px] lg:absolute"
+                          src={share}
+                        />
+                      </div>
+
+                      <div className="flex-col justify-start items-start gap-2 flex lg:gap-4 lg:inline-flex">
+                        <div className="text-violet-950 text-4xl font-medium font-dmsans leading-[44px]">
+                          Share
+                        </div>
+                        <div className="w-full text-violet-950 text-base font-normal font-dmsans leading-normal tracking-wide">
+                          wellness and health tips that were created with
+                          homeless individuals in mind
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-tr-none rounded-br-2xl shrink basis-0 px-8 py-4 bg-gradient-to-br from-sky-200 to-neutral-200 justify-start  gap-6 flex">
+                    <div className="w-full h-fit justify-start items-start lg:items-center gap-3 lg:gap-6 inline-flex flex-col lg:flex-row">
+                      <div className="lg:w-[140px] lg:h-[140px] lg:relative">
+                        <div className="lg:w-[140px] lg:h-[140px] lg:left-0 lg:top-0 lg:absolute lg:bg-white lg:rounded-full" />
+                        <img
+                          className="w-12 h-12 left-0 top-0 rounded-full bg-white lg:w-16 lg:h-16 lg:left-[38px] lg:top-[38px] lg:absolute"
+                          src={donation}
+                        />
+                      </div>
+
+                      <div className="flex-col justify-start items-start gap-2 flex lg:gap-4 lg:inline-flex">
+                        <div className="text-violet-950 text-4xl font-medium font-dmsans leading-[44px]">
+                          Build
+                        </div>
+                        <div className="w-full text-violet-950 text-base font-normal font-dmsans leading-normal tracking-wide">
+                          community among volunteers and homeless people,
+                          through our interactive framework.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Grid End */}
             </div>
           </div>
           {/* End */}
