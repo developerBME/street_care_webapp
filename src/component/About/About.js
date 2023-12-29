@@ -100,16 +100,16 @@ function About() {
 
                 <div className="w-full h-fit justify start items-start grid grid-cols-2 font-bricolage">
                   <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-tr-none rounded-tl-2xl shrink basis-0  px-8 py-4 bg-gradient-to-br from-purple-300 to-zinc-200 gap-6 flex">
-                    <div className="w-full h-fit justify-start items-start lg:items-center gap-3 lg:gap-6 inline-flex flex-col lg:flex-row">
-                      <div className="lg:w-[140px] lg:h-[140px] lg:relative">
-                        <div className="lg:w-[140px] lg:h-[140px] lg:left-0 lg:top-0 lg:absolute lg:bg-white lg:rounded-full" />
+                    <div className="w-full h-fit justify-start items-start xl:items-center gap-3 xl:gap-6 inline-flex flex-col xl:flex-row">
+                      <div className="xl:w-[140px] xl:h-[140px] xl:relative">
+                        <div className="xl:w-[140px] xl:h-[140px] xl:left-0 xl:top-0 xl:absolute xl:bg-white xl:rounded-full" />
                         <img
-                          className="w-12 h-12 left-0 top-0 rounded-full bg-white lg:w-16 lg:h-16 lg:left-[38px] lg:top-[38px] lg:absolute"
+                          className="w-12 h-12 left-0 top-0 rounded-full bg-white xl:w-16 xl:h-16 xl:left-[38px] xl:top-[38px] xl:absolute"
                           src={donation}
                         />
                       </div>
 
-                      <div className="flex-col justify-start items-start gap-2 flex lg:gap-4 lg:inline-flex">
+                      <div className="w-fit xl:w-[370px] flex-col justify-start items-start gap-2 flex xl:gap-4 xl:inline-flex">
                         <div className="text-violet-950 text-4xl font-medium font-dmsans leading-[44px]">
                           Give
                         </div>
@@ -123,20 +123,20 @@ function About() {
                   {/*  */}
 
                   <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-tr-2xl rounded-bl-none shrink basis-0 px-8 py-4 bg-gradient-to-br from-emerald-100 to-neutral-200 justify-start  gap-6 flex">
-                    <div className="w-full h-fit justify-start items-start lg:items-center gap-3 lg:gap-6 inline-flex flex-col lg:flex-row">
-                      <div className="lg:w-[140px] lg:h-[140px] lg:relative">
-                        <div className="lg:w-[140px] lg:h-[140px] lg:left-0 lg:top-0 lg:absolute lg:bg-white lg:rounded-full" />
+                    <div className="w-full h-fit justify-start items-start xl:items-center gap-3 xl:gap-6 inline-flex flex-col xl:flex-row">
+                      <div className="xl:w-[140px] xl:h-[140px] xl:relative">
+                        <div className="xl:w-[140px] xl:h-[140px] xl:left-0 xl:top-0 xl:absolute xl:bg-white xl:rounded-full" />
                         <img
-                          className="w-12 h-12 left-0 top-0 rounded-full bg-white lg:w-16 lg:h-16 lg:left-[38px] lg:top-[38px] lg:absolute"
+                          className="w-12 h-12 left-0 top-0 rounded-full bg-white xl:w-16 xl:h-16 xl:left-[38px] xl:top-[38px] xl:absolute"
                           src={donation}
                         />
                       </div>
 
-                      <div className="flex-col justify-start items-start gap-2 flex lg:gap-4 lg:inline-flex">
+                      <div className="w-fit xl:w-[370px] flex-col justify-start items-start gap-2 flex xl:gap-4 xl:inline-flex">
                         <div className="text-violet-950 text-4xl font-medium font-dmsans leading-[44px]">
                           Help
                         </div>
-                        <div className="w-full text-violet-950 text-base font-normal font-dmsans leading-normal tracking-wide">
+                        <div className="w-fit text-violet-950 text-base font-normal font-dmsans leading-normal tracking-wide">
                           with Goal Reinforcement (crucial for bringing about
                           transformation)
                         </div>
@@ -148,20 +148,20 @@ function About() {
 
                 <div className="w-full h-fit justify start items-start grid grid-cols-2 font-bricolage">
                   <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-tr-none rounded-bl-2xl shrink basis-0 px-8 py-4 bg-gradient-to-br from-red-200 to-neutral-200 justify-start gap-6 flex">
-                    <div className="w-full h-fit justify-start items-start lg:items-center gap-3 lg:gap-6 inline-flex flex-col lg:flex-row">
-                      <div className="lg:w-[140px] lg:h-[140px] lg:relative">
-                        <div className="lg:w-[140px] lg:h-[140px] lg:left-0 lg:top-0 lg:absolute lg:bg-white lg:rounded-full" />
+                    <div className="w-full h-fit justify-start items-start xl:items-center gap-3 xl:gap-6 inline-flex flex-col xl:flex-row">
+                      <div className="xl:w-[140px] xl:h-[140px] xl:relative">
+                        <div className="xl:w-[140px] xl:h-[140px] xl:left-0 xl:top-0 xl:absolute xl:bg-white xl:rounded-full" />
                         <img
-                          className="w-12 h-12 left-0 top-0 rounded-full bg-white lg:w-16 lg:h-16 lg:left-[38px] lg:top-[38px] lg:absolute"
+                          className="w-12 h-12 left-0 top-0 rounded-full bg-white xl:w-16 xl:h-16 xl:left-[38px] xl:top-[38px] xl:absolute"
                           src={share}
                         />
                       </div>
 
-                      <div className="flex-col justify-start items-start gap-2 flex lg:gap-4 lg:inline-flex">
+                      <div className="w-fit xl:w-[370px] flex-col justify-start items-start gap-2 flex xl:gap-4 xl:inline-flex">
                         <div className="text-violet-950 text-4xl font-medium font-dmsans leading-[44px]">
                           Share
                         </div>
-                        <div className="w-full text-violet-950 text-base font-normal font-dmsans leading-normal tracking-wide">
+                        <div className="w-fit text-violet-950 text-base font-normal font-dmsans leading-normal tracking-wide">
                           wellness and health tips that were created with
                           homeless individuals in mind
                         </div>
@@ -170,20 +170,20 @@ function About() {
                   </div>
 
                   <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-tr-none rounded-br-2xl shrink basis-0 px-8 py-4 bg-gradient-to-br from-sky-200 to-neutral-200 justify-start  gap-6 flex">
-                    <div className="w-full h-fit justify-start items-start lg:items-center gap-3 lg:gap-6 inline-flex flex-col lg:flex-row">
-                      <div className="lg:w-[140px] lg:h-[140px] lg:relative">
-                        <div className="lg:w-[140px] lg:h-[140px] lg:left-0 lg:top-0 lg:absolute lg:bg-white lg:rounded-full" />
+                    <div className="w-full h-fit justify-start items-start xl:items-center gap-3 xl:gap-6 inline-flex flex-col xl:flex-row">
+                      <div className="xl:w-[140px] xl:h-[140px] xl:relative">
+                        <div className="xl:w-[140px] xl:h-[140px] xl:left-0 xl:top-0 xl:absolute xl:bg-white xl:rounded-full" />
                         <img
-                          className="w-12 h-12 left-0 top-0 rounded-full bg-white lg:w-16 lg:h-16 lg:left-[38px] lg:top-[38px] lg:absolute"
+                          className="w-12 h-12 left-0 top-0 rounded-full bg-white xl:w-16 xl:h-16 xl:left-[38px] xl:top-[38px] xl:absolute"
                           src={donation}
                         />
                       </div>
 
-                      <div className="flex-col justify-start items-start gap-2 flex lg:gap-4 lg:inline-flex">
+                      <div className="w-fit xl:w-[370px] flex-col justify-start items-start gap-2 flex xl:gap-4 xl:inline-flex">
                         <div className="text-violet-950 text-4xl font-medium font-dmsans leading-[44px]">
                           Build
                         </div>
-                        <div className="w-full text-violet-950 text-base font-normal font-dmsans leading-normal tracking-wide">
+                        <div className="w-fit text-violet-950 text-base font-normal font-dmsans leading-normal tracking-wide">
                           community among volunteers and homeless people,
                           through our interactive framework.
                         </div>
