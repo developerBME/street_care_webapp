@@ -17,7 +17,8 @@ import { AiFillApple, AiFillFacebook } from "react-icons/ai";
 import { BiLogoFacebookCircle } from "react-icons/bi";
 
 import { RiTwitterXFill } from "react-icons/ri";
-import errorImg from "../images/error.png"
+import errorImg from "../images/error.png";
+import { emailConfirmation } from "./EmailService";
 
 const handleGoogleSignIn = async (e) => {
   e.preventDefault();
@@ -240,6 +241,8 @@ function Signup2() {
     } else if (userName) {
       updateErrorState("UsernameError", "");
     }
+
+    const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px"><h1>Thank you for creating the outreach</h1><p>You have succefully registered! Your username is ${userName} and regiestered email address is ${email}</p></div>`;
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -259,10 +262,12 @@ function Signup2() {
         photoUrl: "",
       };
 
-      //await firestore.collection('users').doc(currentUser.uid).set(userData);
+      // await firestore.collection('users').doc(currentUser.uid).set(userData);
       const userRef = doc(db, "users", currentUser.uid);
       await setDoc(userRef, userData);
 
+      
+      emailConfirmation(email, fAuth.currentUser.displayName, '', emailHTML);
       // Clear inputs or navigate to a different page
       setUserName("");
       setEmail("");
