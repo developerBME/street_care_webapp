@@ -8,19 +8,19 @@ import { useNavigate } from "react-router-dom";
 const OutreachVisitLogCard = ({visitLogCardData})=>{
     const navigate = useNavigate();
 
-    const handleViewDetailsClick = () => {
-        const details = {
-          name: "Joshua K",
-          date: "Sept 9, 2023",
-          location: "Brooklyn, NY 11238",
-          description:
-            "Tommy, a senior citizen in a wheelchair wearing a navy blue top and brown shoes.",
-          categories: ["Clothes", "Food and Drinks"],
-          need: "Childcare specialist needed",
-        };
+    // const handleViewDetailsClick = () => {
+    //     const details = {
+    //       name: "Joshua K",
+    //       date: "Sept 9, 2023",
+    //       location: "Brooklyn, NY 11238",
+    //       description:
+    //         "Tommy, a senior citizen in a wheelchair wearing a navy blue top and brown shoes.",
+    //       categories: ["Clothes", "Food and Drinks"],
+    //       need: "Childcare specialist needed",
+    //     };
     
-        navigate(`/VisitLogDetails?${new URLSearchParams(details).toString()}`);
-      };
+    //     navigate(`/VisitLogDetails?${new URLSearchParams(details).toString()}`);
+    //   };
 
 
     return (
@@ -32,7 +32,7 @@ const OutreachVisitLogCard = ({visitLogCardData})=>{
             </div>
             <div className="px-6 py-2">
                 <div className="space-y-4">
-                    <div class="text-violet-900 text-sm font-medium font-['DM Sans'] leading-tight">{visitLogCardData.eventDate || ""} · {visitLogCardData.location.street || ""} {visitLogCardData.location.city || ""} {visitLogCardData.location.state || ""} {visitLogCardData.location.zipcode || ""}</div>
+                    <div class="text-violet-900 text-sm font-medium font-['DM Sans'] leading-tight">{visitLogCardData.date || ""} · {visitLogCardData?.location?.street || ""} {visitLogCardData?.city || ""} {visitLogCardData?.state || ""} {visitLogCardData?.location?.zipcode || ""}</div>
                     {/* <div class="text-violet-900 text-sm font-medium font-['DM Sans'] leading-tight">Sept 9, 2023 · Brooklyn, NY 11238</div> */}
                     {/* <div class="text-zinc-700 text-[10px] font-normal font-['DM Sans'] leading-snug">Tommy, a senior citizen in a wheelchair wearing a navy blue top and brown shoes.</div> */}
                     <div class="text-zinc-700 text-[10px] font-normal font-['DM Sans'] leading-snug">{visitLogCardData.description || ""}</div>
@@ -53,7 +53,8 @@ const OutreachVisitLogCard = ({visitLogCardData})=>{
                 </div>
             </div>
             <div className="pt-2 px-6 pb-6 space-x-2">
-                <CustomButton label="View Details" name="buttonlightsmall" onClick={handleViewDetailsClick} />
+                <CustomButton label="View Details" name="buttonlightsmall" onClick={() => {navigate(`/VisitLogDetails/${visitLogCardData.id}`);
+                  }} />
                 <CustomButton label="Share" name="buttonsmallborder2"/>
             </div>
         </div>

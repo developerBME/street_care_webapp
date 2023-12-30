@@ -20,14 +20,6 @@ function Profile() {
   const [isLoading, setIsLoading] = useState(true);
   const [eventsDisplay, setEventsDisplay] = useState([]);
   const navigate = useNavigate();
- 
- 
-  const [,setStates] = useState([]);
-  const [] = useState("");
-  const [] = useState(false);
-  const [, setVisitLogs] = useState([]);
- 
-
   const [activeTab, setActiveTab] = useState("myoutreach");
 
 
@@ -35,32 +27,9 @@ function Profile() {
     setActiveTab(tab);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const eventsData = await fetchEvents();
-      const visitLogsData = await fetchPersonalVisitLogs(auth?.currentUser?.uid);
-      console.log(visitLogsData)
-      setVisitLogs(visitLogsData)
-      // Filter events to get only past events
-      const upcomingEvents = eventsData
-        .filter((event) => {
-          const eventDate = new Date(event.eventDate.seconds * 1000);
-          return eventDate >= new Date(); // Check if the event date is before the current date
-        })
-      // Sort events in place based on their date
-      upcomingEvents.sort((a, b) => a.eventDate - b.eventDate);
-
-      setEvents(upcomingEvents);
-      // Extract states and remove duplicates
-      const extractedStates = [...new Set(upcomingEvents.map(event => event.location.state))];
-      setStates(extractedStates);
-      
-    };
-
-    fetchData();
-  }, []);
   
   const fetchData = async () => {
+    const visitLogsData = await fetchPersonalVisitLogs(auth?.currentUser?.uid);
     const user = auth.currentUser;
 
     if (user) {

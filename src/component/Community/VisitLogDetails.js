@@ -1,15 +1,31 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import profilePic from "../../images/avatar.jpg";
 import wavingHand from "../../images/waving_hand.png";
 import { fetchVisitLogById } from "../VisitLogCardService"
 
 const VisitLogDetails = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const details = new URLSearchParams(location.search);
-  const categories = details.getAll("categories");
+  // const navigate = useNavigate();
+  // const location = useLocation();
+  // const details = new URLSearchParams(location.search);
+  // const categories = details.getAll("categories");
+  const { id } = useParams();
+  console.log(id)
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const result = await fetchVisitLogById(id)
+        setData(result);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+
+    getData(); // Invoke the async function
+  }, []);
 
   return (
     <div className="relative flex flex-col items-center ">
@@ -23,30 +39,42 @@ const VisitLogDetails = () => {
             <div className="bg-[#F5EEFE] rounded-2xl ">
               <div className="inline-flex gap-2 items-center px-4 pt-6 py-2">
                 <img src={profilePic} className="w-6 h-6 rounded-full" />
-                <div>{details.get("name")}</div>
+                {/* <div>{details.get("name")}</div> */}
+                <div>{}</div>
               </div>
               <div className="px-6 py-2">
                 <div className="flex flex-col space-y-4">
                   <div class="text-violet-900 text-sm font-medium font-['DM Sans'] leading-tight">
-                    {details.get("date")} {details.get("date")}
+                    {/* {details.get("date")} {details.get("date")} */}
+                    {data?.date || ""}
                   </div>
                   <div class="text-zinc-700 text-[10px] font-normal font-['DM Sans'] leading-snug">
-                    {details.get("description")}
+                    {/* {details.get("description")} */}
+                    {data?.description || ""}
                   </div>
                   <div className="inline-flex items-center gap-2">
-                    {categories.map((category, index) => (
+                    {/* {categories.map((category, index) => (
                       <div
                         key={index}
                         className="py-1 px-3 border border-[#C8C8C8] w-fit rounded-xl text-[10px] text-[#444746]"
                       >
                         {category}
                       </div>
+                    ))} */}
+                    {data?.whatGiven.map((item, index) => (
+                      <div
+                        key={index}
+                        className="py-1 px-3 border border-[#C8C8C8] w-fit rounded-xl text-[10px] text-[#444746]"
+                      >
+                        {item}
+                      </div>
                     ))}
                   </div>
                   <div className="inline-flex items-center bg-white px-4 py-1 space-x-2.5 rounded-2xl">
                     <img src={wavingHand} />
                     <div className="font-normal font-['Inter'] text-[10px] text-[#181818]">
-                      {details.get("need")}
+                      {/* {details.get("need")} */}
+                      {data?.need || ""}
                     </div>
                   </div>
                 </div>
@@ -76,14 +104,14 @@ const VisitLogDetails = () => {
               <button className="px-8 py-4 border rounded-full bg-violet-700 text-[#F8F9F0]">
                 Share
               </button>
-              <button
+              {/* <button
                 className="px-8 py-4 border border-[#5F35D5] rounded-full text-violet-700"
                 onClick={() => {
                   navigate("/");
                 }}
               >
                 Cancel
-              </button>
+              </button> */}
             </div>
           </div>
         </div>

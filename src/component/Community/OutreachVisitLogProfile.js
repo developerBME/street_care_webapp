@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import OutreachVisitLogCard from "./OutreachVisitLogCard";
 import { fetchEvents, formatDate } from "../EventCardService";
-import { fetchVisitLogs } from "../VisitLogCardService";
+import { fetchPersonalVisitLogs } from "../VisitLogCardService";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import NoOutreachDoc from "./NoOutreachDoc";
+import { auth } from "../firebase";
    
 const OutreachVisitLogProfile = () => {  
 
@@ -12,53 +13,26 @@ const OutreachVisitLogProfile = () => {
     setVisibleItems((prev) => prev + 3);
   };
   
-  const [events, setEvents] = useState([]);
   const [visitLogs, setVisitLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [eventsDisplay, setEventsDisplay] = useState([]);
-  const [, setStates] = useState([]);
   const [error, setError] = useState(null);
   
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const eventsData = await fetchEvents();
-        const visitLogsData = await fetchVisitLogs();
+        console.log("new ", auth?.currentUser?.uid)
+        const visitLogsData = await fetchPersonalVisitLogs(auth?.currentUser?.uid);
         setVisitLogs(visitLogsData)
-        // Filter events to get only past events
-        const upcomingEvents = eventsData
-          .filter((event) => {
-            const eventDate = new Date(event.eventDate.seconds * 1000);
-            return eventDate >= new Date(); // Check if the event date is before the current date
-          })
-        // Sort events in place based on their date
-        upcomingEvents.sort((a, b) => a.eventDate - b.eventDate);
-
-        setEvents(upcomingEvents);
+        console.log(visitLogsData)
+        setIsLoading(false);
         // Extract states and remove duplicates
-        const extractedStates = [...new Set(upcomingEvents.map(event => event.location.state))];
-        setStates(extractedStates);
-      
     } catch (error) {
       setError(error);
-      setIsLoading(false);
     }
     };
-
     fetchData();
   }, []);
- 
-  useEffect(() => {
-    setEventsDisplay(events);
-    // searchRef.current = "";
-  }, [events]);
-
-  useEffect(() => {
-    if (eventsDisplay.length > 0) {
-      setIsLoading(false);
-    }
-  }, [eventsDisplay]);
-
+  
   return (
     <div>
       <div className="flex items-center justify-between">

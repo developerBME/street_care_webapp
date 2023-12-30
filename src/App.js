@@ -129,6 +129,7 @@ function App() {
             element={<AllOutreachVisitLog />}
           />
           <Route path="visitLogDetails" element={<VisitLogDetails />} />
+          <Route path="visitLogDetails/:id" element={<VisitLogDetails />} />
           <Route path="/*" element={<Not404 />} />
         </Routes>
         <Footer />

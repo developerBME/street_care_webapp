@@ -124,6 +124,7 @@ export const fetchPersonalVisitLogs = async (uid) => {
       const visitLogData = visitLogDoc.data();
       visitLogsData.push({
         ...visitLogData,
+        id: visitLogId,
       });
     }
   }
