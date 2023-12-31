@@ -4,7 +4,17 @@ import Rating from "@mui/material/Rating";
 import { IoIosArrowBack } from "react-icons/io";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import { addDoc, collection, getDocs, getDoc, doc, updateDoc, query, where, limit } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  getDoc,
+  doc,
+  updateDoc,
+  query,
+  where,
+  limit,
+} from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import CustomButton from "../Buttons/CustomButton";
@@ -54,11 +64,12 @@ function PersonalOutForm() {
     useState(false);
   const infoShareCheckbox = useRef(null);
   const [showOptionalQuestions, setShowOptionalQuestions] = useState(false);
+  const optDesc = useRef("");
+  const optLandmark = useRef("");
+  //////STATES FOR OPTIONAL PART OF THE FORM
   // const furtherHelpDescription = useRef("");
   // const furtherHelpLocation = useRef("");
   // const [otherInfo, setOtherInfo] = useState("");
-  const optDesc = useRef("");
-  const optLandmark = useRef("");
   // const optTime = useRef("");
   // const [optFurtherHelp, setOptFurtherHelp] = useState([]);
   // const optFollowUpTime = useRef("");
@@ -340,11 +351,11 @@ function PersonalOutForm() {
         // outreach event collection
         const docSnap = await getDoc(userRef);
         let personalVisitLogs = docSnap.data().personalVisitLogs || [];
-        personalVisitLogs.push(docRef.id)
+        personalVisitLogs.push(docRef.id);
         const updateRef = await updateDoc(userRef, {
           personalVisitLogs: personalVisitLogs,
         });
-        
+
         setSuccess(true);
         emailConfirmation('shivanip@brightmindenrichment.org', fAuth.currentUser.displayName, '', emailHTML);
         clearFields();
