@@ -533,19 +533,6 @@ function CustomButton({ label, name, onClick, icon, disable }) {
         <img src={icon} className="w-5 h-5 " />
       </button>
     );
-  } else if (name == "buttonicon13") {
-    return (
-      <button
-        onClick={onClick}
-        className={` text-sm w-fit h-10 inline-flex gap-2 justify-center px-6 py-2.5 font-medium items-center font-['DM Sans'] border-[1px] rounded-full transition ease-in-out delay-300 ${
-          disable !== "true"
-            ? "text-neutral-900 bg-purple-200  hover:bg-violet-600 hover:text-neutral-100"
-            : "  cursor-not-allowed text-neutral-900 hover:bg-purple-200"
-        }`}  
-      >
-        {label}
-      </button>
-    );
   } else {
     return (
       <button

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import OutreachVisitLogCard from "./OutreachVisitLogCard";
+import OutreachVisitLogProfileCard from "./OutreachVisitLogProfileCard";
 import { fetchEvents, formatDate } from "../EventCardService";
 import { fetchPersonalVisitLogs } from "../VisitLogCardService";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
@@ -18,17 +18,27 @@ const OutreachVisitLogProfile = () => {
   const [error, setError] = useState(null);
   
   useEffect(() => {
+
     const fetchData = async () => {
-      try {
-        console.log("new ", auth?.currentUser?.uid)
-        const visitLogsData = await fetchPersonalVisitLogs(auth?.currentUser?.uid);
-        setVisitLogs(visitLogsData)
-        console.log(visitLogsData)
-        setIsLoading(false);
+       try {
+        const user = auth?.currentUser;
+        // console.log("new ", auth?.currentUser?.uid)
+        if (user) {
+          const uid = user.uid;
+          const logs = await fetchPersonalVisitLogs(uid);
+          setVisitLogs(logs);
+          setIsLoading(false);
+        
+        // const visitLogsData = await fetchPersonalVisitLogs(auth?.currentUser?.uid);
+        // setVisitLogs(visitLogsData)
+        // console.log(visitLogsData)
+        // setIsLoading(false);
         // Extract states and remove duplicates
-    } catch (error) {
-      setError(error);
-    }
+        }
+      } catch (error) {
+        setError(error);
+        setIsLoading(false);
+      }
     };
     fetchData();
   }, []);
@@ -55,7 +65,7 @@ const OutreachVisitLogProfile = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-y-2 mb-6">
               {visitLogs.slice(0, visibleItems).map((visitLogData, index) => (
                 <div key={index} className="p-2">
-                  <OutreachVisitLogCard visitLogCardData={visitLogData} />
+                  <OutreachVisitLogProfileCard visitLogCardData={visitLogData} />
                 </div>
               ))}
             </div>
@@ -70,7 +80,7 @@ const OutreachVisitLogProfile = () => {
             </button>
           )}
 
-          {visitLogs.length === 0 && <NoOutreachDoc />}
+          {visitLogs.length == 0 && <NoOutreachDoc />}
         </>
       )}
     </div>

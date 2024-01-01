@@ -1,5 +1,5 @@
 import CustomButton from "../Buttons/CustomButton";
-import DocVec from "../../images/DocVec.png";
+import DocVec from "../../images/DocVec.svg";
 import { useNavigate } from "react-router-dom"; 
 
 const NoOutreachDoc = () => {
@@ -21,7 +21,7 @@ const NoOutreachDoc = () => {
             <div className="flex justify-center items-start gap-4">    
                 <CustomButton
                 label="Document Personal Outreach"
-                name="buttonicon13"
+                name="buttondefault"
                 onClick={() => {
                     navigate("/createOutreach");
                     window.scrollTo(0, 0);
@@ -29,7 +29,7 @@ const NoOutreachDoc = () => {
                 ></CustomButton>
                 <CustomButton
                 label="Explore Outreach Event"
-                name="buttonicon13"
+                name="buttonlight"
                 onClick={() => {
                     navigate("/allOutreachEvents");
                     window.scrollTo(0, 0);
