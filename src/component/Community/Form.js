@@ -234,7 +234,7 @@ const Form = (hrid) => {
           // Successful if outreach event is updated
           if (ack) {
             setSuccess(true);
-            emailConfirmation('shivanip@brightmindenrichment.org', fAuth.currentUser.displayName, nameRef.current.value, emailHTML);
+            emailConfirmation(fAuth.currentUser.email, fAuth.currentUser.displayName, nameRef.current.value, emailHTML);
             clearFields();
           }
         } catch (e) {

@@ -183,7 +183,7 @@ function CommOutForm() {
       if (docRef.id) {
         console.log(docRef.id);
         setSuccess(true);
-        emailConfirmation('shivanip@brightmindenrichment.org', fAuth.currentUser.displayName, '', emailHTML);
+        emailConfirmation(fAuth.currentUser.email, fAuth.currentUser.displayName, '', emailHTML);
         clearFields();
       }
     } catch (e) {

@@ -187,7 +187,7 @@ function HelpRequestForm() {
       if (docRef.id) {
         console.log(docRef.id);
         setSuccess(true);
-        emailConfirmation('shivanip@brightmindenrichment.org', fAuth.currentUser.displayName, titleRef.current.value, emailHTML);
+        emailConfirmation(fAuth.currentUser.email, fAuth.currentUser.displayName, titleRef.current.value, emailHTML);
         clearFields();
       }
     } catch (e) {

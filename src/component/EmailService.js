@@ -23,7 +23,7 @@ export const emailConfirmation = async (userEmail, userName, eventName, htmlEmai
     })
     .then(data => {
       console.log(data);
-      alert('Check your email for event confirmation and details.');
+      alert('Check your email for confirmation and details.');
     })
     .catch(error => {
       console.error('Error:', error);
