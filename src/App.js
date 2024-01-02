@@ -35,7 +35,7 @@ import Readmorenews from "./component/HomePage/Readmorenews";
 import ICanHelpForm from "./component/Community/ICanHelpForm";
 import CommunityComingSoon from "./component/CommunityComingSoon";
 import VisitLogDetails from "./component/Community/VisitLogDetails";
-import Test from "./component/UserProfile/Test";
+// import Test from "./component/UserProfile/Test";
 
 function App() {
   const fAuth = getAuth();

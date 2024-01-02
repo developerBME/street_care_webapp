@@ -3,6 +3,9 @@ import bmeLogo from "../../images/bme_logo.png";
 import streetCareLogo from "../../images/steet_care_logo.png";
 import donation from "../../images/donation.png";
 import share from "../../images/share.png";
+import bag1 from "../../images/bag1.png";
+import bag2 from "../../images/bag2.png";
+import tshirt from "../../images/tshirt.png";
 
 function About() {
   return (
@@ -193,6 +196,303 @@ function About() {
                 </div>
               </div>
               {/* Grid End */}
+            </div>
+          </div>
+          {/* End */}
+        </div>
+        <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+          {/* Start */}
+          <div className="w-full h-full px-4 py-6 md:p-16 flex-col justify-center items-center gap-6 inline-flex">
+            <div className="w-full text-black text-4xl md:text-[45px] font-medium font-dmsans sm:leading-[44px] md:leading-[52px]">
+              If this is your first time volunteering, the platform shows you
+              how to:{" "}
+            </div>
+            <div className="justify-start items-start gap-4 grid grid-cols-1 lg:gap-10 lg:grid lg:grid-cols-3">
+              <div className="px-4 bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
+                <div className="w-full flex-col justify-start items-start gap-2.5 lg:gap-5 flex">
+                  <div className="w-full flex-col justify-start items-start gap-2.5 flex">
+                    <div className="w-[100%] h-[164px] bg-gradient-to-br from-purple-300 to-zinc-200 rounded-[32px]">
+                      <img
+                        className="w-16 h-16 left-[40%] top-[47px] relative"
+                        src={donation}
+                      />
+                    </div>
+                  </div>
+                  <div className="w-[100%] text-center text-slate-700 text-base font-medium font-dmsans leading-normal">
+                    Distribute healthy, hygienic care bags{" "}
+                  </div>
+                </div>
+              </div>
+              <div className="px-4 bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
+                <div className="w-full flex-col justify-start items-start gap-2.5 lg:gap-5 flex">
+                  <div className="w-full flex-col justify-start items-start gap-2.5 flex">
+                    <div className="w-[100%] h-[164px] bg-gradient-to-br from-emerald-100 to-neutral-200 rounded-[32px]">
+                      <img
+                        className="w-16 h-16 left-[40%] top-[47px] relative"
+                        src={donation}
+                      />
+                    </div>
+                  </div>
+                  <div className="w-[100%] text-center text-slate-700 text-base font-medium font-dmsans leading-normal">
+                    Find areas in your city with the greatest need.
+                  </div>
+                </div>
+              </div>
+
+              <div className="px-4 bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
+                <div className="w-full flex-col justify-start items-start gap-2.5 lg:gap-5 flex">
+                  <div className="w-full flex-col justify-start items-start gap-2.5 flex">
+                    <div className="w-[100%] h-[164px] bg-gradient-to-br from-sky-200 to-neutral-200 rounded-[32px]">
+                      <img
+                        className="w-16 h-16 left-[40%] top-[47px] relative"
+                        src={donation}
+                      />
+                    </div>
+                  </div>
+                  <div className="w-[100%] text-center text-slate-700 text-base font-medium font-dmsans leading-normal">
+                    To approach someone in need on the street
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* End */}
+        </div>
+        <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+          {/* Start */}
+          <div className="w-full relative rounded-[30px]">
+            {/* <div className="h-fit left-[128px] top-[128px] absolute px-4 py-6 md:p-16 flex-col justify-start items-start gap-9 inline-flex"> */}
+            <div className="h-fit w-full px-4 py-6 md:p-16 flex-col justify-start items-start gap-9 inline-flex">
+              <div className="w-full text-neutral-800 text-[45px] font-medium font-dmsans leading-[52px]">
+                Meet Our Team
+              </div>
+              <div className="w-full text-black text-base font-normal font-dmsans leading-normal tracking-wide">
+                Street Care is a volunteer-led and community-driven organization
+                that supports{" "}
+              </div>
+              <div className="px-4 pb-4 w-full grid grid-flow-col overflow-x-auto gap-2 xl:grid xl:grid-flow-row xl:grid-cols-4 xl:gap-4">
+                {/* <div className="w-full overflow-x-auto justify-start items-start gap-2 inline-flex flex-wrap"> */}
+                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                  <div className="self-stretch h-[340px] relative">
+                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                      <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
+                        Executive Director
+                      </div>
+                      <div className="self-stretch text-center text-violet-950 text-base font-bold font-dmsans leading-normal">
+                        Craig Kaufman
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                  <div className="self-stretch h-[340px] relative">
+                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                      <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
+                        Operation Lead
+                      </div>
+                      <div className="self-stretch text-center text-violet-950 text-base font-bold font-dmsans leading-normal">
+                        Shreyas Shukla
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                  <div className="self-stretch h-[340px] relative">
+                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                      <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
+                        Developer Lead
+                      </div>
+                      <div className="self-stretch text-center text-violet-950 text-base font-bold font-dmsans leading-normal">
+                        Shreyas Shukla
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                  <div className="self-stretch h-[340px] relative">
+                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                      <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
+                        UX Design Lead
+                      </div>
+                      <div className="self-stretch text-center text-violet-950 text-base font-bold font-dmsans leading-normal">
+                        May Zhou
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                  <div className="self-stretch h-[340px] relative">
+                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                      <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
+                        Interaction Design Lead
+                      </div>
+                      <div className="self-stretch text-center text-violet-950 text-base font-bold font-dmsans leading-normal">
+                        Qingyi Li
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                  <div className="self-stretch h-[340px] relative">
+                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                      <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
+                        Product Manager
+                      </div>
+                      <div className="self-stretch text-center text-violet-950 text-base font-bold font-dmsans leading-normal">
+                        Sachita Shetty
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                  <div className="self-stretch h-[340px] relative">
+                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                      <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
+                        Front-End Developer Lead
+                      </div>
+                      <div className="self-stretch text-center text-violet-950 text-base font-bold font-dmsans leading-normal">
+                        Nirav Patel
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                  <div className="self-stretch h-[340px] relative">
+                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                      <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
+                        Front-End Developer
+                      </div>
+                      <div className="self-stretch text-center text-violet-950 text-base font-bold font-dmsans leading-normal">
+                        Vishnu Dut
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                  <div className="self-stretch h-[340px] relative">
+                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                      <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
+                        Front-End Developer
+                      </div>
+                      <div className="self-stretch text-center text-violet-950 text-base font-bold font-dmsans leading-normal">
+                        Aniket Thumar
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                  <div className="self-stretch h-[340px] relative">
+                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                      <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
+                        Front-End Developer
+                      </div>
+                      <div className="self-stretch text-center text-violet-950 text-base font-bold font-dmsans leading-normal">
+                        Shivani Pandit
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                  <div className="self-stretch h-[340px] relative">
+                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                      <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
+                        Front-End Developer
+                      </div>
+                      <div className="self-stretch text-center text-violet-950 text-base font-bold font-dmsans leading-normal">
+                        Vedant Chokshi
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                  <div className="self-stretch h-[340px] relative">
+                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                      <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
+                        Back-End Developer
+                      </div>
+                      <div className="self-stretch text-center text-violet-950 text-base font-bold font-dmsans leading-normal">
+                        Shailesh Chikne
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                  <div className="self-stretch h-[340px] relative">
+                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                      <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
+                        Back-End Developer
+                      </div>
+                      <div className="self-stretch text-center text-violet-950 text-base font-bold font-dmsans leading-normal">
+                        Karthik Nautiyal
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                  <div className="self-stretch h-[340px] relative">
+                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                      <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
+                        Full-Stack Developer
+                      </div>
+                      <div className="self-stretch text-center text-violet-950 text-base font-bold font-dmsans leading-normal">
+                        Samarth Kapuria
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* End */}
+        </div>
+        <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black ">
+          {/* Start */}
+          <div className="w-full h-[680px] px-4 py-6 md:p-16 bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
+            <div className="w-full flex-col justify-start items-start gap-10 flex">
+              <div className="w-full justify-start items-start gap-8 xl:gap-[244px] flex flex-col xl:flex-row">
+                <div className="w-full flex-col justify-start items-start gap-8 inline-flex">
+                  <div className="text-black text-4xl md:text-[45px] font-medium font-dmsans sm:leading-[44px] md:leading-[52px]">
+                    Shop our Merch!{" "}
+                  </div>
+                  <div className="w-full h-fit text-neutral-900 text-base font-normal font-dmsans leading-normal tracking-wide">
+                    Information about how purchasing our merch can support the
+                    organization. More information about the merchandise.
+                    <br />
+                  </div>
+                </div>
+                <div className="w-fit h-fit bg-purple-200 rounded-[100px] flex-col justify-center items-center gap-2 inline-flex">
+                  <div className="w-full self-stretch grow shrink basis-0 px-6 py-2.5 justify-center items-center gap-2 inline-flex">
+                    <div className="w-full text-center text-neutral-900 text-xs xl:text-sm font-medium font-dmsans leading-tight">
+                      Visit the Store
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="px-4 pb-4 w-full grid grid-flow-col overflow-x-auto gap-2 xl:grid xl:grid-flow-row xl:grid-cols-3 xl:gap-4">
+                <div className="w-[260px] xl:w-full flex-col justify-start items-start inline-flex">
+                  <img className="w-full h-full rounded-[32px]" src={bag1} />
+                </div>
+                <div className="w-[260px] xl:w-full flex-col justify-start items-start inline-flex">
+                  <img className="w-full h-full rounded-[32px]" src={tshirt} />
+                </div>
+                <div className="w-[260px] xl:w-full flex-col justify-start items-start inline-flex">
+                  <img className="w-full h-full rounded-[32px]" src={bag2} />
+                </div>
+              </div>
             </div>
           </div>
           {/* End */}
