@@ -6,6 +6,7 @@ import share from "../../images/share.png";
 import bag1 from "../../images/bag1.png";
 import bag2 from "../../images/bag2.png";
 import tshirt from "../../images/tshirt.png";
+import CustomButton from "../Buttons/CustomButton";
 
 function About() {
   return (
@@ -213,7 +214,7 @@ function About() {
                   <div className="w-full flex-col justify-start items-start gap-2.5 flex">
                     <div className="w-[100%] h-[164px] bg-gradient-to-br from-purple-300 to-zinc-200 rounded-[32px]">
                       <img
-                        className="w-16 h-16 left-[40%] top-[47px] relative"
+                        className="w-16 h-16 left-[36%] top-[47px] relative"
                         src={donation}
                       />
                     </div>
@@ -228,7 +229,7 @@ function About() {
                   <div className="w-full flex-col justify-start items-start gap-2.5 flex">
                     <div className="w-[100%] h-[164px] bg-gradient-to-br from-emerald-100 to-neutral-200 rounded-[32px]">
                       <img
-                        className="w-16 h-16 left-[40%] top-[47px] relative"
+                        className="w-16 h-16 left-[36%] top-[47px] relative"
                         src={donation}
                       />
                     </div>
@@ -244,7 +245,7 @@ function About() {
                   <div className="w-full flex-col justify-start items-start gap-2.5 flex">
                     <div className="w-[100%] h-[164px] bg-gradient-to-br from-sky-200 to-neutral-200 rounded-[32px]">
                       <img
-                        className="w-16 h-16 left-[40%] top-[47px] relative"
+                        className="w-16 h-16 left-[36%] top-[47px] relative"
                         src={donation}
                       />
                     </div>
@@ -270,7 +271,7 @@ function About() {
                 Street Care is a volunteer-led and community-driven organization
                 that supports{" "}
               </div>
-              <div className="px-4 pb-4 w-full grid grid-flow-col overflow-x-auto gap-2 xl:grid xl:grid-flow-row xl:grid-cols-4 xl:gap-4">
+              <div className="px-4 pb-4 w-full grid grid-flow-col overflow-x-auto gap-2 xl:grid xl:grid-flow-row xl:grid-cols-3 2xl:grid-cols-4 xl:gap-4">
                 {/* <div className="w-full overflow-x-auto justify-start items-start gap-2 inline-flex flex-wrap"> */}
                 <div className="w-[260px] flex-col justify-start items-start inline-flex">
                   <div className="self-stretch h-[340px] relative">
@@ -461,10 +462,10 @@ function About() {
         </div>
         <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black ">
           {/* Start */}
-          <div className="w-full h-[680px] px-4 py-6 md:p-16 bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
-            <div className="w-full flex-col justify-start items-start gap-10 flex">
-              <div className="w-full justify-start items-start gap-8 xl:gap-[244px] flex flex-col xl:flex-row">
-                <div className="w-full flex-col justify-start items-start gap-8 inline-flex">
+          <div className="w-full h-fit px-4 py-6 md:p-16 bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
+            <div className="w-full flex-col justify-start items-start gap-8 flex">
+              <div className="w-full justify-start items-start gap-8 xl:gap-[124px] flex flex-col xl:flex-row">
+                <div className="w-[90%] flex-col justify-start items-start gap-8 inline-flex">
                   <div className="text-black text-4xl md:text-[45px] font-medium font-dmsans sm:leading-[44px] md:leading-[52px]">
                     Shop our Merch!{" "}
                   </div>
@@ -474,12 +475,20 @@ function About() {
                     <br />
                   </div>
                 </div>
-                <div className="w-fit h-fit bg-purple-200 rounded-[100px] flex-col justify-center items-center gap-2 inline-flex">
+                {/* <div className="h-fit bg-purple-200 rounded-[100px] flex-col justify-center items-center gap-2 inline-flex">
                   <div className="w-full self-stretch grow shrink basis-0 px-6 py-2.5 justify-center items-center gap-2 inline-flex">
                     <div className="w-full text-center text-neutral-900 text-xs xl:text-sm font-medium font-dmsans leading-tight">
                       Visit the Store
                     </div>
                   </div>
+                </div> */}
+                <div className="h-fit my-2 flex-col justify-end items-end gap-2 inline-flex">
+                  <CustomButton
+                    label="Visit the Store"
+                    class="w-full text-center text-neutral-900 text-xs xl:text-sm font-medium font-dmsans leading-tight"
+                    name="buttonlight"
+                    onClick={() => {}}
+                  />
                 </div>
               </div>
               <div className="px-4 pb-4 w-full grid grid-flow-col overflow-x-auto gap-2 xl:grid xl:grid-flow-row xl:grid-cols-3 xl:gap-4">
