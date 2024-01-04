@@ -264,7 +264,7 @@ function About() {
           <div className="w-full relative rounded-[30px]">
             {/* <div className="h-fit left-[128px] top-[128px] absolute px-4 py-6 md:p-16 flex-col justify-start items-start gap-9 inline-flex"> */}
             <div className="h-fit w-full px-4 py-6 md:p-16 flex-col justify-start items-start gap-9 inline-flex">
-              <div className="w-full text-neutral-800 text-[45px] font-medium font-dmsans leading-[52px]">
+              <div className="w-full text-4xl md:text-[45px] font-medium font-dmsans sm:leading-[44px] md:leading-[52px]">
                 Meet Our Team
               </div>
               <div className="w-full text-black text-base font-normal font-dmsans leading-normal tracking-wide">
