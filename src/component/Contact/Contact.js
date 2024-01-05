@@ -2,6 +2,8 @@ import React, { useRef, useState } from "react";
 import Landing from "../HomePage/Landing";
 import { checkString } from "../helper/validator";
 import errorImg from "../../images/error.png";
+import { emailConfirmation } from "../EmailService";
+import { getAuth } from "firebase/auth";
 
 function Contact() {
   const nameRef = useRef(null);
@@ -13,6 +15,8 @@ function Contact() {
     emailError:"",
     messageError:""
   });
+
+  const fAuth = getAuth();
 
   const updateErrorState = (key, value) => {
     setError((prevState) => ({
