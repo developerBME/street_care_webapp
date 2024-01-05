@@ -42,9 +42,11 @@ function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let success = true;
 
     if (!nameRef.current.value) {
       updateErrorState("nameError", "Name is required");
+      success = false;
     } else {
       try {
         checkString(nameRef.current.value, "Event Name");
@@ -56,14 +58,21 @@ function Contact() {
 
     if (!emailRef.current.value) {
       updateErrorState("emailError", "Email is required");
+      success = false;
     } else {
-      updateErrorState("nameError", "");
+      updateErrorState("emailError", "");
     }
 
     if (!messageRef.current.value) {
       updateErrorState("messageError", "Message is required");
+      success = false;
     } else {
-      updateErrorState("nameError", "");
+      updateErrorState("messageError", "");
+    }
+
+    const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px"><h1>Thank you for reaching out!!</h1><p>Someone from our team will reach out to you shortly.</p></div>`;
+    if (success) {
+      emailConfirmation('shivanip@brightmindenrichment.org', fAuth.currentUser.displayName, '', emailHTML);
     }
 
 
