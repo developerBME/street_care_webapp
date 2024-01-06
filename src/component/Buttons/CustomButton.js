@@ -54,6 +54,19 @@ function CustomButton({ label, name, onClick, icon, disable }) {
         {label}
       </button>
     );
+  }else if (name == "buttondefaultlong") {
+    return (
+      <button
+        onClick={onClick}
+        className={`w-full text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-white bg-[#6840E0] hover:bg-[#504279]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
+      >
+        {label}
+      </button>
+    );
   } else if (name == "buttondefaulticon") {
     return (
       <button

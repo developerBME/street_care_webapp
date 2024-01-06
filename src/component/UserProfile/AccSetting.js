@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import CustomButton from "../Buttons/CustomButton";
 import errorImg from "../../images/error.png";
 import successImg from "../../images/verified.png";
-import { getAuth } from "firebase/auth";
+import { onAuthStateChanged, getAuth } from "firebase/auth";
 import {
   collection,
   getDocs,
@@ -17,6 +17,8 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import imageCompression from "browser-image-compression";
 import { useNavigate } from "react-router-dom";
 import arrowBack from "../../images/arrowBack.png";
+import defaultImage from "../../images/default_avatar.svg"
+import Avatar from "@mui/material/Avatar";
 
 const USERS_COLLECTION = "users";
 async function uploadProfileImage(file, currentUser, setLoading) {
@@ -55,6 +57,36 @@ function AccSetting() {
   const imgRef = useRef("");
   const fAuth = getAuth();
   const [loading, setLoading] = useState(false);
+
+  const [photoUrl, setPhotoUrl] = useState("");
+
+  const getUserData = async () => {
+    try {
+      const userRef = query(
+        collection(db, "users"),
+        where("uid", "==", fAuth?.currentUser?.uid)
+      );
+      const data = await getDocs(userRef);
+
+      if (data.docs[0]) {
+        setPhotoUrl(data.docs[0].data().photoUrl || defaultImage);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(fAuth, (user) => {
+      if (!user) {
+        navigate("/login");
+      }
+    });
+
+    getUserData();
+
+    return () => unsubscribe();
+  }, [fAuth.currentUser]);
 
   const handleUsernameChange = (e) => {
     setNewUsername(e.target.value);
@@ -147,13 +179,20 @@ function AccSetting() {
   return (
     <div className="relative flex flex-col items-center ">
       <div class=" w-full px-10 md:px-0 h-screen flex items-center justify-center">
-        <div class="bg-white border border-gray-200 flex flex-col items-center justify-center px-4 md:px-8 lg:px-24 py-8 rounded-lg shadow-2xl">
-          <p className="text-[#212121] pl-0 pt-4 text-3xl md:pl-8 md:pt-0 xl:pl-0 xl:pt-0 sm:text-4xl font-medium font-dmsans leading-9 mb-4">
+        <div class="bg-white mt-[64px] border border-gray-200 flex flex-col items-center justify-center px-4 md:px-[128px] py-[100px] rounded-[30px] shadow-2xl">
+          <p className="text-[#212121] text-3xl sm:text-[45px] font-medium font-dmsans leading-9 mb-[32px]">
             Update Your Profile{" "}
           </p>
-          <form>
-            <div className="mb-4">
-              <label htmlFor="username" className="block text-gray-600 mb-2">
+          <div className="rounded-full border border-violet-600">
+            <Avatar src={photoUrl || defaultImage} alt="User Avatar" sx={{ width: 100, height: 100 }}
+          />
+        </div>
+          <form className="md:w-[360px] mt-[24px]">
+            <div className="mb-4 space-y-1.5">
+              <label
+                htmlFor="username"
+                className="text-zinc-700 text-sm font-medium font-dmsans leading-tight"
+              >
                 Profile Name
               </label>
               <input
@@ -162,13 +201,13 @@ function AccSetting() {
                 value={newUsername}
                 ref={username}
                 onChange={handleUsernameChange}
-                className="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-blue-400"
+                className="w-full h-12 px-4 py-1 rounded border border-stone-300 justify-start items-center gap-2 inline-flex focus:ring focus:ring-blue-400"
               />
             </div>
-            <div className="mb-4">
+            <div className="mb-4 space-y-1.5">
               <label
                 htmlFor="profileImage"
-                className="block text-gray-600 mb-2"
+                className="text-zinc-700 text-sm font-medium font-dmsans leading-tight"
               >
                 Profile Image
               </label>
@@ -177,7 +216,7 @@ function AccSetting() {
                 accept="image/*"
                 ref={imgRef}
                 onChange={handleImageChange}
-                className="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-blue-400"
+                className="w-full h-12 px-4 py-2 rounded border border-stone-300 justify-start items-center gap-2 inline-flex focus:outline-none focus:ring focus:ring-blue-400"
               />
               {newProfileImage && (
                 <img
@@ -195,12 +234,12 @@ function AccSetting() {
             </div>
             {error && (
               <div className="inline-flex items-center">
-                <img src={errorImg} className="w-3 h-3" />
+                <img src={errorImg} className="w-3 h-3 px-16" />
                 <p className="text-red-600 text-xs">{error}</p>
               </div>
             )}
-            <div className="space-y-2 md:space-y-8 md:space-x-[15px] space-x-[5px]">
-              <CustomButton
+            <div className="mt-[32px] space-y-2 md:space-y-8 md:space-x-[15px] space-x-[5px]">
+              {/*<CustomButton
                 label="Clear"
                 name="buttonborder"
                 onClick={clearFields}
@@ -209,10 +248,12 @@ function AccSetting() {
                 label="Cancel"
                 name="buttonborder"
                 onClick={handleCancel}
-              />
+            />
+           
+          */}
               <CustomButton
                 label="Update Profile"
-                name="buttondefault"
+                name="buttondefaultlong"
                 onClick={(e) => handleSubmit(e)}
                 // disabled = {loading || !newProfileImage}
               />
