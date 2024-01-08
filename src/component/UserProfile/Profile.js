@@ -29,6 +29,7 @@ function Profile() {
 
   
   const fetchData = async () => {
+    try {
     const visitLogsData = await fetchPersonalVisitLogs(auth?.currentUser?.uid);
     const user = auth.currentUser;
 
@@ -41,6 +42,9 @@ function Profile() {
     } else {
       console.log("No user is signed in.");
       setEvents([]);
+    }
+  } catch (error) {
+     console.error("Error Fetching data:", error.message);
     }
   };
 

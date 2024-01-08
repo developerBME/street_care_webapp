@@ -278,7 +278,7 @@ const CommunityOutreachEvent = () => {
           </div>
         ):(<div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
         {(visitLogs.slice(0,3).map((visitLogData) => (
-          <OutreachVisitLogCard visitLogCardData={visitLogData}/>
+          <OutreachVisitLogCard visitLogCardData={visitLogData} showProfileInfo={true}/>
               )))}
       </div>)}
         

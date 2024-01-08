@@ -22,6 +22,7 @@ const OutreachVisitLogProfile = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   
+  
   useEffect(() => {
 
     const fetchData = async () => {
@@ -78,8 +79,9 @@ const OutreachVisitLogProfile = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-y-2 mb-6">
               {visitLogs.slice(0, visibleItems).map((visitLogData, index) => (
                 <div key={index} className="p-2">
-                  <OutreachVisitLogProfileCard visitLogCardData={visitLogData} />
-                  {/* <OutreachVisitLogCard visitLogCardData={visitLogData} /> */}
+                  {/* <OutreachVisitLogProfileCard visitLogCardData={visitLogData} /> */}
+                  <OutreachVisitLogCard visitLogCardData={visitLogData}
+                   showProfileInfo={false} />
                 </div>
               ))}
             </div>
