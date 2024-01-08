@@ -76,6 +76,8 @@ function Profile() {
   useEffect(() => {
     if (eventsDisplay.length > 0) {
       setIsLoading(false);
+    } else {
+      setIsLoading(false);
     }
   }, [eventsDisplay]);
 
