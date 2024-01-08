@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import OutreachVisitLogProfileCard from "./OutreachVisitLogProfileCard";
+import { useNavigate } from "react-router-dom";
+import icon from "../../images/icon.png";
+import OutreachVisitLogCard from "./OutreachVisitLogCard";
 import { fetchEvents, formatDate } from "../EventCardService";
 import { fetchPersonalVisitLogs } from "../VisitLogCardService";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
+import CustomButton from "../Buttons/CustomButton";
 import NoOutreachDoc from "./NoOutreachDoc";
 import { auth } from "../firebase";
    
@@ -12,7 +16,8 @@ const OutreachVisitLogProfile = () => {
   const loadMore = () => {
     setVisibleItems((prev) => prev + 3);
   };
-  
+
+  const navigate = useNavigate();
   const [visitLogs, setVisitLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -28,7 +33,7 @@ const OutreachVisitLogProfile = () => {
           const logs = await fetchPersonalVisitLogs(uid);
           setVisitLogs(logs);
           setIsLoading(false);
-        
+          console.log(logs);
         // const visitLogsData = await fetchPersonalVisitLogs(auth?.currentUser?.uid);
         // setVisitLogs(visitLogsData)
         // console.log(visitLogsData)
@@ -45,16 +50,24 @@ const OutreachVisitLogProfile = () => {
   
   return (
     <div>
-      <div className="flex items-center justify-between">
-        <div className="md:inline-flex items-center text-center mb-7 space-y-2 md:space-y-0">
-          <p className="font-medium text-xl lg:text-2xl text-[#212121] font-bricolage">
-            Outreach Visit Log
-          </p>
-        </div>
+      <div className="flex items-center justify-between mb-10">
+      <div className="inline-flex flex-col sm:flex-row sm:space-x-16 ">
+              <div class="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage leading-[52px]">
+                Personal Visit Logs
+              </div>
+              <CustomButton
+                label="Document my Outreach"
+                name="buttondefaulticon"
+                icon={icon}
+                onClick={() => {
+                  navigate("/profile/select-outreach");
+                }}
+              />
+            </div>
       </div>
 
       {isLoading ? (
-        <div className=" sm:block sm:overflow-x-auto overflow-y-hidden flex justify-between items-center w-full">
+        <div className=" flex justify-between items-center w-full h-fit gap-2">
           <EventCardSkeleton />
           <EventCardSkeleton />
           <EventCardSkeleton />
@@ -66,6 +79,7 @@ const OutreachVisitLogProfile = () => {
               {visitLogs.slice(0, visibleItems).map((visitLogData, index) => (
                 <div key={index} className="p-2">
                   <OutreachVisitLogProfileCard visitLogCardData={visitLogData} />
+                  {/* <OutreachVisitLogCard visitLogCardData={visitLogData} /> */}
                 </div>
               ))}
             </div>
