@@ -17,8 +17,9 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import imageCompression from "browser-image-compression";
 import { useNavigate } from "react-router-dom";
 import arrowBack from "../../images/arrowBack.png";
-import defaultImage from "../../images/default_avatar.svg"
+import defaultImage from "../../images/default_avatar.svg";
 import Avatar from "@mui/material/Avatar";
+import edit from "../../images/edit.png";
 
 const USERS_COLLECTION = "users";
 async function uploadProfileImage(file, currentUser, setLoading) {
@@ -120,6 +121,9 @@ function AccSetting() {
         console.log("Compressed Image Size:", compressedFile.size, "bytes");
         setNewProfileImage(compressedFile);
         setUserimageError("");
+
+        const imageUrl = URL.createObjectURL(compressedFile);
+        setPhotoUrl(imageUrl);
       } catch (error) {
         setUserimageError(
           "Image compression failed. Please select a smaller image."
@@ -176,6 +180,11 @@ function AccSetting() {
     setSuccess("");
   };
 
+  const handleEditClick = () => {
+    // Trigger click event on the hidden file input
+    imgRef.current.click();
+  };
+
   return (
     <div className="relative flex flex-col items-center ">
       <div class=" w-full px-10 md:px-0 h-screen flex items-center justify-center">
@@ -183,10 +192,23 @@ function AccSetting() {
           <p className="text-[#212121] text-3xl sm:text-[45px] font-medium font-dmsans leading-9 mb-[32px]">
             Update Your Profile{" "}
           </p>
-          <div className="rounded-full border border-violet-600">
-            <Avatar src={photoUrl || defaultImage} alt="User Avatar" sx={{ width: 100, height: 100 }}
-          />
-        </div>
+          <div className="relative">
+            <div className="relative inline-block rounded-full border border-violet-600">
+              <Avatar src={photoUrl || defaultImage} alt="User Avatar" sx={{ width: 100, height: 100 }} />
+              <div
+                className="absolute bottom-0 right-0 transform translate-x-1/2 translate-y-1/2 -mb-2 -mr-2 cursor-pointer bg-white rounded-full p-1"
+              >
+                <CustomButton
+                  label=""
+                  name="buttonicon8"
+                  icon={edit}
+                  className="w-8 h-8" // Adjust the size as needed
+                  onClick={handleEditClick}
+                />
+              </div>
+            </div>
+          </div>
+
           <form className="md:w-[360px] mt-[24px]">
             <div className="mb-4 space-y-1.5">
               <label
@@ -204,7 +226,7 @@ function AccSetting() {
                 className="w-full h-12 px-4 py-1 rounded border border-stone-300 justify-start items-center gap-2 inline-flex focus:ring focus:ring-blue-400"
               />
             </div>
-            <div className="mb-4 space-y-1.5">
+            <div className="mb-4 space-y-1.5 hidden">
               <label
                 htmlFor="profileImage"
                 className="text-zinc-700 text-sm font-medium font-dmsans leading-tight"
