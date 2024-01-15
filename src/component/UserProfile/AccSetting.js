@@ -196,7 +196,7 @@ function AccSetting() {
             <div className="relative inline-block rounded-full border border-violet-600">
               <Avatar src={photoUrl || defaultImage} alt="User Avatar" sx={{ width: 100, height: 100 }} />
               <div
-                className="absolute bottom-0 right-0 transform translate-x-1/2 translate-y-1/2 -mb-2 -mr-2 cursor-pointer bg-white rounded-full p-1"
+                className="absolute bottom-5 right-5 transform translate-x-1/2 translate-y-1/2 -mb-2 -mr-2 cursor-pointer bg-white rounded-full"
               >
                 <CustomButton
                   label=""
