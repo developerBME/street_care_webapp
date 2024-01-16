@@ -11,8 +11,8 @@ import CustomButton from "../Buttons/CustomButton";
 function About() {
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
-      <div className="relative flex flex-col items-center ">
-        <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-32 rounded-2xl bg-white text-black ">
+      <div className="relative flex flex-col items-center gap-8 ">
+        <div className=" w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 lg:mx-40 mt-32 rounded-2xl bg-white text-black ">
           {/* Start */}
           <div className="w-full h-full px-4 py-6 md:p-16 bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
             <div className="flex-col lg:flex-row justify-start items-center gap-8 md:gap-12 lg:gap-y-[172px] lg:gap-x-[90px] inline-flex">
@@ -49,7 +49,7 @@ function About() {
           </div>
           {/* End */}
         </div>
-        <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+        <div className=" w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 lg:mx-40 rounded-2xl bg-white text-black ">
           {/* Start */}
           <div className="w-full h-full px-4 py-6 md:p-16 bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
             <div className="flex-col lg:flex-row justify-start items-center gap-8 md:gap-12 lg:gap-y-[172px] lg:gap-x-[40px] inline-flex">
@@ -89,7 +89,7 @@ function About() {
           </div>
           {/* End */}
         </div>
-        <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+        <div className=" w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 lg:mx-40 rounded-2xl bg-white text-black ">
           {/* Start */}
           <div className="w-full h-full px-4 py-6 md:p-16 bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
             <div className="w-full flex-col justify-start items-start gap-8 flex">
@@ -201,7 +201,7 @@ function About() {
           </div>
           {/* End */}
         </div>
-        <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+        <div className=" w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 lg:mx-40 rounded-2xl bg-white text-black ">
           {/* Start */}
           <div className="w-full h-full px-4 py-6 md:p-16 flex-col justify-center items-center gap-6 inline-flex">
             <div className="w-full text-black text-4xl md:text-[45px] font-medium font-dmsans sm:leading-[44px] md:leading-[52px]">
@@ -259,7 +259,7 @@ function About() {
           </div>
           {/* End */}
         </div>
-        <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+        <div className=" w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 lg:mx-40 rounded-2xl bg-white text-black ">
           {/* Start */}
           <div className="w-full relative rounded-[30px]">
             {/* <div className="h-fit left-[128px] top-[128px] absolute px-4 py-6 md:p-16 flex-col justify-start items-start gap-9 inline-flex"> */}
@@ -271,12 +271,12 @@ function About() {
                 Street Care is a volunteer-led and community-driven organization
                 that supports{" "}
               </div>
-              <div className="px-4 pb-4 w-full grid grid-flow-col overflow-x-auto gap-2 xl:grid xl:grid-flow-row xl:grid-cols-3 2xl:grid-cols-4 xl:gap-4">
+              <div className="w-full grid grid-flow-col overflow-x-auto gap-x-[5px] gap-y-2 lg:grid lg:grid-flow-row lg:grid-cols-3 xl:grid-cols-4 xl:gap-2">
                 {/* <div className="w-full overflow-x-auto justify-start items-start gap-2 inline-flex flex-wrap"> */}
-                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                <div className="w-[242px] flex-col justify-start items-start inline-flex">
                   <div className="self-stretch h-[340px] relative">
-                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
-                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                    <div className="w-[242px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[242px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
                       <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
                         Executive Director
                       </div>
@@ -286,10 +286,10 @@ function About() {
                     </div>
                   </div>
                 </div>
-                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                <div className="w-[242px] flex-col justify-start items-start inline-flex">
                   <div className="self-stretch h-[340px] relative">
-                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
-                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                    <div className="w-[242px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[242px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
                       <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
                         Operation Lead
                       </div>
@@ -299,10 +299,10 @@ function About() {
                     </div>
                   </div>
                 </div>
-                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                <div className="w-[242px] flex-col justify-start items-start inline-flex">
                   <div className="self-stretch h-[340px] relative">
-                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
-                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                    <div className="w-[242px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[242px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
                       <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
                         Developer Lead
                       </div>
@@ -312,10 +312,10 @@ function About() {
                     </div>
                   </div>
                 </div>
-                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                <div className="w-[242px] flex-col justify-start items-start inline-flex">
                   <div className="self-stretch h-[340px] relative">
-                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
-                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                    <div className="w-[242px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[242px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
                       <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
                         UX Design Lead
                       </div>
@@ -325,10 +325,10 @@ function About() {
                     </div>
                   </div>
                 </div>
-                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                <div className="w-[242px] flex-col justify-start items-start inline-flex">
                   <div className="self-stretch h-[340px] relative">
-                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
-                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                    <div className="w-[242px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[242px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
                       <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
                         Interaction Design Lead
                       </div>
@@ -338,10 +338,10 @@ function About() {
                     </div>
                   </div>
                 </div>
-                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                <div className="w-[242px] flex-col justify-start items-start inline-flex">
                   <div className="self-stretch h-[340px] relative">
-                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
-                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                    <div className="w-[242px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[242px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
                       <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
                         Product Manager
                       </div>
@@ -351,10 +351,10 @@ function About() {
                     </div>
                   </div>
                 </div>
-                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                <div className="w-[242px] flex-col justify-start items-start inline-flex">
                   <div className="self-stretch h-[340px] relative">
-                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
-                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                    <div className="w-[242px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[242px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
                       <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
                         Front-End Developer Lead
                       </div>
@@ -364,10 +364,10 @@ function About() {
                     </div>
                   </div>
                 </div>
-                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                <div className="w-[242px] flex-col justify-start items-start inline-flex">
                   <div className="self-stretch h-[340px] relative">
-                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
-                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                    <div className="w-[242px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[242px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
                       <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
                         Front-End Developer
                       </div>
@@ -377,10 +377,10 @@ function About() {
                     </div>
                   </div>
                 </div>
-                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                <div className="w-[242px] flex-col justify-start items-start inline-flex">
                   <div className="self-stretch h-[340px] relative">
-                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
-                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                    <div className="w-[242px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[242px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
                       <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
                         Front-End Developer
                       </div>
@@ -390,10 +390,10 @@ function About() {
                     </div>
                   </div>
                 </div>
-                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                <div className="w-[242px] flex-col justify-start items-start inline-flex">
                   <div className="self-stretch h-[340px] relative">
-                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
-                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                    <div className="w-[242px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[242px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
                       <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
                         Front-End Developer
                       </div>
@@ -403,10 +403,10 @@ function About() {
                     </div>
                   </div>
                 </div>
-                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                <div className="w-[242px] flex-col justify-start items-start inline-flex">
                   <div className="self-stretch h-[340px] relative">
-                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
-                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                    <div className="w-[242px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[242px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
                       <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
                         Front-End Developer
                       </div>
@@ -416,10 +416,10 @@ function About() {
                     </div>
                   </div>
                 </div>
-                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                <div className="w-[242px] flex-col justify-start items-start inline-flex">
                   <div className="self-stretch h-[340px] relative">
-                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
-                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                    <div className="w-[242px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[242px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
                       <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
                         Back-End Developer
                       </div>
@@ -429,10 +429,10 @@ function About() {
                     </div>
                   </div>
                 </div>
-                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                <div className="w-[242px] flex-col justify-start items-start inline-flex">
                   <div className="self-stretch h-[340px] relative">
-                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
-                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                    <div className="w-[242px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[242px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
                       <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
                         Back-End Developer
                       </div>
@@ -442,10 +442,10 @@ function About() {
                     </div>
                   </div>
                 </div>
-                <div className="w-[260px] flex-col justify-start items-start inline-flex">
+                <div className="w-[242px] flex-col justify-start items-start inline-flex">
                   <div className="self-stretch h-[340px] relative">
-                    <div className="w-[260px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
-                    <div className="w-[260px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
+                    <div className="w-[242px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    <div className="w-[242px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
                       <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
                         Full-Stack Developer
                       </div>
@@ -460,7 +460,7 @@ function About() {
           </div>
           {/* End */}
         </div>
-        <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black ">
+        <div className=" w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 lg:mx-40 mb-8 rounded-2xl bg-white text-black ">
           {/* Start */}
           <div className="w-full h-fit px-4 py-6 md:p-16 bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
             <div className="w-full flex-col justify-start items-start gap-8 flex">
@@ -491,14 +491,14 @@ function About() {
                   />
                 </div>
               </div>
-              <div className="px-4 pb-4 w-full grid grid-flow-col overflow-x-auto gap-2 xl:grid xl:grid-flow-row xl:grid-cols-3 xl:gap-4">
-                <div className="w-[260px] xl:w-full flex-col justify-start items-start inline-flex">
+              <div className="w-full grid grid-flow-col overflow-x-auto gap-2 xl:grid xl:grid-flow-row xl:grid-cols-3 xl:gap-4">
+                <div className="w-[240px] xl:w-full flex-col justify-start items-start inline-flex">
                   <img className="w-full h-full rounded-[32px]" src={bag1} />
                 </div>
-                <div className="w-[260px] xl:w-full flex-col justify-start items-start inline-flex">
+                <div className="w-[240px] xl:w-full flex-col justify-start items-start inline-flex">
                   <img className="w-full h-full rounded-[32px]" src={tshirt} />
                 </div>
-                <div className="w-[260px] xl:w-full flex-col justify-start items-start inline-flex">
+                <div className="w-[240px] xl:w-full flex-col justify-start items-start inline-flex">
                   <img className="w-full h-full rounded-[32px]" src={bag2} />
                 </div>
               </div>
