@@ -16,34 +16,42 @@ import { db, storage } from "../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import imageCompression from "browser-image-compression";
 import { useNavigate } from "react-router-dom";
-import arrowBack from "../../images/arrowBack.png";
 import defaultImage from "../../images/default_avatar.svg";
 import Avatar from "@mui/material/Avatar";
 import edit from "../../images/edit.png";
 
 const USERS_COLLECTION = "users";
-async function uploadProfileImage(file, currentUser, setLoading) {
+
+async function uploadProfileImage(file, currentUser, setLoading, setSuccess, setAvatarLoading) {
   const fAuth = getAuth();
   const fileRef = ref(storage, "webappUserImages/" + fAuth.currentUser.uid);
-  setLoading(true);
-  const snapshot = await uploadBytes(fileRef, file);
-  const photoUrl = await getDownloadURL(fileRef);
-  console.log(photoUrl);
 
-  const userQuery = query(
-    collection(db, USERS_COLLECTION),
-    where("uid", "==", fAuth.currentUser.uid)
-  );
-  const userDocRef = await getDocs(userQuery);
-  const userDocID = userDocRef.docs[0].id;
-  // reference for the userdoc
-  const userRef = doc(db, USERS_COLLECTION, userDocID);
-  await updateDoc(userRef, {
-    photoUrl: photoUrl,
-  });
-  // updateProfile(currentUser,{photoURL:photoUrl})
-  setLoading(false);
-  alert("File Uploaded successfully");
+  setAvatarLoading(true); // Set avatar loading to true when starting the upload
+
+  try {
+    const snapshot = await uploadBytes(fileRef, file);
+    const photoUrl = await getDownloadURL(fileRef);
+
+    const userQuery = query(
+      collection(db, USERS_COLLECTION),
+      where("uid", "==", fAuth.currentUser.uid)
+    );
+    const userDocRef = await getDocs(userQuery);
+    const userDocID = userDocRef.docs[0].id;
+    const userRef = doc(db, USERS_COLLECTION, userDocID);
+    await updateDoc(userRef, {
+      photoUrl: photoUrl,
+    });
+
+    setLoading(false);
+    setSuccess("File Uploaded successfully");
+
+    setAvatarLoading(false); // Set avatar loading to false when upload is complete
+  } catch (error) {
+    setLoading(false);
+    console.error("Error uploading image:", error);
+    setAvatarLoading(false); // Set avatar loading to false on error
+  }
 }
 
 function AccSetting() {
@@ -54,6 +62,7 @@ function AccSetting() {
   const [userimageError, setUserimageError] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [avatarLoading, setAvatarLoading] = useState(false);
   const username = useRef("");
   const imgRef = useRef("");
   const fAuth = getAuth();
@@ -98,18 +107,16 @@ function AccSetting() {
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Check the file format
+      setAvatarLoading(true); // Set avatar loading to true when the user selects an image
       if (
         file.type !== "image/png" &&
         file.type !== "image/jpeg" &&
         file.type !== "image/svg+xml"
       ) {
         setUserimageError("Please select a valid PNG, JPG, or SVG image.");
+        setAvatarLoading(false); // Set avatar loading to false since the image type is invalid
         return;
       }
-
-      // Original image size
-      console.log("Original Image Size:", file.size, "bytes");
 
       try {
         const options = {
@@ -117,8 +124,6 @@ function AccSetting() {
         };
 
         const compressedFile = await imageCompression(file, options);
-        // Compressed image size
-        console.log("Compressed Image Size:", compressedFile.size, "bytes");
         setNewProfileImage(compressedFile);
         setUserimageError("");
 
@@ -131,6 +136,7 @@ function AccSetting() {
       }
       setError("");
       setSuccess("");
+      setAvatarLoading(false); // Set avatar loading to false when the image processing is complete
     }
   };
 
@@ -147,9 +153,7 @@ function AccSetting() {
       );
       const userDocRef = await getDocs(userQuery);
       const userDocID = userDocRef.docs[0].id;
-      // reference for the userdoc
       const userRef = doc(db, USERS_COLLECTION, userDocID);
-      // const userDoc = await getDoc(userRef);
       await updateDoc(userRef, {
         username: username.current.value,
       });
@@ -157,7 +161,7 @@ function AccSetting() {
       setSuccess("Successfully updated display name");
     } else if (imgRef.current.value !== "") {
       setUserimageError("");
-      uploadProfileImage(newProfileImage, fAuth.currentUser, setLoading);
+      uploadProfileImage(newProfileImage, fAuth.currentUser, setLoading, setSuccess, setAvatarLoading);
       setSuccess("Successfully updated profile image");
       imgRef.current.value = "";
       setNewProfileImage(null);
@@ -181,20 +185,23 @@ function AccSetting() {
   };
 
   const handleEditClick = () => {
-    // Trigger click event on the hidden file input
     imgRef.current.click();
   };
 
   return (
     <div className="relative flex flex-col items-center ">
-      <div class=" w-full px-10 md:px-0 h-screen flex items-center justify-center">
-        <div class="bg-white mt-[64px] border border-gray-200 flex flex-col items-center justify-center px-4 md:px-[128px] py-[100px] rounded-[30px] shadow-2xl">
+      <div className="w-full px-10 md:px-0 h-screen flex items-center justify-center">
+        <div className="bg-white mt-[64px] border border-gray-200 flex flex-col items-center justify-center px-4 md:px-[128px] py-[100px] rounded-[30px] shadow-2xl">
           <p className="text-[#212121] text-3xl sm:text-[45px] font-medium font-dmsans leading-9 mb-[32px]">
             Update Your Profile{" "}
           </p>
           <div className="relative">
             <div className="relative inline-block rounded-full border border-violet-600">
-              <Avatar src={photoUrl || defaultImage} alt="User Avatar" sx={{ width: 100, height: 100 }} />
+              <Avatar
+                src={photoUrl || defaultImage}
+                alt="User Avatar"
+                sx={{ width: 100, height: 100 }}
+              />
               <div
                 className="absolute bottom-5 right-5 transform translate-x-1/2 translate-y-1/2 -mb-2 -mr-2 cursor-pointer bg-white rounded-full"
               >
@@ -202,13 +209,17 @@ function AccSetting() {
                   label=""
                   name="buttonicon8"
                   icon={edit}
-                  className="w-8 h-8" // Adjust the size as needed
+                  className="w-8 h-8"
                   onClick={handleEditClick}
                 />
               </div>
             </div>
+            {avatarLoading && (
+              <div className="absolute rounded-full text-center inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="text-white">Updating</div>
+              </div>
+            )}
           </div>
-
           <form className="md:w-[360px] mt-[24px]">
             <div className="mb-4 space-y-1.5">
               <label
@@ -261,23 +272,10 @@ function AccSetting() {
               </div>
             )}
             <div className="mt-[32px] space-y-2 md:space-y-8 md:space-x-[15px] space-x-[5px]">
-              {/*<CustomButton
-                label="Clear"
-                name="buttonborder"
-                onClick={clearFields}
-              />
-              <CustomButton
-                label="Cancel"
-                name="buttonborder"
-                onClick={handleCancel}
-            />
-           
-          */}
               <CustomButton
                 label="Update Profile"
                 name="buttondefaultlong"
                 onClick={(e) => handleSubmit(e)}
-                // disabled = {loading || !newProfileImage}
               />
             </div>
             {success && (
