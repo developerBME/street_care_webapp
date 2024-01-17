@@ -14,8 +14,8 @@ function About() {
       <div className="relative flex flex-col items-center gap-8 ">
         <div className=" w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 lg:mx-40 mt-32 rounded-2xl bg-white text-black ">
           {/* Start */}
-          <div className="w-full h-full px-4 py-6 md:p-16 bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
-            <div className="flex-col lg:flex-row justify-start items-center gap-8 md:gap-12 lg:gap-y-[172px] lg:gap-x-[90px] inline-flex">
+          <div className="w-full h-full px-4 py-6 lg:px-12 lg:py-16 xl:p-16 bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
+            <div className="flex-col lg:flex-row justify-start items-center gap-8 md:gap-12 lg:gap-y-[172px] lg:gap-x-[35px] inline-flex">
               <div className="flex-col justify-start items-start gap-5 md:gap-8 inline-flex">
                 <div className="text-black text-4xl md:text-[45px] font-medium font-dmsans sm:leading-[44px] md:leading-[52px]">
                   What is Street Care?
@@ -51,7 +51,7 @@ function About() {
         </div>
         <div className=" w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 lg:mx-40 rounded-2xl bg-white text-black ">
           {/* Start */}
-          <div className="w-full h-full px-4 py-6 md:p-16 bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
+          <div className="w-full h-full px-4 py-6 lg:px-12 lg:py-16 xl:p-16 bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
             <div className="flex-col lg:flex-row justify-start items-center gap-8 md:gap-12 lg:gap-y-[172px] lg:gap-x-[40px] inline-flex">
               <div className="flex-col justify-start items-start gap-5 md:gap-8 inline-flex">
                 <div className="text-black text-4xl md:text-[45px] font-medium font-dmsans sm:leading-[44px] md:leading-[52px]">
@@ -91,7 +91,7 @@ function About() {
         </div>
         <div className=" w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 lg:mx-40 rounded-2xl bg-white text-black ">
           {/* Start */}
-          <div className="w-full h-full px-4 py-6 md:p-16 bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
+          <div className="w-full h-full px-4 py-6 lg:px-12 lg:py-16 xl:p-16 bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
             <div className="w-full flex-col justify-start items-start gap-8 flex">
               <div className="w-full text-black text-4xl md:text-[45px] font-medium font-dmsans sm:leading-[44px] md:leading-[52px]">
                 With Street Care you can make a deep impact on the lives of
@@ -203,7 +203,7 @@ function About() {
         </div>
         <div className=" w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 lg:mx-40 rounded-2xl bg-white text-black ">
           {/* Start */}
-          <div className="w-full h-full px-4 py-6 md:p-16 flex-col justify-center items-center gap-6 inline-flex">
+          <div className="w-full h-full px-4 py-6 lg:px-12 lg:py-16 xl:p-16 flex-col justify-center items-center gap-6 inline-flex">
             <div className="w-full text-black text-4xl md:text-[45px] font-medium font-dmsans sm:leading-[44px] md:leading-[52px]">
               If this is your first time volunteering, the platform shows you
               how to:{" "}
@@ -263,7 +263,7 @@ function About() {
           {/* Start */}
           <div className="w-full relative rounded-[30px]">
             {/* <div className="h-fit left-[128px] top-[128px] absolute px-4 py-6 md:p-16 flex-col justify-start items-start gap-9 inline-flex"> */}
-            <div className="h-fit w-full px-4 py-6 md:p-16 flex-col justify-start items-start gap-9 inline-flex">
+            <div className="h-fit w-full px-4 py-6 lg:px-12 lg:py-16 xl:p-16 flex-col justify-start items-start gap-9 inline-flex">
               <div className="w-full text-4xl md:text-[45px] font-medium font-dmsans sm:leading-[44px] md:leading-[52px]">
                 Meet Our Team
               </div>
@@ -462,7 +462,7 @@ function About() {
         </div>
         <div className=" w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 lg:mx-40 mb-8 rounded-2xl bg-white text-black ">
           {/* Start */}
-          <div className="w-full h-fit px-4 py-6 md:p-16 bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
+          <div className="w-full h-fit px-4 py-6 lg:px-12 lg:py-16 xl:p-16 bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
             <div className="w-full flex-col justify-start items-start gap-8 flex">
               <div className="w-full justify-start items-start gap-8 xl:gap-[124px] flex flex-col xl:flex-row">
                 <div className="w-[90%] flex-col justify-start items-start gap-8 inline-flex">
