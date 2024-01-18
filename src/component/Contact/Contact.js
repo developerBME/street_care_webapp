@@ -1,17 +1,22 @@
 import React, { useRef, useState } from "react";
 import Landing from "../HomePage/Landing";
 import { checkString } from "../helper/validator";
+import { addDoc, collection } from "firebase/firestore";
 import errorImg from "../../images/error.png";
 import { emailConfirmation } from "../EmailService";
 import { getAuth } from "firebase/auth";
+import { db } from "../firebase";
 
 function Contact() {
-  const nameRef = useRef(null);
+  const [success, setSuccess] = useState(false);
+  const firstNameRef = useRef(null);
+  const lastfirstNameRef = useRef(null);
   const emailRef = useRef(null);
   const messageRef = useRef(null);
   const [clear, setClear] = useState(false);
   const [error, setError] = useState({
-    nameError: "",
+    firstNameError: "",
+    lastNameError: "",
     emailError:"",
     messageError:""
   });
@@ -26,14 +31,19 @@ function Contact() {
   };
 
   const clearFields = () => {
-    nameRef.current.value = "";
+    firstNameRef.current.value = "";
+    lastfirstNameRef.current.value = "";
     emailRef.current.value="";
     messageRef.current.value="";
     setClear(true);
   };
 
-  const handleNameChange = (e) => {
-    updateErrorState("nameError", "");
+  const handleFirstNameChange = (e) => {
+    updateErrorState("firstNameError", "");
+  };
+
+  const handleLastNameChange = (e) => {
+    updateErrorState("lastNameError", "");
   };
 
   const handleEmailChange = (e) => {
@@ -48,15 +58,27 @@ function Contact() {
     e.preventDefault();
     let success = true;
 
-    if (!nameRef.current.value) {
-      updateErrorState("nameError", "Name is required");
+    if (!firstNameRef.current.value) {
+      updateErrorState("firstNameError", "First Name is required");
       success = false;
     } else {
       try {
-        checkString(nameRef.current.value, "Event Name");
-        updateErrorState("nameError", "");
+        checkString(firstNameRef.current.value, "First Name");
+        updateErrorState("firstNameError", "");
       } catch (e) {
-        updateErrorState("nameError", "Name should consist only characters");
+        updateErrorState("firstNameError", "First Name should consist only characters");
+      }
+    }
+
+    if (!lastfirstNameRef.current.value) {
+      updateErrorState("lastNameError", "Last Name is required");
+      success = false;
+    } else {
+      try {
+        checkString(lastfirstNameRef.current.value, "Last Name");
+        updateErrorState("lastNameError", "");
+      } catch (e) {
+        updateErrorState("lastNameError", "Last Name should consist only characters");
       }
     }
 
@@ -74,11 +96,31 @@ function Contact() {
       updateErrorState("messageError", "");
     }
 
-    const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px"><h1>Thank you for reaching out!!</h1><p>Someone from our team will reach out to you shortly.</p></div>`;
     if (success) {
-      emailConfirmation('shivanip@brightmindenrichment.org', fAuth.currentUser.displayName, '', emailHTML);
-    }
+      const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px"><h1>Thank you for reaching out!!</h1><p>Someone from our team will reach out to you shortly.</p></div>`;
 
+      let obj = {
+        firstName: firstNameRef.current.value,
+        lastName: lastfirstNameRef.current.value,
+        email: emailRef.current.value,
+        message: messageRef.current.value,
+        createdAt: Date()
+      };
+
+      try {
+        const reqRef = collection(db, "contacts");
+        console.log(obj);
+        const docRef = await addDoc(reqRef, obj);
+        if (docRef.id) {
+          console.log(docRef.id);
+          setSuccess(true);
+          emailConfirmation(obj.email, obj.firstName + " " + obj.lastName, "Contact Us Feedback", emailHTML);
+          clearFields();
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
 
   };
 
@@ -132,19 +174,19 @@ function Contact() {
                     <input
                       type="text"
                       className={`w-full h-12 px-4 py-1 rounded border ${
-                        error.nameError !== ""
+                        error.firstNameError !== ""
                           ? "border-red-500"
                           : "border-stone-300"
                       }`}
                       placeholder="Enter your first name"
-                      ref={nameRef}
-                      onChange={handleNameChange}
+                      ref={firstNameRef}
+                      onChange={handleFirstNameChange}
                     />
-                    {error.nameError && (
+                    {error.firstNameError && (
                       <div className="inline-flex items-center">
                         <img src={errorImg} className="w-3 h-3" />
                         <p className="text-red-600 text-xs">
-                          {error.nameError}
+                          {error.firstNameError}
                         </p>
                       </div>
                     )}
@@ -155,9 +197,23 @@ function Contact() {
                     </p>
                     <input
                       type="text"
-                      className="w-full h-12 px-4 py-1 rounded border border-stone-300 justify-start items-center gap-2 inline-flex"
+                      className={`w-full h-12 px-4 py-1 rounded border ${
+                        error.lastNameError !== ""
+                          ? "border-red-500"
+                          : "border-stone-300"
+                      } justify-start items-center gap-2 inline-flex`}
                       placeholder="Enter your last name"
+                      ref={lastfirstNameRef}
+                      onChange={handleLastNameChange}
                     />
+                    {error.lastNameError && (
+                      <div className="inline-flex items-center">
+                        <img src={errorImg} className="w-3 h-3" />
+                        <p className="text-red-600 text-xs">
+                          {error.lastNameError}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="space-y-1.5">
