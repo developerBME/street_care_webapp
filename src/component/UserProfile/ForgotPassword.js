@@ -47,7 +47,7 @@ function ForgotPassword() {
                         label="Reset Password"
                         name="buttondefault"
                         onClick={() => {
-                            navigate("");
+                            navigate("");                      //Pending Link to Check your Email 
                             window.scrollTo(0, 0);
                         }}
                     />
