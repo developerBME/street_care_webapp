@@ -23,7 +23,7 @@ const NoOutreachDoc = () => {
                 label="Document Personal Outreach"
                 name="buttondefault"
                 onClick={() => {
-                    navigate("/createOutreach");
+                    navigate("/profile/select-outreach");
                     window.scrollTo(0, 0);
                   }}
                 ></CustomButton>

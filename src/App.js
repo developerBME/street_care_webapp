@@ -7,6 +7,7 @@ import Home from "./component/Home";
 import NavBar from "./component/Navbar";
 import Footer from "./component/Footer";
 import Login from "./component/Login";
+import ForgotPassword from "./component/UserProfile/ForgotPassword";
 import Profile from "./component/UserProfile/Profile";
 import Signup2 from "./component/Signup";
 import HowToHelp from "./component/HowtoHelp/HowToHelp";
@@ -92,6 +93,7 @@ function App() {
           {/* <Route path="/community" element={<CommunityComingSoon />} /> */}
           <Route path="/contact" element={<ComingSoon />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/ForgotPassword" element={<ForgotPassword />} />
           <Route path="/signup" element={<Signup2 />} />
           <Route path="/allnews" element={<Newscard />} />
           <Route path="/allnews/:id" element={<Readmorenews />} />

@@ -273,7 +273,10 @@ function Login() {
                       {console.log(error)}
                     </div>
                   )}
-                  <div className="w-fit text-violet-600 text-[15px] font-normal font-inter leading-snug hover:underline cursor-pointer">
+                  <div className="w-fit text-violet-600 text-[15px] font-normal font-inter leading-snug hover:underline cursor-pointer"
+                  onClick={() => {
+                    navigate("/ForgotPassword");
+                  }}>
                     Forgot your password?
                   </div>
                 </div>

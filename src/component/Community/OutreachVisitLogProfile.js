@@ -35,10 +35,6 @@ const OutreachVisitLogProfile = () => {
           setVisitLogs(logs);
           setIsLoading(false);
           console.log(logs);
-        // const visitLogsData = await fetchPersonalVisitLogs(auth?.currentUser?.uid);
-        // setVisitLogs(visitLogsData)
-        // console.log(visitLogsData)
-        // setIsLoading(false);
         // Extract states and remove duplicates
         }
       } catch (error) {
@@ -76,12 +72,16 @@ const OutreachVisitLogProfile = () => {
       ) : (
         <>
           {visitLogs.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-y-2 mb-6">
+            
+            <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2 gap-y-2 mb-6">
               {visitLogs.slice(0, visibleItems).map((visitLogData, index) => (
-                <div key={index} className="p-2">
-                  {/* <OutreachVisitLogProfileCard visitLogCardData={visitLogData} /> */}
-                  <OutreachVisitLogCard visitLogCardData={visitLogData}
-                   showProfileInfo={false} />
+                <div key={index} className="flex p-2">
+                  <div className="flex-1">
+                  <OutreachVisitLogCard
+                    visitLogCardData={visitLogData}
+                    showProfileInfo={false}
+                  />
+                  </div>
                 </div>
               ))}
             </div>
