@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import CustomButton from "../Buttons/CustomButton";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase"; // Importing the auth instance
+import {sendPasswordResetEmail} from "firebase/auth";
 
 function ForgotPassword() {
   const navigate = useNavigate();
@@ -12,10 +14,20 @@ function ForgotPassword() {
     setEmail(e.target.value);
   };
 
-  const handleResetPasswordClick = () => {
+  const [error, setError] = useState(null);
+
+  const handleResetPasswordClick = async () => {
 // Database handling for email and showing the "Check your email" block
-    if (email.trim() !== "") {
+    if (!email) {
+      setError('Please enter your email address to reset your password.');
+      return;
+    }
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setError(null); // Clearing out any existing error messages
       setShowCheckEmailBlock(true);     // Default showCheckEmailBlock is set to true when email is not empty
+    } catch (error) {
+      setError('Failed to send password reset email. ' + error.message);
     }
   };
 
@@ -88,6 +100,7 @@ function ForgotPassword() {
                     name="buttondefault"
                     onClick={handleResetPasswordClick}
                     />
+                    <div>{error}</div>
                 </div>
                 
             )}
