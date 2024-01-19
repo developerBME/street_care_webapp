@@ -93,7 +93,8 @@ function Login() {
       await signInWithEmailAndPassword(auth, email, password);
       setLoginSuccess("Successfully logged in!");
       setError(""); // Clearing out any existing error messages
-      navigate(-1, { preventScrollReset: true });
+      // navigate(-1, { preventScrollReset: true });
+      navigate('/profile');
     } catch (error) {
       // setError(error.message);
       if (error.code === "auth/user-not-found") {
@@ -190,7 +191,7 @@ function Login() {
                 </div>
                 <div className="self-stretch h-fit flex-col justify-start items-start gap-4 flex">
                   <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
-                    <div className="self-stretch text-zinc-700 text-[15px] font-dmsans font-semibold font-inter leading-tight">
+                    <div className="self-stretch text-zinc-700 text-[15px] font-semibold font-inter leading-tight">
                       Email
                     </div>
                     <div className="self-stretch  bg-white border-stone-300 justify-start items-center gap-2 inline-flex">
@@ -218,7 +219,7 @@ function Login() {
                     )}
                   </div>
                   <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
-                    <div className="self-stretch text-zinc-700 text-[15px] font-dmsans font-semibold font-inter leading-tight">
+                    <div className="self-stretch text-zinc-700 text-[15px] font-semibold font-inter leading-tight">
                       Password
                     </div>
                     {/*<div className="self-stretch  bg-white rounded border border-stone-300 justify-start items-center gap-2 inline-flex">

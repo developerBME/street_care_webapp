@@ -5,33 +5,43 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase"; // Importing the auth instance
 import {sendPasswordResetEmail} from "firebase/auth";
 
-function ForgotPassword() {
+const ForgotPassword = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [resetEmail, setResetEmail] = useState("");
+  const [emailForDisplay, setEmailForDisplay] = useState("");
   const [showCheckEmailBlock, setShowCheckEmailBlock] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleEmailChange = (e) => {
-    setEmail(e.target.value);
+    setResetEmail(e.target.value);
   };
-
-  const [error, setError] = useState(null);
 
   const handleResetPasswordClick = async () => {
 // Database handling for email and showing the "Check your email" block
-    if (!email) {
+    if (!resetEmail) {
       setError('Please enter your email address to reset your password.');
       return;
     }
     try {
-      await sendPasswordResetEmail(auth, email);
+      await sendPasswordResetEmail(auth, resetEmail);
       setError(null); // Clearing out any existing error messages
-      setShowCheckEmailBlock(true);     // Default showCheckEmailBlock is set to true when email is not empty
-      setEmail('');
+      setShowCheckEmailBlock(true);
+      setEmailForDisplay(resetEmail);     
+      setResetEmail("");
+
     } catch (error) {
       if (error.code === 'auth/user-not-found') {
-        setError('The provided email address does not exist. Please check your email and try again.');
-      } else {
-        setError('Failed to send password reset email. ' + error.message);
+        setError(
+          'The provided email address does not exist. Please check your email and try again.'
+        );
+      } else if (error.code === 'auth/invalid-email') {
+        setError(
+          'Invalid email address. Please enter a valid email address.'
+        );
+      }  else {
+        setError(
+          'Failed to send password reset email. Please try again later.'
+        );
       }
     }
   };
@@ -51,7 +61,7 @@ function ForgotPassword() {
                 <div className=" lg:w-[67%] flex-col justify-start items-start gap-6 flex">
                             <div className="w-fit">
                                 <span className="text-black text-base font-normal font-['DM Sans'] leading-normal tracking-wide">Follow the instructions sent to </span>
-                                <span className="text-black text-base font-bold font-['DM Sans'] leading-normal"> {email} </span>
+                                <span className="text-black text-base font-bold font-['DM Sans'] leading-normal"> {" "}{emailForDisplay}{" "} </span>
                                 <span className="text-black text-base font-normal font-['DM Sans'] leading-normal tracking-wide"> to reset your password. If it doesn't arrive, be sure to check your spam folder.</span>
                             </div>
                         </div>
@@ -84,7 +94,7 @@ function ForgotPassword() {
                                 type="email"
                                 placeholder="Enter your email"
                                 className="w-full md:w-[95%] h-10 text-zinc-700 text-sm font-normal font-['DM Sans'] leading-snug outline-none"
-                                value={email}
+                                value={resetEmail}
                                 onChange={handleEmailChange}
                                 />
                             </div>
