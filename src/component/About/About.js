@@ -437,7 +437,7 @@ function About() {
                         Back-End Developer
                       </div>
                       <div className="self-stretch text-center text-violet-950 text-base font-bold font-dmsans leading-normal">
-                        Karthik Nautiyal
+                        Kartik Nautiyal
                       </div>
                     </div>
                   </div>
