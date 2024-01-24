@@ -22,7 +22,13 @@ import edit from "../../images/edit.png";
 
 const USERS_COLLECTION = "users";
 
-async function uploadProfileImage(file, currentUser, setLoading, setSuccess, setAvatarLoading) {
+async function uploadProfileImage(
+  file,
+  currentUser,
+  setLoading,
+  setSuccess,
+  setAvatarLoading
+) {
   const fAuth = getAuth();
   const fileRef = ref(storage, "webappUserImages/" + fAuth.currentUser.uid);
 
@@ -161,7 +167,13 @@ function AccSetting() {
       setSuccess("Successfully updated display name");
     } else if (imgRef.current.value !== "") {
       setUserimageError("");
-      uploadProfileImage(newProfileImage, fAuth.currentUser, setLoading, setSuccess, setAvatarLoading);
+      uploadProfileImage(
+        newProfileImage,
+        fAuth.currentUser,
+        setLoading,
+        setSuccess,
+        setAvatarLoading
+      );
       setSuccess("Successfully updated profile image");
       imgRef.current.value = "";
       setNewProfileImage(null);
@@ -202,9 +214,7 @@ function AccSetting() {
                 alt="User Avatar"
                 sx={{ width: 100, height: 100 }}
               />
-              <div
-                className="absolute bottom-5 right-5 transform translate-x-1/2 translate-y-1/2 -mb-2 -mr-2 cursor-pointer bg-white rounded-full"
-              >
+              <div className="absolute bottom-5 right-5 transform translate-x-1/2 translate-y-1/2 -mb-2 -mr-2 cursor-pointer bg-white rounded-full">
                 <CustomButton
                   label=""
                   name="buttonicon8"
@@ -213,12 +223,12 @@ function AccSetting() {
                   onClick={handleEditClick}
                 />
               </div>
+              {avatarLoading && (
+                <div className="absolute rounded-full text-center inset-0 flex items-center justify-center bg-black bg-opacity-50 p-2 m-0">
+                  <div className="text-white text-sm">Updating</div>
+                </div>
+              )}
             </div>
-            {avatarLoading && (
-              <div className="absolute rounded-full text-center inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                <div className="text-white">Updating</div>
-              </div>
-            )}
           </div>
           <form className="md:w-[360px] mt-[24px]">
             <div className="mb-4 space-y-1.5">
@@ -272,11 +282,17 @@ function AccSetting() {
               </div>
             )}
             <div className="mt-[32px] space-y-2 md:space-y-8 md:space-x-[15px] space-x-[5px]">
-              <CustomButton
-                label="Update Profile"
-                name="buttondefaultlong"
-                onClick={(e) => handleSubmit(e)}
-              />
+            <button
+            onClick={(e) => handleSubmit(e)}
+            className={`w-full text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
+              avatarLoading !== true
+                ? "text-white bg-[#6840E0] hover:bg-[#504279]"
+                : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+            }`}
+          >
+            Update Profile
+          </button>
+          
             </div>
             {success && (
               <div className="inline-flex items-center">
