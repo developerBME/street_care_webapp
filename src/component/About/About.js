@@ -487,7 +487,12 @@ function About() {
                     label="Visit the Store"
                     class="w-full text-center text-neutral-900 text-xs xl:text-sm font-medium font-dmsans leading-tight"
                     name="buttonlight"
-                    onClick={() => {}}
+                    onClick={() => {
+                      window.open(
+                        "https://www.bonfire.com/store/bright-mind-street-care-nonprofit/",
+                        "_blank"
+                      );
+                    }}
                   />
                 </div>
               </div>
