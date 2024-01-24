@@ -104,7 +104,7 @@ function About() {
 
                 <div className="w-full h-fit justify start items-start grid grid-cols-2 font-bricolage">
                   <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-tr-none rounded-tl-2xl shrink basis-0  px-8 py-4 bg-gradient-to-br from-purple-300 to-zinc-200 gap-6 flex">
-                    <div className="w-full h-fit justify-start items-start xl:items-center gap-3 xl:gap-6 inline-flex flex-col xl:flex-row">
+                    <div className="w-full h-fit justify-start items-start xl:items-center gap-3 xl:gap-9 inline-flex flex-col xl:flex-row">
                       <div className="xl:w-[140px] xl:h-[140px] xl:relative">
                         <div className="xl:w-[140px] xl:h-[140px] xl:left-0 xl:top-0 xl:absolute xl:bg-white xl:rounded-full" />
                         <img
@@ -127,7 +127,7 @@ function About() {
                   {/*  */}
 
                   <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-tr-2xl rounded-bl-none shrink basis-0 px-8 py-4 bg-gradient-to-br from-emerald-100 to-neutral-200 justify-start  gap-6 flex">
-                    <div className="w-full h-fit justify-start items-start xl:items-center gap-3 xl:gap-6 inline-flex flex-col xl:flex-row">
+                    <div className="w-full h-fit justify-start items-start xl:items-center gap-3 xl:gap-9 inline-flex flex-col xl:flex-row">
                       <div className="xl:w-[140px] xl:h-[140px] xl:relative">
                         <div className="xl:w-[140px] xl:h-[140px] xl:left-0 xl:top-0 xl:absolute xl:bg-white xl:rounded-full" />
                         <img
@@ -152,7 +152,7 @@ function About() {
 
                 <div className="w-full h-fit justify start items-start grid grid-cols-2 font-bricolage">
                   <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-tr-none rounded-bl-2xl shrink basis-0 px-8 py-4 bg-gradient-to-br from-red-200 to-neutral-200 justify-start gap-6 flex">
-                    <div className="w-full h-fit justify-start items-start xl:items-center gap-3 xl:gap-6 inline-flex flex-col xl:flex-row">
+                    <div className="w-full h-fit justify-start items-start xl:items-center gap-3 xl:gap-9 inline-flex flex-col xl:flex-row">
                       <div className="xl:w-[140px] xl:h-[140px] xl:relative">
                         <div className="xl:w-[140px] xl:h-[140px] xl:left-0 xl:top-0 xl:absolute xl:bg-white xl:rounded-full" />
                         <img
@@ -174,7 +174,7 @@ function About() {
                   </div>
 
                   <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-tr-none rounded-br-2xl shrink basis-0 px-8 py-4 bg-gradient-to-br from-sky-200 to-neutral-200 justify-start  gap-6 flex">
-                    <div className="w-full h-fit justify-start items-start xl:items-center gap-3 xl:gap-6 inline-flex flex-col xl:flex-row">
+                    <div className="w-full h-fit justify-start items-start xl:items-center gap-3 xl:gap-9 inline-flex flex-col xl:flex-row">
                       <div className="xl:w-[140px] xl:h-[140px] xl:relative">
                         <div className="xl:w-[140px] xl:h-[140px] xl:left-0 xl:top-0 xl:absolute xl:bg-white xl:rounded-full" />
                         <img
@@ -487,7 +487,12 @@ function About() {
                     label="Visit the Store"
                     class="w-full text-center text-neutral-900 text-xs xl:text-sm font-medium font-dmsans leading-tight"
                     name="buttonlight"
-                    onClick={() => {}}
+                    onClick={() => {
+                      window.open(
+                        "https://www.bonfire.com/store/bright-mind-street-care-nonprofit/",
+                        "_blank"
+                      );
+                    }}
                   />
                 </div>
               </div>
