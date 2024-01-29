@@ -208,7 +208,7 @@ function AccSetting() {
             Update Your Profile{" "}
           </p>
           <div className="relative">
-            <div className="relative inline-block rounded-full border border-violet-600">
+            <div className="relative inline-block rounded-full border-2 border-violet-600">
               <Avatar
                 src={photoUrl || defaultImage}
                 alt="User Avatar"
@@ -282,17 +282,16 @@ function AccSetting() {
               </div>
             )}
             <div className="mt-[32px] space-y-2 md:space-y-8 md:space-x-[15px] space-x-[5px]">
-            <button
-            onClick={(e) => handleSubmit(e)}
-            className={`w-full text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
-              avatarLoading !== true
-                ? "text-white bg-[#6840E0] hover:bg-[#504279]"
-                : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
-            }`}
-          >
-            Update Profile
-          </button>
-          
+              <button
+                onClick={(e) => handleSubmit(e)}
+                className={`w-full text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
+                  avatarLoading !== true
+                    ? "text-white bg-[#6840E0] hover:bg-[#504279]"
+                    : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+                }`}
+              >
+                Update Profile
+              </button>
             </div>
             {success && (
               <div className="inline-flex items-center">
