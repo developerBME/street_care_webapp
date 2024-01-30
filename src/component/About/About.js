@@ -103,8 +103,8 @@ function About() {
                 {/*  */}
 
                 <div className="w-full h-fit justify start items-start grid grid-cols-2 font-bricolage">
-                  <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-tr-none rounded-tl-2xl shrink basis-0  px-8 py-4 bg-gradient-to-br from-purple-300 to-zinc-200 gap-6 flex">
-                    <div className="w-full h-fit justify-start items-start xl:items-center gap-3 xl:gap-9 inline-flex flex-col xl:flex-row">
+                  <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-tr-none rounded-tl-2xl shrink basis-0  px-6 py-6 bg-gradient-to-br from-purple-300 to-zinc-200 gap-6 flex">
+                    <div className="w-full h-fit justify-start items-start xl:items-center gap-3 xl:gap-12 inline-flex flex-col xl:flex-row">
                       <div className="xl:w-[140px] xl:h-[140px] xl:relative">
                         <div className="xl:w-[140px] xl:h-[140px] xl:left-0 xl:top-0 xl:absolute xl:bg-white xl:rounded-full" />
                         <img
@@ -126,8 +126,8 @@ function About() {
                   </div>
                   {/*  */}
 
-                  <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-tr-2xl rounded-bl-none shrink basis-0 px-8 py-4 bg-gradient-to-br from-emerald-100 to-neutral-200 justify-start  gap-6 flex">
-                    <div className="w-full h-fit justify-start items-start xl:items-center gap-3 xl:gap-9 inline-flex flex-col xl:flex-row">
+                  <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-tr-2xl rounded-bl-none shrink basis-0 px-6 py-6 bg-gradient-to-br from-emerald-100 to-neutral-200 justify-start  gap-6 flex">
+                    <div className="w-full h-fit justify-start items-start xl:items-center gap-3 xl:gap-12 inline-flex flex-col xl:flex-row">
                       <div className="xl:w-[140px] xl:h-[140px] xl:relative">
                         <div className="xl:w-[140px] xl:h-[140px] xl:left-0 xl:top-0 xl:absolute xl:bg-white xl:rounded-full" />
                         <img
@@ -151,8 +151,8 @@ function About() {
                 </div>
 
                 <div className="w-full h-fit justify start items-start grid grid-cols-2 font-bricolage">
-                  <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-tr-none rounded-bl-2xl shrink basis-0 px-8 py-4 bg-gradient-to-br from-red-200 to-neutral-200 justify-start gap-6 flex">
-                    <div className="w-full h-fit justify-start items-start xl:items-center gap-3 xl:gap-9 inline-flex flex-col xl:flex-row">
+                  <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-tr-none rounded-bl-2xl shrink basis-0 px-6 py-6 bg-gradient-to-br from-red-200 to-neutral-200 justify-start gap-6 flex">
+                    <div className="w-full h-fit justify-start items-start xl:items-center gap-3 xl:gap-12 inline-flex flex-col xl:flex-row">
                       <div className="xl:w-[140px] xl:h-[140px] xl:relative">
                         <div className="xl:w-[140px] xl:h-[140px] xl:left-0 xl:top-0 xl:absolute xl:bg-white xl:rounded-full" />
                         <img
@@ -173,8 +173,8 @@ function About() {
                     </div>
                   </div>
 
-                  <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-tr-none rounded-br-2xl shrink basis-0 px-8 py-4 bg-gradient-to-br from-sky-200 to-neutral-200 justify-start  gap-6 flex">
-                    <div className="w-full h-fit justify-start items-start xl:items-center gap-3 xl:gap-9 inline-flex flex-col xl:flex-row">
+                  <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-tr-none rounded-br-2xl shrink basis-0 px-6 py-6 bg-gradient-to-br from-sky-200 to-neutral-200 justify-start  gap-6 flex">
+                    <div className="w-full h-fit justify-start items-start xl:items-center gap-3 xl:gap-12 inline-flex flex-col xl:flex-row">
                       <div className="xl:w-[140px] xl:h-[140px] xl:relative">
                         <div className="xl:w-[140px] xl:h-[140px] xl:left-0 xl:top-0 xl:absolute xl:bg-white xl:rounded-full" />
                         <img
@@ -209,7 +209,7 @@ function About() {
               how to:{" "}
             </div>
             <div className="justify-start items-start gap-4 grid grid-cols-1 lg:gap-10 lg:grid lg:grid-cols-3">
-              <div className="px-4 bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
+              <div className="bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
                 <div className="w-full flex-col justify-start items-start gap-2.5 lg:gap-5 flex">
                   <div className="w-full flex-col justify-start items-start gap-2.5 flex">
                     <div className="w-[100%] h-[164px] bg-gradient-to-br from-purple-300 to-zinc-200 rounded-[32px]">
@@ -224,7 +224,7 @@ function About() {
                   </div>
                 </div>
               </div>
-              <div className="px-4 bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
+              <div className="bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
                 <div className="w-full flex-col justify-start items-start gap-2.5 lg:gap-5 flex">
                   <div className="w-full flex-col justify-start items-start gap-2.5 flex">
                     <div className="w-[100%] h-[164px] bg-gradient-to-br from-emerald-100 to-neutral-200 rounded-[32px]">
@@ -240,7 +240,7 @@ function About() {
                 </div>
               </div>
 
-              <div className="px-4 bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
+              <div className="bg-white rounded-[32px] flex-col justify-start items-start gap-2.5 inline-flex">
                 <div className="w-full flex-col justify-start items-start gap-2.5 lg:gap-5 flex">
                   <div className="w-full flex-col justify-start items-start gap-2.5 flex">
                     <div className="w-[100%] h-[164px] bg-gradient-to-br from-sky-200 to-neutral-200 rounded-[32px]">
@@ -268,8 +268,8 @@ function About() {
                 Meet Our Team
               </div>
               <div className="w-full text-black text-base font-normal font-dmsans leading-normal tracking-wide">
-                Street Care is a volunteer-led and community-driven organization
-                that supports{" "}
+                {/* Street Care is a volunteer-led and community-driven organization
+                that supports{" "} */}
               </div>
               <div className="w-full grid grid-flow-col overflow-x-auto gap-x-[5px] gap-y-2 lg:grid lg:grid-flow-row lg:grid-cols-3 xl:grid-cols-4 xl:gap-2">
                 {/* <div className="w-full overflow-x-auto justify-start items-start gap-2 inline-flex flex-wrap"> */}
