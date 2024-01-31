@@ -30,8 +30,14 @@ const OutreachVisitLogCard = ({visitLogCardData, showProfileInfo})=>{
                 {!showProfileInfo && (
                     <div>
                         <div className="lg:flex lg:items-center mt-4 lg:mt-0">
-                            <div className="text-violet-900 lg:mr-10 text-sm font-medium font-bricolage leading-tight">{<img src={calender} />}{visitLogCardData.date || ""} · {visitLogCardData.time}</div>
-                            <div className="text-violet-900 lg:text-right py-1 text-sm font-medium font-bricolage leading-tight"> {<img src={location} />}{visitLogCardData?.city || ""}, {visitLogCardData?.state || ""} </div>
+                            <div className="text-violet-900 text-sm font-medium font-bricolage leading-tight flex flex-row">
+                                <div>{<img src={calender} />}</div>
+                                <div>{visitLogCardData.date || ""} · {visitLogCardData.time}</div>
+                            </div>
+                            <div className="text-violet-900 lg:text-right py-1 text-sm font-medium font-bricolage leading-tight flex flex-row"> 
+                            <div>{<img src={location} />}</div>
+                            <div>{visitLogCardData?.city || ""}, {visitLogCardData?.state || ""}</div>
+                            </div>
                         </div>
                         <div class="text-zinc-700 text-[10px] font-normal font-bricolage leading-snug">{visitLogCardData.description || ""}</div>
                         <div className="flex justify-between">

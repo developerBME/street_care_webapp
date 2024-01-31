@@ -48,12 +48,13 @@ const OutreachVisitLogProfile = () => {
   return (
     <div>
       <div className="flex items-center justify-between mb-10">
-      <div className="inline-flex flex-col sm:flex-row sm:space-x-16 ">
-              <div class="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage leading-[52px]">
-                Personal Visit Logs
+      <div className="inline-flex flex-col sm:flex-row sm:space-x-16 justify-between">
+              <div class="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage leading-[52px] text-left">
+                My Visit Logs
               </div>
               <CustomButton
-                label="Document my Outreach"
+                label="Document New Visit Log"
+                className="text-right"
                 name="buttondefaulticon"
                 icon={icon}
                 onClick={() => {

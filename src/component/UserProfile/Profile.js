@@ -90,7 +90,7 @@ function Profile() {
         <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 mt-24  lg:mx-40 lg:mt-32 rounded-2xl bg-white text-black ">
           <UserInfo />
         </div>
-        <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl">
+        {/* <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl">
           <div
             className={`h-[63px] inline-flex w-full rounded-2xl ${
               activeTab === "myoutreach" ? "bg-violet-50" : "bg-[#E2FAFF]"
@@ -117,18 +117,19 @@ function Profile() {
               Personal Visit Log
             </button>
           </div>
-        </div>
+        </div> */}
         {/* Vishnu */}
-        {
-          activeTab === "myoutreach" ? (
+        {/* { */}
+          {/*  activeTab === "myoutreach" ? ( */}
             <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black mb-10">
           <div className="flex flex-col gap-4 lg:gap-14 lg:p-24 pl-8 pt-4 pb-4 pr-8">
-            <div className="inline-flex flex-col sm:flex-row sm:space-x-16 ">
-              <div class="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage leading-[52px]">
+            <div className="inline-flex flex-col sm:flex-row sm:space-x-16 justify-between ">
+              <div class="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage text-left leading-[52px]">
                 My Outreaches
               </div>
               <CustomButton
-                label="Document my Outreach"
+                label="Document Personal Outreach"
+                className="text-right"
                 name="buttondefaulticon"
                 icon={icon}
                 onClick={() => {
@@ -185,8 +186,8 @@ function Profile() {
           </div>{" "}
         </div>
 
-):(
-  <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2  rounded-2xl bg-white text-black mt-8">
+   {/* ):( */}
+  <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2  mb-8 rounded-2xl bg-white text-black mt-4">
       <div className="p-4 lg:px-28 lg:py-12 space-y-9">
         <OutreachVisitLogProfile/>
 </div>
@@ -194,8 +195,8 @@ function Profile() {
 {/* Vishnu*/}
 
 </div>
-)
-}
+ {/* ) */}
+{/* } */}
 </div>
 </div>
 )
