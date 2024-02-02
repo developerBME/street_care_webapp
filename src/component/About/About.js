@@ -7,6 +7,7 @@ import bag1 from "../../images/bag1.png";
 import bag2 from "../../images/bag2.png";
 import tshirt from "../../images/tshirt.png";
 import CustomButton from "../Buttons/CustomButton";
+import craigKaufman from "../../images/craig_kaufman.png";
 
 function About() {
   return (
@@ -275,7 +276,14 @@ function About() {
                 {/* <div className="w-full overflow-x-auto justify-start items-start gap-2 inline-flex flex-wrap"> */}
                 <div className="w-[242px] flex-col justify-start items-start inline-flex">
                   <div className="self-stretch h-[340px] relative">
-                    <div className="w-[242px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" />
+                    {/* <div className="w-[242px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]" /> */}
+                    <div className="w-[242px] h-[260px] left-0 top-0 absolute bg-slate-900 rounded-tl-[30px] rounded-tr-[30px]">
+                      <img
+                        className="rounded-tl-[30px] rounded-tr-[30px] grayscale-[50%]"
+                        src={craigKaufman}
+                      />
+                    </div>
+
                     <div className="w-[242px] h-20 p-4 left-0 top-[260px] absolute bg-gradient-to-br from-purple-300 to-zinc-200 rounded-bl-[30px] rounded-br-[30px] flex-col justify-start items-start gap-1.5 inline-flex">
                       <div className="self-stretch text-center text-violet-950 text-xs font-medium font-dmsans leading-[18px] tracking-tight">
                         Executive Director
