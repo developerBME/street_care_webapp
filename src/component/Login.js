@@ -27,6 +27,7 @@ import {
   handleFacebookSignIn,
   handleTwitterSignIn,
 } from "./Signup";
+import CustomButton from "./Buttons/CustomButton";
 
 function Login() {
   const navigate = useNavigate();
@@ -88,13 +89,13 @@ function Login() {
       const persistenceType = rememberMe
         ? browserLocalPersistence
         : browserSessionPersistence;
-      await setPersistence(auth, persistenceType);
+      // await setPersistence(auth, persistenceType);
 
       await signInWithEmailAndPassword(auth, email, password);
       setLoginSuccess("Successfully logged in!");
       setError(""); // Clearing out any existing error messages
       // navigate(-1, { preventScrollReset: true });
-      navigate('/profile');
+      navigate("/profile");
     } catch (error) {
       // setError(error.message);
       if (error.code === "auth/user-not-found") {
@@ -243,28 +244,32 @@ function Login() {
                         </div>
                       </div>
                         </div>*/}
-                        <div className="relative self-stretch bg-white rounded-md border-0 border-stone-300 justify-start items-center gap-2 inline-flex">
-                        <input
-                          type={showPassword ? "text" : "password"}
-                          id="password"
-                          placeholder="Enter your password"
-                          className={`text-zinc-700 w-full h-10 px-4 text-[15px] rounded-md border-0 font-normal font-inter leading-snug tracking-wide outline-none ring-1 ring-inset ${
-                            errormsg.PassError !== "" ? "ring-red-500" : "ring-gray-300"
-                          }`}
-                          onChange={(e) => setPassword(e.target.value)}
-                        />
-                        <div
-                          className="absolute right-4 top-2/4 transform -translate-y-2/4 cursor-pointer"
-                          onClick={handleTogglePassword}
-                        >
-                          {showPassword ? <FaEyeSlash /> : <FaEye />}
-                        </div>
+                    <div className="relative self-stretch bg-white rounded-md border-0 border-stone-300 justify-start items-center gap-2 inline-flex">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        id="password"
+                        placeholder="Enter your password"
+                        className={`text-zinc-700 w-full h-10 px-4 text-[15px] rounded-md border-0 font-normal font-inter leading-snug tracking-wide outline-none ring-1 ring-inset ${
+                          errormsg.PassError !== ""
+                            ? "ring-red-500"
+                            : "ring-gray-300"
+                        }`}
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                      <div
+                        className="absolute right-4 top-2/4 transform -translate-y-2/4 cursor-pointer"
+                        onClick={handleTogglePassword}
+                      >
+                        {showPassword ? <FaEyeSlash /> : <FaEye />}
                       </div>
-                      
+                    </div>
+
                     {errormsg.PassError && (
                       <div className="inline-flex items-center gap-1.5">
                         <img src={errorImg} className="w-3 h-3" />
-                        <div className="text-red-700 font-dmsans">{errormsg.PassError}</div>
+                        <div className="text-red-700 font-dmsans">
+                          {errormsg.PassError}
+                        </div>
                       </div>
                     )}
                   </div>
@@ -274,16 +279,18 @@ function Login() {
                       {console.log(error)}
                     </div>
                   )}
-                  <div className="w-fit text-violet-600 text-[15px] font-normal font-inter leading-snug hover:underline cursor-pointer"
-                  onClick={() => {
-                    navigate("/ForgotPassword");
-                  }}>
+                  <div
+                    className="w-fit text-violet-600 text-[15px] font-normal font-inter leading-snug hover:underline cursor-pointer"
+                    onClick={() => {
+                      navigate("/ForgotPassword");
+                    }}
+                  >
                     Forgot your password?
                   </div>
                 </div>
               </div>
 
-              <div className="justify-start items-center mt-14 gap-4 inline-flex">
+              <div className="justify-start items-center mt-12 mb-6 gap-4 inline-flex">
                 <div className="w-[18px] h-[18px] relative">
                   <input
                     type="checkbox"
@@ -299,7 +306,12 @@ function Login() {
                   Remember me
                 </div>
               </div>
-              <div className="self-stretch my-14 h-14 flex-col justify-start items-start gap-4 flex">
+              <CustomButton
+                name="buttondefaultwide"
+                type="submit"
+                label="Log in"
+              ></CustomButton>
+              {/* <div className="self-stretch mb-14 h-14 flex-col justify-start items-start gap-4 flex">
                 <div className="self-stretch justify-center items-center gap-2.5 inline-flex">
                   <button
                     type="submit"
@@ -309,8 +321,8 @@ function Login() {
                     Log in{" "}
                   </button>
                 </div>
-              </div>
-              <div className="w-fit text-center mx-auto">
+              </div> */}
+              <div className="w-fit text-center mx-auto mt-2">
                 <span className="text-zinc-700 text-base font-normal font-open-sans leading-normal">
                   Don't have an account?{" "}
                 </span>

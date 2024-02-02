@@ -1,6 +1,6 @@
 import React from "react";
 
-function CustomButton({ label, name, onClick, icon, disable }) {
+function CustomButton({ label, name, onClick, icon, disable, type }) {
   if (name == "buttonborder") {
     return (
       <button
@@ -54,7 +54,7 @@ function CustomButton({ label, name, onClick, icon, disable }) {
         {label}
       </button>
     );
-  }else if (name == "buttondefaultlong") {
+  } else if (name == "buttondefaultlong") {
     return (
       <button
         onClick={onClick}
@@ -544,6 +544,20 @@ function CustomButton({ label, name, onClick, icon, disable }) {
         }`}
       >
         <img src={icon} className="w-5 h-5 " />
+      </button>
+    );
+  } else if (name == "buttondefaultwide") {
+    return (
+      <button
+        onClick={onClick}
+        type={type}
+        className={` text-[16px] font-medium w-full py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-white bg-[#6840E0] hover:bg-[#504279]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
+      >
+        {label}
       </button>
     );
   } else {
