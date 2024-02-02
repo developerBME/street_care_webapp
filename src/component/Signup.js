@@ -19,6 +19,7 @@ import { BiLogoFacebookCircle } from "react-icons/bi";
 import { RiTwitterXFill } from "react-icons/ri";
 import errorImg from "../images/error.png";
 import { emailConfirmation } from "./EmailService";
+import CustomButton from "./Buttons/CustomButton";
 
 const handleGoogleSignIn = async (e) => {
   e.preventDefault();
@@ -266,8 +267,7 @@ function Signup2() {
       const userRef = doc(db, "users", currentUser.uid);
       await setDoc(userRef, userData);
 
-      
-      emailConfirmation(email, fAuth.currentUser.displayName, '', emailHTML);
+      emailConfirmation(email, fAuth.currentUser.displayName, "", emailHTML);
       // Clear inputs or navigate to a different page
       setUserName("");
       setEmail("");
@@ -374,9 +374,11 @@ function Signup2() {
                     </div>
                     {errormsg.EmailError && (
                       <div className="inline-flex items-center gap-1.5">
-                  <img src={errorImg} className="w-3 h-3" />
-                  <div className="text-red-700 font-dmsaans">{errormsg.EmailError}</div>
-                </div>
+                        <img src={errorImg} className="w-3 h-3" />
+                        <div className="text-red-700 font-dmsaans">
+                          {errormsg.EmailError}
+                        </div>
+                      </div>
                     )}
                   </div>
                   <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
@@ -400,10 +402,11 @@ function Signup2() {
                     </div>
                     {errormsg.PassError && (
                       <div className="inline-flex items-center gap-1.5">
-                  <img src={errorImg} className="w-3 h-3" />
-                  <div className="text-red-700 font-dmsans">{errormsg.PassError}</div>
-
-                </div>
+                        <img src={errorImg} className="w-3 h-3" />
+                        <div className="text-red-700 font-dmsans">
+                          {errormsg.PassError}
+                        </div>
+                      </div>
                     )}
                   </div>
                   {/*  */}
@@ -427,26 +430,24 @@ function Signup2() {
                       </div>
                     </div>
                     {errormsg.UsernameError && (
-                      
                       <div className="inline-flex items-center gap-1.5">
-                  <img src={errorImg} className="w-3 h-3" />
-                  <div className="text-red-700 font-dmsans" >
-                  {errormsg.UsernameError}
-                </div>
-
-                </div>
+                        <img src={errorImg} className="w-3 h-3" />
+                        <div className="text-red-700 font-dmsans">
+                          {errormsg.UsernameError}
+                        </div>
+                      </div>
                     )}
                   </div>
                 </div>
               </div>
-
-              {/*<div className="self-stretch text-center mt-4 mb-4">
-                {error && <p className="text-red-500">{error}</p>}
-                {loginSuccess && (
-                  <p className="text-green-500">{loginSuccess}</p>
-                )}
-                </div>*/}
-              <div className="self-stretch my-14 h-14 flex-col justify-start items-start gap-4 flex">
+              <div className="mt-12">
+                <CustomButton
+                  name="buttondefaultwide"
+                  type="submit"
+                  label="Sign up"
+                ></CustomButton>
+              </div>
+              {/* <div className="self-stretch my-14 h-14 flex-col justify-start items-start gap-4 flex">
                 <div className="self-stretch justify-center items-center gap-2.5 inline-flex">
                   <button
                     type="submit"
@@ -455,8 +456,8 @@ function Signup2() {
                     Sign up with email
                   </button>
                 </div>
-              </div>
-              <div className="w-fit text-center mx-auto">
+              </div> */}
+              <div className="w-fit text-center mx-auto mt-2">
                 <span className="text-zinc-700 text-base font-normal font-open-sans leading-normal">
                   Already have an account?{" "}
                 </span>
