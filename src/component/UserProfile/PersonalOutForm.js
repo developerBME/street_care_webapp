@@ -89,6 +89,15 @@ function PersonalOutForm() {
     infoShareCheckboxError: "",
   });
 
+  const [isOtherChecked, setIsOtherChecked] = useState(false);
+  const [otherInputValue, setOtherInputValue] = useState('');
+
+  const handleOtherCheck = () => {
+    setIsOtherChecked(!isOtherChecked);
+  };
+
+  
+
   const handleNumChange = (e) => {
     const inputValue = e.target.value;
     if (/^[1-9]+\d*$/.test(inputValue) || inputValue === "") {
@@ -220,8 +229,13 @@ function PersonalOutForm() {
   const handleSubmit = async (e) => {
     let setReturn = false;
     e.preventDefault();
-
     // Form Validation Start
+    if (isOtherChecked) {
+      setItemArray([...itemArray, otherInputValue]);
+      updateErrorState("checkboxesError", "");
+    } else {
+      setItemArray(itemArray.filter((item) => item !== otherInputValue));
+    }
     if (!numberHelped) {
       updateErrorState("numberHelpedError", "Number is required");
       setReturn = true;
@@ -635,7 +649,7 @@ function PersonalOutForm() {
                           className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                           required=""
                           ref={(el) => (checkboxes.current[7] = el)}
-                          onChange={handleItemArray}
+                          onChange={handleOtherCheck}
                         ></input>
                         <label
                           for="other-option"
@@ -657,6 +671,28 @@ function PersonalOutForm() {
                       </div>
                     )}
                   </div>
+                  {isOtherChecked && (<div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
+                  <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
+                    <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
+                      Other
+                    </div>
+                  </div>
+                  <div className="self-stretch h-fit  border-collapse     ">
+                    <div className=" h-14  justify-center items-start ">
+                      <input
+                        id="otherInput"
+                        value={otherInputValue}
+                        placeholder="Other"
+                        className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border-0 text-[15px] font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
+                        required=""
+                        onChange={(e) => {
+                          setOtherInputValue(e.target.value);
+                        }}
+                      ></input>
+                    </div>
+                  </div>
+                </div>)}
+                  
                   {/*  */}
                   <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                     <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
