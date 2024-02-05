@@ -34,7 +34,7 @@ const OutreachVisitLogProfile = () => {
           const logs = await fetchPersonalVisitLogs(uid);
           setVisitLogs(logs);
           setIsLoading(false);
-          console.log(logs);
+          console.log("This is from fetchpersonalvisitlog",logs);
         // Extract states and remove duplicates
         }
       } catch (error) {
@@ -80,7 +80,7 @@ const OutreachVisitLogProfile = () => {
                   <div className="flex-1">
                   <OutreachVisitLogCard
                     visitLogCardData={visitLogData}
-                    showProfileInfo={false}
+                    IsNotProfile={false}
                   />
                   </div>
                 </div>

@@ -16,7 +16,7 @@ const NoOutreachDoc = () => {
             </div>
             <div className="h-fit flex flex-col justify-center items-center gap-2">
                 <div className="text-center text-neutral-900 text-[28px] font-medium font-['DM Sans'] leading-9">No Outreach documented yet</div>
-                <div className="text-center text-zinc-700 text-base font-normal font-['DM Sans'] leading-normal">Whoops... no internet connection found. Check your connection</div>
+                {/* <div className="text-center text-zinc-700 text-base font-normal font-['DM Sans'] leading-normal">Whoops... no internet connection found. Check your connection</div> */}
             </div>
             <div className="flex justify-center items-start gap-4">    
                 <CustomButton
