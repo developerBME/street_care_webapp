@@ -49,10 +49,10 @@ const OutreachVisitLogProfile = () => {
     <div>
       
       <div className="flex flex-col justify-between sm:flex-row sm:space-x-16 mb-10">
-              <div className="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage leading-[52px]">
+              <div className="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage text-left leading-[52px]">
                 My Visit Logs
               </div>
-              <div>
+              
                 <CustomButton
                   label="Document New Visit Log"
                   className="text-right"
@@ -62,7 +62,7 @@ const OutreachVisitLogProfile = () => {
                     navigate("/profile/select-outreach");
                   }}
                 />
-              </div>
+              
             </div>
       
 
