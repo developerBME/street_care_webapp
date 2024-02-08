@@ -34,7 +34,7 @@ const OutreachVisitLogProfile = () => {
           const logs = await fetchPersonalVisitLogs(uid);
           setVisitLogs(logs);
           setIsLoading(false);
-          console.log(logs);
+          console.log("This is from fetchpersonalvisitlog",logs);
         // Extract states and remove duplicates
         }
       } catch (error) {
@@ -47,22 +47,24 @@ const OutreachVisitLogProfile = () => {
   
   return (
     <div>
-      <div className="flex items-center justify-between mb-10">
-      <div className="inline-flex flex-col sm:flex-row sm:space-x-16 justify-between">
-              <div class="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage leading-[52px] text-left">
+      
+      <div className="flex flex-col justify-between sm:flex-row sm:space-x-16 mb-10">
+              <div className="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage text-left leading-[52px]">
                 My Visit Logs
               </div>
-              <CustomButton
-                label="Document New Visit Log"
-                className="text-right"
-                name="buttondefaulticon"
-                icon={icon}
-                onClick={() => {
-                  navigate("/profile/select-outreach");
-                }}
-              />
+              
+                <CustomButton
+                  label="Document New Visit Log"
+                  className="text-right"
+                  name="buttondefaulticon"
+                  icon={icon}
+                  onClick={() => {
+                    navigate("/profile/select-outreach");
+                  }}
+                />
+              
             </div>
-      </div>
+      
 
       {isLoading ? (
         <div className=" flex justify-between items-center w-full h-fit gap-2">
@@ -80,7 +82,7 @@ const OutreachVisitLogProfile = () => {
                   <div className="flex-1">
                   <OutreachVisitLogCard
                     visitLogCardData={visitLogData}
-                    showProfileInfo={false}
+                    IsNotProfile={false}
                   />
                   </div>
                 </div>

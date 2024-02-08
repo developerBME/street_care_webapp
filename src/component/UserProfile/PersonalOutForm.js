@@ -326,6 +326,7 @@ function PersonalOutForm() {
 
     let obj = {
       uid: fAuth.currentUser.uid,
+      description:descriptionHelped,
       numberPeopleHelped: numberHelped,
       whatGiven: itemArray,
       itemQty: itemQty,

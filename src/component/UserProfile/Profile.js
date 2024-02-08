@@ -188,13 +188,11 @@ function Profile() {
 
    {/* ):( */}
   <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2  mb-8 rounded-2xl bg-white text-black mt-4">
-      <div className="p-4 lg:px-28 lg:py-12 space-y-9">
+      <div className="flex flex-col gap-4 lg:gap-14 lg:p-24 pl-8 pt-4 pb-4 pr-8">
         <OutreachVisitLogProfile/>
-</div>
+      </div>
+  </div>
 
-{/* Vishnu*/}
-
-</div>
  {/* ) */}
 {/* } */}
 </div>
