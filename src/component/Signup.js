@@ -299,7 +299,7 @@ function Signup2() {
               <div className="w-fit text-neutral-800 text-5xl font-medium font-bricolage leading-[64px]">
                 Sign up
               </div>
-              <div className=" h-fit mt-14 flex flex-col justify-start items-start gap-9 ">
+              <div className=" h-fit mt-9 flex flex-col justify-start items-start gap-9 ">
                 <div className="flex-col justify-start items-start gap-4 flex">
                   <div
                     className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200 cursor-pointer"
@@ -440,7 +440,7 @@ function Signup2() {
                   </div>
                 </div>
               </div>
-              <div className="mt-12">
+              <div className="my-9">
                 <CustomButton
                   name="buttondefaultwide"
                   type="submit"

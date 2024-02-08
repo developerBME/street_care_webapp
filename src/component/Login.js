@@ -290,7 +290,7 @@ function Login() {
                 </div>
               </div>
 
-              <div className="justify-start items-center mt-12 mb-6 gap-4 inline-flex">
+              <div className="justify-start items-center mt-16 mb-6 gap-4 inline-flex">
                 <div className="w-[18px] h-[18px] relative">
                   <input
                     type="checkbox"
@@ -322,7 +322,7 @@ function Login() {
                   </button>
                 </div>
               </div> */}
-              <div className="w-fit text-center mx-auto mt-2">
+              <div className="w-fit text-center mx-auto mt-6">
                 <span className="text-zinc-700 text-base font-normal font-open-sans leading-normal">
                   Don't have an account?{" "}
                 </span>
