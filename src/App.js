@@ -36,6 +36,7 @@ import Readmorenews from "./component/HomePage/Readmorenews";
 import ICanHelpForm from "./component/Community/ICanHelpForm";
 import CommunityComingSoon from "./component/CommunityComingSoon";
 import VisitLogDetails from "./component/Community/VisitLogDetails";
+import Temp_EM from "./component/Temp_EM";
 // import Test from "./component/UserProfile/Test";
 
 function App() {
@@ -137,6 +138,7 @@ function App() {
           <Route path="visitLogDetails" element={<VisitLogDetails />} />
           <Route path="visitLogDetails/:id" element={<VisitLogDetails />} />
           <Route path="/*" element={<Not404 />} />
+          <Route path="/temp_em" element={<Temp_EM />} />
         </Routes>
         <Footer />
       </Router>
