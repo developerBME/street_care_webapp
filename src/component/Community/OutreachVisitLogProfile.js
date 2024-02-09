@@ -21,29 +21,25 @@ const OutreachVisitLogProfile = () => {
   const [visitLogs, setVisitLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  
-  useEffect(() => {
 
+    
+  useEffect(() => {
     const fetchData = async () => {
-       try {
-        const user = auth?.currentUser;
-        // console.log("new ", auth?.currentUser?.uid)
-        if (user) {
-          const uid = user.uid;
-          const logs = await fetchPersonalVisitLogs(uid);
-          setVisitLogs(logs);
-          setIsLoading(false);
-          console.log("This is from fetchpersonalvisitlog",logs);
-        // Extract states and remove duplicates
-        }
-      } catch (error) {
-        setError(error);
+      const user = auth.currentUser;
+  
+      if (user) {
+        const logs = await fetchPersonalVisitLogs(auth?.currentUser?.uid);
+        setVisitLogs(logs);
         setIsLoading(false);
+        // console.log("This is from fetchpersonalvisitlog",logs);
+      // Extract states and remove duplicates
+      } else {
+        console.log("No user is signed in.");
+        setVisitLogs([]);
       }
     };
     fetchData();
-  }, []);
+  }, [auth.currentUser]);
   
   return (
     <div>
