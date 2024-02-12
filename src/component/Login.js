@@ -128,20 +128,20 @@ function Login() {
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center ">
-        <div className=" w-fit mx-2 lg:mx-40 mt-32 mb-16 rounded-2xl bg-white text-black ">
-          <div className="items-center justify-center px-4 py-8 lg:px-32 lg:py-20 h-full w-full mx-auto rounded-2xl ">
+        <div className=" w-fit mx-2 lg:mx-40 mt-40 mb-16 rounded-2xl bg-white text-black ">
+          <div className="items-center justify-center px-4 py-8 lg:px-36 lg:py-24 h-full w-full mx-auto rounded-2xl ">
             {/* form */}
             <form id="login" onSubmit={handleSubmit}>
               <div className="w-fit text-neutral-800 text-5xl font-medium font-bricolage leading-[64px]">
                 Log in
               </div>
-              <div className=" h-fit mt-14 flex flex-col justify-start items-start gap-9 ">
+              <div className=" h-fit mt-16 flex flex-col justify-start items-start gap-9 ">
                 <div className="flex-col justify-start items-start gap-4 flex">
                   <div
                     className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200 cursor-pointer"
                     onClick={handleGoogleSignIn}
                   >
-                    <div className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal ">
+                    <div className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-medium font-inter leading-normal ">
                       Continue with Google
                     </div>
                     <div className="w-8 h-8 left-[22.50px] top-[12px] absolute">
@@ -167,7 +167,7 @@ function Login() {
                     className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200 cursor-pointer"
                     onClick={handleTwitterSignIn}
                   >
-                    <div className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal">
+                    <div className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-medium font-inter leading-normal">
                       <button type="submit">Continue with Twitter</button>
                     </div>
                     <div className="w-8 h-8 left-[22.50px] top-[12px] absolute">
@@ -192,7 +192,7 @@ function Login() {
                 </div>
                 <div className="self-stretch h-fit flex-col justify-start items-start gap-4 flex">
                   <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
-                    <div className="self-stretch text-zinc-700 text-[15px] font-semibold font-inter leading-tight">
+                    <div className="self-stretch text-zinc-700 text-[15px] font-medium font-inter leading-tight">
                       Email
                     </div>
                     <div className="self-stretch  bg-white border-stone-300 justify-start items-center gap-2 inline-flex">
@@ -220,7 +220,7 @@ function Login() {
                     )}
                   </div>
                   <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
-                    <div className="self-stretch text-zinc-700 text-[15px] font-semibold font-inter leading-tight">
+                    <div className="self-stretch text-zinc-700 text-[15px] font-medium font-inter leading-tight">
                       Password
                     </div>
                     {/*<div className="self-stretch  bg-white rounded border border-stone-300 justify-start items-center gap-2 inline-flex">
