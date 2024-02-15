@@ -6,6 +6,7 @@ import CustomButton from "../Buttons/CustomButton";
 import { handleRsvp } from "../EventCardService";
 import { useNavigate } from "react-router-dom";
 import EditModal from "./EditModal";
+import vector from "../../images/Vector.png";
 
 const OutreachEventCard = ({
   cardData,
@@ -41,9 +42,9 @@ const OutreachEventCard = ({
   };
 
   return (
-    <div className="bg-[#F5EEFE] min-w-max sm:min-w-fit lg:w-full rounded-2xl mb-4 flex flex-col justify-between ">
+    <div className="bg-[#F5EEFE] min-w-max max-w-[320px] sm:min-w-fit lg:w-full rounded-[30px] mb-4 flex flex-col justify-between p-6">
       {!isProfilePage && !isPastEvent ? (
-        <div className="inline-flex items-center px-5 pt-6 pb-3 space-x-2 ">
+        <div className="inline-flex items-center space-x-2 ">
           <img
             src={photoUrl || defaultImage}
             className="w-8 h-8 rounded-full"
@@ -73,34 +74,70 @@ const OutreachEventCard = ({
           </div>
         </div>
       ) : (
-        <div className="px-5 py-2 space-y-2 w-full  h-full flex flex-col justify-between">
-          <div className="font-medium text-[16px] font-bricolage">{title}</div>
-          <div className="font-semibold font-inter text-[12px] text-[#37168B]">
-            {eventDate}
-          </div>
+        // <div className="px-5 py-2 space-y-2 w-full  h-full flex flex-col justify-between">
+        //   <div className="font-medium text-[16px] font-bricolage">{title}</div>
+        //   <div className="font-semibold font-inter text-[12px] text-[#37168B]">
+        //     {eventDate}
+        //   </div>
+        //   {isPastEvent ? (
+        //     <div className="font-normal font-inter text-[#444746] text-[12px]">
+        //       {location.city}, {location.state}
+        //     </div>
+        //   ) : (
+        //     <div className="font-normal font-inter text-[#444746] text-[12px]">
+        //       {location.street}, {location.city}, {location.state},{" "}
+        //       {location.zipcode}
+        //     </div>
+        //   )}
+        //   <div className="">
+        //     <div className="w-full inline-flex items-center bg-white px-4 py-2 space-x-2.5 rounded-2xl">
+        //       <img src={wavingHand} />
+        //       <div className="font-normal font-inter text-[12px] text-[#181818]">
+        //         {helpType}
+        //       </div>
+        //     </div>
+        //   </div>
+        // </div>
+        <div className="py-2 space-y-3 w-full h-full flex flex-col justify-between">
           {isPastEvent ? (
-            <div className="font-normal font-inter text-[#444746] text-[12px]">
-              {location.city}, {location.state}
-            </div>
-          ) : (
-            <div className="font-normal font-inter text-[#444746] text-[12px]">
-              {location.street}, {location.city}, {location.state},{" "}
-              {location.zipcode}
-            </div>
-          )}
-          <div className="">
-            <div className="w-full inline-flex items-center bg-white px-4 py-2 space-x-2.5 rounded-2xl">
-              <img src={wavingHand} />
-              <div className="font-normal font-inter text-[12px] text-[#181818]">
-                {helpType}
+            <div className="flex flex-row justify-between">
+              <div className="font-medium font-dmsans text-[12px] text-[#37168B]">
+                {eventDate}
+              </div>
+              <div className="font-medium font-dmsans text-[#444746] text-[12px]">
+                {location.city}, {location.state}
               </div>
             </div>
+          ) : (
+            <div className="flex flex-row justify-between">
+              <div className="font-medium font-dmsans text-[12px] text-[#37168B]">
+                {eventDate}
+              </div>
+              <div className="font-medium font-dmsans text-[12px] text-[#37168B]">
+                {location.city}, {location.state}
+              </div>
+            </div>
+          )}
+          <div className="font-medium text-[18px] font-dmsans">{title}</div>
+
+          <div className="font-medium text-[14px] font-dmsans text-[#444746]">
+            {helpType}
+          </div>
+
+          <div className="w-full inline-flex items-center space-x-2.5 rounded-2xl">
+            {/* <img src={wavingHand} /> */}
+            <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
+              {helpType}
+            </div>
+            {/* <div className="font-semibold font-inter text-[12px] text-[#37168B]">
+              {interests}
+            </div> */}
           </div>
         </div>
       )}
       {!isPastEvent ? (
         <div className=" flex flex-col justify-end">
-          <div className="flex items-center justify-between px-5 pt-2 pb-4 gap-16 ">
+          <div className="flex items-center justify-between pt-1 gap-16 ">
             {isProfilePage || label2 === "EDIT" ? (
               <div class="group relative">
                 <CustomButton
@@ -137,9 +174,13 @@ const OutreachEventCard = ({
             )}
 
             {!isProfilePage ? (
-              <div className="font-normal font-inter text-[12px]">
-                Open Spots: {totalSlots - nop}/{totalSlots}
-              </div>
+              <>
+                <img src={vector}></img>
+                <div className="font-normal font-inter text-[12px]">
+                  {/* Open Spots: {totalSlots - nop}/{totalSlots} */}
+                  {totalSlots - nop}/{totalSlots}
+                </div>
+              </>
             ) : (
               <div></div>
             )}

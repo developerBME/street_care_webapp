@@ -239,20 +239,27 @@ const HelpRequest = () => {
 
   return (
     <div>
-      <div className="sm:p-4 lg:px-28 lg:py-12 bg-gradient-to-br from-[#C0F4FF] to-[#DDD] rounded-t-2xl sm:flex-row px-2 py-6 flex-col justify-start items-center gap-4 inline-flex w-full">
-        <div className="flex gap-x-4 items-center">
-          <div>
+      <div className="sm:p-4 lg:px-10 lg:py-10 bg-gradient-to-br from-[#C0F4FF] to-[#DDD] rounded-t-2xl px-2 py-6 flex-col justify-start items-start gap-4 inline-flex w-full">
+        {/* <div className="text-2xl font-medium font-dmsans"> */}
+        {/* <div className="flex gap-x-4 items-center"> */}
+
+        {/* <div>
             <img
               className="w-12 h-12 lg:w-16 lg:h-16"
               src={wavingHand}
               alt="..."
             ></img>
-          </div>
-          <div className="text-[#212121] text-2xl lg:text-4xl font-medium font-dmsans lg:leading-[44px]">
+          </div> */}
+        {/* <div className="text-[#212121] text-2xl lg:text-4xl font-medium font-dmsans lg:leading-[44px]">
             Help Requests
           </div>
         </div>
-        <div className="flex-col">
+        <div className="text-md font-normal font-dmsans pt-2">
+          What are help requests and how can they help you? If you are ready to
+          help people now, kindly sign up to outreaches
+        </div> */}
+
+        {/* <div className="flex-col">
           <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-medium font-dmsans leading-tight self-stretch">
             <CustomButton
               label="Add New Request"
@@ -261,6 +268,16 @@ const HelpRequest = () => {
                 navigate("/helpRequestForm");
               }}
             />
+          </div>
+        </div> */}
+
+        <div>
+          <div className="text-2xl font-medium font-dmsans">
+            Help Requests ({helpRequests.length})
+          </div>
+          <div className="text-md font-normal font-dmsans pt-2">
+            What are help requests and how can they help you? If you are ready
+            to help people now, kindly sign up to outreaches
           </div>
         </div>
       </div>
@@ -271,10 +288,14 @@ const HelpRequest = () => {
           <HelpRequestSkeleton />
         </>
       ) : (
-        <div className="p-4 lg:px-28 lg:py-12 flex flex-col bg-[#F7F7F7] gap-4 lg:gap-8 rounded-b-2xl">
+        <div className="sm:p-4 lg:px-10 lg:py-10 flex flex-col bg-[#F7F7F7] gap-4 lg:gap-8 rounded-b-2xl">
           <div>
             {helpRequests.slice(0, visibleItems).map((item, index) => (
-              <HelpRequestCard key={index} helpRequestCardData={item} refresh={fetchData}/>
+              <HelpRequestCard
+                key={index}
+                helpRequestCardData={item}
+                refresh={fetchData}
+              />
             ))}
           </div>
           {visibleItems < helpRequests.length && (

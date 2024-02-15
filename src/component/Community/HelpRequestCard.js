@@ -3,12 +3,12 @@ import help_announcement from "../../images/help_announcement.png";
 import help_pending from "../../images/help_pending.png";
 import help_received from "../../images/help_received.png";
 import CustomButton from "../Buttons/CustomButton";
-import {
-  getAuth,
-  onAuthStateChanged,
-} from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { handleHelpRecieved, handleReopenHelpRequest } from "../HelpRequestService";
+import {
+  handleHelpRecieved,
+  handleReopenHelpRequest,
+} from "../HelpRequestService";
 
 const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
   const navigate = useNavigate();
@@ -25,14 +25,14 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
   });
 
   const {
-    id : id,
-    status : helpStatus,
-    title : helpTitle,
-    skills : helpTags,
-    location : helpLocation,
-    identification : helpHowToFind,
-    description : helpDescription,
-    userName : helpPostingUser,
+    id: id,
+    status: helpStatus,
+    title: helpTitle,
+    skills: helpTags,
+    location: helpLocation,
+    identification: helpHowToFind,
+    description: helpDescription,
+    userName: helpPostingUser,
     uid: helpUid,
     createdAt: createdAt,
   } = helpRequestCardData;
@@ -49,10 +49,7 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
   const remainingMinutes = minutes % 60;
   const remainingSeconds = seconds % 60;
 
-
-
   return (
-
     // Updated
     <div className="p-4 sm:p-4 lg:p-8 gap-16 bg-white border-y border-[#C8C8C8] sm:justify-end">
       <div className=" md:grid md:grid-cols-3 md:gap-4">
@@ -95,18 +92,18 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
           </div>
           <div className="w-full overflow-x-auto">
             <div className="justify-start items-start gap-2 inline-flex">
-                {helpTags.map((item, index) => (
-                  <div className="w-fit px-3 py-1 bg-white rounded-xl border border-[#616161] justify-start items-center gap-4 flex">
-                    <div className="opacity-90 justify-start items-center gap-1 flex text-[#616161] text-sm font-semibold font-opensans leading-tight">
-                      {item}
-                    </div>
+              {helpTags.map((item, index) => (
+                <div className="w-fit px-3 py-1 bg-white rounded-xl border border-[#616161] justify-start items-center gap-4 flex">
+                  <div className="opacity-90 justify-start items-center gap-1 flex text-[#616161] text-sm font-semibold font-opensans leading-tight">
+                    {item}
                   </div>
-                ))}
+                </div>
+              ))}
             </div>
           </div>
           <div className="self-stretch text-[#616161] text-[15px] font-normal font-dmsans leading-normal">
-            Location: {helpLocation.street}, {helpLocation.city}, {helpLocation.state},{" "}
-            {helpLocation.zipcode}
+            Location: {helpLocation.street}, {helpLocation.city},{" "}
+            {helpLocation.state}, {helpLocation.zipcode}
             <br />
             How to find: {helpHowToFind}
           </div>
@@ -120,38 +117,63 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
           </div>
 
           <div className="text-[#616161] text-xs font-medium font-dmsans leading-[18px]">
-            Posted 
+            Posted
             {days > 0 ? (
-              <span> {days} {days === 1 ? 'day' : 'days'}</span>
+              <span>
+                {" "}
+                {days} {days === 1 ? "day" : "days"}
+              </span>
             ) : remainingHours > 0 ? (
-              <span> {remainingHours} {remainingHours === 1 ? 'hour' : 'hours'}</span>
+              <span>
+                {" "}
+                {remainingHours} {remainingHours === 1 ? "hour" : "hours"}
+              </span>
             ) : remainingMinutes > 0 ? (
-              <span> {remainingMinutes} {remainingMinutes === 1 ? 'minute' : 'minutes'}</span>
+              <span>
+                {" "}
+                {remainingMinutes}{" "}
+                {remainingMinutes === 1 ? "minute" : "minutes"}
+              </span>
             ) : (
-              <span> {remainingSeconds} {remainingSeconds === 1 ? 'second' : 'seconds'}</span>
-            )} ago by user {helpPostingUser}
+              <span>
+                {" "}
+                {remainingSeconds}{" "}
+                {remainingSeconds === 1 ? "second" : "seconds"}
+              </span>
+            )}{" "}
+            ago by user {helpPostingUser}
           </div>
         </div>
 
         {helpStatus === "Need Help" && (
           <div className="col-span-1">
-            <button onClick={
-              !user
-              ? () => {navigate(`/login`);}
-              : () => {navigate(`/icanhelp/${id}`);}
-            } 
-            className="w-fit bg-[#E6DCFF] hover:bg-[#6840E0] text-[#181818] hover:text-white rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight md:float-right">
+            <button
+              onClick={
+                !user
+                  ? () => {
+                      navigate(`/login`);
+                    }
+                  : () => {
+                      navigate(`/icanhelp/${id}`);
+                    }
+              }
+              className="w-fit bg-[#E6DCFF] hover:bg-[#6840E0] text-[#181818] hover:text-white rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight md:float-right"
+            >
               I can help
             </button>
           </div>
         )}
         {helpStatus === "Help on the way" && (
           <div className="col-span-1">
-            <button className="w-fit bg-[#E6DCFF] hover:bg-[#6840E0] text-[#181818] hover:text-white rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight md:float-right"
-            onClick={
-              !user
-              ? () => {navigate(`/login`);}
-              : (e) => handleHelpRecieved(e,id,refresh)}
+            <button
+              className="w-fit bg-[#E6DCFF] hover:bg-[#6840E0] text-[#181818] hover:text-white rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight md:float-right"
+              onClick={
+                !user
+                  ? () => {
+                      navigate(`/login`);
+                    }
+                  : (e) => handleHelpRecieved(e, id, refresh)
+              }
             >
               Mark as Help Recieved
             </button>
@@ -160,9 +182,13 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
         {helpStatus === "Help Received" && (
           <div className="col-span-1">
             {helpUid === fAuth?.currentUser?.uid && (
-            <div className="w-fit flex-col justify-start gap-2 flex text-center text-[12px] font-semibold font-inter leading-tight md:float-right mt-2.5">
-              <CustomButton label="Reopen Help Request" name="buttonborder" onClick={(e) => handleReopenHelpRequest(e,id,refresh)} />
-            </div>
+              <div className="w-fit flex-col justify-start gap-2 flex text-center text-[12px] font-semibold font-inter leading-tight md:float-right mt-2.5">
+                <CustomButton
+                  label="Reopen Help Request"
+                  name="buttonborder"
+                  onClick={(e) => handleReopenHelpRequest(e, id, refresh)}
+                />
+              </div>
             )}
           </div>
         )}
