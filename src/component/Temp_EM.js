@@ -53,8 +53,8 @@ const Temp_EM = () => {
     return (
         <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to  -[#EAEEB5] to-90% bg-fixed">
             <div className="relative flex flex-col items-center ">
-                <div className="w-[95%] md:w-[90%] lg:w-[75%] mx-2 mt-32 mb-20 rounded-2xl bg-white text-black ">
-                    <div className="justify-center items-center inline-flex p-8 lg:py-24 lg:px-36 h-full w-full rounded-2xl bg-[#F7F7F7]">
+                <div className="w-[95%] md:w-[90%] lg:w-[75%] mx-2 mt-36 mb-20 rounded-2xl bg-white text-black ">
+                    <div className="justify-center items-center inline-flex p-8 lg:py-20 lg:px-32 h-full w-full rounded-2xl bg-[#F7F7F7]">
                         <CheckEmailBlock emailForDisplay={emailForDisplay} />
                     </div>
                 </div>
