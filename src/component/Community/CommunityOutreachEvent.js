@@ -122,7 +122,7 @@ const CommunityOutreachEvent = () => {
     <div>
       {/* <div className="w-full flex flex-col justify-center md:justify-between items-center rounded-t-xl bg-gradient-to-br from-purple-300 to-zinc-200 p-4 lg:px-28 lg:py-12 lg:flex-row lg:space-y-0"> */}
       {/* <div className="sm:p-4 lg:px-10 lg:py-10 bg-gradient-to-br from-[#C0F4FF] to-[#DDD] rounded-t-2xl px-2 py-6 flex-col justify-start items-start gap-4 inline-flex w-full"> */}
-      <div className="sm:p-4 lg:px-10 lg:py-8 rounded-t-2xl px-2 pt-6 flex-col justify-start items-start gap-4 inline-flex w-full">
+      <div className="sm:p-4 lg:px-10 lg:py-12 bg-gradient-to-br from-[#D3C3FF] to-[#DEDCE4] rounded-t-2xl px-2 pt-6 flex-col justify-start items-start gap-4 inline-flex w-full">
         <div className="flex flex-row justify-between gap-16">
           <div>
             <div className="text-[45px] font-medium font-dmsans">
@@ -130,7 +130,7 @@ const CommunityOutreachEvent = () => {
             need */}
               Outreaches ({upcomingEvents.length})
             </div>
-            <div className="text-md font-medium font-dmsans">
+            <div className="text-md font-medium font-dmsans text-[#181818] mt-2">
               {/* Homeless outreach involves both community-wide and personal efforts
             to support individuals experiencing homelessness. Community outreach
             brings together groups and organizations to create systemic change,
@@ -147,7 +147,7 @@ const CommunityOutreachEvent = () => {
               navigate("/allOutreachEvents");
             }}
           >
-            <div className="font-medium text-[24px] lg:text-[16px] font-dmsans">
+            <div className="font-medium text-[45px] lg:text-[16px] font-dmsans text-[#37168B]">
               View all
             </div>
             <img src={arrowRight} className="w-2 h-2 lg:w-4 lg:h-4 " />
@@ -155,7 +155,7 @@ const CommunityOutreachEvent = () => {
         </div>
       </div>
 
-      <div className="px-4 pb-4 lg:px-10 lg:pb-10">
+      <div className="px-4 py-8 pb-4 lg:px-10 lg:pb-10">
         <div className="flex items-center justify-between">
           {/* <div className="md:inline-flex items-center text-center space-y-2 md:space-y-0 hidden">
             <p className="font-medium text-xl lg:text-2xl text-[#212121] font-dmsans">
