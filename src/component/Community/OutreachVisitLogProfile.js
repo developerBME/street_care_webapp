@@ -76,9 +76,12 @@ const OutreachVisitLogProfile = () => {
               {visitLogs.slice(0, visibleItems).map((visitLogData, index) => (
                 <div key={index} className="flex p-2">
                   <div className="flex-1">
-                  <OutreachVisitLogCard
+                  {/* <OutreachVisitLogCard
                     visitLogCardData={visitLogData}
                     IsNotProfile={false}
+                  /> */}
+                  <OutreachVisitLogProfileCard
+                    visitLogCardData={visitLogData}
                   />
                   </div>
                 </div>

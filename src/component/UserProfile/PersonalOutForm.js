@@ -96,7 +96,7 @@ function PersonalOutForm() {
     setIsOtherChecked(!isOtherChecked);
   };
 
-  
+
 
   const handleNumChange = (e) => {
     const inputValue = e.target.value;
@@ -196,8 +196,8 @@ function PersonalOutForm() {
       .postalAbreviation;
     const response = await fetch(
       "https://parseapi.back4app.com/classes/Usabystate_" +
-        stateCode +
-        "?limit=1000&keys=name",
+      stateCode +
+      "?limit=1000&keys=name",
       {
         headers: {
           "X-Parse-Application-Id": "vahnMBqbmIbxOw8R3qtsEMoYrZMljfClGvc1aMyp",
@@ -228,13 +228,19 @@ function PersonalOutForm() {
 
   const handleSubmit = async (e) => {
     let setReturn = false;
+    let setOtherBool = true;
+    let whatGivenArr = [...itemArray]
     e.preventDefault();
     // Form Validation Start
     if (isOtherChecked) {
-      setItemArray([...itemArray, otherInputValue]);
-      updateErrorState("checkboxesError", "");
-    } else {
-      setItemArray(itemArray.filter((item) => item !== otherInputValue));
+      setOtherBool = false;
+      updateErrorState("checkboxesError", "Please specify for other kind of help provided");
+      if (otherInputValue !== "") {
+        whatGivenArr.push(otherInputValue)
+        console.log(otherInputValue)
+        updateErrorState("checkboxesError", "");
+        setOtherBool = true;
+      }
     }
     if (!numberHelped) {
       updateErrorState("numberHelpedError", "Number is required");
@@ -242,8 +248,9 @@ function PersonalOutForm() {
     } else {
       updateErrorState("numberHelpedError", "");
     }
-
-    if (itemArray == "") {
+    console.log("object")
+    console.log(whatGivenArr)
+    if (whatGivenArr == [] || !(setOtherBool)) {
       updateErrorState(
         "checkboxesError",
         "Please provide the kind of help provided"
@@ -326,9 +333,9 @@ function PersonalOutForm() {
 
     let obj = {
       uid: fAuth.currentUser.uid,
-      description:descriptionHelped,
+      description: descriptionHelped,
       numberPeopleHelped: numberHelped,
-      whatGiven: itemArray,
+      whatGiven: whatGivenArr,
       itemQty: itemQty,
       date: date.current.value,
       time: time.current.value,
@@ -456,11 +463,10 @@ function PersonalOutForm() {
                             id="numberHelped"
                             value={numberHelped}
                             placeholder="Number of people helped"
-                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border-0 text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
-                              error.numberHelpedError !== ""
-                                ? "ring-red-500"
-                                : "ring-gray-300"
-                            }`}
+                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border-0 text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.numberHelpedError !== ""
+                              ? "ring-red-500"
+                              : "ring-gray-300"
+                              }`}
                             required={true}
                             onChange={handleNumChange}
                           ></input>
@@ -673,27 +679,27 @@ function PersonalOutForm() {
                     )}
                   </div>
                   {isOtherChecked && (<div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
-                  <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
-                    <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
-                      Other
+                    <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
+                      <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
+                        Other
+                      </div>
                     </div>
-                  </div>
-                  <div className="self-stretch h-fit  border-collapse     ">
-                    <div className=" h-14  justify-center items-start ">
-                      <input
-                        id="otherInput"
-                        value={otherInputValue}
-                        placeholder="Other"
-                        className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border-0 text-[15px] font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
-                        required=""
-                        onChange={(e) => {
-                          setOtherInputValue(e.target.value);
-                        }}
-                      ></input>
+                    <div className="self-stretch h-fit  border-collapse     ">
+                      <div className=" h-14  justify-center items-start ">
+                        <input
+                          id="otherInput"
+                          value={otherInputValue}
+                          placeholder="Other"
+                          className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border-0 text-[15px] font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
+                          required=""
+                          onChange={(e) => {
+                            setOtherInputValue(e.target.value);
+                          }}
+                        ></input>
+                      </div>
                     </div>
-                  </div>
-                </div>)}
-                  
+                  </div>)}
+
                   {/*  */}
                   <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                     <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
@@ -709,11 +715,10 @@ function PersonalOutForm() {
                       <div className="self-stretch h-fit  border-collapse     ">
                         <div className=" h-14 inline-flex w-full">
                           <select
-                            className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
-                              error.stateError !== ""
-                                ? "ring-red-500"
-                                : "ring-gray-300"
-                            }`}
+                            className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.stateError !== ""
+                              ? "ring-red-500"
+                              : "ring-gray-300"
+                              }`}
                             defaultValue=""
                             ref={stateRef}
                             onChange={getCities}
@@ -754,11 +759,10 @@ function PersonalOutForm() {
                       <div className="self-stretch h-fit  border-collapse     ">
                         <div className=" h-14 inline-flex w-full">
                           <select
-                            className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
-                              error.cityError !== ""
-                                ? "ring-red-500"
-                                : "ring-gray-300"
-                            }`}
+                            className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.cityError !== ""
+                              ? "ring-red-500"
+                              : "ring-gray-300"
+                              }`}
                             defaultValue=""
                             disabled={!cityNames}
                             ref={cityRef}
@@ -878,11 +882,10 @@ function PersonalOutForm() {
                           <input
                             id="itemsNumber"
                             placeholder="Number of Items"
-                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
-                              error.itemQtyError !== ""
-                                ? "ring-red-500"
-                                : "ring-gray-300"
-                            }`}
+                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.itemQtyError !== ""
+                              ? "ring-red-500"
+                              : "ring-gray-300"
+                              }`}
                             required={true}
                             value={itemQty}
                             onChange={handleItemQtyChange}
@@ -955,11 +958,10 @@ function PersonalOutForm() {
                                 id="furtherHelpDescription"
                                 type="text"
                                 placeholder="E.g. Tommy, a senior citizen in a wheelchair wearing a navy blue top and brown shoes."
-                                className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300 ${
-                                  error.optDescError !== ""
-                                    ? "ring-red-500"
-                                    : "ring-gray-300"
-                                }`}
+                                className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300 ${error.optDescError !== ""
+                                  ? "ring-red-500"
+                                  : "ring-gray-300"
+                                  }`}
                                 required={true}
                                 // value={furtherHelpDescription}
                                 onChange={handleOptDescChange}
@@ -1001,11 +1003,10 @@ function PersonalOutForm() {
                               <input
                                 id="furtherHelpLocation"
                                 placeholder="E.g. 187 Hambridge Street, NY"
-                                className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300 ${
-                                  error.optLandmarkError !== ""
-                                    ? "ring-red-500"
-                                    : "ring-gray-300"
-                                }`}
+                                className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300 ${error.optLandmarkError !== ""
+                                  ? "ring-red-500"
+                                  : "ring-gray-300"
+                                  }`}
                                 required={true}
                                 onChange={handleOptLandmarkChange}
                                 ref={optLandmark}
@@ -1291,12 +1292,11 @@ function PersonalOutForm() {
                           ></input>
                           <label
                             // for="food-option"
-                            className={`inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer peer-checked:border-[#5F36D6] peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300 ${
-                              !isInfoShareCheckboxChecked &&
+                            className={`inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer peer-checked:border-[#5F36D6] peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300 ${!isInfoShareCheckboxChecked &&
                               error.infoShareCheckboxError !== ""
-                                ? "ring-red-500"
-                                : "ring-gray-300"
-                            }`}
+                              ? "ring-red-500"
+                              : "ring-gray-300"
+                              }`}
                           >
                             <div className="w-full h-full mb-6 text-base font-semibold">
                               {" "}

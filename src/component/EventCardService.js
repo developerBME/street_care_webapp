@@ -6,7 +6,7 @@ import {
   updateDoc,
   query,
   where,
-  limit
+  limit,
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -51,15 +51,16 @@ export const fetchEvents = async () => {
   return outreachEvents;
 };
 
-
-
 async function fetchUserDetailsBatch(userIds) {
   const userDetails = {};
   // Firestore limits 'in' queries to 10 items
   const chunks = splitArrayIntoChunksOfLen(userIds, 10);
 
   for (const chunk of chunks) {
-    const userQuery = query(collection(db, USERS_COLLECTION), where("uid", "in", chunk));
+    const userQuery = query(
+      collection(db, USERS_COLLECTION),
+      where("uid", "in", chunk)
+    );
     const querySnapshot = await getDocs(userQuery);
     querySnapshot.forEach((doc) => {
       const data = doc.data();
@@ -71,13 +72,15 @@ async function fetchUserDetailsBatch(userIds) {
   }
 
   return userDetails;
-};
+}
 
 // Helper function to split an array into chunks of a specified length
 function splitArrayIntoChunksOfLen(arr, len) {
-  var chunks = [], i = 0, n = arr.length;
+  var chunks = [],
+    i = 0,
+    n = arr.length;
   while (i < n) {
-    chunks.push(arr.slice(i, i += len));
+    chunks.push(arr.slice(i, (i += len)));
   }
   return chunks;
 }
@@ -85,22 +88,22 @@ function splitArrayIntoChunksOfLen(arr, len) {
 export const fetchPastOutreachEvents = async () => {
   const pastOureachEventsRef = collection(db, PAST_OUTREACH_EVENTS_COLLECTION);
   const eventSnapshot = await getDocs(pastOureachEventsRef);
-  
+
   const userIds = new Set();
-  eventSnapshot.docs.forEach(doc => userIds.add(doc.data().uid));
-  
+  eventSnapshot.docs.forEach((doc) => userIds.add(doc.data().uid));
+
   // Fetch user details in batch
   const userDetails = await fetchUserDetailsBatch(Array.from(userIds));
 
   // Process events
-  let outreachEvents = eventSnapshot.docs.map(doc => {
+  let outreachEvents = eventSnapshot.docs.map((doc) => {
     const eventData = doc.data();
     return {
       ...eventData,
       userName: userDetails[eventData.uid]?.username,
       photoUrl: userDetails[eventData.uid]?.photoUrl,
       id: doc.id,
-      nop: eventData.participants?.length || 0
+      nop: eventData.participants?.length || 0,
     };
   });
 
@@ -163,11 +166,11 @@ export const fetchUserDetails = async (uid) => {
   );
   const userDocRef = await getDocs(userQuery);
   // const userDocID = userDocRef.docs[0].id;
-  const userData = userDocRef.docs[0].data()
+  const userData = userDocRef.docs[0].data();
   return {
-        username: userData.username || "",
-        photoUrl: userData.photoUrl || "",
-      };
+    username: userData.username || "",
+    photoUrl: userData.photoUrl || "",
+  };
   // reference for the userdoc
   // const userRef = doc(db, USERS_COLLECTION, userDocID);
   // const userDoc = await getDoc(userRef);
@@ -227,7 +230,7 @@ export const fetchUserEvents = async (uid) => {
     return [];
   }
   // const userDocID = userDocRef.docs[0].id;
-  const userData = userDocRef.docs[0].data()
+  const userData = userDocRef.docs[0].data();
   // reference for the userdoc
   // const userRef = doc(db, USERS_COLLECTION, userDocID);
   // const userDoc = await getDoc(userRef);
@@ -275,6 +278,7 @@ export function formatDate(dateObj) {
   const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
   const month = monthNames[dateObj.getMonth()];
+  // const month = dateObj.getMonth() + 1;
   const day = dateObj.getDate();
   const year = dateObj.getFullYear();
   const weekday = days[dateObj.getDay()];
@@ -288,6 +292,8 @@ export function formatDate(dateObj) {
     .padStart(2, "0")} ${ampm}`;
 
   return `${month} ${day}, ${year} ${weekday} ${formattedTime}`;
+  // return `${month}/${day}/${year} - ${hours}:${minutes}`;
+  // return `${month}/${day}/${year} - ${formattedTime}`;
 }
 
 export const handleRsvp = async (
