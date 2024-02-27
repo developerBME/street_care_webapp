@@ -38,6 +38,7 @@ import CommunityComingSoon from "./component/CommunityComingSoon";
 import VisitLogDetails from "./component/Community/VisitLogDetails";
 import Temp_EM from "./component/Temp_EM";
 import Temp_Profile from "./component/Temp_Profile";
+import SrushtiSample from "./component/SampleSrushti";
 
 
 function App() {
@@ -135,6 +136,10 @@ function App() {
           <Route
             path="/allOutreachVisitLog"
             element={<AllOutreachVisitLog />}
+          />
+          <Route
+            path="/srushtiSample"
+            element={<SrushtiSample />}
           />
           <Route path="visitLogDetails" element={<VisitLogDetails />} />
           <Route path="visitLogDetails/:id" element={<VisitLogDetails />} />
