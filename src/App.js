@@ -37,7 +37,9 @@ import ICanHelpForm from "./component/Community/ICanHelpForm";
 import CommunityComingSoon from "./component/CommunityComingSoon";
 import VisitLogDetails from "./component/Community/VisitLogDetails";
 import Temp_EM from "./component/Temp_EM";
-// import Test from "./component/UserProfile/Test";
+import Temp_Profile from "./component/Temp_Profile";
+import SrushtiSample from "./component/SampleSrushti";
+
 
 function App() {
   const fAuth = getAuth();
@@ -135,10 +137,15 @@ function App() {
             path="/allOutreachVisitLog"
             element={<AllOutreachVisitLog />}
           />
+          <Route
+            path="/srushtiSample"
+            element={<SrushtiSample />}
+          />
           <Route path="visitLogDetails" element={<VisitLogDetails />} />
           <Route path="visitLogDetails/:id" element={<VisitLogDetails />} />
           <Route path="/*" element={<Not404 />} />
           <Route path="/temp_em" element={<Temp_EM />} />
+          <Route path="/temp_profile" element={<Temp_Profile />} />
         </Routes>
         <Footer />
       </Router>
