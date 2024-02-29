@@ -28,6 +28,8 @@ const OutreachEventCard = ({
     interests,
     nop,
     photoUrl,
+    description,
+    skills,
   } = cardData;
   const navigate = useNavigate();
   const [label2, setLabel2] = useState(label);
