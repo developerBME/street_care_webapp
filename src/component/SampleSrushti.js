@@ -3,25 +3,27 @@ import { useNavigate } from "react-router-dom";
 import streetcarelogo from "../images/streetcare-logo.png";
 
 function SrushtiSample() {
- const navigate = useNavigate();
-  return (
-    <div className="relative flex flex-col items-center ">
-      <div class=" w-full px-16 md:px-0 h-screen flex items-center justify-center">
-        <div class="bg-white border border-gray-200 flex flex-col items-center justify-center px-4 md:px-8 lg:px-24 py-8 rounded-lg shadow-2xl">
-          <img
-            src={streetcarelogo}
-            alt="Logo"
-            class="object-cover w-40 h-40 mb-8 rounded-full"
-          />
-          <h1 class="text-4xl font-bold mb-4">Sample Page</h1>
-          <p class="text-lg mb-8 px-4 md:px-0">
-            We're working hard to bring you something awesome. Stay tuned!
-          </p>
-        
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default SrushtiSample;
+  const navigate = useNavigate();
+   return (
+         
+     <div className="relative flex flex-col items-center ">
+         <div className=" w-[95%] md:w-[90%] lg:w-[75%] mx-2 lg:mx-40 mt-32 rounded-2xl bg-white text-black ">
+ 
+             <div className="items-center justify-center p-8 lg:py-24 lg:px-36 h-full w-full rounded-2xl bg-[#F7F7F7] ">
+         
+                 <h2 className="text-neutral-800 lg:text-[57px] text-[36px] font-medium font-bricolage lg:leading-[64px] leading-[44px] pb-24 ">
+                     Why should I get involved?
+                 </h2>
+         
+                 <div className="w-fit text-zinc-600 text-lg font-normal font-open-sans leading-normal ">
+                     Getting involved in addressing homelessness brings positive change to individuals, communities, and society.
+                     By joining the cause, you can contribute to meaningful impact and personal fullfillment.
+                 </div>
+         
+             </div>
+         </div>
+     </div>
+   );
+ }
+ 
+ export default SrushtiSample;
