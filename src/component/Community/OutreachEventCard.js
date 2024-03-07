@@ -46,7 +46,7 @@ const OutreachEventCard = ({
   };
 
   return (
-    <div className="bg-[#F5EEFE] min-w-max max-w-[320px] sm:min-w-fit lg:w-full rounded-[30px] mb-4 flex flex-col justify-between p-6">
+    <div className="bg-[#F5EEFE] min-w-fit max-w-[320px] lg:w-full rounded-[30px] mb-4 flex flex-col justify-between p-6">
       {!isProfilePage && !isPastEvent ? (
         <div className="inline-flex items-center space-x-2 ">
           <img
@@ -102,7 +102,7 @@ const OutreachEventCard = ({
         //     </div>
         //   </div>
         // </div>
-        <div className="my-3 space-y-3 w-full h-full flex flex-col justify-between">
+        <div className="my-3 space-y-3 w-full h-full flex flex-col">
           {isPastEvent ? (
             <div className="flex flex-col justify-between space-y-3">
               <div className="flex flex-row justify-normal space-x-2">
@@ -137,25 +137,19 @@ const OutreachEventCard = ({
           <div className="font-medium text-[20px] font-dmsans">{title}</div>
 
           <div className="font-medium text-[14px] font-dmsans text-[#444746]">
-            {helpType}
+            {description}
           </div>
 
-          {/* <div className="w-full inline-flex items-center space-x-2.5 rounded-2xl"> */}
-          {/* <img src={wavingHand} /> */}
           {/* <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
-              {helpType}
-            </div> */}
-          {/* <div className="font-semibold font-inter text-[12px] text-[#37168B]">
-              {interests}
-            </div> */}
-          {/* </div> */}
-
-          <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
             {helpType}
-          </div>
+          </div> */}
 
-          <div className="font-medium font-dmsans text-[14px] text-[#444746]">
-            Chips
+          <div className="inline-flex items-center gap-2 flex-wrap">
+            {skills.map((item, index) => (
+              <div className="py-1 px-3 border border-[#C8C8C8] w-fit rounded-xl text-[12px] text-[#444746]">
+                {item}
+              </div>
+            ))}
           </div>
         </div>
       )}

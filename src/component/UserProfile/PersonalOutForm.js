@@ -589,7 +589,7 @@ function PersonalOutForm() {
                         <input
                           type="checkbox"
                           id="medical-option"
-                          value=""
+                          value="Medical Help"
                           className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                           required="Medical Help"
                           ref={(el) => (checkboxes.current[4] = el)}
