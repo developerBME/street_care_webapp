@@ -11,14 +11,28 @@ function SrushtiSample() {
  
              <div className="items-center justify-center p-8 lg:py-24 lg:px-36 h-full w-full rounded-2xl bg-[#F7F7F7] ">
          
-                 <h2 className="text-neutral-800 lg:text-[57px] text-[36px] font-medium font-bricolage lg:leading-[64px] leading-[44px] pb-24 ">
+                 <h2 className="text-neutral-800 lg:text-[57px] text-[36px] font-medium font-bricolage lg:leading-[64px] leading-[44px] pb-10 ">
                      Why should I get involved?
                  </h2>
+                 
          
                  <div className="w-fit text-zinc-600 text-lg font-normal font-open-sans leading-normal ">
-                     Getting involved in addressing homelessness brings positive change to individuals, communities, and society.
+                     Getting involved in addressing homelessness <span className="text-purple-500 lg:hidden">brings positive change </span> to individuals, communities, and society.
                      By joining the cause, you can contribute to meaningful impact and personal fullfillment.
                  </div>
+                 <div className=" mt-10 w-full h-fit justify-start items-start">
+                   <div className="w-full h-fit justify start items-start grid grid-cols-1 lg:grid-cols-3 font-bricolage">
+                    <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-t-2xl  lg:rounded-tr-none lg:rounded-tl-2xl shrink basis-0  px-8 py-4 bg-gradient-to-br from-emerald-300 to-neutral-200 gap-6 flex">
+                      <div className="text-violet-950 text-2xl lg:text-xl font-bricolage font-medium leading-loose text-[40px] font-normal leading-[64px]">
+                        580K+
+                      </div>
+
+                    </div>
+
+                   </div>
+
+                 </div>
+
          
              </div>
          </div>
