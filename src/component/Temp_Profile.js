@@ -237,9 +237,15 @@ const Temp_Profile = () => {
 
             {/*Outreaches*/}
             <div className="mx-auto max-w-[1580px] p-8 lg:p-32 flex flex-col gap-16 bg-white rounded-lg mt-20">
-                <p className="text-[#212121] text-3xl sm:text-4xl font-medium font-dmsans leading-9">
-                    My Outreaches
-                </p>
+                <div className="flex items-center space-x-12">
+                    <p className="text-[#212121] text-3xl sm:text-4xl font-medium font-dmsans leading-9">
+                        My Outreaches
+                    </p>
+                    <button className="bg-[#6840E0] hover:bg-[#6840E0] text-white  py-2 px-4 rounded-full focus:outline-none focus:shadow-outline">
+                        Document Personal Outreach
+                    </button>
+                </div>
+
 
                 <div
                     style={{ backgroundColor: '#F2F6D8' }}
@@ -249,7 +255,7 @@ const Temp_Profile = () => {
                             Congratulations! You have attended more than 1 outreach event. Now you can host your own.
                         </p>
                     </div>
-                    <button className="bg-[#6840E0] hover:bg-[#6840E0] text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline">
+                    <button className="bg-[#6840E0] hover:bg-[#6840E0] text-white py-2 px-4 rounded-full focus:outline-none focus:shadow-outline">
                         Create Outreach
                     </button>
                 </div>
