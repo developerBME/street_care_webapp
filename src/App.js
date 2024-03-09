@@ -39,7 +39,7 @@ import VisitLogDetails from "./component/Community/VisitLogDetails";
 import Temp_Profile from "./component/Temp_Profile";
 import SrushtiSample from "./component/SampleSrushti";
 import PanktiSample from "./component/SamplePankti";
-
+import Sample_form from "./component/Sample_form";
 
 function App() {
   const fAuth = getAuth();
@@ -137,14 +137,9 @@ function App() {
             path="/allOutreachVisitLog"
             element={<AllOutreachVisitLog />}
           />
-          <Route
-            path="/srushtiSample"
-            element={<SrushtiSample />}
-          />
-          <Route
-            path="/panktiSample"
-            element={<PanktiSample/>}
-          />
+          <Route path="/srushtiSample" element={<SrushtiSample />} />
+          <Route path="/panktiSample" element={<PanktiSample />} />
+          <Route path="/sample_form" element={<Sample_form />} />
           <Route path="visitLogDetails" element={<VisitLogDetails />} />
           <Route path="visitLogDetails/:id" element={<VisitLogDetails />} />
           <Route path="/*" element={<Not404 />} />
