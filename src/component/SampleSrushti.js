@@ -22,18 +22,20 @@ function SrushtiSample() {
                  </div>
                  <div className=" mt-10 w-full h-fit justify-start items-start">
                    <div className="w-full h-fit justify start items-start grid grid-cols-1 lg:grid-cols-2 font-bricolage">
-                    <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-t-2xl  lg:rounded-tr-none lg:rounded-tl-2xl shrink basis-0  px-8 py-4 bg-gradient-to-br from-emerald-300 to-neutral-200 gap-6 flex">
+                    
+                    <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-t-2xl  lg:rounded-tr-none lg:rounded-tl-2xl lg:rounded-bl-2xl shrink basis-0  px-8 py-4 bg-gradient-to-br from-emerald-300 to-neutral-200 gap-6 flex">
                       <div className="text-violet-950 text-2xl lg:text-xl font-bricolage font-medium leading-loose text-[40px] font-normal leading-[64px]">
                         580K+
                       </div>
                     </div>
-                    <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-t-2xl lg:rounded-tr-none lg:rounded-tr-none lg:rounded-br-2xl lg:rounded-bl-2xl shrink basis-0 px-8 py-4 bg-purple-200 gap-6 flex">
+                    <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-tr-2xl lg:rounded-tr-2xl lg:rounded-br-2xl lg:rounded-bl-none shrink basis-0 px-8 py-4 bg-purple-200 gap-6 flex">
                       <div className="text-violet-950 text-2xl lg:text-xl font-bricolage font-medium leading-loose text-[40px] font-normal leading-[64px]">
-                        Additional Text Here
+                        24%
                       </div>
                     </div>
 
-                   </div>
+
+                  </div>
 
                  </div>
 
