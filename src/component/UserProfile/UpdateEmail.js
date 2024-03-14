@@ -2,18 +2,22 @@ import { auth, db } from "../firebase";
 
 async function updateEmailId(emailId, newEmailId) {
   try {
-    const userRecord = await auth.getUserByEmail(emailId);
-    const uid = userRecord.uid;
+    console.log(auth);
+    const user = auth.currentUser;
+    console.log(user);
+
+    await user.updateEmail(newEmailId);
+
+    const uid = user.uid;
     console.log(uid);
 
-    const userRec = db.collection("users").doc(uid);
-    console.log(userRec)
-
-    await userRec.update({
+    const userDocRef = db.collection("users").doc(uid);
+    await userDocRef.update({
       email: newEmailId
     });
 
     console.log("Email updated");
+
   } catch (error) {
     console.error("Could not update email:", error);
   }
