@@ -1,22 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-
-import defaultImage from "../images/default_avatar.svg";
-import crown from "../images/crown.png";
-import notes from "../images/notes.png";
-import announcement from "../images/announcement.png";
-import neighborhood from "../images/neighboorhood.png";
-import information from "../images/information.png";
 import star from "../images/star.png";
-import edit from "../images/edit.png";
 import tickMark from "../images/tickMark.svg";
 import Profieimage from "../images/user.png";
-
-
-//import SuperpowerModal from "./SuperpowerModal";
-
-
-
 
 const Temp_Profile = () => {
     return (
@@ -214,20 +199,20 @@ const Temp_Profile = () => {
             </div>
 
             {/*Outreaches*/}
-            <div className="mx-auto max-w-[98.75rem] p-8 lg:p-32 flex flex-col gap-16 bg-white rounded-lg mt-20">
-                <div className="flex items-center space-x-12">
+            <div className="mx-auto max-w-[98.75rem] p-8 lg:p-32 bg-white rounded-lg mt-20">
+                <div className="flex items-center space-x-12 mb-16">
                     <p className="text-[#212121] text-3xl sm:text-4xl font-medium font-dmsans leading-9">
                         My Outreaches
                     </p>
-                    <button className="bg-[#6840E0] hover:bg-[#6840E0] text-white  py-2 px-4 rounded-full focus:outline-none focus:shadow-outline">
+                    <button className="bg-[#6840E0] hover:bg-[#6840E0] text-white py-2 px-4 rounded-full focus:outline-none focus:shadow-outline">
                         Document Personal Outreach
                     </button>
                 </div>
 
-
                 <div
                     style={{ backgroundColor: '#F2F6D8' }}
-                    className="w-full max-w-[82.75rem] h-auto py-8 px-8 border border-solid border-gray-300 rounded-2xl flex items-center justify-between mx-auto">
+                    className="w-full max-w-[82.75rem] h-auto py-8 px-8 border border-solid border-gray-300 rounded-2xl flex items-center justify-between mx-auto mb-16"
+                >
                     <div className="flex flex-col gap-4">
                         <p className="text-lg font-semibold text-grey-800">
                             Congratulations! You have attended more than 1 outreach event. Now you can host your own.
@@ -238,118 +223,26 @@ const Temp_Profile = () => {
                     </button>
                 </div>
 
-
-                <div className="flex justify-center items-center gap-4 flex-wrap">
-                    <div className="bg-[#F1EEFE] rounded-2xl shadow p-6 w-full sm:w-[19.84375rem] h-auto">
-                        <h3 className="text-lg font-bold gap-2 ">BK Fort Green Outreach</h3>
-                        <p className="text-sm text-[#37168B] mt-4">Sept 9, 2023 SAT 12:00pm</p>
-                        <p className="text-sm text-gray-600 mt-4">200 Eastern Pkwy, Brooklyn, NY 11238</p>
-                        <div className="flex items-center gap-2 mt-4 bg-white rounded-xl p-2">
-                            <span className="text-black text-sm">Childcare specialist needed</span>
+                <div className="grid grid-cols-4 gap-4">
+                    {Array.from({ length: 8 }).map((_, index) => (
+                        <div key={index} className="bg-[#F1EEFE] rounded-2xl shadow p-6 w-full h-auto">
+                            <h3 className="text-lg font-bold gap-2">BK Fort Green Outreach</h3>
+                            <p className="text-sm text-[#37168B] mt-4">Sept 9, 2023 SAT 12:00pm</p>
+                            <p className="text-sm text-gray-600 mt-4">200 Eastern Pkwy, Brooklyn, NY 11238</p>
+                            <div className="flex items-center gap-2 mt-4 bg-white rounded-xl p-2">
+                                <span className="text-black text-sm truncate">Childcare specialist needed</span>
+                            </div>
+                            <div>
+                                <button className="mt-4 bg-[#E6DCFF] hover:bg-indigo-300 text-sm font-medium rounded-full p-2 w-full">
+                                    Edit
+                                </button>
+                            </div>
                         </div>
-                        <div>
-                            <button className="mt-4 bg-[#E6DCFF] hover:bg-indigo-300 text-sm font-medium rounded-full p-2 w-full sm:w-auto">
-                                Edit
-                            </button>
-                        </div>
-                    </div>
-                    <div className="bg-[#F1EEFE] rounded-2xl shadow p-6 w-full sm:w-[19.84375rem] h-auto">
-                        <h3 className="text-lg font-bold gap-2 ">BK Fort Green Outreach</h3>
-                        <p className="text-sm text-[#37168B] mt-4">Sept 9, 2023 SAT 12:00pm</p>
-                        <p className="text-sm text-gray-600 mt-4">200 Eastern Pkwy, Brooklyn, NY 11238</p>
-                        <div className="flex items-center gap-2 mt-4 bg-white rounded-xl p-2">
-                            <span className="text-black text-sm">Childcare specialist needed</span>
-                        </div>
-                        <div>
-                            <button className="mt-4 bg-[#E6DCFF] hover:bg-indigo-300 text-sm font-medium rounded-full p-2 w-full sm:w-auto">
-                                Edit
-                            </button>
-                        </div>
-                    </div>
-                    <div className="bg-[#F1EEFE] rounded-2xl shadow p-6 w-full sm:w-[19.84375rem] h-auto">
-                        <h3 className="text-lg font-bold gap-2 ">BK Fort Green Outreach</h3>
-                        <p className="text-sm text-[#37168B] mt-4">Sept 9, 2023 SAT 12:00pm</p>
-                        <p className="text-sm text-gray-600 mt-4">200 Eastern Pkwy, Brooklyn, NY 11238</p>
-                        <div className="flex items-center gap-2 mt-4 bg-white rounded-xl p-2">
-                            <span className="text-black text-sm">Childcare specialist needed</span>
-                        </div>
-                        <div>
-                            <button className="mt-4 bg-[#E6DCFF] hover:bg-indigo-300 text-sm font-medium rounded-full p-2 w-full sm:w-auto">
-                                Edit
-                            </button>
-                        </div>
-                    </div>
-                    <div className="bg-[#F1EEFE] rounded-2xl shadow p-6 w-full sm:w-[19.84375rem] h-auto">
-                        <h3 className="text-lg font-bold gap-2 ">BK Fort Green Outreach</h3>
-                        <p className="text-sm text-[#37168B] mt-4">Sept 9, 2023 SAT 12:00pm</p>
-                        <p className="text-sm text-gray-600 mt-4">200 Eastern Pkwy, Brooklyn, NY 11238</p>
-                        <div className="flex items-center gap-2 mt-4 bg-white rounded-xl p-2">
-                            <span className="text-black text-sm">Childcare specialist needed</span>
-                        </div>
-                        <div>
-                            <button className="mt-4 bg-[#E6DCFF] hover:bg-indigo-300 text-sm font-medium rounded-full p-2 w-full sm:w-auto">
-                                Edit
-                            </button>
-                        </div>
-                    </div>
+                    ))}
                 </div>
-                <div className="flex justify-center items-center gap-4 flex-wrap">
-                    <div className="bg-[#F1EEFE] rounded-2xl shadow p-6 w-full sm:w-[19.84375rem] h-auto">
-                        <h3 className="text-lg font-bold gap-2 ">BK Fort Green Outreach</h3>
-                        <p className="text-sm text-[#37168B] mt-4">Sept 9, 2023 SAT 12:00pm</p>
-                        <p className="text-sm text-gray-600 mt-4">200 Eastern Pkwy, Brooklyn, NY 11238</p>
-                        <div className="flex items-center gap-2 mt-4 bg-white rounded-xl p-2">
-                            <span className="text-black text-sm">Childcare specialist needed</span>
-                        </div>
-                        <div>
-                            <button className="mt-4 bg-[#E6DCFF] hover:bg-indigo-300 text-sm font-medium rounded-full p-2 w-full sm:w-auto">
-                                Edit
-                            </button>
-                        </div>
-                    </div>
-                    <div className="bg-[#F1EEFE] rounded-2xl shadow p-6 w-full sm:w-[19.84375rem] h-auto">
-                        <h3 className="text-lg font-bold gap-2 ">BK Fort Green Outreach</h3>
-                        <p className="text-sm text-[#37168B] mt-4">Sept 9, 2023 SAT 12:00pm</p>
-                        <p className="text-sm text-gray-600 mt-4">200 Eastern Pkwy, Brooklyn, NY 11238</p>
-                        <div className="flex items-center gap-2 mt-4 bg-white rounded-xl p-2">
-                            <span className="text-black text-sm">Childcare specialist needed</span>
-                        </div>
-                        <div>
-                            <button className="mt-4 bg-[#E6DCFF] hover:bg-indigo-300 text-sm font-medium rounded-full p-2 w-full sm:w-auto">
-                                Edit
-                            </button>
-                        </div>
-                    </div>
-                    <div className="bg-[#F1EEFE] rounded-2xl shadow p-6 w-full sm:w-[19.84375rem] h-auto">
-                        <h3 className="text-lg font-bold gap-2 ">BK Fort Green Outreach</h3>
-                        <p className="text-sm text-[#37168B] mt-4">Sept 9, 2023 SAT 12:00pm</p>
-                        <p className="text-sm text-gray-600 mt-4">200 Eastern Pkwy, Brooklyn, NY 11238</p>
-                        <div className="flex items-center gap-2 mt-4 bg-white rounded-xl p-2">
-                            <span className="text-black text-sm">Childcare specialist needed</span>
-                        </div>
-                        <div>
-                            <button className="mt-4 bg-[#E6DCFF] hover:bg-indigo-300 text-sm font-medium rounded-full p-2 w-full sm:w-auto">
-                                Edit
-                            </button>
-                        </div>
-                    </div>
-                    <div className="bg-[#F1EEFE] rounded-2xl shadow p-6 w-full sm:w-[19.84375rem] h-auto">
-                        <h3 className="text-lg font-bold gap-2 ">BK Fort Green Outreach</h3>
-                        <p className="text-sm text-[#37168B] mt-4">Sept 9, 2023 SAT 12:00pm</p>
-                        <p className="text-sm text-gray-600 mt-4">200 Eastern Pkwy, Brooklyn, NY 11238</p>
-                        <div className="flex items-center gap-2 mt-4 bg-white rounded-xl p-2">
-                            <span className="text-black text-sm">Childcare specialist needed</span>
-                        </div>
-                        <div>
-                            <button className="mt-4 bg-[#E6DCFF] hover:bg-indigo-300 text-sm font-medium rounded-full p-2 w-full sm:w-auto">
-                                Edit
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-
             </div>
+
+
 
         </div>
     );
