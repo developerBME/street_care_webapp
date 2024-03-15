@@ -233,7 +233,7 @@ const Temp_Profile = () => {
                                 <span className="text-black text-sm truncate">Childcare specialist needed</span>
                             </div>
                             <div>
-                                <button className="mt-4 bg-[#E6DCFF] hover:bg-indigo-300 text-sm font-medium rounded-full p-2 w-full">
+                                <button className="mt-4 bg-[#E6DCFF] hover:bg-indigo-300 text-sm font-medium rounded-full px-6 py-2.5 w-18.625 h-10">
                                     Edit
                                 </button>
                             </div>
