@@ -43,6 +43,9 @@ function SrushtiSample() {
                   </div>
 
                  </div>
+                 <h2 className="text-neutral-800 lg:text-[20px] text-[20px] font-medium font-bricolage lg:leading-[64px] leading-[44px] pb-10 ">
+                     Stories
+                 </h2>
 
          
              </div>
