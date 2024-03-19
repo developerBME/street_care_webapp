@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import streetcarelogo from "../images/streetcare-logo.png";
+import icon_howtoprep from "../images/icon_howtoprep.png";
 
 function SrushtiSample() {
   const navigate = useNavigate();
@@ -42,13 +43,17 @@ function SrushtiSample() {
 
                   </div>
 
-                 </div>
-                 <h2 className="text-neutral-800 lg:text-[20px] text-[20px] font-medium font-bricolage lg:leading-[64px] leading-[44px] pb-10 ">
-                     Stories
-                 </h2>
-                 <div className="bg-[#F5EEFE] rounded-[30px] flex flex-col h-full">
-                  
-                 </div>
+              </div>
+                <h2 className="text-neutral-800 lg:text-[20px] text-[20px] font-medium font-bricolage lg:leading-[64px] leading-[44px] xl:hidden mb-6pb-10 ">
+                  Stories
+                </h2>{/* hide when xl */}
+                <img src={icon_howtoprep} className="block lg:hidden mb-6" />
+                <h2 className="text-neutral-800 lg:text-[20px] text-[20px] font-medium font-bricolage lg:leading-[64px] leading-[44px] lg:hidden mb-6 pb-24 ">
+                  Stories from Homeless People
+                </h2>
+                <div className="bg-[#F5EEFE] rounded-[30px] flex flex-col h-full">
+
+              </div>
 
          
              </div>
