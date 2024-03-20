@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import streetcarelogo from "../images/streetcare-logo.png";
 import icon_howtoprep from "../images/icon_howtoprep.png";
+import three from "../images/three.png";
 
 function SrushtiSample() {
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ function SrushtiSample() {
                   </div>
 
               </div>
-                <h2 className="text-neutral-800 lg:text-[20px] text-[20px] font-medium font-bricolage lg:leading-[64px] leading-[44px] xl:hidden mb-6pb-10 ">
+                <h2 className="text-neutral-800 lg:text-[20px] text-[20px] font-medium font-bricolage lg:leading-[64px] leading-[44px] ">
                   Stories
                 </h2>{/* hide when xl */}
                 <img src={icon_howtoprep} className="block lg:hidden mb-6" />
@@ -54,6 +55,40 @@ function SrushtiSample() {
                 <div className="bg-[#F5EEFE] rounded-[30px] flex flex-col h-full">
 
               </div>
+              <div class ="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-2">
+                <div class="rounded-[30px] flex flex-col h-full overflow-hidden shadow-lg">
+                  <img class="w-full" src={three} alt="Rodney"></img>
+                  <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2">Rodney</div>
+                      <p class="text-gray-700 text-base">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
+                      </p>
+                    </div>
+                </div>
+
+                <div class="rounded-[30px] flex flex-col h-full overflow-hidden shadow-lg">
+                  <img class="w-full" src={three} alt="Matt"></img>
+                  <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2">Matt</div>
+                      <p class="text-gray-700 text-base">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
+                      </p>
+                    </div>
+                </div>
+
+                <div class="rounded-[30px] flex flex-col h-full overflow-hidden shadow-lg">
+                  <img class="w-full" src={three} alt="Anna"></img>
+                  <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2">'Anna'</div>
+                      <p class="text-gray-700 text-base">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
+                      </p>
+                    </div>
+                </div>
+
+              </div>
+
+              
 
          
              </div>
