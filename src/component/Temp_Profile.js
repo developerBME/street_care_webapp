@@ -8,7 +8,7 @@ const Temp_Profile = () => {
 
         <div className="xl:px-24 xl:py-12  ">
                 <div className="mx-auto max-w-[98.75rem] w-full p-8 gap-4 bg-white rounded-lg mt-20">
-                <div className="flex flex-col mb-4 md:flex-row md:gap-x-6 xl:gap-x-12 md:mb-8 lg:mb-12 xl:mb-16">
+                <div className="flex flex-col mb-4 md:flex-row md:gap-x-6 xl:gap-x-12 md:mb-8 lg:mb-12 xl:mb-16 max-w-[82.75rem] mx-auto">
                     <div className="pr-0 bg-gradient-to-tr from-[#C0F4FF] from-10% via-[#C0F4FF] via-60% to-[#DDD] to-90% bg-fixed rounded-t-2xl md:bg-none relative">
                         <img
                             src={Profieimage}
@@ -46,7 +46,7 @@ const Temp_Profile = () => {
                     </div>
                 </div>
 
-                <div className="px-4 pb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="px-4 pb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-[82.75rem] mx-auto">
                     <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] gap-4">
                         <div className="relative inline-block min-w-[4rem]">
                             <img className="w-16 h-16" src={star} alt="..."></img>
@@ -57,10 +57,10 @@ const Temp_Profile = () => {
                             ></img>
                         </div>
                         <div className="flex-grow flex flex-col justify-between overflow-hidden">
-                            <h1 className="text-xs sm:text-sm font-bold mt-2 font-bricolage text-[#212121] truncate">
+                            <h1 className="text-xs sm:text-sm font-bold mt-2 font-bricolage text-[#212121] break-words">
                                 Community Leader
                             </h1>
-                            <h3 className="text-[0.625rem] sm:text-[0.6875rem] font-opensans font-normal text-[#616161] truncate">
+                            <h3 className="text-[0.625rem] sm:text-[0.6875rem] font-opensans font-normal text-[#616161] break-words">
                                 Led Community Outreach
                             </h3>
                         </div>
@@ -75,10 +75,10 @@ const Temp_Profile = () => {
                             ></img>
                         </div>
                         <div className="flex-grow flex flex-col justify-between overflow-hidden">
-                            <h1 className="text-xs sm:text-sm font-bold mt-2 font-bricolage text-[#212121] truncate">
+                            <h1 className="text-xs sm:text-sm font-bold mt-2 font-bricolage text-[#212121] break-words">
                                 Volunteer Trainers
                             </h1>
-                            <h3 className="text-[0.625rem] sm:text-[0.6875rem] font-opensans font-normal text-[#616161] truncate">
+                            <h3 className="text-[0.625rem] sm:text-[0.6875rem] font-opensans font-normal text-[#616161] break-words">
                                 Led Community Orientation
                             </h3>
                         </div>
@@ -93,10 +93,10 @@ const Temp_Profile = () => {
                             ></img>
                         </div>
                         <div className="flex-grow flex flex-col justify-between overflow-hidden">
-                            <h1 className="text-xs sm:text-sm font-bold mt-2 font-bricolage text-[#212121] truncate">
+                            <h1 className="text-xs sm:text-sm font-bold mt-2 font-bricolage text-[#212121]">
                                 Ambassador
                             </h1>
-                            <h3 className="text-[0.625rem] sm:text-[0.6875rem] font-opensans font-normal text-[#616161] truncate">
+                            <h3 className="text-[0.625rem] sm:text-[0.6875rem] font-opensans font-normal text-[#616161] break-words">
                                 Had invited friend to join
                             </h3>
                         </div>
@@ -106,10 +106,10 @@ const Temp_Profile = () => {
                             <img className="w-16 h-16" src={star} alt="..."></img>
                         </div>
                         <div className="flex-grow flex flex-col justify-between overflow-hidden">
-                            <h1 className="text-xs sm:text-sm font-bold mt-2 font-bricolage text-[#212121] truncate">
+                            <h1 className="text-xs sm:text-sm font-bold mt-2 font-bricolage text-[#212121] break-words">
                                 Neighborhood Leader
                             </h1>
-                            <h3 className="text-[0.625rem] sm:text-[0.6875rem] font-opensans font-normal text-[#616161] truncate">
+                            <h3 className="text-[0.625rem] sm:text-[0.6875rem] font-opensans font-normal text-[#616161] break-words">
                                 Joined 3 Outreach in the same neighborhood.
                             </h3>
                         </div>
@@ -119,10 +119,10 @@ const Temp_Profile = () => {
                             <img className="w-16 h-16" src={star} alt="..."></img>
                         </div>
                         <div className="flex-grow flex flex-col justify-between overflow-hidden">
-                            <h1 className="text-xs sm:text-sm font-bold mt-2 font-bricolage text-[#212121] truncate">
+                            <h1 className="text-xs sm:text-sm font-bold mt-2 font-bricolage text-[#212121] break-words">
                                 Information Sharer
                             </h1>
-                            <h3 className="text-[0.625rem] sm:text-[0.6875rem] font-opensans font-normal text-[#616161] truncate">
+                            <h3 className="text-[0.625rem] sm:text-[0.6875rem] font-opensans font-normal text-[#616161] break-words">
                                 Finish the 10 min how to Streetcare program.
                             </h3>
                         </div>
@@ -132,10 +132,10 @@ const Temp_Profile = () => {
                             <img className="w-16 h-16 grayscale" src={star} alt="..."></img>
                         </div>
                         <div className="flex-grow flex flex-col justify-between overflow-hidden">
-                            <h1 className="text-xs sm:text-sm font-bold mt-2 font-bricolage text-[#212121] truncate">
+                            <h1 className="text-xs sm:text-sm font-bold mt-2 font-bricolage text-[#212121] break-words">
                                 Seasoned Volunteer
                             </h1>
-                            <h3 className="text-[0.625rem] sm:text-[0.6875rem] font-opensans font-normal text-[#616161] truncate">>
+                            <h3 className="text-[0.625rem] sm:text-[0.6875rem] font-opensans font-normal text-[#616161] break-words">
                                 Joined more than 4 outreaches or has helped more than 8 people.
                             </h3>
                         </div>
@@ -144,13 +144,13 @@ const Temp_Profile = () => {
 
 
                 {/* Impact */}
-                <div className="">
-                    <p className="text-[#212121] pl-4 pt-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-medium font-dmsans leading-9">
+                <div className="max-w-[82.75rem] mx-auto mt-4">
+                    <p className="font-dmsans text-[2.8125rem] font-medium leading-[3.25rem] text-left tracking-[-0.02em] pl-4 pt-4 text-[#212121]">
                         My Impact
                     </p>
 
-                    <div className="w-full h-fit justify-center items-center grid grid-cols-1 sm:grid-cols-3 font-bricolage py-6 px-4 md:px-8 xl:px-0 md:pt-8 md:pb-8 lg:pt-16 lg:pb-12">
-                        <div className="flex flex-col grow shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-purple-300 to-zinc-200 justify-center items-center gap-4 rounded-tl-2xl rounded-bl-2xl   ">
+                    <div className="w-full h-fit justify-center items-center grid grid-cols-3 font-bricolage py-6 px-4 md:px-8 xl:px-0 md:pt-8 md:pb-8 lg:pt-16 lg:pb-12 ">
+                        <div className="flex flex-col grow shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-purple-300 to-zinc-200 justify-center items-center gap-4 rounded-tl-2xl rounded-bl-2xl">
                             <div className="text-violet-950 text-xs sm:text-sm md:text-lg lg:text-xl xl:text-2xl font-semibold leading-loose font-inter">
                                 Participated
                             </div>
@@ -163,7 +163,6 @@ const Temp_Profile = () => {
                                 Outreaches
                             </div>
                         </div>
-
 
                         <div className="flex flex-col grow shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-purple-300 to-zinc-200 justify-center items-center gap-4">
                             <div className="text-violet-950 text-xs sm:text-sm md:text-lg lg:text-xl xl:text-2xl font-semibold leading-loose font-inter">
@@ -196,6 +195,7 @@ const Temp_Profile = () => {
                 </div>
 
 
+
             </div>
 
             {/*Outreaches*/}
@@ -225,21 +225,22 @@ const Temp_Profile = () => {
 
                 <div className="grid grid-cols-4 gap-4">
                     {Array.from({ length: 8 }).map((_, index) => (
-                        <div key={index} className="bg-[#F1EEFE] rounded-2xl shadow p-6 w-full h-auto">
+                        <div key={index} className="bg-[#F1EEFE] rounded-2xl shadow p-4 w-full h-auto">
                             <h3 className="text-lg font-bold gap-2">BK Fort Green Outreach</h3>
                             <p className="text-sm text-[#37168B] mt-4">Sept 9, 2023 SAT 12:00pm</p>
                             <p className="text-sm text-gray-600 mt-4">200 Eastern Pkwy, Brooklyn, NY 11238</p>
                             <div className="flex items-center gap-2 mt-4 bg-white rounded-xl p-2">
-                                <span className="text-black text-sm truncate">Childcare specialist needed</span>
+                                <span className="text-black text-xs break-words">Childcare specialist needed</span>
                             </div>
                             <div>
-                                <button className="mt-4 bg-[#E6DCFF] hover:bg-indigo-300 text-sm font-medium rounded-full px-6 py-2.5 w-18.625 h-10">
+                                <button className="mt-4 bg-[#E6DCFF] hover:bg-indigo-300 text-xs font-medium rounded-full px-6 py-2 w-18.625 h-8">
                                     Edit
                                 </button>
                             </div>
                         </div>
                     ))}
                 </div>
+
             </div>
 
 
