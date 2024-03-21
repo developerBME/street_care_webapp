@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
-  getAuth,
-  signInWithPopup,
-  GoogleAuthProvider,
-  onAuthStateChanged,
+    getAuth,
+    signInWithPopup,
+    GoogleAuthProvider,
+    onAuthStateChanged,
 } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
 import FAQs from "./HomePage/FAQs";
@@ -19,9 +19,9 @@ import MoreAboutUs from "./HomePage/MoreAboutUs";
 import Navbar from "./Navbar";
 import OutreachEventCard from "./Community/OutreachEventCard";
 import {
-  formatDate,
-  fetchEvents,
-  fetchOfficialEvents,
+    formatDate,
+    fetchEvents,
+    fetchOfficialEvents,
 } from "./EventCardService";
 
 import BMEcardimg1 from "../images/BMEofficialcardimg1.png";
@@ -33,283 +33,289 @@ import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 import PastOutreachEventCardSkeleton from "./Skeletons/PastOutreachEventCardSkeleton";
 
 function HomePage() {
-  const navigate = useNavigate();
-  const fAuth = getAuth();
+    const navigate = useNavigate();
+    const fAuth = getAuth();
 
-  onAuthStateChanged(fAuth, (user) => {
-    if (user) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/auth.user
-      console.log(user);
-      // ...
-    } else {
-      // User is signed out
-      // ...
-    }
-  });
+    // onAuthStateChanged(fAuth, (user) => {
+    //   if (user) {
+    //     // User is signed in, see docs for a list of available properties
+    //     // https://firebase.google.com/docs/reference/js/auth.user
+    //     console.log(user);
+    //     // ...
+    //   } else {
+    //     // User is signed out
+    //     // ...
+    //   }
+    // });
 
-  const cardData = [
-    {
-      userName: "William Smith",
-      title: "BK Fort Green Outreach",
-      eventDate: "Sept 9, 2023 SAT 5:00pm",
-      location: {
-        street: "200 Eastern Pkwy",
-        city: "Brooklyn",
-        state: "NY",
-        zipcode: "11238",
-      },
-      helpType: "Childcare Specialist needed",
-      totalSlots: 20,
-      interests: 5,
-    },
-    {
-      userName: "William Smith",
-      title: "BK Fort Green Outreach",
-      eventDate: "Sept 9, 2023 SAT 5:00pm",
-      location: {
-        street: "200 Eastern Pkwy",
-        city: "Brooklyn",
-        state: "NY",
-        zipcode: "11238",
-      },
-      helpType: "Childcare Specialist needed",
-      totalSlots: 20,
-      interests: 5,
-    },
-    {
-      userName: "William Smith",
-      title: "BK Fort Green Outreach",
-      eventDate: "Sept 9, 2023 SAT 5:00pm",
-      location: {
-        street: "200 Eastern Pkwy",
-        city: "Brooklyn",
-        state: "NY",
-        zipcode: "11238",
-      },
-      helpType: "Childcare Specialist needed",
-      totalSlots: 20,
-      interests: 5,
-    },
-  ];
+    const cardData = [
+        {
+            userName: "William Smith",
+            title: "BK Fort Green Outreach",
+            eventDate: "Sept 9, 2023 SAT 5:00pm",
+            location: {
+                street: "200 Eastern Pkwy",
+                city: "Brooklyn",
+                state: "NY",
+                zipcode: "11238",
+            },
+            helpType: "Childcare Specialist needed",
+            totalSlots: 20,
+            interests: 5,
+        },
+        {
+            userName: "William Smith",
+            title: "BK Fort Green Outreach",
+            eventDate: "Sept 9, 2023 SAT 5:00pm",
+            location: {
+                street: "200 Eastern Pkwy",
+                city: "Brooklyn",
+                state: "NY",
+                zipcode: "11238",
+            },
+            helpType: "Childcare Specialist needed",
+            totalSlots: 20,
+            interests: 5,
+        },
+        {
+            userName: "William Smith",
+            title: "BK Fort Green Outreach",
+            eventDate: "Sept 9, 2023 SAT 5:00pm",
+            location: {
+                street: "200 Eastern Pkwy",
+                city: "Brooklyn",
+                state: "NY",
+                zipcode: "11238",
+            },
+            helpType: "Childcare Specialist needed",
+            totalSlots: 20,
+            interests: 5,
+        },
+    ];
 
-  const BMEcardData = [
-    {
-      title: "Community Connection Night",
-      eventDate: "Oct 12,2023 THU 5:30pm",
-      location: {
-        street: "One Place Plaza,",
-        city: "West 2nd Fl,",
-        state: "NY,",
-        zipcode: "10038",
-      },
-      totalSlots: 100,
-      interests: 61,
-      img: BMEcardimg1,
-    },
-    {
-      title: "Volunteer November Meetup",
-      eventDate: "Nov 1,2023 THU 6:00pm",
-      location: {
-        street: "Online",
-      },
-      totalSlots: "Unlimited",
-      interests: "Unlimited",
-      img: BMEcardimg2,
-    },
-    {
-      title: "Volunteer December Meetup",
-      eventDate: "Oct 12,2023 THU 5:30pm",
-      location: {
-        street: "Online",
-      },
-      totalSlots: "Unlimited",
-      interests: "Unlimited",
-      img: BMEcardimg3,
-    },
-  ];
+    const BMEcardData = [
+        {
+            title: "Community Connection Night",
+            eventDate: "Oct 12,2023 THU 5:30pm",
+            location: {
+                street: "One Place Plaza,",
+                city: "West 2nd Fl,",
+                state: "NY,",
+                zipcode: "10038",
+            },
+            totalSlots: 100,
+            interests: 61,
+            img: BMEcardimg1,
+        },
+        {
+            title: "Volunteer November Meetup",
+            eventDate: "Nov 1,2023 THU 6:00pm",
+            location: {
+                street: "Online",
+            },
+            totalSlots: "Unlimited",
+            interests: "Unlimited",
+            img: BMEcardimg2,
+        },
+        {
+            title: "Volunteer December Meetup",
+            eventDate: "Oct 12,2023 THU 5:30pm",
+            location: {
+                street: "Online",
+            },
+            totalSlots: "Unlimited",
+            interests: "Unlimited",
+            img: BMEcardimg3,
+        },
+    ];
 
-  const [events, setEvents] = useState([]);
-  const [offevents, setOffevents] = useState([]);
-  const [newsevents, setnewsevents] = useState([]);
-  const [eventsDisplay, setEventsDisplay] = useState([]);
+    const [events, setEvents] = useState([]);
+    const [offevents, setOffevents] = useState([]);
+    const [newsevents, setnewsevents] = useState([]);
+    const [eventsDisplay, setEventsDisplay] = useState([]);
 
-  const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const eventsData = await fetchEvents();
+    useEffect(() => {
+        const fetchData = async () => {
+            const eventsData = await fetchEvents();
 
-      // Sort events in place based on their date
-      // eventsData.sort((a, b) => a.eventDate - b.eventDate);
+            // Sort events in place based on their date
+            // eventsData.sort((a, b) => a.eventDate - b.eventDate);
 
-      // setEvents(eventsData);
+            // setEvents(eventsData);
 
-      // Display 3 upcoming events
-      eventsData.sort((a, b) => a.eventDate - b.eventDate);
-      setEvents(eventsData);
+            // Display 3 upcoming events
+            eventsData.sort((a, b) => a.eventDate - b.eventDate);
+            setEvents(eventsData);
+        };
+        const fetchOfficialData = async () => {
+            const eventsData = await fetchOfficialEvents();
+            // Sort events in place based on their date
+            // eventsData.sort((a, b) => a.eventDate - b.eventDate);
+            // setOffevents(eventsData);
+
+            // Display 3 upcoming events
+            eventsData.sort((a, b) => a.eventDate - b.eventDate);
+            let limitedData = eventsData.slice(0, 3);
+            setOffevents(limitedData);
+        };
+
+        const fetchnewsData = async () => {
+            // Display 3 news initially
+            let limitedData = NewsCardData.slice(0, 3);
+            setnewsevents(limitedData);
+        };
+
+        fetchData();
+        fetchOfficialData();
+        fetchnewsData();
+    }, []);
+
+    useEffect(() => {
+        setEventsDisplay(events);
+        // searchRef.current = "";
+    }, [events]);
+
+    useEffect(() => {
+        if (eventsDisplay.length > 0) {
+            setIsLoading(false);
+        }
+    }, [eventsDisplay]);
+
+    const outreachRef = useRef();
+
+    const handleOutreachRef = () => {
+        outreachRef.current.scrollIntoView({ behavior: "smooth" });
     };
-    const fetchOfficialData = async () => {
-      const eventsData = await fetchOfficialEvents();
-      // Sort events in place based on their date
-      // eventsData.sort((a, b) => a.eventDate - b.eventDate);
-      // setOffevents(eventsData);
 
-      // Display 3 upcoming events
-      eventsData.sort((a, b) => a.eventDate - b.eventDate);
-      let limitedData = eventsData.slice(0, 3);
-      setOffevents(limitedData);
-    };
+    // Filter events to get only past events
+    const upcomingEvents = events
+        .filter((event) => {
+            const eventDate = new Date(event.eventDate.seconds * 1000);
+            return eventDate >= new Date(); // Check if the event date is before the current date
+        })
+        .slice(0, 3);
 
-    const fetchnewsData = async () => {
-      // Display 3 news initially
-      let limitedData = NewsCardData.slice(0, 3);
-      setnewsevents(limitedData);
-    };
+    // Filter events to get only past events
+    const pastEvents = events
+        .filter((event) => {
+            const eventDate = new Date(event.eventDate.seconds * 1000);
+            return eventDate < new Date(); // Check if the event date is before the current date
+        })
+        .slice(0, 3);
 
-    fetchData();
-    fetchOfficialData();
-    fetchnewsData();
-  }, []);
+    useEffect(() => {
+        document.title = "Home - Street Care";
+    }, []);
 
-  useEffect(() => {
-    setEventsDisplay(events);
-    // searchRef.current = "";
-  }, [events]);
-
-  useEffect(() => {
-    if (eventsDisplay.length > 0) {
-      setIsLoading(false);
-    }
-  }, [eventsDisplay]);
-
-  const outreachRef = useRef();
-
-  const handleOutreachRef = () => {
-    outreachRef.current.scrollIntoView({ behavior: "smooth" });
-  };
-
-  // Filter events to get only past events
-  const upcomingEvents = events
-    .filter((event) => {
-      const eventDate = new Date(event.eventDate.seconds * 1000);
-      return eventDate >= new Date(); // Check if the event date is before the current date
-    })
-    .slice(0, 3);
-
-  // Filter events to get only past events
-  const pastEvents = events
-    .filter((event) => {
-      const eventDate = new Date(event.eventDate.seconds * 1000);
-      return eventDate < new Date(); // Check if the event date is before the current date
-    })
-    .slice(0, 3);
-
-  useEffect(() => {
-    document.title = "Home - Street Care";
-  }, []);
-
-  return (
-    // <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
-    <div className="relative flex flex-col items-center ">
-      <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-32 rounded-2xl text-black ">
-        {" "}
-        <Landing scorllFuntion={handleOutreachRef} />
-      </div>
-      <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
-        <Success />
-      </div>
-      <div
-        id="outreach"
-        className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black"
-      >
-        <div
-          className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] scroll-m-24"
-          ref={outreachRef}
-        >
-          <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
-            {" "}
-            Upcoming Outreach Events:
-          </p>
-
-          {isLoading ? (
-            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-              <EventCardSkeleton />
-              <EventCardSkeleton />
-              <EventCardSkeleton />
+    return (
+        // <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
+        <div className="relative flex flex-col items-center ">
+            <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-32 rounded-2xl text-black ">
+                {" "}
+                <Landing scorllFuntion={handleOutreachRef} />
             </div>
-          ) : (
-            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-              {upcomingEvents.map((eventData) => (
-                <OutreachEventCard
-                  key={eventData.id}
-                  cardData={{
-                    ...eventData,
-                    eventDate: formatDate(
-                      new Date(eventData.eventDate.seconds * 1000)
-                    ),
-                  }}
-                />
-              ))}
+            <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+                <Success />
             </div>
-          )}
-          <div className="mt-16">
-            <CustomButton
-              label="More Outreach Events"
-              name="buttondefault"
-              onClick={() => {
-                navigate("/allOutreachEvents");
-              }}
-            />
-          </div>
-        </div>
-      </div>
-      {/* DIV BLOCK FOR ALL PAST OUTREACH EVENTS*/}
-      <div
-        id="pastoutreach"
-        className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black"
-      >
-        <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] scroll-m-16">
-          <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
-            {" "}
-            Past Outreach Events:
-          </p>
+            <div
+                id="outreach"
+                className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black"
+            >
+                <div
+                    className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] scroll-m-24"
+                    ref={outreachRef}
+                >
+                    <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
+                        {" "}
+                        Upcoming Outreach Events:
+                    </p>
 
-          {isLoading ? (
-            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-              <PastOutreachEventCardSkeleton />
-              <PastOutreachEventCardSkeleton />
-              <PastOutreachEventCardSkeleton />
+                    {isLoading ? (
+                        <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+                            <EventCardSkeleton />
+                            <EventCardSkeleton />
+                            <EventCardSkeleton />
+                        </div>
+                    ) : (
+                        <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+                            {upcomingEvents.map((eventData) => (
+                                <OutreachEventCard
+                                    key={eventData.id}
+                                    cardData={{
+                                        ...eventData,
+                                        eventDate: formatDate(
+                                            new Date(
+                                                eventData.eventDate.seconds *
+                                                    1000
+                                            )
+                                        ),
+                                    }}
+                                />
+                            ))}
+                        </div>
+                    )}
+                    <div className="mt-16">
+                        <CustomButton
+                            label="More Outreach Events"
+                            name="buttondefault"
+                            onClick={() => {
+                                navigate("/allOutreachEvents");
+                            }}
+                        />
+                    </div>
+                </div>
             </div>
-          ) : (
-            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-              {pastEvents.map((eventData) => (
-                <OutreachEventCard
-                  isPastEvent={true}
-                  key={eventData.id}
-                  cardData={{
-                    ...eventData,
-                    eventDate: formatDate(
-                      new Date(eventData.eventDate.seconds * 1000)
-                    ),
-                  }}
-                />
-              ))}
+            {/* DIV BLOCK FOR ALL PAST OUTREACH EVENTS*/}
+            <div
+                id="pastoutreach"
+                className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black"
+            >
+                <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] scroll-m-16">
+                    <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
+                        {" "}
+                        Past Outreach Events:
+                    </p>
+
+                    {isLoading ? (
+                        <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+                            <PastOutreachEventCardSkeleton />
+                            <PastOutreachEventCardSkeleton />
+                            <PastOutreachEventCardSkeleton />
+                        </div>
+                    ) : (
+                        <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+                            {pastEvents.map((eventData) => (
+                                <OutreachEventCard
+                                    isPastEvent={true}
+                                    key={eventData.id}
+                                    cardData={{
+                                        ...eventData,
+                                        eventDate: formatDate(
+                                            new Date(
+                                                eventData.eventDate.seconds *
+                                                    1000
+                                            )
+                                        ),
+                                    }}
+                                />
+                            ))}
+                        </div>
+                    )}
+                    <div className="mt-16">
+                        <CustomButton
+                            label="More Outreach Events"
+                            name="buttondefault"
+                            onClick={() => {
+                                navigate("/allPastOutreachEvents");
+                            }}
+                        />
+                    </div>
+                </div>
             </div>
-          )}
-          <div className="mt-16">
-            <CustomButton
-              label="More Outreach Events"
-              name="buttondefault"
-              onClick={() => {
-                navigate("/allPastOutreachEvents");
-              }}
-            />
-          </div>
-        </div>
-      </div>
-      {/*Vedant*/} {/*BME OFFCIIAL GATHERING BLOCK START*/}
-      {/* 
+            {/*Vedant*/} {/*BME OFFCIIAL GATHERING BLOCK START*/}
+            {/* 
      <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
         <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
           <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
@@ -334,46 +340,46 @@ function HomePage() {
       </div> 
 
       */}
-      {/* Aniket */}
-      <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8  rounded-2xl bg-white text-black ">
-        <Process />
-      </div>
-      <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black">
-        <MoreAboutUs />
-      </div>
-      {/* Aniket */}
-      <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
-        <Map />
-      </div>
-      <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
-        {/*<News />*/}
-
-        <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
-          <p className=" text-[25px] lg:text-[45px] font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
-            Past Events
-          </p>
-          <div className=" grid grid-cols-1 gap-x-8 gap-y-8 mt-6 sm:pt-4 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-            {newsevents.map((eventData) => (
-              <News key={eventData.id} NewsCardData={eventData} />
-            ))}
-            <div className="mt-16">
-              <CustomButton
-                label="Load More News"
-                name="buttondefault"
-                onClick={() => {
-                  navigate("/allnews");
-                }}
-              />
+            {/* Aniket */}
+            <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8  rounded-2xl bg-white text-black ">
+                <Process />
             </div>
-          </div>
+            <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black">
+                <MoreAboutUs />
+            </div>
+            {/* Aniket */}
+            <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+                <Map />
+            </div>
+            <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+                {/*<News />*/}
+
+                <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
+                    <p className=" text-[25px] lg:text-[45px] font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
+                        Past Events
+                    </p>
+                    <div className=" grid grid-cols-1 gap-x-8 gap-y-8 mt-6 sm:pt-4 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+                        {newsevents.map((eventData) => (
+                            <News key={eventData.id} NewsCardData={eventData} />
+                        ))}
+                        <div className="mt-16">
+                            <CustomButton
+                                label="Load More News"
+                                name="buttondefault"
+                                onClick={() => {
+                                    navigate("/allnews");
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-16 rounded-2xl bg-white text-black ">
+                <FAQs />
+            </div>
         </div>
-      </div>
-      <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-16 rounded-2xl bg-white text-black ">
-        <FAQs />
-      </div>
-    </div>
-    // </div>
-  );
+        // </div>
+    );
 }
 
 export default HomePage;
