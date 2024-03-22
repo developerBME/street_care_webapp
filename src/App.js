@@ -39,18 +39,24 @@ import VisitLogDetails from "./component/Community/VisitLogDetails";
 import Temp_EM from "./component/Temp_EM";
 import Temp_Profile from "./component/Temp_Profile";
 import SrushtiSample from "./component/SampleSrushti";
-
+import { ProtectedRoute } from "./component/ProtectedRoute";
+import EmailVerificationModal from "./component/EmailVerificationModal";
 
 function App() {
   const fAuth = getAuth();
   const [loggedIn, setLoggedIn] = useState(false);
   const [photoUrl, setPhotoUrl] = useState("");
+  const [firebaseUser, setFirebaseUser] = useState({});
+
+  console.log(firebaseUser);
+
   useEffect(() => {}, []);
   onAuthStateChanged(fAuth, async (user) => {
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/auth.user
       setLoggedIn(true);
+      setFirebaseUser(user);
       try {
         const userRef = query(
           collection(db, "users"),
@@ -100,7 +106,10 @@ function App() {
           <Route path="/signup" element={<Signup2 />} />
           <Route path="/allnews" element={<Newscard />} />
           <Route path="/allnews/:id" element={<Readmorenews />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/verifyemail" element={<EmailVerificationModal />} />
+          <Route element={<ProtectedRoute user={firebaseUser} />}>
+            <Route path="/profile" element={<Profile />} />
+          </Route>
           <Route path="/profile/select-outreach" element={<Documenting />} />
           <Route path="/profile/commoutform" element={<CommOutForm />} />
           {/* <Route path="/profile/commoutform" element={<ComingSoon />} /> */}
@@ -137,10 +146,7 @@ function App() {
             path="/allOutreachVisitLog"
             element={<AllOutreachVisitLog />}
           />
-          <Route
-            path="/srushtiSample"
-            element={<SrushtiSample />}
-          />
+          <Route path="/srushtiSample" element={<SrushtiSample />} />
           <Route path="visitLogDetails" element={<VisitLogDetails />} />
           <Route path="visitLogDetails/:id" element={<VisitLogDetails />} />
           <Route path="/*" element={<Not404 />} />

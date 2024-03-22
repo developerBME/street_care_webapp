@@ -107,7 +107,7 @@ function CommOutForm() {
       console.log(fAuth.currentUser.uid);
     } else {
       console.log("USER NOT FOUND!");
-      navigate("/login");
+      // navigate("/login");
     }
   });
 
@@ -183,7 +183,12 @@ function CommOutForm() {
       if (docRef.id) {
         console.log(docRef.id);
         setSuccess(true);
-        emailConfirmation(fAuth.currentUser.email, fAuth.currentUser.displayName, '', emailHTML);
+        emailConfirmation(
+          fAuth.currentUser.email,
+          fAuth.currentUser.displayName,
+          "",
+          emailHTML
+        );
         clearFields();
       }
     } catch (e) {

@@ -192,7 +192,10 @@ const NavBar = (props) => {
                             <Link
                               to={e.link}
                               onClick={() => {
-                                e.fireBaseSignOut();
+                                if (e.id === 3) {
+                                  // call some function or handle the event
+                                  e.fireBaseSignOut();
+                                }
                               }}
                               className=" w-[200px] h-10 inline-flex font-inter text-base font-normal leading-6 tracking-wide gap-3  items-center"
                             >
