@@ -6,13 +6,13 @@ import Profieimage from "../images/user.png";
 const Temp_Profile = () => {
     return (
 
-        <div className="xl:px-24 xl:py-12  ">
-                <div className="mx-auto max-w-[98.75rem] w-full p-8 gap-4 bg-white rounded-lg mt-20">
+        <div className="px-4 py-2 sm:px-6 sm:py-4 md:px-8 md:py-6 lg:px-12 lg:py-8 xl:px-24 xl:py-12 2xl:px-32 2xl:py-16">
+            <div className="mx-auto max-w-[98.75rem] w-full p-8 gap-4 bg-white rounded-lg mt-20">
                 <div className="flex flex-col mb-4 md:flex-row md:gap-x-6 xl:gap-x-12 md:mb-8 lg:mb-12 xl:mb-16 max-w-[82.75rem] mx-auto">
                     <div className="pr-0 bg-gradient-to-tr from-[#C0F4FF] from-10% via-[#C0F4FF] via-60% to-[#DDD] to-90% bg-fixed rounded-t-2xl md:bg-none relative">
                         <img
                             src={Profieimage}
-                            className="rounded-full w-32 h-32 mx-auto mt-8 mb-4 md:w-64 md:h-48 lg:w-72 lg:h-56"/>
+                            className="rounded-full w-32 h-32 mx-auto mt-8 mb-4 md:w-64 md:h-48 lg:w-72 lg:h-56" />
                     </div>
                     <div className="w-full lg:w-11/12 py-4 md:mt-16 lg:mt-20 mx-auto">
                         <div>
@@ -145,22 +145,22 @@ const Temp_Profile = () => {
 
                 {/* Impact */}
                 <div className="max-w-[82.75rem] mx-auto mt-4">
-                    <p className="font-dmsans text-[2.8125rem] font-medium leading-[3.25rem] text-left tracking-[-0.02em] pl-4 pt-4 text-[#212121]">
+                    <p className="text-[#212121] text-3xl sm:text-4xl font-medium font-dmsans leading-9">
                         My Impact
                     </p>
 
                     <div className="w-full h-fit justify-center items-center grid grid-cols-3 font-bricolage py-6 px-4 md:px-8 xl:px-0 md:pt-8 md:pb-8 lg:pt-16 lg:pb-12 ">
-                        <div className="flex flex-col grow shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-purple-300 to-zinc-200 justify-center items-center gap-4 rounded-tl-2xl rounded-bl-2xl">
+                        <div className="flex flex-col grow shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-green-200 to-zinc-200 justify-center items-center gap-4 rounded-tl-2xl rounded-bl-2xl">
                             <div className="text-violet-950 text-xs sm:text-sm md:text-lg lg:text-xl xl:text-2xl font-semibold leading-loose font-inter">
-                                Participated
+                                Helped
                             </div>
                             <div className="flex justify-center items-center w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32 bg-white rounded-full">
                                 <div className="text-violet-950 font-bricolage text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-normal leading-[4rem]">
-                                    8
+                                    12
                                 </div>
                             </div>
                             <div className="text-violet-950 text-xs sm:text-sm md:text-lg lg:text-xl xl:text-2xl font-semibold inline-flex">
-                                Outreaches
+                                homless
                             </div>
                         </div>
 
@@ -226,12 +226,13 @@ const Temp_Profile = () => {
                 <div className="grid grid-cols-4 gap-4">
                     {Array.from({ length: 8 }).map((_, index) => (
                         <div key={index} className="bg-[#F1EEFE] rounded-2xl shadow p-4 w-full h-auto">
-                            <h3 className="text-lg font-bold gap-2">BK Fort Green Outreach</h3>
+                            <h3 className="text-lg font-bold break-words">BK Fort Green Outreach</h3>
                             <p className="text-sm text-[#37168B] mt-4">Sept 9, 2023 SAT 12:00pm</p>
                             <p className="text-sm text-gray-600 mt-4">200 Eastern Pkwy, Brooklyn, NY 11238</p>
-                            <div className="flex items-center gap-2 mt-4 bg-white rounded-xl p-2">
-                                <span className="text-black text-xs break-words">Childcare specialist needed</span>
+                            <div className="flex items-center gap-2 mt-4 bg-white rounded-xl p-2 overflow-hidden">
+                                <span className="text-black text-xs min-w-0">Childcare specialist needed</span>
                             </div>
+
                             <div>
                                 <button className="mt-4 bg-[#E6DCFF] hover:bg-indigo-300 text-xs font-medium rounded-full px-6 py-2 w-18.625 h-8">
                                     Edit
