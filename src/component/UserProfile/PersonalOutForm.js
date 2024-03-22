@@ -90,13 +90,11 @@ function PersonalOutForm() {
   });
 
   const [isOtherChecked, setIsOtherChecked] = useState(false);
-  const [otherInputValue, setOtherInputValue] = useState('');
+  const [otherInputValue, setOtherInputValue] = useState("");
 
   const handleOtherCheck = () => {
     setIsOtherChecked(!isOtherChecked);
   };
-
-
 
   const handleNumChange = (e) => {
     const inputValue = e.target.value;
@@ -164,7 +162,7 @@ function PersonalOutForm() {
       console.log("Found user");
     } else {
       console.log("USER NOT FOUND!");
-      navigate("/login");
+      // navigate("/login");
     }
   });
 

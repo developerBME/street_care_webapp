@@ -381,7 +381,7 @@ export const handleRsvp = async (
         }
       } else {
         console.log("USER NOT FOUND!");
-        navigate("/login");
+        // navigate("/login");
       }
     });
   } else {
