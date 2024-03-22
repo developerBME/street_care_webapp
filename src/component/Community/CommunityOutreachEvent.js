@@ -122,9 +122,9 @@ const CommunityOutreachEvent = () => {
     <div>
       {/* <div className="w-full flex flex-col justify-center md:justify-between items-center rounded-t-xl bg-gradient-to-br from-purple-300 to-zinc-200 p-4 lg:px-28 lg:py-12 lg:flex-row lg:space-y-0"> */}
       {/* <div className="sm:p-4 lg:px-10 lg:py-10 bg-gradient-to-br from-[#C0F4FF] to-[#DDD] rounded-t-2xl px-2 py-6 flex-col justify-start items-start gap-4 inline-flex w-full"> */}
-      <div className="sm:p-4 lg:px-10 lg:py-12 bg-gradient-to-br from-[#D3C3FF] to-[#DEDCE4] rounded-t-2xl px-2 pt-6 flex-col justify-start items-start gap-4 inline-flex w-full">
-        <div className="flex flex-row justify-between gap-16">
-          <div>
+      <div className="p-4 lg:px-10 lg:py-12 bg-gradient-to-br from-[#D3C3FF] to-[#DEDCE4] rounded-t-2xl flex-col justify-start items-start gap-4 inline-flex w-full">
+        <div className="flex flex-col md:flex md:flex-row justify-between gap-4 md:gap-10">
+          <div className="">
             <div className="text-[45px] font-medium font-dmsans">
               {/* Outreach - extending help, resources, and compassion to those in
             need */}
@@ -142,12 +142,12 @@ const CommunityOutreachEvent = () => {
             </div>
           </div>
           <div
-            className="lg:flex md:inline-flex cursor-pointer gap-3 items-center text-center"
+            className="flex flex-row cursor-pointer gap-2 items-center"
             onClick={() => {
               navigate("/allOutreachEvents");
             }}
           >
-            <div className="font-medium text-[45px] lg:text-[16px] font-dmsans text-[#37168B]">
+            <div className="font-medium text-[16px] lg:text-[20px] font-dmsans text-[#37168B] whitespace-nowrap">
               View all
             </div>
             <img src={arrowRight} className="w-2 h-2 lg:w-4 lg:h-4 " />
@@ -225,13 +225,13 @@ const CommunityOutreachEvent = () => {
         </div>
 
         {isLoading ? (
-          <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
             <EventCardSkeleton />
             <EventCardSkeleton />
             <EventCardSkeleton />
           </div>
         ) : (
-          <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
             {selectedState === ""
               ? upcomingEvents.map((eventData) => (
                   <OutreachEventCard

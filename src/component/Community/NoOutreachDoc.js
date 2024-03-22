@@ -2,7 +2,7 @@ import CustomButton from "../Buttons/CustomButton";
 import DocVec from "../../images/DocVec.svg";
 import { useNavigate } from "react-router-dom"; 
 
-const NoOutreachDoc = () => {
+const NoOutreachDoc = ({ isPersonalVisitLog }) => {
 
     const navigate = useNavigate();
 
@@ -18,7 +18,36 @@ const NoOutreachDoc = () => {
                 <div className="text-center text-neutral-900 text-[28px] font-medium font-['DM Sans'] leading-9">No Outreach documented yet</div>
                 {/* <div className="text-center text-zinc-700 text-base font-normal font-['DM Sans'] leading-normal">Whoops... no internet connection found. Check your connection</div> */}
             </div>
-            <div className="flex justify-center items-start gap-4">    
+            <div className="flex justify-center items-start gap-4">
+                {isPersonalVisitLog ? (
+                <CustomButton
+                    label="Document Personal Visit Log"
+                    name="buttondefault"
+                    onClick={() => {
+                    navigate("/profile/select-outreach");
+                    window.scrollTo(0, 0);
+                    }}
+                />
+                ) : (
+                <CustomButton
+                    label="Document Personal Outreach"
+                    name="buttondefault"
+                    onClick={() => {
+                    navigate("/createOutreach");
+                    window.scrollTo(0, 0);
+                    }}
+                />
+                )}
+                <CustomButton
+                    label={isPersonalVisitLog ? "Explore Visit Logs" : "Explore Outreach Events"}
+                    name="buttonlight"
+                    onClick={() => {
+                        navigate(isPersonalVisitLog ? "/allOutreachVisitLog" : "/allOutreachEvents");
+                        window.scrollTo(0, 0);
+                    }}
+                />
+            </div>
+            {/* <div className="flex justify-center items-start gap-4">    
                 <CustomButton
                 label="Document Personal Outreach"
                 name="buttondefault"
@@ -36,7 +65,7 @@ const NoOutreachDoc = () => {
                   }}
                 ></CustomButton>
 
-            </div>
+            </div> */}
         </div>
     );
 };

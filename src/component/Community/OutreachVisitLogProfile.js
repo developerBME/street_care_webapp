@@ -98,7 +98,7 @@ const OutreachVisitLogProfile = () => {
             </button>
           )}
 
-          {visitLogs.length == 0 && <NoOutreachDoc />}
+          {visitLogs.length == 0 && (<NoOutreachDoc isPersonalVisitLog={true}/>) }
         </>
       )}
     </div>

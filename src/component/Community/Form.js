@@ -201,25 +201,24 @@ const Form = (hrid) => {
             helpRequest: isHelpReqFlow ? [hrid.hrid] : [],
           };
 
-
           // Insert doc in outreach event
           const eventRef = collection(db, "outreachEvents");
-          
-          async function postDoc (ref,obj) {
-            const docRef = await addDoc(ref,obj)
-            return (docRef.id)
+
+          async function postDoc(ref, obj) {
+            const docRef = await addDoc(ref, obj);
+            return docRef.id;
           }
-          const ack = await postDoc(eventRef,obj);
+          const ack = await postDoc(eventRef, obj);
 
           // check if flow comes from help request
           if (isHelpReqFlow) {
             const helpRequestRef = doc(db, "helpRequests", hrid.hrid);
             const helpData = await fetchHelpReqById(hrid.hrid);
             let outreachEvent = helpData.outreachEvent || [];
-            outreachEvent.push(ack)
+            outreachEvent.push(ack);
             const updateRef = await updateDoc(helpRequestRef, {
               status: "Help on the way",
-              outreachEvent: outreachEvent
+              outreachEvent: outreachEvent,
             });
           }
 
@@ -234,7 +233,12 @@ const Form = (hrid) => {
           // Successful if outreach event is updated
           if (ack) {
             setSuccess(true);
-            emailConfirmation(fAuth.currentUser.email, fAuth.currentUser.displayName, nameRef.current.value, emailHTML);
+            emailConfirmation(
+              fAuth.currentUser.email,
+              fAuth.currentUser.displayName,
+              nameRef.current.value,
+              emailHTML
+            );
             clearFields();
           }
         } catch (e) {
@@ -350,7 +354,10 @@ const Form = (hrid) => {
         );
       }
     }
-    if (descRef.current.value) {
+
+    if (!descRef.current.value) {
+      updateErrorState("descError", "Description is required");
+    } else {
       try {
         checkString(descRef.current.value, "Event Name");
         updateErrorState("descError", "");
@@ -484,11 +491,13 @@ const Form = (hrid) => {
             </div>
             <div className="space-y-1.5">
               <p className="font-semibold font-['Inter'] text-[15px]">
-                Event Description
+                Event Description*
               </p>
               <input
                 type="text"
-                className="h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
+                className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset  ${
+                  error.descError !== "" ? "ring-red-500" : "ring-gray-300"
+                }`}
                 placeholder="Details"
                 id="event-desc"
                 ref={descRef}

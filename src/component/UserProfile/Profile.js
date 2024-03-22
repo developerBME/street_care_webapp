@@ -20,14 +20,7 @@ function Profile() {
   const [isLoading, setIsLoading] = useState(true);
   const [eventsDisplay, setEventsDisplay] = useState([]);
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("myoutreach");
 
-
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
-  };
-
-  
   const fetchData = async () => {
     try {
     const visitLogsData = await fetchPersonalVisitLogs(auth?.currentUser?.uid);
@@ -70,7 +63,6 @@ function Profile() {
 
   useEffect(() => {
     setEventsDisplay(events);
-    // searchRef.current = "";
   }, [events]);
 
   useEffect(() => {
@@ -81,46 +73,14 @@ function Profile() {
     }
   }, [eventsDisplay]);
 
-
-
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center ">
         {/* Aniket */}
-        <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 mt-24  lg:mx-40 lg:mt-32 rounded-2xl bg-white text-black ">
+        <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 mt-24 lg:mx-40 lg:mt-32 sm:mt-4 sm:mb-4 rounded-2xl bg-white text-black ">
           <UserInfo />
         </div>
-        {/* <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl">
-          <div
-            className={`h-[63px] inline-flex w-full rounded-2xl ${
-              activeTab === "myoutreach" ? "bg-violet-50" : "bg-[#E2FAFF]"
-            }`}
-          >
-            <button
-              className={`${
-                activeTab === "myoutreach"
-                  ? "bg-[#1F0A58] text-white"
-                  : "bg-[#E2FAFF] text-[#005363]"
-              } text-xl font-medium px-4 py-2 w-1/2 rounded-2xl `}
-              onClick={() => handleTabClick("myoutreach")}
-            >
-              Personal Outreach
-            </button>
-            <button
-              className={`${
-                activeTab === "visitlog"
-                  ? "bg-[#005363] text-[#E2FAFF] rounded-2xl"
-                  : "bg-violet-50 text-violet-950 rounded-r-2xl "
-              } text-xl font-medium px-4 py-2 w-1/2 `}
-              onClick={() => handleTabClick("visitlog")}
-            >
-              Personal Visit Log
-            </button>
-          </div>
-        </div> */}
         {/* Vishnu */}
-        {/* { */}
-          {/*  activeTab === "myoutreach" ? ( */}
             <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black mb-10">
           <div className="flex flex-col gap-4 lg:gap-14 lg:p-24 pl-8 pt-4 pb-4 pr-8">
             <div className="inline-flex flex-col sm:flex-row sm:space-x-16 justify-between ">
@@ -133,7 +93,7 @@ function Profile() {
                 name="buttondefaulticon"
                 icon={icon}
                 onClick={() => {
-                  navigate("/profile/select-outreach");
+                  navigate("/createOutreach");
                 }}
               />
             </div>
@@ -186,15 +146,12 @@ function Profile() {
           </div>{" "}
         </div>
 
-   {/* ):( */}
   <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2  mb-8 rounded-2xl bg-white text-black mt-4">
       <div className="flex flex-col gap-4 lg:gap-14 lg:p-24 pl-8 pt-4 pb-4 pr-8">
         <OutreachVisitLogProfile/>
       </div>
   </div>
 
- {/* ) */}
-{/* } */}
 </div>
 </div>
 )

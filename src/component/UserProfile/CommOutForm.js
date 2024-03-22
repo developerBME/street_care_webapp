@@ -51,6 +51,14 @@ function CommOutForm() {
     outreachError: "",
   });
 
+  const [isOtherChecked, setIsOtherChecked] = useState(false);
+  const [otherInputValue, setOtherInputValue] = useState('');
+
+  const handleOtherCheck = () => {
+    setIsOtherChecked(!isOtherChecked);
+  };
+
+
   const handleItemQtyChange = (e) => {
     const inputValue = e.target.value;
     if (/^[1-9]+\d*$/.test(inputValue) || inputValue === "") {
@@ -123,12 +131,35 @@ function CommOutForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     let setReturn = false;
+    let setOtherBool = true;
+
+    let whatGivenArr = [...itemArray]
+    if (isOtherChecked) {
+      setOtherBool = false;
+      updateErrorState("checkboxesError", "Please specify for other kind of help provided");
+      if (otherInputValue !== "") {
+        whatGivenArr.push(otherInputValue)
+        console.log(otherInputValue)
+        updateErrorState("checkboxesError", "");
+        setOtherBool = true;
+      }
+    }
     // Form Validation Start
     if (!numberHelped) {
       updateErrorState("numberHelpedError", "Number is required");
       setReturn = true;
     } else {
       updateErrorState("numberHelpedError", "");
+    }
+
+    if (whatGivenArr == [] || !(setOtherBool)) {
+      updateErrorState(
+        "checkboxesError",
+        "Please provide the kind of help provided"
+      );
+      setReturn = true;
+    } else {
+      updateErrorState("checkboxesError", "");
     }
 
     if (itemArray == "" || itemArray == []) {
@@ -160,7 +191,7 @@ function CommOutForm() {
     let obj = {
       uid: fAuth.currentUser.uid,
       numberPeopleHelped: numberHelped,
-      whatGiven: itemArray,
+      whatGiven: whatGivenArr,
       itemQty: itemQty,
       rating: rating,
       outreachEvent: outreachRef.current.value,
@@ -498,7 +529,7 @@ function CommOutForm() {
                         className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
                         ref={(el) => (checkboxes.current[7] = el)}
-                        onChange={handleItemArray}
+                        onChange={handleOtherCheck}
                       ></input>
                       <label
                         for="other-option"
@@ -520,6 +551,27 @@ function CommOutForm() {
                     </div>
                   )}
                 </div>
+                {isOtherChecked && (<div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
+                    <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
+                      <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
+                        Other
+                      </div>
+                    </div>
+                    <div className="self-stretch h-fit  border-collapse     ">
+                      <div className=" h-14  justify-center items-start ">
+                        <input
+                          id="otherInput"
+                          value={otherInputValue}
+                          placeholder="Other"
+                          className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border-0 text-[15px] font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
+                          required=""
+                          onChange={(e) => {
+                            setOtherInputValue(e.target.value);
+                          }}
+                        ></input>
+                      </div>
+                    </div>
+                  </div>)}
                 {/*  */}
 
                 <div className="self-stretch grow shrink basis-0 px-8 pt-[54px] pb-[55px] bg-stone-50 rounded-[30px] border border-stone-300 flex-col justify-start items-center gap-[29px] flex">
