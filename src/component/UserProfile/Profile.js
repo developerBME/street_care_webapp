@@ -13,7 +13,6 @@ import { fetchPersonalVisitLogs } from "../VisitLogCardService";
 import OutreachVisitLogProfile from "../Community/OutreachVisitLogProfile";
 import NoOutreachDoc from "../Community/NoOutreachDoc";
 
-
 function Profile() {
 
   const [events, setEvents] = useState([]);

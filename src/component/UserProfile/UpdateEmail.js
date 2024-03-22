@@ -1,12 +1,10 @@
 import { auth, db } from "../firebase";
-import { getAuth, updateEmail } from "firebase/auth";
+import { getAuth, updateEmail, sendEmailVerification } from "firebase/auth";
 import {
   doc,
   getDoc,
   updateDoc
 } from "firebase/firestore";
-
-
 
 export async function updateEmailId(newEmailId) {
   try {
@@ -14,9 +12,24 @@ export async function updateEmailId(newEmailId) {
     const user = auth?.currentUser;
     
     console.log(newEmailId);
+
+    // /* eslint-disable no-restricted-globals */
+    // const confirmation = confirm("Do you want to proceed?");
+    // /* eslint-enable no-restricted-globals */
+    // if (confirmation) {
+    //   console.log("Yes, confirmed");
+    //  } else {
+    //   console.log("not confirmed");
+    //  }
+
     console.log(user?.email);
 
-    updateEmail(user, newEmailId);
+    await updateEmail(user, newEmailId);
+
+    const currentUser = auth?.currentUser;
+    await sendEmailVerification(currentUser);
+    console.log("Verification email sent");
+      
     const uid = user?.uid;
     console.log(uid);
 
