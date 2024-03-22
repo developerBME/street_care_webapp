@@ -26,10 +26,10 @@ function SrushtiSample() {
                    <div className="w-full h-fit justify start items-start grid grid-cols-2 lg:grid-cols-2 font-bricolage ">
                     
                     <div className="grow items-start h-full lg:items-start xl:items-start flex-col rounded-tl-2xl rounded-bl-2xl lg:rounded-tr-none lg:rounded-tl-2xl lg:rounded-bl-2xl shrink basis-0  px-8 py-4 bg-gradient-to-br from-emerald-300 to-neutral-200 gap-6 flex">
-                      <div className="text-violet-950 text-2xl lg:text-xl font-bricolage font-medium leading-loose text-[40px] font-normal leading-[64px]">
+                      <div className="text-violet-950 text-2xl lg:text-xl font-bricolage font-medium  text-[40px] font-normal leading-normal">
                         580K+ 
                         <br/>
-                        <span className="text-xs">Total homeless population in United States</span>
+                        <span className="font-bricolage font-medium leading-6 text-xl md:text-[18px] self-stretch md:leading-7 grow shrink basis-0 ">Total homeless population in United States</span>
 
                       </div>
                     </div>
@@ -37,7 +37,7 @@ function SrushtiSample() {
                       <div className="text-violet-950 text-2xl lg:text-xl font-bricolage font-medium leading-loose text-[40px] font-normal leading-[64px]">
                         24%
                         <br/>
-                        <span className="text-xs">Homeless due to health conditions</span>
+                        <span className="font-bricolage font-medium leading-6 text-xl md:text-[18px] self-stretch md:leading-7 grow shrink basis-0">Homeless due to health conditions</span>
                       </div>
                     </div>
 
