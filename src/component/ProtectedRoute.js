@@ -8,4 +8,6 @@ export const ProtectedRoute = ({ user }) => {
   if (!user) return <Navigate to="/login" />;
 
   return user.emailVerified ? <Outlet /> : <Navigate to="/verifyemail" />;
+
+  //test comment
 };
