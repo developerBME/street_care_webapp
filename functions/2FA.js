@@ -1,12 +1,23 @@
 const functions = require('firebase-functions');
-const { google } = require('googleapis');
+const admin = require('firebase-admin');
+const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const { google } = require('googleapis');
+const { Timestamp } = require('@firebase/firestore');
 const cors = require('cors')({ origin: true });
+
+const db = admin.firestore();
+
+const generateSecretKey = () => {
+  const keyLength = 32; // 32 bytes (256 bits)
+  return crypto.randomBytes(keyLength).toString('hex');
+};
 
 const CLIENT_ID = '223295299587-dinnroh9j2lb858kphbgb96f8t6j0eq2.apps.googleusercontent.com';
 const CLIENT_SECRET = 'anpX22WnN_boI0nx64wDSGZX';
 const REFRESH_TOKEN = '1//048nBjC6R9Z1lCgYIARAAGAQSNwF-L9IrNkd1YuirnquWSrC_Rk3Q71QWAjOSYPTw0gdFzrUkGk3fEnKPd7YFf-_n38cKCF4kV9M';
 const EMAIL = 'developer@brightmindenrichment.org';
+const SECRET_KEY = generateSecretKey();
 
 const oAuth2Client = new google.auth.OAuth2(
   CLIENT_ID,
@@ -18,11 +29,15 @@ oAuth2Client.setCredentials({
   refresh_token: REFRESH_TOKEN
 });
 
+function getTimeWindow(timestamp, windowSizeInMinutes = 10) {
+  const windowSizeMs = windowSizeInMinutes * 60 * 1000;
+  return Math.floor(timestamp / windowSizeMs) * windowSizeMs;
+}
+
 function generateRandomCode(){
   const min = 100000;
   const max = 999999;
   const res = Math.floor(Math.random() * (max - min + 1)) + min;
-  console.log('code: ', res);
   return res;
 }
 
@@ -34,6 +49,13 @@ exports.send2FACode = functions.https.onRequest((req, res) => {
     }
 
     const { userEmail } = req.body;
+
+    // Validate userEmail parameter
+    if (!userEmail) {
+      res.status(400).send('User email is required');
+      return;
+    }
+
     const codeFA = generateRandomCode();
 
     try {
@@ -60,9 +82,60 @@ exports.send2FACode = functions.https.onRequest((req, res) => {
 
       await transporter.sendMail(mailOptions);
       res.send('Email sent successfully');
+
+      const timestamp = Date.now();
+      const hashedCode = crypto.createHmac('sha256', SECRET_KEY)
+                             .update(`${userEmail}:${timestamp}`)
+                             .digest('hex');
+
     } catch (error) {
       console.error('Failed to send email:', error);
       res.status(500).send('Failed to send email');
+    }
+  });
+});
+
+exports.verify2FACode = functions.https.onRequest((req, res) => {
+  cors(req, res, async () => {
+    if (req.method !== 'POST') {
+      res.status(405).send('Method Not Allowed');
+      return;
+    }
+
+    const { userEmail, UID, timestamp, code } = req.body;
+
+    // Validate userEmail and code parameters
+    if (!userEmail || !UID || !timestamp || !code) {
+      res.status(400).send('All parameters are required');
+      return;
+    }
+
+    try {
+      const windowStart = getTimeWindow(timestamp);
+      const windowEnd = windowStart + (10 * 60 * 1000);
+      
+      let isValid = false;
+      
+      for (let t = windowStart; t <= windowEnd; t += (1 * 60 * 1000)) {
+        const hashedCode = crypto.createHmac('sha256', SECRET_KEY)
+                               .update(`${userEmail}:${t}`)
+                               .digest('hex');
+
+        if (hashedCode === code) {
+          isValid = true;
+          break;
+        }
+      }
+
+      if (isValid) {
+        // Code is valid within the time window
+        res.send('Code is valid');
+      } else {
+        res.status(400).send('Invalid code');
+      }
+    } catch (error) {
+      console.error('Error verifying code:', error);
+      res.status(500).send('Error verifying code');
     }
   });
 });
