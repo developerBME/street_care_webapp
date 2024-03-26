@@ -93,7 +93,7 @@ function Profile() {
                 name="buttondefaulticon"
                 icon={icon}
                 onClick={() => {
-                  navigate("/profile/select-outreach");
+                  navigate("/createOutreach");
                 }}
               />
             </div>

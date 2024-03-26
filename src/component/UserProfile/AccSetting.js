@@ -95,7 +95,7 @@ function AccSetting() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(fAuth, (user) => {
       if (!user) {
-        navigate("/login");
+        // navigate("/login");
       }
     });
 
