@@ -27,6 +27,7 @@ const NavBar = (props) => {
       .then(() => {
         console.log("success");
         navigate("/login");
+        props.setLoggedIn(false);
       })
       .catch((error) => {
         console.log(error);

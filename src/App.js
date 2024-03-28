@@ -85,7 +85,7 @@ function App() {
       // }
       // ...
     } else {
-      setLoggedIn(false);
+      // setLoggedIn(false);
       // User is signed out
       // ...
     }
@@ -94,7 +94,11 @@ function App() {
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <Router>
         <ScrollToTop />
-        <NavBar loggedIn={loggedIn} photoUrl={photoUrl} />
+        <NavBar
+          loggedIn={loggedIn}
+          photoUrl={photoUrl}
+          setLoggedIn={setLoggedIn}
+        />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
