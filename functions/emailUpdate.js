@@ -25,11 +25,16 @@ exports.sendConfirmationLinkEmail = functions.https.onRequest((req, res) => {
       return;
     }
 
-    const { userEmail, htmlEmailBody } = req.body;
+    const { userEmail } = req.body;
 
     const confirmationLink = ""; // call cloud function to generate the confirmation link
     
     // include confirmationLink in the htmlEmailBody
+    const htmlEmailBody = `
+    <p>Hello,</p>
+    <p>Please confirm your email address change by clicking the link below:</p>
+    <a href="${confirmationLink}">Confirm Email Change</a>
+  `;
     
     try {
       const accessToken = await oAuth2Client.getAccessToken();
