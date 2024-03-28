@@ -8,16 +8,11 @@ const cors = require('cors')({ origin: true });
 
 const db = admin.firestore();
 
-const generateSecretKey = () => {
-  const keyLength = 32; // 32 bytes (256 bits)
-  return crypto.randomBytes(keyLength).toString('hex');
-};
-
 const CLIENT_ID = '223295299587-dinnroh9j2lb858kphbgb96f8t6j0eq2.apps.googleusercontent.com';
 const CLIENT_SECRET = 'anpX22WnN_boI0nx64wDSGZX';
 const REFRESH_TOKEN = '1//048nBjC6R9Z1lCgYIARAAGAQSNwF-L9IrNkd1YuirnquWSrC_Rk3Q71QWAjOSYPTw0gdFzrUkGk3fEnKPd7YFf-_n38cKCF4kV9M';
 const EMAIL = 'developer@brightmindenrichment.org';
-const SECRET_KEY = generateSecretKey();
+const SECRET_KEY = '48610ca52d0c1fee946020018d7c6f7dab31d391a59fb69e747189c22e6dd9bf';
 
 const oAuth2Client = new google.auth.OAuth2(
   CLIENT_ID,
@@ -29,17 +24,6 @@ oAuth2Client.setCredentials({
   refresh_token: REFRESH_TOKEN
 });
 
-function getTimeWindow(timestamp, windowSizeInMinutes = 10) {
-  const windowSizeMs = windowSizeInMinutes * 60 * 1000;
-  return Math.floor(timestamp / windowSizeMs) * windowSizeMs;
-}
-
-function generateRandomCode(){
-  const min = 100000;
-  const max = 999999;
-  const res = Math.floor(Math.random() * (max - min + 1)) + min;
-  return res;
-}
 
 exports.send2FACode = functions.https.onRequest((req, res) => {
   cors(req, res, async () => {
@@ -48,17 +32,23 @@ exports.send2FACode = functions.https.onRequest((req, res) => {
       return;
     }
 
-    const { userEmail } = req.body;
+    const { userEmail, UID, timestamp } = req.body; 
 
     // Validate userEmail parameter
-    if (!userEmail) {
-      res.status(400).send('User email is required');
+    if (!userEmail || !UID || !timestamp) {
+      res.status(400).send('All parameters are required');
       return;
     }
 
-    const codeFA = generateRandomCode();
-
     try {
+      const hashedCode = crypto.createHmac('sha256', SECRET_KEY)
+                             .update(`${userEmail}:${timestamp}`)
+                             .digest('hex');
+
+      const hashBigInt = BigInt('0x' + hashedCode);
+      const sixDigitCode = hashBigInt % 1000000n;
+      const sixDigitCodeStr = sixDigitCode.toString().padStart(6,'0');
+
       const accessToken = await oAuth2Client.getAccessToken();
 
       const transporter = nodemailer.createTransport({
@@ -77,16 +67,11 @@ exports.send2FACode = functions.https.onRequest((req, res) => {
         from: EMAIL,
         to: userEmail,
         subject: `2FA Code`,
-        text:  `Your 2FA code is: ${codeFA}`
+        text:  `Your 2FA code is: ${sixDigitCodeStr}`
       };
 
       await transporter.sendMail(mailOptions);
       res.send('Email sent successfully');
-
-      const timestamp = Date.now();
-      const hashedCode = crypto.createHmac('sha256', SECRET_KEY)
-                             .update(`${userEmail}:${timestamp}`)
-                             .digest('hex');
 
     } catch (error) {
       console.error('Failed to send email:', error);
@@ -121,7 +106,11 @@ exports.verify2FACode = functions.https.onRequest((req, res) => {
                                .update(`${userEmail}:${t}`)
                                .digest('hex');
 
-        if (hashedCode === code) {
+        const hashBigInt = BigInt('0x' + hashedCode)
+        const sixDigitCode = hashBigInt % 1000000n;
+        const sixDigitCodeStr = sixDigitCode.toString().padStart(6,'0');
+
+        if (sixDigitCodeStr === code) {
           isValid = true;
           break;
         }
