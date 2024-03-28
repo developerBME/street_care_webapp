@@ -42,6 +42,7 @@ import { ProtectedRoute } from "./component/ProtectedRoute";
 import EmailVerificationModal from "./component/EmailVerificationModal";
 import PanktiSample from "./component/SamplePankti";
 import Sample_form from "./component/Sample_form";
+import AllHelpRequests from "./component/AllHelpRequests";
 
 function App() {
   const fAuth = getAuth();
@@ -154,6 +155,7 @@ function App() {
           <Route path="visitLogDetails/:id" element={<VisitLogDetails />} />
           <Route path="/*" element={<Not404 />} />
           <Route path="/temp_profile" element={<Temp_Profile />} />
+          <Route path="/allHelpRequests" element={<AllHelpRequests />} />
         </Routes>
         <Footer />
       </Router>
