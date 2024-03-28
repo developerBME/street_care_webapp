@@ -71,10 +71,9 @@ const Sample_form = () => {
     // const stateName = query && query.split(",")[2];
     // const postcode = query && query.split(",")[2];
 
-
     // console.log(autoComplete.getPlace());
     for (const component of addressObject.address_components) {
-      // console.log(component);
+      console.log(component);
       const componentType = component.types[0];
 
       switch (componentType) {
@@ -152,6 +151,7 @@ const Sample_form = () => {
               <div className="flex flex-col">
                 <label>Enter Address</label>
                 <input
+                  type="text"
                   ref={autoCompleteRef}
                   className="my-5 w-full h-10 pl-3"
                   onChange={(event) => setQuery(event.target.value)}

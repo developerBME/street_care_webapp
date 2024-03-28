@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Chip from "../Community/Chip";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebase";
@@ -8,6 +8,27 @@ import arrowDown from "../../images/arrowDown.png";
 import errorImg from "../../images/error.png";
 import { useNavigate } from "react-router-dom";
 import { emailConfirmation } from "../EmailService";
+
+let autoComplete;
+
+export const GOOGLE_PLACES_API_KEY = "AIzaSyBpaLVj2EjhjCeHbTUXfcBhBoaQLVathvE";
+
+const loadScript = (url, callback) => {
+  let script = document.createElement("script");
+  script.type = "text/javascript";
+
+  if (script.readyState) {
+    script.onreadystatechange = function () {
+      if (script.readyState === "loaded" || script.readyState === "complete") {
+      }
+    };
+  } else {
+    script.onload = () => callback();
+  }
+
+  script.src = url;
+  document.getElementsByTagName("head")[0].appendChild(script);
+};
 
 function HelpRequestForm() {
   const navigate = useNavigate();
@@ -66,18 +87,19 @@ function HelpRequestForm() {
     setClear(true);
   };
 
-  const [isAtLeastOneChipSelected, setIsAtLeastOneChipSelected] = useState(false);
-  
+  const [isAtLeastOneChipSelected, setIsAtLeastOneChipSelected] =
+    useState(false);
+
   const handleChipClick = (value, isSelected) => {
     setIsAtLeastOneChipSelected(isSelected);
   };
 
   const [error, setError] = useState({
     streetError: "",
-    cityError:"",
-    stateError:"",
+    cityError: "",
+    stateError: "",
     zipError: "",
-    idError : "",
+    idError: "",
     checkboxesError: "",
     titleError: "",
   });
@@ -89,7 +111,6 @@ function HelpRequestForm() {
     }));
   };
 
-  
   const handleTitleChange = (e) => {
     updateErrorState("titleError", "");
   };
@@ -109,7 +130,6 @@ function HelpRequestForm() {
     updateErrorState("idError", "");
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -120,7 +140,10 @@ function HelpRequestForm() {
       updateErrorState("titleError", "");
     }
     if (helpType == "") {
-      updateErrorState("checkboxesError", "Please provide the kind of help is needed");
+      updateErrorState(
+        "checkboxesError",
+        "Please provide the kind of help is needed"
+      );
       setSuccess(false);
     } else {
       updateErrorState("checkboxesError", "");
@@ -137,11 +160,11 @@ function HelpRequestForm() {
     } else {
       updateErrorState("zipError", "");
     }
-    if(!cityRef.current.value){
-      updateErrorState("cityError","City is required");
+    if (!cityRef.current.value) {
+      updateErrorState("cityError", "City is required");
       setSuccess(false);
-    }else{
-      updateErrorState("cityError","");
+    } else {
+      updateErrorState("cityError", "");
     }
     if (!idRef.current.value) {
       updateErrorState("idError", "This field is required");
@@ -149,18 +172,18 @@ function HelpRequestForm() {
     } else {
       updateErrorState("idError", "");
     }
-    if(!stateRef.current.value){
-      updateErrorState("stateError","Sate is required");
+    if (!stateRef.current.value) {
+      updateErrorState("stateError", "Sate is required");
       setSuccess(false);
-    }else{
-      updateErrorState("stateError","")
+    } else {
+      updateErrorState("stateError", "");
     }
 
     let obj = {
       uid: fAuth.currentUser.uid,
       description: addDescRef.current.value,
       identification: idRef.current.value,
-      title:titleRef.current.value,
+      title: titleRef.current.value,
       location: {
         street: streetRef.current.value,
         city: cityRef.current.value,
@@ -169,7 +192,7 @@ function HelpRequestForm() {
       },
       skills: helpType,
       createdAt: Date(),
-      status: "Need Help" // This is default for every new HR
+      status: "Need Help", // This is default for every new HR
     };
 
     const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px"><h1>Thank you for creating the outreach</h1><p>Your Help Request <b>${titleRef.current.value}</b> has been successfully created and you can view it in your profile.</p>
@@ -187,13 +210,101 @@ function HelpRequestForm() {
       if (docRef.id) {
         console.log(docRef.id);
         setSuccess(true);
-        emailConfirmation(fAuth.currentUser.email, fAuth.currentUser.displayName, titleRef.current.value, emailHTML);
+        emailConfirmation(
+          fAuth.currentUser.email,
+          fAuth.currentUser.displayName,
+          titleRef.current.value,
+          emailHTML
+        );
         clearFields();
       }
     } catch (e) {
       console.log(e);
     }
   };
+
+  // Address Autocomplete functionality
+  const [query, setQuery] = useState();
+  const autoCompleteRef = useRef(null);
+  const [street, setStreet] = useState("");
+  const [cityName, setCityName] = useState("");
+  const [stateName, setStateName] = useState("");
+  const [postcode, setPostcode] = useState("");
+
+  const handleScriptLoad = (updateQuery, autoCompleteRef) => {
+    autoComplete = new window.google.maps.places.Autocomplete(
+      autoCompleteRef.current,
+      {
+        types: ["address"],
+        componentRestrictions: { country: ["us"] },
+      }
+    );
+
+    autoComplete.addListener("place_changed", () => {
+      handlePlaceSelect(updateQuery);
+    });
+  };
+
+  const handlePlaceSelect = async (updateQuery) => {
+    const addressObject = await autoComplete.getPlace();
+
+    const query = addressObject.formatted_address;
+    updateQuery(query);
+    const latLng = {
+      lat: addressObject?.geometry?.location?.lat(),
+      lng: addressObject?.geometry?.location?.lng(),
+    };
+
+    let street = "";
+    let postcode = "";
+    let city = "";
+    let state = "";
+
+    for (const component of addressObject.address_components) {
+      const componentType = component.types[0];
+
+      switch (componentType) {
+        case "street_number": {
+          street = `${component.long_name} ${street}`;
+          break;
+        }
+        case "route": {
+          street += component.long_name;
+          break;
+        }
+        case "postal_code": {
+          postcode = `${component.long_name}${postcode}`;
+          break;
+        }
+        case "postal_code_suffix": {
+          postcode = `${postcode}-${component.long_name}`;
+          break;
+        }
+        case "locality": {
+          city = component.long_name;
+          break;
+        }
+        case "administrative_area_level_1": {
+          state = component.long_name;
+          break;
+        }
+        default:
+          break;
+      }
+    }
+
+    setStreet(street);
+    setCityName(city);
+    setStateName(state);
+    setPostcode(postcode);
+  };
+
+  useEffect(() => {
+    loadScript(
+      `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_PLACES_API_KEY}&libraries=places`,
+      () => handleScriptLoad(setQuery, autoCompleteRef)
+    );
+  }, []);
 
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
@@ -202,7 +313,12 @@ function HelpRequestForm() {
           <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-32 rounded-2xl text-black ">
             <div className="inline-flex pl-3 lg:pl-40 cursor-pointer pb-[19px]">
               <img src={arrowBack} />
-              <p className="font-semibold font-bricolage text-[22px]" onClick={() => {navigate("/community");}}>
+              <p
+                className="font-semibold font-bricolage text-[22px]"
+                onClick={() => {
+                  navigate("/community");
+                }}
+              >
                 Return to Profile
               </p>
             </div>
@@ -232,7 +348,11 @@ function HelpRequestForm() {
                       </div>
                       <input
                         type="text"
-                        className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${ error.titleError !== "" ? "ring-red-500" : "ring-gray-300" }`}
+                        className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
+                          error.titleError !== ""
+                            ? "ring-red-500"
+                            : "ring-gray-300"
+                        }`}
                         placeholder="Title"
                         required
                         ref={titleRef}
@@ -288,22 +408,63 @@ function HelpRequestForm() {
                         locate them
                       </div>
                     </div>
+                    <div className="space-y-1.5">
+                      <div className="font-semibold font-['Inter'] text-[15px]">
+                        Enter Address*
+                      </div>
+                      <input
+                        type="text"
+                        ref={autoCompleteRef}
+                        onChange={(event)=> setQuery(event.target.value)}
+                        value={query}
+                        placeholder="Enter Address"
+                        className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
+                          error.idError !== ""
+                            ? "ring-red-500"
+                            : "ring-gray-300"
+                        }`}
+                      />
+                      {error.idError && (
+                        <div className="inline-flex items-center">
+                          <img src={errorImg} className="w-3 h-3" />
+                          <p className="text-red-600 text-xs">
+                            {error.idError}
+                          </p>
+                        </div>
+                      )}
+                    </div>
                     <div className="inline-flex grid grid-cols-2 space-x-4">
                       <div className="space-y-1.5">
                         <p className="font-semibold font-['Inter'] text-[15px]">
                           Street*
                         </p>
                         <input
-                          type="text"
-                          className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${ error.streetError !== "" ? "ring-red-500" : "ring-gray-300" }`}
+                          className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
+                            error.streetError !== ""
+                              ? "ring-red-500"
+                              : "ring-gray-300"
+                          }`}
                           placeholder="Street"
                           ref={streetRef}
-                          onChange={handleStreetChange}
+                          // ref={autoCompleteRef}
+                          // onChange={handleStreetChange}
+                          // onChange={(event) => {
+                          //   setQuery(event.target.value);
+                          //   console.log(
+                          //     "Input value changed:",
+                          //     event.target.value
+                          //   );
+                          // }}
+                          id="street-address"
+                          name="street-address"
+                          value={street}
                         />
                         {error.streetError && (
                           <div className="inline-flex items-center">
                             <img src={errorImg} className="w-3 h-3" />
-                            <p className="text-red-600 text-xs">{error.streetError}</p>
+                            <p className="text-red-600 text-xs">
+                              {error.streetError}
+                            </p>
                           </div>
                         )}
                       </div>
@@ -313,15 +474,22 @@ function HelpRequestForm() {
                         </p>
                         <input
                           type="text"
-                          className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${ error.cityError !== "" ? "ring-red-500" : "ring-gray-300" }`}
+                          className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
+                            error.cityError !== ""
+                              ? "ring-red-500"
+                              : "ring-gray-300"
+                          }`}
                           placeholder="City"
-                          ref={cityRef}
+                          // ref={cityRef}
                           onChange={handleCityChange}
+                          value={cityName}
                         />
                         {error.cityError && (
                           <div className="inline-flex items-center">
                             <img src={errorImg} className="w-3 h-3" />
-                            <p className="text-red-600 text-xs">{error.cityError}</p>
+                            <p className="text-red-600 text-xs">
+                              {error.cityError}
+                            </p>
                           </div>
                         )}
                       </div>
@@ -333,15 +501,22 @@ function HelpRequestForm() {
                         </p>
                         <input
                           type="text"
-                          className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${ error.stateError !== "" ? "ring-red-500" : "ring-gray-300" }`}
+                          className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
+                            error.stateError !== ""
+                              ? "ring-red-500"
+                              : "ring-gray-300"
+                          }`}
                           placeholder="State"
                           ref={stateRef}
                           onChange={handleStateChange}
+                          value={stateName}
                         />
                         {error.stateError && (
                           <div className="inline-flex items-center">
                             <img src={errorImg} className="w-3 h-3" />
-                            <p className="text-red-600 text-xs">{error.stateError}</p>
+                            <p className="text-red-600 text-xs">
+                              {error.stateError}
+                            </p>
                           </div>
                         )}
                       </div>
@@ -351,19 +526,25 @@ function HelpRequestForm() {
                         </p>
                         <input
                           type="text"
-                          className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${ error.zipError !== "" ? "ring-red-500" : "ring-gray-300" }`}
+                          className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
+                            error.zipError !== ""
+                              ? "ring-red-500"
+                              : "ring-gray-300"
+                          }`}
                           placeholder="Zipcode"
                           ref={zipRef}
                           onChange={handleZipChange}
+                          value={postcode}
                         />
                         {error.zipError && (
                           <div className="inline-flex items-center">
                             <img src={errorImg} className="w-3 h-3" />
-                            <p className="text-red-600 text-xs">{error.zipError}</p>
+                            <p className="text-red-600 text-xs">
+                              {error.zipError}
+                            </p>
                           </div>
                         )}
                       </div>
-                      
                     </div>
                     <div className="space-y-1.5">
                       <div className="font-semibold font-['Inter'] text-[15px]">
@@ -371,7 +552,11 @@ function HelpRequestForm() {
                       </div>
                       <input
                         type="text"
-                        className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${ error.idError !== "" ? "ring-red-500" : "ring-gray-300" }`}
+                        className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
+                          error.idError !== ""
+                            ? "ring-red-500"
+                            : "ring-gray-300"
+                        }`}
                         placeholder="Blue Shirt"
                         ref={idRef}
                         onChange={handleIDChange}
@@ -379,11 +564,12 @@ function HelpRequestForm() {
                       {error.idError && (
                         <div className="inline-flex items-center">
                           <img src={errorImg} className="w-3 h-3" />
-                          <p className="text-red-600 text-xs">{error.idError}</p>
+                          <p className="text-red-600 text-xs">
+                            {error.idError}
+                          </p>
                         </div>
                       )}
                     </div>
-                    
                   </div>
                   <div className="inline-flex gap-2 items-center mt-6">
                     <input type="checkbox"></input>

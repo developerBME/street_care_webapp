@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import CustomButton from "../Buttons/CustomButton";
+import howtohelp from "../../images/howtohelp.png"
 
 import CarePackage from "./CarePackage";
 
@@ -11,33 +12,42 @@ function HowToHelp() {
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center ">
-        <div className=" w-[95%] md:w-[90%] lg:w-[75%] mx-2 lg:mx-40 mt-32 rounded-2xl bg-white text-black ">
+        <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-32 rounded-2xl bg-white text-black ">
           {/*  */}
-          <div className="items-center justify-center p-8 lg:py-24 lg:px-36 h-full w-full rounded-2xl bg-[#F7F7F7] ">
-            <div className="flex-col justify-start items-start gap-6 inline-flex">
+          <div className="items-center justify-center p-8 lg:p-16 h-full w-full rounded-2xl bg-[#F7F7F7] ">
+            <div className="flex-col justify-start items-start gap-10 inline-flex">
               <div className="w-fit text-neutral-800 text-[57px] font-medium font-bricolage leading-[64px]">
-                How To Help
+                Make a Difference,
+                <br />
+                <span className="text-[#6840E0]">
+                  Your Support Transforms Lives
+                </span>
               </div>
               <div className="w-fit text-zinc-600 text-lg font-normal font-open-sans leading-normal">
-                Remember that homeless people have diverse needs, and it is
-                vital to tailor outreach efforts to their specific
-                situations. <br />
-                Building genuine connections and fostering trust is key to
-                making a positive impact.
+                Getting involved in addressing homelessness brings positive
+                change to individuals, communities, and society. By joining the
+                cause, you contribute to meaningful impact and personal
+                fulfillment.
               </div>
-              <div
-                className=" cursor-pointer px-8 py-4 bg-white rounded-[100px] border border-stone-300 justify-center items-center gap-2.5 inline-flex text-center text-slate-700 text-lg font-semibold font-open-sans leading-normal"
-                onClick={() =>
-                  howToHelp.current.scrollIntoView({ behavior: "smooth" })
-                }
-              >
-                How to prepare the Care Package? ↓
-              </div>
-              {/* <div className="px-8 py-4 bg-white rounded-[100px] border border-stone-300 justify-center items-center gap-2.5 inline-flex">
-                <div className="text-center text-slate-700 text-lg font-semibold font-open-sans leading-normal">
-                  How to prepare for the outreach? ↓
+              <div className="flex w-full ">
+                <div className="bg-gradient-to-br from-[#D3F2CE] to-[#E7E7E7] p-8 w-full rounded-l-2xl">
+                  <span className="font-dmsans text-[45px]">650k+</span>
+                  <br />
+                  <span className="font-dmsans text-[12px]">
+                    Total homeless population in United States
+                  </span>
                 </div>
-              </div> */}
+                <div className="bg-gradient-to-br from-[#D3C3FF] to-[#DEDCE4] p-8 w-full rounded-r-2xl">
+                  <span className="font-dmsans text-[45px]">24%</span>
+                  <br />
+                  <span className="font-dmsans text-[12px]">
+                    Homeless due to health conditions
+                  </span>
+                </div>
+              </div>
+              <div className="w-full">
+                <img src={howtohelp} className="w-full"/>
+              </div>
             </div>
           </div>
           {/*  */}

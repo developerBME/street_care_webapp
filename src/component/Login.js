@@ -54,19 +54,20 @@ function Login() {
         setRememberMe(e.target.checked);
     };
 
-    const fAuth = getAuth();
-    onAuthStateChanged(fAuth, (user) => {
-        // Checks Login status for Redirection
-        if (user) {
-            // User is signed in, see docs for a list of available properties
-            // https://firebase.google.com/docs/reference/js/auth.user
-            navigate("/profile", { replace: true });
-            // ...
-        } else {
-            // User is signed out
-            // ...
-        }
-    });
+  const fAuth = getAuth();
+  if(fAuth.currentUser) navigate("/profile", { replace: true });
+  onAuthStateChanged(fAuth, (user) => {
+    // Checks Login status for Redirection
+    if (user) {
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/auth.user
+      // navigate("/profile", { replace: true });
+      // ...
+    } else {
+      // User is signed out
+      // ...
+    }
+  });
 
     const handleSubmit = async (e) => {
         e.preventDefault();

@@ -7,6 +7,7 @@ import {
   onAuthStateChanged,
   FacebookAuthProvider,
   TwitterAuthProvider,
+  sendEmailVerification,
 } from "firebase/auth";
 import { auth, db } from "./firebase"; // Importing the auth instance
 import { useNavigate } from "react-router-dom";
@@ -210,7 +211,7 @@ function Signup2() {
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/auth.user
-      navigate("/profile", { replace: true });
+      // navigate("/profile", { replace: true });
       // ...
     } else {
       // User is signed out
@@ -267,7 +268,9 @@ function Signup2() {
       const userRef = doc(db, "users", currentUser.uid);
       await setDoc(userRef, userData);
 
-      emailConfirmation(email, fAuth.currentUser.displayName, "", emailHTML);
+      sendEmailVerification(currentUser);
+
+      // emailConfirmation(email, fAuth.currentUser.displayName, "", emailHTML);
       // Clear inputs or navigate to a different page
       setUserName("");
       setEmail("");
@@ -276,9 +279,11 @@ function Signup2() {
       setLoginSuccess("Successfully signed up!");
       setError(""); // Clear out any existing error messages
 
-      setTimeout(() => {
-        navigate("/profile");
-      }, 6000); // Wait for 2 seconds to let the user see the success message
+      navigate("/verifyemail");
+
+      // setTimeout(() => {
+      //   navigate("/verifyemail");
+      // }, 1000); // Wait for 2 seconds to let the user see the success message
     } catch (error) {
       if (error.message === "Firebase: Error (auth/email-already-in-use).") {
         setError("Account already exists, please Log in.");
