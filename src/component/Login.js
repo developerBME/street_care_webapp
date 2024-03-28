@@ -55,6 +55,7 @@ function Login() {
     };
 
   const fAuth = getAuth();
+  if(fAuth.currentUser) navigate("/profile", { replace: true });
   onAuthStateChanged(fAuth, (user) => {
     // Checks Login status for Redirection
     if (user) {
