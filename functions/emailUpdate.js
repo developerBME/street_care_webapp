@@ -25,17 +25,13 @@ exports.sendConfirmationLinkEmail = functions.https.onRequest((req, res) => {
       return;
     }
 
-    const { userEmail } = req.body;
+    const { userEmail, htmlEmailBody } = req.body;
 
     const confirmationLink = ""; // call cloud function to generate the confirmation link
     
     // include confirmationLink in the htmlEmailBody
-    const htmlEmailBody = `
-    <p>Hello,</p>
-    <p>Please confirm your email address change by clicking the link below:</p>
-    <a href="${confirmationLink}">Confirm Email Change</a>
-  `;
-    
+    const updatedHtmlEmailBody = htmlEmailBody + confirmationLink;
+
     try {
       const accessToken = await oAuth2Client.getAccessToken();
 
@@ -55,7 +51,7 @@ exports.sendConfirmationLinkEmail = functions.https.onRequest((req, res) => {
         from: EMAIL,
         to: userEmail,
         subject: `Bright Mind Enrichment: Confirm your updated email id`,
-        html: htmlEmailBody
+        html: updatedHtmlEmailBody
       };
 
       await transporter.sendMail(mailOptions);
