@@ -96,12 +96,14 @@ exports.verify2FACode = functions.https.onRequest((req, res) => {
     }
 
     try {
-      const windowStart = getTimeWindow(timestamp);
-      const windowEnd = windowStart + (10 * 60 * 1000);
-      
+      const currentWindowStart = getTimeWindow(timestamp); // get start time of current time window
+      const currentWindowEnd = currentWindowStart + (5 * 60 * 1000); // Calculating the end time of current time window
+      const previousWindowStart = currentWindowStart - (5 * 60 * 1000); // Calculate the start time of the previous time window
+
       let isValid = false;
-      
-      for (let t = windowStart; t <= windowEnd; t += (1 * 60 * 1000)) {
+
+      // Iterate through the current and previous time windows to check for valid codes
+      for (t = previousWindowStart; t <= currentWindowEnd; t += (1 * 60 * 1000)) {
         const hashedCode = crypto.createHmac('sha256', SECRET_KEY)
                                .update(`${userEmail}:${t}`)
                                .digest('hex');
