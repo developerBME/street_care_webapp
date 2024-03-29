@@ -13,9 +13,7 @@ import { fetchPersonalVisitLogs } from "../VisitLogCardService";
 import OutreachVisitLogProfile from "../Community/OutreachVisitLogProfile";
 import NoOutreachDoc from "../Community/NoOutreachDoc";
 
-
 function Profile() {
-
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [eventsDisplay, setEventsDisplay] = useState([]);
@@ -23,21 +21,23 @@ function Profile() {
 
   const fetchData = async () => {
     try {
-    const visitLogsData = await fetchPersonalVisitLogs(auth?.currentUser?.uid);
-    const user = auth.currentUser;
+      const visitLogsData = await fetchPersonalVisitLogs(
+        auth?.currentUser?.uid
+      );
+      const user = auth.currentUser;
 
-    if (user) {
-      const uid = user.uid;
-      console.log("UID is ", uid);
-      const eventsData = await fetchUserEvents(uid);
-      eventsData.sort((a, b) => a.eventDate - b.eventDate);
-      setEvents(eventsData);
-    } else {
-      console.log("No user is signed in.");
-      setEvents([]);
-    }
-  } catch (error) {
-     console.error("Error Fetching data:", error.message);
+      if (user) {
+        const uid = user.uid;
+        console.log("UID is ", uid);
+        const eventsData = await fetchUserEvents(uid);
+        eventsData.sort((a, b) => a.eventDate - b.eventDate);
+        setEvents(eventsData);
+      } else {
+        console.log("No user is signed in.");
+        setEvents([]);
+      }
+    } catch (error) {
+      console.error("Error Fetching data:", error.message);
     }
   };
 
@@ -81,7 +81,7 @@ function Profile() {
           <UserInfo />
         </div>
         {/* Vishnu */}
-            <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black mb-10">
+        <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black mb-10">
           <div className="flex flex-col gap-4 lg:gap-14 lg:p-24 pl-8 pt-4 pb-4 pr-8">
             <div className="inline-flex flex-col sm:flex-row sm:space-x-16 justify-between ">
               <div class="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage text-left leading-[52px]">
@@ -115,46 +115,45 @@ function Profile() {
                 </div>
               </div>
             </div>
-            
-            <div className="hidden sm:block sm:overflow-x-auto overflow-y-hidden">
-            {isLoading? (
-              <div className="flex justify-between items-center w-full h-fit gap-2">
-                <EventCardSkeleton />
-                <EventCardSkeleton />
-                <EventCardSkeleton />
-              </div>
-            ) : events.length === 0 ? (
-              <NoOutreachDoc />
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2 gap-y-16 mb-6">
-                {events.map((eventData) => (
-                  <OutreachEventCard
-                    key={eventData.id}
-                    cardData={{
-                      ...eventData,
-                      eventDate: formatDate(
-                        new Date(eventData.eventDate.seconds * 1000)
-                      ),
-                    }}
-                    isProfilePage={true}
-                    refresh={fetchData}
-                  />
-                ))}
-              </div>
-            )}
+
+            <div className="block overflow-x-auto overflow-y-hidden">
+              {isLoading ? (
+                <div className="flex justify-between items-center w-full h-fit gap-2">
+                  <EventCardSkeleton />
+                  <EventCardSkeleton />
+                  <EventCardSkeleton />
+                </div>
+              ) : events.length === 0 ? (
+                <NoOutreachDoc />
+              ) : (
+                <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 mb-6">
+                  {events.map((eventData) => (
+                    <OutreachEventCard
+                      key={eventData.id}
+                      cardData={{
+                        ...eventData,
+                        eventDate: formatDate(
+                          new Date(eventData.eventDate.seconds * 1000)
+                        ),
+                      }}
+                      isProfilePage={true}
+                      refresh={fetchData}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </div>{" "}
         </div>
 
-  <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2  mb-8 rounded-2xl bg-white text-black mt-4">
-      <div className="flex flex-col gap-4 lg:gap-14 lg:p-24 pl-8 pt-4 pb-4 pr-8">
-        <OutreachVisitLogProfile/>
+        <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2  mb-8 rounded-2xl bg-white text-black mt-4">
+          <div className="flex flex-col gap-4 lg:gap-14 lg:p-24 pl-8 pt-4 pb-4 pr-8">
+            <OutreachVisitLogProfile />
+          </div>
+        </div>
       </div>
-  </div>
-
-</div>
-</div>
-)
+    </div>
+  );
 }
 
 export default Profile;

@@ -7,6 +7,9 @@ import { fetchEventById, handleRsvp } from "../EventCardService";
 import { Co2Sharp } from "@mui/icons-material";
 import defaultImage from "../../images/default_avatar.svg";
 import RSVPConfirmationModal from "../UserProfile/RSVPConfirmationModal";
+import userSlots from "../../images/userSlots.png";
+import date from "../../images/date.png";
+import locate from "../../images/location.png";
 
 const OutreachSignup = () => {
   const navigate = useNavigate();
@@ -67,8 +70,8 @@ const OutreachSignup = () => {
                   </div>
                 </div>
               </div>
-              <div className="self-stretch h-fit px-6 py-2 flex-col justify-start items-start gap-4 flex">
-                {data ? (
+              <div className="self-stretch h-fit px-6 py-2 flex-col justify-start items-start gap-2 flex">
+                {/* {data ? (
                   <div className="self-stretch text-[#212121] text-2xl font-medium font-inter leading-loose">
                     {data.title}
                   </div>
@@ -76,9 +79,9 @@ const OutreachSignup = () => {
                   <div className="self-stretch text-[#212121] text-2xl font-medium font-inter leading-loose">
                     Loading...
                   </div>
-                )}
+                )} */}
 
-                {data ? (
+                {/* {data ? (
                   <div className="self-stretch text-[#37168B] text-sm font-medium font-inter leading-tight">
                     {data.eventDate}
                   </div>
@@ -99,8 +102,56 @@ const OutreachSignup = () => {
                       Loading...
                     </div>
                   )}
+                </div> */}
+
+                <div className="flex flex-col justify-between space-y-3">
+                  <div className="flex flex-row justify-normal space-x-2">
+                    <img className="w-[13px] h-[15px] my-[3px]" src={date} />
+                    {data ? (
+                      <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
+                        {data.eventDate}
+                      </div>
+                    ) : (
+                      <div className="self-stretch text-[#37168B] text-sm font-medium font-inter leading-tight">
+                        Loading...
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-row justify-normal space-x-2">
+                    <img className="w-[12px] h-[15px] my-[3px]" src={locate} />
+                    {data ? (
+                      <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
+                        {data.location.city}, {data.location.state}
+                      </div>
+                    ) : (
+                      <div className="self-stretch text-[#444746] text-sm font-normal font-inter leading-snug">
+                        Loading...
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className="self-stretch px-4 py-2 bg-white rounded-2xl justify-center items-center gap-2.5 inline-flex">
+
+                {data ? (
+                  <div className="self-stretch text-[#212121] text-2xl font-medium font-inter leading-loose">
+                    {data.title}
+                  </div>
+                ) : (
+                  <div className="self-stretch text-[#212121] text-2xl font-medium font-inter leading-loose">
+                    Loading...
+                  </div>
+                )}
+
+                {data ? (
+                  <div className="self-stretch text-[#444746] text-[14px] font-medium font-dmsans leading-loose">
+                    {data.description}
+                  </div>
+                ) : (
+                  <div className="self-stretch text-[#444746] text-[14px] font-medium font-dmsans leading-loose">
+                    Loading...
+                  </div>
+                )}
+
+                {/* <div className="self-stretch px-4 py-2 bg-white rounded-2xl justify-center items-center gap-2.5 inline-flex">
                   <img src={wavingHand} className="w-6 h-6" />
 
                   {data ? (
@@ -112,13 +163,37 @@ const OutreachSignup = () => {
                       Loading...
                     </div>
                   )}
-                </div>
+                </div> */}
+
+                {data ? (
+                  <div className="inline-flex items-center gap-2 flex-wrap">
+                    {data.skills.map((item, index) => (
+                      <div className="py-1 px-3 border border-[#C8C8C8] w-fit rounded-xl text-[12px] text-[#444746]">
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="self-stretch text-[#444746] text-[14px] font-medium font-dmsans leading-loose">
+                    Loading...
+                  </div>
+                )}
               </div>
               <div className="self-stretch px-6 pt-4 pb-6 justify-between items-center inline-flex">
                 {data ? (
-                  <div className="text-[#444746] text-sm font-normal font-inter leading-snug">
-                    {/* Open Spots: {data.interests}/{data.totalSlots} */}
-                    Open Spots: {data.totalSlots - data.nop}/{data.totalSlots}
+                  // <div className="text-[#444746] text-sm font-normal font-inter leading-snug">
+                  //   {/* Open Spots: {data.interests}/{data.totalSlots} */}
+                  //   Open Spots: {data.totalSlots - data.nop}/{data.totalSlots}
+                  // </div>
+                  <div className="flex flex-row space-x-2">
+                    <img
+                      className="w-[20px] h-[14px] my-1"
+                      src={userSlots}
+                    ></img>
+                    <div className="font-normal font-dmsans text-[14px]">
+                      {/* Open Spots: {totalSlots - nop}/{totalSlots} */}
+                      {data.totalSlots - data.nop}/{data.totalSlots}
+                    </div>
                   </div>
                 ) : (
                   <div className="text-[#444746] text-sm font-normal font-inter leading-snug">

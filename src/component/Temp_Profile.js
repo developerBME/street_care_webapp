@@ -149,27 +149,27 @@ const Temp_Profile = () => {
                         My Impact
                     </p>
 
-                    <div className="w-full h-fit justify-center items-center grid grid-cols-3 font-bricolage py-6 px-4 md:px-8 xl:px-0 md:pt-8 md:pb-8 lg:pt-16 lg:pb-12 ">
-                        <div className="flex flex-col grow shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-green-200 to-zinc-200 justify-center items-center gap-4 rounded-tl-2xl rounded-bl-2xl">
-                            <div className="text-violet-950 text-xs sm:text-sm md:text-lg lg:text-xl xl:text-2xl font-semibold leading-loose font-inter">
+                    <div className="w-full h-fit justify-center items-center grid grid-cols-3 font-bricolage py-6 px-4 md:px-8 xl:px-0 md:pt-8 md:pb-8 lg:pt-16 lg:pb-12">
+                        <div className="flex flex-col grow shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-green-200 to-zinc-200 justify-center items-center gap-4 rounded-tl-2xl rounded-bl-2xl xl:justify-start xl:items-start">
+                            <div className="text-violet-950 text-xs sm:text-sm md:text-lg lg:text-xl xl:text-2xl font-semibold leading-loose font-inter text-center xl:text-left">
                                 Helped
                             </div>
                             <div className="flex justify-center items-center w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32 bg-white rounded-full">
-                                <div className="text-violet-950 font-bricolage text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-normal leading-[4rem]">
+                                <div className="text-violet-950 font-bricolage text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-normal flex justify-center items-center">
                                     12
                                 </div>
                             </div>
                             <div className="text-violet-950 text-xs sm:text-sm md:text-lg lg:text-xl xl:text-2xl font-semibold inline-flex">
-                                homless
+                                Homeless
                             </div>
                         </div>
 
-                        <div className="flex flex-col grow shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-purple-300 to-zinc-200 justify-center items-center gap-4">
-                            <div className="text-violet-950 text-xs sm:text-sm md:text-lg lg:text-xl xl:text-2xl font-semibold leading-loose font-inter">
-                                Participated
+                        <div className="flex flex-col grow shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-purple-300 to-zinc-200 justify-center items-center gap-4 xl:justify-start xl:items-start">
+                            <div className="text-violet-950 text-xs sm:text-sm md:text-lg lg:text-xl xl:text-2xl font-semibold leading-loose font-inter text-center xl:text-left">
+                                Participated                       
                             </div>
                             <div className="flex justify-center items-center w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32 bg-white rounded-full">
-                                <div className="text-violet-950 font-bricolage text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-normal leading-[4rem]">
+                                <div className="text-violet-950 font-bricolage text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-normal flex justify-center items-center">
                                     8
                                 </div>
                             </div>
@@ -178,12 +178,13 @@ const Temp_Profile = () => {
                             </div>
                         </div>
 
-                        <div className="flex flex-col grow sm:rounded-br-2xl rounded-bl-none sm:rounded-b-none rounded-r-2xl lg:rounded-r-2xl lg:rounded-bl-none shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-sky-200 to-neutral-200 justify-center items-center gap-4">
-                            <div className="text-violet-950 text-xs sm:text-sm md:text-lg lg:text-xl xl:text-2xl font-semibold leading-loose font-inter">
+                        <div className="flex flex-col grow sm:rounded-br-2xl rounded-bl-none sm:rounded-b-none rounded-r-2xl lg:rounded-r-2xl lg:rounded-bl-none shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-sky-200 to-neutral-200 justify-center items-center gap-4 xl:justify-start xl:items-start">
+                            
+                            <div className="text-violet-950 text-xs sm:text-sm md:text-lg lg:text-xl xl:text-2xl font-semibold leading-loose font-inter text-center xl:text-left">
                                 Donated
                             </div>
                             <div className="flex justify-center items-center w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32 bg-white rounded-full">
-                                <div className="text-violet-950 font-bricolage text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-normal leading-[4rem]">
+                                <div className="text-violet-950 font-bricolage text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-normal flex justify-center items-center">
                                     32
                                 </div>
                             </div>
@@ -191,6 +192,7 @@ const Temp_Profile = () => {
                                 Items
                             </div>
                         </div>
+
                     </div>
                 </div>
 

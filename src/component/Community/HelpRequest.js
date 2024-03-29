@@ -5,6 +5,7 @@ import CustomButton from "../Buttons/CustomButton";
 import { formatDate, fetchHelpRequests } from "../HelpRequestService";
 import { Link, useNavigate } from "react-router-dom";
 import HelpRequestSkeleton from "../Skeletons/HelpRequestSkeleton";
+import arrowRight from "../../images/arrowRight.png";
 
 const HelpRequest = () => {
   const navigate = useNavigate();
@@ -278,6 +279,17 @@ const HelpRequest = () => {
           <div className="text-md font-normal font-dmsans pt-2">
             What are help requests and how can they help you? If you are ready
             to help people now, kindly sign up to outreaches
+          </div>
+          <div
+            className="flex flex-row cursor-pointer gap-2 items-center"
+            onClick={() => {
+              navigate("/allHelpRequests");
+            }}
+          >
+            <div className="font-medium text-[16px] lg:text-[20px] font-dmsans text-[#37168B] whitespace-nowrap">
+              View all
+            </div>
+            <img src={arrowRight} className="w-2 h-2 lg:w-4 lg:h-4 " />
           </div>
         </div>
       </div>
