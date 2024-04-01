@@ -42,7 +42,7 @@ exports.send2FACode = functions.https.onRequest((req, res) => {
 
     try {
       const hashedCode = crypto.createHmac('sha256', SECRET_KEY)
-                             .update(`${userEmail}:${timestamp}`)
+                             .update(`${userEmail}:${UID}:${timestamp}`)
                              .digest('hex');
 
       const hashBigInt = BigInt('0x' + hashedCode);
@@ -105,7 +105,7 @@ exports.verify2FACode = functions.https.onRequest((req, res) => {
       // Iterate through the current and previous time windows to check for valid codes
       for (t = previousWindowStart; t <= currentWindowEnd; t += (1 * 60 * 1000)) {
         const hashedCode = crypto.createHmac('sha256', SECRET_KEY)
-                               .update(`${userEmail}:${t}`)
+                               .update(`${userEmail}:${UID}:${t}`)
                                .digest('hex');
 
         const hashBigInt = BigInt('0x' + hashedCode)
