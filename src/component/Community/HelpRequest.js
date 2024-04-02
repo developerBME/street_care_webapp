@@ -272,14 +272,38 @@ const HelpRequest = () => {
           </div>
         </div> */}
 
-        <div>
-          <div className="text-2xl font-medium font-dmsans">
-            Help Requests ({helpRequests.length})
+        <div className="flex flex-col md:flex md:flex-row justify-between gap-4 md:gap-10">
+          <div className="">
+            <div className="flex flex-row gap-4">
+              <div className="text-[45px] font-medium font-dmsans">
+                {/* Outreach - extending help, resources, and compassion to those in
+            need */}
+                Help Requests ({helpRequests.length})
+              </div>
+              <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-medium font-dmsans leading-tight self-stretch">
+                <CustomButton
+                  label="Add New Request"
+                  name="buttondefault"
+                  onClick={() => {
+                    navigate("/helpRequestForm");
+                  }}
+                />
+              </div>
+
+              {/* </div> */}
+            </div>
+            <div className="text-md font-medium font-dmsans text-[#181818] mt-2">
+              {/* Homeless outreach involves both community-wide and personal efforts
+            to support individuals experiencing homelessness. Community outreach
+            brings together groups and organizations to create systemic change,
+            while personal outreach involves one-on-one assistance. Homeless
+            outreach is crucial because it provides immediate help and fosters
+            empathy, building a more compassionate society. */}
+              What are help requests and how can they help you? If you are ready
+              to help people now, kindly sign up to outreaches
+            </div>
           </div>
-          <div className="text-md font-normal font-dmsans pt-2">
-            What are help requests and how can they help you? If you are ready
-            to help people now, kindly sign up to outreaches
-          </div>
+
           <div
             className="flex flex-row cursor-pointer gap-2 items-center"
             onClick={() => {
@@ -293,6 +317,8 @@ const HelpRequest = () => {
           </div>
         </div>
       </div>
+
+      {/* <div className="p-4 lg:px-10 lg:py-12 bg-gradient-to-br from-[#D3C3FF] to-[#DEDCE4] rounded-t-2xl flex-col justify-start items-start gap-4 inline-flex w-full"> */}
 
       {isLoading ? (
         <>
@@ -310,14 +336,14 @@ const HelpRequest = () => {
               />
             ))}
           </div>
-          {visibleItems < helpRequests.length && (
+          {/* {visibleItems < helpRequests.length && (
             <button
               className="w-fit rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 flex text-center text-[#1F0A58] hover:bg-[#1F0A58] hover:text-white text-[13px] font-medium font-dmsans leading-tight self-stretch px-6 py-2.5"
               onClick={loadMore}
             >
               Load 5 More
             </button>
-          )}
+          )} */}
         </div>
       )}
     </div>

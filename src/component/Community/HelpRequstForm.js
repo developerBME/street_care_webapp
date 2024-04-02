@@ -319,7 +319,7 @@ function HelpRequestForm() {
                   navigate("/community");
                 }}
               >
-                Return to Profile
+                Return to Community
               </p>
             </div>
             <div className="rounded-2xl mx-2 mb-32 lg:mx-40 bg-[#F8F9F0] p-4 lg:pt-[100px] lg:pb-[100px] lg:pr-[150px] lg:pl-[150px]">
@@ -415,7 +415,7 @@ function HelpRequestForm() {
                       <input
                         type="text"
                         ref={autoCompleteRef}
-                        onChange={(event)=> setQuery(event.target.value)}
+                        onChange={(event) => setQuery(event.target.value)}
                         value={query}
                         placeholder="Enter Address"
                         className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
