@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import streetcarelogo from "../images/streetcare-logo.png";
 import icon_howtoprep from "../images/icon_howtoprep.png";
 import three from "../images/three.png";
+import donation from "../images/donation.png";
+
 
 function SrushtiSample() {
   const navigate = useNavigate();
@@ -34,7 +36,7 @@ function SrushtiSample() {
                       </div>
                     </div>
                     <div className="grow items-start h-full lg:items-start xl:items-start flex-col rounded-tr-2xl rounded-br-2xl lg:rounded-tr-2xl lg:rounded-br-2xl lg:rounded-bl-none shrink basis-0 px-8 py-4 bg-gradient-to-br from-purple-200 to-neutral-200 gap-6 flex">
-                      <div className="text-violet-950 text-3xl lg:text-3xl xl:text-4xl font-dmsans font-medium ">
+                      <div className="text-violet-950 text-3xl lg:text-3xl xl:text-3xl font-dmsans font-medium ">
                         24%
                         <br/>
                         <span className="font-bricolage text-xl xl:text-sm">Homeless due to health conditions</span>
@@ -63,8 +65,8 @@ function SrushtiSample() {
                   <div class="px-6 py-4">
                     <div class="font-bold text-xl mb-2">Rodney</div>
                       <p class="text-gray-700 text-base">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
-                      </p>
+                      Rodney,an elderly man who uses a wheelchair, recieves weekly mentoring sessions from us. Rodney shares some powerful insights,
+                      particularly his thoughts on resiliance and the concept of "feast or famine".</p>
                     </div>
                 </div>
 
@@ -94,10 +96,10 @@ function SrushtiSample() {
                 <h2 class="text-gray-800 py-8 text-[20px] font-dmsans">Let's get started</h2>
               </div>
               <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-2">
-                <div class="xl:m-0 h-25 bg-white rounded-xl shadow-md overflow-hiddenmd:max-w-xl">
+                <div class="xl:m-0 h-25 bg-white rounded-xl shadow-md overflow-hidden md:max-w-xl">
                   <div class="md:flex">
-                    <div class ="">
-                      <div class="h-36 w-full object-cover md:h-full md:w-36 bg-gradient-to-br from-emerald-300 to-neutral-200">
+                    <div class ="relative flex justify-center items-center">
+                      <div class="h-36 w-full object-cover  md:h-full md:w-36 bg-gradient-to-br from-emerald-300 to-neutral-200 flex justify-center items-center">
                         <img src={icon_howtoprep} className="h-16 items-center"></img>
                       </div>
 
@@ -111,16 +113,16 @@ function SrushtiSample() {
 
                 </div>
 
-                <div class="xl:m-0 h-25 bg-white rounded-xl shadow-md overflow-hidden md:max-w-xl">
+                <div class="xl:m-0 h-25 bg-white rounded-xl shadow-md overflow-hidden md:max-w-xl ">
                   <div class="md:flex">
-                    <div class=" ">
-                      <div class="h-36 w-full object-cover md:h-full md:w-36 bg-gradient-to-br from-purple-300 to neutral-200">
-                        <img src={icon_howtoprep} className="h-16 items-center"></img>
+                    <div class="relative flex justify-center items-center">
+                      <div class="h-36 w-full object-cover md:h-full md:w-36 bg-gradient-to-br from-purple-300 to neutral-200 flex justify-center items-center">
+                        <img src={donation} className="h-16 "></img>
                       </div>
                     </div>
                     <div class="p-8">
                       <div class="text-sm text-gray-800 font-semibold">Prepare guide for outreach</div>
-                      <span href="#" class="block mt-1 text-lg leading-tight font-medium text-black hover:underline">
+                      <span class="block mt-1 text-lg leading-tight font-medium text-black hover:underline">
                         Tips on what to bring, how to approach and safety tips for a successful outreach.
                       </span>
                     </div>
