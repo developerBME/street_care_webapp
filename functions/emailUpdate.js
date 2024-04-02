@@ -55,7 +55,7 @@ exports.sendConfirmationLinkEmail = functions.https.onRequest((req, res) => {
 
       const mailOptions = {
         from: EMAIL,
-        to: newUserEmail,
+        to: oldUserEmail,
         subject: `Bright Mind Enrichment: Confirm your updated email id`,
         html: updatedHtmlEmailBody
       };
