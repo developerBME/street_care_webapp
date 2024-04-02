@@ -107,9 +107,9 @@ const CommunityVisitLog = () => {
                 <CustomButton
                   label="Create a Visit Log"
                   name="buttondefault"
-                  // onClick={() => {
-                  //   navigate("/createOutreach");
-                  // }}
+                  onClick={() => {
+                    navigate("/profile/commoutform");
+                  }}
                 />
               </div>
 
