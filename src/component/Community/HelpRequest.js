@@ -10,7 +10,7 @@ import arrowRight from "../../images/arrowRight.png";
 const HelpRequest = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
-  const [visibleItems, setVisibleItems] = useState(5);
+  const [visibleItems, setVisibleItems] = useState(3);
 
   const loadMore = () => {
     setVisibleItems((prev) => prev + 5);
@@ -322,6 +322,7 @@ const HelpRequest = () => {
 
       {isLoading ? (
         <>
+          <HelpRequestSkeleton />
           <HelpRequestSkeleton />
           <HelpRequestSkeleton />
         </>
