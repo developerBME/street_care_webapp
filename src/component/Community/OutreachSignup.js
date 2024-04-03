@@ -192,7 +192,8 @@ const OutreachSignup = () => {
                     ></img>
                     <div className="font-normal font-dmsans text-[14px]">
                       {/* Open Spots: {totalSlots - nop}/{totalSlots} */}
-                      {data.totalSlots - data.nop}/{data.totalSlots}
+                      {/* {data.totalSlots - data.nop}/{data.totalSlots} */}
+                      {data.nop}/{data.totalSlots}
                     </div>
                   </div>
                 ) : (
