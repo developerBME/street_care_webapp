@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import streetcarelogo from "../images/streetcare-logo.png";
 import icon_howtoprep from "../images/icon_howtoprep.png";
 import three from "../images/three.png";
+import donation from "../images/donation.png";
+
 
 function SrushtiSample() {
   const navigate = useNavigate();
@@ -26,18 +28,18 @@ function SrushtiSample() {
                    <div className="w-full h-fit justify start items-start grid grid-cols-2 lg:grid-cols-2 font-bricolage ">
                     
                     <div className="grow items-start h-full lg:items-start xl:items-start flex-col rounded-tl-2xl rounded-bl-2xl lg:rounded-tr-none lg:rounded-tl-2xl lg:rounded-bl-2xl shrink basis-0  px-8 py-4 bg-gradient-to-br from-emerald-300 to-neutral-200 gap-6 flex">
-                      <div className="text-violet-950 text-2xl lg:text-xl font-bricolage font-medium  text-[40px] font-normal leading-normal">
+                      <div className="text-violet-950 text-3xl lg:text-3xl font-dmsans font-medium">
                         580K+ 
                         <br/>
-                        <span className="font-bricolage font-medium leading-6 text-xl md:text-[18px] self-stretch md:leading-7 grow shrink basis-0 ">Total homeless population in United States</span>
+                        <span className="font-bricolage text-xl xl:text-sm">Total homeless population in United States</span>
 
                       </div>
                     </div>
                     <div className="grow items-start h-full lg:items-start xl:items-start flex-col rounded-tr-2xl rounded-br-2xl lg:rounded-tr-2xl lg:rounded-br-2xl lg:rounded-bl-none shrink basis-0 px-8 py-4 bg-gradient-to-br from-purple-200 to-neutral-200 gap-6 flex">
-                      <div className="text-violet-950 text-2xl lg:text-xl font-bricolage font-medium leading-loose text-[40px] font-normal leading-[64px]">
+                      <div className="text-violet-950 text-3xl lg:text-3xl xl:text-3xl font-dmsans font-medium ">
                         24%
                         <br/>
-                        <span className="font-bricolage font-medium leading-6 text-xl md:text-[18px] self-stretch md:leading-7 grow shrink basis-0">Homeless due to health conditions</span>
+                        <span className="font-bricolage text-xl xl:text-sm">Homeless due to health conditions</span>
                       </div>
                     </div>
 
@@ -45,11 +47,13 @@ function SrushtiSample() {
                   </div>
 
               </div>
-                <h2 className="text-neutral-800 lg:text-[20px] text-[20px] font-medium font-bricolage lg:leading-[64px] leading-[44px] ">
+                <h2 className="hidden lg:block text-neutral-800 lg:text-[20px] text-[20px] font-medium font-dmsans lg:leading-[64px] lg:visible leading-[44px] ">
                   Stories
                 </h2>{/* hide when xl */}
-                <img src={icon_howtoprep} className="block lg:hidden mb-6" />
-                <h2 className="text-neutral-800 lg:text-[20px] text-[20px] font-medium font-bricolage lg:leading-[64px] leading-[44px] lg:hidden mb-6 pb-24 ">
+                <div class="block lg:hidden mt-8 w-12 h-12 md:w-24 md:h-24 rounded-lg bg-gradient-to-br from-emerald-300 to-neutral-200 p-5">
+                  <img src={icon_howtoprep} className="block lg:hidden mb-6" />
+                </div>
+                <h2 className="text-neutral-800 lg:text-[20px] text-[20px] font-medium font-dmsans lg:leading-[64px] leading-[44px] lg:hidden mb-6 pb-24 ">
                   Stories from Homeless People
                 </h2>
                 <div className="bg-[#F5EEFE] rounded-[30px] flex flex-col h-full">
@@ -61,8 +65,8 @@ function SrushtiSample() {
                   <div class="px-6 py-4">
                     <div class="font-bold text-xl mb-2">Rodney</div>
                       <p class="text-gray-700 text-base">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
-                      </p>
+                      Rodney,an elderly man who uses a wheelchair, recieves weekly mentoring sessions from us. Rodney shares some powerful insights,
+                      particularly his thoughts on resiliance and the concept of "feast or famine".</p>
                     </div>
                 </div>
 
@@ -86,6 +90,45 @@ function SrushtiSample() {
                     </div>
                 </div>
 
+              </div>
+
+              <div>
+                <h2 class="text-gray-800 py-8 text-[20px] font-dmsans">Let's get started</h2>
+              </div>
+              <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-2">
+                <div class="xl:m-0 h-25 bg-white rounded-xl shadow-md overflow-hidden md:max-w-xl">
+                  <div class="md:flex">
+                    <div class ="relative flex justify-center items-center">
+                      <div class="h-36 w-full object-cover  md:h-full md:w-36 bg-gradient-to-br from-emerald-300 to-neutral-200 flex justify-center items-center">
+                        <img src={icon_howtoprep} className="h-16 items-center"></img>
+                      </div>
+
+                    </div>
+                    <div class="p-8">
+                      <div class="text-sm text-gray-800 font-semibold">How to prepare care package?</div>
+                      <span class="block mt-1 text-lg leading-tight font-medium text-black hover:underline">Make helpful, respectful, and appropriate care packages.</span>
+
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="xl:m-0 h-25 bg-white rounded-xl shadow-md overflow-hidden md:max-w-xl ">
+                  <div class="md:flex">
+                    <div class="relative flex justify-center items-center">
+                      <div class="h-36 w-full object-cover md:h-full md:w-36 bg-gradient-to-br from-purple-300 to neutral-200 flex justify-center items-center">
+                        <img src={donation} className="h-16 "></img>
+                      </div>
+                    </div>
+                    <div class="p-8">
+                      <div class="text-sm text-gray-800 font-semibold">Prepare guide for outreach</div>
+                      <span class="block mt-1 text-lg leading-tight font-medium text-black hover:underline">
+                        Tips on what to bring, how to approach and safety tips for a successful outreach.
+                      </span>
+                    </div>
+                  </div>
+                  
+                </div>
               </div>
 
               

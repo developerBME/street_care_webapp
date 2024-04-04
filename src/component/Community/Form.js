@@ -49,6 +49,26 @@ const CustomInput = ({ value, onClick, onChange, id, className }) => (
   </div>
 );
 
+let autoComplete;
+
+export const GOOGLE_PLACES_API_KEY = "AIzaSyBpaLVj2EjhjCeHbTUXfcBhBoaQLVathvE";
+
+const loadScript = (url, callback) => {
+  let script = document.createElement("script");
+  script.type = "text/javascript";
+
+  if (script.readyState) {
+    script.onreadystatechange = function () {
+      if (script.readystate === "loaded" || script.readyState === "complete") {
+      }
+    };
+  } else {
+    script.onload = () => callback();
+  }
+  script.src = url;
+  document.getElementsByTagName("head")[0].appendChild(script);
+};
+
 const Form = (hrid) => {
   console.log(hrid.hrid);
   const [success, setSuccess] = useState(false);
@@ -85,6 +105,7 @@ const Form = (hrid) => {
     helpError: "",
     descError: "",
     maxCapError: "",
+    idError: "",
   });
 
   //
@@ -456,6 +477,85 @@ const Form = (hrid) => {
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
 
+  //Address Autocomplete functionality
+  const [query, setQuery] = useState();
+  const autoCompleteRef = useRef(null);
+  const [street, setStreet] = useState("");
+  const [cityName, setCityName] = useState("");
+  const [stateName, setStateName] = useState("");
+  const [postcode, setPostCode] = useState("");
+
+  const handleScriptLoad = (updateQuery, autoCompleteRef) => {
+    autoComplete = new window.google.maps.places.Autocomplete(
+      autoCompleteRef.current,
+      {
+        types: ["address"],
+        componentRestrictions: { country: ["us"] },
+      }
+    );
+
+    autoComplete.addListener("place_changed", () => {
+      handlePlaceSelect(updateQuery);
+    });
+  };
+
+  const handlePlaceSelect = async (updateQuery) => {
+    const addressObject = await autoComplete.getPlace();
+
+    const query = addressObject.formatted_address;
+    updateQuery(query);
+
+    let street = "";
+    let postcode = "";
+    let city = "";
+    let state = "";
+
+    for (const component of addressObject.address_components) {
+      const componentType = component.types[0];
+
+      switch (componentType) {
+        case "street_number": {
+          street = `${component.long_name} ${street}`;
+          break;
+        }
+        case "route": {
+          street += component.long_name;
+          break;
+        }
+        case "postal_code": {
+          postcode = `${component.long_name}${postcode}`;
+          break;
+        }
+        case "postal_code_suffix": {
+          postcode = `${postcode}-${component.long_name}`;
+          break;
+        }
+        case "locality": {
+          city = component.long_name;
+          break;
+        }
+        case "administrative_area_level_1": {
+          state = component.long_name;
+          break;
+        }
+        default:
+          break;
+      }
+    }
+
+    setStreet(street);
+    setCityName(city);
+    setStateName(state);
+    setPostCode(postcode);
+  };
+
+  useEffect(() => {
+    loadScript(
+      `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_PLACES_API_KEY}&libraries=places`,
+      () => handleScriptLoad(setQuery, autoCompleteRef)
+    );
+  }, []);
+
   return (
     <div>
       <form className="space-y-6 " onSubmit={handleSubmit}>
@@ -536,7 +636,118 @@ const Form = (hrid) => {
               Meet up Details
             </div>
             <div className="space-y-1.5">
-              <p className="font-semibold font-['Inter'] text-[15px]">
+              <div className="font-semibold font-['Inter'] text-[15px]">
+                Enter Address*
+              </div>
+              <input
+                type="text"
+                ref={autoCompleteRef}
+                onChange={(event) => setQuery(event.target.value)}
+                value={query}
+                placeholder="Enter Address"
+                className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
+                  error.idError !== "" ? "ring-red-500" : "ring-gray-300"
+                }`}
+              />
+              {error.idError && (
+                <div className="inline-flex items-center">
+                  <img src={errorImg} className="w-3 h-3" />
+                  <p className="text-red-600 text-xs">{error.idError}</p>
+                </div>
+              )}
+            </div>
+            <div className="grid grid-cols-2 space-x-4 ">
+              <div className="space-y-1.5">
+                <p className="font-semibold font-['Inter'] text-[15px]">
+                  Street*
+                </p>
+                <input
+                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
+                    error.streetError !== "" ? "ring-red-500" : "ring-gray-300"
+                  }`}
+                  placeholder="Street"
+                  ref={streetRef}
+                  id="street-address"
+                  name="street-address"
+                  value={street}
+                />
+                {error.streetError && (
+                  <div className="inline-flex items-center">
+                    <img src={errorImg} className="w-3 h-3" />
+                    <p className="text-red-600 text-xs">{error.streetError}</p>
+                  </div>
+                )}
+              </div>
+              <div className="space-y-1.5">
+                <p className="font-semibold font-['Inter'] text-[15px]">
+                  City*
+                </p>
+                <input
+                  type="text"
+                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
+                    error.cityError !== "" ? "ring-red-500" : "ring-gray-300"
+                  }`}
+                  placeholder="City"
+                  // ref={cityRef}
+                  onChange={handleCityChange}
+                  value={cityName}
+                />
+                {error.cityError && (
+                  <div className="inline-flex items-center">
+                    <img src={errorImg} className="w-3 h-3" />
+                    <p className="text-red-600 text-xs">{error.cityError}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className=" grid grid-cols-2 space-x-4">
+              <div className="space-y-2.5">
+                <p className="font-semibold font-['Inter'] text-[15px]">
+                  State*
+                </p>
+                <input
+                  type="text"
+                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
+                    error.stateError !== "" ? "ring-red-500" : "ring-gray-300"
+                  }`}
+                  placeholder="State"
+                  ref={stateRef}
+                  onChange={handleStateChange}
+                  value={stateName}
+                />
+                {error.stateError && (
+                  <div className="inline-flex items-center">
+                    <img src={errorImg} className="w-3 h-3" />
+                    <p className="text-red-600 text-xs">{error.stateError}</p>
+                  </div>
+                )}
+              </div>
+              <div className="space-y-1.5">
+                <p className="font-semibold font-['Inter'] text-[15px]">
+                  Zipcode*
+                </p>
+                <input
+                  type="text"
+                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
+                    error.zipError !== "" ? "ring-red-500" : "ring-gray-300"
+                  }`}
+                  placeholder="Zipcode"
+                  onChange={handleZipChange}
+                  value={postcode}
+                />
+                {error.zipError && (
+                  <div className="inline-flex items-center">
+                    <img src={errorImg} className="w-3 h-3" />
+                    <p className="text-red-600 text-xs">{error.zipError}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Old Form Fields Start */}
+
+            {/* <p className="font-semibold font-['Inter'] text-[15px]">
                 Street*
               </p>
               <input
@@ -555,8 +766,7 @@ const Form = (hrid) => {
                   <img src={errorImg} className="w-3 h-3" />
                   <p className="text-red-600 text-xs">{error.streetError}</p>
                 </div>
-              )}
-            </div>
+              )} */}
             {/*<div className="space-y-1.5">
               <p className="font-semibold font-['Inter'] text-[15px]">City*</p>
               <input
@@ -577,7 +787,7 @@ const Form = (hrid) => {
               )}
               </div>*/}
 
-            <div className="space-y-1.5">
+            {/* <div className="space-y-1.5">
               <p className="font-semibold font-['Inter'] text-[15px]">State*</p>
               {helpBool && (
                 <input
@@ -617,10 +827,10 @@ const Form = (hrid) => {
                   <p className="text-red-600 text-xs">{error.stateError}</p>
                 </div>
               )}
-            </div>
+            </div> */}
 
-            <div className="inline-flex grid grid-cols-2 space-x-4">
-              {/*<div className="space-y-1.5">
+            {/* <div className="inline-flex grid grid-cols-2 space-x-4"> */}
+            {/*<div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
                   State*
                 </p>
@@ -642,7 +852,7 @@ const Form = (hrid) => {
                 )}
                 </div>*/}
 
-              <div className="space-y-1.5">
+            {/* <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
                   City*
                 </p>
@@ -688,9 +898,9 @@ const Form = (hrid) => {
                     <p className="text-red-600 text-xs">{error.cityError}</p>
                   </div>
                 )}
-              </div>
+              </div> */}
 
-              <div className="space-y-1.5">
+            {/* <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
                   Zipcode*
                 </p>
@@ -711,8 +921,11 @@ const Form = (hrid) => {
                     <p className="text-red-600 text-xs">{error.zipError}</p>
                   </div>
                 )}
-              </div>
-            </div>
+              </div> */}
+            {/* </div> */}
+
+            {/* Old Form Fields End */}
+
             <div className="grid grid-cols-2 space-x-4">
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import OutreachVisitLogCard from "./Community/OutreachVisitLogCard";
-import { useNavigate,useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import CustomButton from "./Buttons/CustomButton";
 import { fetchVisitLogs } from "./VisitLogCardService";
@@ -10,14 +10,13 @@ const AllOutreachVisitLog = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [visitLogs, setVisitLogs] = useState([]);
-  
+
   const [isLoading, setIsLoading] = useState(true);
 
-  
   useEffect(() => {
     const getVisitLogs = async () => {
-        const visitLogsData = await fetchVisitLogs();
-        setVisitLogs(visitLogsData)
+      const visitLogsData = await fetchVisitLogs();
+      setVisitLogs(visitLogsData);
     };
     getVisitLogs();
   }, []);
@@ -35,9 +34,9 @@ const AllOutreachVisitLog = () => {
     location.state && location.state.from === "home" ? "/" : "/Community";
 
   const returnText =
-  location.state && location.state.from === "home"
-    ? "Return to Home"
-    : "Return to Community";
+    location.state && location.state.from === "home"
+      ? "Return to Home"
+      : "Return to Community";
   return (
     <div className="relative flex flex-col items-center ">
       <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-16 lg:mx-40 mt-48 rounded-2xl bg-white text-black ">
@@ -59,21 +58,19 @@ const AllOutreachVisitLog = () => {
             {" "}
             All Outreach Visit Logs
           </p>
-          {
-            isLoading ? (
-              <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-                <EventCardSkeleton />
-                <EventCardSkeleton />
-                <EventCardSkeleton />
-              </div>
-            ) :(
-              <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-          {(visitLogs.map((visitLogData) => (
-          <OutreachVisitLogCard visitLogCardData={visitLogData}/>
-              )))}
-          </div>
-            )
-          }
+          {isLoading ? (
+            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+              <EventCardSkeleton />
+              <EventCardSkeleton />
+              <EventCardSkeleton />
+            </div>
+          ) : (
+            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+              {visitLogs.map((visitLogData) => (
+                <OutreachVisitLogCard visitLogCardData={visitLogData} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
