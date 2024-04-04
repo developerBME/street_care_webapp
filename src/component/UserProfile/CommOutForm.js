@@ -52,12 +52,11 @@ function CommOutForm() {
   });
 
   const [isOtherChecked, setIsOtherChecked] = useState(false);
-  const [otherInputValue, setOtherInputValue] = useState('');
+  const [otherInputValue, setOtherInputValue] = useState("");
 
   const handleOtherCheck = () => {
     setIsOtherChecked(!isOtherChecked);
   };
-
 
   const handleItemQtyChange = (e) => {
     const inputValue = e.target.value;
@@ -133,13 +132,16 @@ function CommOutForm() {
     let setReturn = false;
     let setOtherBool = true;
 
-    let whatGivenArr = [...itemArray]
+    let whatGivenArr = [...itemArray];
     if (isOtherChecked) {
       setOtherBool = false;
-      updateErrorState("checkboxesError", "Please specify for other kind of help provided");
+      updateErrorState(
+        "checkboxesError",
+        "Please specify for other kind of help provided"
+      );
       if (otherInputValue !== "") {
-        whatGivenArr.push(otherInputValue)
-        console.log(otherInputValue)
+        whatGivenArr.push(otherInputValue);
+        console.log(otherInputValue);
         updateErrorState("checkboxesError", "");
         setOtherBool = true;
       }
@@ -152,7 +154,7 @@ function CommOutForm() {
       updateErrorState("numberHelpedError", "");
     }
 
-    if (whatGivenArr == [] || !(setOtherBool)) {
+    if (whatGivenArr == [] || !setOtherBool) {
       updateErrorState(
         "checkboxesError",
         "Please provide the kind of help provided"
@@ -323,16 +325,16 @@ function CommOutForm() {
                     Select the community outreach you have attended.
                   </div>
                   {/*  */}
-                  <div className="self-stretch w-full h-fit flex-col  flex ">
-                    <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
+                  <div className="self-stretch w-full h-fit flex-col flex ">
+                    <div className=" absolute w-fit bg-white ml-3 mt-[-5px] px-1 justify-start items-center inline-flex">
                       <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
                         Community Outreach
                       </div>
                     </div>
-                    <div className="self-stretch h-fit  border-collapse">
-                      <div className=" h-14 inline-flex w-full">
+                    <div className="self-stretch h-fit border-collapse">
+                      <div className="h-14 inline-flex w-full">
                         <select
-                          className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
+                          className={`text-zinc-900 w-full h-full px-3 rounded-[4px] text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
                             error.outreachError !== ""
                               ? "ring-red-500"
                               : "ring-gray-300"
@@ -342,7 +344,7 @@ function CommOutForm() {
                           onChange={handleOutreachChange}
                         >
                           <option value="" disabled>
-                            Select Outreach event
+                            Select Outreach Event
                           </option>
                           {outreach &&
                             outreach.map((event) => {
@@ -551,7 +553,8 @@ function CommOutForm() {
                     </div>
                   )}
                 </div>
-                {isOtherChecked && (<div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
+                {isOtherChecked && (
+                  <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
                     <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
                       <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
                         Other
@@ -571,7 +574,8 @@ function CommOutForm() {
                         ></input>
                       </div>
                     </div>
-                  </div>)}
+                  </div>
+                )}
                 {/*  */}
 
                 <div className="self-stretch grow shrink basis-0 px-8 pt-[54px] pb-[55px] bg-stone-50 rounded-[30px] border border-stone-300 flex-col justify-start items-center gap-[29px] flex">
