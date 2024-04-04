@@ -25,7 +25,7 @@ const Temp_Profile = () => {
                         </div>
 
 
-                        <div className="w-full px-4 pb-2 flex flex-wrap gap-2 overflow-x-auto md:flex-nowrap">
+                        <div className="w-full flex flex-wrap gap-2 overflow-x-auto md:flex-nowrap pt-4">
                             <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold whitespace-nowrap flex justify-center items-center">
                                 <h6 className="text-[#212121] text-[0.875rem] font-opensans">
                                     Spanish
@@ -141,9 +141,9 @@ const Temp_Profile = () => {
                         </div>
                     </div>
                 </div>
-
-
-                {/* Impact */}
+            </div>
+            {/* Impact */}
+            <div className="mx-auto max-w-[98.75rem] w-full p-8 bg-white rounded-lg mt-8 md:mt-0">
                 <div className="max-w-[82.75rem] mx-auto mt-4">
                     <p className="text-[#212121] text-3xl sm:text-4xl font-medium font-dmsans leading-9">
                         My Impact
@@ -195,13 +195,12 @@ const Temp_Profile = () => {
 
                     </div>
                 </div>
-
-
-
             </div>
 
+            
+
             {/*Outreaches*/}
-            <div className="mx-auto max-w-[98.75rem] p-8 lg:p-32 bg-white rounded-lg mt-20">
+            <div className="mx-auto max-w-[98.75rem] p-8 lg:p-32 bg-white rounded-lg mt-8">
                 <div className="flex items-center space-x-12 mb-16">
                     <p className="text-[#212121] text-3xl sm:text-4xl font-medium font-dmsans leading-9">
                         My Outreaches
