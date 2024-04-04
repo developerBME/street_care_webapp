@@ -1,4 +1,4 @@
-import React from "react";
+{/*import React from "react";
 import { useNavigate } from "react-router-dom";
 import streetcarelogo from "../images/streetcare-logo.png";
 import icon_howtoprep from "../images/icon_howtoprep.png";
@@ -38,8 +38,8 @@ function SrushtiSample() {
             <h2 className="hidden lg:block text-neutral-800 lg:text-[20px] text-[20px] font-medium font-dmsans lg:leading-[64px] lg:visible leading-[44px]">
               Stories
             </h2>
-            {/* hide when xl */}
-            <div class="block lg:hidden mt-8 w-12 h-12 md:w-24 md:h-24 rounded-lg bg-gradient-to-br from-emerald-300 to-neutral-200 p-5">
+            
+            <div class="block shrink-0 lg:hidden mt-8 w-12 h-12 md:w-24 md:h-24 rounded-lg bg-gradient-to-br from-emerald-300 to-neutral-200 p-5">
               <img src={icon_howtoprep} className="block lg:hidden mb-6" />
             </div>
             <h2 className=" text-neutral-800 m-4 pt-10 pl-5	 text-[20px] font-medium font-dmsans lg:hidden mb-6 pb-24">
@@ -116,4 +116,5 @@ function SrushtiSample() {
   );
 }
 
-export default SrushtiSample;
+
+export default SrushtiSample; */}
