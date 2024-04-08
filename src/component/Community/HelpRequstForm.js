@@ -250,10 +250,7 @@ function HelpRequestForm() {
 
     const query = addressObject.formatted_address;
     updateQuery(query);
-    const latLng = {
-      lat: addressObject?.geometry?.location?.lat(),
-      lng: addressObject?.geometry?.location?.lng(),
-    };
+    
 
     let street = "";
     let postcode = "";
@@ -433,7 +430,7 @@ function HelpRequestForm() {
                         </div>
                       )}
                     </div>
-                    <div className="inline-flex grid grid-cols-2 space-x-4">
+                    <div className="grid grid-cols-2 space-x-4">
                       <div className="space-y-1.5">
                         <p className="font-semibold font-['Inter'] text-[15px]">
                           Street*
@@ -494,7 +491,7 @@ function HelpRequestForm() {
                         )}
                       </div>
                     </div>
-                    <div className="inline-flex grid grid-cols-2 space-x-4">
+                    <div className="grid grid-cols-2 space-x-4">
                       <div className="space-y-1.5">
                         <p className="font-semibold font-['Inter'] text-[15px]">
                           State*
