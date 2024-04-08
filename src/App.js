@@ -132,25 +132,27 @@ function App() {
               path="/profile/personaloutform"
               element={<PersonalOutForm />}
             />
+            <Route path="/createOutreach" element={<CreateOutreach />} />
+            <Route
+              path="/createOutreach/:helpreqid"
+              element={<CreateOutreach />}
+            />
+            <Route path="/helpRequestForm" element={<HelpRequestForm />} />
           </Route>
+
           <Route path="/profile/select-outreach" element={<Documenting />} />
 
           {/* <Route path="/profile/commoutform" element={<ComingSoon />} /> */}
 
           <Route path="/outreachsignup" element={<OutreachSignup />} />
           <Route path="/outreachsignup/:id" element={<OutreachSignup />} />
-          <Route path="/createOutreach" element={<CreateOutreach />} />
-          <Route
-            path="/createOutreach/:helpreqid"
-            element={<CreateOutreach />}
-          />
 
           <Route
             path="/helpRequestEventWindow"
             element={<HelpRequestEventWindow />}
           />
           {/* <Route path="/helpRequestEventWindow" element={<ComingSoon />} /> */}
-          <Route path="/helpRequestForm" element={<HelpRequestForm />} />
+
           {/* <Route path="/helpRequestForm" element={<ComingSoon />} /> */}
           <Route path="/icanhelp/:id" element={<ICanHelpForm />} />
           {/* <Route path="/icanhelp" element={<ComingSoon />} /> */}
