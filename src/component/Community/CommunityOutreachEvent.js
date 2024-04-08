@@ -271,14 +271,14 @@ const CommunityOutreachEvent = () => {
                 ))}
           </div>
         )}
-        {visibleItems < upcomingEvents.length && (
+        {/* {visibleItems < upcomingEvents.length && (
           <button
             className="w-full px-6 py-2.5 rounded-full text-sm font-medium text-violet-950 font-['DM Sans'] border border-stone-300"
             onClick={loadMore}
           >
             Load More
           </button>
-        )}
+        )} */}
         {/* <div className="flex items-center justify-between">
           <div className="md:inline-flex items-center text-center space-y-2 md:space-y-0">
             <p className="font-medium text-xl lg:text-2xl text-[#212121] font-bricolage">

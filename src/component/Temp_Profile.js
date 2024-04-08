@@ -25,7 +25,7 @@ const Temp_Profile = () => {
                         </div>
 
 
-                        <div className="w-full px-4 pb-2 flex flex-wrap gap-2 overflow-x-auto md:flex-nowrap">
+                        <div className="w-full flex flex-wrap gap-2 overflow-x-auto md:flex-nowrap pt-4">
                             <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold whitespace-nowrap flex justify-center items-center">
                                 <h6 className="text-[#212121] text-[0.875rem] font-opensans">
                                     Spanish
@@ -141,11 +141,11 @@ const Temp_Profile = () => {
                         </div>
                     </div>
                 </div>
-
-
-                {/* Impact */}
+            </div>
+            {/* Impact */}
+            <div className="mx-auto max-w-[98.75rem] w-full p-8 bg-white rounded-lg mt-8 md:mt-0">
                 <div className="max-w-[82.75rem] mx-auto mt-4">
-                    <p className="text-[#212121] text-3xl sm:text-4xl font-medium font-dmsans leading-9">
+                    <p className="text-[#212121] text-3xl sm:text-4xl font-medium font-dmsans leading-9 md:px-0 px-4">
                         My Impact
                     </p>
 
@@ -195,14 +195,13 @@ const Temp_Profile = () => {
 
                     </div>
                 </div>
-
-
-
             </div>
 
+            
+
             {/*Outreaches*/}
-            <div className="mx-auto max-w-[98.75rem] p-8 lg:p-32 bg-white rounded-lg mt-20">
-                <div className="flex items-center space-x-12 mb-16">
+            <div className="mx-auto max-w-[98.75rem] p-8 lg:p-32 bg-white rounded-lg mt-8 ">
+                <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-12 mb-16">
                     <p className="text-[#212121] text-3xl sm:text-4xl font-medium font-dmsans leading-9">
                         My Outreaches
                     </p>
@@ -225,14 +224,14 @@ const Temp_Profile = () => {
                     </button>
                 </div>
 
-                <div className="grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-4 gap-4 ">
                     {Array.from({ length: 8 }).map((_, index) => (
-                        <div key={index} className="bg-[#F1EEFE] rounded-2xl shadow p-4 w-full h-auto">
-                            <h3 className="text-lg font-bold break-words">BK Fort Green Outreach</h3>
+                        <div key={index} className="bg-[#F1EEFE] rounded-2xl shadow p-2 overflow-x-auto ">
+                            <h3 className="text-lg font-bold ">BK Fort Green Outreach</h3>
                             <p className="text-sm text-[#37168B] mt-4">Sept 9, 2023 SAT 12:00pm</p>
                             <p className="text-sm text-gray-600 mt-4">200 Eastern Pkwy, Brooklyn, NY 11238</p>
-                            <div className="flex items-center gap-2 mt-4 bg-white rounded-xl p-2 overflow-hidden">
-                                <span className="text-black text-xs min-w-0">Childcare specialist needed</span>
+                            <div className="flex items-center mt-4 bg-white rounded-xl p-2">
+                                <span className="text-black text-xs inline-block w-auto min-w-0">Childcare specialist needed</span>
                             </div>
 
                             <div>
