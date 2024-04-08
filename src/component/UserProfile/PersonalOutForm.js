@@ -39,6 +39,27 @@ const CustomInput = ({ value, onClick, onChange, id, className }) => (
   </div>
 );
 
+let autoComplete;
+
+export const GOOGLE_PLACES_API_KEY = "AIzaSyBpaLVj2EjhjCeHbTUXfcBhBoaQLVathvE";
+
+const loadScript = (url, callback) => {
+  let script = document.createElement("script");
+  script.type = "text/javascript";
+
+  if (script.readyState) {
+    script.onreadystatechange = function () {
+      if (script.readyState === "loaded" || script.readyState === "complete") {
+      }
+    };
+  } else {
+    script.onload = () => callback();
+  }
+
+  script.src = url;
+  document.getElementsByTagName("head")[0].appendChild(script);
+};
+
 function PersonalOutForm() {
   const navigate = useNavigate();
   // const ratingChanged = (newRating) => {
@@ -48,6 +69,8 @@ function PersonalOutForm() {
   const time = useRef("");
   const cityRef = useRef("");
   const stateRef = useRef("");
+  const streetRef = useRef("");
+  const zipcodeRef = useRef("");
   const checkboxes = useRef([]);
   const [itemQty, setItemQty] = useState("");
   const [numberHelped, setNumberhelped] = useState("");
@@ -87,6 +110,9 @@ function PersonalOutForm() {
     optDescError: "",
     optLandmarkError: "",
     infoShareCheckboxError: "",
+    idError: "",
+    streetError: "",
+    zipError: "",
   });
 
   const [isOtherChecked, setIsOtherChecked] = useState(false);
@@ -143,6 +169,16 @@ function PersonalOutForm() {
     updateErrorState("timeError", "");
   };
 
+  const handleCityChange = (e) => {
+    updateErrorState("cityError", "");
+  };
+  const handleStateChange = (e) => {
+    updateErrorState("stateError", "");
+  };
+  const handleZipChange = (e) => {
+    updateErrorState("zipError", "");
+  };
+
   const updateErrorState = (key, value) => {
     setError((prevState) => ({
       ...prevState, // Clone the current state
@@ -194,8 +230,8 @@ function PersonalOutForm() {
       .postalAbreviation;
     const response = await fetch(
       "https://parseapi.back4app.com/classes/Usabystate_" +
-      stateCode +
-      "?limit=1000&keys=name",
+        stateCode +
+        "?limit=1000&keys=name",
       {
         headers: {
           "X-Parse-Application-Id": "vahnMBqbmIbxOw8R3qtsEMoYrZMljfClGvc1aMyp",
@@ -227,15 +263,18 @@ function PersonalOutForm() {
   const handleSubmit = async (e) => {
     let setReturn = false;
     let setOtherBool = true;
-    let whatGivenArr = [...itemArray]
+    let whatGivenArr = [...itemArray];
     e.preventDefault();
     // Form Validation Start
     if (isOtherChecked) {
       setOtherBool = false;
-      updateErrorState("checkboxesError", "Please specify for other kind of help provided");
+      updateErrorState(
+        "checkboxesError",
+        "Please specify for other kind of help provided"
+      );
       if (otherInputValue !== "") {
-        whatGivenArr.push(otherInputValue)
-        console.log(otherInputValue)
+        whatGivenArr.push(otherInputValue);
+        console.log(otherInputValue);
         updateErrorState("checkboxesError", "");
         setOtherBool = true;
       }
@@ -246,9 +285,9 @@ function PersonalOutForm() {
     } else {
       updateErrorState("numberHelpedError", "");
     }
-    console.log("object")
-    console.log(whatGivenArr)
-    if (whatGivenArr == [] || !(setOtherBool)) {
+    console.log("object");
+    console.log(whatGivenArr);
+    if (whatGivenArr == [] || !setOtherBool) {
       updateErrorState(
         "checkboxesError",
         "Please provide the kind of help provided"
@@ -259,17 +298,31 @@ function PersonalOutForm() {
     }
 
     if (!stateRef.current.value) {
-      updateErrorState("stateError", "Select State");
+      updateErrorState("stateError", "State is required");
       setReturn = true;
     } else {
       updateErrorState("stateError", "");
     }
 
     if (!cityRef.current.value) {
-      updateErrorState("cityError", "Select City");
+      updateErrorState("cityError", "City is required");
       setReturn = true;
     } else {
       updateErrorState("cityError", "");
+    }
+
+    if (!streetRef.current.value) {
+      updateErrorState("streetError", "Street is required");
+      setReturn = true;
+    } else {
+      updateErrorState("streetError", "");
+    }
+
+    if (!zipcodeRef.current.value) {
+      updateErrorState("zipError", "Zipcode is required");
+      setReturn = true;
+    } else {
+      updateErrorState("zipError", "");
     }
 
     if (!date.current.value) {
@@ -377,7 +430,12 @@ function PersonalOutForm() {
         });
 
         setSuccess(true);
-        emailConfirmation(fAuth.currentUser.email, fAuth.currentUser.displayName, '', emailHTML);
+        emailConfirmation(
+          fAuth.currentUser.email,
+          fAuth.currentUser.displayName,
+          "",
+          emailHTML
+        );
         clearFields();
       }
     } catch (e) {
@@ -399,7 +457,86 @@ function PersonalOutForm() {
     setCity("");
     cityRef.current.value = "";
     stateRef.current.value = "";
+    zipcodeRef.current.value = "";
+    streetRef.current.value = "";
   };
+
+  //Address autocomplete functionality
+  const [query, setQuery] = useState();
+  const autoCompleteRef = useRef(null);
+  const [street, setStreet] = useState("");
+  const [cityName, setCityName] = useState("");
+  const [stateName, setStateName] = useState("");
+  const [postcode, setPostcode] = useState("");
+
+  const handleScriptLoad = (updateQuery, autoCompleteRef) => {
+    autoComplete = new window.google.maps.places.Autocomplete(
+      autoCompleteRef.current,
+      {
+        types: ["address"],
+        componentRestrictions: { country: ["us"] },
+      }
+    );
+
+    autoComplete.addListener("place_changed", () => {
+      handlePlaceSelect(updateQuery);
+    });
+  };
+
+  const handlePlaceSelect = async (updateQuery) => {
+    const addressObject = await autoComplete.getPlace();
+    const query = addressObject.formatted_address;
+    updateQuery(query);
+
+    let street = "";
+    let postcode = "";
+    let city = "";
+    let state = "";
+
+    for (const component of addressObject.address_components) {
+      const componentType = component.types[0];
+
+      switch (componentType) {
+        case "street_number": {
+          street = `${component.long_name} ${street}`;
+          break;
+        }
+        case "route": {
+          street += component.long_name;
+          break;
+        }
+        case "postal_code": {
+          postcode = `${component.long_name}${postcode}`;
+          break;
+        }
+        case "postal_code_suffix": {
+          postcode = `${postcode}-${component.long_name}`;
+          break;
+        }
+        case "locality": {
+          city = component.long_name;
+          break;
+        }
+        case "administrative_area_level_1": {
+          state = component.long_name;
+          break;
+        }
+        default:
+          break;
+      }
+    }
+    setStreet(street);
+    setCityName(city);
+    setStateName(state);
+    setPostcode(postcode);
+  };
+
+  useEffect(() => {
+    loadScript(
+      `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_PLACES_API_KEY}&libraries=places`,
+      () => handleScriptLoad(setQuery, autoCompleteRef)
+    );
+  }, []);
 
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
@@ -461,10 +598,11 @@ function PersonalOutForm() {
                             id="numberHelped"
                             value={numberHelped}
                             placeholder="Number of people helped"
-                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border-0 text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.numberHelpedError !== ""
-                              ? "ring-red-500"
-                              : "ring-gray-300"
-                              }`}
+                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border-0 text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
+                              error.numberHelpedError !== ""
+                                ? "ring-red-500"
+                                : "ring-gray-300"
+                            }`}
                             required={true}
                             onChange={handleNumChange}
                           ></input>
@@ -676,27 +814,29 @@ function PersonalOutForm() {
                       </div>
                     )}
                   </div>
-                  {isOtherChecked && (<div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
-                    <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
-                      <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
-                        Other
+                  {isOtherChecked && (
+                    <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
+                      <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
+                        <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
+                          Other
+                        </div>
+                      </div>
+                      <div className="self-stretch h-fit  border-collapse     ">
+                        <div className=" h-14  justify-center items-start ">
+                          <input
+                            id="otherInput"
+                            value={otherInputValue}
+                            placeholder="Other"
+                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border-0 text-[15px] font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
+                            required=""
+                            onChange={(e) => {
+                              setOtherInputValue(e.target.value);
+                            }}
+                          ></input>
+                        </div>
                       </div>
                     </div>
-                    <div className="self-stretch h-fit  border-collapse     ">
-                      <div className=" h-14  justify-center items-start ">
-                        <input
-                          id="otherInput"
-                          value={otherInputValue}
-                          placeholder="Other"
-                          className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border-0 text-[15px] font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
-                          required=""
-                          onChange={(e) => {
-                            setOtherInputValue(e.target.value);
-                          }}
-                        ></input>
-                      </div>
-                    </div>
-                  </div>)}
+                  )}
 
                   {/*  */}
                   <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
@@ -704,19 +844,154 @@ function PersonalOutForm() {
                       Where did you see a person in need?*
                     </div>
                     {/*  */}
-                    <div className="self-stretch w-full h-fit flex-col  flex ">
-                      <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
+
+                    <div className="self-stretch w-full h-fit flex-col  flex gap-4">
+                      <div className="space-y-1.5">
+                        <div className="font-semibold font-['Inter'] text-[15px]">
+                          Enter Address*
+                        </div>
+                        <input
+                          type="text"
+                          ref={autoCompleteRef}
+                          onChange={(event) => setQuery(event.target.value)}
+                          value={query}
+                          placeholder="Enter Address"
+                          className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
+                            error.idError !== ""
+                              ? "ring-red-500"
+                              : "ring-gray-300"
+                          }`}
+                        />
+                        {error.idError && (
+                          <div className="inline-flex items-center">
+                            <img src={errorImg} className="w-3 h-3" />
+                            <p className="text-red-600 text-xs">
+                              {error.idError}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="grid grid-cols-2 space-x-4">
+                        <div className="space-y-1.5">
+                          <p className="font-semibold font-['Inter'] text-[15px]">
+                            Street*
+                          </p>
+                          <input
+                            className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
+                              error.streetError !== ""
+                                ? "ring-red-500"
+                                : "ring-gray-300"
+                            }`}
+                            placeholder="Street"
+                            ref={streetRef}
+                            id="street-address"
+                            name="street-address"
+                            value={street}
+                          />
+                          {error.streetError && (
+                            <div className="inline-flex items-center">
+                              <img src={errorImg} className="w-3 h-3" />
+                              <p className="text-red-600 text-xs">
+                                {error.streetError}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                        <div className="space-y-1.5">
+                          <p className="font-semibold font-['Inter'] text-[15px]">
+                            City*
+                          </p>
+                          <input
+                            type="text"
+                            className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
+                              error.cityError !== ""
+                                ? "ring-red-500"
+                                : "ring-gray-300"
+                            }`}
+                            placeholder="City"
+                            ref={cityRef}
+                            onChange={handleCityChange}
+                            value={cityName}
+                          />
+                          {error.cityError && (
+                            <div className="inline-flex items-center">
+                              <img src={errorImg} className="w-3 h-3" />
+                              <p className="text-red-600 text-xs">
+                                {error.cityError}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className=" grid grid-cols-2 space-x-4">
+                        <div className="space-y-1.5">
+                          <p className="font-semibold font-['Inter'] text-[15px]">
+                            State*
+                          </p>
+                          <input
+                            type="text"
+                            className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
+                              error.stateError !== ""
+                                ? "ring-red-500"
+                                : "ring-gray-300"
+                            }`}
+                            placeholder="State"
+                            ref={stateRef}
+                            onChange={handleStateChange}
+                            value={stateName}
+                          />
+                          {error.stateError && (
+                            <div className="inline-flex items-center">
+                              <img src={errorImg} className="w-3 h-3" />
+                              <p className="text-red-600 text-xs">
+                                {error.stateError}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                        <div className="space-y-1.5">
+                          <p className="font-semibold font-['Inter'] text-[15px]">
+                            Zipcode*
+                          </p>
+                          <input
+                            type="text"
+                            className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
+                              error.zipError !== ""
+                                ? "ring-red-500"
+                                : "ring-gray-300"
+                            }`}
+                            placeholder="Zipcode"
+                            onChange={handleZipChange}
+                            value={postcode}
+                          />
+                          {error.zipError && (
+                            <div className="inline-flex items-center">
+                              <img src={errorImg} className="w-3 h-3" />
+                              <p className="text-red-600 text-xs">
+                                {error.zipError}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Old form fields start */}
+
+                      {/* <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
                         <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
                           State
                         </div>
-                      </div>
-                      <div className="self-stretch h-fit  border-collapse     ">
+                      </div> */}
+                      {/* <div className="self-stretch h-fit  border-collapse     ">
                         <div className=" h-14 inline-flex w-full">
                           <select
-                            className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.stateError !== ""
-                              ? "ring-red-500"
-                              : "ring-gray-300"
-                              }`}
+                            className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
+                              error.stateError !== ""
+                                ? "ring-red-500"
+                                : "ring-gray-300"
+                            }`}
                             defaultValue=""
                             ref={stateRef}
                             onChange={getCities}
@@ -746,9 +1021,9 @@ function PersonalOutForm() {
                             </p>
                           </div>
                         )}
-                      </div>
+                      </div> */}
                     </div>
-                    <div className="self-stretch w-full h-fit flex-col  flex ">
+                    {/* <div className="self-stretch w-full h-fit flex-col  flex ">
                       <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
                         <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
                           City
@@ -757,10 +1032,11 @@ function PersonalOutForm() {
                       <div className="self-stretch h-fit  border-collapse     ">
                         <div className=" h-14 inline-flex w-full">
                           <select
-                            className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.cityError !== ""
-                              ? "ring-red-500"
-                              : "ring-gray-300"
-                              }`}
+                            className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
+                              error.cityError !== ""
+                                ? "ring-red-500"
+                                : "ring-gray-300"
+                            }`}
                             defaultValue=""
                             disabled={!cityNames}
                             ref={cityRef}
@@ -798,10 +1074,11 @@ function PersonalOutForm() {
                           </div>
                         )}
                       </div>
-                    </div>
+                    </div> */}
                   </div>
 
-                  {/*  */}
+                  {/* Old form fields end */}
+                  
                   <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                     {/* Grid 2 */}
                     <div className="w-full h-full grid grid-cols-2 gap-4 ">
@@ -880,10 +1157,11 @@ function PersonalOutForm() {
                           <input
                             id="itemsNumber"
                             placeholder="Number of Items"
-                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${error.itemQtyError !== ""
-                              ? "ring-red-500"
-                              : "ring-gray-300"
-                              }`}
+                            className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
+                              error.itemQtyError !== ""
+                                ? "ring-red-500"
+                                : "ring-gray-300"
+                            }`}
                             required={true}
                             value={itemQty}
                             onChange={handleItemQtyChange}
@@ -956,10 +1234,11 @@ function PersonalOutForm() {
                                 id="furtherHelpDescription"
                                 type="text"
                                 placeholder="E.g. Tommy, a senior citizen in a wheelchair wearing a navy blue top and brown shoes."
-                                className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300 ${error.optDescError !== ""
-                                  ? "ring-red-500"
-                                  : "ring-gray-300"
-                                  }`}
+                                className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300 ${
+                                  error.optDescError !== ""
+                                    ? "ring-red-500"
+                                    : "ring-gray-300"
+                                }`}
                                 required={true}
                                 // value={furtherHelpDescription}
                                 onChange={handleOptDescChange}
@@ -1001,10 +1280,11 @@ function PersonalOutForm() {
                               <input
                                 id="furtherHelpLocation"
                                 placeholder="E.g. 187 Hambridge Street, NY"
-                                className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300 ${error.optLandmarkError !== ""
-                                  ? "ring-red-500"
-                                  : "ring-gray-300"
-                                  }`}
+                                className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300 ${
+                                  error.optLandmarkError !== ""
+                                    ? "ring-red-500"
+                                    : "ring-gray-300"
+                                }`}
                                 required={true}
                                 onChange={handleOptLandmarkChange}
                                 ref={optLandmark}
@@ -1290,11 +1570,12 @@ function PersonalOutForm() {
                           ></input>
                           <label
                             // for="food-option"
-                            className={`inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer peer-checked:border-[#5F36D6] peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300 ${!isInfoShareCheckboxChecked &&
+                            className={`inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer peer-checked:border-[#5F36D6] peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300 ${
+                              !isInfoShareCheckboxChecked &&
                               error.infoShareCheckboxError !== ""
-                              ? "ring-red-500"
-                              : "ring-gray-300"
-                              }`}
+                                ? "ring-red-500"
+                                : "ring-gray-300"
+                            }`}
                           >
                             <div className="w-full h-full mb-6 text-base font-semibold">
                               {" "}

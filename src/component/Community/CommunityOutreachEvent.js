@@ -125,10 +125,23 @@ const CommunityOutreachEvent = () => {
       <div className="p-4 lg:px-10 lg:py-12 bg-gradient-to-br from-[#D3C3FF] to-[#DEDCE4] rounded-t-2xl flex-col justify-start items-start gap-4 inline-flex w-full">
         <div className="flex flex-col md:flex md:flex-row justify-between gap-4 md:gap-10">
           <div className="">
-            <div className="text-[45px] font-medium font-dmsans">
-              {/* Outreach - extending help, resources, and compassion to those in
+            <div className="flex flex-row gap-4">
+              <div className="text-[45px] font-medium font-dmsans">
+                {/* Outreach - extending help, resources, and compassion to those in
             need */}
-              Outreaches ({upcomingEvents.length})
+                Outreaches ({upcomingEvents.length})
+              </div>
+              <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-medium font-dmsans leading-tight self-stretch">
+                <CustomButton
+                  label="Create an Outreach"
+                  name="buttondefault"
+                  onClick={() => {
+                    navigate("/createOutreach");
+                  }}
+                />
+              </div>
+
+              {/* </div> */}
             </div>
             <div className="text-md font-medium font-dmsans text-[#181818] mt-2">
               {/* Homeless outreach involves both community-wide and personal efforts
@@ -141,6 +154,7 @@ const CommunityOutreachEvent = () => {
               to help people now, kindly sign up to outreaches
             </div>
           </div>
+
           <div
             className="flex flex-row cursor-pointer gap-2 items-center"
             onClick={() => {
@@ -257,20 +271,20 @@ const CommunityOutreachEvent = () => {
                 ))}
           </div>
         )}
-        {visibleItems < upcomingEvents.length && (
+        {/* {visibleItems < upcomingEvents.length && (
           <button
             className="w-full px-6 py-2.5 rounded-full text-sm font-medium text-violet-950 font-['DM Sans'] border border-stone-300"
             onClick={loadMore}
           >
             Load More
           </button>
-        )}
-        <div className="flex items-center justify-between">
+        )} */}
+        {/* <div className="flex items-center justify-between">
           <div className="md:inline-flex items-center text-center space-y-2 md:space-y-0">
             <p className="font-medium text-xl lg:text-2xl text-[#212121] font-bricolage">
               Outreach Visit Log
             </p>
-            <button className="text-sm font-medium font-['DM Sans'] leading-tight lg:text-[12px] text-white bg-[#6840E0] px-6 py-2.5 lg:px-6 lg:py-2.5 rounded-full sm:hidden">
+            <button className="text-sm font-medium font-['DM Sans'] leading-tight lg:text-[12px] text-black bg-[#6840E0] px-6 py-2.5 lg:px-6 lg:py-2.5 rounded-full sm:hidden">
               Create an Outreach
             </button>
           </div>
@@ -301,7 +315,7 @@ const CommunityOutreachEvent = () => {
               />
             ))}
           </div>
-        )}
+        )} */}
 
         {visibleItems < cardData.length && (
           <button

@@ -49,48 +49,55 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [photoUrl, setPhotoUrl] = useState("");
   const [firebaseUser, setFirebaseUser] = useState({});
+  const [loadingUser, setLoadingUser] = useState(true);
 
   console.log(firebaseUser);
 
-  useEffect(() => {}, []);
-  onAuthStateChanged(fAuth, async (user) => {
-    if (user) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/auth.user
-      setLoggedIn(true);
-      setFirebaseUser(user);
-      try {
-        const userRef = query(
-          collection(db, "users"),
-          where("uid", "==", fAuth?.currentUser?.uid)
-        );
-        const data = await getDocs(userRef);
-        if (typeof data.docs[0] == "undefined") {
-          setPhotoUrl("");
-          console.log("UNDEFINED");
-        } else {
-          setPhotoUrl(data.docs[0].data().photoUrl);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(fAuth, async (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/auth.user
+        setLoggedIn(true);
+        setFirebaseUser(user);
+        setLoadingUser(false);
+        try {
+          const userRef = query(
+            collection(db, "users"),
+            where("uid", "==", fAuth?.currentUser?.uid)
+          );
+          const data = await getDocs(userRef);
+          if (typeof data.docs[0] == "undefined") {
+            setPhotoUrl("");
+            console.log("UNDEFINED");
+          } else {
+            setPhotoUrl(data.docs[0].data().photoUrl);
+          }
+        } catch (err) {
+          console.log(err);
         }
-      } catch (err) {
-        console.log(err);
-      }
 
-      // if (fAuth?.currentUser?.providerData[0].providerId === 'google.com') {
-      //   setPhotoUrl(fAuth?.currentUser?.photoURL.toString().substring(0,fAuth?.currentUser?.photoURL.toString().indexOf("=")+1) + "s224-c");
-      // } else if (fAuth?.currentUser?.providerData[0].providerId === 'twitter.com'){
-      //   setPhotoUrl(fAuth?.currentUser?.photoURL.toString().substring(0,fAuth?.currentUser?.photoURL.toString().indexOf("_normal")) + ".png");
-      // } else if (fAuth?.currentUser?.providerData[0].providerId === 'facebook.com'){
-      //   setPhotoUrl(fAuth?.currentUser?.photoURL.toString());
-      // } else {
-      //   setPhotoUrl("")
-      // }
-      // ...
-    } else {
-      // setLoggedIn(false);
-      // User is signed out
-      // ...
-    }
-  });
+        // if (fAuth?.currentUser?.providerData[0].providerId === 'google.com') {
+        //   setPhotoUrl(fAuth?.currentUser?.photoURL.toString().substring(0,fAuth?.currentUser?.photoURL.toString().indexOf("=")+1) + "s224-c");
+        // } else if (fAuth?.currentUser?.providerData[0].providerId === 'twitter.com'){
+        //   setPhotoUrl(fAuth?.currentUser?.photoURL.toString().substring(0,fAuth?.currentUser?.photoURL.toString().indexOf("_normal")) + ".png");
+        // } else if (fAuth?.currentUser?.providerData[0].providerId === 'facebook.com'){
+        //   setPhotoUrl(fAuth?.currentUser?.photoURL.toString());
+        // } else {
+        //   setPhotoUrl("")
+        // }
+        // ...
+      } else {
+        // setLoggedIn(false);
+        // User is signed out
+        // ...
+        setLoadingUser(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <Router>
@@ -113,16 +120,23 @@ function App() {
           <Route path="/allnews" element={<Newscard />} />
           <Route path="/allnews/:id" element={<Readmorenews />} />
           <Route path="/verifyemail" element={<EmailVerificationModal />} />
-          <Route element={<ProtectedRoute user={firebaseUser} />}>
+          <Route
+            element={
+              <ProtectedRoute user={firebaseUser} loading={loadingUser} />
+            }
+          >
             <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/accsetting" element={<AccSetting />} />
+            <Route path="/profile/commoutform" element={<CommOutForm />} />
+            <Route
+              path="/profile/personaloutform"
+              element={<PersonalOutForm />}
+            />
           </Route>
           <Route path="/profile/select-outreach" element={<Documenting />} />
-          <Route path="/profile/commoutform" element={<CommOutForm />} />
+
           {/* <Route path="/profile/commoutform" element={<ComingSoon />} /> */}
-          <Route
-            path="/profile/personaloutform"
-            element={<PersonalOutForm />}
-          />
+
           <Route path="/outreachsignup" element={<OutreachSignup />} />
           <Route path="/outreachsignup/:id" element={<OutreachSignup />} />
           <Route path="/createOutreach" element={<CreateOutreach />} />
@@ -130,7 +144,7 @@ function App() {
             path="/createOutreach/:helpreqid"
             element={<CreateOutreach />}
           />
-          <Route path="/profile/accsetting" element={<AccSetting />} />
+
           <Route
             path="/helpRequestEventWindow"
             element={<HelpRequestEventWindow />}
