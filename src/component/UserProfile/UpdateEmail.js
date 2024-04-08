@@ -15,7 +15,7 @@ export async function updateUserEmail(oldEmail, newEmail) {
       console.log(uid);
 
       //1. sending 2FA code to old email id
-      const send2FAResponse = await axios.post('https://us-central1-your-project-id.cloudfunctions.net/sendUpdateEmail2FACode', {
+      const send2FAResponse = await axios.post('https://us-central1-streetcare-d0f33.cloudfunctions.net/sendUpdateEmail2FACode', {
         userEmail: oldEmail,
         UID: uid,
         timestamp: Date.now().toString()
@@ -32,7 +32,7 @@ export async function updateUserEmail(oldEmail, newEmail) {
   
       while (Date.now() - startTime < minimumDuration) {
         let code; // how do we retrive code from user since its not passed in the function parameters? Dont we get it from UI elementId?
-        const verify2FAResponse = await axios.post('https://us-central1-your-project-id.cloudfunctions.net/verifyUpdateEmail2FACode', {
+        const verify2FAResponse = await axios.post('https://us-central1-streetcare-d0f33.cloudfunctions.net/verifyUpdateEmail2FACode', {
           userEmail: oldEmail,
           UID: uid,
           timestamp: Date.now().toString(),
