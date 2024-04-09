@@ -5,7 +5,7 @@ const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
 const { Timestamp } = require('@firebase/firestore');
 const cors = require('cors')({ origin: true });
-
+admin.initializeApp();
 const db = admin.firestore();
 
 const CLIENT_ID = '223295299587-dinnroh9j2lb858kphbgb96f8t6j0eq2.apps.googleusercontent.com';
@@ -31,9 +31,9 @@ exports.verifyUpdateEmail2FACode = functions.https.onRequest((req, res) => {
       return;
     }
 
-    const { userEmail, UID, timestamp, code } = req.body;
+    const { userEmail, timestamp, code } = req.body;
 
-    if (!userEmail || !UID || !timestamp || !code) {
+    if (!userEmail || !timestamp || !code) {
       res.status(400).send('All parameters are required');
       return;
     }
@@ -46,7 +46,7 @@ exports.verifyUpdateEmail2FACode = functions.https.onRequest((req, res) => {
       let isValid = false;
 
       for (t = previousWindowStart; t <= currentWindowEnd; t += (1 * 60 * 1000)) {
-        const hashedCode = crypto.createHmac('sha256', SECRET_KEY).update(`${userEmail}:${UID}:${t}`).digest('hex');
+        const hashedCode = crypto.createHmac('sha256', SECRET_KEY).update(`${userEmail}:${t}`).digest('hex');
 
         const hashBigInt = BigInt('0x' + hashedCode)
         const sixDigitCode = hashBigInt % 1000000n;

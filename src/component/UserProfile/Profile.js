@@ -12,6 +12,8 @@ import { fetchEvents } from "../EventCardService";
 import { fetchPersonalVisitLogs } from "../VisitLogCardService";
 import OutreachVisitLogProfile from "../Community/OutreachVisitLogProfile";
 import NoOutreachDoc from "../Community/NoOutreachDoc";
+import axios from 'axios';
+import { send2FA } from "./SendUpdateEmail2FA";
 
 
 function Profile() {
@@ -72,6 +74,10 @@ function Profile() {
       setIsLoading(false);
     }
   }, [eventsDisplay]);
+
+  // useEffect(() => {
+  //   send2FA('aishwaryakatkar53@gmail.com', Date.now().toString());
+  // }, []);
 
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
