@@ -19,7 +19,6 @@ import CommOutForm from "./component/UserProfile/CommOutForm";
 import PersonalOutForm from "./component/UserProfile/PersonalOutForm";
 import Documenting from "./component/UserProfile/Documenting";
 import AccSetting from "./component/UserProfile/AccSetting";
-import ProfileSettings from "./component/UserProfile/ProfileSettings";
 import OutreachSignup from "./component/Community/OutreachSignup";
 import CreateOutreach from "./component/Community/CreateOutreach";
 import HelpRequestForm from "./component/Community/HelpRequstForm";
