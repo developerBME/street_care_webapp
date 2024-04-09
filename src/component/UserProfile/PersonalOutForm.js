@@ -984,8 +984,8 @@ function PersonalOutForm() {
                           State
                         </div>
                       </div> */}
-                      {/* <div className="self-stretch h-fit  border-collapse     ">
-                        <div className=" h-14 inline-flex w-full">
+                      <div className="self-stretch h-fit border-collapse">
+                        <div className="h-14 inline-flex w-full">
                           <select
                             className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
                               error.stateError !== ""
@@ -1021,7 +1021,7 @@ function PersonalOutForm() {
                             </p>
                           </div>
                         )}
-                      </div> */}
+                      </div>
                     </div>
                     {/* <div className="self-stretch w-full h-fit flex-col  flex ">
                       <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
@@ -1078,7 +1078,7 @@ function PersonalOutForm() {
                   </div>
 
                   {/* Old form fields end */}
-                  
+
                   <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                     {/* Grid 2 */}
                     <div className="w-full h-full grid grid-cols-2 gap-4 ">

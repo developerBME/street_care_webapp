@@ -19,6 +19,7 @@ import CommOutForm from "./component/UserProfile/CommOutForm";
 import PersonalOutForm from "./component/UserProfile/PersonalOutForm";
 import Documenting from "./component/UserProfile/Documenting";
 import AccSetting from "./component/UserProfile/AccSetting";
+import ProfileSettings from "./component/UserProfile/ProfileSettings";
 import OutreachSignup from "./component/Community/OutreachSignup";
 import CreateOutreach from "./component/Community/CreateOutreach";
 import HelpRequestForm from "./component/Community/HelpRequstForm";
@@ -43,6 +44,7 @@ import EmailVerificationModal from "./component/EmailVerificationModal";
 import PanktiSample from "./component/SamplePankti";
 import Sample_form from "./component/Sample_form";
 import AllHelpRequests from "./component/AllHelpRequests";
+import ProfileSettings from "./component/UserProfile/ProfileSettings";
 
 function App() {
   const fAuth = getAuth();
@@ -127,6 +129,7 @@ function App() {
           >
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/accsetting" element={<AccSetting />} />
+            <Route path="/profile/profilesettings" element={<ProfileSettings />} />
             <Route path="/profile/commoutform" element={<CommOutForm />} />
             <Route
               path="/profile/personaloutform"
