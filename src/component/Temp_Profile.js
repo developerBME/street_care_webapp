@@ -210,10 +210,8 @@ const Temp_Profile = () => {
                     </button>
                 </div>
 
-                <div
-                    style={{ backgroundColor: '#F2F6D8' }}
-                    className="w-full max-w-[82.75rem] h-auto py-8 px-8 border border-solid border-gray-300 rounded-2xl flex items-center justify-between mx-auto mb-16"
-                >
+                <div style={{ backgroundColor: '#F2F6D8' }}
+                    className="w-full max-w-[82.75rem] h-auto py-8 px-8 border border-solid border-gray-300 rounded-2xl flex items-center justify-between mx-auto mb-16">
                     <div className="flex flex-col gap-4">
                         <p className="text-lg font-semibold text-grey-800">
                             Congratulations! You have attended more than 1 outreach event. Now you can host your own.
@@ -224,16 +222,15 @@ const Temp_Profile = () => {
                     </button>
                 </div>
 
-                <div className="grid grid-cols-4 gap-4 ">
+                <div className="md:grid md:grid-cols-4 gap-4 flex overflow-x-auto">
                     {Array.from({ length: 8 }).map((_, index) => (
-                        <div key={index} className="bg-[#F1EEFE] rounded-2xl shadow p-2 overflow-x-auto ">
-                            <h3 className="text-lg font-bold ">BK Fort Green Outreach</h3>
+                        <div key={index} className="bg-[#F1EEFE] rounded-2xl shadow p-4 min-w-[15rem] ">
+                            <h3 className="text-lg font-bold">BK Fort Green Outreach</h3>
                             <p className="text-sm text-[#37168B] mt-4">Sept 9, 2023 SAT 12:00pm</p>
                             <p className="text-sm text-gray-600 mt-4">200 Eastern Pkwy, Brooklyn, NY 11238</p>
                             <div className="flex items-center mt-4 bg-white rounded-xl p-2">
                                 <span className="text-black text-xs inline-block w-auto min-w-0">Childcare specialist needed</span>
                             </div>
-
                             <div>
                                 <button className="mt-4 bg-[#E6DCFF] hover:bg-indigo-300 text-xs font-medium rounded-full px-6 py-2 w-18.625 h-8">
                                     Edit
@@ -243,7 +240,9 @@ const Temp_Profile = () => {
                     ))}
                 </div>
 
+
             </div>
+
 
 
 
