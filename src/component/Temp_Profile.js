@@ -46,8 +46,8 @@ const Temp_Profile = () => {
                     </div>
                 </div>
 
-                <div className="px-4 pb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-[82.75rem] mx-auto">
-                    <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] gap-4">
+                <div className="px-4 pb-4 lg:grid lg:grid-cols-3 md:grid md:grid-cols-2 flex gap-4 max-w-[82.75rem] mx-auto overflow-x-auto">
+                    <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] gap-4 min-w-[18rem]">
                         <div className="relative inline-block min-w-[4rem]">
                             <img className="w-16 h-16" src={star} alt="..."></img>
                             <img
@@ -65,7 +65,7 @@ const Temp_Profile = () => {
                             </h3>
                         </div>
                     </div>
-                    <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] gap-4">
+                    <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] gap-4 min-w-[18rem]">
                         <div className="relative inline-block min-w-[4rem]">
                             <img className="w-16 h-16" src={star} alt="..."></img>
                             <img
@@ -83,7 +83,7 @@ const Temp_Profile = () => {
                             </h3>
                         </div>
                     </div>
-                    <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] gap-4">
+                    <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] gap-4 min-w-[18rem]">
                         <div className="relative inline-block min-w-[4rem]">
                             <img className="w-16 h-16" src={star} alt="..."></img>
                             <img
@@ -101,7 +101,7 @@ const Temp_Profile = () => {
                             </h3>
                         </div>
                     </div>
-                    <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] gap-4">
+                    <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] gap-4 min-w-[18rem]">
                         <div className="relative inline-block min-w-[4rem]">
                             <img className="w-16 h-16" src={star} alt="..."></img>
                         </div>
@@ -114,7 +114,7 @@ const Temp_Profile = () => {
                             </h3>
                         </div>
                     </div>
-                    <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] gap-4">
+                    <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] gap-4 min-w-[18rem]">
                         <div className="relative inline-block min-w-[4rem]">
                             <img className="w-16 h-16" src={star} alt="..."></img>
                         </div>
@@ -127,7 +127,7 @@ const Temp_Profile = () => {
                             </h3>
                         </div>
                     </div>
-                    <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] gap-4">
+                    <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] gap-4 min-w-[18rem]">
                         <div className="relative inline-block min-w-[4rem]">
                             <img className="w-16 h-16 grayscale" src={star} alt="..."></img>
                         </div>
@@ -222,9 +222,9 @@ const Temp_Profile = () => {
                     </button>
                 </div>
 
-                <div className="md:grid md:grid-cols-4 gap-4 flex overflow-x-auto">
+                <div className="lg:grid lg:grid-cols-4 gap-4 flex overflow-x-auto">
                     {Array.from({ length: 8 }).map((_, index) => (
-                        <div key={index} className="bg-[#F1EEFE] rounded-2xl shadow p-4 min-w-[15rem] ">
+                        <div key={index} className="bg-[#F1EEFE] rounded-2xl shadow p-4 min-w-[10.5rem] ">
                             <h3 className="text-lg font-bold">BK Fort Green Outreach</h3>
                             <p className="text-sm text-[#37168B] mt-4">Sept 9, 2023 SAT 12:00pm</p>
                             <p className="text-sm text-gray-600 mt-4">200 Eastern Pkwy, Brooklyn, NY 11238</p>
