@@ -6,11 +6,10 @@ export const send2FA = async (userEmail, timestamp) => {
   
     try {
       const response = await fetch('https://us-central1-streetcare-d0f33.cloudfunctions.net/sendUpdateEmail2FACode', {
-        // mode: 'no-cors',
+        mode: 'no-cors',
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
       });
