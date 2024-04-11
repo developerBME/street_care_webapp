@@ -1,22 +1,24 @@
 import React from "react";
+import { MdOutlineAccountCircle } from "react-icons/md";
+import { MdAlternateEmail } from "react-icons/md";
+import { MdLockOutline } from "react-icons/md";
 
 const settingOptions = [
   {
     title: "Update your profile",
-    logo: "img",
+    logo: <MdOutlineAccountCircle />,
     desc: "Name and Profile picture",
   },
   {
     title: "Update your email address",
-    logo: "img",
-    desc: "",
+    logo: <MdAlternateEmail />,
   },
   {
     title: "Delete your account",
-    logo: "img",
-    desc: "",
+    logo: <MdLockOutline />,
   },
 ];
+
 
 function ProfileSettings() {
   return (
@@ -32,22 +34,22 @@ function ProfileSettings() {
               </div>
             </div>
             <div className="items-center justify-center h-full w-full rounded-xl bg-white">
-              <div className="flex-col justify-start items-start gap-1 inline-flex">
+              <div className="flex-col justify-start items-start gap-1 inline-flex w-full">
                 <div className="w-full">
                   <div className="flex flex-col">
                     {settingOptions.map((option) => (
-                      <div className="flex-col border-b w-full cursor-pointer px-4 py-6 gap-1">
+                      <div className="flex-col border-b w-full cursor-pointer px-4 py-4 gap-1">
                         <div className="flex gap-3 items-center">
-                          <div className="font-dmsans text-1 text-grey-300 ">
-                            {option.logo}
-                          </div>
+                          <ul className="text-[#6840E0]">
+                            <li>{option.logo}</li>
+                          </ul>
                           <div className="flex-col flex gap-1 justify-center">
                             <div className="flex font-dmsans text-base text-grey-300 font-semibold">
                               {option.title}
                             </div>
-                            <div className="flex font-dmsans text-sm text-grey-300 font-normal">
+                            {option.desc && <div className="flex font-dmsans text-sm text-grey-300 font-normal">
                               {option.desc}
-                            </div>
+                            </div>}
                           </div>
                         </div>
                       </div>
