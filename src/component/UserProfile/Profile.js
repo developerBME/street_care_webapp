@@ -12,6 +12,7 @@ import { fetchEvents } from "../EventCardService";
 import { fetchPersonalVisitLogs } from "../VisitLogCardService";
 import OutreachVisitLogProfile from "../Community/OutreachVisitLogProfile";
 import NoOutreachDoc from "../Community/NoOutreachDoc";
+// import deleteUserData from "./DeleteUserData"
 
 function Profile() {
   const [events, setEvents] = useState([]);
