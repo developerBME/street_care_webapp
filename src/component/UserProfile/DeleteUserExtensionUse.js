@@ -1,31 +1,24 @@
-import { useEffect, useState } from 'react';
-import { auth, ExtensionToDeleteUserData } from '../firebase';
+import React, { useState } from 'react';
+import firebase from "firebase";
 
-const DeleteProfile = () => {
-    const [user, setUser] = useState(null);
+const DeleteUserData = () => {
+    const [userId, setUserId] = useState("");
 
-    useEffect(() => {
-        // Fetch the current user on component mount
-        const currentUser = auth.currentUser;
-        setUser(currentUser);
-    }, []);
-
-    const handleDeleteProfile = async (uid) => {
-        try {
-            // Trigger the extension to delete user data based on the UID
-            await ExtensionToDeleteUserData(uid); 
-            console.log("User data deleted successfully.");
-            return true;
-        } catch (error) {
-            console.error("Error deleting user data:", error);
-            return false;
-        }
+    const handleDelete = async () => {
+        const extension = firebase.extensions().get("delete-user-data");
+        await extension.call({
+            uid: userId,
+        });
+    
     };
+    /*return (
+
+    );*/
 };
 
 const testDelete = async () => {
     const testUid = 'bR8WnHpGzYPllfHclQ6Az55ZkXv2';
-    await handleDeleteProfile(testUid);
+    await handleDelete(testUid);
 };
 
-export { DeleteProfile, testDelete };
+export default DeleteUserData;
