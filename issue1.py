@@ -40,15 +40,28 @@ def update_form_field(collection_name, field_name, new_field_value):
     docs = collection.stream()
 
     for doc in docs:
-        print(f"Document ID:- {doc.id} => {doc.to_dict()}")
-        print('/n')
+        doc.reference.update({field_name:new_field_value})
    
+def add_fields_to_document(collection_name, field_name):
+    collection_ref = db.collection(collection_name)
+    docs = collection_ref.stream()
+
+    for doc in docs:
+        doc.reference.update(field_name)
+    
+
+
 # Example
 #  usage
 if __name__ == "__main__":
     # Change these values to match the form you want to update
-    collection_name = "events"
-    field_to_update = "field1"
-    new_field_value = "New Value"
+    collection_name = "kp1234"
+    field_to_update = "name_test"
+    new_field_value = "test_value_after_update"
+    new_fields_to_add = {
+        'city':'cityA',
+        'zip':7006
+    }
 
-    update_form_field(collection_name, field_to_update, new_field_value)
+    ##update_form_field(collection_name, field_to_update, new_field_value)
+    add_fields_to_document(collection_name, new_fields_to_add)
