@@ -31,9 +31,9 @@ exports.verifyUpdateEmail2FACode = functions.https.onRequest((req, res) => {
       return;
     }
 
-    const { userEmail, timestamp, code } = req.body;
+    const { userEmail, uid, timestamp, code } = req.body;
 
-    if (!userEmail || !timestamp || !code) {
+    if (!userEmail || !uid || !timestamp || !code) {
       res.status(400).send('All parameters are required');
       return;
     }
@@ -46,7 +46,7 @@ exports.verifyUpdateEmail2FACode = functions.https.onRequest((req, res) => {
       let isValid = false;
 
       for (t = previousWindowStart; t <= currentWindowEnd; t += (1 * 60 * 1000)) {
-        const hashedCode = crypto.createHmac('sha256', SECRET_KEY).update(`${userEmail}:${t}`).digest('hex');
+        const hashedCode = crypto.createHmac('sha256', SECRET_KEY).update(`${userEmail}:${uid}:${t}`).digest('hex');
 
         const hashBigInt = BigInt('0x' + hashedCode)
         const sixDigitCode = hashBigInt % 1000000n;

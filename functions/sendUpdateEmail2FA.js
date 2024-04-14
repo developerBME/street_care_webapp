@@ -32,15 +32,15 @@ exports.sendUpdateEmail2FACode = functions.https.onRequest((req, res) => {
       return;
     }
 
-    const { userEmail, timestamp } = req.body; 
+    const { userEmail, uid, timestamp } = req.body; 
 
-    if (!userEmail || !timestamp) {
+    if (!userEmail || !uid || !timestamp) {
       res.status(400).send('All fields are required!');
       return;
     }
 
     try {
-      const hashedCode = crypto.createHmac('sha256', SECRET_KEY).update(`${userEmail}:${timestamp}`).digest('hex');
+      const hashedCode = crypto.createHmac('sha256', SECRET_KEY).update(`${userEmail}:${uid}:${timestamp}`).digest('hex');
 
       const hashBigInt = BigInt('0x' + hashedCode);
       const sixDigitCode = hashBigInt % 1000000n;
