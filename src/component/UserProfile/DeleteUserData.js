@@ -9,7 +9,7 @@ import {
 } from "firebase/firestore";
 
 
-const deleteUserData = async (uid) => {
+const deleteUser = async (uid) => {
   const user = auth.currentUser;
   console.log("inside the fuction delete user");
   if (user) {
@@ -47,4 +47,4 @@ const deleteUserData = async (uid) => {
   return false;
 };
 
-export default deleteUserData;
+export default deleteUser;

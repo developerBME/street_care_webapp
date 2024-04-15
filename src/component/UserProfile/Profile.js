@@ -12,12 +12,13 @@ import { fetchEvents } from "../EventCardService";
 import { fetchPersonalVisitLogs } from "../VisitLogCardService";
 import OutreachVisitLogProfile from "../Community/OutreachVisitLogProfile";
 import NoOutreachDoc from "../Community/NoOutreachDoc";
-// import deleteUserData from "./DeleteUserData"
+import DeleteUserExtensionUse from "./DeleteUserExtensionUse";
 
 function Profile() {
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [eventsDisplay, setEventsDisplay] = useState([]);
+  const [testUid, setTestUid] = useState("");
   const navigate = useNavigate();
 
   const fetchData = async () => {
@@ -152,6 +153,11 @@ function Profile() {
             <OutreachVisitLogProfile />
           </div>
         </div>
+        <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2  mb-8 rounded-2xl bg-white text-black mt-4">
+          <div className="flex flex-col gap-4 lg:gap-14 lg:p-24 pl-8 pt-4 pb-4 pr-8">
+            <DeleteUserExtensionUse uid={auth.currentUser?.uid} />
+          </div>
+        </div>  
       </div>
     </div>
   );

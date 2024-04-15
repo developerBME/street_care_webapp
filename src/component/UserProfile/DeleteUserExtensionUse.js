@@ -1,33 +1,47 @@
 import React, { useState } from 'react';
 import { auth } from "../firebase";
 
-const DeleteUserData = () => {
+const DeleteUserExtensionUse = () => {
     const [userId, setUserId] = useState("");
     const [deleteResult, setDeleteResult] = useState("");
+    const [error, setError] = useState("");
 
     const handleDelete = async () => {
         try {
-            // getting the extension 
+            // Validate user ID
+            if (!userId) {
+                setError("Please enter a valid User ID.");
+                return;
+            }
+
+            // Getting the extension 
             const extension = auth.app.extensions.get("delete-user-data");
-            // call the extension with the usere's UID
-            const result = await extension.call({
-                uid: userId
-            });
+            // Call the extension with the user's UID
+            const result = await extension.call({ uid: userId });
             console.log("User data deleted successfully:", result);
             setDeleteResult("User data deleted successfully.");
+            setError(""); // Clear any previous errors
         } catch (error) {
-            console.error("Error deleting user data: ", error);
-            setDeleteResult("Error deleting user data.");
+            console.error("Error deleting user data:", error);
+            setDeleteResult("");
+            setError("Error deleting user data. Please try again.");
         }
     };
-    /*return (
 
-    );*/
+    return (
+        <div>
+            <input
+                type="text"
+                value={'userId'}
+                onChange={(e) => setUserId(e.target.value)}
+                disabled
+                placeholder="userId"
+            />
+            <button onClick={handleDelete}>Delete User Data</button>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {deleteResult && <p>{deleteResult}</p>}
+        </div>
+    );
 };
 
-const testDelete = async () => {
-    const testUid = 'bR8WnHpGzYPllfHclQ6Az55ZkXv2';
-    await handleDelete(testUid);
-};
-
-export default DeleteUserData;
+export default DeleteUserExtensionUse;
