@@ -75,9 +75,9 @@ function Profile() {
   }, [eventsDisplay]);
 
 
-  useEffect(() => {
-      updateEmailId("aishwaryakatkar53@gmail.com");
-    }, []);
+  // useEffect(() => {
+  //     updateEmailId("aishwaryakatkar53@gmail.com");
+  //   }, []);
 
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
