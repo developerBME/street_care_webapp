@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { auth } from "../firebase";
 
 const DeleteUserExtensionUse = () => {
-    const [userId, setUserId] = useState("");
+    const [userId, setUserId] = useState("rcNfGNzxTJUevMN5rxr51CJYqKz1");
     const [deleteResult, setDeleteResult] = useState("");
     const [error, setError] = useState("");
 
