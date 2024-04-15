@@ -16,8 +16,6 @@ export async function updateEmailId(newEmailId) {
     
     console.log(newEmailId);
     console.log(user?.email);
-
-    await updateEmail(user, newEmailId);
       
     const uid = user?.uid;
     console.log(uid);
@@ -35,6 +33,8 @@ export async function updateEmailId(newEmailId) {
       await updateDoc(userRef, {
         email: newEmailId
       });
+
+      await updateEmail(user, newEmailId);
 
       const emailChangeLog = collection(db, "emailChange");
       await addDoc(emailChangeLog, {
