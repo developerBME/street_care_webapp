@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import help_announcement from "../../images/help_announcement.png";
 import help_pending from "../../images/help_pending.png";
 import help_received from "../../images/help_received.png";
@@ -12,18 +12,23 @@ import {
 
 const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
   const navigate = useNavigate();
-  const [user, setUser] = useState(false);
+  // const [user, setUser] = useState(false);
 
   const fAuth = getAuth();
-  onAuthStateChanged(fAuth, (user) => {
-    if (user) {
-      console.log(user);
-      setUser(true);
-    } else {
-      console.log("USER NOT FOUND!");
-    }
-  });
+  // onAuthStateChanged(fAuth, (user) => {
+  //   if (user) {
+  //     console.log(user);
+  //     setUser(true);
+  //   } else {
+  //     console.log("USER NOT FOUND!");
+  //   }
+  // });
 
+  useEffect(() => {
+
+    console.log(fAuth.currentUser.uid)
+
+  }, [fAuth.currentUser.uid])
   const {
     id: id,
     status: helpStatus,
@@ -149,13 +154,13 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
           <div className="col-span-1">
             <button
               onClick={
-                !user
+                !fAuth?.currentUser?.uid
                   ? () => {
-                      navigate(`/login`);
-                    }
+                    navigate(`/login`);
+                  }
                   : () => {
-                      navigate(`/icanhelp/${id}`);
-                    }
+                    navigate(`/icanhelp/${id}`);
+                  }
               }
               className="w-fit bg-[#E6DCFF] hover:bg-[#6840E0] text-[#181818] hover:text-white rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight md:float-right"
             >
@@ -168,10 +173,10 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
             <button
               className="w-fit bg-[#E6DCFF] hover:bg-[#6840E0] text-[#181818] hover:text-white rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight md:float-right"
               onClick={
-                !user
+                !fAuth?.currentUser?.uid
                   ? () => {
-                      navigate(`/login`);
-                    }
+                    navigate(`/login`);
+                  }
                   : (e) => handleHelpRecieved(e, id, refresh)
               }
             >
