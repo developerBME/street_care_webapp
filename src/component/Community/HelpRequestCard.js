@@ -24,11 +24,9 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
   //   }
   // });
 
-  useEffect(() => {
-
-    console.log(fAuth.currentUser.uid)
-
-  }, [fAuth.currentUser.uid])
+  // useEffect(() => {
+  //   console.log(fAuth.currentUser.uid)
+  // }, [fAuth.currentUser.uid])
   const {
     id: id,
     status: helpStatus,
