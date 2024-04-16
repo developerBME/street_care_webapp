@@ -58,7 +58,7 @@ function ProfileSettings() {
                       <Link
                         href={option.href}
                         key={option.key}
-                        className="flex-col border-b w-full cursor-pointer px-4 py-4 gap-1 hover:bg-slate-50"
+                        className="flex-col border-b last:border-0 w-full cursor-pointer px-4 py-4 gap-1 hover:bg-slate-50 first:hover:rounded-t-xl last:hover:rounded-b-xl"
                       >
                         <div className="flex gap-4 items-center">
                           <ul className="text-[#6840E0] text-base">
