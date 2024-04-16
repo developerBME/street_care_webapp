@@ -29,6 +29,8 @@ export const fetchVisitLogs = async () => {
     const userDetails = await fetchUserDetails(uid);
     visitLogs.push({
       whatGiven: visitLogData.whatGiven,
+      itemQty: visitLogData?.itemQty || "",
+      numberPeopleHelped: visitLogData?.numberPeopleHelped || "",
       description: outreachEventData?.description || "",
       helpType: outreachEventData?.helpType || "",
       location: outreachEventData?.location || "",
@@ -37,6 +39,8 @@ export const fetchVisitLogs = async () => {
         : "",
       userName: userDetails.username,
       photoUrl: userDetails.photoUrl,
+      totalSlots: outreachEventData?.totalSlots || "",
+      filledSlots: outreachEventData?.filledSlots || "",
     });
   }
   return visitLogs;
@@ -54,6 +58,8 @@ const fetchOutreachEventData = async (eid) => {
     helpType: outReachEventData?.data().helpType || "",
     eventDate: outReachEventData?.data().eventDate || "",
     location: outReachEventData?.data().location || "",
+    totalSlots: outReachEventData?.data().totalSlots || "",
+    filledSlots: outReachEventData?.data().participants?.length || "",
   };
 };
 
