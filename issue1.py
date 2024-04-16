@@ -15,18 +15,19 @@
 # # Initialize Firestore client
 # db = firestore.client()
 
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
+import firebase_admin ## As per suggestions importing once
+from firebase_admin import firestore,credentials
 
 cred = credentials.Certificate("streetcare-d0f33-firebase-adminsdk-idx6g-e46500ba2b.json")
 
-app = firebase_admin.initialize_app(cred)
+## error checking for connection
+if not firebase_admin._apps:
+    app = firebase_admin.initialize_app(cred)
+else: 
+    app= firebase_admin.get_app()
 
 db = firestore.client()
 
-print(app)
-print(db)
 
 # users_ref = db.collection("BMEContactUs")
 # docs = users_ref.stream()
@@ -36,19 +37,25 @@ print(db)
 
 def update_form_field(collection_name, field_name, new_field_value):
     # Reference to the specific form document
-    collection = db.collection(collection_name)
-    docs = collection.stream()
+    try:
+        collection = db.collection(collection_name)
+        docs = collection.stream()
 
-    for doc in docs:
-        doc.reference.update({field_name:new_field_value})
+        for doc in docs:
+            doc.reference.update({field_name:new_field_value})
+    except Exception as e:
+        print(f"Error occured:{e}")
    
-def add_fields_to_document(collection_name, field_name):
-    collection_ref = db.collection(collection_name)
-    docs = collection_ref.stream()
+def add_fields_to_document(collection_name, new_fields):
+    try:
+        collection_ref = db.collection(collection_name)
+        docs = collection_ref.stream()
 
-    for doc in docs:
-        doc.reference.update(field_name)
-    
+        for doc in docs:
+            doc.reference.update(new_fields)
+    except Exception as e:
+        print(f"An error occured while adding fields: {e}")
+        
 
 
 # Example
@@ -59,7 +66,7 @@ if __name__ == "__main__":
     field_to_update = "name_test"
     new_field_value = "test_value_after_update"
     new_fields_to_add = {
-        'city':'cityA',
+        'City':'cityA',
         'zip':7006
     }
 
