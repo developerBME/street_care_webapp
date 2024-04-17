@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import star from "../images/star.png";
 import tickMark from "../images/tickMark.svg";
 import Profieimage from "../images/user.png";
+import location from "../images/location.png";
+import date from "../images/date.png";
 
 const Temp_Profile = () => {
     return (
@@ -225,12 +227,32 @@ const Temp_Profile = () => {
                 <div className="lg:grid lg:grid-cols-4 gap-4 flex overflow-x-auto">
                     {Array.from({ length: 8 }).map((_, index) => (
                         <div key={index} className="bg-[#F1EEFE] rounded-2xl shadow p-4 min-w-[10.5rem] ">
-                            <h3 className="text-lg font-bold">BK Fort Green Outreach</h3>
-                            <p className="text-sm text-[#37168B] mt-4">Sept 9, 2023 SAT 12:00pm</p>
-                            <p className="text-sm text-gray-600 mt-4">200 Eastern Pkwy, Brooklyn, NY 11238</p>
-                            <div className="flex items-center mt-4 bg-white rounded-xl p-2">
-                                <span className="text-black text-xs inline-block w-auto min-w-0">Childcare specialist needed</span>
+
+                            <div className="flex items-center mt-2">
+                                <img src={date} className=" mr-2" alt="Location" />
+                                <p className="text-sm text-[#37168B]">03/12/2023 - 14:30</p>
                             </div>
+                            <div className="flex items-center mt-2">
+                                <img src={location} className=" mr-2" alt="Location" /> 
+                                <p className="text-sm text-[#37168B]">Queens, NY</p>
+                            </div>
+                            
+                            <h3 className="text-lg font-bold mt-4">Children Welfare in New...</h3>
+
+                            <p className="text-sm text-gray-600 mt-2">Tommy, a senior citizen in a wheelchair wearing a navy blue top and brown shoes.</p>
+
+
+                            <div className="flex flex-row"> 
+                                <div className="flex items-center mt-4 bg-[#F1EEFE] rounded-full p-2 max-w-[5.5rem] border border-[#C8C8C8]">
+                                    <span className="text-black text-xs lg:w-auto">Childcare</span>
+                                </div>
+                                <div className="flex items-center mt-4 bg-[#F1EEFE] rounded-full p-2 max-w-[5.5rem] border border-[#C8C8C8] ml-2"> 
+                                    <span className="text-black text-xs lg:w-auto">Shelter</span>
+                                </div>
+                                <p className="text-sm text-gray-600 mt-6 ml-2 font-bold">+1 more</p>
+                            </div>
+
+
                             <div>
                                 <button className="mt-4 bg-[#E6DCFF] hover:bg-indigo-300 text-xs font-medium rounded-full px-6 py-2 w-18.625 h-8">
                                     Edit
