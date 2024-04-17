@@ -10,19 +10,19 @@ const settingOptions = [
     title: "Update your profile",
     logo: <MdOutlineAccountCircle />,
     desc: "Name and Profile picture",
-    href: "/ProfileSettings/UpdateEmailAddress",
+    href: "/profile/profilesettings/updateemailaddress",
     key: "updateProfile",
   },
   {
     title: "Update your email address",
     logo: <MdAlternateEmail />,
-    href: "/ProfileSettings/UpdateEmailAddress",
+    href: "/profile/profilesettings/updateemailaddress",
     key: "updateEmail",
   },
   {
     title: "Delete your account",
     logo: <MdLockOutline />,
-    href: "/ProfileSettings/UpdateEmailAddress",
+    href: "/profile/profilesettings/updateemailaddress",
     key: "deleteAccount",
   },
 ];
@@ -56,7 +56,7 @@ function ProfileSettings() {
                   <div className="flex flex-col">
                     {settingOptions.map((option) => (
                       <Link
-                        href={option.href}
+                        to={option.href}
                         key={option.key}
                         className="flex-col border-b last:border-0 w-full cursor-pointer px-4 py-4 gap-1 hover:bg-slate-50 first:hover:rounded-t-xl last:hover:rounded-b-xl"
                       >
