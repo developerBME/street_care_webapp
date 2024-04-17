@@ -1,6 +1,8 @@
 import React from 'react';
+import { useNavigate } from "react-router-dom";
 
 function CommunityHub() {
+  const navigate = useNavigate();
   return (
     <div className="community-section flex flex-col space-y-16 items-end justify-start absolute left-[78px] top-[184px] w-[1120px] h-[3602px]">
       <div className="community-info flex flex-col items-center justify-start relative w-[1120px] h-[666px]">
