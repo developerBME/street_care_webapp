@@ -3,7 +3,7 @@ import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import profilePic from "../../images/avatar.jpg";
 import wavingHand from "../../images/waving_hand.png";
-import { fetchVisitLogById } from "../VisitLogCardService"
+import { fetchVisitLogById } from "../VisitLogCardService";
 
 const VisitLogDetails = () => {
   // const navigate = useNavigate();
@@ -11,13 +11,13 @@ const VisitLogDetails = () => {
   // const details = new URLSearchParams(location.search);
   // const categories = details.getAll("categories");
   const { id } = useParams();
-  console.log(id)
+  console.log(id);
   const [data, setData] = useState(null);
 
   useEffect(() => {
     const getData = async () => {
       try {
-        const result = await fetchVisitLogById(id)
+        const result = await fetchVisitLogById(id);
         setData(result);
       } catch (error) {
         console.error(error.message);
@@ -81,7 +81,9 @@ const VisitLogDetails = () => {
               </div>
             </div>
             <div className="space-y-[32px]">
-              <div className="text-neutral-800 text-[22px] font-bold font-['Bricolage Grotesque'] leading-7">Would you like to type a note you would like to share ?</div>
+              <div className="text-neutral-800 text-[22px] font-bold font-['Bricolage Grotesque'] leading-7">
+                Would you like to type a note you would like to share ?
+              </div>
               <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
                 <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
                   <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">

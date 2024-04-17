@@ -129,8 +129,14 @@ function App() {
           >
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/accsetting" element={<AccSetting />} />
-            <Route path="/profile/profilesettings" element={<ProfileSettings />} />
-            <Route path="/profile/profilesettings/updateemailaddress" element={< UpdateEmailAddress />} />
+            <Route
+              path="/profile/profilesettings"
+              element={<ProfileSettings />}
+            />
+            <Route
+              path="/profile/profilesettings/updateemailaddress"
+              element={<UpdateEmailAddress />}
+            />
             <Route path="/profile/commoutform" element={<CommOutForm />} />
             <Route
               path="/profile/personaloutform"
