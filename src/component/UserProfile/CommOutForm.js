@@ -574,6 +574,14 @@ function CommOutForm() {
                         ></input>
                       </div>
                     </div>
+                    {error.checkboxesError && (
+                      <div className="inline-flex items-center">
+                        <img src={errorImg} className="w-3 h-3" />
+                        <p className="text-red-600 text-xs">
+                          {error.checkboxesError}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
                 {/*  */}

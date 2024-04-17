@@ -46,7 +46,7 @@ const OutreachEventCard = ({
   };
 
   return (
-    <div className="bg-[#F5EEFE] min-w-fit max-w-[320px] lg:w-full rounded-[30px] mb-4 flex flex-col justify-between p-6">
+    <div className="bg-[#F5EEFE] min-w-full max-w-[320px] lg:w-full rounded-[30px] mb-4 flex flex-col justify-between p-6">
       {!isProfilePage && !isPastEvent ? (
         <div className="inline-flex items-center space-x-2 ">
           <img
@@ -226,8 +226,8 @@ const OutreachEventCard = ({
                 <img className="w-[20px] h-[14px] my-1" src={userSlots}></img>
                 <div className="font-normal font-dmsans text-[14px]">
                   {/* Open Spots: {totalSlots - nop}/{totalSlots} */}
-                  {/* {totalSlots - nop}/{totalSlots} */}
-                  {nop}/{totalSlots}
+                  {totalSlots - nop}/{totalSlots}
+                  {/* {nop}/{totalSlots} */}
                 </div>
               </div>
             ) : (

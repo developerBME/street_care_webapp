@@ -44,8 +44,7 @@ import PanktiSample from "./component/SamplePankti";
 import Sample_form from "./component/Sample_form";
 import AllHelpRequests from "./component/AllHelpRequests";
 import ProfileSettings from "./component/UserProfile/ProfileSettings";
-import CommunityHub from "./component/Sample_Aditya";
-
+import UpdateEmailAddress from "./component/UserProfile/ProfileSettings/UpdateEmailAddress";
 
 function App() {
   const fAuth = getAuth();
@@ -130,7 +129,14 @@ function App() {
           >
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/accsetting" element={<AccSetting />} />
-            <Route path="/profile/profilesettings" element={<ProfileSettings />} />
+            <Route
+              path="/profile/profilesettings"
+              element={<ProfileSettings />}
+            />
+            <Route
+              path="/profile/profilesettings/updateemailaddress"
+              element={<UpdateEmailAddress />}
+            />
             <Route path="/profile/commoutform" element={<CommOutForm />} />
             <Route
               path="/profile/personaloutform"
