@@ -9,9 +9,8 @@ import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import CustomButton from "../Buttons/CustomButton";
 import NoOutreachDoc from "./NoOutreachDoc";
 import { auth } from "../firebase";
-   
-const OutreachVisitLogProfile = () => {  
 
+const OutreachVisitLogProfile = () => {
   const [visibleItems, setVisibleItems] = useState(3);
   const loadMore = () => {
     setVisibleItems((prev) => prev + 3);
@@ -22,17 +21,16 @@ const OutreachVisitLogProfile = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-    
   useEffect(() => {
     const fetchData = async () => {
       const user = auth.currentUser;
-  
+
       if (user) {
         const logs = await fetchPersonalVisitLogs(auth?.currentUser?.uid);
         setVisitLogs(logs);
         setIsLoading(false);
         // console.log("This is from fetchpersonalvisitlog",logs);
-      // Extract states and remove duplicates
+        // Extract states and remove duplicates
       } else {
         console.log("No user is signed in.");
         setVisitLogs([]);
@@ -40,27 +38,24 @@ const OutreachVisitLogProfile = () => {
     };
     fetchData();
   }, [auth.currentUser]);
-  
+
   return (
     <div>
-      
       <div className="flex flex-col justify-between sm:flex-row sm:space-x-16 mb-10">
-              <div className="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage text-left leading-[52px]">
-                My Visit Logs
-              </div>
-              
-                <CustomButton
-                  label="Document New Visit Log"
-                  className="text-right"
-                  name="buttondefaulticon"
-                  icon={icon}
-                  onClick={() => {
-                    navigate("/profile/select-outreach");
-                  }}
-                />
-              
-            </div>
-      
+        <div className="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage text-left leading-[52px]">
+          My Visit Logs
+        </div>
+
+        <CustomButton
+          label="Document New Visit Log"
+          className="text-right"
+          name="buttondefaulticon"
+          icon={icon}
+          onClick={() => {
+            navigate("/profile/select-outreach");
+          }}
+        />
+      </div>
 
       {isLoading ? (
         <div className=" flex justify-between items-center w-full h-fit gap-2">
@@ -71,18 +66,17 @@ const OutreachVisitLogProfile = () => {
       ) : (
         <>
           {visitLogs.length > 0 && (
-            
             <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2 gap-y-2 mb-6">
               {visitLogs.slice(0, visibleItems).map((visitLogData, index) => (
                 <div key={index} className="flex p-2">
                   <div className="flex-1">
-                  {/* <OutreachVisitLogCard
+                    {/* <OutreachVisitLogCard
                     visitLogCardData={visitLogData}
                     IsNotProfile={false}
                   /> */}
-                  <OutreachVisitLogProfileCard
-                    visitLogCardData={visitLogData}
-                  />
+                    <OutreachVisitLogProfileCard
+                      visitLogCardData={visitLogData}
+                    />
                   </div>
                 </div>
               ))}
@@ -98,7 +92,7 @@ const OutreachVisitLogProfile = () => {
             </button>
           )}
 
-          {visitLogs.length == 0 && (<NoOutreachDoc isPersonalVisitLog={true}/>) }
+          {visitLogs.length == 0 && <NoOutreachDoc isPersonalVisitLog={true} />}
         </>
       )}
     </div>

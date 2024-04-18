@@ -238,39 +238,50 @@ const CommunityOutreachEvent = () => {
           </div> */}
         </div>
 
-        {isLoading ? (
-          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
-            <EventCardSkeleton />
-            <EventCardSkeleton />
-            <EventCardSkeleton />
+        {eventsDisplay.length == 0 ? (
+          <div className="text-md font-medium font-dmsans text-[#181818] mt-2">
+            No outreaches
           </div>
         ) : (
-          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
-            {selectedState === ""
-              ? upcomingEvents.map((eventData) => (
-                  <OutreachEventCard
-                    key={eventData.id}
-                    cardData={{
-                      ...eventData,
-                      eventDate: formatDate(
-                        new Date(eventData.eventDate.seconds * 1000)
-                      ),
-                    }}
-                  />
-                ))
-              : filteredEvents.map((eventData) => (
-                  <OutreachEventCard
-                    key={eventData.id}
-                    cardData={{
-                      ...eventData,
-                      eventDate: formatDate(
-                        new Date(eventData.eventDate.seconds * 1000)
-                      ),
-                    }}
-                  />
-                ))}
-          </div>
+          <>
+            {isLoading ? (
+              // <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
+              <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
+                <EventCardSkeleton />
+                <EventCardSkeleton />
+                <EventCardSkeleton />
+              </div>
+            ) : (
+              // <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
+              <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
+                {selectedState === ""
+                  ? upcomingEvents.map((eventData) => (
+                      <OutreachEventCard
+                        key={eventData.id}
+                        cardData={{
+                          ...eventData,
+                          eventDate: formatDate(
+                            new Date(eventData.eventDate.seconds * 1000)
+                          ),
+                        }}
+                      />
+                    ))
+                  : filteredEvents.map((eventData) => (
+                      <OutreachEventCard
+                        key={eventData.id}
+                        cardData={{
+                          ...eventData,
+                          eventDate: formatDate(
+                            new Date(eventData.eventDate.seconds * 1000)
+                          ),
+                        }}
+                      />
+                    ))}
+              </div>
+            )}
+          </>
         )}
+
         {/* {visibleItems < upcomingEvents.length && (
           <button
             className="w-full px-6 py-2.5 rounded-full text-sm font-medium text-violet-950 font-['DM Sans'] border border-stone-300"

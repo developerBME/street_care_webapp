@@ -43,6 +43,8 @@ import EmailVerificationModal from "./component/EmailVerificationModal";
 import PanktiSample from "./component/SamplePankti";
 import Sample_form from "./component/Sample_form";
 import AllHelpRequests from "./component/AllHelpRequests";
+import ProfileSettings from "./component/UserProfile/ProfileSettings";
+import UpdateEmailAddress from "./component/UserProfile/ProfileSettings/UpdateEmailAddress";
 
 function App() {
   const fAuth = getAuth();
@@ -127,6 +129,14 @@ function App() {
           >
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/accsetting" element={<AccSetting />} />
+            <Route
+              path="/profile/profilesettings"
+              element={<ProfileSettings />}
+            />
+            <Route
+              path="/profile/profilesettings/updateemailaddress"
+              element={<UpdateEmailAddress />}
+            />
             <Route path="/profile/commoutform" element={<CommOutForm />} />
             <Route
               path="/profile/personaloutform"
@@ -168,6 +178,7 @@ function App() {
             path="/allOutreachVisitLog"
             element={<AllOutreachVisitLog />}
           />
+          <Route path="/adityaSample" element={<CommunityHub />} />
           <Route path="/srushtiSample" element={<SrushtiSample />} />
           <Route path="/panktiSample" element={<PanktiSample />} />
           <Route path="/sample_form" element={<Sample_form />} />

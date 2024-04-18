@@ -89,10 +89,10 @@ const CommunityVisitLog = () => {
   }, [events]);
 
   useEffect(() => {
-    if (eventsDisplay.length > 0) {
+    if (visitLogs.length > 0) {
       setIsLoading(false);
     }
-  }, [eventsDisplay]);
+  }, [visitLogs]);
 
   return (
     <div>
@@ -138,13 +138,15 @@ const CommunityVisitLog = () => {
       <div className="px-4 py-8 pb-4 lg:px-10 lg:pb-10">
         <div className="flex items-center justify-between"></div>
         {isLoading ? (
-          <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
+          // <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
+          <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
             <EventCardSkeleton />
             <EventCardSkeleton />
             <EventCardSkeleton />
           </div>
         ) : (
-          <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
+          // <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
+          <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
             {visitLogs.slice(0, 3).map((visitLogData) => (
               <OutreachVisitLogCard
                 visitLogCardData={visitLogData}

@@ -210,33 +210,33 @@ const HelpRequest = () => {
 
     // Sort helpRequests in place based on their date
     helpRequestData.sort((a, b) => a.createdAt - b.createdAt);
-
     setHelpRequests(helpRequestData);
+    setIsLoading(false)
   };
 
   const [helpRequests, setHelpRequests] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const helpRequestData = await fetchHelpRequests();
+    // const fetchData = async () => {
+    //   const helpRequestData = await fetchHelpRequests();
 
-      // Sort helpRequests in place based on their date
-      helpRequestData.sort((a, b) => a.createdAt - b.createdAt);
+    //   // Sort helpRequests in place based on their date
+    //   helpRequestData.sort((a, b) => a.createdAt - b.createdAt);
 
-      setHelpRequests(helpRequestData);
-    };
+    //   setHelpRequests(helpRequestData);
+    // };
 
     fetchData();
   }, []);
 
-  // Simulate an API call or data loading
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 3000); // Simulate a 3-second loading time (adjust as needed)
+  // // Simulate an API call or data loading
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setIsLoading(false);
+  //   }, 3000); // Simulate a 3-second loading time (adjust as needed)
 
-    return () => clearTimeout(timer);
-  }, []);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   return (
     <div>

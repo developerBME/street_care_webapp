@@ -70,7 +70,7 @@ const loadScript = (url, callback) => {
 };
 
 const Form = (hrid) => {
-  console.log(hrid.hrid);
+  // console.log(hrid.hrid);
   const [success, setSuccess] = useState(false);
   const nameRef = useRef("");
   const descRef = useRef("");
@@ -180,9 +180,6 @@ const Form = (hrid) => {
     }
   }, [helpDetails]);
 
-  useEffect(() => {
-    console.log(helpDetails);
-  }, [helpDetails]);
   useEffect(() => {
     const submitForm = async () => {
       const hasErrors = Object.values(error).some(
@@ -423,7 +420,7 @@ const Form = (hrid) => {
     }
 
     if (!stateRef.current.value) {
-      updateErrorState("stateError", "Street is required");
+      updateErrorState("stateError", "State is required");
     } else {
       try {
         checkString(stateRef.current.value, "Event Name");
@@ -447,14 +444,20 @@ const Form = (hrid) => {
       }
     }
 
+    if (startDate && endDate && startDate >= endDate) {
+      updateErrorState("stimeError", "Start DateTime should be before End DateTime");
+    } else {
+      updateErrorState("stimeError", "");
+    }
+
     if (!startDate) {
-      updateErrorState("stimeError", "Start Time is required");
+      updateErrorState("stimeError", "Start DateTime is required");
     } else {
       updateErrorState("stimeError", "");
     }
 
     if (!endDate) {
-      updateErrorState("etimeError", "End Time is required");
+      updateErrorState("etimeError", "End DateTime is required");
     } else {
       updateErrorState("etimeError", "");
     }
@@ -501,6 +504,7 @@ const Form = (hrid) => {
 
   const handlePlaceSelect = async (updateQuery) => {
     const addressObject = await autoComplete.getPlace();
+    console.log('addressObject: ', addressObject);
 
     const query = addressObject.formatted_address;
     updateQuery(query);
@@ -585,7 +589,7 @@ const Form = (hrid) => {
               {error.nameError && (
                 <div className="inline-flex items-center">
                   <img src={errorImg} className="w-3 h-3" />
-                  <p className="text-red-600 text-xs">{error.nameError}</p>
+                  <p className="text-red-600 text-xs mx-1">{error.nameError}</p>
                 </div>
               )}
             </div>
@@ -606,7 +610,7 @@ const Form = (hrid) => {
               {error.descError && (
                 <div className="inline-flex items-center">
                   <img src={errorImg} className="w-3 h-3" />
-                  <p className="text-red-600 text-xs">{error.descError}</p>
+                  <p className="text-red-600 text-xs mx-1">{error.descError}</p>
                 </div>
               )}
             </div>
@@ -622,13 +626,15 @@ const Form = (hrid) => {
                 ref={maxCapRef}
                 onChange={handleCapChange}
               />
-              <p className="font-normal font-['Inter'] text-xs">
-                Please provide a numerical value.
-              </p>
+              {/* <p className="font-normal font-['Inter'] text-xs">
+                Please provide a numerical value
+              </p> */}
               {error.maxCapError && (
                 <div className="inline-flex items-center">
                   <img src={errorImg} className="w-3 h-3" />
-                  <p className="text-red-600 text-xs">{error.maxCapError}</p>
+                  <p className="text-red-600 text-xs mx-1">
+                    {error.maxCapError}
+                  </p>
                 </div>
               )}
             </div>
@@ -652,7 +658,7 @@ const Form = (hrid) => {
               {error.idError && (
                 <div className="inline-flex items-center">
                   <img src={errorImg} className="w-3 h-3" />
-                  <p className="text-red-600 text-xs">{error.idError}</p>
+                  <p className="text-red-600 text-xs mx-1">{error.idError}</p>
                 </div>
               )}
             </div>
@@ -674,7 +680,9 @@ const Form = (hrid) => {
                 {error.streetError && (
                   <div className="inline-flex items-center">
                     <img src={errorImg} className="w-3 h-3" />
-                    <p className="text-red-600 text-xs">{error.streetError}</p>
+                    <p className="text-red-600 text-xs mx-1">
+                      {error.streetError}
+                    </p>
                   </div>
                 )}
               </div>
@@ -688,21 +696,23 @@ const Form = (hrid) => {
                     error.cityError !== "" ? "ring-red-500" : "ring-gray-300"
                   }`}
                   placeholder="City"
-                  // ref={cityRef}
+                  ref={cityRef}
                   onChange={handleCityChange}
                   value={cityName}
                 />
                 {error.cityError && (
                   <div className="inline-flex items-center">
                     <img src={errorImg} className="w-3 h-3" />
-                    <p className="text-red-600 text-xs">{error.cityError}</p>
+                    <p className="text-red-600 text-xs mx-1">
+                      {error.cityError}
+                    </p>
                   </div>
                 )}
               </div>
             </div>
 
             <div className=" grid grid-cols-2 space-x-4">
-              <div className="space-y-2.5">
+              <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
                   State*
                 </p>
@@ -719,7 +729,9 @@ const Form = (hrid) => {
                 {error.stateError && (
                   <div className="inline-flex items-center">
                     <img src={errorImg} className="w-3 h-3" />
-                    <p className="text-red-600 text-xs">{error.stateError}</p>
+                    <p className="text-red-600 text-xs mx-1">
+                      {error.stateError}
+                    </p>
                   </div>
                 )}
               </div>
@@ -733,13 +745,16 @@ const Form = (hrid) => {
                     error.zipError !== "" ? "ring-red-500" : "ring-gray-300"
                   }`}
                   placeholder="Zipcode"
+                  ref={zipcodeRef}
                   onChange={handleZipChange}
                   value={postcode}
                 />
                 {error.zipError && (
                   <div className="inline-flex items-center">
                     <img src={errorImg} className="w-3 h-3" />
-                    <p className="text-red-600 text-xs">{error.zipError}</p>
+                    <p className="text-red-600 text-xs mx-1">
+                      {error.zipError}
+                    </p>
                   </div>
                 )}
               </div>
@@ -956,7 +971,9 @@ const Form = (hrid) => {
                 {error.stimeError && (
                   <div className="inline-flex items-center">
                     <img src={errorImg} className="w-3 h-3" />
-                    <p className="text-red-600 text-xs">{error.stimeError}</p>
+                    <p className="text-red-600 text-xs mx-1">
+                      {error.stimeError}
+                    </p>
                   </div>
                 )}
               </div>
@@ -989,7 +1006,9 @@ const Form = (hrid) => {
                 {error.etimeError && (
                   <div className="inline-flex items-center">
                     <img src={errorImg} className="w-3 h-3" />
-                    <p className="text-red-600 text-xs">{error.etimeError}</p>
+                    <p className="text-red-600 text-xs mx-1">
+                      {error.etimeError}
+                    </p>
                   </div>
                 )}
               </div>
@@ -1035,7 +1054,7 @@ const Form = (hrid) => {
             {error.helpError && (
               <div className="inline-flex items-center">
                 <img src={errorImg} className="w-3 h-3" />
-                <p className="text-red-600 text-xs">{error.helpError}</p>
+                <p className="text-red-600 text-xs mx-1">{error.helpError}</p>
               </div>
             )}
           </div>
