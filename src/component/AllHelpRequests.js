@@ -56,19 +56,6 @@ const AllHelpRequests = () => {
     }, [helpRequestsDisplay]);
 
     const searchChange = () => {
-        console.log(searchRef.current.value);
-        console.log(helpRequests[0]);
-        console.log(
-            helpRequests.filter(
-                (x) =>
-                    x.title
-                        .toLowerCase()
-                        .search(searchRef.current.value.toLowerCase()) > -1 ||
-                    x.userName
-                        .toLowerCase()
-                        .search(searchRef.current.value.toLowerCase()) > -1
-            )
-        );
         setHelpRequestsDisplay(
             helpRequests.filter(
                 (x) =>
