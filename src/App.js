@@ -47,151 +47,193 @@ import ProfileSettings from "./component/UserProfile/ProfileSettings";
 import UpdateEmailAddress from "./component/UserProfile/ProfileSettings/UpdateEmailAddress";
 
 function App() {
-  const fAuth = getAuth();
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [photoUrl, setPhotoUrl] = useState("");
-  const [firebaseUser, setFirebaseUser] = useState({});
-  const [loadingUser, setLoadingUser] = useState(true);
+    const fAuth = getAuth();
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [photoUrl, setPhotoUrl] = useState("");
+    const [firebaseUser, setFirebaseUser] = useState({});
+    const [loadingUser, setLoadingUser] = useState(true);
 
-  console.log(firebaseUser);
+    console.log(firebaseUser);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(fAuth, async (user) => {
-      if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/auth.user
-        setLoggedIn(true);
-        setFirebaseUser(user);
-        setLoadingUser(false);
-        try {
-          const userRef = query(
-            collection(db, "users"),
-            where("uid", "==", fAuth?.currentUser?.uid)
-          );
-          const data = await getDocs(userRef);
-          if (typeof data.docs[0] == "undefined") {
-            setPhotoUrl("");
-            console.log("UNDEFINED");
-          } else {
-            setPhotoUrl(data.docs[0].data().photoUrl);
-          }
-        } catch (err) {
-          console.log(err);
-        }
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(fAuth, async (user) => {
+            if (user) {
+                // User is signed in, see docs for a list of available properties
+                // https://firebase.google.com/docs/reference/js/auth.user
+                setLoggedIn(true);
+                setFirebaseUser(user);
+                setLoadingUser(false);
+                try {
+                    const userRef = query(
+                        collection(db, "users"),
+                        where("uid", "==", fAuth?.currentUser?.uid)
+                    );
+                    const data = await getDocs(userRef);
+                    if (typeof data.docs[0] == "undefined") {
+                        setPhotoUrl("");
+                        console.log("UNDEFINED");
+                    } else {
+                        setPhotoUrl(data.docs[0].data().photoUrl);
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
 
-        // if (fAuth?.currentUser?.providerData[0].providerId === 'google.com') {
-        //   setPhotoUrl(fAuth?.currentUser?.photoURL.toString().substring(0,fAuth?.currentUser?.photoURL.toString().indexOf("=")+1) + "s224-c");
-        // } else if (fAuth?.currentUser?.providerData[0].providerId === 'twitter.com'){
-        //   setPhotoUrl(fAuth?.currentUser?.photoURL.toString().substring(0,fAuth?.currentUser?.photoURL.toString().indexOf("_normal")) + ".png");
-        // } else if (fAuth?.currentUser?.providerData[0].providerId === 'facebook.com'){
-        //   setPhotoUrl(fAuth?.currentUser?.photoURL.toString());
-        // } else {
-        //   setPhotoUrl("")
-        // }
-        // ...
-      } else {
-        // setLoggedIn(false);
-        // User is signed out
-        // ...
-        setLoadingUser(false);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  return (
-    <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
-      <Router>
-        <ScrollToTop />
-        <NavBar
-          loggedIn={loggedIn}
-          photoUrl={photoUrl}
-          setLoggedIn={setLoggedIn}
-        />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/howtohelp" element={<HowToHelp />} />
-          <Route path="/community" element={<Community />} />
-          {/* <Route path="/community" element={<CommunityComingSoon />} /> */}
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/ForgotPassword" element={<ForgotPassword />} />
-          <Route path="/signup" element={<Signup2 />} />
-          <Route path="/allnews" element={<Newscard />} />
-          <Route path="/allnews/:id" element={<Readmorenews />} />
-          <Route path="/verifyemail" element={<EmailVerificationModal />} />
-          <Route
-            element={
-              <ProtectedRoute user={firebaseUser} loading={loadingUser} />
+                // if (fAuth?.currentUser?.providerData[0].providerId === 'google.com') {
+                //   setPhotoUrl(fAuth?.currentUser?.photoURL.toString().substring(0,fAuth?.currentUser?.photoURL.toString().indexOf("=")+1) + "s224-c");
+                // } else if (fAuth?.currentUser?.providerData[0].providerId === 'twitter.com'){
+                //   setPhotoUrl(fAuth?.currentUser?.photoURL.toString().substring(0,fAuth?.currentUser?.photoURL.toString().indexOf("_normal")) + ".png");
+                // } else if (fAuth?.currentUser?.providerData[0].providerId === 'facebook.com'){
+                //   setPhotoUrl(fAuth?.currentUser?.photoURL.toString());
+                // } else {
+                //   setPhotoUrl("")
+                // }
+                // ...
+            } else {
+                // setLoggedIn(false);
+                // User is signed out
+                // ...
+                setLoadingUser(false);
             }
-          >
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/profile/accsetting" element={<AccSetting />} />
-            <Route
-              path="/profile/profilesettings"
-              element={<ProfileSettings />}
-            />
-            <Route
-              path="/profile/profilesettings/updateemailaddress"
-              element={<UpdateEmailAddress />}
-            />
-            <Route path="/profile/commoutform" element={<CommOutForm />} />
-            <Route
-              path="/profile/personaloutform"
-              element={<PersonalOutForm />}
-            />
-            <Route path="/createOutreach" element={<CreateOutreach />} />
-            <Route
-              path="/createOutreach/:helpreqid"
-              element={<CreateOutreach />}
-            />
-            <Route path="/helpRequestForm" element={<HelpRequestForm />} />
-          </Route>
+        });
 
-          <Route path="/profile/select-outreach" element={<Documenting />} />
+        return () => unsubscribe();
+    }, []);
 
-          {/* <Route path="/profile/commoutform" element={<ComingSoon />} /> */}
+    return (
+        <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
+            <Router>
+                <ScrollToTop />
+                <NavBar
+                    loggedIn={loggedIn}
+                    photoUrl={photoUrl}
+                    setLoggedIn={setLoggedIn}
+                />
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/howtohelp" element={<HowToHelp />} />
+                    <Route path="/community" element={<Community />} />
+                    {/* <Route path="/community" element={<CommunityComingSoon />} /> */}
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route
+                        path="/ForgotPassword"
+                        element={<ForgotPassword />}
+                    />
+                    <Route path="/signup" element={<Signup2 />} />
+                    <Route path="/allnews" element={<Newscard />} />
+                    <Route path="/allnews/:id" element={<Readmorenews />} />
+                    <Route
+                        path="/verifyemail"
+                        element={<EmailVerificationModal />}
+                    />
+                    <Route
+                        element={
+                            <ProtectedRoute
+                                user={firebaseUser}
+                                loading={loadingUser}
+                            />
+                        }
+                    >
+                        <Route path="/profile" element={<Profile />} />
+                        <Route
+                            path="/profile/accsetting"
+                            element={<AccSetting />}
+                        />
+                        <Route
+                            path="/profile/profilesettings"
+                            element={<ProfileSettings />}
+                        />
+                        <Route
+                            path="/profile/profilesettings/updateemailaddress"
+                            element={<UpdateEmailAddress />}
+                        />
+                        <Route
+                            path="/profile/commoutform"
+                            element={<CommOutForm />}
+                        />
+                        <Route
+                            path="/profile/personaloutform"
+                            element={<PersonalOutForm />}
+                        />
+                        <Route
+                            path="/createOutreach"
+                            element={<CreateOutreach />}
+                        />
+                        <Route
+                            path="/createOutreach/:helpreqid"
+                            element={<CreateOutreach />}
+                        />
+                        <Route
+                            path="/helpRequestForm"
+                            element={<HelpRequestForm />}
+                        />
+                    </Route>
 
-          <Route path="/outreachsignup" element={<OutreachSignup />} />
-          <Route path="/outreachsignup/:id" element={<OutreachSignup />} />
+                    <Route
+                        path="/profile/select-outreach"
+                        element={<Documenting />}
+                    />
 
-          <Route
-            path="/helpRequestEventWindow"
-            element={<HelpRequestEventWindow />}
-          />
-          {/* <Route path="/helpRequestEventWindow" element={<ComingSoon />} /> */}
+                    {/* <Route path="/profile/commoutform" element={<ComingSoon />} /> */}
 
-          {/* <Route path="/helpRequestForm" element={<ComingSoon />} /> */}
-          <Route path="/icanhelp/:id" element={<ICanHelpForm />} />
-          {/* <Route path="/icanhelp" element={<ComingSoon />} /> */}
-          {/* <Route path="/donateForm" element={<DonateForm />} /> */}
-          <Route path="/donateForm" element={<ComingSoon />} />
-          <Route path="/allOutreachEvents" element={<AllOutreachEvents />} />
-          {/* <Route path="/createBME" element={<CreateBME />} /> */}
-          <Route
-            path="/allPastOutreachEvents"
-            element={<AllPastOutreachEvents />}
-          />
-          <Route
-            path="/allOutreachVisitLog"
-            element={<AllOutreachVisitLog />}
-          />
-          <Route path="/adityaSample" element={<CommunityHub />} />
-          <Route path="/srushtiSample" element={<SrushtiSample />} />
-          <Route path="/panktiSample" element={<PanktiSample />} />
-          <Route path="/sample_form" element={<Sample_form />} />
-          <Route path="visitLogDetails" element={<VisitLogDetails />} />
-          <Route path="visitLogDetails/:id" element={<VisitLogDetails />} />
-          <Route path="/*" element={<Not404 />} />
-          <Route path="/temp_profile" element={<Temp_Profile />} />
-          <Route path="/allHelpRequests" element={<AllHelpRequests />} />
-        </Routes>
-        <Footer />
-      </Router>
-    </div>
-  );
+                    <Route
+                        path="/outreachsignup"
+                        element={<OutreachSignup />}
+                    />
+                    <Route
+                        path="/outreachsignup/:id"
+                        element={<OutreachSignup />}
+                    />
+
+                    <Route
+                        path="/helpRequestEventWindow"
+                        element={<HelpRequestEventWindow />}
+                    />
+                    {/* <Route path="/helpRequestEventWindow" element={<ComingSoon />} /> */}
+
+                    {/* <Route path="/helpRequestForm" element={<ComingSoon />} /> */}
+                    <Route path="/icanhelp/:id" element={<ICanHelpForm />} />
+                    {/* <Route path="/icanhelp" element={<ComingSoon />} /> */}
+                    {/* <Route path="/donateForm" element={<DonateForm />} /> */}
+                    <Route path="/donateForm" element={<ComingSoon />} />
+                    <Route
+                        path="/allOutreachEvents"
+                        element={<AllOutreachEvents />}
+                    />
+                    {/* <Route path="/createBME" element={<CreateBME />} /> */}
+                    <Route
+                        path="/allPastOutreachEvents"
+                        element={<AllPastOutreachEvents />}
+                    />
+                    <Route
+                        path="/allOutreachVisitLog"
+                        element={<AllOutreachVisitLog />}
+                    />
+                    {/* <Route path="/adityaSample" element={<CommunityHub />} /> */}
+                    <Route path="/srushtiSample" element={<SrushtiSample />} />
+                    <Route path="/panktiSample" element={<PanktiSample />} />
+                    <Route path="/sample_form" element={<Sample_form />} />
+                    <Route
+                        path="visitLogDetails"
+                        element={<VisitLogDetails />}
+                    />
+                    <Route
+                        path="visitLogDetails/:id"
+                        element={<VisitLogDetails />}
+                    />
+                    <Route path="/*" element={<Not404 />} />
+                    <Route path="/temp_profile" element={<Temp_Profile />} />
+                    <Route
+                        path="/allHelpRequests"
+                        element={<AllHelpRequests />}
+                    />
+                </Routes>
+                <Footer />
+            </Router>
+        </div>
+    );
 }
 
 export default App;
