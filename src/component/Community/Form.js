@@ -70,7 +70,7 @@ const loadScript = (url, callback) => {
 };
 
 const Form = (hrid) => {
-  console.log(hrid.hrid);
+  // console.log(hrid.hrid);
   const [success, setSuccess] = useState(false);
   const nameRef = useRef("");
   const descRef = useRef("");
@@ -180,9 +180,6 @@ const Form = (hrid) => {
     }
   }, [helpDetails]);
 
-  useEffect(() => {
-    console.log(helpDetails);
-  }, [helpDetails]);
   useEffect(() => {
     const submitForm = async () => {
       const hasErrors = Object.values(error).some(
@@ -423,7 +420,7 @@ const Form = (hrid) => {
     }
 
     if (!stateRef.current.value) {
-      updateErrorState("stateError", "Street is required");
+      updateErrorState("stateError", "State is required");
     } else {
       try {
         checkString(stateRef.current.value, "Event Name");
@@ -447,14 +444,20 @@ const Form = (hrid) => {
       }
     }
 
+    if (startDate && endDate && startDate >= endDate) {
+      updateErrorState("stimeError", "Start DateTime should be before End DateTime");
+    } else {
+      updateErrorState("stimeError", "");
+    }
+
     if (!startDate) {
-      updateErrorState("stimeError", "Start Time is required");
+      updateErrorState("stimeError", "Start DateTime is required");
     } else {
       updateErrorState("stimeError", "");
     }
 
     if (!endDate) {
-      updateErrorState("etimeError", "End Time is required");
+      updateErrorState("etimeError", "End DateTime is required");
     } else {
       updateErrorState("etimeError", "");
     }
@@ -501,6 +504,7 @@ const Form = (hrid) => {
 
   const handlePlaceSelect = async (updateQuery) => {
     const addressObject = await autoComplete.getPlace();
+    console.log('addressObject: ', addressObject);
 
     const query = addressObject.formatted_address;
     updateQuery(query);
