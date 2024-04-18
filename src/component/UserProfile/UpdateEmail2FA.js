@@ -1,5 +1,3 @@
-import { fetch } from 'node-fetch';
-
 const send2FA = async (userEmail, uid, timestamp) => {
   const data = {
     userEmail,
@@ -9,24 +7,28 @@ const send2FA = async (userEmail, uid, timestamp) => {
 
   try {
     const response = await fetch('https://us-central1-streetcare-d0f33.cloudfunctions.net/sendUpdateEmail2FACode', {
-    mode: 'no-cors',  
-    method: 'POST',
+      mode: 'no-cors',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(data)
     });
 
+    const responseData = await response.text();
+
     if (response.ok) {
-      const responseData = await response.text();
       console.log(responseData);
-      alert('2FA code sent successfully.');
+      console.log('2FA code sent successfully.');
     } else {
-      throw new Error('Failed to send 2FA code');
+      console.error(responseData);
+      console.log('Failed to send 2FA code: ' + responseData);
     }
+    return { status: response.status, data: responseData };
   } catch (error) {
     console.error('Error:', error);
-    alert('Error sending 2FA code');
+    console.log('Error sending 2FA code');
+    return { status: 'error', data: error.message };
   }
 };
 
@@ -40,24 +42,28 @@ const verify2FA = async (userEmail, uid, timestamp, code) => {
 
   try {
     const response = await fetch('https://us-central1-streetcare-d0f33.cloudfunctions.net/verifyUpdateEmail2FACode', {
-    mode: 'no-cors',  
-    method: 'POST',
+      mode: 'no-cors',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(data)
     });
 
+    const responseData = await response.text();
+
     if (response.ok) {
-      const responseData = await response.text();
       console.log(responseData);
-      alert('2FA code verified successfully.');
+      console.log('2FA code verified successfully.');
     } else {
-      throw new Error('Failed to verify 2FA code');
+      console.error(responseData);
+      console.log('Failed to verify 2FA code: ' + responseData);
     }
+    return { status: response.status, data: responseData };
   } catch (error) {
     console.error('Error:', error);
-    alert('Error verifying 2FA code');
+    console.log('Error verifying 2FA code');
+    return { status: 'error', data: error.message };
   }
 };
 

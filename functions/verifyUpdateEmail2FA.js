@@ -10,7 +10,7 @@ const db = admin.firestore();
 
 const CLIENT_ID = '223295299587-dinnroh9j2lb858kphbgb96f8t6j0eq2.apps.googleusercontent.com';
 const CLIENT_SECRET = 'anpX22WnN_boI0nx64wDSGZX';
-const REFRESH_TOKEN = '1//05YE9u8rnREb8CgYIARAAGAUSNwF-L9IrwsMC77bhiidRgu55AdOcSiduWfwRntL3VjOJ9eySlXf9siflZlYLlDs9W4hNpa2eFeA';
+const REFRESH_TOKEN = '1//05wD9ZSLWaCZFCgYIARAAGAUSNwF-L9IrBT_px6HZB5-xWOnl3lq2mhkgdsB0RJJ2-QOabYeGPtmkyTzB2yVr8hFbn4uJ4irhmqE';
 const EMAIL = 'developer@brightmindenrichment.org';
 const SECRET_KEY = '48610ca52d0c1fee946020018d7c6f7dab31d391a59fb69e747189c22e6dd9bf';
 

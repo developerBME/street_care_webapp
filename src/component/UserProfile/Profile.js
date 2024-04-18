@@ -13,7 +13,7 @@ import { fetchPersonalVisitLogs } from "../VisitLogCardService";
 import OutreachVisitLogProfile from "../Community/OutreachVisitLogProfile";
 import NoOutreachDoc from "../Community/NoOutreachDoc";
 import { updateEmailId } from "./UpdateEmail";
-
+import { send2FA } from "./UpdateEmail2FA.js";
 
 function Profile() {
 
@@ -76,8 +76,13 @@ function Profile() {
 
 
   // useEffect(() => {
-  //     updateEmailId("aishwaryakatkar53@gmail.com");
+  //     updateEmailId("");
   //   }, []);
+
+  //  useEffect(() => {
+  //   send2FA('','', Date.now().toString());
+  // }, []);
+
 
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
