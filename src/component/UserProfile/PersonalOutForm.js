@@ -963,6 +963,7 @@ function PersonalOutForm() {
                                 : "ring-gray-300"
                             }`}
                             placeholder="Zipcode"
+                            ref={zipcodeRef}
                             onChange={handleZipChange}
                             value={postcode}
                           />
@@ -984,7 +985,7 @@ function PersonalOutForm() {
                           State
                         </div>
                       </div> */}
-                      <div className="self-stretch h-fit border-collapse">
+                      {/* <div className="self-stretch h-fit border-collapse">
                         <div className="h-14 inline-flex w-full">
                           <select
                             className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
@@ -1021,7 +1022,7 @@ function PersonalOutForm() {
                             </p>
                           </div>
                         )}
-                      </div>
+                      </div> */}
                     </div>
                     {/* <div className="self-stretch w-full h-fit flex-col  flex ">
                       <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
