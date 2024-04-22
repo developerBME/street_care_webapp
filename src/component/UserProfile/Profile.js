@@ -8,13 +8,13 @@ import OutreachEventCard from "../Community/OutreachEventCard";
 import { formatDate, fetchUserEvents } from "../EventCardService";
 import { auth } from "../firebase";
 import CustomButton from "../Buttons/CustomButton";
-import { fetchEvents } from "../EventCardService";
 import { fetchPersonalVisitLogs } from "../VisitLogCardService";
 import OutreachVisitLogProfile from "../Community/OutreachVisitLogProfile";
 import NoOutreachDoc from "../Community/NoOutreachDoc";
+import DeleteUserData from "./DeleteUserDataMethod";
 import DeleteUserExtensionUse from "./DeleteUserExtensionUse";
 
-function Profile() {
+export function Profile() {
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [eventsDisplay, setEventsDisplay] = useState([]);
@@ -96,8 +96,7 @@ function Profile() {
                 icon={icon}
                 onClick={() => {
                   navigate("/createOutreach");
-                }}
-              />
+                }} />
             </div>
             <div className="">
               <div className="w-full flex flex-col sm:flex-row bg-[#F2F6D8] p-4 rounded-xl gap-4  ">
@@ -112,8 +111,7 @@ function Profile() {
                     onClick={() => {
                       navigate("/createOutreach");
                       window.scrollTo(0, 0);
-                    }}
-                  />
+                    }} />
                 </div>
               </div>
             </div>
@@ -139,8 +137,7 @@ function Profile() {
                         ),
                       }}
                       isProfilePage={true}
-                      refresh={fetchData}
-                    />
+                      refresh={fetchData} />
                   ))}
                 </div>
               )}
@@ -155,9 +152,14 @@ function Profile() {
         </div>
         <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2  mb-8 rounded-2xl bg-white text-black mt-4">
           <div className="flex flex-col gap-4 lg:gap-14 lg:p-24 pl-8 pt-4 pb-4 pr-8">
-            <DeleteUserExtensionUse uid={auth.currentUser?.uid} />
+            <DeleteUserExtensionUse />
           </div>
-        </div>  
+        </div>
+        <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2  mb-8 rounded-2xl bg-white text-black mt-4">
+          <div className="flex flex-col gap-4 lg:gap-14 lg:p-24 pl-8 pt-4 pb-4 pr-8">
+            <DeleteUserData />
+          </div>
+        </div>
       </div>
     </div>
   );

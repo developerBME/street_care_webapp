@@ -1,30 +1,27 @@
 import React, { useState } from 'react';
-import { auth } from "../firebase";
+import { auth } from '../firebase'; // Import the auth object from your Firebase configuration
+import axios from 'axios'; // Import axios for making HTTP requests
 
 const DeleteUserExtensionUse = () => {
-    const [userId, setUserId] = useState("rcNfGNzxTJUevMN5rxr51CJYqKz1");
-    const [deleteResult, setDeleteResult] = useState("");
-    const [error, setError] = useState("");
+    const [userId, setUserId] = useState("WPsfSZedThWj5IWecYbNq2USTGD3");
+    const [deleteResult, setDeleteResult] = useState('');
+    const [error, setError] = useState('');
 
-    const handleDelete = async () => {
+    const handleDeleteUser = async () => {
+        if (!userId) {
+            setError('Please enter a valid User ID.');
+            return;
+        }
+
         try {
-            // Validate user ID
-            if (!userId) {
-                setError("Please enter a valid User ID.");
-                return;
-            }
-
-            // Getting the extension 
-            const extension = auth.app.extensions.get("delete-user-data");
-            // Call the extension with the user's UID
-            const result = await extension.call({ uid: userId });
-            console.log("User data deleted successfully:", result);
-            setDeleteResult("User data deleted successfully.");
-            setError(""); // Clear any previous errors
+            // Call a Cloud Function that triggers the delete-user-data extension
+            await axios.post('https://us-central1-ext-delete-user-data-handleSearch/deleteUser', { userId });
+            console.log('User deletion initiated. Firebase extension will handle data cleanup.');
+            setDeleteResult('User deletion initiated. Data will be cleaned up by the extension.');
+            setError('');
         } catch (error) {
-            console.error("Error deleting user data:", error);
-            setDeleteResult("");
-            setError("Error deleting user data. Please try again.");
+            console.error('Error deleting user:', error);
+            setError('Error deleting user. Please try again.');
         }
     };
 
@@ -32,12 +29,11 @@ const DeleteUserExtensionUse = () => {
         <div>
             <input
                 type="text"
-                value={'userId'}
+                value={userId}
                 onChange={(e) => setUserId(e.target.value)}
-                disabled
-                placeholder="userId"
+                placeholder="User ID"
             />
-            <button onClick={handleDelete}>Delete User Data</button>
+            <button onClick={handleDeleteUser}>Delete User Extension</button>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {deleteResult && <p>{deleteResult}</p>}
         </div>
