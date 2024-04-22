@@ -3,8 +3,11 @@ import { getAuth, updateEmail, sendEmailVerification } from "firebase/auth";
 import {
   doc,
   getDoc,
-  updateDoc
+  updateDoc,
+  collection,
+  addDoc,
 } from "firebase/firestore";
+import { Timestamp } from "firebase/firestore";
 
 export async function updateEmailId(newEmailId) {
   try {
@@ -12,23 +15,7 @@ export async function updateEmailId(newEmailId) {
     const user = auth?.currentUser;
     
     console.log(newEmailId);
-
-    // /* eslint-disable no-restricted-globals */
-    // const confirmation = confirm("Do you want to proceed?");
-    // /* eslint-enable no-restricted-globals */
-    // if (confirmation) {
-    //   console.log("Yes, confirmed");
-    //  } else {
-    //   console.log("not confirmed");
-    //  }
-
     console.log(user?.email);
-
-    await updateEmail(user, newEmailId);
-
-    const currentUser = auth?.currentUser;
-    await sendEmailVerification(currentUser);
-    console.log("Verification email sent");
       
     const uid = user?.uid;
     console.log(uid);
@@ -38,13 +25,23 @@ export async function updateEmailId(newEmailId) {
 
     if (userSnapshot.exists()) {
       const userData = userSnapshot.data();
-      const userEmail = userData.email;
+      const oldEmail = userData.email;
 
       console.log(userData);
-      console.log("Email found:", userEmail);
+      console.log("Email found:", oldEmail);
 
       await updateDoc(userRef, {
         email: newEmailId
+      });
+
+      await updateEmail(user, newEmailId);
+
+      const emailChangeLog = collection(db, "emailChange");
+      await addDoc(emailChangeLog, {
+        oldEmail,
+        newEmail: newEmailId,
+        uid,
+        timestamp: Timestamp.now()
       });
 
       console.log("New email updated");
@@ -59,6 +56,4 @@ export async function updateEmailId(newEmailId) {
     console.error("Could not update email:", error);
   }
 }
-
-// updateEmailId("abc@gmail.com");
 
