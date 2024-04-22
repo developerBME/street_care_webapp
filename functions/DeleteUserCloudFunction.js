@@ -1,7 +1,6 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 
-admin.initializeApp();
 
 // Triggered when a user is deleted from Firebase Authentication
 exports.deleteUser = functions.auth.user().onDelete(async (user) => {
