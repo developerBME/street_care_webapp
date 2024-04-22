@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { } from "react";
 import star from "../images/star.png";
 import tickMark from "../images/tickMark.svg";
 import Profieimage from "../images/user.png";
@@ -9,8 +9,8 @@ const Temp_Profile = () => {
     return (
 
         <div className="px-4 py-2 sm:px-6 sm:py-4 md:px-8 md:py-6 lg:px-12 lg:py-8 xl:px-24 xl:py-12 2xl:px-32 2xl:py-16">
-            <div className="mx-auto max-w-[98.75rem] w-full p-8 gap-4 bg-white rounded-lg mt-20">
-                <div className="flex flex-col mb-4 md:flex-row md:gap-x-6 xl:gap-x-12 md:mb-8 lg:mb-12 xl:mb-16 max-w-[82.75rem] mx-auto">
+            <div className="mx-auto max-w-[98.75rem] w-full p-8 gap-4 bg-white  rounded-t-lg md:rounded-b-none rounded-b-lg mt-20">
+                <div className="flex flex-col mb-4 md:flex-row md:gap-x-6 xl:gap-x-12 md:mb-8 lg:mb-12 xl:mb-16 max-w-[87rem] mx-auto">
                     <div className="pr-0 bg-gradient-to-tr from-[#C0F4FF] from-10% via-[#C0F4FF] via-60% to-[#DDD] to-90% bg-fixed rounded-t-2xl md:bg-none relative">
                         <img
                             src={Profieimage}
@@ -48,7 +48,7 @@ const Temp_Profile = () => {
                     </div>
                 </div>
 
-                <div className="px-4 pb-4 lg:grid lg:grid-cols-3 md:grid md:grid-cols-2 flex gap-4 max-w-[82.75rem] mx-auto overflow-x-auto">
+                <div className="px-4 pb-4 lg:grid lg:grid-cols-3 md:grid md:grid-cols-2 flex gap-4 max-w-[87rem] mx-auto overflow-x-auto">
                     <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] gap-4 min-w-[18rem]">
                         <div className="relative inline-block min-w-[4rem]">
                             <img className="w-16 h-16" src={star} alt="..."></img>
@@ -145,8 +145,8 @@ const Temp_Profile = () => {
                 </div>
             </div>
             {/* Impact */}
-            <div className="mx-auto max-w-[98.75rem] w-full p-8 bg-white rounded-lg mt-8 md:mt-0">
-                <div className="max-w-[82.75rem] mx-auto mt-4">
+            <div className="mx-auto max-w-[98.75rem] w-full p-8 bg-white  rounded-t-lg md:rounded-t-none rounded-b-lg mt-8 md:mt-0 ">
+                <div className="max-w-[87rem] mx-auto mt-4">
                     <p className="text-[#212121] text-3xl sm:text-4xl font-medium font-dmsans leading-9 md:px-0 px-4">
                         My Impact
                     </p>
@@ -202,9 +202,9 @@ const Temp_Profile = () => {
             
 
             {/*Outreaches*/}
-            <div className="mx-auto max-w-[98.75rem] p-8 lg:p-32 bg-white rounded-lg mt-8 ">
+            <div className="mx-auto max-w-[98.75rem] p-8 lg:p-24 bg-white rounded-lg mt-8 ">
                 <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-12 mb-16">
-                    <p className="text-[#212121] text-3xl sm:text-4xl font-medium font-dmsans leading-9">
+                    <p className="text-[#212121] text-3xl sm:text-4xl font-medium font-dmsans leading-9 ">
                         My Outreaches
                     </p>
                     <button className="bg-[#6840E0] hover:bg-[#6840E0] text-white py-2 px-4 rounded-full focus:outline-none focus:shadow-outline">
@@ -213,13 +213,13 @@ const Temp_Profile = () => {
                 </div>
 
                 <div style={{ backgroundColor: '#F2F6D8' }}
-                    className="w-full max-w-[82.75rem] h-auto py-8 px-8 border border-solid border-gray-300 rounded-2xl flex items-center justify-between mx-auto mb-16">
+                    className="w-full max-w-[87rem] h-auto py-8 px-8 border border-solid border-gray-300 rounded-2xl flex items-center justify-between mx-auto mb-16">
                     <div className="flex flex-col gap-4">
                         <p className="text-lg font-semibold text-grey-800">
                             Congratulations! You have attended more than 1 outreach event. Now you can host your own.
                         </p>
                     </div>
-                    <button className="bg-[#6840E0] hover:bg-[#6840E0] text-white py-2 px-4 rounded-full focus:outline-none focus:shadow-outline">
+                    <button className="bg-[#6840E0] hover:bg-[#6840E0] text-white py-2 px-4 rounded-full focus:outline-none focus:shadow-outline min-w-[9.9375rem]">
                         Create Outreach
                     </button>
                 </div>
@@ -227,32 +227,28 @@ const Temp_Profile = () => {
                 <div className="lg:grid lg:grid-cols-4 gap-4 flex overflow-x-auto">
                     {Array.from({ length: 8 }).map((_, index) => (
                         <div key={index} className="bg-[#F1EEFE] rounded-2xl shadow p-4 min-w-[10.5rem] ">
-
                             <div className="flex items-center mt-2">
-                                <img src={date} className=" mr-2" alt="Location" />
+                                <img src={date} className=" mr-2" alt="date" />
                                 <p className="text-sm text-[#37168B]">03/12/2023 - 14:30</p>
                             </div>
                             <div className="flex items-center mt-2">
-                                <img src={location} className=" mr-2" alt="Location" /> 
+                                <img src={location} className=" mr-2" alt="Location" />
                                 <p className="text-sm text-[#37168B]">Queens, NY</p>
                             </div>
-                            
                             <h3 className="text-lg font-bold mt-4">Children Welfare in New...</h3>
-
                             <p className="text-sm text-gray-600 mt-2">Tommy, a senior citizen in a wheelchair wearing a navy blue top and brown shoes.</p>
-
-
-                            <div className="flex flex-row"> 
+                            <div className="flex flex-row">
                                 <div className="flex items-center mt-4 bg-[#F1EEFE] rounded-full p-2 max-w-[5.5rem] border border-[#C8C8C8]">
                                     <span className="text-black text-xs lg:w-auto">Childcare</span>
                                 </div>
-                                <div className="flex items-center mt-4 bg-[#F1EEFE] rounded-full p-2 max-w-[5.5rem] border border-[#C8C8C8] ml-2"> 
+                                <div className="flex items-center mt-4 bg-[#F1EEFE] rounded-full p-2 max-w-[5.5rem] border border-[#C8C8C8] ml-2">
                                     <span className="text-black text-xs lg:w-auto">Shelter</span>
                                 </div>
-                                <p className="text-sm text-gray-600 mt-6 ml-2 font-bold">+1 more</p>
+                                <p className="text-sm text-gray-600 mt-6 ml-1 font-bold">+1</p>
+                                <p className="text-sm text-gray-600 mt-6  font-bold hidden lg:block">more</p>
+
+
                             </div>
-
-
                             <div>
                                 <button className="mt-4 bg-[#E6DCFF] hover:bg-indigo-300 text-xs font-medium rounded-full px-6 py-2 w-18.625 h-8">
                                     Edit
