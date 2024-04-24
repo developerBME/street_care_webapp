@@ -65,10 +65,15 @@ if __name__ == "__main__":
     collection_name = "kp1234"
     field_to_update = "name_test"
     new_field_value = "test_value_after_update"
-    new_fields_to_add = {
+    '''new_fields_to_add = {
         'City':'cityA',
         'zip':7006
+    }'''
+    new_fields_to_add = {
+        'name_test': 'test_value_after_update',
+        'name_test_1': 'test_value_after_update_1',
+        'name_test_2': 'test_value_after_update_2'
     }
-
-    ##update_form_field(collection_name, field_to_update, new_field_value)
+    update_form_field(collection_name, field_to_update, new_field_value)
     add_fields_to_document(collection_name, new_fields_to_add)
+
