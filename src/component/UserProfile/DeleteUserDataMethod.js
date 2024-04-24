@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { getAuth, deleteUser, onAuthStateChanged } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 const DeleteUserData = () => {
   const [userId, setUserId] = useState('');
   const [deleteResult, setDeleteResult] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const auth = getAuth();
@@ -35,26 +37,22 @@ const DeleteUserData = () => {
 
       setDeleteResult('User account deleted successfully.');
       setError('');
+
+      navigate('/home');
     } catch (error) {
       console.error('Error deleting user data:', error);
       setError('Error deleting user data. Please try again.');
+      setError('');
     }
   };
 
   return (
     <div>
-      <input
-        type="text"
-        value={userId}
-        onChange={(e) => setUserId(e.target.value)}
-        placeholder="User ID"
-        disabled // Disable input if user is authenticated
-      />
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {deleteResult && <p>{deleteResult}</p>}
       <button onClick={handleDeleteUser} disabled={!userId}>
         Delete User
       </button>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {deleteResult && <p>{deleteResult}</p>}
     </div>
   );
 };
