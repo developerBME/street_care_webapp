@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAuth, deleteUser, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, deleteUser, signOut, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 
 const DeleteUserData = () => {
@@ -37,6 +37,8 @@ const DeleteUserData = () => {
 
       setDeleteResult('User account deleted successfully.');
       setError('');
+
+      await signOut(auth);
 
       navigate('/home');
     } catch (error) {
