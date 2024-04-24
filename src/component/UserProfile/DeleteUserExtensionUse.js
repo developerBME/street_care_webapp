@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { auth } from '../firebase'; // Import the auth object from your Firebase configuration
+// import { auth } from '../firebase'; // Import the auth object from your Firebase configuration
 import axios from 'axios'; // Import axios for making HTTP requests
 
 const DeleteUserExtensionUse = () => {
-    const [userId, setUserId] = useState("WPsfSZedThWj5IWecYbNq2USTGD3");
+    const [userId, setUserId] = useState('');
     const [deleteResult, setDeleteResult] = useState('');
     const [error, setError] = useState('');
 
