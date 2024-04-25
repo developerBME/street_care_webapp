@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { getAuth, deleteUser, signOut, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, deleteUser, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import NavBar from '../Navbar';
 
-const DeleteUserData = () => {
+const DeleteUserData = (props) => {
   const [userId, setUserId] = useState('');
   const [deleteResult, setDeleteResult] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const auth = getAuth();
 
   useEffect(() => {
-    const auth = getAuth();
+   
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUserId(user.uid); // Set the current user's UID
@@ -19,7 +21,7 @@ const DeleteUserData = () => {
     });
 
     return () => unsubscribe(); // Clean up the subscription
-  }, []);
+  }, [auth]);
 
   const handleDeleteUser = async () => {
     try {
@@ -28,24 +30,18 @@ const DeleteUserData = () => {
         setError('Please log in to delete your account.');
         return;
       }
-
-      // Get auth instance
-      const auth = getAuth();
-
       // Delete user
       await deleteUser(auth.currentUser);
 
       setDeleteResult('User account deleted successfully.');
       setError('');
 
-      await signOut(auth);
-
-      navigate('/home');
+      navigate('/');
     } catch (error) {
       console.error('Error deleting user data:', error);
       setError('Error deleting user data. Please try again.');
-      setError('');
     }
+
   };
 
   return (

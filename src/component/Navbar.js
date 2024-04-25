@@ -18,10 +18,21 @@ import { getAuth, signOut } from "firebase/auth";
 import defaultImage from "../images/default_avatar.svg";
 import { FaTimes } from "react-icons/fa";
 import { FaBars } from "react-icons/fa";
+import DeleteUserData from "./UserProfile/DeleteUserDataMethod";
 
 const NavBar = (props) => {
   const [nav, setNav] = useState(false);
   const fAuth = getAuth();
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  let menuRef = useRef();
+  
+  useEffect(() => {
+    if (!props.loggedIn) {
+      setOpen(false); // Close the dropdown if the user is not logged in
+    }
+  }, [props.loggedIn]);
+
   const fireBaseSignOut = async () => {
     signOut(fAuth)
       .then(() => {
@@ -93,11 +104,11 @@ const NavBar = (props) => {
     },
   ];
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
 
-  let menuRef = useRef();
+  // let menuRef = useRef();
 
   useEffect(() => {
     let handler = (e) => {
@@ -129,7 +140,7 @@ const NavBar = (props) => {
             className="invisible aria-[current=page]:visible md:aria-[current=page]:hidden md:hidden mx-6 my-3 text-lg  font-inter font-medium
              text-white hover:scale-105 hover:text-[#1FCFF0] duration-200 "
             onClick={() => {
-              fireBaseSignOut();
+              navigate('/login');
             }}
             end
           >
