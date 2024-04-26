@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { getAuth, deleteUser, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, deleteUser, signOut, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import NavBar from '../Navbar';
+// import NavBar from '../Navbar';
 
 const DeleteUserData = (props) => {
   const [userId, setUserId] = useState('');
@@ -11,7 +11,7 @@ const DeleteUserData = (props) => {
   const auth = getAuth();
 
   useEffect(() => {
-   
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUserId(user.uid); // Set the current user's UID
@@ -32,10 +32,11 @@ const DeleteUserData = (props) => {
       }
       // Delete user
       await deleteUser(auth.currentUser);
-
       setDeleteResult('User account deleted successfully.');
-      setError('');
-
+      signOut(auth)
+        .then(() => {
+          navigate("/login");
+        })
       navigate('/');
     } catch (error) {
       console.error('Error deleting user data:', error);
