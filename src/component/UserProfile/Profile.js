@@ -12,6 +12,7 @@ import { fetchEvents } from "../EventCardService";
 import { fetchPersonalVisitLogs } from "../VisitLogCardService";
 import OutreachVisitLogProfile from "../Community/OutreachVisitLogProfile";
 import NoOutreachDoc from "../Community/NoOutreachDoc";
+import CustomCRUD from "./CustomCRUD";
 
 function Profile() {
   const [events, setEvents] = useState([]);
@@ -149,6 +150,17 @@ function Profile() {
         <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2  mb-8 rounded-2xl bg-white text-black mt-4">
           <div className="flex flex-col gap-4 lg:gap-14 lg:p-24 pl-8 pt-4 pb-4 pr-8">
             <OutreachVisitLogProfile />
+          </div>
+        </div>
+        
+        {/* Sindhuja */}
+        <div lassName=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 mt-24  lg:mx-40 lg:mt-32 rounded-2xl bg-white text-black ">
+          <div className="flex flex-col gap-4 lg:gap-14 lg:p-24 pl-8 pt-4 pb-4 pr-8">
+            <div className="inline-flex flex-col sm:flex-row sm:space-x-16 ">
+              <div class="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage leading-[52px]">
+                  <CustomCRUD></CustomCRUD>
+              </div>
+            </div>
           </div>
         </div>
       </div>
