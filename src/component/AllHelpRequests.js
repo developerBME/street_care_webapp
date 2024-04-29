@@ -145,7 +145,7 @@ const AllHelpRequests = () => {
                                     .slice(0, visibleItems)
                                     .map((item, index) => (
                                         <HelpRequestCard
-                                            key={index}
+                                            key={item.id}
                                             helpRequestCardData={item}
                                             // refresh={fetchData}
                                         />
