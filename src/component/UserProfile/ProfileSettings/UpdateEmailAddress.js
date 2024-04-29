@@ -16,8 +16,8 @@ const UpdateEmailAddress = () => {
   };
 
   const [email, setEmail] = useState("");
-  const [error, setError] = useState(null);
-
+  const [verificationCode, setVerificationCode] = useState("");
+  // const [error, setError] = useState(null);
 
   const [currentStep, setCurrentStep] = useState("UPDATE_EMAIL");
 
@@ -26,6 +26,7 @@ const UpdateEmailAddress = () => {
 
   const [errormsg, setErrors] = useState({
     EmailError: "",
+    CodeError: "",
   });
 
   const updateErrorState = (key, value) => {
@@ -81,7 +82,11 @@ const UpdateEmailAddress = () => {
     //   setIsSubmitted((prevState) => prevState + 1);
     // }
 
-    if (!email || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email) || "") {
+    if (
+      !email ||
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email) ||
+      ""
+    ) {
       updateErrorState("EmailError", "Email is required");
       return;
     } else if (email) {
@@ -94,7 +99,11 @@ const UpdateEmailAddress = () => {
   };
 
   const handleCodeSubmit = () => {
-    // setShowVerification(true);
+    if (!verificationCode) {
+      updateErrorState("CodeError", "Verification Code is required");
+      return;
+    }
+
     setCurrentStep("NEW_EMAIL");
   };
 
@@ -169,7 +178,8 @@ const UpdateEmailAddress = () => {
                                 type="email"
                                 id="email"
                                 disabled
-                                placeholder="patricks_123@email.com"
+                                placeholder="patrick_123@email.com"
+                                value={email}
                                 className={`text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
                                   errormsg.EmailError !== ""
                                     ? "ring-red-500"
@@ -269,15 +279,17 @@ const UpdateEmailAddress = () => {
                           <div className="self-stretch  bg-white border-stone-300 justify-start items-center gap-2 inline-flex">
                             <div className="grow shrink basis-0 h-10 flex-col rounded-md border-0 justify-center items-start inline-flex">
                               <input
-                                type="email"
-                                id="email"
+                                type="number"
+                                id="verficationCode"
                                 placeholder="23232"
                                 className={`text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
-                                  errormsg.EmailError !== ""
+                                  errormsg.CodeError !== ""
                                     ? "ring-red-500"
                                     : "ring-gray-300"
                                 }`}
-                                onChange={(e) => setEmail(e.target.value)}
+                                onChange={(e) =>
+                                  setVerificationCode(e.target.value)
+                                }
                               ></input>
                             </div>
                           </div>
@@ -296,11 +308,11 @@ const UpdateEmailAddress = () => {
                               </button>
                             )}
                           </div>
-                          {errormsg.EmailError && (
+                          {errormsg.CodeError && (
                             <div className="inline-flex items-center gap-1.5">
-                              {/* <img src={errorImg} className="w-3 h-3" /> */}
+                              <img src={errorImg} className="w-3 h-3" />
                               <div className="text-red-700 font-dmsans">
-                                {errormsg.EmailError}
+                                {errormsg.CodeError}
                               </div>
                             </div>
                           )}
