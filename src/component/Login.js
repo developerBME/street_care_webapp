@@ -98,7 +98,7 @@ function Login() {
                 setLoginSuccess("Successfully logged in!");
                 setError(""); // Clearing out any existing error messages
                 // navigate(-1, { preventScrollReset: true });
-                navigate("/profile");
+                // navigate("/profile");
             })
             .catch((error) => {
                 // setError(error.message);

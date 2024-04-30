@@ -18,13 +18,14 @@ import { getAuth, signOut } from "firebase/auth";
 import defaultImage from "../images/default_avatar.svg";
 import { FaTimes } from "react-icons/fa";
 import { FaBars } from "react-icons/fa";
+import DeleteUserData from "./UserProfile/DeleteUserData";
 
 const NavBar = (props) => {
   const [nav, setNav] = useState(false);
   const fAuth = getAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  let menuRef = useRef();
+  const menuRef = useRef();
 
   useEffect(() => {
     if (!props.loggedIn) {
@@ -37,7 +38,6 @@ const NavBar = (props) => {
       .then(() => {
         console.log("success");
         navigate("/login");
-        props.setLoggedIn(false);
       })
       .catch((error) => {
         console.log(error);
@@ -140,13 +140,13 @@ const NavBar = (props) => {
              text-white hover:scale-105 hover:text-[#1FCFF0] duration-200 "
             onClick={() => {
               fireBaseSignOut();
-              navigate('/login');
             }}
             end
           >
             Logout
           </NavLink>
         )}
+
 
         <ul className="hidden items-center md:flex px-2    leading-6">
           {links.map(({ id, link, label }) => (
