@@ -366,7 +366,7 @@ function HowToHelp() {
           <div className="items-center justify-center p-8 lg:p-16 h-full w-full rounded-2xl bg-[#F7F7F7] ">
             <div className="flex-col justify-start items-start gap-10 inline-flex">
               <div>
-                <div className="flex justify-between">
+                 <div className="flex flex-col lg:flex-row justify-between">
                   <div className="font-bricolage text-[57px]">
                     Sign up to outreachs now!
                   </div>
@@ -378,7 +378,7 @@ function HowToHelp() {
                   </div>
                 </div>
 
-                <div className="font-dmsans text-1 text-grey-300 font-normal">
+                <div className="font-dmsans text-1 text-grey-300 font-normal py-2">
                   We’ve made a simple guide on how you can contribute to the
                   homeless. Join our team of 700+ members and contribute in your
                   own way. More than 35% of our volunteers are first-time
@@ -398,7 +398,7 @@ function HowToHelp() {
                 <div className="font-bricolage text-[57px] text-[#273164] font-medium">
                   What else can I do to help?
                 </div>
-                <div className="flex gap-2 ">
+                              <div className="grid grid-cols-2 md:flex md:flex-row md:gap-4 lg:flex lg:flex-row lg:gap-4">
                   <div className="p-2 bg-[#FFFFFF] space-y-2 w-fit rounded-2xl">
                     <div>
                       <img src={groupOutreaches} />
