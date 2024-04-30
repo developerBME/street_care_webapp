@@ -23,6 +23,7 @@ import ConfirmationModal from "./ConfirmationModal";
 import DatePicker from "react-datepicker";
 import { Timestamp } from "firebase/firestore";
 import { emailConfirmation } from "../EmailService";
+import { checkNumber } from "../helper/validator";
 
 const USERS_COLLECTION = "users";
 
@@ -170,12 +171,14 @@ function PersonalOutForm() {
   };
 
   const handleCityChange = (e) => {
+    setCityName(e.target.value)
     updateErrorState("cityError", "");
   };
   const handleStateChange = (e) => {
     updateErrorState("stateError", "");
   };
   const handleZipChange = (e) => {
+    setPostcode(e.target.value)
     updateErrorState("zipError", "");
   };
 
@@ -322,7 +325,12 @@ function PersonalOutForm() {
       updateErrorState("zipError", "Zipcode is required");
       setReturn = true;
     } else {
-      updateErrorState("zipError", "");
+      try {
+        checkNumber(zipcodeRef.current.value, "Event Name");
+        updateErrorState("zipError", "");
+      } catch (e) {
+        updateErrorState("zipError", "Should consist of only Numbers");
+      }
     }
 
     if (!date.current.value) {
@@ -513,6 +521,7 @@ function PersonalOutForm() {
           postcode = `${postcode}-${component.long_name}`;
           break;
         }
+        case "sublocality_level_1":
         case "locality": {
           city = component.long_name;
           break;

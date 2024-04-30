@@ -14,6 +14,7 @@ import { UpdateDisabledRounded } from "@mui/icons-material";
 import CreateOutreachModal from "./CreateOutreachModal";
 import { fetchHelpReqById } from "../HelpRequestService";
 import { emailConfirmation } from "../EmailService";
+import { Link } from "react-router-dom";
 
 const chipList = [
   "Childcare",
@@ -327,9 +328,11 @@ const Form = (hrid) => {
     updateErrorState("nameError", "");
   };
   const handleStreetChange = (e) => {
+    setStreet(e.target.value)
     updateErrorState("streetError", "");
   };
   const handleCityChange = (e) => {
+    setCityName(e.target.value);
     updateErrorState("cityError", "");
   };
   const handleDescChange = (e) => {
@@ -342,6 +345,7 @@ const Form = (hrid) => {
     updateErrorState("stateError", "");
   };
   const handleZipChange = (e) => {
+    setPostCode(e.target.value);
     updateErrorState("zipError", "");
   };
   const handleHelpChange = (e) => {
@@ -534,6 +538,7 @@ const Form = (hrid) => {
           postcode = `${postcode}-${component.long_name}`;
           break;
         }
+        case "sublocality_level_1":
         case "locality": {
           city = component.long_name;
           break;
@@ -588,7 +593,7 @@ const Form = (hrid) => {
               />
               {error.nameError && (
                 <div className="inline-flex items-center">
-                  <img src={errorImg} className="w-3 h-3" />
+                  <img alt="" src={errorImg} className="w-3 h-3" />
                   <p className="text-red-600 text-xs mx-1">{error.nameError}</p>
                 </div>
               )}
@@ -609,7 +614,7 @@ const Form = (hrid) => {
               />
               {error.descError && (
                 <div className="inline-flex items-center">
-                  <img src={errorImg} className="w-3 h-3" />
+                  <img alt="" src={errorImg} className="w-3 h-3" />
                   <p className="text-red-600 text-xs mx-1">{error.descError}</p>
                 </div>
               )}
@@ -631,7 +636,7 @@ const Form = (hrid) => {
               </p> */}
               {error.maxCapError && (
                 <div className="inline-flex items-center">
-                  <img src={errorImg} className="w-3 h-3" />
+                  <img alt="" src={errorImg} className="w-3 h-3" />
                   <p className="text-red-600 text-xs mx-1">
                     {error.maxCapError}
                   </p>
@@ -657,7 +662,7 @@ const Form = (hrid) => {
               />
               {error.idError && (
                 <div className="inline-flex items-center">
-                  <img src={errorImg} className="w-3 h-3" />
+                  <img alt="" src={errorImg} className="w-3 h-3" />
                   <p className="text-red-600 text-xs mx-1">{error.idError}</p>
                 </div>
               )}
@@ -676,10 +681,11 @@ const Form = (hrid) => {
                   id="street-address"
                   name="street-address"
                   value={street}
+                  onChange={handleStreetChange}
                 />
                 {error.streetError && (
                   <div className="inline-flex items-center">
-                    <img src={errorImg} className="w-3 h-3" />
+                    <img alt="" src={errorImg} className="w-3 h-3" />
                     <p className="text-red-600 text-xs mx-1">
                       {error.streetError}
                     </p>
@@ -702,7 +708,7 @@ const Form = (hrid) => {
                 />
                 {error.cityError && (
                   <div className="inline-flex items-center">
-                    <img src={errorImg} className="w-3 h-3" />
+                    <img alt="" src={errorImg} className="w-3 h-3" />
                     <p className="text-red-600 text-xs mx-1">
                       {error.cityError}
                     </p>
@@ -728,7 +734,7 @@ const Form = (hrid) => {
                 />
                 {error.stateError && (
                   <div className="inline-flex items-center">
-                    <img src={errorImg} className="w-3 h-3" />
+                    <img alt="" src={errorImg} className="w-3 h-3" />
                     <p className="text-red-600 text-xs mx-1">
                       {error.stateError}
                     </p>
@@ -751,7 +757,7 @@ const Form = (hrid) => {
                 />
                 {error.zipError && (
                   <div className="inline-flex items-center">
-                    <img src={errorImg} className="w-3 h-3" />
+                    <img alt="" src={errorImg} className="w-3 h-3" />
                     <p className="text-red-600 text-xs mx-1">
                       {error.zipError}
                     </p>
@@ -778,7 +784,7 @@ const Form = (hrid) => {
               />
               {error.streetError && (
                 <div className="inline-flex items-center">
-                  <img src={errorImg} className="w-3 h-3" />
+                  <img alt="" src={errorImg} className="w-3 h-3" />
                   <p className="text-red-600 text-xs">{error.streetError}</p>
                 </div>
               )} */}
@@ -796,7 +802,7 @@ const Form = (hrid) => {
               />
               {error.cityError && (
                 <div className="inline-flex items-center">
-                  <img src={errorImg} className="w-3 h-3" />
+                  <img alt="" src={errorImg} className="w-3 h-3" />
                   <p className="text-red-600 text-xs">{error.cityError}</p>
                 </div>
               )}
@@ -838,7 +844,7 @@ const Form = (hrid) => {
               )}
               {error.stateError && (
                 <div className="inline-flex items-center">
-                  <img src={errorImg} className="w-3 h-3" />
+                  <img alt="" src={errorImg} className="w-3 h-3" />
                   <p className="text-red-600 text-xs">{error.stateError}</p>
                 </div>
               )}
@@ -861,7 +867,7 @@ const Form = (hrid) => {
                 />
                 {error.stateError && (
                   <div className="inline-flex items-center">
-                    <img src={errorImg} className="w-3 h-3" />
+                    <img alt="" src={errorImg} className="w-3 h-3" />
                     <p className="text-red-600 text-xs">{error.stateError}</p>
                   </div>
                 )}
@@ -909,7 +915,7 @@ const Form = (hrid) => {
                 )}
                 {error.cityError && (
                   <div className="inline-flex items-center">
-                    <img src={errorImg} className="w-3 h-3" />
+                    <img alt="" src={errorImg} className="w-3 h-3" />
                     <p className="text-red-600 text-xs">{error.cityError}</p>
                   </div>
                 )}
@@ -932,7 +938,7 @@ const Form = (hrid) => {
                 />
                 {error.zipError && (
                   <div className="inline-flex items-center">
-                    <img src={errorImg} className="w-3 h-3" />
+                    <img alt="" src={errorImg} className="w-3 h-3" />
                     <p className="text-red-600 text-xs">{error.zipError}</p>
                   </div>
                 )}
@@ -970,7 +976,7 @@ const Form = (hrid) => {
                 />
                 {error.stimeError && (
                   <div className="inline-flex items-center">
-                    <img src={errorImg} className="w-3 h-3" />
+                    <img alt="" src={errorImg} className="w-3 h-3" />
                     <p className="text-red-600 text-xs mx-1">
                       {error.stimeError}
                     </p>
@@ -1005,7 +1011,7 @@ const Form = (hrid) => {
                 />
                 {error.etimeError && (
                   <div className="inline-flex items-center">
-                    <img src={errorImg} className="w-3 h-3" />
+                    <img alt="" src={errorImg} className="w-3 h-3" />
                     <p className="text-red-600 text-xs mx-1">
                       {error.etimeError}
                     </p>
@@ -1036,7 +1042,7 @@ const Form = (hrid) => {
               <option value="helpRequest2">Help Request 2</option>
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 pt-5 text-gray-700">
-              <img src={arrowDown} />
+              <img alt="" src={arrowDown} />
             </div> */}
             <p className="font-semibold font-['Inter'] text-[15px]">
               Help Type Required*
@@ -1053,7 +1059,7 @@ const Form = (hrid) => {
             />
             {error.helpError && (
               <div className="inline-flex items-center">
-                <img src={errorImg} className="w-3 h-3" />
+                <img alt="" src={errorImg} className="w-3 h-3" />
                 <p className="text-red-600 text-xs mx-1">{error.helpError}</p>
               </div>
             )}
@@ -1074,12 +1080,14 @@ const Form = (hrid) => {
           </div>
         </div>
         <div className="space-y-16 space-x-[15px]">
-          <button
-            type="button"
-            className="px-8 py-4 border border-[#5F35D5] rounded-full text-violet-700"
-          >
-            Cancel
-          </button>
+          <Link to="/profile">
+            <button
+              type="button"
+              className="px-8 py-4 border border-[#5F35D5] rounded-full text-violet-700"
+            >
+              Cancel
+            </button>
+          </Link>
           <button
             type="submit"
             className="px-8 py-4 border rounded-full bg-violet-700 text-[#F8F9F0]"

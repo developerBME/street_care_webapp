@@ -28,6 +28,7 @@ export const fetchVisitLogs = async () => {
     const uid = visitLogData.uid;
     const userDetails = await fetchUserDetails(uid);
     visitLogs.push({
+      id: doc.id,
       whatGiven: visitLogData.whatGiven,
       itemQty: visitLogData?.itemQty || "",
       numberPeopleHelped: visitLogData?.numberPeopleHelped || "",
@@ -77,16 +78,19 @@ export const fetchVisitLogById = async (visitLogId) => {
     description: outreachEventData?.description || "",
     helpType: outreachEventData?.helpType || "",
     location: outreachEventData?.location || "",
+    numberPeopleHelped: visitLogData.numberPeopleHelped,
+    itemQty: visitLogData.itemQty,
     eventDate: outreachEventData?.eventDate?.seconds
       ? formatDate(new Date(outreachEventData?.eventDate?.seconds * 1000))
       : "",
     userName: userDetails.username,
     photoUrl: userDetails.photoUrl,
+    filledSlots: outreachEventData?.filledSlots || "",
   };
 };
 
 // export const fetchPersonalVisitLogs = async (uid) => {
-//   const visitLogsRef = collection(db, VISIT_LOG_COLLECTION);
+//   const visitLogsRef = collection(db, PERSONAL_VISIT_LOG_COLLECTION);
 //   const visitLogSnapshot = await getDocs(visitLogsRef);
 //   let visitLogs = [];
 //   for (const doc of visitLogSnapshot.docs) {

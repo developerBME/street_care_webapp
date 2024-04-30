@@ -6,7 +6,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import arrowBack from "../../images/arrowBack.png";
 import arrowDown from "../../images/arrowDown.png";
 import errorImg from "../../images/error.png";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { emailConfirmation } from "../EmailService";
 
 let autoComplete;
@@ -309,7 +309,7 @@ function HelpRequestForm() {
         <div className="relative flex flex-col items-center ">
           <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-32 rounded-2xl text-black ">
             <div className="inline-flex pl-3 lg:pl-40 cursor-pointer pb-[19px]">
-              <img src={arrowBack} />
+              <img alt="" src={arrowBack} />
               <p
                 className="font-semibold font-bricolage text-[22px]"
                 onClick={() => {
@@ -358,7 +358,7 @@ function HelpRequestForm() {
                     </div>
                     {error.titleError && (
                       <div className="inline-flex items-center">
-                        <img src={errorImg} className="w-3 h-3" />
+                        <img alt="" src={errorImg} className="w-3 h-3" />
                         <p className="text-red-600 text-xs">
                           {error.titleError}
                         </p>
@@ -379,7 +379,7 @@ function HelpRequestForm() {
                     </div>
                     {error.checkboxesError && (
                       <div className="inline-flex items-center">
-                        <img src={errorImg} className="w-3 h-3" />
+                        <img alt="" src={errorImg} className="w-3 h-3" />
                         <p className="text-red-600 text-xs">
                           {error.checkboxesError}
                         </p>
@@ -423,7 +423,7 @@ function HelpRequestForm() {
                       />
                       {error.idError && (
                         <div className="inline-flex items-center">
-                          <img src={errorImg} className="w-3 h-3" />
+                          <img alt="" src={errorImg} className="w-3 h-3" />
                           <p className="text-red-600 text-xs">
                             {error.idError}
                           </p>
@@ -458,7 +458,7 @@ function HelpRequestForm() {
                         />
                         {error.streetError && (
                           <div className="inline-flex items-center">
-                            <img src={errorImg} className="w-3 h-3" />
+                            <img alt="" src={errorImg} className="w-3 h-3" />
                             <p className="text-red-600 text-xs">
                               {error.streetError}
                             </p>
@@ -477,13 +477,13 @@ function HelpRequestForm() {
                               : "ring-gray-300"
                           }`}
                           placeholder="City"
-                          // ref={cityRef}
+                          ref={cityRef}
                           onChange={handleCityChange}
                           value={cityName}
                         />
                         {error.cityError && (
                           <div className="inline-flex items-center">
-                            <img src={errorImg} className="w-3 h-3" />
+                            <img alt="" src={errorImg} className="w-3 h-3" />
                             <p className="text-red-600 text-xs">
                               {error.cityError}
                             </p>
@@ -510,7 +510,7 @@ function HelpRequestForm() {
                         />
                         {error.stateError && (
                           <div className="inline-flex items-center">
-                            <img src={errorImg} className="w-3 h-3" />
+                            <img alt="" src={errorImg} className="w-3 h-3" />
                             <p className="text-red-600 text-xs">
                               {error.stateError}
                             </p>
@@ -535,7 +535,7 @@ function HelpRequestForm() {
                         />
                         {error.zipError && (
                           <div className="inline-flex items-center">
-                            <img src={errorImg} className="w-3 h-3" />
+                            <img alt="" src={errorImg} className="w-3 h-3" />
                             <p className="text-red-600 text-xs">
                               {error.zipError}
                             </p>
@@ -560,7 +560,7 @@ function HelpRequestForm() {
                       />
                       {error.idError && (
                         <div className="inline-flex items-center">
-                          <img src={errorImg} className="w-3 h-3" />
+                          <img alt="" src={errorImg} className="w-3 h-3" />
                           <p className="text-red-600 text-xs">
                             {error.idError}
                           </p>
@@ -584,12 +584,14 @@ function HelpRequestForm() {
                     </div>
                   </div>
                   <div className="space-y-16 space-x-[15px]">
-                    <button
-                      type="button"
-                      className="px-8 py-4 border border-[#5F35D5] rounded-full text-violet-700"
-                    >
-                      Cancel
-                    </button>
+                    <Link to={"/community"}>
+                      <button
+                        type="button"
+                        className="px-8 py-4 border border-[#5F35D5] rounded-full text-violet-700"
+                      >
+                        Cancel
+                      </button>
+                    </Link>
                     <button
                       onClick={handleSubmit}
                       className="px-8 py-4 border rounded-full bg-violet-700 text-[#F8F9F0]"

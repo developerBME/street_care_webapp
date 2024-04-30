@@ -144,7 +144,7 @@ const ICanHelpForm = () => {
                 </div>
                 <div className="space-y-16 space-x-[15px]">
                     <CustomButton label="I can help" name="buttondefault" onClick={handleSubmit} />
-                    <CustomButton label="Cancel" name="buttonborder" />
+                    <CustomButton label="Cancel" name="buttonborder" onClick={() => { navigate(-1, { preventScrollReset: true }); }} />
                 </div>
                 {success && (
                   <ConfirmationModal isOpen={true} id = {id} outreachEvents ={data.outreachEvent}/>

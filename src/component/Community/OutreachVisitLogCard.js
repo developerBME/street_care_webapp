@@ -84,7 +84,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
         </div>
         {/* <div className="font-medium text-[20px] font-dmsans">{title}</div> */}
 
-        <div className="font-medium text-[20px] font-dmsans text-[#444746] line-clamp-1">
+        <div className="font-medium text-[20px] font-dmsans text-[#444746] line-clamp-2">
           {visitLogCardData.description || ""}
         </div>
 
@@ -107,11 +107,17 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
         </div>
 
         <div className="inline-flex items-center gap-2 flex-wrap">
-          {visitLogCardData?.whatGiven.map((item, index) => (
+          {visitLogCardData?.whatGiven.slice(0, 4).map((item, index) => (
             <div className="py-1 px-3 border border-[#C8C8C8] w-fit rounded-xl text-[12px] text-[#444746]">
               {item}
             </div>
           ))}
+          {visitLogCardData?.whatGiven.length > 4 && (
+            <div className="text-[12px]">
+              {" "}
+              +{visitLogCardData?.whatGiven.length - 4} more
+            </div>
+          )}
         </div>
       </div>
 
@@ -133,9 +139,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
               label="View Details"
               name="buttonlightsmall"
               onClick={() => {
-                navigate(
-                  `/VisitLogDetails/${visitLogCardData.outreachEventId}`
-                );
+                navigate(`/VisitLogDetails/${visitLogCardData.id}`);
               }}
             />
           </div>
