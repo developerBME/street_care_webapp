@@ -12,11 +12,13 @@ const UpdateEmailAddress = () => {
   const stepLabelMap = {
     UPDATE_EMAIL: "Update email",
     VERIFY_CODE: "Verify Code",
-    NEW_EMAIL: "Verify New Email",
+    NEW_EMAIL_CODE: "Verify New Email",
   };
 
   const [email, setEmail] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
+  const [emailCode, setEmailCode] = useState("");
+
   // const [error, setError] = useState(null);
 
   const [currentStep, setCurrentStep] = useState("UPDATE_EMAIL");
@@ -35,10 +37,6 @@ const UpdateEmailAddress = () => {
       [key]: value,
     }));
   };
-
-  // const callVerificationCode = () => {
-  //   console.log("called api");
-  // };
 
   const resendCode = () => {
     setMinutes(4);
@@ -64,17 +62,6 @@ const UpdateEmailAddress = () => {
     };
   }, [seconds]);
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   if (!email || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
-  //     updateErrorState("EmailError", "Email is required");
-  //     return;
-  //   } else if (email) {
-  //     updateErrorState("EmailError", "");
-  //   }
-  // };
-
   const handleEmailSubmit = () => {
     // if (isSubmitted === 2) {
     //   setIsSubmitted((prevState) => prevState - 1);
@@ -96,19 +83,42 @@ const UpdateEmailAddress = () => {
     setCurrentStep("VERIFY_CODE");
     setMinutes(4);
     setSeconds(59);
+
+    document.getElementById("email-update-form").reset();
   };
 
   const handleCodeSubmit = () => {
-    if (!verificationCode) {
-      updateErrorState("CodeError", "Verification Code is required");
+    const verfication_pattern = /^[0-9]{5}$/;
+
+    if (!verificationCode || "") {
+      updateErrorState("CodeError", "Verification code is required");
       return;
+    } else if (!/^[0-9]{5}$/.test(verificationCode)) {
+      updateErrorState("CodeError", "Please enter all 5 digits");
+      return;
+    } else if (verificationCode) {
+      updateErrorState("CodeError", "");
     }
 
-    setCurrentStep("NEW_EMAIL");
+    setCurrentStep("NEW_EMAIL_CODE");
+    document.getElementById("verification-code-form").reset();
   };
 
-  const handleNewEmail = () => {
-    setCurrentStep();
+  const handleNewEmailCode = () => {
+
+    const verfication_pattern = /^[0-9]{5}$/;
+
+    if (!verificationCode || "") {
+      updateErrorState("CodeError", "Verification code is required");
+      return;
+    } else if (!/^[0-9]{5}$/.test(verificationCode)) {
+      updateErrorState("CodeError", "Please enter all 5 digits");
+      return;
+    } else if (verificationCode) {
+      updateErrorState("CodeError", "");
+    }
+
+    setCurrentStep("NEW_EMAIL_CODE");
   };
 
   const handleBack = () => {
@@ -127,15 +137,18 @@ const UpdateEmailAddress = () => {
   const stepFuncMap = {
     UPDATE_EMAIL: handleEmailSubmit,
     VERIFY_CODE: handleCodeSubmit,
-    NEW_EMAIL: handleNewEmail,
+    NEW_EMAIL_CODE: handleNewEmailCode,
   };
+
+  const EmailForm = document.getElementById("email-update-form");
+  const NewEmail = document.getElementById("new-email");
 
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center gap-8 ">
         <div className=" w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 lg:mx-40 mt-32 mb-16 rounded-2xl bg-[#f7f7f7] text-black flex flex-row">
           <div className="w-1/2 bg-[#f7f7f7] rounded-l-2xl">
-            <div className="w-full h-full px-4 py-6 lg:p-16 flex-col justify-start items-start gap-6 inline-flex">
+            <div className="w-full h-full px-4 py-6 md:p-12 lg:p-16 flex-col justify-start items-start gap-6 inline-flex">
               {currentStep === "UPDATE_EMAIL" ? (
                 <div className="flex-col lg:flex-row justify-start items-center gap-8 md:gap-12 lg:gap-y-[172px] lg:gap-x-[35px] inline-flex">
                   <div className="flex-col justify-start items-start gap-5 md:gap-6 inline-flex">
@@ -165,6 +178,7 @@ const UpdateEmailAddress = () => {
                     </div>
                     <form
                       className="gap-6 flex flex-col w-full"
+                      id="email-update-form"
                       // onSubmit={handleSubmit}
                     >
                       <div className="self-stretch h-fit flex-col justify-start items-start gap-4 flex">
@@ -179,12 +193,8 @@ const UpdateEmailAddress = () => {
                                 id="email"
                                 disabled
                                 placeholder="patrick_123@email.com"
-                                value={email}
-                                className={`text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
-                                  errormsg.EmailError !== ""
-                                    ? "ring-red-500"
-                                    : "ring-gray-300"
-                                }`}
+                                // value={email}
+                                className="text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ring-gray-200"
                                 // onChange={(e) => setEmail(e.target.value)}
                               ></input>
                             </div>
@@ -252,9 +262,6 @@ const UpdateEmailAddress = () => {
                             //   setIsSubmitted((prevState) => prevState - 1)
                             // }
                           />
-                          {/* <p className="font-semibold font-bricolage text-[22px]">
-                            Return to Profile
-                        </p> */}
                         </div>
                       </Link>
                     </div>
@@ -270,18 +277,23 @@ const UpdateEmailAddress = () => {
                       . Enter the code below to verify your existing email
                       address
                     </div>
-                    <form className="gap-6 flex flex-col w-full">
+                    <form
+                      id="verification-code-form"
+                      className="gap-6 flex flex-col w-full"
+                    >
                       <div className="self-stretch h-fit flex-col justify-start items-start gap-4 flex">
                         <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
                           <div className="self-stretch text-zinc-700 text-[15px] font-medium font-inter leading-tight">
-                            Verfication Code
+                            Verification Code
                           </div>
                           <div className="self-stretch  bg-white border-stone-300 justify-start items-center gap-2 inline-flex">
-                            <div className="grow shrink basis-0 h-10 flex-col rounded-md border-0 justify-center items-start inline-flex">
+                            <div className="grow shrink basis-0 h-10 flex-col rounded-md border-0 justify-center items-start inline-flex relative">
                               <input
-                                type="number"
+                                type="text"
                                 id="verficationCode"
                                 placeholder="23232"
+                                maxLength="5"
+                                value={verificationCode}
                                 className={`text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
                                   errormsg.CodeError !== ""
                                     ? "ring-red-500"
@@ -291,6 +303,10 @@ const UpdateEmailAddress = () => {
                                   setVerificationCode(e.target.value)
                                 }
                               ></input>
+                              <div className="absolute rounded-md py-1.5 px-2 bg-slate-200 right-3 text-xs font-dmsans font-normal text-black cursor-pointer hover:bg-slate-300"
+                              onClick={(e)=> setVerificationCode("")
+                              }
+                              >Clear</div>
                             </div>
                           </div>
                           <div className="flex flex-row justify-between w-full">
@@ -301,7 +317,9 @@ const UpdateEmailAddress = () => {
                               </div>
                             ) : (
                               <button
-                                className="disabled:text-black disabled:cursor-not-allowed text-[#6840E0] cursor-pointer text-sm font-dmsans font-normal"
+                                // className="disabled:text-black disabled:cursor-not-allowed
+                                // text-[#6840E0] cursor-pointer text-sm font-dmsans font-normal"
+                                className="text-[#6840E0] cursor-pointer text-sm font-dmsans font-normal"
                                 onClick={resendCode}
                               >
                                 Resend Code
@@ -332,7 +350,7 @@ const UpdateEmailAddress = () => {
           </div>
           <div className="w-1/2 bg-white rounded-r-2xl">
             <div className="w-full h-full flex-col justify-center gap-6 inline-flex">
-              <div className="flex flex-col gap-8 font-dmsans px-4 py-6 lg:px-12 lg:py-16 xl:pl-10 xl:pr-30">
+              <div className="flex flex-col gap-8 font-dmsans px-4 py-6 md:py-12 md:px-8 lg:px-12 lg:py-16 xl:pl-10 xl:pr-30">
                 <div className="flex flex-col gap-2">
                   <div className="text-lg font-bold">
                     Steps to update your email address
@@ -348,8 +366,8 @@ const UpdateEmailAddress = () => {
                       Step 1 - Verify Existing Email
                     </div>
                     {currentStep === "VERIFY_CODE" ||
-                    currentStep === "NEW_EMAIL" ? (
-                      currentStep === "NEW_EMAIL" ? (
+                    currentStep === "NEW_EMAIL_CODE" ? (
+                      currentStep === "NEW_EMAIL_CODE" ? (
                         <FaCheckCircle className="text-green-600" />
                       ) : (
                         <AiOutlineLoading3Quarters className="text-green-300" />
@@ -368,7 +386,7 @@ const UpdateEmailAddress = () => {
                     <div className="text-base font-bold">
                       Step 2 - Verify New Email
                     </div>
-                    {currentStep === "NEW_EMAIL" && (
+                    {currentStep === "NEW_EMAIL_CODE" && (
                       <AiOutlineLoading3Quarters className="text-green-300" />
                     )}
                   </div>
