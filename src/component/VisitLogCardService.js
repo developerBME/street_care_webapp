@@ -145,3 +145,15 @@ export const fetchPersonalVisitLogs = async (uid) => {
 
   return visitLogsData;
 };
+
+export const fetchPersonalVisitLogById = async (visitLogId) => {
+  const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
+  const visitLogDoc = await getDoc(visitLogRef);
+  if (visitLogDoc.exists()) {
+    const visitLogData = visitLogDoc.data();
+    return {
+      ...visitLogData,
+      id: visitLogId,
+    };
+  }
+};

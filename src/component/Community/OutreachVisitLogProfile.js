@@ -29,7 +29,7 @@ const OutreachVisitLogProfile = () => {
         const logs = await fetchPersonalVisitLogs(auth?.currentUser?.uid);
         setVisitLogs(logs);
         setIsLoading(false);
-        // console.log("This is from fetchpersonalvisitlog",logs);
+        console.log("This is from fetchpersonalvisitlog", logs);
         // Extract states and remove duplicates
       } else {
         console.log("No user is signed in.");

@@ -3,27 +3,27 @@ import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import profilePic from "../../images/avatar.jpg";
 import wavingHand from "../../images/waving_hand.png";
-import { fetchVisitLogById } from "../VisitLogCardService";
+import { fetchPersonalVisitLogById } from "../VisitLogCardService";
 import date from "../../images/date.png";
 import locate from "../../images/location.png";
 import userSlots from "../../images/userSlots.png";
 import verifiedImg from "../../images/verified_purple.png";
 import CustomButton from "../Buttons/CustomButton";
 
-const VisitLogDetails = () => {
+const PersonalVisitLogDetails = () => {
   // const navigate = useNavigate();
   // const location = useLocation();
   // const details = new URLSearchParams(location.search);
   // const categories = details.getAll("categories");
   const { id } = useParams();
-  console.log("Community Visit Log ID: " + id);
+  console.log("Personal Visit Log ID: " + id);
   const [data, setData] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const getData = async () => {
       try {
-        const result = await fetchVisitLogById(id);
+        const result = await fetchPersonalVisitLogById(id);
         setData(result);
       } catch (error) {
         console.error(error.message);
@@ -43,28 +43,28 @@ const VisitLogDetails = () => {
               Visit Log Details
             </div>
             <div className="bg-[#F5EEFE] rounded-2xl ">
-              <div className="inline-flex gap-2 items-center px-4 pt-6 py-2">
+              {/* <div className="inline-flex gap-2 items-center px-4 pt-6 py-2">
                 <img src={profilePic} className="w-6 h-6 rounded-full" />
-                {/* <div>{details.get("name")}</div> */}
                 <div>{data?.userName}</div>
                 <img src={verifiedImg} className="w-5 h-5" />
-              </div>
+              </div> */}
               {console.log("Data: " + JSON.stringify(data))}
-              <div className="px-6 py-2">
+              <div className="px-6 py-4">
                 <div className="flex flex-col space-y-4">
                   <div className="flex flex-row justify-normal space-x-2">
                     <img className="w-[13px] h-[15px] my-[3px]" src={date} />
-                    <div class="text-violet-900 text-sm font-medium font-['DM Sans'] leading-tight">
+                    <div class="text-violet-900 text-sm font-medium font-['DM Sans'] leading-tight pt-0.5">
                       {/* {details.get("date")} {details.get("date")} */}
-                      {data?.eventDate || ""}
+                      {data?.date || ""} · {data?.time || ""}
                     </div>
                   </div>
                   <div className="flex flex-row justify-normal space-x-2">
                     <img className="w-[12px] h-[15px] my-[3px]" src={locate} />
-                    <div class="text-violet-900 text-sm font-medium font-['DM Sans'] leading-tight">
+                    <div class="text-violet-900 text-sm font-medium font-['DM Sans'] leading-tight pt-0.5">
                       {/* {details.get("date")} {details.get("date")} */}
-                      {data?.location?.city || ""},{" "}
-                      {data?.location?.state || ""}
+                      {/* {data?.location?.city || ""},{" "}
+                      {data?.location?.state || ""} */}
+                      {data?.city || ""}, {data?.state || ""}
                     </div>
                   </div>
                   <div class="text-zinc-700 text-[16px] font-normal font-['DM Sans'] leading-snug max-w-3xl">
@@ -107,7 +107,7 @@ const VisitLogDetails = () => {
                     </div>
                   </div>
 
-                  <div className="flex flex-row space-x-2">
+                  {/* <div className="flex flex-row space-x-2">
                     <img
                       className="w-[20px] h-[14px] my-1"
                       src={userSlots}
@@ -115,7 +115,7 @@ const VisitLogDetails = () => {
                     <div className="font-normal font-dmsans text-[14px]">
                       {data?.filledSlots}
                     </div>
-                  </div>
+                  </div> */}
                   {/* <div className="inline-flex items-center bg-white px-4 py-1 space-x-2.5 rounded-2xl">
                     <img src={wavingHand} />
                     <div className="font-normal font-['Inter'] text-[10px] text-[#181818]">
@@ -154,10 +154,10 @@ const VisitLogDetails = () => {
             </div> */}
             <div className="mt-16">
               <CustomButton
-                label="Return to All Outreach Visit Logs"
+                label="Return to Profile"
                 name="buttondefault"
                 onClick={() => {
-                  navigate("/allOutreachVisitLog");
+                  navigate("/profile");
                 }}
               />
             </div>
@@ -168,4 +168,4 @@ const VisitLogDetails = () => {
   );
 };
 
-export default VisitLogDetails;
+export default PersonalVisitLogDetails;
