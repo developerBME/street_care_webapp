@@ -25,6 +25,9 @@ import badge6 from '../../images/badge6.png'
 
 import CarePackage from "./CarePackage";
 
+
+
+
 function HowToHelp() {
   const [selectedStep, setSelectedStep] = useState(1);
 
@@ -47,45 +50,39 @@ function HowToHelp() {
     switch (selectedStep) {
       case 1:
         return (
-          <div className="flex px-10 ">
-            <div className="space-y-10 ">
-              <div className="space-y-2 pr-18">
-                <div className="text-[22px] font-dmsans font-bold leading-7">
-                  Create or Signup to existing outreaches
+            <div className="flex flex-col px-10 md:flex-row">
+                <div className="space-y-10 md:pr-18">
+                    <div className="space-y-2">
+                        <div className="text-[22px] font-dmsans font-bold leading-7">
+                            Create or Signup to existing outreaches
+                        </div>
+                        <div className="text-[16px] font-dmsans text-[#181818] leading-6">
+                            With StreetCare, you can sign up to existing outreaches or create an outreach for any help request for which you could offer help.
+                            <br /><br />
+                            Outreaches are created by users that are willing to help for a particular cause for which they could provide help.
+                        </div>
+                    </div>
+                    <div className="space-y-2 pb-32">
+                        <div className="text-[22px] font-dmsans font-bold leading-7">
+                            Help Requests
+                        </div>
+                        <div className="text-[16px] font-dmsans text-[#181818] leading-6">
+                            If you come across people in need and not sure how to help them, create a help request for others to view and contribute if they could.
+                        </div>
+                    </div>
                 </div>
-                <div className="text-[16px] font-dmsans text-[#181818] leading-6">
-                  With StreetCare, you can sign up to existing outreaches or
-                  create an outreach for any help request for which you could
-                  offer help.
-                  <br />
-                  <br />
-                  Outreaches are created by users that are willing to help for a
-                  particular cause for which they could provide help.
+                <div className="flex w-full justify-end md:justify-center md:w-auto">
+                    <div>
+                        <img src={howToHelpOutreachSample} />
+                    </div>
                 </div>
-              </div>
-              <div className="space-y-2 pb-32">
-                <div className="text-[22px] font-dmsans font-bold leading-7">
-                  Help Requests
-                </div>
-                <div className="text-[16px] font-dmsans text-[#181818] leading-6">
-                  If you come across people in need and not sure how to help
-                  them, create a help request for others to view and contribute
-                  if they could.
-                </div>
-              </div>
             </div>
-            <div className="flex w-full justify-end">
-              <div>
-                {" "}
-                <img src={howToHelpOutreachSample} />
-              </div>
-            </div>
-          </div>
+
         );
       case 2:
         return (
           <div>
-            <div className="flex px-10 gap-4">
+                <div className="flex px-10 gap-4 flex-col lg:flex-row">
               <div className="space-y-10 ">
                 <div className="space-y-2 pr-18">
                   <div className="text-[22px] font-dmsans font-bold leading-7">
@@ -129,7 +126,7 @@ function HowToHelp() {
       case 3:
         return (
           <div className="space-y-[40px]">
-            <div className="flex px-10 gap-4">
+                <div className="flex px-10 gap-4 flex-col lg:flex-row">
               <div className="space-y-10 ">
                 <div className="space-y-2 pr-18">
                   <div className="text-[22px] font-dmsans font-bold leading-7">
@@ -147,43 +144,43 @@ function HowToHelp() {
                   </div>
                 </div>
               </div>
-              <div className="flex w-full justify-end">
-                <div>
+              <div className="flex  w-full justify-end">
+                        <div className="flex ">
                   <img src={howtohelp} />
                 </div>
               </div>
             </div>
-            <div className="px-10 space-y-2">
-              <div className="text-[22px] font-dmsans font-bold leading-7">
-                Before attending:
-              </div>
-              <div className="flex gap-6">
-                <div className="rounded-[30px] bg-[#F7F7F7] px-[40px] py-[24px] space-y-3">
-                  <div className="text-[16px] font-dmsans font-bold leading-7">
-                    Let someone know
-                  </div>
-                  <div className="text-[16px] font-dmsans text-[#181818] leading-6">
-                    During an outreach you may run into new neighborhoods. It
-                    would help to keep someone informed about this outreach.
-                  </div>
+                <div className="px-10 space-y-2">
+                    <div className="text-[22px] font-dmsans font-bold leading-7">
+                        Before attending:
+                    </div>
+                    <div className="flex flex-col gap-6 sm:flex-row">
+                        <div className="rounded-[30px] bg-[#F7F7F7] px-[40px] py-[24px] space-y-3">
+                            <div className="text-[16px] font-dmsans font-bold leading-7">
+                                Let someone know
+                            </div>
+                            <div className="text-[16px] font-dmsans text-[#181818] leading-6">
+                                During an outreach you may run into new neighborhoods. It
+                                would help to keep someone informed about this outreach.
+                            </div>
+                        </div>
+                        <div className="rounded-[30px] bg-[#F7F7F7] px-[40px] py-[24px] space-y-3">
+                            <div className="text-[16px] font-dmsans font-bold leading-7">
+                                Let someone know
+                            </div>
+                            <div className="text-[16px] font-dmsans text-[#181818] leading-6">
+                                During an outreach you may run into new neighborhoods. It
+                                would help to keep someone informed about this outreach.
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div className="rounded-[30px] bg-[#F7F7F7] px-[40px] py-[24px] space-y-3">
-                  <div className="text-[16px] font-dmsans font-bold leading-7">
-                    Let someone know
-                  </div>
-                  <div className="text-[16px] font-dmsans text-[#181818] leading-6">
-                    During an outreach you may run into new neighborhoods. It
-                    would help to keep someone informed about this outreach.
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         );
       case 4:
         return (
           <div>
-            <div className="flex px-10 ">
+                <div className="flex px-10 flex-col lg:flex-row ">
               <div className="space-y-10 ">
                 <div className="space-y-2 pr-18">
                   <div className="text-[22px] font-dmsans font-bold leading-7">
@@ -210,13 +207,13 @@ function HowToHelp() {
                 </div>
               </div>
             </div>
-            <div className="flex px-10">
-              <img src={badge1}/>
-              <img src={badge2}/>
-              <img src={badge3}/>
-              <img src={badge4}/>
-              <img src={badge5}/>
-              <img src={badge6}/>
+                <div className="flex flex-wrap px-10">
+                    <img src={badge1} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]"/>
+                    <img src={badge2} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]" />
+                    <img src={badge3} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]" />
+                    <img src={badge4} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]" />
+                    <img src={badge5} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]" />
+                    <img src={badge6} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]" />
             </div>
           </div>
         );
@@ -288,7 +285,7 @@ function HowToHelp() {
                 </div>
               </div>
               <div className="w-full">
-                <div className="flex w-full">
+                 <div className="flex w-full  flex-col sm:flex-row">
                   {[1, 2, 3, 4].map((step) => (
                     <div
                       key={step}
@@ -398,7 +395,7 @@ function HowToHelp() {
                 <div className="font-bricolage text-[57px] text-[#273164] font-medium">
                   What else can I do to help?
                 </div>
-                              <div className="grid grid-cols-2 md:flex md:flex-row md:gap-4 lg:flex lg:flex-row lg:gap-4">
+                 <div className="grid grid-cols-2 md:flex md:flex-row md:gap-4 gap-4 lg:flex lg:flex-row lg:gap-4 ">
                   <div className="p-2 bg-[#FFFFFF] space-y-2 w-fit rounded-2xl">
                     <div>
                       <img src={groupOutreaches} />
@@ -463,7 +460,56 @@ function HowToHelp() {
               name="buttondefault"
             />
           </div> */}
-        </div>
+              </div>
+
+              <div>
+
+                  <div className="p-4 lg:px-10 lg:py-12 bg-gradient-to-br from-[#D3C3FF] to-[#DEDCE4] rounded-t-2xl flex-col justify-start items-start gap-4 inline-flex w-full">
+                      <div className="flex flex-col md:flex md:flex-row justify-between gap-4 md:gap-10">
+                          <div className="">
+                              <div className="flex flex-row gap-4">
+                                  <div className="text-[45px] font-medium font-dmsans">
+                                      {/* Outreach - extending help, resources, and compassion to those in
+            need */}
+                                      Outreaches ({})
+                                  </div>
+                                  <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-medium font-dmsans leading-tight self-stretch">
+                                      <CustomButton
+                                          label="Create an Outreach"
+                                          name="buttondefault"
+                                          onClick={() => {
+                                              
+                                          }}
+                                      />
+                                  </div>
+
+                                  {/* </div> */}
+                              </div>
+                              <div className="text-md font-medium font-dmsans text-[#181818] mt-2">
+
+                                  What are help requests and how can they help you? If you are ready
+                                  to help people now, kindly sign up to outreaches
+                              </div>
+                          </div>
+
+                          <div
+                              className="flex flex-row cursor-pointer gap-2 items-center"
+                              onClick={() => {
+                               
+                              }}
+                          >
+                              <div className="font-medium text-[16px] lg:text-[20px] font-dmsans text-[#37168B] whitespace-nowrap">
+                                  View all
+                              </div>
+                              <img src={arrowRight} className="w-2 h-2 lg:w-4 lg:h-4 " />
+                          </div>
+                      </div>
+                  </div>
+
+                
+              </div>
+
+
       </div>
     </div>
   );
