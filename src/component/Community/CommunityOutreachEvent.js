@@ -238,7 +238,7 @@ const CommunityOutreachEvent = () => {
           </div> */}
         </div>
 
-        {eventsDisplay.length == 0 ? (
+        {eventsDisplay.length === 0 ? (
           <div className="text-md font-medium font-dmsans text-[#181818] mt-2">
             No outreaches
           </div>

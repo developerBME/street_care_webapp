@@ -171,14 +171,14 @@ function PersonalOutForm() {
   };
 
   const handleCityChange = (e) => {
-    setCityName(e.target.value)
+    setCityName(e.target.value);
     updateErrorState("cityError", "");
   };
   const handleStateChange = (e) => {
     updateErrorState("stateError", "");
   };
   const handleZipChange = (e) => {
-    setPostcode(e.target.value)
+    setPostcode(e.target.value);
     updateErrorState("zipError", "");
   };
 
@@ -205,6 +205,7 @@ function PersonalOutForm() {
     }
   });
 
+  // useEffect(()=>{},[])
   useEffect(() => {
     async function getStates() {
       const response = await fetch(
@@ -288,8 +289,8 @@ function PersonalOutForm() {
     } else {
       updateErrorState("numberHelpedError", "");
     }
-    console.log("object");
-    console.log(whatGivenArr);
+    // console.log("object");
+    // console.log(whatGivenArr);
     if (whatGivenArr == [] || !setOtherBool) {
       updateErrorState(
         "checkboxesError",
@@ -416,6 +417,7 @@ function PersonalOutForm() {
     </div>`;
 
     try {
+      console.log("Sending email...");
       const logRef = collection(db, "personalVisitLog");
       const docRef = await addDoc(logRef, obj);
       if (docRef.id) {
@@ -426,6 +428,7 @@ function PersonalOutForm() {
           where("uid", "==", fAuth?.currentUser?.uid)
         );
         const userDocRef = await getDocs(userQuery);
+        console.log(userDocRef);
         const userDocID = userDocRef.docs[0].id;
         // reference for the userdoc
         const userRef = doc(db, USERS_COLLECTION, userDocID);
@@ -470,7 +473,7 @@ function PersonalOutForm() {
   };
 
   //Address autocomplete functionality
-  const [query, setQuery] = useState();
+  const [AddQuery, setAddQuery] = useState();
   const autoCompleteRef = useRef(null);
   const [street, setStreet] = useState("");
   const [cityName, setCityName] = useState("");
@@ -493,8 +496,8 @@ function PersonalOutForm() {
 
   const handlePlaceSelect = async (updateQuery) => {
     const addressObject = await autoComplete.getPlace();
-    const query = addressObject.formatted_address;
-    updateQuery(query);
+    const AddQuery = addressObject.formatted_address;
+    updateQuery(AddQuery);
 
     let street = "";
     let postcode = "";
@@ -543,7 +546,7 @@ function PersonalOutForm() {
   useEffect(() => {
     loadScript(
       `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_PLACES_API_KEY}&libraries=places`,
-      () => handleScriptLoad(setQuery, autoCompleteRef)
+      () => handleScriptLoad(setAddQuery, autoCompleteRef)
     );
   }, []);
 
@@ -862,8 +865,8 @@ function PersonalOutForm() {
                         <input
                           type="text"
                           ref={autoCompleteRef}
-                          onChange={(event) => setQuery(event.target.value)}
-                          value={query}
+                          onChange={(event) => setAddQuery(event.target.value)}
+                          value={AddQuery}
                           placeholder="Enter Address"
                           className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
                             error.idError !== ""

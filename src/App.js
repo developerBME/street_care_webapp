@@ -37,10 +37,10 @@ import ICanHelpForm from "./component/Community/ICanHelpForm";
 import CommunityComingSoon from "./component/CommunityComingSoon";
 import VisitLogDetails from "./component/Community/VisitLogDetails";
 import Temp_Profile from "./component/Temp_Profile";
-import SrushtiSample from "./component/SampleSrushti";
+
 import { ProtectedRoute } from "./component/ProtectedRoute";
 import EmailVerificationModal from "./component/EmailVerificationModal";
-import PanktiSample from "./component/SamplePankti";
+
 import Sample_form from "./component/Sample_form";
 import AllHelpRequests from "./component/AllHelpRequests";
 import ProfileSettings from "./component/UserProfile/ProfileSettings";
@@ -54,7 +54,7 @@ function App() {
   const [firebaseUser, setFirebaseUser] = useState({});
   const [loadingUser, setLoadingUser] = useState(true);
 
-  console.log(firebaseUser);
+  // console.log(firebaseUser);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(fAuth, async (user) => {
@@ -122,7 +122,15 @@ function App() {
           <Route path="/signup" element={<Signup2 />} />
           <Route path="/allnews" element={<Newscard />} />
           <Route path="/allnews/:id" element={<Readmorenews />} />
-          <Route path="/verifyemail" element={<EmailVerificationModal />} />
+          <Route
+            path="/verifyemail"
+            element={
+              <EmailVerificationModal
+                setLoggedIn={setLoggedIn}
+                user={firebaseUser}
+              />
+            }
+          />
           <Route
             element={
               <ProtectedRoute user={firebaseUser} loading={loadingUser} />
@@ -179,9 +187,7 @@ function App() {
             path="/allOutreachVisitLog"
             element={<AllOutreachVisitLog />}
           />
-          {/* <Route path="/adityaSample" element={<CommunityHub />} /> */}
-          <Route path="/srushtiSample" element={<SrushtiSample />} />
-          <Route path="/panktiSample" element={<PanktiSample />} />
+
           <Route path="/sample_form" element={<Sample_form />} />
           <Route path="visitLogDetails" element={<VisitLogDetails />} />
           <Route path="visitLogDetails/:id" element={<VisitLogDetails />} />

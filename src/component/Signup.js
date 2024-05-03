@@ -252,7 +252,7 @@ function Signup2() {
         password
       );
       const currentUser = userCredential.user;
-
+      console.log(currentUser);
       const userData = {
         dateCreated: new Date(),
         deviceType: "Web",
