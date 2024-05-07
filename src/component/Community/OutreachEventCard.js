@@ -226,7 +226,7 @@ const OutreachEventCard = ({
                 <img className="w-[20px] h-[14px] my-1" src={userSlots}></img>
                 <div className="font-normal font-dmsans text-[14px]">
                   {/* Open Spots: {totalSlots - nop}/{totalSlots} */}
-                  {totalSlots - nop}/{totalSlots}
+                  {nop}/{totalSlots}
                   {/* {nop}/{totalSlots} */}
                 </div>
               </div>
