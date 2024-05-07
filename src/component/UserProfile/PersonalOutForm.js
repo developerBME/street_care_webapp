@@ -13,32 +13,29 @@ import {
   updateDoc,
   query,
   where,
-  limit,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import CustomButton from "../Buttons/CustomButton";
 import errorImg from "../../images/error.png";
 import ConfirmationModal from "./ConfirmationModal";
-import DatePicker from "react-datepicker";
-import { Timestamp } from "firebase/firestore";
 import { emailConfirmation } from "../EmailService";
 import { checkNumber } from "../helper/validator";
 
 const USERS_COLLECTION = "users";
 
-const CustomInput = ({ value, onClick, onChange, id, className }) => (
-  <div>
-    <input
-      type="text"
-      onClick={onClick}
-      onChange={onChange}
-      value={value}
-      id={id}
-      className={className}
-    />
-  </div>
-);
+// const CustomInput = ({ value, onClick, onChange, id, className }) => (
+//   <div>
+//     <input
+//       type="text"
+//       onClick={onClick}
+//       onChange={onChange}
+//       value={value}
+//       id={id}
+//       className={className}
+//     />
+//   </div>
+// );
 
 let autoComplete;
 
@@ -192,9 +189,7 @@ function PersonalOutForm() {
   const handleOptionalButtonClick = () => {
     setShowOptionalQuestions(!showOptionalQuestions);
   };
-  {
     /* Firebase */
-  }
   const fAuth = getAuth();
   onAuthStateChanged(fAuth, (user) => {
     if (user) {
@@ -399,10 +394,13 @@ function PersonalOutForm() {
       itemQty: itemQty,
       date: date.current.value,
       time: time.current.value,
-      state: state,
-      city: city,
+      state: stateName,
+      city: cityName,
       rating: rating,
+      zipcode: postcode,
+      street: street
     };
+    console.log('obj: ', obj);
 
     const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px">
       <h1>Thank you for creating the outreach</h1>
@@ -620,7 +618,7 @@ function PersonalOutForm() {
                           ></input>
                           {error.numberHelpedError && (
                             <div className="inline-flex items-center">
-                              <img src={errorImg} className="w-3 h-3" />
+                              <img alt="" src={errorImg} className="w-3 h-3" />
                               <p className="text-red-600 text-xs ml-1">
                                 {error.numberHelpedError}
                               </p>
@@ -630,7 +628,7 @@ function PersonalOutForm() {
                       </div>
                       {/* {error.numberHelpedError && (
                       <div className="inline-flex items-center">
-                        <img src={errorImg} className="w-3 h-3" />
+                        <img alt="" src={errorImg} className="w-3 h-3" />
                         <p className="text-red-600 text-xs ml-1">
                           {error.numberHelpedError}
                         </p>
@@ -819,7 +817,7 @@ function PersonalOutForm() {
                     </div>
                     {error.checkboxesError && (
                       <div className="inline-flex items-center">
-                        <img src={errorImg} className="w-3 h-3" />
+                        <img alt="" src={errorImg} className="w-3 h-3" />
                         <p className="text-red-600 text-xs ml-1">
                           {error.checkboxesError}
                         </p>
@@ -876,7 +874,7 @@ function PersonalOutForm() {
                         />
                         {error.idError && (
                           <div className="inline-flex items-center">
-                            <img src={errorImg} className="w-3 h-3" />
+                            <img alt="" src={errorImg} className="w-3 h-3" />
                             <p className="text-red-600 text-xs">
                               {error.idError}
                             </p>
@@ -903,7 +901,7 @@ function PersonalOutForm() {
                           />
                           {error.streetError && (
                             <div className="inline-flex items-center">
-                              <img src={errorImg} className="w-3 h-3" />
+                              <img alt="" src={errorImg} className="w-3 h-3" />
                               <p className="text-red-600 text-xs">
                                 {error.streetError}
                               </p>
@@ -928,7 +926,7 @@ function PersonalOutForm() {
                           />
                           {error.cityError && (
                             <div className="inline-flex items-center">
-                              <img src={errorImg} className="w-3 h-3" />
+                              <img alt="" src={errorImg} className="w-3 h-3" />
                               <p className="text-red-600 text-xs">
                                 {error.cityError}
                               </p>
@@ -956,7 +954,7 @@ function PersonalOutForm() {
                           />
                           {error.stateError && (
                             <div className="inline-flex items-center">
-                              <img src={errorImg} className="w-3 h-3" />
+                              <img alt="" src={errorImg} className="w-3 h-3" />
                               <p className="text-red-600 text-xs">
                                 {error.stateError}
                               </p>
@@ -981,7 +979,7 @@ function PersonalOutForm() {
                           />
                           {error.zipError && (
                             <div className="inline-flex items-center">
-                              <img src={errorImg} className="w-3 h-3" />
+                              <img alt="" src={errorImg} className="w-3 h-3" />
                               <p className="text-red-600 text-xs">
                                 {error.zipError}
                               </p>
@@ -1028,7 +1026,7 @@ function PersonalOutForm() {
                         </div>
                         {error.stateError && (
                           <div className="inline-flex items-center">
-                            <img src={errorImg} className="w-3 h-3" />
+                            <img alt="" src={errorImg} className="w-3 h-3" />
                             <p className="text-red-600 text-xs ml-1">
                               {error.stateError}
                             </p>
@@ -1076,7 +1074,7 @@ function PersonalOutForm() {
                         </div>
                         {error.cityError && (
                           <div className="inline-flex items-center">
-                            <img
+                            <img alt=""
                               src={errorImg}
                               className="w-3 h-3"
                               alt="Error Image"
@@ -1113,7 +1111,7 @@ function PersonalOutForm() {
                             ></input>
                             {/* {error.dateError && (
                             <div className="inline-flex items-center">
-                              <img
+                              <img alt=""
                                 src={errorImg}
                                 className="w-3 h-3"
                                 alt="Date Error"
@@ -1145,7 +1143,7 @@ function PersonalOutForm() {
                             ></input>
                             {/* {error.timeError && (
                             <div className="inline-flex items-center">
-                              <img src={errorImg} className="w-3 h-3" />
+                              <img alt="" src={errorImg} className="w-3 h-3" />
                               <p className="text-red-600 text-xs ml-1">
                                 {error.timeError}
                               </p>
@@ -1181,7 +1179,7 @@ function PersonalOutForm() {
                           ></input>
                           {error.itemQtyError && (
                             <div className="inline-flex items-center">
-                              <img src={errorImg} className="w-3 h-3" />
+                              <img alt="" src={errorImg} className="w-3 h-3" />
                               <p className="text-red-600 text-xs ml-1">
                                 {error.itemQtyError}
                               </p>
@@ -1259,7 +1257,7 @@ function PersonalOutForm() {
                               ></input>
                               {error.optDescError && (
                                 <div className="inline-flex items-center">
-                                  <img src={errorImg} className="w-3 h-3" />
+                                  <img alt="" src={errorImg} className="w-3 h-3" />
                                   <p className="text-red-600 text-xs ml-1">
                                     {error.optDescError}
                                   </p>
@@ -1270,7 +1268,7 @@ function PersonalOutForm() {
                         </div>
                         {/* {error.furtherHelpDescriptionError && (
                           <div className="inline-flex items-center">
-                            <img src={errorImg} className="w-3 h-3" />
+                            <img alt="" src={errorImg} className="w-3 h-3" />
                             <p className="text-red-600 text-xs ml-1">
                               {error.furtherHelpDescriptionError}
                             </p>
@@ -1304,7 +1302,7 @@ function PersonalOutForm() {
                               ></input>
                               {error.optLandmarkError && (
                                 <div className="inline-flex items-center">
-                                  <img src={errorImg} className="w-3 h-3" />
+                                  <img alt="" src={errorImg} className="w-3 h-3" />
                                   <p className="text-red-600 text-xs ml-1">
                                     {error.optLandmarkError}
                                   </p>
@@ -1513,7 +1511,7 @@ function PersonalOutForm() {
                         </div>
                         {/* {error.checkboxesError && (
                         <div className="inline-flex items-center">
-                          <img src={errorImg} className="w-3 h-3" />
+                          <img alt="" src={errorImg} className="w-3 h-3" />
                           <p className="text-red-600 text-xs ml-1">
                             {error.checkboxesError}
                           </p>
@@ -1598,7 +1596,7 @@ function PersonalOutForm() {
                         </div>
                         {error.infoShareCheckboxError && (
                           <div className="inline-flex items-center">
-                            <img src={errorImg} className="w-3 h-3" />
+                            <img alt="" src={errorImg} className="w-3 h-3" />
                             <p className="text-red-600 text-xs ml-1">
                               {error.infoShareCheckboxError}
                             </p>

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import defaultImage from "../../images/default_avatar.svg";
-import crown from "../../images/crown.png";
-import notes from "../../images/notes.png";
-import announcement from "../../images/announcement.png";
+// import crown from "../../images/crown.png";
+// import notes from "../../images/notes.png";
+// import announcement from "../../images/announcement.png";
 import neighborhood from "../../images/neighboorhood.png";
 import information from "../../images/information.png";
 import star from "../../images/star.png";
@@ -13,8 +13,6 @@ import tickMark from "../../images/tickMark.svg";
 
 import { db } from "../firebase";
 import {
-  doc,
-  getDoc,
   getDocs,
   collection,
   query,
@@ -23,8 +21,6 @@ import {
 
 import {
   getAuth,
-  signInWithPopup,
-  GoogleAuthProvider,
   onAuthStateChanged,
 } from "firebase/auth";
 
@@ -183,7 +179,7 @@ const UserInfo = () => {
     getDeedValues();
     getUserData();
     getCreatedOutreaches();
-  }, [fAuth.currentUser]);
+  }, [fAuth.currentUser, achievments]);
 
   // ACHIEVEMENTS LOGIC
   useEffect(() => {
@@ -202,7 +198,7 @@ const UserInfo = () => {
       achievments_obj.neighborhood_leader = true;
       setAchievements(achievments_obj);
     }
-  }, [donations, helped, outreaches]);
+  }, [donations, helped, outreaches, achievments]);
 
   useEffect(() => {
     document.title = `${displayName} - Street Care`;
@@ -242,7 +238,7 @@ const UserInfo = () => {
             {superpowers &&
               superpowers.map((superpower) => {
                 return (
-                  <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold whitespace-nowrap flex justify-center items-center">
+                  <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold whitespace-nowrap flex justify-center items-center" key={superpower}>
                     <h6 className="text-[#212121] w-fit text-[14px] font-opensans">
                       {superpower}
                     </h6>

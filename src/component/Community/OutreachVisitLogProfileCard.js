@@ -13,13 +13,13 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData }) => {
           <div className="mt-2">
             <div className="flex xl:justify-between xl:mt-5 mt-0 flex-col xl:flex-row">
               <div className="text-violet-900 text-[12px] font-medium font-bricolage leading-tight flex flex-row">
-                <div>{<img className="w-4 h-4" src={calender} />}</div>
+                <div>{<img alt="" className="w-4 h-4" src={calender} />}</div>
                 <div className="px-1">
                   {visitLogCardData.date || ""} · {visitLogCardData.time}
                 </div>
               </div>
               <div className="text-violet-900 text-[12px] font-medium font-bricolage leading-tight flex flex-row mt-2 xl:mt-0">
-                <div>{<img className="w-4 h-4" src={location} />}</div>
+                <div>{<img alt="" className="w-4 h-4" src={location} />}</div>
                 <div className="pt-0.5">
                   {visitLogCardData?.city || ""},{" "}
                   {visitLogCardData?.state || ""}
@@ -48,7 +48,7 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData }) => {
             <div className="px-1">
               <div className="inline-flex items-center gap-2 flex-wrap mt-2">
                 {visitLogCardData?.whatGiven.map((item, index) => (
-                  <div className="py-1 px-3 border border-[#C8C8C8] w-fit rounded-xl text-[10px] text-[#444746]">
+                  <div className="py-1 px-3 border border-[#C8C8C8] w-fit rounded-xl text-[10px] text-[#444746]" key={item}>
                     {item}
                   </div>
                 ))}

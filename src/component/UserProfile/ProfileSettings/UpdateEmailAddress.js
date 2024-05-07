@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import CustomButton from "../../Buttons/CustomButton";
-import { Box, Breadcrumbs, Link, Typography } from "@mui/material";
+import { Breadcrumbs, Link, Typography } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import arrowBack from "../../../images/arrowBack.png";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
@@ -17,7 +17,6 @@ const UpdateEmailAddress = () => {
 
   const [email, setEmail] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
-  const [emailCode, setEmailCode] = useState("");
 
   // const [error, setError] = useState(null);
 
@@ -60,7 +59,7 @@ const UpdateEmailAddress = () => {
     return () => {
       clearInterval(interval);
     };
-  }, [seconds]);
+  }, [seconds, minutes]);
 
   const handleEmailSubmit = () => {
     // if (isSubmitted === 2) {
@@ -88,7 +87,6 @@ const UpdateEmailAddress = () => {
   };
 
   const handleCodeSubmit = () => {
-    const verfication_pattern = /^[0-9]{5}$/;
 
     if (!verificationCode || "") {
       updateErrorState("CodeError", "Verification code is required");
@@ -106,7 +104,6 @@ const UpdateEmailAddress = () => {
 
   const handleNewEmailCode = () => {
 
-    const verfication_pattern = /^[0-9]{5}$/;
 
     if (!verificationCode || "") {
       updateErrorState("CodeError", "Verification code is required");
@@ -140,8 +137,6 @@ const UpdateEmailAddress = () => {
     NEW_EMAIL_CODE: handleNewEmailCode,
   };
 
-  const EmailForm = document.getElementById("email-update-form");
-  const NewEmail = document.getElementById("new-email");
 
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
@@ -201,7 +196,7 @@ const UpdateEmailAddress = () => {
                           </div>
                           {/* {errormsg.EmailError && (
                             <div className="inline-flex items-center gap-1.5">
-                              <img src={errorImg} className="w-3 h-3" />
+                              <img alt="" src={errorImg} className="w-3 h-3" />
                               <div className="text-red-700 font-dmsans">
                                 {errormsg.EmailError}
                               </div>
@@ -231,7 +226,7 @@ const UpdateEmailAddress = () => {
                           </div>
                           {errormsg.EmailError && (
                             <div className="inline-flex items-center gap-1.5">
-                              <img src={errorImg} className="w-3 h-3" />
+                              <img alt="" src={errorImg} className="w-3 h-3" />
                               <div className="text-red-700 font-dmsans">
                                 {errormsg.EmailError}
                               </div>
@@ -255,7 +250,7 @@ const UpdateEmailAddress = () => {
                       <Link to="/profile/profilesettings/updateemailaddress">
                         <div className="inline-flex cursor-pointer">
                           {/* removed pl-3 xl:px-16 xl:pt-16 from this div*/}
-                          <img
+                          <img alt=""
                             src={arrowBack}
                             onClick={handleBack}
                             // onClick={() =>
@@ -304,7 +299,7 @@ const UpdateEmailAddress = () => {
                                 }
                               ></input>
                               <div className="absolute rounded-md py-1.5 px-2 bg-slate-200 right-3 text-xs font-dmsans font-normal text-black cursor-pointer hover:bg-slate-300"
-                              onClick={(e)=> setVerificationCode("")
+                              onClick={()=> setVerificationCode("")
                               }
                               >Clear</div>
                             </div>
@@ -328,7 +323,7 @@ const UpdateEmailAddress = () => {
                           </div>
                           {errormsg.CodeError && (
                             <div className="inline-flex items-center gap-1.5">
-                              <img src={errorImg} className="w-3 h-3" />
+                              <img alt="" src={errorImg} className="w-3 h-3" />
                               <div className="text-red-700 font-dmsans">
                                 {errormsg.CodeError}
                               </div>

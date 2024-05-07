@@ -113,9 +113,10 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
           </div>
           <div className="self-stretch" style={{width: '150%'}}>
             <span className="text-[#616161] text-[15px] font-normal font-dmsans leading-normal">
-              {showDetails
+              {showDetails || helpDescription.length < 250
                 ? helpDescription
-                : `${helpDescription.substring(0, 250)}...`}
+                : `${helpDescription.substring(0, 250)}...`
+                }
             </span>{" "}
             {helpDescription.length > 250 && (
               <a
