@@ -328,7 +328,7 @@ const Form = (hrid) => {
     updateErrorState("nameError", "");
   };
   const handleStreetChange = (e) => {
-    setStreet(e.target.value)
+    setStreet(e.target.value);
     updateErrorState("streetError", "");
   };
   const handleCityChange = (e) => {
@@ -449,7 +449,10 @@ const Form = (hrid) => {
     }
 
     if (startDate && endDate && startDate >= endDate) {
-      updateErrorState("stimeError", "Start DateTime should be before End DateTime");
+      updateErrorState(
+        "stimeError",
+        "Start DateTime should be before End DateTime"
+      );
     } else {
       updateErrorState("stimeError", "");
     }
@@ -508,7 +511,7 @@ const Form = (hrid) => {
 
   const handlePlaceSelect = async (updateQuery) => {
     const addressObject = await autoComplete.getPlace();
-    console.log('addressObject: ', addressObject);
+    console.log("addressObject: ", addressObject);
 
     const query = addressObject.formatted_address;
     updateQuery(query);
@@ -622,7 +625,7 @@ const Form = (hrid) => {
 
             <div className="space-y-1.5">
               <p className="font-semibold font-['Inter'] text-[15px]">
-                Maximum capacity of participants allowed
+                Maximum capacity of participants allowed*
               </p>
               <input
                 type="text"

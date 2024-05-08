@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import OutreachVisitLogProfileCard from "./OutreachVisitLogProfileCard";
 import { useNavigate } from "react-router-dom";
 import icon from "../../images/icon.png";
-import OutreachVisitLogCard from "./OutreachVisitLogCard";
-import { fetchEvents, formatDate } from "../EventCardService";
+// import OutreachVisitLogCard from "./OutreachVisitLogCard";
+// import { fetchEvents, formatDate } from "../EventCardService";
 import { fetchPersonalVisitLogs } from "../VisitLogCardService";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import CustomButton from "../Buttons/CustomButton";
@@ -19,7 +19,6 @@ const OutreachVisitLogProfile = () => {
   const navigate = useNavigate();
   const [visitLogs, setVisitLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,7 +67,7 @@ const OutreachVisitLogProfile = () => {
           {visitLogs.length > 0 && (
             <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2 gap-y-2 mb-6">
               {visitLogs.slice(0, visibleItems).map((visitLogData, index) => (
-                <div key={index} className="flex p-2">
+                <div key={visitLogData.id} className="flex p-2">
                   <div className="flex-1">
                     {/* <OutreachVisitLogCard
                     visitLogCardData={visitLogData}

@@ -164,15 +164,15 @@ function CommOutForm() {
       updateErrorState("checkboxesError", "");
     }
 
-    if (itemArray == "" || itemArray == []) {
-      updateErrorState(
-        "checkboxesError",
-        "Please provide the kind of help provided"
-      );
-      setReturn = true;
-    } else {
-      updateErrorState("checkboxesError", "");
-    }
+    // if (itemArray == "" || itemArray == []) {
+    //   updateErrorState(
+    //     "checkboxesError",
+    //     "Please provide the kind of help provided"
+    //   );
+    //   setReturn = true;
+    // } else {
+    //   updateErrorState("checkboxesError", "");
+    // }
 
     if (!itemQty) {
       updateErrorState("itemQtyError", "Enter Quantity");
