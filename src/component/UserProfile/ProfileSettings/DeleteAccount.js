@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import errorImg from "../../../images/error.png";
 import CustomButton from "../../Buttons/CustomButton";
-
+import { Breadcrumbs, Link, Typography } from "@mui/material";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 const DeleteAccount = () => {
   const [email, setEmail] = useState("");
