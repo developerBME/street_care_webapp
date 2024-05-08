@@ -9,12 +9,17 @@ exports.addLogEntry = functions.https.onRequest((req, res) => {
       return;
     }
 
-    const logMessage = req.body.data ? req.body.data.message : "";
-    if (logMessage.length) {
+    const tag = req.body.data ? req.body.data.tag : "";
+    const messageBody = req.body.data ? req.body.data.message : "";
+
+    if (messageBody.length && tag.length) {
+      const logMessage = `[${tag}]: ${messageBody}`;
       console.log(logMessage);
       res.status(200).send({ data: { message: "event was logged" } });
     } else {
-      res.status(400).send({ data: { message: "empty log received" } });
+      res
+        .status(400)
+        .send({ data: { message: "tag or message should not be empty" } });
     }
   });
 });
