@@ -10,7 +10,7 @@ const headers = {
 const logEvent = async (tag, message) => {
   try {
     const addLogEntry = httpsCallable(functions, "addLogEntry", { headers });
-    await addLogEntry({ message: `[${tag}]: ${message}` });
+    await addLogEntry({ tag, message });
     console.log("Event logged successfully");
   } catch (error) {
     console.error("Error logging event:", error);
