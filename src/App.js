@@ -45,6 +45,7 @@ import Sample_form from "./component/Sample_form";
 import AllHelpRequests from "./component/AllHelpRequests";
 import ProfileSettings from "./component/UserProfile/ProfileSettings";
 import UpdateEmailAddress from "./component/UserProfile/ProfileSettings/UpdateEmailAddress";
+import DeleteAccount from "./component/UserProfile/ProfileSettings/DeleteAccount";
 import PersonalVisitLogDetails from "./component/Community/PersonalVisitLogDetails";
 
 function App() {
@@ -145,6 +146,10 @@ function App() {
             <Route
               path="/profile/profilesettings/updateemailaddress"
               element={<UpdateEmailAddress />}
+            />
+            <Route
+              path="/profile/profilesettings/deleteaccount"
+              element={<DeleteAccount />}
             />
             <Route path="/profile/commoutform" element={<CommOutForm />} />
             <Route
