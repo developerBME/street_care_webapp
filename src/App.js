@@ -44,6 +44,8 @@ import PanktiSample from "./component/SamplePankti";
 import Sample_form from "./component/Sample_form";
 import AllHelpRequests from "./component/AllHelpRequests";
 import ProfileSettings from "./component/UserProfile/ProfileSettings";
+import DeleteUserPage from "./component/UserProfile/DeleteUserPage";
+import DeleteUserData from "./component/UserProfile/DeleteUserData";
 
 function App() {
   const fAuth = getAuth();
@@ -140,6 +142,8 @@ function App() {
               element={<CreateOutreach />}
             />
             <Route path="/helpRequestForm" element={<HelpRequestForm />} />
+            <Route path="/DeleteUserData" element={<DeleteUserData />} />
+            <Route path="/DeleteUserPage" element={<DeleteUserPage />} />
           </Route>
 
           <Route path="/profile/select-outreach" element={<Documenting />} />
