@@ -10,7 +10,7 @@ const db = admin.firestore();
 
 const CLIENT_ID = '223295299587-dinnroh9j2lb858kphbgb96f8t6j0eq2.apps.googleusercontent.com';
 const CLIENT_SECRET = 'anpX22WnN_boI0nx64wDSGZX';
-const REFRESH_TOKEN = '1//05wD9ZSLWaCZFCgYIARAAGAUSNwF-L9IrBT_px6HZB5-xWOnl3lq2mhkgdsB0RJJ2-QOabYeGPtmkyTzB2yVr8hFbn4uJ4irhmqE';
+const REFRESH_TOKEN = '1//04kWwsPXOMdiLCgYIARAAGAQSNwF-L9IruatCfWHDiw533kOifxANJks2lV251MEidsfQmcI0eIZmQO9H27ha06dCP12PyBVrSl0';
 const EMAIL = 'developer@brightmindenrichment.org';
 const SECRET_KEY = '48610ca52d0c1fee946020018d7c6f7dab31d391a59fb69e747189c22e6dd9bf';
 
@@ -40,8 +40,10 @@ exports.sendUpdateEmail2FACode = functions.https.onRequest((req, res) => {
     }
 
     try {
-      const hashedCode = crypto.createHmac('sha256', SECRET_KEY).update(`${userEmail}:${uid}:${timestamp}`).digest('hex');
+        //const hashedCode = crypto.createHmac('sha256', SECRET_KEY).update(`${userEmail}:${uid}:${timestamp}`).digest('hex');
 
+      const currentTimestampWindow = Math.floor(timestamp / (5 * 60 * 1000)) * (5 * 60 * 1000);//start of the current minute
+      const hashedCode = crypto.createHmac('sha256', SECRET_KEY).update(`${userEmail}:${uid}:${currentTimestampWindow}`).digest('hex');
       const hashBigInt = BigInt('0x' + hashedCode);
       const sixDigitCode = hashBigInt % 1000000n;
       const sixDigitCodeStr = sixDigitCode.toString().padStart(6,'0');
