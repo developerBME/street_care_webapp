@@ -3,6 +3,8 @@ import errorImg from "../../../images/error.png";
 import CustomButton from "../../Buttons/CustomButton";
 import { Breadcrumbs, Link, Typography } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { getAuth, deleteUser, signOut, signInWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 const DeleteAccount = () => {
   const [email, setEmail] = useState("");
@@ -11,6 +13,8 @@ const DeleteAccount = () => {
     EmailError: "",
     PassError: "",
   });
+  const navigate = useNavigate();
+  const auth = getAuth();
 
   const updateErrorState = (key, value) => {
     setErrors((prevState) => ({
@@ -18,6 +22,38 @@ const DeleteAccount = () => {
       [key]: value,
     }));
   };
+
+  const handleDeleteUser = async (e) => {
+    e.preventDefault(); // Prevent form submission
+
+    try {
+      // Validate email format
+      if (!validateEmail(email)) {
+        updateErrorState('EmailError', 'Invalid email format. Please enter a valid email.');
+        return;
+      }
+
+      // Sign in with email and password
+      await signInWithEmailAndPassword(auth, email, password);
+
+      // Delete user
+      await deleteUser(auth.currentUser);
+      updateErrorState('EmailError', 'User account deleted successfully.');
+
+      // Sign out
+      await signOut(auth);
+      window.location.reload();
+    } catch (error) {
+      console.error('Error deleting user data', error);
+      updateErrorState('EmailError', 'Error deleting user data. Please try again.');
+    }
+  };
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
 
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
@@ -54,6 +90,7 @@ const DeleteAccount = () => {
                   <form
                     className="gap-6 flex flex-col w-full"
                     id="delete-account-form"
+                    onSubmit={handleDeleteUser} // Add onSubmit event handler to call handleDeleteUser on form submission
                   >
                     <div className="self-stretch h-fit flex-col justify-start items-start gap-4 flex">
                       <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
@@ -116,10 +153,10 @@ const DeleteAccount = () => {
                         )}
                       </div>
                     </div>
-                    <CustomButton 
-                    name="deleteButton"
-                    type="submit"
-                    label="Delete Account"
+                    <CustomButton
+                      name="deleteButton"
+                      type="submit"
+                      label="Delete Account"
                     />
                   </form>
                 </div>
