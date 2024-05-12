@@ -7,6 +7,8 @@ import arrowBack from "../../../images/arrowBack.png";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaCheckCircle } from "react-icons/fa";
 import errorImg from "../../../images/error.png";
+import { send2FA, verify2FA } from "../UpdateEmail2FA";
+import { getAuth } from "firebase/auth";
 
 const UpdateEmailAddress = () => {
   const stepLabelMap = {
@@ -17,6 +19,7 @@ const UpdateEmailAddress = () => {
 
   const [email, setEmail] = useState("");
   const [error, setError] = useState(null);
+  const fAuth = getAuth();
 
 
   const [currentStep, setCurrentStep] = useState("UPDATE_EMAIL");
@@ -74,7 +77,7 @@ const UpdateEmailAddress = () => {
   //   }
   // };
 
-  const handleEmailSubmit = () => {
+  const handleEmailSubmit = async () => {
     // if (isSubmitted === 2) {
     //   setIsSubmitted((prevState) => prevState - 1);
     // } else {
@@ -88,13 +91,22 @@ const UpdateEmailAddress = () => {
       updateErrorState("EmailError", "");
     }
 
+    //calling send email notification
+    //console.log(fAuth?.currentUser.email,fAuth?.currentUser.uid)
+    await send2FA(fAuth?.currentUser.email,fAuth?.currentUser.uid, Date.now().toString());
+    //console.log('testsubmit')
+
     setCurrentStep("VERIFY_CODE");
     setMinutes(4);
     setSeconds(59);
   };
 
-  const handleCodeSubmit = () => {
+  const handleCodeSubmit = async() => {
     // setShowVerification(true);
+
+    //calling verify code received
+    //console.log(email); //verification code
+    await verify2FA(fAuth?.currentUser.email,fAuth?.currentUser.uid, Date.now().toString(), email);
     setCurrentStep("NEW_EMAIL");
   };
 
