@@ -35,7 +35,6 @@ function HelpRequestForm() {
   const navigate = useNavigate();
   const [success, setSuccess] = useState(false);
   const addDescRef = useRef("");
-  const addressRef = useRef("");
   const streetRef = useRef("");
   const cityRef = useRef("");
   const stateRef = useRef("");
@@ -79,7 +78,7 @@ function HelpRequestForm() {
 
   const clearFields = () => {
     addDescRef.current.value = "";
-    // addressRef.current.value = "";
+    autoCompleteRef.current.value = "";
     streetRef.current.value = "";
     cityRef.current.value = "";
     stateRef.current.value = "";
@@ -98,7 +97,7 @@ function HelpRequestForm() {
   };
 
   const [error, setError] = useState({
-    // addressError: "",
+    autoCompleteError: "",
     streetError: "",
     cityError: "",
     stateError: "",
@@ -121,9 +120,6 @@ function HelpRequestForm() {
   const handleStreetChange = (e) => {
     updateErrorState("streetError", "");
   };
-  // const handleAddressChange = (e) => {
-  //   updateErrorState("addressError", "");
-  // };
   const handleCityChange = (e) => {
     updateErrorState("cityError", "");
   };
@@ -244,19 +240,19 @@ function HelpRequestForm() {
     if (helpType == "") {
       updateErrorState(
         "checkboxesError",
-        "Please provide the kind of help is needed"
+        "Please provide the kind of help needed"
       );
       setReturn = true;
       // setSuccess(false);
     } else {
       updateErrorState("checkboxesError", "");
     }
-    // if (!addressRef.current.value) {
-    //   updateErrorState("addressError", "Address is required");
-    //   setReturn = true;
-    // } else {
-    //   updateErrorState("addressError", "");
-    // }
+    if (!autoCompleteRef.current.value) {
+      updateErrorState("autoCompleteError", "Address is required");
+      setReturn = true;
+    } else {
+      updateErrorState("autoCompleteError", "");
+    }
     if (!streetRef.current.value) {
       updateErrorState("streetError", "Street is required");
       setReturn = true;
@@ -538,11 +534,11 @@ function HelpRequestForm() {
                             : "ring-gray-300"
                         }`}
                       />
-                      {error.idError && (
+                      {error.autoCompleteError && (
                         <div className="inline-flex items-center">
                           <img alt="" src={errorImg} className="w-3 h-3" />
                           <p className="text-red-600 text-xs mx-1">
-                            {error.idError}
+                            {error.autoCompleteError}
                           </p>
                         </div>
                       )}
