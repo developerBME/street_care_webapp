@@ -3,10 +3,12 @@ import errorImg from "../../../images/error.png";
 import CustomButton from "../../Buttons/CustomButton";
 import { Breadcrumbs, Link, Typography } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const DeleteAccount = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [errormsg, setErrors] = useState({
     EmailError: "",
     PassError: "",
@@ -17,6 +19,31 @@ const DeleteAccount = () => {
       ...prevState,
       [key]: value,
     }));
+  };
+
+  const handleDeleteAccForm = () => {
+    
+    if (
+      !email ||
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email) ||
+      ""
+    ) {
+      updateErrorState("EmailError", "Email is required");
+      return;
+    } else if (email) {
+      updateErrorState("EmailError", "");
+    }
+
+    if (!password) {
+      updateErrorState("PassError", "Password is required");
+      return;
+    } else if (password) {
+      updateErrorState("PassError", "");
+    }
+  };
+
+  const handleTogglePassword = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
   return (
@@ -54,6 +81,7 @@ const DeleteAccount = () => {
                   <form
                     className="gap-6 flex flex-col w-full"
                     id="delete-account-form"
+                    onSubmit={handleDeleteAccForm}
                   >
                     <div className="self-stretch h-fit flex-col justify-start items-start gap-4 flex">
                       <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
@@ -90,7 +118,7 @@ const DeleteAccount = () => {
                         <div className="self-stretch text-zinc-700 text-[15px] font-medium font-inter leading-tight">
                           Password
                         </div>
-                        <div className="self-stretch bg-white border-stone-300 justify-start items-center gap-2 inline-flex">
+                        <div className="relative self-stretch bg-white border-stone-300 justify-start items-center gap-2 inline-flex">
                           <div className="grow shrink basis-0 h-10 flex-col rounded-md border-0 justify-center items-start inline-flex">
                             <input
                               type="password"
@@ -103,7 +131,12 @@ const DeleteAccount = () => {
                               }`}
                               onChange={(e) => setPassword(e.target.value)}
                             ></input>
-                            <div className=""></div>
+                            <div
+                              className="absolute right-4 top-2/4 transform -translate-y-2/4 cursor-pointer"
+                              onClick={handleTogglePassword}
+                            >
+                              {showPassword ? <FaEyeSlash /> : <FaEye />}
+                            </div>
                           </div>
                         </div>
                         {errormsg.PassError && (
@@ -116,40 +149,42 @@ const DeleteAccount = () => {
                         )}
                       </div>
                     </div>
-                    <CustomButton 
+                  </form>
+                  <CustomButton
                     name="deleteButton"
                     type="submit"
                     label="Delete Account"
-                    />
-                  </form>
+                    onClick={handleDeleteAccForm}
+                  />
                 </div>
               </div>
             </div>
           </div>
           <div className="w-1/2 bg-white rounded-r-2xl">
             <div className="w-full h-full flex-col justify-center gap-6 inline-flex">
-              <div className="flex flex-col gap-4 font-dmsans px-4 py-6 md:py-12 md:px-8 lg:px-12 lg:py-16 xl:pl-10 xl:pr-30">
-                <div className="flex flex-col gap-2">
-                  <div className="text-lg font-bold">
+              <div className="flex flex-col gap-4 font-dmsans px-4 py-6 md:py-12 md:px-8 lg:px-12 lg:py-16 xl:pl-16 ">
+                <div className="flex flex-col gap-4">
+                  <div className="text-2xl font-bold">
                     Things to keep in mind
                   </div>
-                  <div className="text-base font-normal">
+                  <div className="text-base font-normal text-justify">
                     Once you delete your account, StreetCare remove any
-                    information related to your account from the platform. This
-                    includes :
+                    information related to your account from the platform.
+                    <br />
+                    This includes :
                   </div>
                 </div>
-                <div className="flex flex-col gap-1">
-                  <ul className="text-black font-normal text-base font-dmsans">
-                    <li>Name</li>
-                    <li>Email Address</li>
-                    <li>Profile Picture</li>
-                    <li>Your Achievements</li>
-                    <li>Your Visitlogs</li>
-                    <li>Registered Outreaches</li>
+                <div className="flex flex-col gap-1 pl-6">
+                  <ul className="text-black font-normal text-base font-dmsans list-disc">
+                    <li className="pl-1">Name</li>
+                    <li className="pl-1">Email Address</li>
+                    <li className="pl-1">Profile Picture</li>
+                    <li className="pl-1">Your Achievements</li>
+                    <li className="pl-1">Your Visitlogs</li>
+                    <li className="pl-1">Registered Outreaches</li>
                   </ul>
                 </div>
-                <div className="text-base font-normal">
+                <div className="text-base font-normal font-dmsans">
                   This information cannot be retrieved in the future.
                 </div>
               </div>
