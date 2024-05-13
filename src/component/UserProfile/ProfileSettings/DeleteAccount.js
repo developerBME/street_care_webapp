@@ -4,6 +4,13 @@ import CustomButton from "../../Buttons/CustomButton";
 import { Breadcrumbs, Link, Typography } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import {
+  getAuth,
+  deleteUser,
+  signOut,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 const DeleteAccount = () => {
   const [email, setEmail] = useState("");
@@ -13,6 +20,8 @@ const DeleteAccount = () => {
     EmailError: "",
     PassError: "",
   });
+  const navigate = useNavigate();
+  const auth = getAuth();
 
   const updateErrorState = (key, value) => {
     setErrors((prevState) => ({
@@ -21,29 +30,74 @@ const DeleteAccount = () => {
     }));
   };
 
-  const handleDeleteAccForm = () => {
-    
-    if (
-      !email ||
-      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email) ||
-      ""
-    ) {
-      updateErrorState("EmailError", "Email is required");
-      return;
-    } else if (email) {
-      updateErrorState("EmailError", "");
-    }
+//Previous handle delete function
 
-    if (!password) {
-      updateErrorState("PassError", "Password is required");
-      return;
-    } else if (password) {
-      updateErrorState("PassError", "");
-    }
-  };
+//   const handleDeleteAccForm = () => {
+//     if (
+//       !email ||
+//       !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email) ||
+//       ""
+//     ) {
+//       updateErrorState("EmailError", "Email is required");
+//       return;
+//     } else if (email) {
+//       updateErrorState("EmailError", "");
+//     }
+
+//     if (!password) {
+//       updateErrorState("PassError", "Password is required");
+//       return;
+//     } else if (password) {
+//       updateErrorState("PassError", "");
+//     }
+//   };
 
   const handleTogglePassword = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+
+  const handleDeleteUser = async (e) => {
+    e.preventDefault(); // Prevent form submission
+
+    try {
+      // Validate email format
+      if (!validateEmail(email)) {
+        updateErrorState(
+          "EmailError",
+          "Invalid email format. Please enter a valid email."
+        );
+        return;
+      }
+
+      if (!password) {
+        updateErrorState("PassError", "Password is required");
+        return;
+      } else if (password) {
+        updateErrorState("PassError", "");
+      }
+
+      // Sign in with email and password
+      await signInWithEmailAndPassword(auth, email, password);
+
+      // Delete user
+      await deleteUser(auth.currentUser);
+      updateErrorState("EmailError", "User account deleted successfully.");
+
+      // Sign out
+      await signOut(auth);
+      window.location.reload();
+    } catch (error) {
+      console.error("Error deleting user data", error);
+      updateErrorState(
+        "EmailError",
+        "Error deleting user data. Please try again."
+      );
+    }
+  };
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   };
 
   return (
@@ -81,7 +135,8 @@ const DeleteAccount = () => {
                   <form
                     className="gap-6 flex flex-col w-full"
                     id="delete-account-form"
-                    onSubmit={handleDeleteAccForm}
+                    // onSubmit={handleDeleteAccForm}
+                    onSubmit={handleDeleteUser} // Add onSubmit event handler to call handleDeleteUser on form submission
                   >
                     <div className="self-stretch h-fit flex-col justify-start items-start gap-4 flex">
                       <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
@@ -150,11 +205,17 @@ const DeleteAccount = () => {
                       </div>
                     </div>
                   </form>
-                  <CustomButton
+                  {/* <CustomButton
                     name="deleteButton"
                     type="submit"
                     label="Delete Account"
                     onClick={handleDeleteAccForm}
+                  /> */}
+                  <CustomButton
+                    name="deleteButton"
+                    type="submit"
+                    label="Delete Account"
+                    onClick={handleDeleteUser}
                   />
                 </div>
               </div>

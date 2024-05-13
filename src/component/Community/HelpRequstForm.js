@@ -8,6 +8,7 @@ import arrowDown from "../../images/arrowDown.png";
 import errorImg from "../../images/error.png";
 import { Link, useNavigate } from "react-router-dom";
 import { emailConfirmation } from "../EmailService";
+import HelpRequestConfirmationModal from "../Community/HelpRequestConfirmationModal";
 
 let autoComplete;
 
@@ -77,6 +78,7 @@ function HelpRequestForm() {
 
   const clearFields = () => {
     addDescRef.current.value = "";
+    autoCompleteRef.current.value = "";
     streetRef.current.value = "";
     cityRef.current.value = "";
     stateRef.current.value = "";
@@ -95,6 +97,7 @@ function HelpRequestForm() {
   };
 
   const [error, setError] = useState({
+    autoCompleteError: "",
     streetError: "",
     cityError: "",
     stateError: "",
@@ -130,53 +133,164 @@ function HelpRequestForm() {
     updateErrorState("idError", "");
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   if (!titleRef.current.value) {
+  //     updateErrorState("titleError", "Title is required");
+  //     setSuccess(false);
+  //   } else {
+  //     updateErrorState("titleError", "");
+  //   }
+  //   if (helpType == "") {
+  //     updateErrorState(
+  //       "checkboxesError",
+  //       "Please provide the kind of help is needed"
+  //     );
+  //     setSuccess(false);
+  //   } else {
+  //     updateErrorState("checkboxesError", "");
+  //   }
+  //   if (!streetRef.current.value) {
+  //     updateErrorState("streetError", "Street is required");
+  //     setSuccess(false);
+  //   } else {
+  //     updateErrorState("streetError", "");
+  //   }
+  //   if (!zipRef.current.value) {
+  //     updateErrorState("zipError", "Zipcode is required");
+  //     setSuccess(false);
+  //   } else {
+  //     updateErrorState("zipError", "");
+  //   }
+  //   if (!cityRef.current.value) {
+  //     updateErrorState("cityError", "City is required");
+  //     setSuccess(false);
+  //   } else {
+  //     updateErrorState("cityError", "");
+  //   }
+  //   if (!idRef.current.value) {
+  //     updateErrorState("idError", "This field is required");
+  //     setSuccess(false);
+  //   } else {
+  //     updateErrorState("idError", "");
+  //   }
+  //   if (!stateRef.current.value) {
+  //     updateErrorState("stateError", "Sate is required");
+  //     setSuccess(false);
+  //   } else {
+  //     updateErrorState("stateError", "");
+  //   }
+
+  //   let obj = {
+  //     uid: fAuth.currentUser.uid,
+  //     description: addDescRef.current.value,
+  //     identification: idRef.current.value,
+  //     title: titleRef.current.value,
+  //     location: {
+  //       street: streetRef.current.value,
+  //       city: cityRef.current.value,
+  //       state: stateRef.current.value,
+  //       zipcode: zipRef.current.value,
+  //     },
+  //     skills: helpType,
+  //     createdAt: Date(),
+  //     status: "Need Help", // This is default for every new HR
+  //   };
+
+  //   const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px"><h1>Thank you for creating the outreach</h1><p>Your Help Request <b>${titleRef.current.value}</b> has been successfully created and you can view it in your profile.</p>
+  //         <p>Here are some of the details:</p>
+  //         <ul>
+  //         <li>Description: ${addDescRef.current.value}</li>
+  //         <li>Location: ${streetRef.current.value}, ${cityRef.current.value}, ${stateRef.current.value}, ${zipRef.current.value}</li>
+  //         <li>Help Type: ${idRef.current.value}</li>
+  //         </ul>
+  //   </div>`;
+
+  //   try {
+  //     const reqRef = collection(db, "helpRequests");
+  //     const docRef = await addDoc(reqRef, obj);
+  //     if (docRef.id) {
+  //       console.log(docRef.id);
+  //       setSuccess(true);
+  //       emailConfirmation(
+  //         fAuth.currentUser.email,
+  //         fAuth.currentUser.displayName,
+  //         titleRef.current.value,
+  //         emailHTML
+  //       );
+  //       clearFields();
+  //     }
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let setReturn = false;
 
     if (!titleRef.current.value) {
       updateErrorState("titleError", "Title is required");
-      setSuccess(false);
+      // setSuccess(false);
+      setReturn = true;
     } else {
       updateErrorState("titleError", "");
     }
     if (helpType == "") {
       updateErrorState(
         "checkboxesError",
-        "Please provide the kind of help is needed"
+        "Please provide the kind of help needed"
       );
-      setSuccess(false);
+      setReturn = true;
+      // setSuccess(false);
     } else {
       updateErrorState("checkboxesError", "");
     }
+    if (!autoCompleteRef.current.value) {
+      updateErrorState("autoCompleteError", "Address is required");
+      setReturn = true;
+    } else {
+      updateErrorState("autoCompleteError", "");
+    }
     if (!streetRef.current.value) {
       updateErrorState("streetError", "Street is required");
-      setSuccess(false);
+      setReturn = true;
+      // setSuccess(false);
     } else {
       updateErrorState("streetError", "");
     }
     if (!zipRef.current.value) {
       updateErrorState("zipError", "Zipcode is required");
-      setSuccess(false);
+      setReturn = true;
+      // setSuccess(false);
     } else {
       updateErrorState("zipError", "");
     }
     if (!cityRef.current.value) {
       updateErrorState("cityError", "City is required");
-      setSuccess(false);
+      setReturn = true;
+      // setSuccess(false);
     } else {
       updateErrorState("cityError", "");
     }
     if (!idRef.current.value) {
-      updateErrorState("idError", "This field is required");
-      setSuccess(false);
+      updateErrorState("idError", "Identification is required");
+      setReturn = true;
+      // setSuccess(false);
     } else {
       updateErrorState("idError", "");
     }
     if (!stateRef.current.value) {
-      updateErrorState("stateError", "Sate is required");
-      setSuccess(false);
+      updateErrorState("stateError", "State is required");
+      setReturn = true;
+      // setSuccess(false);
     } else {
       updateErrorState("stateError", "");
+    }
+
+    if (setReturn) {
+      return;
     }
 
     let obj = {
@@ -250,7 +364,6 @@ function HelpRequestForm() {
 
     const query = addressObject.formatted_address;
     updateQuery(query);
-    
 
     let street = "";
     let postcode = "";
@@ -341,7 +454,7 @@ function HelpRequestForm() {
                     </div>
                     <div className="space-y-1.5">
                       <div className="text-zinc-700 font-semibold text-[15px] font-['Inter']">
-                        Title
+                        Title*
                       </div>
                       <input
                         type="text"
@@ -359,7 +472,7 @@ function HelpRequestForm() {
                     {error.titleError && (
                       <div className="inline-flex items-center">
                         <img alt="" src={errorImg} className="w-3 h-3" />
-                        <p className="text-red-600 text-xs">
+                        <p className="text-red-600 text-xs mx-1">
                           {error.titleError}
                         </p>
                       </div>
@@ -380,7 +493,7 @@ function HelpRequestForm() {
                     {error.checkboxesError && (
                       <div className="inline-flex items-center">
                         <img alt="" src={errorImg} className="w-3 h-3" />
-                        <p className="text-red-600 text-xs">
+                        <p className="text-red-600 text-xs mx-1">
                           {error.checkboxesError}
                         </p>
                       </div>
@@ -421,11 +534,11 @@ function HelpRequestForm() {
                             : "ring-gray-300"
                         }`}
                       />
-                      {error.idError && (
+                      {error.autoCompleteError && (
                         <div className="inline-flex items-center">
                           <img alt="" src={errorImg} className="w-3 h-3" />
-                          <p className="text-red-600 text-xs">
-                            {error.idError}
+                          <p className="text-red-600 text-xs mx-1">
+                            {error.autoCompleteError}
                           </p>
                         </div>
                       )}
@@ -459,7 +572,7 @@ function HelpRequestForm() {
                         {error.streetError && (
                           <div className="inline-flex items-center">
                             <img alt="" src={errorImg} className="w-3 h-3" />
-                            <p className="text-red-600 text-xs">
+                            <p className="text-red-600 text-xs mx-1">
                               {error.streetError}
                             </p>
                           </div>
@@ -484,7 +597,7 @@ function HelpRequestForm() {
                         {error.cityError && (
                           <div className="inline-flex items-center">
                             <img alt="" src={errorImg} className="w-3 h-3" />
-                            <p className="text-red-600 text-xs">
+                            <p className="text-red-600 text-xs mx-1">
                               {error.cityError}
                             </p>
                           </div>
@@ -511,7 +624,7 @@ function HelpRequestForm() {
                         {error.stateError && (
                           <div className="inline-flex items-center">
                             <img alt="" src={errorImg} className="w-3 h-3" />
-                            <p className="text-red-600 text-xs">
+                            <p className="text-red-600 text-xs mx-1">
                               {error.stateError}
                             </p>
                           </div>
@@ -536,7 +649,7 @@ function HelpRequestForm() {
                         {error.zipError && (
                           <div className="inline-flex items-center">
                             <img alt="" src={errorImg} className="w-3 h-3" />
-                            <p className="text-red-600 text-xs">
+                            <p className="text-red-600 text-xs mx-1">
                               {error.zipError}
                             </p>
                           </div>
@@ -561,14 +674,14 @@ function HelpRequestForm() {
                       {error.idError && (
                         <div className="inline-flex items-center">
                           <img alt="" src={errorImg} className="w-3 h-3" />
-                          <p className="text-red-600 text-xs">
+                          <p className="text-red-600 text-xs mx-1">
                             {error.idError}
                           </p>
                         </div>
                       )}
                     </div>
                   </div>
-                  <div className="inline-flex gap-2 items-center mt-6">
+                  {/* <div className="inline-flex gap-2 items-center mt-6">
                     <input type="checkbox"></input>
                     <div>
                       <span className="text-black text-sm font-normal font-['Open Sans'] leading-tight">
@@ -582,7 +695,7 @@ function HelpRequestForm() {
                         anonymously
                       </span>
                     </div>
-                  </div>
+                  </div> */}
                   <div className="space-y-16 space-x-[15px]">
                     <Link to={"/community"}>
                       <button
@@ -600,11 +713,12 @@ function HelpRequestForm() {
                     </button>
                   </div>
                   {success && (
-                    <div className="justify-start items-start gap-4 inline-flex">
-                      <div className="justify-start items-start gap-4 flex">
-                        Success!
-                      </div>
-                    </div>
+                    // <div className="justify-start items-start gap-4 inline-flex">
+                    //   <div className="justify-start items-start gap-4 flex">
+                    //     Success!
+                    //   </div>
+                    // </div>
+                    <HelpRequestConfirmationModal />
                   )}
                 </form>
               </div>
