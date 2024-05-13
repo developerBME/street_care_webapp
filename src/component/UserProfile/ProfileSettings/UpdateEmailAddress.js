@@ -8,6 +8,14 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaCheckCircle } from "react-icons/fa";
 import errorImg from "../../../images/error.png";
 
+import {
+  getAuth,
+  deleteUser,
+  signOut,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { updateEmailId } from "../UpdateEmail";
+
 const UpdateEmailAddress = () => {
   const stepLabelMap = {
     UPDATE_EMAIL: "Update email",
@@ -36,6 +44,10 @@ const UpdateEmailAddress = () => {
       [key]: value,
     }));
   };
+
+  const auth = getAuth();
+
+  // console.log(auth.currentUser);
 
   const resendCode = () => {
     setMinutes(4);
@@ -78,6 +90,8 @@ const UpdateEmailAddress = () => {
     } else if (email) {
       updateErrorState("EmailError", "");
     }
+
+    updateEmailId(email);
 
     setCurrentStep("VERIFY_CODE");
     setMinutes(4);
@@ -187,8 +201,8 @@ const UpdateEmailAddress = () => {
                                 type="email"
                                 id="email"
                                 disabled
-                                placeholder="patrick_123@email.com"
-                                // value={email}
+                                // placeholder="patrick_123@email.com"
+                                value={auth.currentUser.email}
                                 className="text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ring-gray-200"
                                 // onChange={(e) => setEmail(e.target.value)}
                               ></input>
@@ -214,7 +228,7 @@ const UpdateEmailAddress = () => {
                               <input
                                 type="email"
                                 id="email"
-                                placeholder="patricks_123@email.com"
+                                placeholder="Enter new email address"
                                 className={`text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
                                   errormsg.EmailError !== ""
                                     ? "ring-red-500"
