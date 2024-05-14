@@ -7,6 +7,7 @@ import arrowBack from "../../../images/arrowBack.png";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaCheckCircle } from "react-icons/fa";
 import errorImg from "../../../images/error.png";
+import { send2FA, verify2FA } from "../UpdateEmail2FA";
 
 import {
   getAuth,
@@ -27,6 +28,8 @@ const UpdateEmailAddress = () => {
 
   const [email, setEmail] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
+
+  const [error, setError] = useState(null);
   const fAuth = getAuth();
 
   // const [error, setError] = useState(null);
@@ -47,10 +50,6 @@ const UpdateEmailAddress = () => {
       [key]: value,
     }));
   };
-
-  const auth = getAuth();
-
-  // console.log(auth.currentUser);
 
   const resendCode = () => {
     setMinutes(4);
@@ -94,9 +93,15 @@ const UpdateEmailAddress = () => {
       updateErrorState("EmailError", "");
     }
 
+    // updateEmailId(email);
+
     //calling send email notification
     //console.log(fAuth?.currentUser.email,fAuth?.currentUser.uid)
-    await send2FA(fAuth?.currentUser.email,fAuth?.currentUser.uid, Date.now().toString());
+    await send2FA(
+      fAuth?.currentUser.email,
+      fAuth?.currentUser.uid,
+      Date.now().toString()
+    );
     //console.log('testsubmit')
 
     setCurrentStep("VERIFY_CODE");
@@ -106,34 +111,52 @@ const UpdateEmailAddress = () => {
     document.getElementById("email-update-form").reset();
   };
 
-  const handleCodeSubmit = () => {
-
+  const handleCodeSubmit = async () => {
     if (!verificationCode || "") {
       updateErrorState("CodeError", "Verification code is required");
       return;
-    } else if (!/^[0-9]{5}$/.test(verificationCode)) {
+    } else if (!/^[0-9]{6}$/.test(verificationCode)) {
       updateErrorState("CodeError", "Please enter all 5 digits");
       return;
     } else if (verificationCode) {
       updateErrorState("CodeError", "");
     }
+
+    document.getElementById("verification-code-form").reset();
+    // const handleCodeSubmit = async() => {
+    // setShowVerification(true);
+
+    //calling verify code received
+    //console.log(email); //verification code
+    await verify2FA(
+      fAuth?.currentUser.email,
+      fAuth?.currentUser.uid,
+      Date.now().toString(),
+      email
+    );
 
     setCurrentStep("NEW_EMAIL_CODE");
-    document.getElementById("verification-code-form").reset();
+
+    // setCurrentStep("NEW_EMAIL");
   };
 
-  const handleNewEmailCode = () => {
-
-
+  const handleNewEmailCode = async () => {
     if (!verificationCode || "") {
       updateErrorState("CodeError", "Verification code is required");
       return;
-    } else if (!/^[0-9]{5}$/.test(verificationCode)) {
+    } else if (!/^[0-9]{6}$/.test(verificationCode)) {
       updateErrorState("CodeError", "Please enter all 5 digits");
       return;
     } else if (verificationCode) {
       updateErrorState("CodeError", "");
     }
+
+    await send2FA(
+      fAuth?.currentUser.email,
+      fAuth?.currentUser.uid,
+      Date.now().toString()
+    );
+
 
     setCurrentStep("NEW_EMAIL_CODE");
   };
@@ -156,7 +179,6 @@ const UpdateEmailAddress = () => {
     VERIFY_CODE: handleCodeSubmit,
     NEW_EMAIL_CODE: handleNewEmailCode,
   };
-
 
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
@@ -208,20 +230,13 @@ const UpdateEmailAddress = () => {
                                 id="email"
                                 disabled
                                 // placeholder="patrick_123@email.com"
-                                value={auth.currentUser.email}
+                                value={fAuth.currentUser.email}
                                 className="text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ring-gray-200"
                                 // onChange={(e) => setEmail(e.target.value)}
                               ></input>
                             </div>
                           </div>
-                          {/* {errormsg.EmailError && (
-                            <div className="inline-flex items-center gap-1.5">
-                              <img alt="" src={errorImg} className="w-3 h-3" />
-                              <div className="text-red-700 font-dmsans">
-                                {errormsg.EmailError}
-                              </div>
-                            </div>
-                          )} */}
+                          
                         </div>
                       </div>
                       <div className="self-stretch h-fit flex-col justify-start items-start gap-4 flex">
@@ -254,12 +269,7 @@ const UpdateEmailAddress = () => {
                           )}
                         </div>
                       </div>
-                      {/* <button
-                        onClick={() => setIsSubmitted(!isSubmitted)}
-                        label="Update Email"
-                        type="submit"
-                        className="text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300"
-                      ></button> */}
+                      
                     </form>
                   </div>
                 </div>
@@ -270,7 +280,8 @@ const UpdateEmailAddress = () => {
                       <Link to="/profile/profilesettings/updateemailaddress">
                         <div className="inline-flex cursor-pointer">
                           {/* removed pl-3 xl:px-16 xl:pt-16 from this div*/}
-                          <img alt=""
+                          <img
+                            alt=""
                             src={arrowBack}
                             onClick={handleBack}
                             // onClick={() =>
@@ -287,7 +298,7 @@ const UpdateEmailAddress = () => {
                     <div className="font-dmsans text-base font-normal">
                       We have sent a verification code to{" "}
                       <span className="text-[#6840E0]">
-                        patricks_123@yahoo.com
+                        {fAuth.currentUser.email}
                       </span>
                       . Enter the code below to verify your existing email
                       address
@@ -318,10 +329,12 @@ const UpdateEmailAddress = () => {
                                   setVerificationCode(e.target.value)
                                 }
                               ></input>
-                              <div className="absolute rounded-md py-1.5 px-2 bg-slate-200 right-3 text-xs font-dmsans font-normal text-black cursor-pointer hover:bg-slate-300"
-                              onClick={()=> setVerificationCode("")
-                              }
-                              >Clear</div>
+                              <div
+                                className="absolute rounded-md py-1.5 px-2 bg-slate-200 right-3 text-xs font-dmsans font-normal text-black cursor-pointer hover:bg-slate-300"
+                                onClick={() => setVerificationCode("")}
+                              >
+                                Clear
+                              </div>
                             </div>
                           </div>
                           <div className="flex flex-row justify-between w-full">
