@@ -1,13 +1,14 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import CustomButton from "../Buttons/CustomButton";
 import howtohelp from "../../images/howtohelp.png";
 import howToHelpOutreachSample from "../../images/howToHelpSampleOutreach.png";
+import EventOutrachesSection from "../HowtoHelp/EventOutrachesSection";
 import groupOutreaches from "../../images/groupOutreaches.png";
 import donate from "../../images/donate.png";
 import spreadTheWord from "../../images/spreadTheWord.png";
 import joinUsAsVolunteer from "../../images/joinAsVolunteer.png";
 import arrowRight from "../../images/arrowRight.png";
-import OutreachEventCard from "../Community/OutreachEventCard";
 import one from "../../images/rectangle-1.png";
 import two from "../../images/rectangle-2.png";
 import sampleVisitLog from "../../images/sampleVisitLog.png"
@@ -23,435 +24,407 @@ import badge6 from '../../images/badge6.png'
 
 
 
-import CarePackage from "./CarePackage";
+
+
+
+
+
 
 function HowToHelp() {
-  const [selectedStep, setSelectedStep] = useState(1);
+    const [selectedStep, setSelectedStep] = useState(1);
 
-  const handleSelectStep = (step) => {
-    setSelectedStep(step);
-  };
+    const handleSelectStep = (step) => {
+        setSelectedStep(step);
+    };
 
-  const skipItems = [
-    {
-      image: one,
-      content: "A ton of anything",
-    },
-    {
-      image: two,
-      content: "Alcohol",
-    },
-  ];
+    const skipItems = [
+        {
+            image: one,
+            content: "A ton of anything",
+        },
+        {
+            image: two,
+            content: "Alcohol",
+        },
+    ];
 
-  const renderStepContent = () => {
-    switch (selectedStep) {
-      case 1:
-        return (
-          <div className="flex px-10 ">
-            <div className="space-y-10 ">
-              <div className="space-y-2 pr-18">
-                <div className="text-[22px] font-dmsans font-bold leading-7">
-                  Create or Signup to existing outreaches
-                </div>
-                <div className="text-[16px] font-dmsans text-[#181818] leading-6">
-                  With StreetCare, you can sign up to existing outreaches or
-                  create an outreach for any help request for which you could
-                  offer help.
-                  <br />
-                  <br />
-                  Outreaches are created by users that are willing to help for a
-                  particular cause for which they could provide help.
-                </div>
-              </div>
-              <div className="space-y-2 pb-32">
-                <div className="text-[22px] font-dmsans font-bold leading-7">
-                  Help Requests
-                </div>
-                <div className="text-[16px] font-dmsans text-[#181818] leading-6">
-                  If you come across people in need and not sure how to help
-                  them, create a help request for others to view and contribute
-                  if they could.
-                </div>
-              </div>
-            </div>
-            <div className="flex w-full justify-end">
-              <div>
-                {" "}
-                <img src={howToHelpOutreachSample} />
-              </div>
-            </div>
-          </div>
-        );
-      case 2:
-        return (
-          <div>
-            <div className="flex px-10 gap-4">
-              <div className="space-y-10 ">
-                <div className="space-y-2 pr-18">
-                  <div className="text-[22px] font-dmsans font-bold leading-7">
-                    How to prepare a care package?
-                  </div>
-                  <div className="text-[16px] font-dmsans text-[#181818] leading-6">
-                    Remember that homeless individuals have diverse needs, so
-                    it's important to tailor your outreach efforts to their
-                    specific situations.
-                    <br />
-                    <br />
-                    Building genuine connections and fostering trust is key to
-                    making a positive impact.
-                  </div>
-                </div>
-              </div>
-              <div className="flex w-full justify-end">
-                <div>
-                  <img src={howtohelp} />
-                </div>
-              </div>
-            </div>
-            <div className="px-10">
-              <p className="text-[16px] font-dmsans font-bold">Items to Skip</p>
-              <div className="overflow-x-auto">
-                <div className="w-fit flex lg:flex-wrap">
-                  {skipItems.map((item, index) => (
-                    <div
-                      key={index}
-                      className="image-container px-[8px] lg:max-w-[90px] lg:min-w-[90px] w-[120px] mb-[25px]"
-                    >
-                      <img src={item.image} alt={`Image ${index}`} />
-                      <p className="text-[12px] pt-[10px]">{item.content}</p>
+    const renderStepContent = () => {
+        switch (selectedStep) {
+            case 1:
+                return (
+                    <div className="flex flex-col px-10 md:flex-row">
+                        <div className="space-y-10 md:pr-18">
+                            <div className="space-y-2">
+                                <div className="text-[22px] font-dmsans font-bold leading-7">
+                                    Create or Signup to existing outreaches
+                                </div>
+                                <div className="text-[16px] font-dmsans text-[#181818] leading-6">
+                                    With StreetCare, you can sign up to existing outreaches or create an outreach for any help request for which you could offer help.
+                                    <br /><br />
+                                    Outreaches are created by users that are willing to help for a particular cause for which they could provide help.
+                                </div>
+                            </div>
+                            <div className="space-y-2 pb-32">
+                                <div className="text-[22px] font-dmsans font-bold leading-7">
+                                    Help Requests
+                                </div>
+                                <div className="text-[16px] font-dmsans text-[#181818] leading-6">
+                                    If you come across people in need and not sure how to help them, create a help request for others to view and contribute if they could.
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex w-full justify-end md:justify-center md:w-auto">
+                            <div>
+                                <img src={howToHelpOutreachSample} />
+                            </div>
+                        </div>
                     </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      case 3:
-        return (
-          <div className="space-y-[40px]">
-            <div className="flex px-10 gap-4">
-              <div className="space-y-10 ">
-                <div className="space-y-2 pr-18">
-                  <div className="text-[22px] font-dmsans font-bold leading-7">
-                    Show up to the outreach
-                  </div>
-                  <div className="text-[16px] font-dmsans text-[#181818] leading-6">
-                    Homeless people are diverse group of people just like
-                    everyone else, no matter their appearance, gender, age or
-                    race.
-                    <br />
-                    <br />
-                    Some have fallen on hard times. Some may be struggling with
-                    mental illness. But everyone wants to be treated with
-                    respect and dignity.
-                  </div>
-                </div>
-              </div>
-              <div className="flex w-full justify-end">
-                <div>
-                  <img src={howtohelp} />
-                </div>
-              </div>
-            </div>
-            <div className="px-10 space-y-2">
-              <div className="text-[22px] font-dmsans font-bold leading-7">
-                Before attending:
-              </div>
-              <div className="flex gap-6">
-                <div className="rounded-[30px] bg-[#F7F7F7] px-[40px] py-[24px] space-y-3">
-                  <div className="text-[16px] font-dmsans font-bold leading-7">
-                    Let someone know
-                  </div>
-                  <div className="text-[16px] font-dmsans text-[#181818] leading-6">
-                    During an outreach you may run into new neighborhoods. It
-                    would help to keep someone informed about this outreach.
-                  </div>
-                </div>
-                <div className="rounded-[30px] bg-[#F7F7F7] px-[40px] py-[24px] space-y-3">
-                  <div className="text-[16px] font-dmsans font-bold leading-7">
-                    Let someone know
-                  </div>
-                  <div className="text-[16px] font-dmsans text-[#181818] leading-6">
-                    During an outreach you may run into new neighborhoods. It
-                    would help to keep someone informed about this outreach.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      case 4:
-        return (
-          <div>
-            <div className="flex px-10 ">
-              <div className="space-y-10 ">
-                <div className="space-y-2 pr-18">
-                  <div className="text-[22px] font-dmsans font-bold leading-7">
-                    Log your visit
-                  </div>
-                  <div className="text-[16px] font-dmsans text-[#181818] leading-6">
-                  After your visit, make sure you log your visit to the outreach on your profile using the streetcare website or mobile application.
 
-                  </div>
-                </div>
-                <div className="space-y-2 pb-32">
-                  <div className="text-[22px] font-dmsans font-bold leading-7">
-                    Earn Badges
-                  </div>
-                  <div className="text-[16px] font-dmsans text-[#181818] leading-6">
-                  After your visit, make sure you log your visit to the outreach on your profile using the streetcare website or mobile application.
-                  </div>
-                </div>
-              </div>
-              <div className="flex w-full justify-end">
-                <div>
-                  {" "}
-                  <img src={sampleVisitLog} />
-                </div>
-              </div>
-            </div>
-            <div className="flex px-10">
-              <img src={badge1}/>
-              <img src={badge2}/>
-              <img src={badge3}/>
-              <img src={badge4}/>
-              <img src={badge5}/>
-              <img src={badge6}/>
-            </div>
-          </div>
-        );
-      default:
-        return <div>Select a step</div>;
-    }
-  };
-
-  const howToHelp = useRef();
-  useEffect(() => {
-    document.title = "How to help - Street Care";
-  }, []);
-  return (
-    <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
-      <div className="relative flex flex-col items-center ">
-        <div className=" w-[95%] md:w-[90%] lg:w-[79%] mx-2 lg:mx-40 mt-32 rounded-2xl bg-white text-black ">
-          {/*  */}
-          <div className="items-center justify-center p-8 lg:p-16 h-full w-full rounded-2xl bg-[#F7F7F7] ">
-            <div className="flex-col justify-start items-start gap-10 inline-flex">
-              <div className="w-fit text-neutral-800 text-[57px] font-medium font-bricolage leading-[64px]">
-                Make a Difference,
-                <br />
-                <span className="text-[#6840E0]">
-                  Your Support Transforms Lives
-                </span>
-              </div>
-              <div className="w-fit text-zinc-600 text-lg font-normal font-open-sans leading-normal">
-                Getting involved in addressing homelessness brings positive
-                change to individuals, communities, and society. By joining the
-                cause, you contribute to meaningful impact and personal
-                fulfillment.
-              </div>
-              <div className="flex w-full ">
-                <div className="bg-gradient-to-br from-[#D3F2CE] to-[#E7E7E7] p-8 w-full rounded-l-2xl">
-                  <span className="font-dmsans text-[45px]">650k+</span>
-                  <br />
-                  <span className="font-dmsans text-[12px]">
-                    Total homeless population in United States
-                  </span>
-                </div>
-                <div className="bg-gradient-to-br from-[#D3C3FF] to-[#DEDCE4] p-8 w-full rounded-r-2xl">
-                  <span className="font-dmsans text-[45px]">24%</span>
-                  <br />
-                  <span className="font-dmsans text-[12px]">
-                    Homeless due to health conditions
-                  </span>
-                </div>
-              </div>
-              <div className="w-full">
-                <img src={howtohelp} className="w-full" />
-              </div>
-            </div>
-          </div>
-          {/*  */}
-        </div>
-        <div className=" w-[95%] md:w-[90%] lg:w-[79%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
-          {/*  */}
-          <div className="items-center justify-center p-8 lg:p-16 h-full w-full rounded-2xl bg-[#F7F7F7] ">
-            <div className="flex-col justify-start items-start gap-10 inline-flex">
-              <div>
-                <div className="font-bricolage text-[57px]">
-                  How to help with StreetCare
-                </div>
-                <div className="font-dmsans text-1 text-grey-300 font-normal">
-                  We’ve made a simple guide on how you can contribute to the
-                  homeless. Join our team of 700+ members and contribute in your
-                  own way. More than 35% of our volunteers are first-time
-                  volunteers.
-                </div>
-              </div>
-              <div className="w-full">
-                <div className="flex w-full">
-                  {[1, 2, 3, 4].map((step) => (
-                    <div
-                      key={step}
-                      className={`border-x border-y w-full cursor-pointer px-4 py-6 space-y-8 ${
-                        selectedStep === step
-                          ? "bg-[#CEBFFC] border-[#6840E0] border-1 rounded-b-lg"
-                          : ""
-                      }`}
-                      style={{
-                        transform:
-                          selectedStep === step ? "scaleY(1.05)" : "none",
-                        transformOrigin: "top",
-                      }}
-                      onClick={() => handleSelectStep(step)}
-                    >
-                      <div className="bg-[#FFFFFF] px-4 py-2.5 rounded-full w-fit text-[14px]">
-                        Step {step}
-                      </div>
-                      <div className="font-dmsans text-[24px] leading-8 text-[#616161]">
-                        {/* Example description for each step */}
-                        {step === 1 && (
-                          <div
-                            className={`${
-                              selectedStep === step ? "text-black" : ""
-                            }`}
-                          >
-                            Join an <br /> Outreach
-                          </div>
-                        )}
-                        {step === 2 && (
-                          <div
-                            className={`${
-                              selectedStep === step ? "text-black" : ""
-                            }`}
-                          >
-                            Prepare
-                            <br /> an <br />
-                            Outreach
-                          </div>
-                        )}
-                        {step === 3 && (
-                          <div
-                            className={`${
-                              selectedStep === step ? "text-black" : ""
-                            }`}
-                          >
-                            Attend <br /> Outreach
-                          </div>
-                        )}
-                        {step === 4 && (
-                          <div
-                            className={`${
-                              selectedStep === step ? "text-black" : ""
-                            }`}
-                          >
-                            Document your <br /> Visit
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Step Content */}
-                <div className="border-l-2 border-r-2 border-b-2 w-full py-10 rounded-b-2xl bg-white">
-                  {renderStepContent()}
-                </div>
-              </div>
-            </div>
-          </div>
-          {/*  */}
-        </div>
-        <div className=" w-[95%] md:w-[90%] lg:w-[79%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
-          {/*  */}
-          <div className="items-center justify-center p-8 lg:p-16 h-full w-full rounded-2xl bg-[#F7F7F7] ">
-            <div className="flex-col justify-start items-start gap-10 inline-flex">
-              <div>
-                <div className="flex justify-between">
-                  <div className="font-bricolage text-[57px]">
-                    Sign up to outreachs now!
-                  </div>
-                  <div className="inline-flex items-center cursor-pointer gap-4">
-                    <div className="font-dmsans text-[24px] font-medium">
-                      View all{" "}
-                    </div>
-                    <img src={arrowRight} className="w-4 h-4" />
-                  </div>
-                </div>
-
-                <div className="font-dmsans text-1 text-grey-300 font-normal">
-                  We’ve made a simple guide on how you can contribute to the
-                  homeless. Join our team of 700+ members and contribute in your
-                  own way. More than 35% of our volunteers are first-time
-                  volunteers.
-                </div>
-              </div>
-              <div></div>
-            </div>
-          </div>
-          {/*  */}
-        </div>
-        <div className=" w-[95%] md:w-[90%] lg:w-[79%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
-          {/*  */}
-          <div className="items-center justify-center p-8 lg:p-16 h-full w-full rounded-2xl bg-[#F7F7F7] ">
-            <div className="flex-col justify-start items-start gap-10 inline-flex">
-              <div className="space-y-12">
-                <div className="font-bricolage text-[57px] text-[#273164] font-medium">
-                  What else can I do to help?
-                </div>
-                <div className="flex gap-2 ">
-                  <div className="p-2 bg-[#FFFFFF] space-y-2 w-fit rounded-2xl">
+                );
+            case 2:
+                return (
                     <div>
-                      <img src={groupOutreaches} />
+                        <div className="flex px-10 gap-4 flex-col lg:flex-row">
+                            <div className="space-y-10 ">
+                                <div className="space-y-2 pr-18">
+                                    <div className="text-[22px] font-dmsans font-bold leading-7">
+                                        How to prepare a care package?
+                                    </div>
+                                    <div className="text-[16px] font-dmsans text-[#181818] leading-6">
+                                        Remember that homeless individuals have diverse needs, so
+                                        it's important to tailor your outreach efforts to their
+                                        specific situations.
+                                        <br />
+                                        <br />
+                                        Building genuine connections and fostering trust is key to
+                                        making a positive impact.
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex w-full justify-end">
+                                <div>
+                                    <img src={howtohelp} />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="px-10">
+                            <p className="text-[16px] font-dmsans font-bold">Items to Skip</p>
+                            <div className="overflow-x-auto">
+                                <div className="w-fit flex lg:flex-wrap">
+                                    {skipItems.map((item, index) => (
+                                        <div
+                                            key={index}
+                                            className="image-container px-[8px] lg:max-w-[90px] lg:min-w-[90px] w-[120px] mb-[25px]"
+                                        >
+                                            <img src={item.image} alt={`Image ${index}`} />
+                                            <p className="text-[12px] pt-[10px]">{item.content}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div className="font-dmsans font-medium text-[14px]">
-                      Group Outreaches
+                );
+            case 3:
+                return (
+                    <div className="space-y-[40px]">
+                        <div className="flex px-10 gap-4 flex-col lg:flex-row">
+                            <div className="space-y-10 ">
+                                <div className="space-y-2 pr-18">
+                                    <div className="text-[22px] font-dmsans font-bold leading-7">
+                                        Show up to the outreach
+                                    </div>
+                                    <div className="text-[16px] font-dmsans text-[#181818] leading-6">
+                                        Homeless people are diverse group of people just like
+                                        everyone else, no matter their appearance, gender, age or
+                                        race.
+                                        <br />
+                                        <br />
+                                        Some have fallen on hard times. Some may be struggling with
+                                        mental illness. But everyone wants to be treated with
+                                        respect and dignity.
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex  w-full justify-end">
+                                <div className="flex ">
+                                    <img src={howtohelp} />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="px-10 space-y-2">
+                            <div className="text-[22px] font-dmsans font-bold leading-7">
+                                Before attending:
+                            </div>
+                            <div className="flex flex-col gap-6 sm:flex-row">
+                                <div className="rounded-[30px] bg-[#F7F7F7] px-[40px] py-[24px] space-y-3">
+                                    <div className="text-[16px] font-dmsans font-bold leading-7">
+                                        Let someone know
+                                    </div>
+                                    <div className="text-[16px] font-dmsans text-[#181818] leading-6">
+                                        During an outreach you may run into new neighborhoods. It
+                                        would help to keep someone informed about this outreach.
+                                    </div>
+                                </div>
+                                <div className="rounded-[30px] bg-[#F7F7F7] px-[40px] py-[24px] space-y-3">
+                                    <div className="text-[16px] font-dmsans font-bold leading-7">
+                                        Let someone know
+                                    </div>
+                                    <div className="text-[16px] font-dmsans text-[#181818] leading-6">
+                                        During an outreach you may run into new neighborhoods. It
+                                        would help to keep someone informed about this outreach.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div className="w-4 h-4">
-                      <img src={arrowRight} />
-                    </div>
-                  </div>
-                  <div className="p-2 bg-[#FFFFFF] space-y-2 w-fit rounded-2xl">
+                );
+            case 4:
+                return (
                     <div>
-                      <img src={joinUsAsVolunteer} />
+                        <div className="flex px-10 flex-col lg:flex-row ">
+                            <div className="space-y-10 ">
+                                <div className="space-y-2 pr-18">
+                                    <div className="text-[22px] font-dmsans font-bold leading-7">
+                                        Log your visit
+                                    </div>
+                                    <div className="text-[16px] font-dmsans text-[#181818] leading-6">
+                                        After your visit, make sure you log your visit to the outreach on your profile using the streetcare website or mobile application.
+
+                                    </div>
+                                </div>
+                                <div className="space-y-2 pb-32">
+                                    <div className="text-[22px] font-dmsans font-bold leading-7">
+                                        Earn Badges
+                                    </div>
+                                    <div className="text-[16px] font-dmsans text-[#181818] leading-6">
+                                        After your visit, make sure you log your visit to the outreach on your profile using the streetcare website or mobile application.
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex w-full justify-end">
+                                <div>
+                                    {" "}
+                                    <img src={sampleVisitLog} />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex flex-wrap px-10">
+                            <img src={badge1} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]" />
+                            <img src={badge2} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]" />
+                            <img src={badge3} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]" />
+                            <img src={badge4} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]" />
+                            <img src={badge5} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]" />
+                            <img src={badge6} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]" />
+                        </div>
                     </div>
-                    <div className="font-dmsans font-medium text-[14px]">
-                      Join us as Volunteer
+                );
+            default:
+                return <div>Select a step</div>;
+        }
+    };
+
+    const howToHelp = useRef();
+    useEffect(() => {
+        document.title = "How to help - Street Care";
+    }, []);
+    return (
+        <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
+            <div className="relative flex flex-col items-center ">
+                <div className=" w-[95%] md:w-[90%] lg:w-[79%] mx-2 lg:mx-40 mt-32 rounded-2xl bg-white text-black ">
+                    {/*  casaskasjlkalslssas*/}
+                    <div className="items-center justify-center p-8 lg:p-16 h-full w-full rounded-2xl bg-[#F7F7F7] ">
+                        <div className="flex-col justify-start items-start gap-10 inline-flex">
+                            <div className="w-fit text-neutral-800 text-[57px] font-medium font-bricolage leading-[64px]">
+                                Make a Difference,
+                                <br />
+                                <span className="text-[#6840E0]">
+                                    Your Support Transforms Lives
+                                </span>
+                            </div>
+                            <div className="w-fit text-zinc-600 text-lg font-normal font-open-sans leading-normal">
+                                Getting involved in addressing homelessness brings positive
+                                change to individuals, communities, and society. By joining the
+                                cause, you contribute to meaningful impact and personal
+                                fulfillment.
+                            </div>
+                            <div className="flex w-full ">
+                                <div className="bg-gradient-to-br from-[#D3F2CE] to-[#E7E7E7] p-8 w-full rounded-l-2xl">
+                                    <span className="font-dmsans text-[45px]">650k+</span>
+                                    <br />
+                                    <span className="font-dmsans text-[12px]">
+                                        Total homeless population in United States
+                                    </span>
+                                </div>
+                                <div className="bg-gradient-to-br from-[#D3C3FF] to-[#DEDCE4] p-8 w-full rounded-r-2xl">
+                                    <span className="font-dmsans text-[45px]">24%</span>
+                                    <br />
+                                    <span className="font-dmsans text-[12px]">
+                                        Homeless due to health conditions
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="w-full">
+                                <img src={howtohelp} className="w-full" />
+                            </div>
+                        </div>
                     </div>
-                    <div className="w-4 h-4">
-                      <img src={arrowRight} />
-                    </div>
-                  </div>
-                  <div className="p-2 bg-[#FFFFFF] space-y-2 w-fit rounded-2xl">
-                    <div>
-                      <img src={spreadTheWord} />
-                    </div>
-                    <div className="font-dmsans font-medium text-[14px]">
-                      Spread the Word
-                    </div>
-                    <div className="w-4 h-4">
-                      <img src={arrowRight} />
-                    </div>
-                  </div>
-                  <div className="p-2 bg-[#FFFFFF] space-y-2 w-fit rounded-2xl">
-                    <div>
-                      <img src={donate} />
-                    </div>
-                    <div className="font-dmsans font-medium text-[14px]">
-                      Donate
-                    </div>
-                    <div className="w-4 h-4">
-                      <img src={arrowRight} />
-                    </div>
-                  </div>
+                    {/*  */}
                 </div>
-              </div>
-            </div>
-          </div>
-          {/*  */}
-        </div>
-        <div className="  w-[95%] md:w-[90%] lg:w-[75%] mx-2 lg:mx-40 mt-8 mb-20 rounded-2xl bg-white text-black ">
-          {/* section 2 */}
-          {/* <div className="items-center justify-center p-8 lg:py-24 lg:px-36 h-full w-full rounded-2xl bg-[#F7F7F7] ">
+                <div className=" w-[95%] md:w-[90%] lg:w-[79%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+                    {/*  */}
+                    <div className="items-center justify-center p-8 lg:p-16 h-full w-full rounded-2xl bg-[#F7F7F7] ">
+                        <div className="flex-col justify-start items-start gap-10 inline-flex">
+                            <div>
+                                <div className="font-bricolage text-[57px]">
+                                    How to help with StreetCare
+                                </div>
+                                <div className="font-dmsans text-1 text-grey-300 font-normal">
+                                    We’ve made a simple guide on how you can contribute to the
+                                    homeless. Join our team of 700+ members and contribute in your
+                                    own way. More than 35% of our volunteers are first-time
+                                    volunteers.
+                                </div>
+                            </div>
+                            <div className="w-full">
+                                <div className="flex w-full  flex-col sm:flex-row">
+                                    {[1, 2, 3, 4].map((step) => (
+                                        <div
+                                            key={step}
+                                            className={`border-x border-y w-full cursor-pointer px-4 py-6 space-y-8 ${selectedStep === step
+                                                    ? "bg-[#CEBFFC] border-[#6840E0] border-1 rounded-b-lg"
+                                                    : ""
+                                                }`}
+                                            style={{
+                                                transform:
+                                                    selectedStep === step ? "scaleY(1.05)" : "none",
+                                                transformOrigin: "top",
+                                            }}
+                                            onClick={() => handleSelectStep(step)}
+                                        >
+                                            <div className="bg-[#FFFFFF] px-4 py-2.5 rounded-full w-fit text-[14px]">
+                                                Step {step}
+                                            </div>
+                                            <div className="font-dmsans text-[24px] leading-8 text-[#616161]">
+                                                {/* Example description for each step */}
+                                                {step === 1 && (
+                                                    <div
+                                                        className={`${selectedStep === step ? "text-black" : ""
+                                                            }`}
+                                                    >
+                                                        Join an <br /> Outreach
+                                                    </div>
+                                                )}
+                                                {step === 2 && (
+                                                    <div
+                                                        className={`${selectedStep === step ? "text-black" : ""
+                                                            }`}
+                                                    >
+                                                        Prepare
+                                                        <br /> an <br />
+                                                        Outreach
+                                                    </div>
+                                                )}
+                                                {step === 3 && (
+                                                    <div
+                                                        className={`${selectedStep === step ? "text-black" : ""
+                                                            }`}
+                                                    >
+                                                        Attend <br /> Outreach
+                                                    </div>
+                                                )}
+                                                {step === 4 && (
+                                                    <div
+                                                        className={`${selectedStep === step ? "text-black" : ""
+                                                            }`}
+                                                    >
+                                                        Document your <br /> Visit
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Step Content */}
+                                <div className="border-l-2 border-r-2 border-b-2 w-full py-10 rounded-b-2xl bg-white">
+                                    {renderStepContent()}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/*  */}
+                </div>
+
+
+
+                <div className=" w-[95%] md:w-[90%] lg:w-[79%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
+                    <EventOutrachesSection />
+                </div>
+
+
+                <div className=" w-[95%] md:w-[90%] lg:w-[79%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+                    {/*  */}
+                    <div className="items-center justify-center p-8 lg:p-16 h-full w-full rounded-2xl bg-[#F7F7F7] ">
+                        <div className="flex-col justify-start items-start gap-10 inline-flex">
+                            <div className="space-y-12">
+                                <div className="font-bricolage text-[57px] text-[#273164] font-medium">
+                                    What else can I do to help?
+                                </div>
+                                <div className="grid grid-cols-2 md:flex md:flex-row md:gap-4 gap-4 lg:flex lg:flex-row lg:gap-4 ">
+                                    <div className="p-2 bg-[#FFFFFF] space-y-2 w-fit rounded-2xl">
+                                        <div>
+                                            <img src={groupOutreaches} />
+                                        </div>
+                                        <div className="font-dmsans font-medium text-[14px]">
+                                            Group Outreaches
+                                        </div>
+                                        <div className="w-4 h-4">
+                                            <img src={arrowRight} />
+                                        </div>
+                                    </div>
+                                    <div className="p-2 bg-[#FFFFFF] space-y-2 w-fit rounded-2xl">
+                                        <div>
+                                            <img src={joinUsAsVolunteer} />
+                                        </div>
+                                        <div className="font-dmsans font-medium text-[14px]">
+                                            Join us as Volunteer
+                                        </div>
+                                        <div className="w-4 h-4">
+                                            <img src={arrowRight} />
+                                        </div>
+                                    </div>
+                                    <div className="p-2 bg-[#FFFFFF] space-y-2 w-fit rounded-2xl">
+                                        <div>
+                                            <img src={spreadTheWord} />
+                                        </div>
+                                        <div className="font-dmsans font-medium text-[14px]">
+                                            Spread the Word
+                                        </div>
+                                        <div className="w-4 h-4">
+                                            <img src={arrowRight} />
+                                        </div>
+                                    </div>
+                                    <div className="p-2 bg-[#FFFFFF] space-y-2 w-fit rounded-2xl">
+                                        <div>
+                                            <img src={donate} />
+                                        </div>
+                                        <div className="font-dmsans font-medium text-[14px]">
+                                            Donate
+                                        </div>
+                                        <div className="w-4 h-4">
+                                            <img src={arrowRight} />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/*  */}
+                </div>
+                <div className="  w-[95%] md:w-[90%] lg:w-[75%] mx-2 lg:mx-40 mt-8 mb-20 rounded-2xl bg-white text-black ">
+                    {/* section 2 */}
+                    {/* <div className="items-center justify-center p-8 lg:py-24 lg:px-36 h-full w-full rounded-2xl bg-[#F7F7F7] ">
             <div className="text-neutral-800 text-2xl font-medium font-bricolage leading-loose">
               Next...
             </div>
@@ -463,10 +436,14 @@ function HowToHelp() {
               name="buttondefault"
             />
           </div> */}
+                </div>
+
+
+
+
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }
 
 export default HowToHelp;

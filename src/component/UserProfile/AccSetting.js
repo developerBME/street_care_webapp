@@ -163,7 +163,6 @@ function AccSetting() {
       await updateDoc(userRef, {
         username: username.current.value,
       });
-      setNewUsername("");
       setSuccess("Successfully updated display name");
     } else if (imgRef.current.value !== "") {
       setUserimageError("");

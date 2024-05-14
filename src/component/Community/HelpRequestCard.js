@@ -11,6 +11,7 @@ import {
 } from "../HelpRequestService";
 
 const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
+  const [showDetails, setShowDetails] = useState(false);
   const navigate = useNavigate();
   // const [user, setUser] = useState(false);
 
@@ -110,13 +111,21 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
             <br />
             How to find: {helpHowToFind}
           </div>
-          <div className="self-stretch">
+          <div className="self-stretch" style={{width: '150%'}}>
             <span className="text-[#616161] text-[15px] font-normal font-dmsans leading-normal">
-              {helpDescription}
+              {showDetails || helpDescription.length < 250
+                ? helpDescription
+                : `${helpDescription.substring(0, 250)}...`
+                }
             </span>{" "}
-            <a className="text-[#6840E0] text-[15px] font-normal font-dmsans underline leading-normal cursor-pointer">
-              Show details
-            </a>
+            {helpDescription.length > 250 && (
+              <a
+                className="text-[#6840E0] text-[15px] font-normal font-dmsans underline leading-normal cursor-pointer"
+                onClick={() => setShowDetails(!showDetails)}
+              >
+                {showDetails ? "Hide details" : "Show details"}
+              </a>
+            )}
           </div>
 
           <div className="text-[#616161] text-xs font-medium font-dmsans leading-[18px]">
@@ -149,16 +158,16 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
         </div>
 
         {helpStatus === "Need Help" && (
-          <div className="col-span-1">
+          <div className="col-span-1 h-fit">
             <button
               onClick={
                 !fAuth?.currentUser?.uid
                   ? () => {
-                    navigate(`/login`);
-                  }
+                      navigate(`/login`);
+                    }
                   : () => {
-                    navigate(`/icanhelp/${id}`);
-                  }
+                      navigate(`/icanhelp/${id}`);
+                    }
               }
               className="w-fit bg-[#E6DCFF] hover:bg-[#6840E0] text-[#181818] hover:text-white rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight md:float-right"
             >
@@ -167,14 +176,14 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
           </div>
         )}
         {helpStatus === "Help on the way" && (
-          <div className="col-span-1">
+          <div className="col-span-1 h-fit">
             <button
               className="w-fit bg-[#E6DCFF] hover:bg-[#6840E0] text-[#181818] hover:text-white rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight md:float-right"
               onClick={
                 !fAuth?.currentUser?.uid
                   ? () => {
-                    navigate(`/login`);
-                  }
+                      navigate(`/login`);
+                    }
                   : (e) => handleHelpRecieved(e, id, refresh)
               }
             >
@@ -183,7 +192,7 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
           </div>
         )}
         {helpStatus === "Help Received" && (
-          <div className="col-span-1">
+          <div className="col-span-1 h-fit">
             {helpUid === fAuth?.currentUser?.uid && (
               <div className="w-fit flex-col justify-start gap-2 flex text-center text-[12px] font-semibold font-inter leading-tight md:float-right mt-2.5">
                 <CustomButton

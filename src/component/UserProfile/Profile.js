@@ -8,8 +8,7 @@ import OutreachEventCard from "../Community/OutreachEventCard";
 import { formatDate, fetchUserEvents } from "../EventCardService";
 import { auth } from "../firebase";
 import CustomButton from "../Buttons/CustomButton";
-import { fetchEvents } from "../EventCardService";
-import { fetchPersonalVisitLogs } from "../VisitLogCardService";
+// import { fetchPersonalVisitLogs } from "../VisitLogCardService";
 import OutreachVisitLogProfile from "../Community/OutreachVisitLogProfile";
 import NoOutreachDoc from "../Community/NoOutreachDoc";
 
@@ -21,9 +20,9 @@ function Profile() {
 
   const fetchData = async () => {
     try {
-      const visitLogsData = await fetchPersonalVisitLogs(
-        auth?.currentUser?.uid
-      );
+      // const visitLogsData = await fetchPersonalVisitLogs(
+      //   auth?.currentUser?.uid
+      // );
       const user = auth.currentUser;
 
       if (user) {
@@ -59,7 +58,7 @@ function Profile() {
     };
 
     fetchData();
-  }, [auth.currentUser]);
+  }, []);
 
   useEffect(() => {
     setEventsDisplay(events);

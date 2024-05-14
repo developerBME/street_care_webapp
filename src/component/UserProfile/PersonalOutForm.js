@@ -13,31 +13,29 @@ import {
   updateDoc,
   query,
   where,
-  limit,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import CustomButton from "../Buttons/CustomButton";
 import errorImg from "../../images/error.png";
 import ConfirmationModal from "./ConfirmationModal";
-import DatePicker from "react-datepicker";
-import { Timestamp } from "firebase/firestore";
 import { emailConfirmation } from "../EmailService";
+import { checkNumber } from "../helper/validator";
 
 const USERS_COLLECTION = "users";
 
-const CustomInput = ({ value, onClick, onChange, id, className }) => (
-  <div>
-    <input
-      type="text"
-      onClick={onClick}
-      onChange={onChange}
-      value={value}
-      id={id}
-      className={className}
-    />
-  </div>
-);
+// const CustomInput = ({ value, onClick, onChange, id, className }) => (
+//   <div>
+//     <input
+//       type="text"
+//       onClick={onClick}
+//       onChange={onChange}
+//       value={value}
+//       id={id}
+//       className={className}
+//     />
+//   </div>
+// );
 
 let autoComplete;
 
@@ -170,12 +168,14 @@ function PersonalOutForm() {
   };
 
   const handleCityChange = (e) => {
+    setCityName(e.target.value);
     updateErrorState("cityError", "");
   };
   const handleStateChange = (e) => {
     updateErrorState("stateError", "");
   };
   const handleZipChange = (e) => {
+    setPostcode(e.target.value);
     updateErrorState("zipError", "");
   };
 
@@ -189,9 +189,7 @@ function PersonalOutForm() {
   const handleOptionalButtonClick = () => {
     setShowOptionalQuestions(!showOptionalQuestions);
   };
-  {
     /* Firebase */
-  }
   const fAuth = getAuth();
   onAuthStateChanged(fAuth, (user) => {
     if (user) {
@@ -202,6 +200,7 @@ function PersonalOutForm() {
     }
   });
 
+  // useEffect(()=>{},[])
   useEffect(() => {
     async function getStates() {
       const response = await fetch(
@@ -285,8 +284,8 @@ function PersonalOutForm() {
     } else {
       updateErrorState("numberHelpedError", "");
     }
-    console.log("object");
-    console.log(whatGivenArr);
+    // console.log("object");
+    // console.log(whatGivenArr);
     if (whatGivenArr == [] || !setOtherBool) {
       updateErrorState(
         "checkboxesError",
@@ -322,7 +321,12 @@ function PersonalOutForm() {
       updateErrorState("zipError", "Zipcode is required");
       setReturn = true;
     } else {
-      updateErrorState("zipError", "");
+      try {
+        checkNumber(zipcodeRef.current.value, "Event Name");
+        updateErrorState("zipError", "");
+      } catch (e) {
+        updateErrorState("zipError", "Should consist of only Numbers");
+      }
     }
 
     if (!date.current.value) {
@@ -390,10 +394,13 @@ function PersonalOutForm() {
       itemQty: itemQty,
       date: date.current.value,
       time: time.current.value,
-      state: state,
-      city: city,
+      state: stateName,
+      city: cityName,
       rating: rating,
+      zipcode: postcode,
+      street: street
     };
+    console.log('obj: ', obj);
 
     const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px">
       <h1>Thank you for creating the outreach</h1>
@@ -408,6 +415,7 @@ function PersonalOutForm() {
     </div>`;
 
     try {
+      console.log("Sending email...");
       const logRef = collection(db, "personalVisitLog");
       const docRef = await addDoc(logRef, obj);
       if (docRef.id) {
@@ -418,6 +426,7 @@ function PersonalOutForm() {
           where("uid", "==", fAuth?.currentUser?.uid)
         );
         const userDocRef = await getDocs(userQuery);
+        console.log(userDocRef);
         const userDocID = userDocRef.docs[0].id;
         // reference for the userdoc
         const userRef = doc(db, USERS_COLLECTION, userDocID);
@@ -462,7 +471,7 @@ function PersonalOutForm() {
   };
 
   //Address autocomplete functionality
-  const [query, setQuery] = useState();
+  const [AddQuery, setAddQuery] = useState();
   const autoCompleteRef = useRef(null);
   const [street, setStreet] = useState("");
   const [cityName, setCityName] = useState("");
@@ -485,8 +494,8 @@ function PersonalOutForm() {
 
   const handlePlaceSelect = async (updateQuery) => {
     const addressObject = await autoComplete.getPlace();
-    const query = addressObject.formatted_address;
-    updateQuery(query);
+    const AddQuery = addressObject.formatted_address;
+    updateQuery(AddQuery);
 
     let street = "";
     let postcode = "";
@@ -513,6 +522,7 @@ function PersonalOutForm() {
           postcode = `${postcode}-${component.long_name}`;
           break;
         }
+        case "sublocality_level_1":
         case "locality": {
           city = component.long_name;
           break;
@@ -534,7 +544,7 @@ function PersonalOutForm() {
   useEffect(() => {
     loadScript(
       `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_PLACES_API_KEY}&libraries=places`,
-      () => handleScriptLoad(setQuery, autoCompleteRef)
+      () => handleScriptLoad(setAddQuery, autoCompleteRef)
     );
   }, []);
 
@@ -608,7 +618,7 @@ function PersonalOutForm() {
                           ></input>
                           {error.numberHelpedError && (
                             <div className="inline-flex items-center">
-                              <img src={errorImg} className="w-3 h-3" />
+                              <img alt="" src={errorImg} className="w-3 h-3" />
                               <p className="text-red-600 text-xs ml-1">
                                 {error.numberHelpedError}
                               </p>
@@ -618,7 +628,7 @@ function PersonalOutForm() {
                       </div>
                       {/* {error.numberHelpedError && (
                       <div className="inline-flex items-center">
-                        <img src={errorImg} className="w-3 h-3" />
+                        <img alt="" src={errorImg} className="w-3 h-3" />
                         <p className="text-red-600 text-xs ml-1">
                           {error.numberHelpedError}
                         </p>
@@ -807,7 +817,7 @@ function PersonalOutForm() {
                     </div>
                     {error.checkboxesError && (
                       <div className="inline-flex items-center">
-                        <img src={errorImg} className="w-3 h-3" />
+                        <img alt="" src={errorImg} className="w-3 h-3" />
                         <p className="text-red-600 text-xs ml-1">
                           {error.checkboxesError}
                         </p>
@@ -853,8 +863,8 @@ function PersonalOutForm() {
                         <input
                           type="text"
                           ref={autoCompleteRef}
-                          onChange={(event) => setQuery(event.target.value)}
-                          value={query}
+                          onChange={(event) => setAddQuery(event.target.value)}
+                          value={AddQuery}
                           placeholder="Enter Address"
                           className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
                             error.idError !== ""
@@ -864,7 +874,7 @@ function PersonalOutForm() {
                         />
                         {error.idError && (
                           <div className="inline-flex items-center">
-                            <img src={errorImg} className="w-3 h-3" />
+                            <img alt="" src={errorImg} className="w-3 h-3" />
                             <p className="text-red-600 text-xs">
                               {error.idError}
                             </p>
@@ -891,7 +901,7 @@ function PersonalOutForm() {
                           />
                           {error.streetError && (
                             <div className="inline-flex items-center">
-                              <img src={errorImg} className="w-3 h-3" />
+                              <img alt="" src={errorImg} className="w-3 h-3" />
                               <p className="text-red-600 text-xs">
                                 {error.streetError}
                               </p>
@@ -916,7 +926,7 @@ function PersonalOutForm() {
                           />
                           {error.cityError && (
                             <div className="inline-flex items-center">
-                              <img src={errorImg} className="w-3 h-3" />
+                              <img alt="" src={errorImg} className="w-3 h-3" />
                               <p className="text-red-600 text-xs">
                                 {error.cityError}
                               </p>
@@ -944,7 +954,7 @@ function PersonalOutForm() {
                           />
                           {error.stateError && (
                             <div className="inline-flex items-center">
-                              <img src={errorImg} className="w-3 h-3" />
+                              <img alt="" src={errorImg} className="w-3 h-3" />
                               <p className="text-red-600 text-xs">
                                 {error.stateError}
                               </p>
@@ -969,7 +979,7 @@ function PersonalOutForm() {
                           />
                           {error.zipError && (
                             <div className="inline-flex items-center">
-                              <img src={errorImg} className="w-3 h-3" />
+                              <img alt="" src={errorImg} className="w-3 h-3" />
                               <p className="text-red-600 text-xs">
                                 {error.zipError}
                               </p>
@@ -1016,7 +1026,7 @@ function PersonalOutForm() {
                         </div>
                         {error.stateError && (
                           <div className="inline-flex items-center">
-                            <img src={errorImg} className="w-3 h-3" />
+                            <img alt="" src={errorImg} className="w-3 h-3" />
                             <p className="text-red-600 text-xs ml-1">
                               {error.stateError}
                             </p>
@@ -1064,7 +1074,7 @@ function PersonalOutForm() {
                         </div>
                         {error.cityError && (
                           <div className="inline-flex items-center">
-                            <img
+                            <img alt=""
                               src={errorImg}
                               className="w-3 h-3"
                               alt="Error Image"
@@ -1101,7 +1111,7 @@ function PersonalOutForm() {
                             ></input>
                             {/* {error.dateError && (
                             <div className="inline-flex items-center">
-                              <img
+                              <img alt=""
                                 src={errorImg}
                                 className="w-3 h-3"
                                 alt="Date Error"
@@ -1133,7 +1143,7 @@ function PersonalOutForm() {
                             ></input>
                             {/* {error.timeError && (
                             <div className="inline-flex items-center">
-                              <img src={errorImg} className="w-3 h-3" />
+                              <img alt="" src={errorImg} className="w-3 h-3" />
                               <p className="text-red-600 text-xs ml-1">
                                 {error.timeError}
                               </p>
@@ -1169,7 +1179,7 @@ function PersonalOutForm() {
                           ></input>
                           {error.itemQtyError && (
                             <div className="inline-flex items-center">
-                              <img src={errorImg} className="w-3 h-3" />
+                              <img alt="" src={errorImg} className="w-3 h-3" />
                               <p className="text-red-600 text-xs ml-1">
                                 {error.itemQtyError}
                               </p>
@@ -1247,7 +1257,7 @@ function PersonalOutForm() {
                               ></input>
                               {error.optDescError && (
                                 <div className="inline-flex items-center">
-                                  <img src={errorImg} className="w-3 h-3" />
+                                  <img alt="" src={errorImg} className="w-3 h-3" />
                                   <p className="text-red-600 text-xs ml-1">
                                     {error.optDescError}
                                   </p>
@@ -1258,7 +1268,7 @@ function PersonalOutForm() {
                         </div>
                         {/* {error.furtherHelpDescriptionError && (
                           <div className="inline-flex items-center">
-                            <img src={errorImg} className="w-3 h-3" />
+                            <img alt="" src={errorImg} className="w-3 h-3" />
                             <p className="text-red-600 text-xs ml-1">
                               {error.furtherHelpDescriptionError}
                             </p>
@@ -1292,7 +1302,7 @@ function PersonalOutForm() {
                               ></input>
                               {error.optLandmarkError && (
                                 <div className="inline-flex items-center">
-                                  <img src={errorImg} className="w-3 h-3" />
+                                  <img alt="" src={errorImg} className="w-3 h-3" />
                                   <p className="text-red-600 text-xs ml-1">
                                     {error.optLandmarkError}
                                   </p>
@@ -1501,7 +1511,7 @@ function PersonalOutForm() {
                         </div>
                         {/* {error.checkboxesError && (
                         <div className="inline-flex items-center">
-                          <img src={errorImg} className="w-3 h-3" />
+                          <img alt="" src={errorImg} className="w-3 h-3" />
                           <p className="text-red-600 text-xs ml-1">
                             {error.checkboxesError}
                           </p>
@@ -1586,7 +1596,7 @@ function PersonalOutForm() {
                         </div>
                         {error.infoShareCheckboxError && (
                           <div className="inline-flex items-center">
-                            <img src={errorImg} className="w-3 h-3" />
+                            <img alt="" src={errorImg} className="w-3 h-3" />
                             <p className="text-red-600 text-xs ml-1">
                               {error.infoShareCheckboxError}
                             </p>

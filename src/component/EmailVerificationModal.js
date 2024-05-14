@@ -1,9 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getAuth, signOut } from "firebase/auth";
+import { getAuth, signOut, sendEmailVerification } from "firebase/auth";
+import CustomButton from "./Buttons/CustomButton";
+import errorImg from "../images/error.png";
 
-const EmailVerificationModal = () => {
+const EmailVerificationModal = (props) => {
   const navigate = useNavigate();
+
+  const currentUser = getAuth().currentUser;
+
+  const [Error, setError] = useState(false);
+  const ResendVerificationLink = async () => {
+    try {
+      await sendEmailVerification(currentUser);
+      console.log("Verification email sent");
+    } catch (error) {
+      setError(true);
+      console.error("Error sending verification email:", error);
+    }
+  };
 
   const fireBaseSignOut = async () => {
     const fAuth = await getAuth();
@@ -11,6 +26,7 @@ const EmailVerificationModal = () => {
       .then(() => {
         console.log("success");
         // navigate("/login");
+        props.setLoggedIn(false);
       })
       .catch((error) => {
         console.log(error);
@@ -19,7 +35,12 @@ const EmailVerificationModal = () => {
   };
 
   useEffect(() => {
-    fireBaseSignOut();
+    if (currentUser && currentUser.emailVerified === true) {
+      navigate("/profile");
+    } else {
+      console.log("Email not verified");
+    }
+    // fireBaseSignOut();
   }, []);
 
   return (
@@ -33,28 +54,32 @@ const EmailVerificationModal = () => {
             </div>
 
             <div className="justify-start items-start gap-[15px] inline-flex">
-              {/* <div className="h-10 bg-[#6840E0] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex"> */}
-              {/* <CustomButton
-                  label="Sign Up"
+              <div className="w-fit justify-start items-start gap-4 inline-flex">
+                <CustomButton
+                  label="Profile"
                   name="buttondefault"
-                  onClick={(e) => {}}
-                /> */}
-              {/* </div> */}
-
-              <div
-                className="h-10 bg-[#000]] rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 inline-flex"
-                onClick={() => {
-                  navigate("/login");
-                }}
-              >
-                <div className="self-stretch grow shrink basis-0 px-6 py-2.5 justify-center items-center gap-2 inline-flex">
-                  <button className="text-center text-[#1F0A58] text-sm font-medium font-inter leading-tight">
-                    Login
-                  </button>
-                </div>
+                  onClick={() => {
+                    navigate("/profile");
+                    window.location.reload();
+                  }}
+                />
+                <CustomButton
+                  label="Resend Link"
+                  name="buttonborder"
+                  onClick={() => {
+                    ResendVerificationLink();
+                  }}
+                />
               </div>
-              {/* {success && <RSVPConfirmationModal />} */}
             </div>
+            {Error && (
+              <div className="inline-flex items-center">
+                <img src={errorImg} className="w-3 h-3" />
+                <p className="text-red-600 text-xs">
+                  Email already verified please click on profile page
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
