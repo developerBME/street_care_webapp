@@ -16,8 +16,6 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { updateEmailId } from "../UpdateEmail";
-import { send2FA, verify2FA } from "../UpdateEmail2FA";
-import { getAuth } from "firebase/auth";
 
 const UpdateEmailAddress = () => {
   const stepLabelMap = {
@@ -28,6 +26,9 @@ const UpdateEmailAddress = () => {
 
   const [email, setEmail] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
+
+  //const verifyCode = document.getElementById("verificationCode");
+  //const verifyCodeValue = verifyCode.value;
 
   const [error, setError] = useState(null);
   const fAuth = getAuth();
@@ -75,6 +76,7 @@ const UpdateEmailAddress = () => {
     };
   }, [seconds, minutes]);
 
+  //old email submit
   const handleEmailSubmit = async () => {
     // if (isSubmitted === 2) {
     //   setIsSubmitted((prevState) => prevState - 1);
@@ -111,6 +113,7 @@ const UpdateEmailAddress = () => {
     document.getElementById("email-update-form").reset();
   };
 
+  //old email verification code & sending new email code
   const handleCodeSubmit = async () => {
     if (!verificationCode || "") {
       updateErrorState("CodeError", "Verification code is required");
@@ -122,41 +125,58 @@ const UpdateEmailAddress = () => {
       updateErrorState("CodeError", "");
     }
 
-    document.getElementById("verification-code-form").reset();
     // const handleCodeSubmit = async() => {
     // setShowVerification(true);
 
     //calling verify code received
-    //console.log(email); //verification code
-    await verify2FA(
+    console.log(verificationCode); //verification code
+    const response = await verify2FA(
       fAuth?.currentUser.email,
       fAuth?.currentUser.uid,
       Date.now().toString(),
-      email
+      verificationCode 
     );
-
+    console.log(response.data,response.status)
+    if (response.status) {
+      console.log(email,fAuth?.currentUser.uid,Date.now().toString())
+      const newEmailSendCode =  await send2FA(
+        email,
+        fAuth?.currentUser.uid,
+        Date.now().toString()
+      );
+      console.log(newEmailSendCode);
+    } else {
+      console.log('Invalid code');
+    }
     setCurrentStep("NEW_EMAIL_CODE");
-
+    document.getElementById("verification-code-form").reset();
     // setCurrentStep("NEW_EMAIL");
   };
 
+  //New email verification code, final update email
   const handleNewEmailCode = async () => {
     if (!verificationCode || "") {
       updateErrorState("CodeError", "Verification code is required");
       return;
     } else if (!/^[0-9]{6}$/.test(verificationCode)) {
-      updateErrorState("CodeError", "Please enter all 5 digits");
+      updateErrorState("CodeError", "Please enter all 6 digits");
       return;
     } else if (verificationCode) {
       updateErrorState("CodeError", "");
     }
-
-    await send2FA(
-      fAuth?.currentUser.email,
+    console.log(verificationCode)
+    const response = await verify2FA(
+      email,
       fAuth?.currentUser.uid,
-      Date.now().toString()
+      Date.now().toString(),
+      verificationCode 
     );
-
+    console.log(response.data,response.status)
+    if (response.status) {
+      updateEmailId(email)
+    } else {
+      console.log('Invalid code');
+    }
 
     setCurrentStep("NEW_EMAIL_CODE");
   };
@@ -318,7 +338,7 @@ const UpdateEmailAddress = () => {
                                 type="text"
                                 id="verficationCode"
                                 placeholder="23232"
-                                maxLength="5"
+                                maxLength="6"
                                 value={verificationCode}
                                 className={`text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
                                   errormsg.CodeError !== ""
