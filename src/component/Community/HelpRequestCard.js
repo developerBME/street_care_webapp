@@ -97,7 +97,7 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
           <div className="w-full overflow-x-auto">
             <div className="justify-start items-start gap-2 inline-flex">
               {helpTags.map((item, index) => (
-                <div className="w-fit px-3 py-1 bg-white rounded-xl border border-[#616161] justify-start items-center gap-4 flex">
+                <div className="w-fit px-3 py-1 bg-white rounded-xl border border-[#616161] justify-start items-center gap-4 flex" key={item}>
                   <div className="opacity-90 justify-start items-center gap-1 flex text-[#616161] text-sm font-semibold font-opensans leading-tight">
                     {item}
                   </div>

@@ -72,7 +72,7 @@ function Footer() {
                   {iconLinks.map((e, i) => {
                     const Icon = e.icon;
                     return (
-                      <>
+                      <React.Fragment key={e.id}>
                         <a
                           key={e.id}
                           href={e.link}
@@ -82,7 +82,7 @@ function Footer() {
                         >
                           <Icon size={24} />
                         </a>
-                      </>
+                      </React.Fragment>
                     );
                   })}
                 </div>
