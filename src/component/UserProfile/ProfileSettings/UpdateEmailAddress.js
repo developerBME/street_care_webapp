@@ -94,22 +94,17 @@ const UpdateEmailAddress = () => {
     } else if (email) {
       updateErrorState("EmailError", "");
     }
-
-    // updateEmailId(email);
-
-    //calling send email notification
     //console.log(fAuth?.currentUser.email,fAuth?.currentUser.uid)
+
+    //Email submission by sending a code to old email
     await send2FA(
       fAuth?.currentUser.email,
       fAuth?.currentUser.uid,
       Date.now().toString()
     );
-    //console.log('testsubmit')
-
     setCurrentStep("VERIFY_CODE");
     setMinutes(4);
     setSeconds(59);
-
     document.getElementById("email-update-form").reset();
   };
 
@@ -128,8 +123,8 @@ const UpdateEmailAddress = () => {
     // const handleCodeSubmit = async() => {
     // setShowVerification(true);
 
-    //calling verify code received
-    console.log(verificationCode); //verification code
+    //old email verification call
+    console.log(verificationCode);
     const response = await verify2FA(
       fAuth?.currentUser.email,
       fAuth?.currentUser.uid,
@@ -139,6 +134,7 @@ const UpdateEmailAddress = () => {
     console.log(response.data,response.status)
     if (response.status) {
       console.log(email,fAuth?.currentUser.uid,Date.now().toString())
+      //sending code to new email
       const newEmailSendCode =  await send2FA(
         email,
         fAuth?.currentUser.uid,
@@ -164,14 +160,13 @@ const UpdateEmailAddress = () => {
     } else if (verificationCode) {
       updateErrorState("CodeError", "");
     }
-    console.log(verificationCode)
     const response = await verify2FA(
       email,
       fAuth?.currentUser.uid,
       Date.now().toString(),
       verificationCode 
     );
-    console.log(response.data,response.status)
+    
     if (response.status) {
       updateEmailId(email)
     } else {
