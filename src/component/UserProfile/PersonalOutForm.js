@@ -400,7 +400,6 @@ function PersonalOutForm() {
       zipcode: postcode,
       street: street
     };
-    console.log('obj: ', obj);
 
     const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px">
       <h1>Thank you for creating the outreach</h1>

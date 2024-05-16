@@ -2,9 +2,8 @@ import React, { useRef, useState, useEffect } from "react";
 import Chip from "../Community/Chip";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebase";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import arrowBack from "../../images/arrowBack.png";
-import arrowDown from "../../images/arrowDown.png";
 import errorImg from "../../images/error.png";
 import { Link, useNavigate } from "react-router-dom";
 import { emailConfirmation } from "../EmailService";
@@ -31,18 +30,52 @@ const loadScript = (url, callback) => {
   document.getElementsByTagName("head")[0].appendChild(script);
 };
 
+const chipList = [
+  "Childcare",
+  "Counseling and Support",
+  "Clothing",
+  "Education",
+  "Personal Care",
+  "Employment and Training",
+  "Food and Water",
+  "Healthcare",
+  "Chinese",
+  "Spanish",
+  "Language(please specify)",
+  "Legal",
+  "Shelter",
+  "Transportation",
+  "LGBTQ Support",
+  "Technology Access",
+  "Social Integration",
+  "Pet Care",
+];
+
 function HelpRequestForm() {
   const navigate = useNavigate();
   const [success, setSuccess] = useState(false);
   const addDescRef = useRef("");
-  const streetRef = useRef("");
-  const cityRef = useRef("");
-  const stateRef = useRef("");
-  const zipRef = useRef("");
   const idRef = useRef("");
   const titleRef = useRef("");
   const [clear, setClear] = useState(false);
   const [helpType, setHelpType] = useState([]);
+  const [error, setError] = useState({
+    autoCompleteError: "",
+    streetError: "",
+    cityError: "",
+    stateError: "",
+    zipError: "",
+    idError: "",
+    checkboxesError: "",
+    titleError: "",
+  });
+  // Address Autocomplete functionality
+  const autoCompleteRef = useRef(null);
+  const [query, setQuery] = useState(null);
+  const [street, setStreet] = useState("");
+  const [cityName, setCityName] = useState("");
+  const [stateName, setStateName] = useState("");
+  const [postcode, setPostcode] = useState("");
 
   const fAuth = getAuth();
 
@@ -55,57 +88,18 @@ function HelpRequestForm() {
     updateErrorState("checkboxesError", "");
   }
 
-  const chipList = [
-    "Childcare",
-    "Counseling and Support",
-    "Clothing",
-    "Education",
-    "Personal Care",
-    "Employment and Training",
-    "Food and Water",
-    "Healthcare",
-    "Chinese",
-    "Spanish",
-    "Language(please specify)",
-    "Legal",
-    "Shelter",
-    "Transportation",
-    "LGBTQ Support",
-    "Technology Access",
-    "Social Integration",
-    "Pet Care",
-  ];
-
   const clearFields = () => {
     addDescRef.current.value = "";
     autoCompleteRef.current.value = "";
-    streetRef.current.value = "";
-    cityRef.current.value = "";
-    stateRef.current.value = "";
-    zipRef.current.value = "";
+    setStreet("");
+    setCityName("");
+    setStateName("");
+    setPostcode("");
     idRef.current.value = "";
     titleRef.current.value = "";
     setHelpType([]);
     setClear(true);
   };
-
-  const [isAtLeastOneChipSelected, setIsAtLeastOneChipSelected] =
-    useState(false);
-
-  const handleChipClick = (value, isSelected) => {
-    setIsAtLeastOneChipSelected(isSelected);
-  };
-
-  const [error, setError] = useState({
-    autoCompleteError: "",
-    streetError: "",
-    cityError: "",
-    stateError: "",
-    zipError: "",
-    idError: "",
-    checkboxesError: "",
-    titleError: "",
-  });
 
   const updateErrorState = (key, value) => {
     setError((prevState) => ({
@@ -114,22 +108,21 @@ function HelpRequestForm() {
     }));
   };
 
-  const handleTitleChange = (e) => {
+  const handleTitleChange = () => {
     updateErrorState("titleError", "");
   };
-  const handleStreetChange = (e) => {
-    updateErrorState("streetError", "");
-  };
   const handleCityChange = (e) => {
+    setCityName(e.target.value);
     updateErrorState("cityError", "");
   };
-  const handleStateChange = (e) => {
+  const handleStateChange = () => {
     updateErrorState("stateError", "");
   };
   const handleZipChange = (e) => {
+    setPostcode(e.target.value);
     updateErrorState("zipError", "");
   };
-  const handleIDChange = (e) => {
+  const handleIDChange = () => {
     updateErrorState("idError", "");
   };
 
@@ -232,7 +225,6 @@ function HelpRequestForm() {
 
     if (!titleRef.current.value) {
       updateErrorState("titleError", "Title is required");
-      // setSuccess(false);
       setReturn = true;
     } else {
       updateErrorState("titleError", "");
@@ -243,7 +235,6 @@ function HelpRequestForm() {
         "Please provide the kind of help needed"
       );
       setReturn = true;
-      // setSuccess(false);
     } else {
       updateErrorState("checkboxesError", "");
     }
@@ -253,38 +244,33 @@ function HelpRequestForm() {
     } else {
       updateErrorState("autoCompleteError", "");
     }
-    if (!streetRef.current.value) {
+    if (!street) {
       updateErrorState("streetError", "Street is required");
       setReturn = true;
-      // setSuccess(false);
     } else {
       updateErrorState("streetError", "");
     }
-    if (!zipRef.current.value) {
+    if (!postcode) {
       updateErrorState("zipError", "Zipcode is required");
       setReturn = true;
-      // setSuccess(false);
     } else {
       updateErrorState("zipError", "");
     }
-    if (!cityRef.current.value) {
+    if (!cityName) {
       updateErrorState("cityError", "City is required");
       setReturn = true;
-      // setSuccess(false);
     } else {
       updateErrorState("cityError", "");
     }
     if (!idRef.current.value) {
       updateErrorState("idError", "Identification is required");
       setReturn = true;
-      // setSuccess(false);
     } else {
       updateErrorState("idError", "");
     }
-    if (!stateRef.current.value) {
+    if (!stateName) {
       updateErrorState("stateError", "State is required");
       setReturn = true;
-      // setSuccess(false);
     } else {
       updateErrorState("stateError", "");
     }
@@ -299,10 +285,10 @@ function HelpRequestForm() {
       identification: idRef.current.value,
       title: titleRef.current.value,
       location: {
-        street: streetRef.current.value,
-        city: cityRef.current.value,
-        state: stateRef.current.value,
-        zipcode: zipRef.current.value,
+        street: street,
+        city: cityName,
+        state: stateName,
+        zipcode: postcode,
       },
       skills: helpType,
       createdAt: Date(),
@@ -313,7 +299,7 @@ function HelpRequestForm() {
           <p>Here are some of the details:</p>
           <ul>
           <li>Description: ${addDescRef.current.value}</li>
-          <li>Location: ${streetRef.current.value}, ${cityRef.current.value}, ${stateRef.current.value}, ${zipRef.current.value}</li>
+          <li>Location: ${street}, ${cityName}, ${stateName}, ${postcode}</li>
           <li>Help Type: ${idRef.current.value}</li>
           </ul>
     </div>`;
@@ -322,7 +308,6 @@ function HelpRequestForm() {
       const reqRef = collection(db, "helpRequests");
       const docRef = await addDoc(reqRef, obj);
       if (docRef.id) {
-        console.log(docRef.id);
         setSuccess(true);
         emailConfirmation(
           fAuth.currentUser.email,
@@ -337,15 +322,7 @@ function HelpRequestForm() {
     }
   };
 
-  // Address Autocomplete functionality
-  const [query, setQuery] = useState();
-  const autoCompleteRef = useRef(null);
-  const [street, setStreet] = useState("");
-  const [cityName, setCityName] = useState("");
-  const [stateName, setStateName] = useState("");
-  const [postcode, setPostcode] = useState("");
-
-  const handleScriptLoad = (updateQuery, autoCompleteRef) => {
+  const handleScriptLoad = (updateQuery, value) => {
     autoComplete = new window.google.maps.places.Autocomplete(
       autoCompleteRef.current,
       {
@@ -362,8 +339,8 @@ function HelpRequestForm() {
   const handlePlaceSelect = async (updateQuery) => {
     const addressObject = await autoComplete.getPlace();
 
-    const query = addressObject.formatted_address;
-    updateQuery(query);
+    const value = addressObject.formatted_address;
+    updateQuery(value);
 
     let street = "";
     let postcode = "";
@@ -390,6 +367,7 @@ function HelpRequestForm() {
           postcode = `${postcode}-${component.long_name}`;
           break;
         }
+        case "sublocality_level_1":
         case "locality": {
           city = component.long_name;
           break;
@@ -529,7 +507,7 @@ function HelpRequestForm() {
                         value={query}
                         placeholder="Enter Address"
                         className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
-                          error.idError !== ""
+                          error.autoCompleteError !== ""
                             ? "ring-red-500"
                             : "ring-gray-300"
                         }`}
@@ -555,16 +533,6 @@ function HelpRequestForm() {
                               : "ring-gray-300"
                           }`}
                           placeholder="Street"
-                          ref={streetRef}
-                          // ref={autoCompleteRef}
-                          // onChange={handleStreetChange}
-                          // onChange={(event) => {
-                          //   setQuery(event.target.value);
-                          //   console.log(
-                          //     "Input value changed:",
-                          //     event.target.value
-                          //   );
-                          // }}
                           id="street-address"
                           name="street-address"
                           value={street}
@@ -590,7 +558,6 @@ function HelpRequestForm() {
                               : "ring-gray-300"
                           }`}
                           placeholder="City"
-                          ref={cityRef}
                           onChange={handleCityChange}
                           value={cityName}
                         />
@@ -617,7 +584,6 @@ function HelpRequestForm() {
                               : "ring-gray-300"
                           }`}
                           placeholder="State"
-                          ref={stateRef}
                           onChange={handleStateChange}
                           value={stateName}
                         />
@@ -642,7 +608,6 @@ function HelpRequestForm() {
                               : "ring-gray-300"
                           }`}
                           placeholder="Zipcode"
-                          ref={zipRef}
                           onChange={handleZipChange}
                           value={postcode}
                         />
