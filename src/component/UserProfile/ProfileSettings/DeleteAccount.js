@@ -93,6 +93,7 @@ const DeleteAccount = () => {
         "Error deleting user data. Please try again."
       );
     }
+    navigate("/profile/profilesettings/deleteaccconfirmation");
   };
 
   const validateEmail = (email) => {

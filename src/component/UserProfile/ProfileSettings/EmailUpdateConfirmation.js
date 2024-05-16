@@ -1,39 +1,35 @@
-import CustomButton from "../Buttons/CustomButton";
+import CustomButton from "../../Buttons/CustomButton";
 import { useNavigate } from "react-router-dom";
 import React from "react";
+import { getAuth } from "firebase/auth";
+import UpdateEmailAddress from "./UpdateEmailAddress";
 
 const EmailUpdateConfirmation = () => {
-
   const navigate = useNavigate();
 
+  const fAuth = getAuth();
+
   return (
-    <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-opacity-50 bg-gray-800 z-50">
-      <div className="w-[350px] sm:w-[550px] md:w-[650px] lg:w-[800px] bg-[#F8F9F0] rounded-2xl p-14">
-        <div className="w-fit h-fit flex-col justify-start items-start gap-16 inline-flex">
-          <div className="self-stretch h-fit flex-col justify-start items-start gap-6 flex">
-            <div className="justify-self-end items-start gap-20 sm:gap-6 inline-flex w-full">
-              <div className="w-fit text-[#212121] text-4xl font-medium font-bricolage leading-[44px]">
+    <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
+      <div className="relative flex flex-col items-center gap-8 ">
+        <div className=" w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 lg:mx-40 mt-32 mb-16 rounded-2xl bg-[#f7f7f7] text-black flex flex-row">
+          <div className="bg-[#f7f7f7] rounded-l-2xl">
+            <div className="w-full h-full px-4 py-6 md:p-12 lg:p-16 flex-col justify-start items-start gap-6 inline-flex">
+              <div className="text-black text-4xl md:text-[32px] font-medium font-dmsans sm:leading-[44px] md:leading-[52px]">
                 Your email has been successfully updated.
               </div>
-              {/* <div className="w-fit h-fit  bg-gray-300  justify-end ">
-              <button className="text-6xl " onClick={closeModal}>
-                &times;
-              </button>
-            </div> */}
-            </div>
-            <div className="self-stretch text-[#616161] text-lg font-semibold font-['Open Sans'] leading-normal">
-              You can now login with {fAuth.currentUser.email} and current
-              password. Click on continue to login with your new email.
-            </div>
-          </div>
-          <div className="w-fit justify-start items-start gap-4 inline-flex">
-            <CustomButton
+              <div className="text-black text-base font-normal">
+                You can now login <span className="text-[#6840E0]">{fAuth.currentUser.email}</span> with and current
+                password. Click on continue to login with your new email.
+              </div>
+              <CustomButton
               label="Back to Profile"
-              name="buttonborder"
+              name="buttondefault"
               onClick={() => {
                 navigate("/profile");
               }}
             />
+            </div>
           </div>
         </div>
       </div>

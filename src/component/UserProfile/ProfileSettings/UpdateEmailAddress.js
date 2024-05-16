@@ -16,6 +16,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { updateEmailId } from "../UpdateEmail";
+import { useNavigate } from "react-router-dom";
 
 const UpdateEmailAddress = () => {
   const stepLabelMap = {
@@ -33,6 +34,7 @@ const UpdateEmailAddress = () => {
 
   const [error, setError] = useState(null);
   const fAuth = getAuth();
+  const navigate = useNavigate();
 
   // const [error, setError] = useState(null);
 
@@ -170,12 +172,14 @@ const UpdateEmailAddress = () => {
 
     if (response.status) {
       updateEmailId(email);
+      navigate("/profile/profilesettings/emailupdateconfirmation")
     } else {
       console.log("Invalid code");
     }
 
     setCurrentStep("NEW_EMAIL_CODE");
     setVerificationCode("");
+    
   };
 
   const handleBack = () => {
