@@ -22,7 +22,7 @@ const settingOptions = [
   {
     title: "Delete your account",
     logo: <MdLockOutline />,
-    href: "/profile/profilesettings/updateemailaddress",
+    href: "/profile/profilesettings/deleteaccount",
     key: "deleteAccount",
   },
 ];

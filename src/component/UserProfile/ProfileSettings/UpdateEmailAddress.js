@@ -26,6 +26,7 @@ const UpdateEmailAddress = () => {
 
   const [email, setEmail] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
+  const [newVerificationCode, setNewVerificationCode] = useState("");
 
   //const verifyCode = document.getElementById("verificationCode");
   //const verifyCodeValue = verifyCode.value;
@@ -114,7 +115,7 @@ const UpdateEmailAddress = () => {
       updateErrorState("CodeError", "Verification code is required");
       return;
     } else if (!/^[0-9]{6}$/.test(verificationCode)) {
-      updateErrorState("CodeError", "Please enter all 5 digits");
+      updateErrorState("CodeError", "Please enter all 6 digits");
       return;
     } else if (verificationCode) {
       updateErrorState("CodeError", "");
@@ -129,23 +130,23 @@ const UpdateEmailAddress = () => {
       fAuth?.currentUser.email,
       fAuth?.currentUser.uid,
       Date.now().toString(),
-      verificationCode 
+      verificationCode
     );
-    console.log(response.data,response.status)
+    console.log(response.data, response.status);
     if (response.status) {
-      console.log(email,fAuth?.currentUser.uid,Date.now().toString())
+      console.log(email, fAuth?.currentUser.uid, Date.now().toString());
       //sending code to new email
-      const newEmailSendCode =  await send2FA(
+      const newEmailSendCode = await send2FA(
         email,
         fAuth?.currentUser.uid,
         Date.now().toString()
       );
       console.log(newEmailSendCode);
     } else {
-      console.log('Invalid code');
+      console.log("Invalid code");
     }
     setCurrentStep("NEW_EMAIL_CODE");
-    document.getElementById("verification-code-form").reset();
+    // setVerificationCode("");
     // setCurrentStep("NEW_EMAIL");
   };
 
@@ -164,16 +165,17 @@ const UpdateEmailAddress = () => {
       email,
       fAuth?.currentUser.uid,
       Date.now().toString(),
-      verificationCode 
+      verificationCode
     );
-    
+
     if (response.status) {
-      updateEmailId(email)
+      updateEmailId(email);
     } else {
-      console.log('Invalid code');
+      console.log("Invalid code");
     }
 
     setCurrentStep("NEW_EMAIL_CODE");
+    setVerificationCode("");
   };
 
   const handleBack = () => {
@@ -251,7 +253,6 @@ const UpdateEmailAddress = () => {
                               ></input>
                             </div>
                           </div>
-                          
                         </div>
                       </div>
                       <div className="self-stretch h-fit flex-col justify-start items-start gap-4 flex">
@@ -284,7 +285,6 @@ const UpdateEmailAddress = () => {
                           )}
                         </div>
                       </div>
-                      
                     </form>
                   </div>
                 </div>
@@ -307,15 +307,18 @@ const UpdateEmailAddress = () => {
                       </Link>
                     </div>
                     <div className="font-dmsans text-2xl font-bold">
-                      {currentStep == "VERIFY_CODE" ? "Existing" : "New"} Email
+                      {currentStep === "VERIFY_CODE" ? "Existing" : "New"} Email
                       Address Verification
                     </div>
                     <div className="font-dmsans text-base font-normal">
                       We have sent a verification code to{" "}
                       <span className="text-[#6840E0]">
-                        {fAuth.currentUser.email}
+                        {currentStep === "VERIFY_CODE"
+                          ? fAuth.currentUser.email
+                          : email}
                       </span>
-                      . Enter the code below to verify your existing email
+                      . Enter the code below to verify your{" "}
+                      {currentStep == "VERIFY_CODE" ? "existing" : "new"} email
                       address
                     </div>
                     <form
@@ -334,15 +337,21 @@ const UpdateEmailAddress = () => {
                                 id="verficationCode"
                                 placeholder="23232"
                                 maxLength="6"
-                                value={verificationCode}
+                                value={
+                                  currentStep === "VERIFY_CODE"
+                                    ? verificationCode
+                                    : newVerificationCode
+                                }
                                 className={`text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
                                   errormsg.CodeError !== ""
                                     ? "ring-red-500"
                                     : "ring-gray-300"
                                 }`}
-                                onChange={(e) =>
-                                  setVerificationCode(e.target.value)
-                                }
+                                onChange={(e) => {
+                                  currentStep === "VERIFY_CODE"
+                                    ? setVerificationCode(e.target.value)
+                                    : setNewVerificationCode(e.target.value);
+                                }}
                               ></input>
                               <div
                                 className="absolute rounded-md py-1.5 px-2 bg-slate-200 right-3 text-xs font-dmsans font-normal text-black cursor-pointer hover:bg-slate-300"

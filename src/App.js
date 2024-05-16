@@ -47,6 +47,8 @@ import ProfileSettings from "./component/UserProfile/ProfileSettings";
 import UpdateEmailAddress from "./component/UserProfile/ProfileSettings/UpdateEmailAddress";
 import DeleteAccount from "./component/UserProfile/ProfileSettings/DeleteAccount";
 import PersonalVisitLogDetails from "./component/Community/PersonalVisitLogDetails";
+import EmailUpdateConfirmation from "./component/UserProfile/ProfileSettings/EmailUpdateConfirmation";
+import DeleteAccConfirmation from "./component/UserProfile/ProfileSettings/DeleteAccConfirmation";
 
 function App() {
   const fAuth = getAuth();
@@ -148,8 +150,16 @@ function App() {
               element={<UpdateEmailAddress />}
             />
             <Route
+              path="/profile/profilesettings/emailupdateconfirmation"
+              element={<EmailUpdateConfirmation />}
+            />
+            <Route
               path="/profile/profilesettings/deleteaccount"
               element={<DeleteAccount />}
+            />
+            <Route
+              path="/profile/profilesettings/deleteaccconfirmation"
+              element={<DeleteAccConfirmation />}
             />
             <Route path="/profile/commoutform" element={<CommOutForm />} />
             <Route
