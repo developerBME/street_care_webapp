@@ -240,25 +240,19 @@ function HomePage() {
             </div>
           ) : (
             <>
-              {upcomingEvents.length == 0 ? (
-                <div className="text-md font-medium font-dmsans text-[#181818] mt-6">
-                  No upcoming events
-                </div>
-              ) : (
-                <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-                  {upcomingEvents.map((eventData) => (
-                    <OutreachEventCard
-                      key={eventData.id}
-                      cardData={{
-                        ...eventData,
-                        eventDate: formatDate(
-                          new Date(eventData.eventDate.seconds * 1000)
-                        ),
-                      }}
-                    />
-                  ))}
-                </div>
-              )}
+              <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+                {upcomingEvents.map((eventData) => (
+                  <OutreachEventCard
+                    key={eventData.id}
+                    cardData={{
+                      ...eventData,
+                      eventDate: formatDate(
+                        new Date(eventData.eventDate.seconds * 1000)
+                      ),
+                    }}
+                  />
+                ))}
+              </div>
             </>
           )}
           <div className="mt-16">

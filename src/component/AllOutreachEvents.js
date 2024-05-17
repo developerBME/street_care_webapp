@@ -114,38 +114,33 @@ const AllOutreachEvents = () => {
             </div>
           </div>
 
-          {eventsDisplay.length == 0 ? (
-            <div className="text-md font-medium font-dmsans text-[#181818] mt-2">
-              No upcoming outreaches
-            </div>
-          ) : (
-            <>
-              {isLoading ? (
-                // <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
-                <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
-                  <EventCardSkeleton />
-                  <EventCardSkeleton />
-                  <EventCardSkeleton />
-                </div>
-              ) : (
-                // <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
-                <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
-                  {eventsDisplay.length > 0 &&
-                    eventsDisplay.map((eventData) => (
-                      <OutreachEventCard
-                        key={eventData.id}
-                        cardData={{
-                          ...eventData,
-                          eventDate: formatDate(
-                            new Date(eventData.eventDate.seconds * 1000)
-                          ),
-                        }}
-                      />
-                    ))}
-                </div>
-              )}
-            </>
-          )}
+          <>
+            {isLoading ? (
+              // <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
+              <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
+                <EventCardSkeleton />
+                <EventCardSkeleton />
+                <EventCardSkeleton />
+              </div>
+            ) : (
+              // <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
+              <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
+                {eventsDisplay.length > 0 &&
+                  eventsDisplay.map((eventData) => (
+                    <OutreachEventCard
+                      key={eventData.id}
+                      cardData={{
+                        ...eventData,
+                        eventDate: formatDate(
+                          new Date(eventData.eventDate.seconds * 1000)
+                        ),
+                      }}
+                    />
+                  ))}
+              </div>
+            )}
+          </>
+
           {/* <>
             {isLoading ? (
               <div className="flex justify-between items-center w-full h-fit">
