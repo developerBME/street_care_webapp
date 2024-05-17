@@ -97,7 +97,10 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
           <div className="w-full overflow-x-auto">
             <div className="justify-start items-start gap-2 inline-flex">
               {helpTags.map((item, index) => (
-                <div className="w-fit px-3 py-1 bg-white rounded-xl border border-[#616161] justify-start items-center gap-4 flex">
+                <div
+                  className="w-fit px-3 py-1 bg-white rounded-xl border border-[#616161] justify-start items-center gap-4 flex"
+                  key={item}
+                >
                   <div className="opacity-90 justify-start items-center gap-1 flex text-[#616161] text-sm font-semibold font-opensans leading-tight">
                     {item}
                   </div>
@@ -111,12 +114,11 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
             <br />
             How to find: {helpHowToFind}
           </div>
-          <div className="self-stretch" style={{width: '150%'}}>
+          <div className="self-stretch" style={{ width: "150%" }}>
             <span className="text-[#616161] text-[15px] font-normal font-dmsans leading-normal">
               {showDetails || helpDescription.length < 250
                 ? helpDescription
-                : `${helpDescription.substring(0, 250)}...`
-                }
+                : `${helpDescription.substring(0, 250)}...`}
             </span>{" "}
             {helpDescription.length > 250 && (
               <a

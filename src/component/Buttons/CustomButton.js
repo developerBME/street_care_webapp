@@ -560,6 +560,19 @@ function CustomButton({ label, name, onClick, icon, disable, type }) {
         {label}
       </button>
     );
+  } else if(name == "deleteButton") {
+    return (
+      <button
+        onClick={onClick}
+        className={`text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-white bg-[#CF003E] hover:bg-[#cf003ec7]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
+      >
+        {label}
+      </button>
+    );
   } else {
     return (
       <button

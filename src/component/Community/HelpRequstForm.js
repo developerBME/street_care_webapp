@@ -2,12 +2,12 @@ import React, { useRef, useState, useEffect } from "react";
 import Chip from "../Community/Chip";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebase";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import arrowBack from "../../images/arrowBack.png";
-import arrowDown from "../../images/arrowDown.png";
 import errorImg from "../../images/error.png";
 import { Link, useNavigate } from "react-router-dom";
 import { emailConfirmation } from "../EmailService";
+import HelpRequestConfirmationModal from "../Community/HelpRequestConfirmationModal";
 
 let autoComplete;
 
@@ -30,18 +30,52 @@ const loadScript = (url, callback) => {
   document.getElementsByTagName("head")[0].appendChild(script);
 };
 
+const chipList = [
+  "Childcare",
+  "Counseling and Support",
+  "Clothing",
+  "Education",
+  "Personal Care",
+  "Employment and Training",
+  "Food and Water",
+  "Healthcare",
+  "Chinese",
+  "Spanish",
+  "Language(please specify)",
+  "Legal",
+  "Shelter",
+  "Transportation",
+  "LGBTQ Support",
+  "Technology Access",
+  "Social Integration",
+  "Pet Care",
+];
+
 function HelpRequestForm() {
   const navigate = useNavigate();
   const [success, setSuccess] = useState(false);
   const addDescRef = useRef("");
-  const streetRef = useRef("");
-  const cityRef = useRef("");
-  const stateRef = useRef("");
-  const zipRef = useRef("");
   const idRef = useRef("");
   const titleRef = useRef("");
   const [clear, setClear] = useState(false);
   const [helpType, setHelpType] = useState([]);
+  const [error, setError] = useState({
+    autoCompleteError: "",
+    streetError: "",
+    cityError: "",
+    stateError: "",
+    zipError: "",
+    idError: "",
+    checkboxesError: "",
+    titleError: "",
+  });
+  // Address Autocomplete functionality
+  const autoCompleteRef = useRef(null);
+  const [query, setQuery] = useState(null);
+  const [street, setStreet] = useState("");
+  const [cityName, setCityName] = useState("");
+  const [stateName, setStateName] = useState("");
+  const [postcode, setPostcode] = useState("");
 
   const fAuth = getAuth();
 
@@ -54,55 +88,18 @@ function HelpRequestForm() {
     updateErrorState("checkboxesError", "");
   }
 
-  const chipList = [
-    "Childcare",
-    "Counseling and Support",
-    "Clothing",
-    "Education",
-    "Personal Care",
-    "Employment and Training",
-    "Food and Water",
-    "Healthcare",
-    "Chinese",
-    "Spanish",
-    "Language(please specify)",
-    "Legal",
-    "Shelter",
-    "Transportation",
-    "LGBTQ Support",
-    "Technology Access",
-    "Social Integration",
-    "Pet Care",
-  ];
-
   const clearFields = () => {
     addDescRef.current.value = "";
-    streetRef.current.value = "";
-    cityRef.current.value = "";
-    stateRef.current.value = "";
-    zipRef.current.value = "";
+    autoCompleteRef.current.value = "";
+    setStreet("");
+    setCityName("");
+    setStateName("");
+    setPostcode("");
     idRef.current.value = "";
     titleRef.current.value = "";
     setHelpType([]);
     setClear(true);
   };
-
-  const [isAtLeastOneChipSelected, setIsAtLeastOneChipSelected] =
-    useState(false);
-
-  const handleChipClick = (value, isSelected) => {
-    setIsAtLeastOneChipSelected(isSelected);
-  };
-
-  const [error, setError] = useState({
-    streetError: "",
-    cityError: "",
-    stateError: "",
-    zipError: "",
-    idError: "",
-    checkboxesError: "",
-    titleError: "",
-  });
 
   const updateErrorState = (key, value) => {
     setError((prevState) => ({
@@ -111,72 +108,175 @@ function HelpRequestForm() {
     }));
   };
 
-  const handleTitleChange = (e) => {
+  const handleTitleChange = () => {
     updateErrorState("titleError", "");
   };
-  const handleStreetChange = (e) => {
-    updateErrorState("streetError", "");
-  };
   const handleCityChange = (e) => {
+    setCityName(e.target.value);
     updateErrorState("cityError", "");
   };
-  const handleStateChange = (e) => {
+  const handleStateChange = () => {
     updateErrorState("stateError", "");
   };
   const handleZipChange = (e) => {
+    setPostcode(e.target.value);
     updateErrorState("zipError", "");
   };
-  const handleIDChange = (e) => {
+  const handleIDChange = () => {
     updateErrorState("idError", "");
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   if (!titleRef.current.value) {
+  //     updateErrorState("titleError", "Title is required");
+  //     setSuccess(false);
+  //   } else {
+  //     updateErrorState("titleError", "");
+  //   }
+  //   if (helpType == "") {
+  //     updateErrorState(
+  //       "checkboxesError",
+  //       "Please provide the kind of help is needed"
+  //     );
+  //     setSuccess(false);
+  //   } else {
+  //     updateErrorState("checkboxesError", "");
+  //   }
+  //   if (!streetRef.current.value) {
+  //     updateErrorState("streetError", "Street is required");
+  //     setSuccess(false);
+  //   } else {
+  //     updateErrorState("streetError", "");
+  //   }
+  //   if (!zipRef.current.value) {
+  //     updateErrorState("zipError", "Zipcode is required");
+  //     setSuccess(false);
+  //   } else {
+  //     updateErrorState("zipError", "");
+  //   }
+  //   if (!cityRef.current.value) {
+  //     updateErrorState("cityError", "City is required");
+  //     setSuccess(false);
+  //   } else {
+  //     updateErrorState("cityError", "");
+  //   }
+  //   if (!idRef.current.value) {
+  //     updateErrorState("idError", "This field is required");
+  //     setSuccess(false);
+  //   } else {
+  //     updateErrorState("idError", "");
+  //   }
+  //   if (!stateRef.current.value) {
+  //     updateErrorState("stateError", "Sate is required");
+  //     setSuccess(false);
+  //   } else {
+  //     updateErrorState("stateError", "");
+  //   }
+
+  //   let obj = {
+  //     uid: fAuth.currentUser.uid,
+  //     description: addDescRef.current.value,
+  //     identification: idRef.current.value,
+  //     title: titleRef.current.value,
+  //     location: {
+  //       street: streetRef.current.value,
+  //       city: cityRef.current.value,
+  //       state: stateRef.current.value,
+  //       zipcode: zipRef.current.value,
+  //     },
+  //     skills: helpType,
+  //     createdAt: Date(),
+  //     status: "Need Help", // This is default for every new HR
+  //   };
+
+  //   const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px"><h1>Thank you for creating the outreach</h1><p>Your Help Request <b>${titleRef.current.value}</b> has been successfully created and you can view it in your profile.</p>
+  //         <p>Here are some of the details:</p>
+  //         <ul>
+  //         <li>Description: ${addDescRef.current.value}</li>
+  //         <li>Location: ${streetRef.current.value}, ${cityRef.current.value}, ${stateRef.current.value}, ${zipRef.current.value}</li>
+  //         <li>Help Type: ${idRef.current.value}</li>
+  //         </ul>
+  //   </div>`;
+
+  //   try {
+  //     const reqRef = collection(db, "helpRequests");
+  //     const docRef = await addDoc(reqRef, obj);
+  //     if (docRef.id) {
+  //       console.log(docRef.id);
+  //       setSuccess(true);
+  //       emailConfirmation(
+  //         fAuth.currentUser.email,
+  //         fAuth.currentUser.displayName,
+  //         titleRef.current.value,
+  //         emailHTML
+  //       );
+  //       clearFields();
+  //     }
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let setReturn = false;
 
     if (!titleRef.current.value) {
       updateErrorState("titleError", "Title is required");
-      setSuccess(false);
+      setReturn = true;
     } else {
       updateErrorState("titleError", "");
     }
     if (helpType == "") {
       updateErrorState(
         "checkboxesError",
-        "Please provide the kind of help is needed"
+        "Please provide the kind of help needed"
       );
-      setSuccess(false);
+      setReturn = true;
     } else {
       updateErrorState("checkboxesError", "");
     }
-    if (!streetRef.current.value) {
+    if (!autoCompleteRef.current.value) {
+      updateErrorState("autoCompleteError", "Address is required");
+      setReturn = true;
+    } else {
+      updateErrorState("autoCompleteError", "");
+    }
+    if (!street) {
       updateErrorState("streetError", "Street is required");
-      setSuccess(false);
+      setReturn = true;
     } else {
       updateErrorState("streetError", "");
     }
-    if (!zipRef.current.value) {
+    if (!postcode) {
       updateErrorState("zipError", "Zipcode is required");
-      setSuccess(false);
+      setReturn = true;
     } else {
       updateErrorState("zipError", "");
     }
-    if (!cityRef.current.value) {
+    if (!cityName) {
       updateErrorState("cityError", "City is required");
-      setSuccess(false);
+      setReturn = true;
     } else {
       updateErrorState("cityError", "");
     }
     if (!idRef.current.value) {
-      updateErrorState("idError", "This field is required");
-      setSuccess(false);
+      updateErrorState("idError", "Identification is required");
+      setReturn = true;
     } else {
       updateErrorState("idError", "");
     }
-    if (!stateRef.current.value) {
-      updateErrorState("stateError", "Sate is required");
-      setSuccess(false);
+    if (!stateName) {
+      updateErrorState("stateError", "State is required");
+      setReturn = true;
     } else {
       updateErrorState("stateError", "");
+    }
+
+    if (setReturn) {
+      return;
     }
 
     let obj = {
@@ -185,10 +285,10 @@ function HelpRequestForm() {
       identification: idRef.current.value,
       title: titleRef.current.value,
       location: {
-        street: streetRef.current.value,
-        city: cityRef.current.value,
-        state: stateRef.current.value,
-        zipcode: zipRef.current.value,
+        street: street,
+        city: cityName,
+        state: stateName,
+        zipcode: postcode,
       },
       skills: helpType,
       createdAt: Date(),
@@ -199,7 +299,7 @@ function HelpRequestForm() {
           <p>Here are some of the details:</p>
           <ul>
           <li>Description: ${addDescRef.current.value}</li>
-          <li>Location: ${streetRef.current.value}, ${cityRef.current.value}, ${stateRef.current.value}, ${zipRef.current.value}</li>
+          <li>Location: ${street}, ${cityName}, ${stateName}, ${postcode}</li>
           <li>Help Type: ${idRef.current.value}</li>
           </ul>
     </div>`;
@@ -208,7 +308,6 @@ function HelpRequestForm() {
       const reqRef = collection(db, "helpRequests");
       const docRef = await addDoc(reqRef, obj);
       if (docRef.id) {
-        console.log(docRef.id);
         setSuccess(true);
         emailConfirmation(
           fAuth.currentUser.email,
@@ -223,15 +322,7 @@ function HelpRequestForm() {
     }
   };
 
-  // Address Autocomplete functionality
-  const [query, setQuery] = useState();
-  const autoCompleteRef = useRef(null);
-  const [street, setStreet] = useState("");
-  const [cityName, setCityName] = useState("");
-  const [stateName, setStateName] = useState("");
-  const [postcode, setPostcode] = useState("");
-
-  const handleScriptLoad = (updateQuery, autoCompleteRef) => {
+  const handleScriptLoad = (updateQuery, value) => {
     autoComplete = new window.google.maps.places.Autocomplete(
       autoCompleteRef.current,
       {
@@ -248,9 +339,8 @@ function HelpRequestForm() {
   const handlePlaceSelect = async (updateQuery) => {
     const addressObject = await autoComplete.getPlace();
 
-    const query = addressObject.formatted_address;
-    updateQuery(query);
-    
+    const value = addressObject.formatted_address;
+    updateQuery(value);
 
     let street = "";
     let postcode = "";
@@ -277,6 +367,7 @@ function HelpRequestForm() {
           postcode = `${postcode}-${component.long_name}`;
           break;
         }
+        case "sublocality_level_1":
         case "locality": {
           city = component.long_name;
           break;
@@ -341,7 +432,7 @@ function HelpRequestForm() {
                     </div>
                     <div className="space-y-1.5">
                       <div className="text-zinc-700 font-semibold text-[15px] font-['Inter']">
-                        Title
+                        Title*
                       </div>
                       <input
                         type="text"
@@ -359,7 +450,7 @@ function HelpRequestForm() {
                     {error.titleError && (
                       <div className="inline-flex items-center">
                         <img alt="" src={errorImg} className="w-3 h-3" />
-                        <p className="text-red-600 text-xs">
+                        <p className="text-red-600 text-xs mx-1">
                           {error.titleError}
                         </p>
                       </div>
@@ -380,7 +471,7 @@ function HelpRequestForm() {
                     {error.checkboxesError && (
                       <div className="inline-flex items-center">
                         <img alt="" src={errorImg} className="w-3 h-3" />
-                        <p className="text-red-600 text-xs">
+                        <p className="text-red-600 text-xs mx-1">
                           {error.checkboxesError}
                         </p>
                       </div>
@@ -416,16 +507,16 @@ function HelpRequestForm() {
                         value={query}
                         placeholder="Enter Address"
                         className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
-                          error.idError !== ""
+                          error.autoCompleteError !== ""
                             ? "ring-red-500"
                             : "ring-gray-300"
                         }`}
                       />
-                      {error.idError && (
+                      {error.autoCompleteError && (
                         <div className="inline-flex items-center">
                           <img alt="" src={errorImg} className="w-3 h-3" />
-                          <p className="text-red-600 text-xs">
-                            {error.idError}
+                          <p className="text-red-600 text-xs mx-1">
+                            {error.autoCompleteError}
                           </p>
                         </div>
                       )}
@@ -442,16 +533,6 @@ function HelpRequestForm() {
                               : "ring-gray-300"
                           }`}
                           placeholder="Street"
-                          ref={streetRef}
-                          // ref={autoCompleteRef}
-                          // onChange={handleStreetChange}
-                          // onChange={(event) => {
-                          //   setQuery(event.target.value);
-                          //   console.log(
-                          //     "Input value changed:",
-                          //     event.target.value
-                          //   );
-                          // }}
                           id="street-address"
                           name="street-address"
                           value={street}
@@ -459,7 +540,7 @@ function HelpRequestForm() {
                         {error.streetError && (
                           <div className="inline-flex items-center">
                             <img alt="" src={errorImg} className="w-3 h-3" />
-                            <p className="text-red-600 text-xs">
+                            <p className="text-red-600 text-xs mx-1">
                               {error.streetError}
                             </p>
                           </div>
@@ -477,14 +558,13 @@ function HelpRequestForm() {
                               : "ring-gray-300"
                           }`}
                           placeholder="City"
-                          ref={cityRef}
                           onChange={handleCityChange}
                           value={cityName}
                         />
                         {error.cityError && (
                           <div className="inline-flex items-center">
                             <img alt="" src={errorImg} className="w-3 h-3" />
-                            <p className="text-red-600 text-xs">
+                            <p className="text-red-600 text-xs mx-1">
                               {error.cityError}
                             </p>
                           </div>
@@ -504,14 +584,13 @@ function HelpRequestForm() {
                               : "ring-gray-300"
                           }`}
                           placeholder="State"
-                          ref={stateRef}
                           onChange={handleStateChange}
                           value={stateName}
                         />
                         {error.stateError && (
                           <div className="inline-flex items-center">
                             <img alt="" src={errorImg} className="w-3 h-3" />
-                            <p className="text-red-600 text-xs">
+                            <p className="text-red-600 text-xs mx-1">
                               {error.stateError}
                             </p>
                           </div>
@@ -529,14 +608,13 @@ function HelpRequestForm() {
                               : "ring-gray-300"
                           }`}
                           placeholder="Zipcode"
-                          ref={zipRef}
                           onChange={handleZipChange}
                           value={postcode}
                         />
                         {error.zipError && (
                           <div className="inline-flex items-center">
                             <img alt="" src={errorImg} className="w-3 h-3" />
-                            <p className="text-red-600 text-xs">
+                            <p className="text-red-600 text-xs mx-1">
                               {error.zipError}
                             </p>
                           </div>
@@ -561,14 +639,14 @@ function HelpRequestForm() {
                       {error.idError && (
                         <div className="inline-flex items-center">
                           <img alt="" src={errorImg} className="w-3 h-3" />
-                          <p className="text-red-600 text-xs">
+                          <p className="text-red-600 text-xs mx-1">
                             {error.idError}
                           </p>
                         </div>
                       )}
                     </div>
                   </div>
-                  <div className="inline-flex gap-2 items-center mt-6">
+                  {/* <div className="inline-flex gap-2 items-center mt-6">
                     <input type="checkbox"></input>
                     <div>
                       <span className="text-black text-sm font-normal font-['Open Sans'] leading-tight">
@@ -582,7 +660,7 @@ function HelpRequestForm() {
                         anonymously
                       </span>
                     </div>
-                  </div>
+                  </div> */}
                   <div className="space-y-16 space-x-[15px]">
                     <Link to={"/community"}>
                       <button
@@ -600,11 +678,12 @@ function HelpRequestForm() {
                     </button>
                   </div>
                   {success && (
-                    <div className="justify-start items-start gap-4 inline-flex">
-                      <div className="justify-start items-start gap-4 flex">
-                        Success!
-                      </div>
-                    </div>
+                    // <div className="justify-start items-start gap-4 inline-flex">
+                    //   <div className="justify-start items-start gap-4 flex">
+                    //     Success!
+                    //   </div>
+                    // </div>
+                    <HelpRequestConfirmationModal />
                   )}
                 </form>
               </div>
