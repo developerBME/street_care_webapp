@@ -6,6 +6,7 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import arrowBack from "../../../images/arrowBack.png";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaCheckCircle } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import errorImg from "../../../images/error.png";
 import { send2FA, verify2FA } from "../UpdateEmail2FA";
 
@@ -16,22 +17,24 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { updateEmailId } from "../UpdateEmail";
+import { useNavigate } from "react-router-dom";
 
 const UpdateEmailAddress = () => {
   const stepLabelMap = {
     UPDATE_EMAIL: "Update email",
     VERIFY_CODE: "Verify Code",
-    NEW_EMAIL_CODE: "Verify New Email",
+    // NEW_EMAIL_CODE: "Verify New Email",
   };
 
   const [email, setEmail] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
-
-  //const verifyCode = document.getElementById("verificationCode");
-  //const verifyCodeValue = verifyCode.value;
+  const [newVerificationCode, setNewVerificationCode] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [password, setPassword] = useState("");
 
   const [error, setError] = useState(null);
   const fAuth = getAuth();
+  const navigate = useNavigate();
 
   // const [error, setError] = useState(null);
 
@@ -42,6 +45,7 @@ const UpdateEmailAddress = () => {
 
   const [errormsg, setErrors] = useState({
     EmailError: "",
+    PassError: "",
     CodeError: "",
   });
 
@@ -55,6 +59,10 @@ const UpdateEmailAddress = () => {
   const resendCode = () => {
     setMinutes(4);
     setSeconds(59);
+  };
+
+  const handleTogglePassword = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
   useEffect(() => {
@@ -94,6 +102,14 @@ const UpdateEmailAddress = () => {
     } else if (email) {
       updateErrorState("EmailError", "");
     }
+
+    if (!password) {
+      updateErrorState("PassError", "Password is required");
+      return;
+    } else if (password) {
+      updateErrorState("PassError", "");
+    }
+
     //console.log(fAuth?.currentUser.email,fAuth?.currentUser.uid)
 
     //Email submission by sending a code to old email
@@ -114,7 +130,7 @@ const UpdateEmailAddress = () => {
       updateErrorState("CodeError", "Verification code is required");
       return;
     } else if (!/^[0-9]{6}$/.test(verificationCode)) {
-      updateErrorState("CodeError", "Please enter all 5 digits");
+      updateErrorState("CodeError", "Please enter all 6 digits");
       return;
     } else if (verificationCode) {
       updateErrorState("CodeError", "");
@@ -129,61 +145,70 @@ const UpdateEmailAddress = () => {
       fAuth?.currentUser.email,
       fAuth?.currentUser.uid,
       Date.now().toString(),
-      verificationCode 
+      verificationCode
     );
-    console.log(response.data,response.status)
+    console.log(response.data, response.status);
     if (response.status) {
-      console.log(email,fAuth?.currentUser.uid,Date.now().toString())
+      console.log(email, fAuth?.currentUser.uid, Date.now().toString());
       //sending code to new email
-      const newEmailSendCode =  await send2FA(
+      const newEmailSendCode = await send2FA(
         email,
         fAuth?.currentUser.uid,
         Date.now().toString()
       );
       console.log(newEmailSendCode);
     } else {
-      console.log('Invalid code');
+      console.log("Invalid code");
     }
-    setCurrentStep("NEW_EMAIL_CODE");
-    document.getElementById("verification-code-form").reset();
+    if (response.status) {
+      updateEmailId(email);
+      navigate("/profile/profilesettings/emailupdateconfirmation");
+    } else {
+      console.log("Invalid code");
+    }
+
+    setVerificationCode("");
     // setCurrentStep("NEW_EMAIL");
   };
 
   //New email verification code, final update email
-  const handleNewEmailCode = async () => {
-    if (!verificationCode || "") {
-      updateErrorState("CodeError", "Verification code is required");
-      return;
-    } else if (!/^[0-9]{6}$/.test(verificationCode)) {
-      updateErrorState("CodeError", "Please enter all 6 digits");
-      return;
-    } else if (verificationCode) {
-      updateErrorState("CodeError", "");
-    }
-    const response = await verify2FA(
-      email,
-      fAuth?.currentUser.uid,
-      Date.now().toString(),
-      verificationCode 
-    );
-    
-    if (response.status) {
-      updateEmailId(email)
-    } else {
-      console.log('Invalid code');
-    }
+  // const handleNewEmailCode = async () => {
+  //   if (!verificationCode || "") {
+  //     updateErrorState("CodeError", "Verification code is required");
+  //     return;
+  //   } else if (!/^[0-9]{6}$/.test(verificationCode)) {
+  //     updateErrorState("CodeError", "Please enter all 6 digits");
+  //     return;
+  //   } else if (verificationCode) {
+  //     updateErrorState("CodeError", "");
+  //   }
+  //   const response = await verify2FA(
+  //     email,
+  //     fAuth?.currentUser.uid,
+  //     Date.now().toString(),
+  //     verificationCode
+  //   );
 
-    setCurrentStep("NEW_EMAIL_CODE");
-  };
+  //   if (response.status) {
+  //     updateEmailId(email);
+  //     navigate("/profile/profilesettings/emailupdateconfirmation");
+  //   } else {
+  //     console.log("Invalid code");
+  //   }
+
+  //   setCurrentStep("NEW_EMAIL_CODE");
+  //   setVerificationCode("");
+  // };
 
   const handleBack = () => {
     // setIsSubmitted((prevState) => prevState - 1);
 
     if (currentStep === "VERIFY_CODE") {
       setCurrentStep("UPDATE_EMAIL");
-    } else {
-      setCurrentStep("VERIFY_CODE");
     }
+    // else {
+    //   setCurrentStep("VERIFY_CODE");
+    // }
 
     setMinutes(4);
     setSeconds(59);
@@ -192,7 +217,7 @@ const UpdateEmailAddress = () => {
   const stepFuncMap = {
     UPDATE_EMAIL: handleEmailSubmit,
     VERIFY_CODE: handleCodeSubmit,
-    NEW_EMAIL_CODE: handleNewEmailCode,
+    // NEW_EMAIL_CODE: handleNewEmailCode,
   };
 
   return (
@@ -251,7 +276,6 @@ const UpdateEmailAddress = () => {
                               ></input>
                             </div>
                           </div>
-                          
                         </div>
                       </div>
                       <div className="self-stretch h-fit flex-col justify-start items-start gap-4 flex">
@@ -284,7 +308,42 @@ const UpdateEmailAddress = () => {
                           )}
                         </div>
                       </div>
-                      
+                      <div className="self-stretch h-fit flex-col justify-start items-start gap-4 flex">
+                        <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
+                          <div className="self-stretch text-zinc-700 text-[15px] font-medium font-inter leading-tight">
+                            Password
+                          </div>
+                          <div className="relative self-stretch bg-white border-stone-300 justify-start items-center gap-2 inline-flex">
+                            <div className="grow shrink basis-0 h-10 flex-col rounded-md border-0 justify-center items-start inline-flex">
+                              <input
+                                type={showPassword ? "text" : "password"}
+                                id="password"
+                                placeholder="Enter your password"
+                                className={`text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
+                                  errormsg.PassError !== ""
+                                    ? "ring-red-500"
+                                    : "ring-gray-300"
+                                }`}
+                                onChange={(e) => setPassword(e.target.value)}
+                              ></input>
+                              <div
+                                className="absolute right-4 top-2/4 transform -translate-y-2/4 cursor-pointer"
+                                onClick={handleTogglePassword}
+                              >
+                                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                              </div>
+                            </div>
+                          </div>
+                          {errormsg.PassError && (
+                            <div className="inline-flex items-center gap-1.5">
+                              <img src={errorImg} className="w-3 h-3" />
+                              <div className="text-red-700 font-dmsans">
+                                {errormsg.PassError}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     </form>
                   </div>
                 </div>
@@ -307,16 +366,12 @@ const UpdateEmailAddress = () => {
                       </Link>
                     </div>
                     <div className="font-dmsans text-2xl font-bold">
-                      {currentStep == "VERIFY_CODE" ? "Existing" : "New"} Email
-                      Address Verification
+                      New Email Address Verification
                     </div>
                     <div className="font-dmsans text-base font-normal">
                       We have sent a verification code to{" "}
-                      <span className="text-[#6840E0]">
-                        {fAuth.currentUser.email}
-                      </span>
-                      . Enter the code below to verify your existing email
-                      address
+                      <span className="text-[#6840E0]">{email}</span>. Enter the
+                      code below to verify your new email address
                     </div>
                     <form
                       id="verification-code-form"
@@ -340,9 +395,9 @@ const UpdateEmailAddress = () => {
                                     ? "ring-red-500"
                                     : "ring-gray-300"
                                 }`}
-                                onChange={(e) =>
-                                  setVerificationCode(e.target.value)
-                                }
+                                onChange={(e) => {
+                                  setVerificationCode(e.target.value);
+                                }}
                               ></input>
                               <div
                                 className="absolute rounded-md py-1.5 px-2 bg-slate-200 right-3 text-xs font-dmsans font-normal text-black cursor-pointer hover:bg-slate-300"
@@ -399,29 +454,22 @@ const UpdateEmailAddress = () => {
                     Steps to update your email address
                   </div>
                   <div className="text-base font-normal">
-                    Ensure you have access to both your email addresses before
-                    proceeding.
+                    Ensure you have access to your new email address before proceeding. 
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
                   <div className="flex flex-row gap-2 items-center">
                     <div className="text-base font-bold">
-                      Step 1 - Verify Existing Email
+                      Step 1 - Enter New Email and Existing Password
                     </div>
-                    {currentStep === "VERIFY_CODE" ||
-                    currentStep === "NEW_EMAIL_CODE" ? (
-                      currentStep === "NEW_EMAIL_CODE" ? (
-                        <FaCheckCircle className="text-green-600" />
-                      ) : (
-                        <AiOutlineLoading3Quarters className="text-green-300" />
-                      )
+                    {currentStep === "UPDATE_EMAIL" ? (
+                      <AiOutlineLoading3Quarters className="text-green-300" />
                     ) : (
-                      ""
+                      <FaCheckCircle className="text-green-600" />
                     )}
                   </div>
                   <div className="text-base font-normal">
-                    Verify your existing email address using the link sent to
-                    your email address.
+                    Enter your new email address and existing password.
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -429,7 +477,7 @@ const UpdateEmailAddress = () => {
                     <div className="text-base font-bold">
                       Step 2 - Verify New Email
                     </div>
-                    {currentStep === "NEW_EMAIL_CODE" && (
+                    {currentStep === "VERIFY_CODE" && (
                       <AiOutlineLoading3Quarters className="text-green-300" />
                     )}
                   </div>

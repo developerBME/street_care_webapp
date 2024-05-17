@@ -30,27 +30,27 @@ const DeleteAccount = () => {
     }));
   };
 
-//Previous handle delete function
+  //Previous handle delete function
 
-//   const handleDeleteAccForm = () => {
-//     if (
-//       !email ||
-//       !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email) ||
-//       ""
-//     ) {
-//       updateErrorState("EmailError", "Email is required");
-//       return;
-//     } else if (email) {
-//       updateErrorState("EmailError", "");
-//     }
+  //   const handleDeleteAccForm = () => {
+  //     if (
+  //       !email ||
+  //       !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email) ||
+  //       ""
+  //     ) {
+  //       updateErrorState("EmailError", "Email is required");
+  //       return;
+  //     } else if (email) {
+  //       updateErrorState("EmailError", "");
+  //     }
 
-//     if (!password) {
-//       updateErrorState("PassError", "Password is required");
-//       return;
-//     } else if (password) {
-//       updateErrorState("PassError", "");
-//     }
-//   };
+  //     if (!password) {
+  //       updateErrorState("PassError", "Password is required");
+  //       return;
+  //     } else if (password) {
+  //       updateErrorState("PassError", "");
+  //     }
+  //   };
 
   const handleTogglePassword = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -93,6 +93,7 @@ const DeleteAccount = () => {
         "Error deleting user data. Please try again."
       );
     }
+    navigate("/profile/profilesettings/deleteaccconfirmation");
   };
 
   const validateEmail = (email) => {
@@ -176,7 +177,7 @@ const DeleteAccount = () => {
                         <div className="relative self-stretch bg-white border-stone-300 justify-start items-center gap-2 inline-flex">
                           <div className="grow shrink basis-0 h-10 flex-col rounded-md border-0 justify-center items-start inline-flex">
                             <input
-                              type="password"
+                              type={showPassword ? "text" : "password"}
                               id="password"
                               placeholder="Enter your password"
                               className={`text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
