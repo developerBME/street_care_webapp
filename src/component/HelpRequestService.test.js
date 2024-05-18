@@ -13,7 +13,7 @@ describe("fetchOutreaches function", () => {
       
         getDocs.mockResolvedValue(mockOutreachSnapshot); // Mock getDocs return value
       
-        const helpRequestId = "tDUMYnQuFKfebYv4BPW5fbIn9RC3";
+        const helpRequestId = "test-ID";
         const outreaches = await fetchOutreaches(helpRequestId);
 
         console.log("Outreaches (no outreaches found):", outreaches);
@@ -33,7 +33,7 @@ describe("fetchOutreaches function", () => {
       
         getDocs.mockResolvedValue(mockOutreachSnapshot);
       
-        const helpRequestId = "Bp3PTeIeSyNTutPPkX5IZBBQWkO2";
+        const helpRequestId = "test-ID";
         const outreaches = await fetchOutreaches(helpRequestId);
 
         console.log("Outreaches (outreach data found):", outreaches);
