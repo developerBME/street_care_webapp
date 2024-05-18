@@ -2,7 +2,6 @@ import CustomButton from "../../Buttons/CustomButton";
 import { useNavigate } from "react-router-dom";
 import React from "react";
 import { getAuth } from "firebase/auth";
-import UpdateEmailAddress from "./UpdateEmailAddress";
 
 const EmailUpdateConfirmation = () => {
   const navigate = useNavigate();
@@ -19,8 +18,8 @@ const EmailUpdateConfirmation = () => {
                 Your email has been successfully updated.
               </div>
               <div className="text-black text-base font-normal">
-                You can now login <span className="text-[#6840E0]">{fAuth.currentUser.email}</span> with and current
-                password. Click on continue to login with your new email.
+                You can now login with <span className="text-[#6840E0]">{fAuth.currentUser.email}</span> and current
+                password. Click the button below to go back to your profile.
               </div>
               <CustomButton
               label="Back to Profile"
