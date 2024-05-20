@@ -41,7 +41,7 @@ export const fetchEvents = async () => {
       id: doc.id,
       label:
         fAuth.currentUser &&
-        currentParticipants.includes(fAuth?.currentUser?.uid)
+          currentParticipants.includes(fAuth?.currentUser?.uid)
           ? "EDIT"
           : "RSVP",
       nop: currentParticipants.length,
@@ -130,7 +130,7 @@ export const fetchOfficialEvents = async () => {
       id: doc.id,
       label:
         fAuth.currentUser &&
-        currentParticipants.includes(fAuth?.currentUser?.uid)
+          currentParticipants.includes(fAuth?.currentUser?.uid)
           ? "EDIT"
           : "RSVP",
       nop: currentParticipants.length,
@@ -166,10 +166,10 @@ export const fetchUserDetails = async (uid) => {
   );
   const userDocRef = await getDocs(userQuery);
   // const userDocID = userDocRef.docs[0].id;
-  const userData = userDocRef.docs[0].data();
+  const userData = userDocRef.docs[0]?.data();
   return {
-    username: userData.username || "",
-    photoUrl: userData.photoUrl || "",
+    username: userData?.username || "",
+    photoUrl: userData?.photoUrl || "",
   };
   // reference for the userdoc
   // const userRef = doc(db, USERS_COLLECTION, userDocID);
