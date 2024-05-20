@@ -15,6 +15,8 @@ import {
   deleteUser,
   signOut,
   signInWithEmailAndPassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
 } from "firebase/auth";
 import { updateEmailId } from "../UpdateEmail";
 import { useNavigate } from "react-router-dom";
@@ -84,7 +86,7 @@ const UpdateEmailAddress = () => {
     };
   }, [seconds, minutes]);
 
-  //old email submit
+  //Old Email Verification step via reauthentication of current user login
   const handleEmailSubmit = async () => {
     // if (isSubmitted === 2) {
     //   setIsSubmitted((prevState) => prevState - 1);
@@ -110,21 +112,37 @@ const UpdateEmailAddress = () => {
       updateErrorState("PassError", "");
     }
 
-    //console.log(fAuth?.currentUser.email,fAuth?.currentUser.uid)
+    //G relogin code
+    //await reauthenticateWithPopup(auth.currentUser, provider);
+    //const user = getAuth().currentUser;
 
-    //Email submission by sending a code to old email
-    await send2FA(
-      fAuth?.currentUser.email,
-      fAuth?.currentUser.uid,
-      Date.now().toString()
-    );
+    // Current user's reauthentication
+    const credential = EmailAuthProvider.credential(fAuth.currentUser.email, password);
+    try {
+      const response = await reauthenticateWithCredential(fAuth.currentUser, credential);
+      console.log('after relogin'); 
+      console.log(response);
+      console.log(email, fAuth?.currentUser.uid, Date.now().toString());
+      //sending verification code to new email after user relogin
+      const newEmailSendCodeResponse = await send2FA(
+        email,
+        fAuth?.currentUser.uid,
+        Date.now().toString()
+      );
+      console.log(newEmailSendCodeResponse);
+    } catch (error) {
+      // Reauthentication failed, handling the error
+      updateErrorState("PassError", "Incorrect Password");
+      console.error("Reauthentication Failed!", error);
+    }
+
     setCurrentStep("VERIFY_CODE");
     setMinutes(4);
     setSeconds(59);
     document.getElementById("email-update-form").reset();
   };
 
-  //old email verification code & sending new email code
+  //New email verification step
   const handleCodeSubmit = async () => {
     if (!verificationCode || "") {
       updateErrorState("CodeError", "Verification code is required");
@@ -135,32 +153,19 @@ const UpdateEmailAddress = () => {
     } else if (verificationCode) {
       updateErrorState("CodeError", "");
     }
-
-    // const handleCodeSubmit = async() => {
     // setShowVerification(true);
 
-    //old email verification call
+    // verifying code of new email
     console.log(verificationCode);
     const response = await verify2FA(
-      fAuth?.currentUser.email,
+      email,
       fAuth?.currentUser.uid,
       Date.now().toString(),
       verificationCode
     );
-    console.log(response.data, response.status);
-    if (response.status) {
-      console.log(email, fAuth?.currentUser.uid, Date.now().toString());
-      //sending code to new email
-      const newEmailSendCode = await send2FA(
-        email,
-        fAuth?.currentUser.uid,
-        Date.now().toString()
-      );
-      console.log(newEmailSendCode);
-    } else {
-      console.log("Invalid code");
-    }
-    if (response.status) {
+    console.log(response.status);
+    
+    if (response.status === 200) { //On verifying code, updating email
       updateEmailId(email);
       navigate("/profile/profilesettings/emailupdateconfirmation");
     } else {
