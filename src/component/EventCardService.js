@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import logEvent from "./FirebaseLogger";
 
 const OFFICIAL_EVENTS_COLLECTION = "officialEvents";
 const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
@@ -41,7 +42,7 @@ export const fetchEvents = async () => {
       id: doc.id,
       label:
         fAuth.currentUser &&
-        currentParticipants.includes(fAuth?.currentUser?.uid)
+          currentParticipants.includes(fAuth?.currentUser?.uid)
           ? "EDIT"
           : "RSVP",
       nop: currentParticipants.length,
@@ -130,7 +131,7 @@ export const fetchOfficialEvents = async () => {
       id: doc.id,
       label:
         fAuth.currentUser &&
-        currentParticipants.includes(fAuth?.currentUser?.uid)
+          currentParticipants.includes(fAuth?.currentUser?.uid)
           ? "EDIT"
           : "RSVP",
       nop: currentParticipants.length,
@@ -166,10 +167,10 @@ export const fetchUserDetails = async (uid) => {
   );
   const userDocRef = await getDocs(userQuery);
   // const userDocID = userDocRef.docs[0].id;
-  const userData = userDocRef.docs[0].data();
+  const userData = userDocRef.docs[0]?.data();
   return {
-    username: userData.username || "",
-    photoUrl: userData.photoUrl || "",
+    username: userData?.username || "",
+    photoUrl: userData?.photoUrl || "",
   };
   // reference for the userdoc
   // const userRef = doc(db, USERS_COLLECTION, userDocID);
@@ -373,6 +374,11 @@ export const handleRsvp = async (
               });
             }
 
+            logEvent(
+              "STREET_CARE_INFO_OUTREACH",
+              "RSVP added for user" + fAuth.currentUser.uid
+            );
+
             console.log("successfully added outreach to users collection");
           }
           setLabel2("EDIT");
@@ -449,6 +455,10 @@ export const handleRsvp = async (
                   outreachEvents: currentEvents,
                 });
               }
+              logEvent(
+                "STREET_CARE_INFO_OUTREACH",
+                "RSVP edited for user" + userDocID
+              );
             }
           } else {
             console.log("event not found in the user");

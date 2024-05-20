@@ -82,7 +82,7 @@ const NavBar = (props) => {
     {
       id: 2,
       label: "Account Settings",
-      link: "/profile/accsetting",
+      link: "/profile/profilesettings",
       icons: RiUserSettingsLine,
     },
     {

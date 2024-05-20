@@ -137,3 +137,21 @@ export const handleReopenHelpRequest = async (e,id,refresh) => {
         refresh();
       }
 };
+
+export const fetchOutreaches = async (helpRequestId) => {
+    const outreachesRef = collection(db, "outreachEvents");
+    const outreachesQuery = query(outreachesRef, where("HelpRequest.id", "==", helpRequestId));
+    const outreachSnapshot = await getDocs(outreachesQuery);
+
+    let outreaches = [];
+
+    outreachSnapshot.forEach((doc) => {
+        const outreachData = doc.data();
+        const id = doc.id;
+        outreaches.push({
+            ...outreachData,
+            id: id,
+        });
+    });
+    return outreaches;
+}

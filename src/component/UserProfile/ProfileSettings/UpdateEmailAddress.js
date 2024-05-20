@@ -139,7 +139,7 @@ const UpdateEmailAddress = () => {
     setCurrentStep("VERIFY_CODE");
     setMinutes(4);
     setSeconds(59);
-    document.getElementById("email-update-form").reset();
+    // document.getElementById("email-update-form").reset();
   };
 
   //New email verification step
@@ -392,7 +392,7 @@ const UpdateEmailAddress = () => {
                               <input
                                 type="text"
                                 id="verficationCode"
-                                placeholder="23232"
+                                placeholder="845672"
                                 maxLength="6"
                                 value={verificationCode}
                                 className={`text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${

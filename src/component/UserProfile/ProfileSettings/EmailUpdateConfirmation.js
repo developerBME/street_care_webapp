@@ -1,12 +1,18 @@
 import CustomButton from "../../Buttons/CustomButton";
 import { useNavigate } from "react-router-dom";
 import React from "react";
-import { getAuth } from "firebase/auth";
+import { getAuth, signOut } from "firebase/auth";
 
 const EmailUpdateConfirmation = () => {
   const navigate = useNavigate();
 
   const fAuth = getAuth();
+
+  const handleLogOut = async () => {
+    await signOut(fAuth);
+    window.location.reload();
+    navigate("/login");
+  };
 
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
@@ -18,16 +24,17 @@ const EmailUpdateConfirmation = () => {
                 Your email has been successfully updated.
               </div>
               <div className="text-black text-base font-normal">
-                You can now login with <span className="text-[#6840E0]">{fAuth.currentUser.email}</span> and current
-                password. Click the button below to go back to your profile.
+                You can now login with{" "}
+                <span className="text-[#6840E0]">
+                  {fAuth.currentUser.email}
+                </span>{" "}
+                and current password. Click the button below to log back into your account.
               </div>
               <CustomButton
-              label="Back to Profile"
-              name="buttondefault"
-              onClick={() => {
-                navigate("/profile");
-              }}
-            />
+                label="Login"
+                name="buttondefault"
+                onClick={handleLogOut}
+              />
             </div>
           </div>
         </div>

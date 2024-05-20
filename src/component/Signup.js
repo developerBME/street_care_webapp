@@ -21,6 +21,7 @@ import { RiTwitterXFill } from "react-icons/ri";
 import errorImg from "../images/error.png";
 import { emailConfirmation } from "./EmailService";
 import CustomButton from "./Buttons/CustomButton";
+import logEvent from "./FirebaseLogger";
 
 const handleGoogleSignIn = async (e) => {
   e.preventDefault();
@@ -270,6 +271,8 @@ function Signup2() {
 
       sendEmailVerification(currentUser);
 
+      logEvent("STREET_CARE_INFO_AUTH", `${email} has signed up`);
+
       // emailConfirmation(email, fAuth.currentUser.displayName, "", emailHTML);
       // Clear inputs or navigate to a different page
       setUserName("");
@@ -290,6 +293,7 @@ function Signup2() {
       } else {
         setError(error.message);
       }
+      logEvent("STREET_CARE_ERROR", `at signup - ${error.message}`);
       setLoginSuccess(""); // Clear out any success messages
     }
   };
