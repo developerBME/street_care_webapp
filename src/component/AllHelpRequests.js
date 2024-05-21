@@ -1,10 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import OutreachEventCard from "./Community/OutreachEventCard";
-import { formatDate, fetchEvents } from "./EventCardService";
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
-import search_icon from "../images/search_icon.png";
-import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 import { fetchHelpRequests } from "./HelpRequestService";
 import HelpRequestCard from "./Community/HelpRequestCard";
 import HelpRequestSkeleton from "./Skeletons/HelpRequestSkeleton";
@@ -36,15 +32,6 @@ const AllHelpRequests = () => {
     fetchData();
   }, []);
 
-  // // Simulate an API call or data loading
-  // useEffect(() => {
-  //     const timer = setTimeout(() => {
-  //         setIsLoading(false);
-  //     }, 3000); // Simulate a 3-second loading time (adjust as needed)
-
-  //     return () => clearTimeout(timer);
-  // }, []);
-
   useEffect(() => {
     setHelpRequestsDisplay(helpRequests);
   }, [helpRequests]);
@@ -71,7 +58,6 @@ const AllHelpRequests = () => {
   return (
     <div className="relative flex flex-col items-center ">
       <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-16 lg:mx-40 mt-48 rounded-2xl bg-white text-black ">
-        {/*  */}
         <div
           className=" absolute flex mt-[-50px] items-center cursor-pointer "
           onClick={() => {
@@ -80,7 +66,7 @@ const AllHelpRequests = () => {
         >
           <IoIosArrowBack className=" w-6 h-6" />{" "}
           <p className=" font-bricolage text-xl font-bold leading-7">
-            Return to Home
+            Return to Community
           </p>
         </div>
         {/*  */}
@@ -108,13 +94,13 @@ const AllHelpRequests = () => {
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 20 20"
-                  stroke-width="1.5"
+                  strokeWidth="1.5"
                   stroke="currentColor"
                   class="w-6 h-6 pointer-events-none absolute top-6 transform -translate-y-1/2 left-3"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
                   />
                 </svg>
@@ -129,29 +115,16 @@ const AllHelpRequests = () => {
               <HelpRequestSkeleton />
             </div>
           ) : (
-            // <div className="w-full h-fit grid grid-cols-1 pt-9 gap-5">
-            //   {helpRequests.map((item, index) => (
-            //     <HelpRequestCard
-            //       key={index}
-            //       helpRequestCardData={item}
-            //       refresh={fetchData}
-            //     />
-            //   ))}
-            // </div>
             <>
               <div className="sm:p-4 lg:px-2 lg:py-10 flex flex-col bg-[#F7F7F7] gap-4 lg:gap-8 rounded-b-2xl">
                 {helpRequestsDisplay
                   .slice(0, visibleItems)
                   .map((item, index) => (
-                    <HelpRequestCard
-                      key={item.id}
-                      helpRequestCardData={item}
-                      // refresh={fetchData}
-                    />
+                    <HelpRequestCard key={item.id} helpRequestCardData={item} />
                   ))}
               </div>
               {visibleItems < helpRequests.length &&
-                helpRequestsDisplay.length != 0 &&
+                helpRequestsDisplay.length !== 0 &&
                 helpRequestsDisplay.length > visibleItems && (
                   <button
                     className="w-fit rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 flex text-center text-[#1F0A58] hover:bg-[#1F0A58] hover:text-white text-[13px] font-medium font-dmsans leading-tight self-stretch px-6 py-2.5"
@@ -160,7 +133,7 @@ const AllHelpRequests = () => {
                     Load 5 More
                   </button>
                 )}
-              {helpRequestsDisplay.length == 0 && (
+              {helpRequestsDisplay.length === 0 && (
                 <div>No help requests found with {searchRef.current.value}</div>
               )}
             </>
