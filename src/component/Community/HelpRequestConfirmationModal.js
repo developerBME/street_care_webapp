@@ -34,7 +34,7 @@ const HelpRequestConfirmationModal = ({}) => {
               label="All Help Requests"
               name="buttondefault"
               onClick={() => {
-                navigate("/allHelpRequests");
+                navigate("/community/allHelpRequests");
               }}
             />
             <CustomButton

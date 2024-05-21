@@ -188,7 +188,7 @@ function App() {
           {/* <Route path="/helpRequestEventWindow" element={<ComingSoon />} /> */}
 
           {/* <Route path="/helpRequestForm" element={<ComingSoon />} /> */}
-          <Route path="/icanhelp/:id" element={<ICanHelpForm />} />
+          <Route path="/community/icanhelp/:id" element={<ICanHelpForm />} />
           {/* <Route path="/icanhelp" element={<ComingSoon />} /> */}
           {/* <Route path="/donateForm" element={<DonateForm />} /> */}
           <Route path="/donateForm" element={<ComingSoon />} />
@@ -216,7 +216,7 @@ function App() {
           />
           <Route path="/*" element={<Not404 />} />
           <Route path="/temp_profile" element={<Temp_Profile />} />
-          <Route path="/allHelpRequests" element={<AllHelpRequests />} />
+          <Route path="/community/allHelpRequests" element={<AllHelpRequests />} />
         </Routes>
         <Footer />
       </Router>
