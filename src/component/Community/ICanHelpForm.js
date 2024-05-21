@@ -4,7 +4,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import CustomButton from "../Buttons/CustomButton";
 import help_announcement from "../../images/help_announcement.png";
 import ConfirmationModal from "./ConfirmationModal";
-import { fetchHelpReqById, fetchUserName } from "../HelpRequestService";
+import { fetchHelpReqById, fetchUserName, fetchOutreaches } from "../HelpRequestService";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import ICanHelpConfirmationModal from "./ICanHelpConfirmationModal";
 
@@ -14,14 +14,17 @@ const ICanHelpForm = () => {
   const { id } = useParams();
   const [data, setData] = useState(null);
   const [username, setUserName] = useState("");
+  const [outreaches, setOutreaches] = useState([]);
 
   useEffect(() => {
     const getData = async () => {
       try {
         const result = await fetchHelpReqById(id);
         const user = await fetchUserName(result.uid);
+        const outreacheList = await fetchOutreaches(id);
         setData(result);
         setUserName(user);
+        setOutreaches(outreacheList);
       } catch (error) {
         console.error(error.message);
       }
@@ -202,7 +205,7 @@ const ICanHelpForm = () => {
           {success && (
             <ICanHelpConfirmationModal
               id={id}
-              // outreachEvents={data.outreachEvents}
+              outreaches = {outreaches}
             />
           )}
         </div>
