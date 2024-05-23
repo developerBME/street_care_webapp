@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getAuth, signOut, sendEmailVerification } from "firebase/auth";
 import CustomButton from "./Buttons/CustomButton";
@@ -8,6 +8,7 @@ const EmailVerificationModal = (props) => {
   const navigate = useNavigate();
 
   const currentUser = getAuth().currentUser;
+  const hasSentVerificationLink = useRef(false); // Ref to track if the email verification link is sent
 
   const [Error, setError] = useState(false);
   const ResendVerificationLink = async () => {
@@ -39,6 +40,10 @@ const EmailVerificationModal = (props) => {
       navigate("/profile");
     } else {
       console.log("Email not verified");
+      if (!hasSentVerificationLink.current) { // checking this condition as useeffect is being called twice by default
+        ResendVerificationLink();
+        hasSentVerificationLink.current = true; // Setting the ref to true after sending the verification link
+      }
     }
     // fireBaseSignOut();
   }, []);
