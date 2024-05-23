@@ -107,9 +107,11 @@ const UpdateEmailAddress = () => {
 
     if (!password) {
       updateErrorState("PassError", "Password is required");
+      console.log("!password");
       return;
     } else if (password) {
       updateErrorState("PassError", "");
+      console.log("else if")
     }
 
     //G relogin code
@@ -117,10 +119,16 @@ const UpdateEmailAddress = () => {
     //const user = getAuth().currentUser;
 
     // Current user's reauthentication
-    const credential = EmailAuthProvider.credential(fAuth.currentUser.email, password);
+    const credential = EmailAuthProvider.credential(
+      fAuth.currentUser.email,
+      password
+    );
     try {
-      const response = await reauthenticateWithCredential(fAuth.currentUser, credential);
-      console.log('after relogin'); 
+      const response = await reauthenticateWithCredential(
+        fAuth.currentUser,
+        credential
+      );
+      console.log("after relogin");
       console.log(response);
       console.log(email, fAuth?.currentUser.uid, Date.now().toString());
       //sending verification code to new email after user relogin
@@ -134,9 +142,9 @@ const UpdateEmailAddress = () => {
       // Reauthentication failed, handling the error
       updateErrorState("PassError", "Incorrect Password");
       console.error("Reauthentication Failed!", error);
+      return;
     }
 
-    setCurrentStep("VERIFY_CODE");
     setMinutes(4);
     setSeconds(59);
     // document.getElementById("email-update-form").reset();
@@ -164,8 +172,9 @@ const UpdateEmailAddress = () => {
       verificationCode
     );
     console.log(response.status);
-    
-    if (response.status === 200) { //On verifying code, updating email
+
+    if (response.status === 200) {
+      //On verifying code, updating email
       updateEmailId(email);
       navigate("/profile/profilesettings/emailupdateconfirmation");
     } else {
@@ -459,7 +468,8 @@ const UpdateEmailAddress = () => {
                     Steps to update your email address
                   </div>
                   <div className="text-base font-normal">
-                    Ensure you have access to your new email address before proceeding. 
+                    Ensure you have access to your new email address before
+                    proceeding.
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">

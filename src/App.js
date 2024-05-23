@@ -49,6 +49,7 @@ import DeleteAccount from "./component/UserProfile/ProfileSettings/DeleteAccount
 import PersonalVisitLogDetails from "./component/Community/PersonalVisitLogDetails";
 import EmailUpdateConfirmation from "./component/UserProfile/ProfileSettings/EmailUpdateConfirmation";
 import DeleteAccConfirmation from "./component/UserProfile/ProfileSettings/DeleteAccConfirmation";
+import UpdateProfile from "./component/UserProfile/ProfileSettings/UpdateProfile";
 
 function App() {
   const fAuth = getAuth();
@@ -144,6 +145,10 @@ function App() {
             <Route
               path="/profile/profilesettings"
               element={<ProfileSettings />}
+            />
+            <Route
+              path="/profile/profilesettings/updateprofile"
+              element={<UpdateProfile />}
             />
             <Route
               path="/profile/profilesettings/updateemailaddress"
