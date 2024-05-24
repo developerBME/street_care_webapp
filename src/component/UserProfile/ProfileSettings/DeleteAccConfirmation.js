@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CustomButton from "../../Buttons/CustomButton";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { getAuth } from "firebase/auth";
-
 const DeleteAccConfirmation = () => {
   const navigate = useNavigate();
-
-  const fAuth = getAuth();
-
+  const { state } = useLocation();
+  // const queryParameters = new URLSearchParams(window.location.search)
+  // const acc = queryParameters.get("acc")
+  if (!state) {
+    navigate("/pagenotfound")
+  }
+  useEffect(() => { console.log(state) }, [])
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center gap-8 ">
@@ -21,7 +24,7 @@ const DeleteAccConfirmation = () => {
                 Thank you for being part of this wonderful community. Your
                 account -{" "}
                 <span className="text-[#6840E0]">
-                  {fAuth.currentUser.email}
+                  {state?.email}
                 </span>
                 , has been successfully deleted. You will be redirected to the
                 StreetCare homepage shortly.{" "}

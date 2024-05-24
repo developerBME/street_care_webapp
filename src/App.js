@@ -160,12 +160,9 @@ function App() {
             />
             <Route
               path="/profile/profilesettings/deleteaccount"
-              element={<DeleteAccount />}
+              element={<DeleteAccount setLoggedIn={setLoggedIn} />}
             />
-            <Route
-              path="/profile/profilesettings/deleteaccconfirmation"
-              element={<DeleteAccConfirmation />}
-            />
+
             <Route path="/profile/commoutform" element={<CommOutForm />} />
             <Route
               path="/profile/personaloutform"
@@ -178,7 +175,10 @@ function App() {
             />
             <Route path="/helpRequestForm" element={<HelpRequestForm />} />
           </Route>
-
+          <Route
+            path="/profile/profilesettings/deleteaccconfirmation"
+            element={<DeleteAccConfirmation />}
+          />
           <Route path="/profile/select-outreach" element={<Documenting />} />
 
           {/* <Route path="/profile/commoutform" element={<ComingSoon />} /> */}
