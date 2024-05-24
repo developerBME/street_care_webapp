@@ -50,6 +50,9 @@ import PersonalVisitLogDetails from "./component/Community/PersonalVisitLogDetai
 import EmailUpdateConfirmation from "./component/UserProfile/ProfileSettings/EmailUpdateConfirmation";
 import DeleteAccConfirmation from "./component/UserProfile/ProfileSettings/DeleteAccConfirmation";
 
+import TestUser from "./component/Test/Test";
+import ListUser from "./component/Test/ListUser";
+
 function App() {
   const fAuth = getAuth();
   const [loggedIn, setLoggedIn] = useState(false);
@@ -217,6 +220,10 @@ function App() {
           <Route path="/*" element={<Not404 />} />
           <Route path="/temp_profile" element={<Temp_Profile />} />
           <Route path="/community/allHelpRequests" element={<AllHelpRequests />} />
+
+          <Route path="/test" element={<TestUser />} />
+          <Route path="/list" element={<ListUser />} />
+
         </Routes>
         <Footer />
       </Router>
