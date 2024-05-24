@@ -31,6 +31,9 @@ import CustomButton from "../component/Buttons/CustomButton";
 import { NewsCardData } from "../NewsData";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 import PastOutreachEventCardSkeleton from "./Skeletons/PastOutreachEventCardSkeleton";
+import { PanoramaWideAngleSelectRounded } from "@mui/icons-material";
+import { collection, doc, setDoc, getDoc,updateDoc, deleteDoc } from "firebase/firestore";
+import { auth, db } from "./firebase";
 
 function HomePage() {
   const navigate = useNavigate();
@@ -134,7 +137,83 @@ function HomePage() {
   const [newsevents, setnewsevents] = useState([]);
   const [eventsDisplay, setEventsDisplay] = useState([]);
 
+
+//Kedar changes
+  const [user, setUser] = useState([]);
+  const [fname, setNamef] = useState('');
+  const [lname, setNamel] = useState('');
+  const [address, setAddress] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+
+    const firstName = form.fname.value;
+    const lastName = form.lname.value;
+    const addressValue = form.address.value;
+
+    setNamef(firstName);
+    setNamel(lastName);
+    setAddress(addressValue);
+
+    const userData = {
+      firName:firstName,
+      lasName:lastName,
+      addValue:addressValue,
+    };
+
+    // Modify handleSubmit to only update changed fields
+  
+
+    const id = "0010";
+    const userRef = doc(db, "test_kb",id);
+    await setDoc(userRef, userData);
+    const docSnap = await getDoc(userRef);
+
+
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+    } else {
+      console.log("No such document!");
+}
+const newData = { lastLogin: new Date() }; // Example of new data to update
+
+await updateDoc(userRef, newData); // Updates only the fields in newData
+
+  };
+  const clickUpdate = async () => {
+    const userRef = doc(db, "test_kb", "0010");
+    const updatedData = {
+      firName: fname,
+      lasName: lname,
+      addValue: address,
+  };
+
+  try {
+    await updateDoc(userRef, updatedData);
+    console.log("Document successfully updated");
+  } catch (error) {
+    console.error("Error updating document: ", error);
+  }
+};
+const clickDelete = async () => {
+  const userRef = doc(db, "test_kb", "0010");
+  
+
+try {
+  await deleteDoc(userRef);
+  console.log("Document successfully deleted");
+} catch (error) {
+  console.error("Error deleting document: ", error);
+}
+};
+
+
+  useEffect(()=> {
+    const getUsers = async ()=> {
+
+    }
+  },[])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -379,8 +458,38 @@ function HomePage() {
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-16 rounded-2xl bg-white text-black ">
         <FAQs />
       </div>
+
+      <div>
+    <form onSubmit={handleSubmit}>
+      <label htmlFor="fname">First name:</label><br/>
+      <input type="text" id="fname" name="fname" onChange={(e) => setNamef(e.target.value)} value={fname}/>
+      <button type="button" onClick={clickUpdate}>Update</button>
+      <br/>
+      <label htmlFor="lname"> Last name: </label><br/>
+      <input type="text" id="lname" name="lname" onChange={(e) => setNamel(e.target.value)} value={lname}/>
+      <button type="button">Update</button>
+      <br/>
+      <label htmlFor="address">Address:</label><br/>
+      <input type="text" id="address" name="address" onChange={(e) => setAddress(e.target.value)} value={address}/>
+      <button type="button">Update</button>
+      <br/>
+      <button type="submit">Submit</button>
+      <br/>
+      <button type="button" onClick={clickDelete}>Delete</button><br/><br/>
+    </form>
+    
+    <br/>
+    <div>
+      <h3>Submitted Data:</h3>
+      <p><strong>First Name:</strong> {fname}</p>
+      <p><strong>Last Name:</strong> {lname}</p>
+      <p><strong>Address:</strong> {address}</p>
     </div>
-    // </div>
+  </div>
+
+    </div>
+
+    
   );
 }
 
