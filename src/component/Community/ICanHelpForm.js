@@ -10,29 +10,33 @@ import ICanHelpConfirmationModal from "./ICanHelpConfirmationModal";
 
 const ICanHelpForm = () => {
   const navigate = useNavigate();
-  const [success, setSuccess] = useState(false);
   const { id } = useParams();
   const [data, setData] = useState(null);
   const [username, setUserName] = useState("");
   const [outreaches, setOutreaches] = useState([]);
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
       try {
         const result = await fetchHelpReqById(id);
         const user = await fetchUserName(result.uid);
-        const outreacheList = await fetchOutreaches(id);
+        const outreachList = await fetchOutreaches(id);
         setData(result);
         setUserName(user);
-        setOutreaches(outreacheList);
+        setOutreaches(outreachList);
+        setLoading(false);
       } catch (error) {
         console.error(error.message);
+        setError(error.message);
+        setLoading(false);
       }
     };
-    console.log("DATA");
-    console.log(data);
-    getData(); // Invoke the async function
-  }, []);
+    getData();
+  }, [id]);
 
   const fAuth = getAuth();
   onAuthStateChanged(fAuth, (user) => {
@@ -43,7 +47,7 @@ const ICanHelpForm = () => {
     }
   });
 
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  // const [modalIsOpen, setModalIsOpen] = useState(false);
   const openModal = () => {
     setModalIsOpen(true);
   };
@@ -60,6 +64,14 @@ const ICanHelpForm = () => {
       console.log(e);
     }
   };
+  
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="relative flex flex-col items-center ">
@@ -205,7 +217,8 @@ const ICanHelpForm = () => {
           {success && (
             <ICanHelpConfirmationModal
               id={id}
-              outreaches = {outreaches}
+              helpRequestId={data ? data.id : null} // Pass the help request ID to the modal
+              outreaches={outreaches}
             />
           )}
         </div>
