@@ -8,12 +8,15 @@ import {
   addDoc,
 } from "firebase/firestore";
 import { Timestamp } from "firebase/firestore";
+import { getFunctions, httpsCallable } from "firebase/functions";
+import { customUpdateEmail } from "./UpdateEmail2FA";
 
 export async function updateEmailId(newEmailId) {
+
   try {
     console.log(auth);
     const user = auth?.currentUser;
-    
+
     console.log(newEmailId);
     console.log(user?.email);
       
@@ -23,7 +26,7 @@ export async function updateEmailId(newEmailId) {
     const userRef = doc(db, "users", user?.uid);
     const userSnapshot = await getDoc(userRef);
     console.log(user)
-    
+  
     if (userSnapshot.exists()) {
       const userData = userSnapshot.data();
       const oldEmail = userData.email;
@@ -35,7 +38,11 @@ export async function updateEmailId(newEmailId) {
         email: newEmailId
       });
 
-      await updateEmail(user, newEmailId);
+      //await updateEmail(user, newEmailId);// inbuilt update email with verification
+
+      //2. custom update email call without verification step
+      const result = await customUpdateEmail(user, newEmailId)      
+      console.log(result);
 
       const emailChangeLog = collection(db, "auditLog");
       await addDoc(emailChangeLog, {
