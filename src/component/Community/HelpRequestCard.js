@@ -49,7 +49,7 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
           {helpStatus === "Need Help" && (
             <div className="w-fit h-8 px-2 py-1 bg-[#FFECF2] rounded-lg justify-start items-start gap-2 inline-flex">
               <div className="w-6 h-6 relative">
-                <img alt=""src={help_announcement}></img>
+                <img alt="" src={help_announcement}></img>
               </div>
               <div className="text-center text-[#7E0025] text-lg font-semibold font-opensans leading-normal">
                 {helpStatus}
@@ -60,7 +60,7 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
           {helpStatus === "Help on the way" && (
             <div className="w-fit h-8 px-2 py-1 bg-[#FEF9EF] rounded-lg justify-start items-start gap-2 inline-flex">
               <div className="w-6 h-6 relative">
-                <img alt=""src={help_pending}></img>
+                <img alt="" src={help_pending}></img>
               </div>
               <div className="text-center text-[#836A00] text-lg font-semibold font-opensans leading-normal">
                 {helpStatus}
@@ -71,7 +71,7 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
           {helpStatus === "Help Received" && (
             <div className="w-fit h-8 px-2 py-1 bg-[#D4FFEC] rounded-lg justify-start items-start gap-2 inline-flex">
               <div className="w-6 h-6 relative">
-                <img alt=""src={help_received}></img>
+                <img alt="" src={help_received}></img>
               </div>
               <div className="text-center text-[#004905] text-lg font-semibold font-opensans leading-normal">
                 {helpStatus}
@@ -165,22 +165,42 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
             </button>
           </div>
         )}
-        {helpStatus === "Help on the way" && (
-          <div className="col-span-1 h-fit">
-            <button
-              className="w-fit bg-[#E6DCFF] hover:bg-[#6840E0] text-[#181818] hover:text-white rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight md:float-right"
-              onClick={
-                !fAuth?.currentUser?.uid
-                  ? () => {
-                      navigate(`/login`);
-                    }
-                  : (e) => handleHelpRecieved(e, id, refresh)
-              }
-            >
-              Mark as Help Recieved
-            </button>
-          </div>
-        )}
+        {helpStatus === "Help on the way" &&
+          fAuth.currentUser === helpPostingUser && (
+            <div className="col-span-1 h-fit">
+              <button
+                className="w-fit bg-[#E6DCFF] hover:bg-[#6840E0] text-[#181818] hover:text-white rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight md:float-right"
+                onClick={
+                  !fAuth?.currentUser?.uid
+                    ? () => {
+                        navigate(`/login`);
+                      }
+                    : (e) => handleHelpRecieved(e, id, refresh)
+                }
+              >
+                Mark as Help Recieved
+              </button>
+            </div>
+          )}
+        {helpStatus === "Help on the way" &&
+          fAuth.currentUser !== helpPostingUser && (
+            <div className="col-span-1 h-fit">
+              <button
+                onClick={
+                  !fAuth?.currentUser?.uid
+                    ? () => {
+                        navigate(`/login`);
+                      }
+                    : () => {
+                        navigate(`/community/icanhelp/${id}`);
+                      }
+                }
+                className="w-fit bg-[#E6DCFF] hover:bg-[#6840E0] text-[#181818] hover:text-white rounded-[100px] flex-col justify-start gap-2 flex px-4 py-2 md:px-6 md:py-2.5 text-center text-[12px] font-semibold font-inter leading-tight md:float-right"
+              >
+                I can help
+              </button>
+            </div>
+          )}
         {helpStatus === "Help Received" && (
           <div className="col-span-1 h-fit">
             {helpUid === fAuth?.currentUser?.uid && (

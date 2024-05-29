@@ -101,7 +101,10 @@ const OutreachEventCard = ({
 
           <div className="inline-flex items-center gap-2 flex-wrap">
             {skills.map((item, index) => (
-              <div className="py-1 px-3 border border-[#C8C8C8] w-fit rounded-xl text-[12px] text-[#444746]" key={item}>
+              <div
+                className="py-1 px-3 border border-[#C8C8C8] w-fit rounded-xl text-[12px] text-[#444746]"
+                key={item}
+              >
                 {item}
               </div>
             ))}
