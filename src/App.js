@@ -221,7 +221,10 @@ function App() {
           />
           <Route path="/*" element={<Not404 />} />
           <Route path="/temp_profile" element={<Temp_Profile />} />
-          <Route path="/community/allHelpRequests" element={<AllHelpRequests />} />
+          <Route
+            path="/community/allHelpRequests"
+            element={<AllHelpRequests />}
+          />
         </Routes>
         <Footer />
       </Router>
