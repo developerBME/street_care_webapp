@@ -100,13 +100,13 @@ const AllOutreachEvents = () => {
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 20 20"
-                  stroke-width="1.5"
+                  strokeWidth="1.5"
                   stroke="currentColor"
                   class="w-6 h-6 pointer-events-none absolute top-6 transform -translate-y-1/2 left-3"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
                   />
                 </svg>
@@ -114,38 +114,33 @@ const AllOutreachEvents = () => {
             </div>
           </div>
 
-          {eventsDisplay.length == 0 ? (
-            <div className="text-md font-medium font-dmsans text-[#181818] mt-2">
-              No upcoming outreaches
-            </div>
-          ) : (
-            <>
-              {isLoading ? (
-                // <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
-                <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
-                  <EventCardSkeleton />
-                  <EventCardSkeleton />
-                  <EventCardSkeleton />
-                </div>
-              ) : (
-                // <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
-                <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
-                  {eventsDisplay.length > 0 &&
-                    eventsDisplay.map((eventData) => (
-                      <OutreachEventCard
-                        key={eventData.id}
-                        cardData={{
-                          ...eventData,
-                          eventDate: formatDate(
-                            new Date(eventData.eventDate.seconds * 1000)
-                          ),
-                        }}
-                      />
-                    ))}
-                </div>
-              )}
-            </>
-          )}
+          <>
+            {isLoading ? (
+              // <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
+              <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
+                <EventCardSkeleton />
+                <EventCardSkeleton />
+                <EventCardSkeleton />
+              </div>
+            ) : (
+              // <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
+              <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
+                {eventsDisplay.length > 0 &&
+                  eventsDisplay.map((eventData) => (
+                    <OutreachEventCard
+                      key={eventData.id}
+                      cardData={{
+                        ...eventData,
+                        eventDate: formatDate(
+                          new Date(eventData.eventDate.seconds * 1000)
+                        ),
+                      }}
+                    />
+                  ))}
+              </div>
+            )}
+          </>
+
           {/* <>
             {isLoading ? (
               <div className="flex justify-between items-center w-full h-fit">

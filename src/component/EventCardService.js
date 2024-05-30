@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import logEvent from "./FirebaseLogger";
 
 const OFFICIAL_EVENTS_COLLECTION = "officialEvents";
 const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
@@ -17,38 +18,45 @@ const PAST_OUTREACH_EVENTS_COLLECTION = "pastOutreachEvents";
 const USERS_COLLECTION = "users";
 
 export const fetchEvents = async () => {
-  const oureachEventsRef = collection(db, OUTREACH_EVENTS_COLLECTION);
-  const eventSnapshot = await getDocs(oureachEventsRef);
-  let outreachEvents = [];
-  const fAuth = getAuth();
-  onAuthStateChanged(fAuth, (user) => {
-    if (user) {
-      console.log("Found user");
-    } else {
-      console.log("USER NOT FOUND!");
-    }
-  });
-  for (const doc of eventSnapshot.docs) {
-    const eventData = doc.data();
-    const result = await fetchUserDetails(eventData.uid);
-    const userName = result.username;
-    const photoUrl = result.photoUrl;
-
-    let currentParticipants = eventData.participants || [];
-    outreachEvents.push({
-      ...eventData,
-      userName: userName,
-      id: doc.id,
-      label:
-        fAuth.currentUser &&
-        currentParticipants.includes(fAuth?.currentUser?.uid)
-          ? "EDIT"
-          : "RSVP",
-      nop: currentParticipants.length,
-      photoUrl: photoUrl,
+  try {
+    const oureachEventsRef = collection(db, OUTREACH_EVENTS_COLLECTION);
+    const eventSnapshot = await getDocs(oureachEventsRef);
+    let outreachEvents = [];
+    const fAuth = getAuth();
+    onAuthStateChanged(fAuth, (user) => {
+      if (user) {
+        console.log("Found user");
+      } else {
+        console.log("USER NOT FOUND!");
+      }
     });
+    for (const doc of eventSnapshot.docs) {
+      const eventData = doc.data();
+      const result = await fetchUserDetails(eventData.uid);
+      const userName = result.username;
+      const photoUrl = result.photoUrl;
+
+      let currentParticipants = eventData.participants || [];
+      outreachEvents.push({
+        ...eventData,
+        userName: userName,
+        id: doc.id,
+        label:
+          fAuth.currentUser &&
+          currentParticipants.includes(fAuth?.currentUser?.uid)
+            ? "EDIT"
+            : "RSVP",
+        nop: currentParticipants.length,
+        photoUrl: photoUrl,
+      });
+    }
+    return outreachEvents;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchEvents in EventCardService.js- ${error.message}`
+    );
   }
-  return outreachEvents;
 };
 
 async function fetchUserDetailsBatch(userIds) {
@@ -86,57 +94,74 @@ function splitArrayIntoChunksOfLen(arr, len) {
 }
 
 export const fetchPastOutreachEvents = async () => {
-  const pastOureachEventsRef = collection(db, PAST_OUTREACH_EVENTS_COLLECTION);
-  const eventSnapshot = await getDocs(pastOureachEventsRef);
+  try {
+    const pastOureachEventsRef = collection(
+      db,
+      PAST_OUTREACH_EVENTS_COLLECTION
+    );
+    const eventSnapshot = await getDocs(pastOureachEventsRef);
 
-  const userIds = new Set();
-  eventSnapshot.docs.forEach((doc) => userIds.add(doc.data().uid));
+    const userIds = new Set();
+    eventSnapshot.docs.forEach((doc) => userIds.add(doc.data().uid));
 
-  // Fetch user details in batch
-  const userDetails = await fetchUserDetailsBatch(Array.from(userIds));
+    // Fetch user details in batch
+    const userDetails = await fetchUserDetailsBatch(Array.from(userIds));
 
-  // Process events
-  let outreachEvents = eventSnapshot.docs.map((doc) => {
-    const eventData = doc.data();
-    return {
-      ...eventData,
-      userName: userDetails[eventData.uid]?.username,
-      photoUrl: userDetails[eventData.uid]?.photoUrl,
-      id: doc.id,
-      nop: eventData.participants?.length || 0,
-    };
-  });
+    // Process events
+    let outreachEvents = eventSnapshot.docs.map((doc) => {
+      const eventData = doc.data();
+      return {
+        ...eventData,
+        userName: userDetails[eventData.uid]?.username,
+        photoUrl: userDetails[eventData.uid]?.photoUrl,
+        id: doc.id,
+        nop: eventData.participants?.length || 0,
+      };
+    });
 
-  return outreachEvents;
+    return outreachEvents;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchPastOutreachEvents EventCardService.js- ${error.message}`
+    );
+  }
 };
 
 export const fetchOfficialEvents = async () => {
-  const officialEventsRef = collection(db, OFFICIAL_EVENTS_COLLECTION);
-  const snapshot = await getDocs(officialEventsRef);
-  const officialEvents = [];
-  const fAuth = getAuth();
-  onAuthStateChanged(fAuth, (user) => {
-    if (user) {
-      console.log("Found user");
-    } else {
-      console.log("USER NOT FOUND!");
-    }
-  });
-  for (const doc of snapshot.docs) {
-    const eventData = doc.data();
-    let currentParticipants = eventData.participants || [];
-    officialEvents.push({
-      ...eventData,
-      id: doc.id,
-      label:
-        fAuth.currentUser &&
-        currentParticipants.includes(fAuth?.currentUser?.uid)
-          ? "EDIT"
-          : "RSVP",
-      nop: currentParticipants.length,
+  try {
+    const officialEventsRef = collection(db, OFFICIAL_EVENTS_COLLECTION);
+    const snapshot = await getDocs(officialEventsRef);
+    const officialEvents = [];
+    const fAuth = getAuth();
+    onAuthStateChanged(fAuth, (user) => {
+      if (user) {
+        console.log("Found user");
+      } else {
+        console.log("USER NOT FOUND!");
+      }
     });
+    for (const doc of snapshot.docs) {
+      const eventData = doc.data();
+      let currentParticipants = eventData.participants || [];
+      officialEvents.push({
+        ...eventData,
+        id: doc.id,
+        label:
+          fAuth.currentUser &&
+          currentParticipants.includes(fAuth?.currentUser?.uid)
+            ? "EDIT"
+            : "RSVP",
+        nop: currentParticipants.length,
+      });
+    }
+    return officialEvents;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchOfficialEvents EventCardService.js- ${error.message}`
+    );
   }
-  return officialEvents;
 };
 
 const fetchUserName = async (uid) => {
@@ -154,69 +179,87 @@ const fetchUserName = async (uid) => {
     return userDoc.data().username || "";
   } else {
     console.error("No user found with uid:", uid);
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchUserName EventCardService.js- No user Found ${uid}`
+    );
     return "";
   }
 };
 
 export const fetchUserDetails = async (uid) => {
-  // Reference to the uid instead of the docid of the user.
-  const userQuery = query(
-    collection(db, USERS_COLLECTION),
-    where("uid", "==", uid)
-  );
-  const userDocRef = await getDocs(userQuery);
-  // const userDocID = userDocRef.docs[0].id;
-  const userData = userDocRef.docs[0].data();
-  return {
-    username: userData.username || "",
-    photoUrl: userData.photoUrl || "",
-  };
-  // reference for the userdoc
-  // const userRef = doc(db, USERS_COLLECTION, userDocID);
-  // const userDoc = await getDoc(userRef);
-  // if (userDoc.exists()) {
-  //   return {
-  //     username: userDoc.data().username || "",
-  //     photoUrl: userDoc.data().photoUrl || "",
-  //   };
-  // } else {
-  //   console.error("No user found with uid:", uid);
-  //   return "";
-  // }
+  try {
+    // Reference to the uid instead of the docid of the user.
+    const userQuery = query(
+      collection(db, USERS_COLLECTION),
+      where("uid", "==", uid)
+    );
+    const userDocRef = await getDocs(userQuery);
+    // const userDocID = userDocRef.docs[0].id;
+    const userData = userDocRef.docs[0]?.data();
+    return {
+      username: userData?.username || "",
+      photoUrl: userData?.photoUrl || "",
+    };
+    // reference for the userdoc
+    // const userRef = doc(db, USERS_COLLECTION, userDocID);
+    // const userDoc = await getDoc(userRef);
+    // if (userDoc.exists()) {
+    //   return {
+    //     username: userDoc.data().username || "",
+    //     photoUrl: userDoc.data().photoUrl || "",
+    //   };
+    // } else {
+    //   console.error("No user found with uid:", uid);
+    //   return "";
+    // }
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchUserDetails EventCardService.js- ${error.message}`
+    );
+  }
 };
 
 export const fetchEventById = async (eventId) => {
-  // Reference to the specific document in the outreach events collection
-  const eventRef = doc(db, OUTREACH_EVENTS_COLLECTION, eventId);
+  try {
+    // Reference to the specific document in the outreach events collection
+    const eventRef = doc(db, OUTREACH_EVENTS_COLLECTION, eventId);
 
-  const eventSnap = await getDoc(eventRef);
+    const eventSnap = await getDoc(eventRef);
 
-  // Check if the document exists
-  if (!eventSnap.exists()) {
-    console.error("Event not found with id:", eventId);
-    return null;
+    // Check if the document exists
+    if (!eventSnap.exists()) {
+      console.error("Event not found with id:", eventId);
+      return null;
+    }
+
+    const eventData = eventSnap.data();
+
+    const result = eventData.uid
+      ? await fetchUserDetails(eventData.uid)
+      : "Unknown User";
+    const userName = result.username;
+    const photoUrl = result.photoUrl;
+    let currentParticipants = eventData.participants || [];
+    const formattedDate = eventData.eventDate
+      ? formatDate(new Date(eventData.eventDate.seconds * 1000))
+      : "No Date";
+
+    return {
+      ...eventData,
+      userName,
+      eventDate: formattedDate,
+      id: eventSnap.id,
+      photoUrl,
+      nop: currentParticipants.length,
+    };
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchEventById EventCardService.js- ${error.message}`
+    );
   }
-
-  const eventData = eventSnap.data();
-
-  const result = eventData.uid
-    ? await fetchUserDetails(eventData.uid)
-    : "Unknown User";
-  const userName = result.username;
-  const photoUrl = result.photoUrl;
-  let currentParticipants = eventData.participants || [];
-  const formattedDate = eventData.eventDate
-    ? formatDate(new Date(eventData.eventDate.seconds * 1000))
-    : "No Date";
-
-  return {
-    ...eventData,
-    userName,
-    eventDate: formattedDate,
-    id: eventSnap.id,
-    photoUrl,
-    nop: currentParticipants.length,
-  };
 };
 
 export const fetchUserEvents = async (uid) => {
@@ -373,11 +416,17 @@ export const handleRsvp = async (
               });
             }
 
+            logEvent(
+              "STREET_CARE_INFO_OUTREACH",
+              "RSVP added for user" + fAuth.currentUser.uid
+            );
+
             console.log("successfully added outreach to users collection");
           }
           setLabel2("EDIT");
         } catch (error) {
           console.log(error);
+          logEvent("STREET_CARE_ERROR", `error on rsvp- ${error.message}`);
         }
       } else {
         console.log("USER NOT FOUND!");
@@ -449,6 +498,10 @@ export const handleRsvp = async (
                   outreachEvents: currentEvents,
                 });
               }
+              logEvent(
+                "STREET_CARE_INFO_OUTREACH",
+                "RSVP edited for user" + userDocID
+              );
             }
           } else {
             console.log("event not found in the user");
@@ -459,6 +512,7 @@ export const handleRsvp = async (
           }
         } catch (error) {
           console.log(error);
+          logEvent("STREET_CARE_ERROR", `error on rsvp edit- ${error.message}`);
         }
       } else {
         navigate("/login", { replace: true });

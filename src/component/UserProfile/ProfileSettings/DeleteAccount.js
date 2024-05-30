@@ -12,7 +12,7 @@ import {
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
-const DeleteAccount = () => {
+const DeleteAccount = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -30,27 +30,27 @@ const DeleteAccount = () => {
     }));
   };
 
-//Previous handle delete function
+  //Previous handle delete function
 
-//   const handleDeleteAccForm = () => {
-//     if (
-//       !email ||
-//       !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email) ||
-//       ""
-//     ) {
-//       updateErrorState("EmailError", "Email is required");
-//       return;
-//     } else if (email) {
-//       updateErrorState("EmailError", "");
-//     }
+  //   const handleDeleteAccForm = () => {
+  //     if (
+  //       !email ||
+  //       !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email) ||
+  //       ""
+  //     ) {
+  //       updateErrorState("EmailError", "Email is required");
+  //       return;
+  //     } else if (email) {
+  //       updateErrorState("EmailError", "");
+  //     }
 
-//     if (!password) {
-//       updateErrorState("PassError", "Password is required");
-//       return;
-//     } else if (password) {
-//       updateErrorState("PassError", "");
-//     }
-//   };
+  //     if (!password) {
+  //       updateErrorState("PassError", "Password is required");
+  //       return;
+  //     } else if (password) {
+  //       updateErrorState("PassError", "");
+  //     }
+  //   };
 
   const handleTogglePassword = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -85,7 +85,7 @@ const DeleteAccount = () => {
 
       // Sign out
       await signOut(auth);
-      window.location.reload();
+      props.setLoggedIn(false)
     } catch (error) {
       console.error("Error deleting user data", error);
       updateErrorState(
@@ -93,13 +93,14 @@ const DeleteAccount = () => {
         "Error deleting user data. Please try again."
       );
     }
+    console.log(email);
+    navigate("/profile/profilesettings/deleteaccconfirmation", { state: { email: email } });
   };
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
-
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center gap-8 ">
@@ -149,11 +150,10 @@ const DeleteAccount = () => {
                               type="email"
                               id="email"
                               placeholder="patricks_123@email.com"
-                              className={`text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
-                                errormsg.EmailError !== ""
-                                  ? "ring-red-500"
-                                  : "ring-gray-300"
-                              }`}
+                              className={`text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${errormsg.EmailError !== ""
+                                ? "ring-red-500"
+                                : "ring-gray-300"
+                                }`}
                               onChange={(e) => setEmail(e.target.value)}
                             ></input>
                           </div>
@@ -176,14 +176,13 @@ const DeleteAccount = () => {
                         <div className="relative self-stretch bg-white border-stone-300 justify-start items-center gap-2 inline-flex">
                           <div className="grow shrink basis-0 h-10 flex-col rounded-md border-0 justify-center items-start inline-flex">
                             <input
-                              type="password"
+                              type={showPassword ? "text" : "password"}
                               id="password"
                               placeholder="Enter your password"
-                              className={`text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
-                                errormsg.PassError !== ""
-                                  ? "ring-red-500"
-                                  : "ring-gray-300"
-                              }`}
+                              className={`text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${errormsg.PassError !== ""
+                                ? "ring-red-500"
+                                : "ring-gray-300"
+                                }`}
                               onChange={(e) => setPassword(e.target.value)}
                             ></input>
                             <div

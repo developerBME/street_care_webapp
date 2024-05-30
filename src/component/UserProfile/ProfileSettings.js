@@ -10,7 +10,7 @@ const settingOptions = [
     title: "Update your profile",
     logo: <MdOutlineAccountCircle />,
     desc: "Name and Profile picture",
-    href: "/profile/profilesettings/updateemailaddress",
+    href: "/profile/profilesettings/updateprofile",
     key: "updateProfile",
   },
   {
@@ -22,7 +22,7 @@ const settingOptions = [
   {
     title: "Delete your account",
     logo: <MdLockOutline />,
-    href: "/profile/profilesettings/updateemailaddress",
+    href: "/profile/profilesettings/deleteaccount",
     key: "deleteAccount",
   },
 ];

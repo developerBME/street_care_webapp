@@ -82,7 +82,7 @@ const NavBar = (props) => {
     {
       id: 2,
       label: "Account Settings",
-      link: "/profile/accsetting",
+      link: "/profile/profilesettings",
       icons: RiUserSettingsLine,
     },
     {
@@ -188,7 +188,7 @@ const NavBar = (props) => {
                       const Icon = e.icons;
 
                       return (
-                        <>
+                        <React.Fragment key={e.id}>
                           <li className=" px-3 cursor-pointer hover:bg-slate-200">
                             <Link
                               to={e.link}
@@ -204,7 +204,7 @@ const NavBar = (props) => {
                               {e.label}
                             </Link>
                           </li>
-                        </>
+                        </React.Fragment>
                       );
                     })}
                   </ul>

@@ -22,7 +22,8 @@ export async function updateEmailId(newEmailId) {
 
     const userRef = doc(db, "users", user?.uid);
     const userSnapshot = await getDoc(userRef);
-
+    console.log(user)
+    
     if (userSnapshot.exists()) {
       const userData = userSnapshot.data();
       const oldEmail = userData.email;
@@ -36,12 +37,13 @@ export async function updateEmailId(newEmailId) {
 
       await updateEmail(user, newEmailId);
 
-      const emailChangeLog = collection(db, "emailChange");
+      const emailChangeLog = collection(db, "auditLog");
       await addDoc(emailChangeLog, {
         oldEmail,
         newEmail: newEmailId,
         uid,
-        timestamp: Timestamp.now()
+        timestamp: Timestamp.now(),
+        type: 'email change'
       });
 
       console.log("New email updated");

@@ -12,11 +12,13 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const HELP_REQ_COLLECTION = "helpRequests";
 const USERS_COLLECTION = "users";
+const OUTREACHES_COLLECTION = "outreachEvents";
 
 export const fetchHelpRequests = async () => {
     const helpReqRef = collection(db, HELP_REQ_COLLECTION);
     const helpSnapshot = await getDocs(helpReqRef);
     let helpRequests = [];
+
     const fAuth = getAuth();
     onAuthStateChanged(fAuth, (user) => {
         if (user) {
@@ -25,6 +27,7 @@ export const fetchHelpRequests = async () => {
             console.log("USER NOT FOUND!");
         }
     });
+
     for (const doc of helpSnapshot.docs) {
         const helpData = doc.data();
         const id = doc.id;
@@ -42,21 +45,21 @@ export const fetchHelpRequests = async () => {
 export const fetchHelpReqById = async (helpReqId) => {
     // Reference to the specific document in the Help Request collection
     const helpRef = doc(db, HELP_REQ_COLLECTION, helpReqId);
-  
+
     const helpSnap = await getDoc(helpRef);
-  
+
     // Check if the document exists
     if (!helpSnap.exists()) {
-      console.error("Help Request not found with id:", helpReqId);
-      return null;
+        console.error("Help Request not found with id:", helpReqId);
+        return null;
     }
 
     const helpData = helpSnap.data();
     return {
         ...helpData,
-      };
+    };
 };
-  
+
 
 export const fetchUserName = async (uid) => {
     // Reference to the uid instead of the docid of the user.
@@ -112,28 +115,54 @@ export function formatDate(dateObj) {
     return `${month} ${day}, ${year} ${weekday} ${formattedTime}`;
 }
 
-export const handleHelpRecieved = async (e,id,refresh) => {
+export const handleHelpRecieved = async (e, id, refresh) => {
     e.preventDefault();
     // Reference to the specific document in the Help Request collection
     const helpRequestRef = doc(db, HELP_REQ_COLLECTION, id);
     const updateRef = await updateDoc(helpRequestRef, {
-        status : "Help Received",
-      });
+        status: "Help Received",
+    });
     console.log("HELP REQ UPDATED");
     if (typeof refresh == "function") {
         refresh();
-      }
+    }
 };
 
-export const handleReopenHelpRequest = async (e,id,refresh) => {
+export const handleReopenHelpRequest = async (e, id, refresh) => {
     e.preventDefault();
     // Reference to the specific document in the Help Request collection
     const helpRequestRef = doc(db, HELP_REQ_COLLECTION, id);
     const updateRef = await updateDoc(helpRequestRef, {
-        status : "Need Help",
-      });
+        status: "Need Help",
+    });
     console.log("HELP REQ UPDATED");
     if (typeof refresh == "function") {
         refresh();
-      }
+    }
+};
+
+export async function fetchOutreaches(helpRequestId) {
+    console.log("Fetching outreaches for helpRequestId: ", helpRequestId);
+    
+    try {
+        const outreachesRef = collection(db, OUTREACHES_COLLECTION);
+        const outreachQuery = query(outreachesRef, where('helpRequest', 'array-contains', helpRequestId));
+        const snapshot = await getDocs(outreachQuery);
+        
+        if (snapshot.empty) {
+            console.log('No matching outreaches found.');
+            return [];
+        }
+
+        let outreaches = [];
+        snapshot.forEach(doc => {
+            outreaches.push({ id: doc.id, ...doc.data() });
+        });
+
+        console.log('Fetched outreaches: ', outreaches);
+        return outreaches;
+    } catch (error) {
+        console.error("Error fetching outreaches: ", error);
+        throw error;
+    }
 };
