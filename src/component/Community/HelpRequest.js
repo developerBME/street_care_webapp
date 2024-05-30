@@ -307,7 +307,7 @@ const HelpRequest = () => {
           <div
             className="flex flex-row cursor-pointer gap-2 items-center"
             onClick={() => {
-              navigate("/allHelpRequests");
+              navigate("/community/allHelpRequests");
             }}
           >
             <div className="font-medium text-[16px] lg:text-[20px] font-dmsans text-[#37168B] whitespace-nowrap">

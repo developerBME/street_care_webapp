@@ -63,6 +63,10 @@ const handleGoogleSignIn = async (e) => {
       };
       const userRef = doc(db, "users", user.uid);
       setDoc(userRef, userData);
+      logEvent(
+        "STREET_CARE_INFO_AUTH",
+        `${user.email} has logged in via Google`
+      );
     }
 
     // setTimeout(() => {
@@ -75,6 +79,7 @@ const handleGoogleSignIn = async (e) => {
     const email = error.customData.email;
     // The AuthCredential type that was used.
     const credential = GoogleAuthProvider.credentialFromError(error);
+    logEvent("STREET_CARE_ERROR", `at Google login - ${errorMessage}`);
   }
 };
 
@@ -111,6 +116,10 @@ const handleFacebookSignIn = async (e) => {
       };
       const userRef = doc(db, "users", user.uid);
       setDoc(userRef, userData);
+      logEvent(
+        "STREET_CARE_INFO_AUTH",
+        `${user.email} has logged in via Facebook`
+      );
     }
 
     // setTimeout(() => {
@@ -123,6 +132,7 @@ const handleFacebookSignIn = async (e) => {
     const email = error.customData.email;
     // The AuthCredential type that was used.
     const credential = FacebookAuthProvider.credentialFromError(error);
+    logEvent("STREET_CARE_ERROR", `at Facebook login - ${errorMessage}`);
   }
 };
 
@@ -164,6 +174,10 @@ const handleTwitterSignIn = async (e) => {
       };
       const userRef = doc(db, "users", user.uid);
       setDoc(userRef, userData);
+      logEvent(
+        "STREET_CARE_INFO_AUTH",
+        `${user.email} has logged in via Twitter`
+      );
     }
 
     // setTimeout(() => {
@@ -176,6 +190,7 @@ const handleTwitterSignIn = async (e) => {
     const email = error.customData.email;
     // The AuthCredential type that was used.
     const credential = TwitterAuthProvider.credentialFromError(error);
+    logEvent("STREET_CARE_ERROR", `at Twitter login - ${errorMessage}`);
   }
 };
 

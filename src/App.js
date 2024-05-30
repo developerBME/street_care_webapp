@@ -49,6 +49,7 @@ import DeleteAccount from "./component/UserProfile/ProfileSettings/DeleteAccount
 import PersonalVisitLogDetails from "./component/Community/PersonalVisitLogDetails";
 import EmailUpdateConfirmation from "./component/UserProfile/ProfileSettings/EmailUpdateConfirmation";
 import DeleteAccConfirmation from "./component/UserProfile/ProfileSettings/DeleteAccConfirmation";
+import UpdateProfile from "./component/UserProfile/ProfileSettings/UpdateProfile";
 
 function App() {
   const fAuth = getAuth();
@@ -146,6 +147,10 @@ function App() {
               element={<ProfileSettings />}
             />
             <Route
+              path="/profile/profilesettings/updateprofile"
+              element={<UpdateProfile />}
+            />
+            <Route
               path="/profile/profilesettings/updateemailaddress"
               element={<UpdateEmailAddress />}
             />
@@ -155,12 +160,9 @@ function App() {
             />
             <Route
               path="/profile/profilesettings/deleteaccount"
-              element={<DeleteAccount />}
+              element={<DeleteAccount setLoggedIn={setLoggedIn} />}
             />
-            <Route
-              path="/profile/profilesettings/deleteaccconfirmation"
-              element={<DeleteAccConfirmation />}
-            />
+
             <Route path="/profile/commoutform" element={<CommOutForm />} />
             <Route
               path="/profile/personaloutform"
@@ -173,7 +175,10 @@ function App() {
             />
             <Route path="/helpRequestForm" element={<HelpRequestForm />} />
           </Route>
-
+          <Route
+            path="/profile/profilesettings/deleteaccconfirmation"
+            element={<DeleteAccConfirmation />}
+          />
           <Route path="/profile/select-outreach" element={<Documenting />} />
 
           {/* <Route path="/profile/commoutform" element={<ComingSoon />} /> */}
@@ -188,7 +193,7 @@ function App() {
           {/* <Route path="/helpRequestEventWindow" element={<ComingSoon />} /> */}
 
           {/* <Route path="/helpRequestForm" element={<ComingSoon />} /> */}
-          <Route path="/icanhelp/:id" element={<ICanHelpForm />} />
+          <Route path="/community/icanhelp/:id" element={<ICanHelpForm />} />
           {/* <Route path="/icanhelp" element={<ComingSoon />} /> */}
           {/* <Route path="/donateForm" element={<DonateForm />} /> */}
           <Route path="/donateForm" element={<ComingSoon />} />
@@ -216,7 +221,10 @@ function App() {
           />
           <Route path="/*" element={<Not404 />} />
           <Route path="/temp_profile" element={<Temp_Profile />} />
-          <Route path="/allHelpRequests" element={<AllHelpRequests />} />
+          <Route
+            path="/community/allHelpRequests"
+            element={<AllHelpRequests />}
+          />
         </Routes>
         <Footer />
       </Router>

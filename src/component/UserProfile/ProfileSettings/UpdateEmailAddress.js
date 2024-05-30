@@ -94,22 +94,13 @@ const UpdateEmailAddress = () => {
     //   setIsSubmitted((prevState) => prevState + 1);
     // }
 
-    if (
-      !email ||
-      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email) ||
-      ""
-    ) {
-      updateErrorState("EmailError", "Email is required");
-      return;
-    } else if (email) {
-      updateErrorState("EmailError", "");
-    }
-
     if (!password) {
       updateErrorState("PassError", "Password is required");
+      console.log("!password");
       return;
     } else if (password) {
       updateErrorState("PassError", "");
+      console.log("else if");
     }
 
     //G relogin code
@@ -117,10 +108,16 @@ const UpdateEmailAddress = () => {
     //const user = getAuth().currentUser;
 
     // Current user's reauthentication
-    const credential = EmailAuthProvider.credential(fAuth.currentUser.email, password);
+    const credential = EmailAuthProvider.credential(
+      fAuth.currentUser.email,
+      password
+    );
     try {
-      const response = await reauthenticateWithCredential(fAuth.currentUser, credential);
-      console.log('after relogin'); 
+      const response = await reauthenticateWithCredential(
+        fAuth.currentUser,
+        credential
+      );
+      console.log("after relogin");
       console.log(response);
       console.log(email, fAuth?.currentUser.uid, Date.now().toString());
       //sending verification code to new email after user relogin
@@ -130,13 +127,25 @@ const UpdateEmailAddress = () => {
         Date.now().toString()
       );
       console.log(newEmailSendCodeResponse);
+      if (
+        !email ||
+        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email) ||
+        ""
+      ) {
+        updateErrorState("EmailError", "Email is required");
+        return;
+      } else if (email) {
+        updateErrorState("EmailError", "");
+      }
+      setCurrentStep("VERIFY_CODE");
     } catch (error) {
       // Reauthentication failed, handling the error
       updateErrorState("PassError", "Incorrect Password");
       console.error("Reauthentication Failed!", error);
+      console.log("catch error");
+      return;
     }
 
-    setCurrentStep("VERIFY_CODE");
     setMinutes(4);
     setSeconds(59);
     // document.getElementById("email-update-form").reset();
@@ -164,12 +173,14 @@ const UpdateEmailAddress = () => {
       verificationCode
     );
     console.log(response.status);
-    
-    if (response.status === 200) { //On verifying code, updating email
+
+    if (response.status === 200) {
+      //On verifying code, updating email
       updateEmailId(email);
       navigate("/profile/profilesettings/emailupdateconfirmation");
     } else {
       console.log("Invalid code");
+      updateErrorState("CodeError", "Invalid code")
     }
 
     setVerificationCode("");
@@ -286,36 +297,6 @@ const UpdateEmailAddress = () => {
                       <div className="self-stretch h-fit flex-col justify-start items-start gap-4 flex">
                         <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
                           <div className="self-stretch text-zinc-700 text-[15px] font-medium font-inter leading-tight">
-                            New Email Address
-                          </div>
-                          <div className="self-stretch  bg-white border-stone-300 justify-start items-center gap-2 inline-flex">
-                            <div className="grow shrink basis-0 h-10 flex-col rounded-md border-0 justify-center items-start inline-flex">
-                              <input
-                                type="email"
-                                id="email"
-                                placeholder="Enter new email address"
-                                className={`text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
-                                  errormsg.EmailError !== ""
-                                    ? "ring-red-500"
-                                    : "ring-gray-300"
-                                }`}
-                                onChange={(e) => setEmail(e.target.value)}
-                              ></input>
-                            </div>
-                          </div>
-                          {errormsg.EmailError && (
-                            <div className="inline-flex items-center gap-1.5">
-                              <img alt="" src={errorImg} className="w-3 h-3" />
-                              <div className="text-red-700 font-dmsans">
-                                {errormsg.EmailError}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      <div className="self-stretch h-fit flex-col justify-start items-start gap-4 flex">
-                        <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
-                          <div className="self-stretch text-zinc-700 text-[15px] font-medium font-inter leading-tight">
                             Password
                           </div>
                           <div className="relative self-stretch bg-white border-stone-300 justify-start items-center gap-2 inline-flex">
@@ -344,6 +325,37 @@ const UpdateEmailAddress = () => {
                               <img src={errorImg} className="w-3 h-3" />
                               <div className="text-red-700 font-dmsans">
                                 {errormsg.PassError}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex border-t-2 "></div>
+                      <div className="self-stretch h-fit flex-col justify-start items-start gap-4 flex">
+                        <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
+                          <div className="self-stretch text-zinc-700 text-[15px] font-medium font-inter leading-tight">
+                            New Email Address
+                          </div>
+                          <div className="self-stretch  bg-white border-stone-300 justify-start items-center gap-2 inline-flex">
+                            <div className="grow shrink basis-0 h-10 flex-col rounded-md border-0 justify-center items-start inline-flex">
+                              <input
+                                type="email"
+                                id="email"
+                                placeholder="Enter new email address"
+                                className={`text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
+                                  errormsg.EmailError !== ""
+                                    ? "ring-red-500"
+                                    : "ring-gray-300"
+                                }`}
+                                onChange={(e) => setEmail(e.target.value)}
+                              ></input>
+                            </div>
+                          </div>
+                          {errormsg.EmailError && (
+                            <div className="inline-flex items-center gap-1.5">
+                              <img alt="" src={errorImg} className="w-3 h-3" />
+                              <div className="text-red-700 font-dmsans">
+                                {errormsg.EmailError}
                               </div>
                             </div>
                           )}
@@ -392,7 +404,7 @@ const UpdateEmailAddress = () => {
                               <input
                                 type="text"
                                 id="verficationCode"
-                                placeholder="845672"
+                                placeholder="Eg. 845672"
                                 maxLength="6"
                                 value={verificationCode}
                                 className={`text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
@@ -459,13 +471,14 @@ const UpdateEmailAddress = () => {
                     Steps to update your email address
                   </div>
                   <div className="text-base font-normal">
-                    Ensure you have access to your new email address before proceeding. 
+                    Ensure you have access to your new email address before
+                    proceeding.
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
                   <div className="flex flex-row gap-2 items-center">
                     <div className="text-base font-bold">
-                      Step 1 - Enter New Email and Existing Password
+                      Step 1 - Enter Existing Password and New Email
                     </div>
                     {currentStep === "UPDATE_EMAIL" ? (
                       <AiOutlineLoading3Quarters className="text-green-300" />
@@ -474,7 +487,7 @@ const UpdateEmailAddress = () => {
                     )}
                   </div>
                   <div className="text-base font-normal">
-                    Enter your new email address and existing password.
+                    Confirm existing password associated with the existing email and the enter your new email address.
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
