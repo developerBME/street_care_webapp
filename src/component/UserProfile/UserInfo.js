@@ -219,7 +219,7 @@ const UserInfo = () => {
               label=""
               name="buttonicon8"
               icon={edit}
-              onClick={() => navigate("/profile/accsetting")}
+              onClick={() => navigate("/profile/profilesettings/updateprofile")}
             />
           </div>
         </div>
