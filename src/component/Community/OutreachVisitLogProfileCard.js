@@ -24,6 +24,15 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData }) => {
                   {visitLogCardData?.city || ""},{" "}
                   {visitLogCardData?.state || ""}
                 </div>
+                <div className="px-1">
+                  <CustomButton
+                    label="Edit"
+                    name="buttonlightsmall"
+                    onClick={() => {
+                      navigate(`/profile/personaloutform/${visitLogCardData.id}`);
+                    }}
+                  />
+                </div>
               </div>
             </div>
             <div class="text-zinc-700 text-[12px] font-normal font-bricolage leading-snug mt-2 mb-2 px-1">
