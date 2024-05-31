@@ -56,6 +56,7 @@ export const fetchEvents = async () => {
       "STREET_CARE_ERROR",
       `error on fetchEvents in EventCardService.js- ${error.message}`
     );
+    throw error;
   }
 };
 
@@ -125,6 +126,7 @@ export const fetchPastOutreachEvents = async () => {
       "STREET_CARE_ERROR",
       `error on fetchPastOutreachEvents EventCardService.js- ${error.message}`
     );
+    throw error;
   }
 };
 
@@ -161,6 +163,7 @@ export const fetchOfficialEvents = async () => {
       "STREET_CARE_ERROR",
       `error on fetchOfficialEvents EventCardService.js- ${error.message}`
     );
+    throw error;
   }
 };
 
@@ -181,6 +184,9 @@ const fetchUserName = async (uid) => {
     console.error("No user found with uid:", uid);
     logEvent(
       "STREET_CARE_ERROR",
+      `error on fetchUserName EventCardService.js- No user Found ${uid}`
+    );
+    throw new Error(
       `error on fetchUserName EventCardService.js- No user Found ${uid}`
     );
     return "";
@@ -218,6 +224,7 @@ export const fetchUserDetails = async (uid) => {
       "STREET_CARE_ERROR",
       `error on fetchUserDetails EventCardService.js- ${error.message}`
     );
+    throw error;
   }
 };
 
@@ -259,47 +266,56 @@ export const fetchEventById = async (eventId) => {
       "STREET_CARE_ERROR",
       `error on fetchEventById EventCardService.js- ${error.message}`
     );
+    throw error;
   }
 };
 
 export const fetchUserEvents = async (uid) => {
-  const userQuery = query(
-    collection(db, USERS_COLLECTION),
-    where("uid", "==", uid)
-  );
-  const userDocRef = await getDocs(userQuery);
-  if (userDocRef.docs.length === 0) {
-    console.error("User document not found for uid:", uid);
-    return [];
-  }
-  // const userDocID = userDocRef.docs[0].id;
-  const userData = userDocRef.docs[0].data();
-  // reference for the userdoc
-  // const userRef = doc(db, USERS_COLLECTION, userDocID);
-  // const userDoc = await getDoc(userRef);
-
-  // if (!userDoc.exists()) {
-  //   console.error("User not found:", uid);
-  //   return [];
-  // }
-
-  // const eventIds = userDoc.data().outreachEvents || [];
-  const eventIds = userData.outreachEvents || [];
-  const eventsData = [];
-
-  for (let eventId of eventIds) {
-    const eventRef = doc(db, OUTREACH_EVENTS_COLLECTION, eventId);
-    const eventDoc = await getDoc(eventRef);
-    if (eventDoc.exists()) {
-      const eventData = eventDoc.data();
-      eventsData.push({
-        ...eventData,
-        id: eventDoc.id,
-      });
+  try {
+    const userQuery = query(
+      collection(db, USERS_COLLECTION),
+      where("uid", "==", uid)
+    );
+    const userDocRef = await getDocs(userQuery);
+    if (userDocRef.docs.length === 0) {
+      console.error("User document not found for uid:", uid);
+      return [];
     }
-  }
+    // const userDocID = userDocRef.docs[0].id;
+    const userData = userDocRef.docs[0].data();
+    // reference for the userdoc
+    // const userRef = doc(db, USERS_COLLECTION, userDocID);
+    // const userDoc = await getDoc(userRef);
 
-  return eventsData;
+    // if (!userDoc.exists()) {
+    //   console.error("User not found:", uid);
+    //   return [];
+    // }
+
+    // const eventIds = userDoc.data().outreachEvents || [];
+    const eventIds = userData.outreachEvents || [];
+    const eventsData = [];
+
+    for (let eventId of eventIds) {
+      const eventRef = doc(db, OUTREACH_EVENTS_COLLECTION, eventId);
+      const eventDoc = await getDoc(eventRef);
+      if (eventDoc.exists()) {
+        const eventData = eventDoc.data();
+        eventsData.push({
+          ...eventData,
+          id: eventDoc.id,
+        });
+      }
+    }
+
+    return eventsData;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchUserEvents EventCardService.js- ${error.message}`
+    );
+    throw error;
+  }
 };
 
 export function formatDate(dateObj) {
@@ -427,6 +443,7 @@ export const handleRsvp = async (
         } catch (error) {
           console.log(error);
           logEvent("STREET_CARE_ERROR", `error on rsvp- ${error.message}`);
+          throw error;
         }
       } else {
         console.log("USER NOT FOUND!");
@@ -513,6 +530,7 @@ export const handleRsvp = async (
         } catch (error) {
           console.log(error);
           logEvent("STREET_CARE_ERROR", `error on rsvp edit- ${error.message}`);
+          throw error;
         }
       } else {
         navigate("/login", { replace: true });
