@@ -223,6 +223,7 @@ function App() {
 
           <Route path="/test" element={<TestUser />} />
           <Route path="/list" element={<ListUser />} />
+          <Route path="/profile/personaloutform/:id" element={<PersonalOutForm />} />
 
         </Routes>
         <Footer />
