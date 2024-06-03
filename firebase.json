@@ -9,6 +9,10 @@
         "firebase-debug.log",
         "firebase-debug.*.log"
       ]
+    },
+    {
+      "source": "functions/delUserOutreaches",
+      "codebase": "del-user-outreaches"
     }
   ]
 }

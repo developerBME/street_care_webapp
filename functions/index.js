@@ -2,8 +2,8 @@ const functions = require('firebase-functions');
 const { google } = require('googleapis');
 const nodemailer = require('nodemailer');
 const cors = require('cors')({ origin: true });
-const admin = require('firebase-admin');
-admin.initializeApp();
+//const admin = require('firebase-admin');
+//admin.initializeApp();
 
 const CLIENT_ID = '223295299587-dinnroh9j2lb858kphbgb96f8t6j0eq2.apps.googleusercontent.com';
 const CLIENT_SECRET = 'anpX22WnN_boI0nx64wDSGZX';
@@ -60,28 +60,5 @@ exports.sendOutreachEmail = functions.https.onRequest((req, res) => {
   });
 });
 
-// New function to delete all outreaches made by a user when the user profile is deleted
-exports.deleteUserOutreaches = functions.firestore
-  .document('users/{uid}')
-  .onDelete(async (snap, context) => {
-    const userId = context.params.uid;
-    //console.log(`User ID: ${userId} deleted`);
-    const outreachesRef = admin.firestore().collection('outreachEvents');
-    const query = outreachesRef.where('uid', '==', userId);
-    try {
-      const outreachesSnapshot = await query.get();
-      if (outreachesSnapshot.empty) {
-        console.log(`No outreach documents found for user ID: ${userId}`);
-        return null;
-      }
-      const batch = admin.firestore().batch();
-      outreachesSnapshot.forEach(doc => {
-        console.log(`Deleting outreach document ID: ${doc.id}`);
-        batch.delete(doc.ref);
-      });
-      await batch.commit();
-      console.log(`Deleted outreach documents for user ID: ${userId}`);
-    } catch (error) {
-      console.error(`Error deleting outreach documents for user ID: ${userId}`, error);
-    }
-  });
+//const { deleteUserOutreaches } = require('./delUserOutreaches');
+//exports.deleteUserOutreaches = deleteUserOutreaches;
