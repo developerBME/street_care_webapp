@@ -169,7 +169,7 @@ const DeleteAccount = (props) => {
                       <input type={showPassword ? "text" : "password"}
                         id="password"
                         placeholder="Enter your password"
-                        className={` text-zinc-700 w-full h-12 px-6 py-2 my-1.5 border-gray-200 rounded-[6px] font-dmsans font-inter leading-snug tracking-wide ring-1 ring-inset ring-gray-200 ${errormsg.PassError !== ""
+                        className={` text-zinc-700 w-full h-12 px-6 py-2 my-1.5 border-gray-200 rounded-[6px] font-dmsans leading-snug tracking-wide ring-1 ring-inset ring-gray-200 ${errormsg.PassError !== ""
                           ? "ring-red-500"
                           : "ring-gray-300"
                           }`}

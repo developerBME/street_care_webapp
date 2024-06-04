@@ -214,14 +214,15 @@ const UserInfo = () => {
             alt="..."
             className="rounded-full md:w-64 md:h-48 lg:w-72 lg:h-56 border-none md:mt-16 lg:mt-20 h-32 w-32 mx-auto mt-8 mb-4 "
           />
-          <div className="absolute left-0 bottom-0 ml-4 mb-2 md:ml-0 md:mb-0">
+          //Removing extra update profile button 
+          {/* <div className="absolute left-0 bottom-0 ml-4 mb-2 md:ml-0 md:mb-0">
             <CustomButton
               label=""
               name="buttonicon8"
               icon={edit}
               onClick={() => navigate("/profile/profilesettings/updateprofile")}
             />
-          </div>
+          </div> */}
         </div>
         <div className="w-[99%] py-4 md:mt-16 lg:mt-20">
           <div className="px-4">

@@ -191,7 +191,7 @@ const UpdateProfile = () => {
       await updateDoc(userRef, {
         username: username.current.value,
       });
-      setSuccess("Successfully updated display name");
+      setSuccess("Successfully updated display name"); 
     } else if (imgRef.current.value !== "") {
       setUserimageError("");
       uploadProfileImage(
@@ -239,6 +239,13 @@ const UpdateProfile = () => {
                   aria-label="breadcrumb"
                   separator={<NavigateNextIcon />}
                 >
+                  <Link
+                    underline="hover"
+                    href="/Profile"
+                    className="font-dmsans"
+                  >
+                    Profile
+                  </Link>
                   <Link
                     underline="hover"
                     href="../ProfileSettings"
@@ -313,7 +320,8 @@ const UpdateProfile = () => {
                                   id="username"
                                   value={newUsername}
                                   ref={username}
-                                  placeholder="Profile Name"
+                                  placeholder="Eg. John Doe"
+                                  maxLength="20"
                                   className={`text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
                                     errormsg.ProfileNameError !== ""
                                       ? "ring-red-500"
