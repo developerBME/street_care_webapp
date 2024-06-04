@@ -571,7 +571,7 @@ const Form = (hrid) => {
   return (
     <div>
       <form className="space-y-6 " onSubmit={handleSubmit}>
-        <div>
+        <div className="md:p-12 lg:p-0">
           <div className="lg:text-5xl text-3xl font-medium font-bricolage pb-4 lg:pb-16">
             Create Outreach Event
           </div>
@@ -1025,7 +1025,7 @@ const Form = (hrid) => {
             <div></div>
           </div>
         </div>
-        <div className="space-y-6">
+        <div className="space-y-6 md:px-12 lg:px-0">
           <div className="font-semibold font-bricolage text-[22px]">
             What kind of help they need?
           </div>
@@ -1082,7 +1082,7 @@ const Form = (hrid) => {
             ))}
           </div>
         </div>
-        <div className="space-y-16 space-x-[15px]">
+        <div className="space-y-16 space-x-[15px] md:px-12 md:pb-12 lg:px-0 lg:pb-0">
           <Link to="/profile">
             <button
               type="button"
