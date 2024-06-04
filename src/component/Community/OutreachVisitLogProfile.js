@@ -20,23 +20,28 @@ const OutreachVisitLogProfile = () => {
   const [visitLogs, setVisitLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const user = auth.currentUser;
+  const fetchData = async () => {
+    const user = auth.currentUser;
 
-      if (user) {
-        const logs = await fetchPersonalVisitLogs(auth?.currentUser?.uid);
-        setVisitLogs(logs);
-        setIsLoading(false);
-        console.log("This is from fetchpersonalvisitlog", logs);
-        // Extract states and remove duplicates
-      } else {
-        console.log("No user is signed in.");
-        setVisitLogs([]);
-      }
-    };
+    if (user) {
+      const logs = await fetchPersonalVisitLogs(auth?.currentUser?.uid);
+      setVisitLogs(logs);
+      setIsLoading(false);
+      console.log("This is from fetchpersonalvisitlog", logs);
+      // Extract states and remove duplicates
+    } else {
+      console.log("No user is signed in.");
+      setVisitLogs([]);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, [auth.currentUser]);
+
+  const handleRefresh = () => {
+    fetchData();
+  };
 
   return (
     <div>
@@ -75,6 +80,7 @@ const OutreachVisitLogProfile = () => {
                   /> */}
                     <OutreachVisitLogProfileCard
                       visitLogCardData={visitLogData}
+                      onRefresh={handleRefresh} 
                     />
                   </div>
                 </div>

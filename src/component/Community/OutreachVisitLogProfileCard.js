@@ -3,9 +3,56 @@ import location from "../../images/location_on.svg";
 import calender from "../../images/calendar_month.svg";
 import CustomButton from "../Buttons/CustomButton";
 import { useNavigate } from "react-router-dom";
+import { doc, deleteDoc, query, collection, where, getDocs, getDoc, updateDoc } from "firebase/firestore";
+import { db } from "../firebase";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-const OutreachVisitLogProfileCard = ({ visitLogCardData }) => {
+const USERS_COLLECTION = "users";
+
+const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
   const navigate = useNavigate();
+
+     /* Firebase */
+     const fAuth = getAuth();
+     onAuthStateChanged(fAuth, (user) => {
+       if (user) {
+         console.log("Found user");
+       } else {
+         console.log("USER NOT FOUND!");
+         // navigate("/login");
+       }
+     });
+
+  const deleteVisitLog = async (id) => {
+    try {
+        const visitLogDoc = doc(db,"personalVisitLog",id);
+
+        const userQuery = query(
+          collection(db, USERS_COLLECTION),
+          where("uid", "==", fAuth?.currentUser?.uid)
+        );
+        const userDocRef = await getDocs(userQuery);
+
+        const userDocID = userDocRef.docs[0].id;
+        // // reference for the userdoc
+        const userRef = doc(db, USERS_COLLECTION, userDocID);
+        // // outreach event collection
+        const docSnap = await getDoc(userRef);
+        let personalVisitLogs = docSnap.data().personalVisitLogs || [];
+        personalVisitLogs = personalVisitLogs.filter(x=>x != id);
+        
+        await deleteDoc(visitLogDoc);
+        await updateDoc(userRef, {
+          personalVisitLogs: personalVisitLogs,
+         });
+        alert("Log deleted successfully");
+        onRefresh();
+       // window.location.reload();
+    } catch(err) {
+        console.log(err);
+    }
+}
+
   return (
     <div className="bg-[#F5EEFE] rounded-[30px] flex flex-col h-full">
       <div className="flex-1 px-4 xl:py-1.5 lg:py-4 py-3">
@@ -31,6 +78,13 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData }) => {
                     onClick={() => {
                       navigate(`/profile/personaloutform/${visitLogCardData.id}`);
                     }}
+                  />
+                </div>
+                <div className="px-1">
+                  <CustomButton
+                    label="Delete"
+                    name="buttonlightsmall"
+                    onClick={() => {(deleteVisitLog(visitLogCardData.id)) }}
                   />
                 </div>
               </div>
