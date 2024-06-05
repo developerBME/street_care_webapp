@@ -4,7 +4,11 @@ import { IoIosArrowBack } from "react-icons/io";
 import CustomButton from "../Buttons/CustomButton";
 import help_announcement from "../../images/help_announcement.png";
 import ConfirmationModal from "./ConfirmationModal";
-import { fetchHelpReqById, fetchUserName, fetchOutreaches } from "../HelpRequestService";
+import {
+  fetchHelpReqById,
+  fetchUserName,
+  fetchOutreaches,
+} from "../HelpRequestService";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import ICanHelpConfirmationModal from "./ICanHelpConfirmationModal";
 
@@ -14,7 +18,7 @@ const ICanHelpForm = () => {
   const [data, setData] = useState(null);
   const [username, setUserName] = useState("");
   const [outreaches, setOutreaches] = useState([]);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -64,7 +68,7 @@ const ICanHelpForm = () => {
       console.log(e);
     }
   };
-  
+
   if (loading) {
     return <div>Loading...</div>;
   }
