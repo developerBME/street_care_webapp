@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "./firebase";
+import { db } from "./firebase";  // Ensure this path is correct for your Firebase configuration
 
 function UserList() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -13,45 +14,61 @@ function UserList() {
         const querySnapshot = await getDocs(collection(db, "users"));
         const userList = [];
         querySnapshot.forEach((doc) => {
-          userList.push({ id: doc.id, ...doc.data() });
-        });
-        // Sorting users by name, placing 'No name available' at the end
-        userList.sort((a, b) => {
-          const nameA = a.username || "zzzzz"; // Using 'zzzzz' as a high-value string to ensure it sorts last
-          const nameB = b.username || "zzzzz";
-          return nameA.localeCompare(nameB);
+          const userData = { id: doc.id, ...doc.data() };
+          if (userData.deviceType && userData.deviceType.trim() === "Web") {
+            userList.push(userData);
+          }
         });
         setUsers(userList);
       } catch (error) {
-        console.error("Error fetching user data: ", error);
+        console.error("Error fetching user data:", error);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchUsers();
   }, []);
 
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredUsers = users.filter(user =>
+    user.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.email?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   if (loading) {
-    return <div style={{ fontSize: '20px', fontWeight: 'bold', textAlign: 'center', marginTop: '20px' }}>Loading...</div>;
+    return <div>Loading...</div>;
   }
 
   return (
-    <div style={{ background: 'linear-gradient(to tr, #E4EEEA 10%, #E4EEEA 60%, #EAEEB5 90%)', minHeight: '100vh', padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div style={{ padding: '20px' }}>
       <h2>User List</h2>
-      <table style={{ width: '80%', maxWidth: '600px', backgroundColor: 'white', borderCollapse: 'collapse', boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)', marginTop: '20px' }}>
+      <div style={{ marginTop: '50px', width: '100%', maxWidth: '600px' }}>
+        <input 
+          type="text"
+          placeholder="Search users..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+          style={{ padding: '10px', marginBottom: '20px', borderRadius: '5px', border: '1px solid #ccc', width: '100%' }}
+        />
+      </div>
+      <table style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid #ccc' }}>
         <thead>
-          <tr>
-            <th style={{ backgroundColor: '#F5F5F5', color: '#333', padding: '8px', border: '1px solid #DDD', fontWeight: 'bold' }}>Name</th>
-            <th style={{ backgroundColor: '#F5F5F5', color: '#333', padding: '8px', border: '1px solid #DDD', fontWeight: 'bold' }}>Email</th>
-            <th style={{ backgroundColor: '#F5F5F5', color: '#333', padding: '8px', border: '1px solid #DDD', fontWeight: 'bold' }}>Device Type</th>
+          <tr style={{ backgroundColor: '#a9a9a9' }}>
+            <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Name</th>
+            <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Email</th>
+            <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Device Type</th>
           </tr>
         </thead>
         <tbody>
-          {users.map(user => (
+          {filteredUsers.map(user => (
             <tr key={user.id}>
-              <td style={{ padding: '8px', border: '1px solid #DDD' }}>{user.username || "No name available"}</td>
-              <td style={{ padding: '8px', border: '1px solid #DDD' }}>{user.email}</td>
-              <td style={{ padding: '8px', border: '1px solid #DDD' }}>{user.deviceType || "No device type"}</td>
+              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.username || "No name available"}</td>
+              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.email}</td>
+              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.deviceType}</td>
             </tr>
           ))}
         </tbody>
