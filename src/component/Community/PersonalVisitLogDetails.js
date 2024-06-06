@@ -55,7 +55,8 @@ const PersonalVisitLogDetails = () => {
                     <img className="w-[13px] h-[15px] my-[3px]" src={date} />
                     <div class="text-violet-900 text-sm font-medium font-['DM Sans'] leading-tight pt-0.5">
                       {/* {details.get("date")} {details.get("date")} */}
-                      {data?.date || ""} · {data?.time || ""}
+                       {data?.dateTime.toDate().toLocaleString().toString()}
+                      {/* {data?.date || ""} · {data?.time || ""} */}
                     </div>
                   </div>
                   <div className="flex flex-row justify-normal space-x-2">
