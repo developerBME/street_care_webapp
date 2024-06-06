@@ -8,30 +8,7 @@ import userSlots from "../../images/userSlots.png";
 import date from "../../images/date.png";
 import locate from "../../images/location.png";
 import { formatDate } from "../helper";
-
-const DisplaySkills = ({ skills }) => {
-  let maxShown = 2;
-  let moreCount = skills.length - maxShown;
-  return (
-    <div className="inline-flex items-center gap-2 flex-wrap">
-      {skills.slice(0, maxShown).map((item, index) => (
-        <div
-          className={`py-1 px-3 border border-[#C8C8C8] rounded-xl text-[12px] text-[#444746] overflow-hidden text-ellipsis whitespace-nowrap max-w-fit ${
-            moreCount > 0 ? "basis-1/3" : "basis-1/2"
-          }`}
-          key={item}
-        >
-          {item}
-        </div>
-      ))}
-      {moreCount > 0 && (
-        <div className="text-[12px] text-[#444746] overflow-hidden text-ellipsis whitespace-nowrap font-bold max-w-fit">
-          +{moreCount} more
-        </div>
-      )}
-    </div>
-  );
-};
+import CardTags from "./CardTags";
 
 const OutreachEventCard = ({
   cardData,
@@ -107,7 +84,7 @@ const OutreachEventCard = ({
             {description}
           </div>
 
-          <DisplaySkills skills={skills} />
+          <CardTags tags={skills} />
         </div>
       ) : (
         <div className="my-3 space-y-3 w-full h-full flex flex-col">
@@ -126,7 +103,7 @@ const OutreachEventCard = ({
                   src={locate}
                 />
                 <div className="font-medium font-dmsans text-[12px] text-[#37168B]">
-                  {location.city}, {location.state}
+                  {location.city}, {location.stateAbbv || location.state}
                 </div>
               </div>
             </div>
@@ -145,7 +122,7 @@ const OutreachEventCard = ({
                   src={locate}
                 />
                 <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
-                  {location.city}, {location.state}
+                  {location.city}, {location.stateAbbv || location.state}
                 </div>
               </div>
             </div>
@@ -158,7 +135,7 @@ const OutreachEventCard = ({
             {description}
           </div>
 
-          <DisplaySkills skills={skills} />
+          <CardTags tags={skills} />
         </div>
       )}
       {!isPastEvent ? (

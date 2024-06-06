@@ -209,6 +209,7 @@ const Form = (hrid) => {
               street: streetRef.current.value,
               city: cityRef.current.value,
               state: stateRef.current.value,
+              stateAbbv: stateAbbv,
               zipcode: zipcodeRef.current.value,
             },
             helpType: helpRef.current.value,
@@ -493,6 +494,7 @@ const Form = (hrid) => {
   const [street, setStreet] = useState("");
   const [cityName, setCityName] = useState("");
   const [stateName, setStateName] = useState("");
+  const [stateAbbv, setStateAbbv] = useState("");
   const [postcode, setPostCode] = useState("");
 
   const handleScriptLoad = (updateQuery, autoCompleteRef) => {
@@ -520,6 +522,7 @@ const Form = (hrid) => {
     let postcode = "";
     let city = "";
     let state = "";
+    let state_abbv = "";
 
     for (const component of addressObject.address_components) {
       const componentType = component.types[0];
@@ -548,6 +551,7 @@ const Form = (hrid) => {
         }
         case "administrative_area_level_1": {
           state = component.long_name;
+          state_abbv = component.short_name
           break;
         }
         default:
@@ -558,6 +562,7 @@ const Form = (hrid) => {
     setStreet(street);
     setCityName(city);
     setStateName(state);
+    setStateAbbv(state_abbv);
     setPostCode(postcode);
   };
 
@@ -1073,7 +1078,7 @@ const Form = (hrid) => {
           <div className=" space-y-2">
             {chipList.map((value, index) => (
               <Chip
-                keyName={"chip-" + index}
+                key={value}
                 val={value}
                 setter={handleHelpTypeArray}
                 clear={clear}

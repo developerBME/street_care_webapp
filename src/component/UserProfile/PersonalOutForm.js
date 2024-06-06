@@ -395,6 +395,7 @@ function PersonalOutForm() {
       date: date.current.value,
       time: time.current.value,
       state: stateName,
+      stateAbbv: stateAbbv,
       city: cityName,
       rating: rating,
       zipcode: postcode,
@@ -475,6 +476,7 @@ function PersonalOutForm() {
   const [street, setStreet] = useState("");
   const [cityName, setCityName] = useState("");
   const [stateName, setStateName] = useState("");
+  const [stateAbbv, setStateAbbv] = useState("");
   const [postcode, setPostcode] = useState("");
 
   const handleScriptLoad = (updateQuery, autoCompleteRef) => {
@@ -500,6 +502,7 @@ function PersonalOutForm() {
     let postcode = "";
     let city = "";
     let state = "";
+    let state_abbv = "";
 
     for (const component of addressObject.address_components) {
       const componentType = component.types[0];
@@ -528,6 +531,7 @@ function PersonalOutForm() {
         }
         case "administrative_area_level_1": {
           state = component.long_name;
+          state_abbv = component.short_name;
           break;
         }
         default:
@@ -537,6 +541,7 @@ function PersonalOutForm() {
     setStreet(street);
     setCityName(city);
     setStateName(state);
+    setStateAbbv(state_abbv);
     setPostcode(postcode);
   };
 
