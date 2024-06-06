@@ -23,21 +23,23 @@ import { emailConfirmation } from "../EmailService";
 import { checkNumber } from "../helper/validator";
 import { fetchPersonalVisitLogById } from "../VisitLogCardService";
 import UpdateVisitLogConfirmationModal from "./UpdateVisitLogConfirmationModal";
+import DatePicker from "react-datepicker";
+import { Timestamp } from "firebase/firestore";
 
 const USERS_COLLECTION = "users";
 
-// const CustomInput = ({ value, onClick, onChange, id, className }) => (
-//   <div>
-//     <input
-//       type="text"
-//       onClick={onClick}
-//       onChange={onChange}
-//       value={value}
-//       id={id}
-//       className={className}
-//     />
-//   </div>
-// );
+const CustomInput = ({ value, onClick, onChange, id, className }) => (
+  <div>
+    <input
+      type="text"
+      onClick={onClick}
+      onChange={onChange}
+      value={value}
+      id={id}
+      className={className}
+    />
+  </div>
+);
 
 let autoComplete;
 
@@ -65,6 +67,7 @@ function PersonalOutForm() {
   // const ratingChanged = (newRating) => {
   //   console.log(newRating);
   // };
+  const dateTimeRef = useRef("");
   const date = useRef("");
   const time = useRef("");
   const cityRef = useRef("");
@@ -107,6 +110,7 @@ function PersonalOutForm() {
     itemQtyError: "",
     dateError: "",
     timeError: "",
+    dateTimeError: "",
     optDescError: "",
     optLandmarkError: "",
     infoShareCheckboxError: "",
@@ -165,6 +169,11 @@ function PersonalOutForm() {
       updateErrorState("itemQtyError", "Please enter a number");
     }
   };
+
+  const handleDateTimeChange = (e) => {
+    updateErrorState("dateTimeError", "");
+  };
+
   const handleDateChange = (e) => {
     updateErrorState("dateError", "");
   };
@@ -267,8 +276,9 @@ function PersonalOutForm() {
         setCityName(logResult.city);
         setStateName(logResult.state);
         setPostcode(logResult.zipcode);
-        date.current.value = logResult.date ;
-        time.current.value = logResult.time ;
+        //date.current.value = logResult.date ;
+        //time.current.value = logResult.time ;
+        setDateTime(logResult.dateTime.toDate());
        
       } catch (error) {
         console.error(error.message);
@@ -386,19 +396,27 @@ function PersonalOutForm() {
       }
     }
 
-    if (!date.current.value) {
-      updateErrorState("dateError", "Enter a date");
+    if (!dateTime) {
+      updateErrorState("dateTimeError", "DateTime is required");
+      console.log();
       setReturn = true;
     } else {
-      updateErrorState("dateError", "");
+      updateErrorState("dateTimeError", "");
     }
 
-    if (!time.current.value) {
-      updateErrorState("timeError", "Enter a time");
-      setReturn = true;
-    } else {
-      updateErrorState("timeError", "");
-    }
+    // if (!date.current.value) {
+    //   updateErrorState("dateError", "Enter a date");
+    //   setReturn = true;
+    // } else {
+    //   updateErrorState("dateError", "");
+    // }
+
+    // if (!time.current.value) {
+    //   updateErrorState("timeError", "Enter a time");
+    //   setReturn = true;
+    // } else {
+    //   updateErrorState("timeError", "");
+    // }
 
     if (!itemQty) {
       updateErrorState("itemQtyError", "Enter Quantity");
@@ -449,15 +467,17 @@ function PersonalOutForm() {
       numberPeopleHelped: numberHelped,
       whatGiven: whatGivenArr,
       itemQty: itemQty,
-      date: date.current.value,
-      time: time.current.value,
+      //date: date.current.value,
+      //time: time.current.value,
       state: stateName,
       stateAbbv: stateAbbv,
       city: cityName,
       rating: rating,
       zipcode: postcode,
-      street: street
+      street: street,
+      dateTime: Timestamp.fromDate(dateTime)
     };
+    console.log(obj);
 
     const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px">
       <h1>Thank you for creating the outreach</h1>
@@ -510,14 +530,14 @@ function PersonalOutForm() {
   };
 
   const clearFields = () => {
-    date.current.value = "";
+   // date.current.value = "";
     setNumberhelped("");
     setItemQty("");
     setItemArray([]);
     checkboxes.current.forEach((x) => {
       x.checked = false;
     });
-    time.current.value = "";
+   // time.current.value = "";
     setRating(0);
     setState("");
     setCity("");
@@ -525,6 +545,7 @@ function PersonalOutForm() {
     stateRef.current.value = "";
     zipcodeRef.current.value = "";
     streetRef.current.value = "";
+    setDateTime(null);
   };
 
   //Address autocomplete functionality
@@ -535,6 +556,7 @@ function PersonalOutForm() {
   const [stateName, setStateName] = useState("");
   const [stateAbbv, setStateAbbv] = useState("");
   const [postcode, setPostcode] = useState("");
+  const [dateTime, setDateTime] = useState();
 
   const handleScriptLoad = (updateQuery, autoCompleteRef) => {
     autoComplete = new window.google.maps.places.Autocomplete(
@@ -683,18 +705,26 @@ function PersonalOutForm() {
       }
     }
 
-    if (!date.current.value) {
-      updateErrorState("dateError", "Enter a date");
-      setReturn = true;
-    } else {
-      updateErrorState("dateError", "");
-    }
+    // if (!date.current.value) {
+    //   updateErrorState("dateError", "Enter a date");
+    //   setReturn = true;
+    // } else {
+    //   updateErrorState("dateError", "");
+    // }
 
-    if (!time.current.value) {
-      updateErrorState("timeError", "Enter a time");
+    // if (!time.current.value) {
+    //   updateErrorState("timeError", "Enter a time");
+    //   setReturn = true;
+    // } else {
+    //   updateErrorState("timeError", "");
+    // }
+
+    if (!dateTime) {
+      updateErrorState("dateTimeError", "DateTime is required");
+      console.log();
       setReturn = true;
     } else {
-      updateErrorState("timeError", "");
+      updateErrorState("dateTimeError", "");
     }
 
     if (!itemQty) {
@@ -746,13 +776,14 @@ function PersonalOutForm() {
       numberPeopleHelped: numberHelped,
       whatGiven: whatGivenArr,
       itemQty: itemQty,
-      date: date.current.value,
-      time: time.current.value,
+      //date: date.current.value,
+      //time: time.current.value,
       state: stateName,
       city: cityName,
       rating: rating,
       zipcode: postcode,
-      street: street
+      street: street,
+      dateTime: Timestamp.fromDate(dateTime)
     };
 
     try {
@@ -1316,23 +1347,54 @@ function PersonalOutForm() {
 
                   <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                     {/* Grid 2 */}
+                    
                     <div className="w-full h-full grid grid-cols-2 gap-4 ">
                       <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
                         <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
                           <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
-                            Date
+                            Date *
                           </div>
                         </div>
+                        <br/>
                         <div className="self-stretch h-fit  border-collapse     ">
                           <div className=" h-14  justify-center items-start ">
-                            <input
+                            {/* <input
                               type="date"
                               id="-itemnumber"
                               placeholder="Number"
                               className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
                               ref={date}
                               onChange={handleDateChange}
-                            ></input>
+                            ></input> */}
+
+                            <DatePicker selected={dateTime}
+                                onChange={(date) => { setDateTime(date); handleDateTimeChange(date); }}
+                                showTimeSelect
+                                timeFormat="HH:mm"
+                                timeIntervals={15}
+                                dateFormat="Pp"
+                                customInput={
+                                  <CustomInput
+                                    id="date"
+                                    className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                                      error.dateTimeError !== ""
+                                        ? "ring-red-500"
+                                        : "ring-gray-300"
+                                    }`}
+                                    ref={dateTimeRef}
+                                  /> 
+                                }
+                            />
+
+                            {error.dateTimeError && (
+                                              <div className="inline-flex items-center">
+                                                <img alt="" src={errorImg} className="w-3 h-3" />
+                                                <p className="text-red-600 text-xs mx-1">
+                                                  {error.dateTimeError}
+                                                </p>
+                                              </div>
+                                            )}
+
                             {/* {error.dateError && (
                             <div className="inline-flex items-center">
                               <img alt=""
@@ -1349,7 +1411,7 @@ function PersonalOutForm() {
                         </div>
                       </div>
                       {/*  */}
-                      <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
+                      {/* <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
                         <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
                           <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
                             Time
@@ -1372,10 +1434,10 @@ function PersonalOutForm() {
                                 {error.timeError}
                               </p>
                             </div>
-                          )} */}
+                          )}
                           </div>
                         </div>
-                      </div>
+                      </div> */}
                     </div>
                     {/**/}
                     <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
