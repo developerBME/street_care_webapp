@@ -62,7 +62,7 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
               <div className="text-violet-900 text-[12px] font-medium font-bricolage leading-tight flex flex-row">
                 <div>{<img alt="" className="w-4 h-4" src={calender} />}</div>
                 <div className="px-1">
-                  {visitLogCardData.dateTime.toDate().toLocaleString().toString()}
+                  {visitLogCardData?.dateTime.toDate().toLocaleString().toString()}
                   {/* {visitLogCardData.date || ""} · {visitLogCardData.time} */}
                 </div>
               </div>
