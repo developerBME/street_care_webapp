@@ -11,8 +11,8 @@
       ]
     },
     {
-      "source": "functions/delUserOutreaches",
-      "codebase": "del-user-outreaches"
+      "source": "functions/delUserActivity",
+      "codebase": "del-user-activity"
     }
   ]
 }

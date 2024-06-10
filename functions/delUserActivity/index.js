@@ -11,7 +11,7 @@ if (!admin.apps.length) {
 }
 
 
-exports.deleteUserOutreaches = functions.firestore
+exports.delUserActivity = functions.firestore
   .document('users/{uid}')
   .onDelete(async (snap, context) => {
     const userId = context.params.uid;

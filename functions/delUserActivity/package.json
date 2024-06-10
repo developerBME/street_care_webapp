@@ -1,6 +1,6 @@
 {
-  "name": "delUserOutreaches",
-  "description": "Cloud Functions to handle user deletions and associated outreaches",
+  "name": "delUserActivity",
+  "description": "Cloud Functions to handle the deletion of user outreaches and personal visitLogs",
   "main": "index.js",
   "dependencies": {
     "firebase-admin": "^11.11.1",
