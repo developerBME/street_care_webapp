@@ -204,7 +204,7 @@ const ICanHelpForm = () => {
               </p>
             )}
           </div>
-          <div className="space-y-16 space-x-[15px]">
+          <div className="space-y-8 space-x-[15px]">
             <CustomButton
               label="I can help"
               name="buttondefault"

@@ -101,7 +101,7 @@ const ICanHelpConfirmationModal = ({ id }) => {
 
     // New
     <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-opacity-50 bg-gray-800 z-50 overflow-hidden">
-      <div className="bg-white w-[70%] max-h-[90vh] overflow-y-auto p-14 rounded shadow-lg">
+      <div className="bg-white w-[90%] max-h-[90vh] overflow-y-auto p-8 rounded shadow-lg">
         <div className="self-stretch h-fit flex-col justify-start items-start gap-6 flex">
           <div className="justify-self-end items-start gap-20 sm:gap-6 inline-flex w-full">
             <div className="w-fit text-[#212121] text-4xl font-medium font-bricolage leading-[44px]">
