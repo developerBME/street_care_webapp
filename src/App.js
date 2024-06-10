@@ -54,6 +54,9 @@ import UpdateProfile from "./component/UserProfile/ProfileSettings/UpdateProfile
 import TestUser from "./component/Test/Test";
 import ListUser from "./component/Test/ListUser";
 
+import TestUser from "./component/Test/Test";
+import ListUser from "./component/Test/ListUser";
+
 function App() {
   const fAuth = getAuth();
   const [loggedIn, setLoggedIn] = useState(false);
