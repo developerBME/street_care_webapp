@@ -10,7 +10,6 @@ if (!admin.apps.length) {
   });
 }
 
-
 exports.delUserActivity = functions.firestore
   .document('users/{uid}')
   .onDelete(async (snap, context) => {
@@ -24,6 +23,10 @@ exports.delUserActivity = functions.firestore
     // Delete visit logs
     const visitLogsRef = admin.firestore().collection('personalVisitLog');
     const visitLogsQuery = visitLogsRef.where('uid', '==', userId);
+
+    // Delete helpRequest documents
+    const helpRequestRef = admin.firestore().collection('helpRequests');
+    const helpRequestQuery = helpRequestRef.where('uid', '==', userId);
 
     try {
       // Delete outreach documents
@@ -54,6 +57,21 @@ exports.delUserActivity = functions.firestore
         });
         await visitLogsBatch.commit();
         console.log(`Deleted visit logs for user ID: ${userId}`);
+      }
+
+      // Delete helpRequest documents
+      const helpRequestSnapshot = await helpRequestQuery.get();
+      if (helpRequestSnapshot.empty) {
+        console.log(`No helpRequest documents found for user ID: ${userId}`);
+      } else {
+        console.log(`Found ${helpRequestSnapshot.size} helpRequest documents for user ID: ${userId}`);
+        const helpRequestBatch = admin.firestore().batch();
+        helpRequestSnapshot.forEach(doc => {
+          console.log(`Deleting helpRequest document ID: ${doc.id}`);
+          helpRequestBatch.delete(doc.ref);
+        });
+        await helpRequestBatch.commit();
+        console.log(`Deleted helpRequest documents for user ID: ${userId}`);
       }
     } catch (error) {
       console.error(`Error deleting documents for user ID: ${userId}`, error);
