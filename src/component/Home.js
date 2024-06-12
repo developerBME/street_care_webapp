@@ -11,7 +11,8 @@ import Eventcard from "./HomePage/Eventcard";
 import BMEcard from "./HomePage/BMEcard";
 import BMEcardnew from "./HomePage/BMEofficialCard";
 import Landing from "./HomePage/Landing";
-import Success from "./HomePage/Success";
+import Success2 from "./HomePage/Success2";
+//import Success from "./HomePage/Success"
 import News from "./HomePage/News";
 import Map from "./HomePage/Map";
 import Process from "./HomePage/Process";
@@ -216,8 +217,11 @@ function HomePage() {
         {" "}
         <Landing scorllFuntion={handleOutreachRef} />
       </div>
+       {/* <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+        <Success/>
+      </div>*/}
       <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
-        <Success />
+        <Success2 />
       </div>
       <div
         id="outreach"
