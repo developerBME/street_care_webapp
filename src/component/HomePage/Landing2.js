@@ -14,22 +14,23 @@ const Landing = forwardRef(({ scorllFuntion }, ref) => {
     callParentFunction: handleOnClick,
   }));
   return (
-    <div className="items-center justify-center px-2 py-2 lg:p-24 h-full w-full rounded-2xl  grid  lg:grid-cols-2 gap-3 bg-[#F7F7F7]">
+    <div className="items-center justify-center px-4 py-8 lg:px-12 lg:py-15 xl:p-16 h-full w-full rounded-2xl  grid  xl:grid-cols-2 gap-5 lg:gap-9 bg-[#F7F7F7]">
       <div className="  flex-col">
-        <p className="font-dmsans font-medium text-4xl md:text-[42px] md:leading-[48px]  text-black ">
-          {" "}
-          Support homeless people.{" "}
-          <p className="font-dmsans font-medium text-4xl md:text-[42px] md:leading-[48px] text-black ">
-            Prepare care packages.
-          </p>
-        </p>
-        <p className="font-dmsans font-medium text-4xl md:text-[42px] md:leading-[48px] text-black ">
-          Join outreach.{" "}
-          <p className="font-dmsans font-medium text-4xl md:text-[42px] md:leading-[48px] text-black ">
+        <p className="font-dmsans font-medium text-4xl md:text-[42px] md:leading-[48px]  text-black ">          
+          <span>
+            Support the homeless people.   
+          </span>{" "}
+          <span>
+            Prepare care packages.   
+          </span>{" "}
+          <span>
+            Join outreach.   
+          </span>{" "}
+          <span>
             Make a difference.
-          </p>
+          </span>
         </p>
-        <div className="mt-12 mb-5 p-4">
+        <div className="mt-10 mb-5">
           <CustomButton
             label="Join Community Outreach"
             name="buttonlight"

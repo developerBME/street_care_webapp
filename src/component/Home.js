@@ -6,11 +6,15 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
-import FAQs from "./HomePage/FAQs";
+// import FAQs from "./HomePage/FAQs";
+import FAQs from "./HomePage/FAQs2";
 import Eventcard from "./HomePage/Eventcard";
 import BMEcard from "./HomePage/BMEcard";
 import BMEcardnew from "./HomePage/BMEofficialCard";
-import Landing from "./HomePage/Landing";
+import Success2 from "./HomePage/Success2";
+//import Success from "./HomePage/Success"
+// import Landing from "./HomePage/Landing";
+import Landing from "./HomePage/Landing2";
 import Success from "./HomePage/Success";
 import News from "./HomePage/News";
 import Map from "./HomePage/Map";
@@ -216,8 +220,11 @@ function HomePage() {
         {" "}
         <Landing scorllFuntion={handleOutreachRef} />
       </div>
+       {/* <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+        <Success/>
+      </div>*/}
       <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
-        <Success />
+        <Success2 />
       </div>
       <div
         id="outreach"
