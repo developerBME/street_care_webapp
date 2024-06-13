@@ -1,6 +1,5 @@
 import React from "react";
 import { useRef, useState } from "react";
-// import arrowBack from "../../images/arrowBack.png";
 // import Rating from "@mui/material/Rating";
 import { IoIosArrowBack } from "react-icons/io";
 // import { AiOutlineStar, AiTwotoneStar, AiFillStar } from "react-icons/ai";
