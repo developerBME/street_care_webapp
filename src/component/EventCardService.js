@@ -17,6 +17,7 @@ const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
 const PAST_OUTREACH_EVENTS_COLLECTION = "pastOutreachEvents";
 const USERS_COLLECTION = "users";
 
+// test comment
 export const fetchEvents = async () => {
   try {
     const oureachEventsRef = collection(db, OUTREACH_EVENTS_COLLECTION);
