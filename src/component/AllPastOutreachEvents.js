@@ -22,6 +22,8 @@ const AllPastOutreachEvents = () => {
     setVisibleCards((prev) => prev + 12);
   };
 
+  const searchCityRef = useRef("");
+
   useEffect(() => {
     const fetchData = async () => {
       const pastOutreachEventsData = await fetchPastOutreachEvents(); // Fetch past outreach events
@@ -60,7 +62,6 @@ const AllPastOutreachEvents = () => {
 
   const searchChange = () => {
     console.log(searchRef.current.value);
-    console.log(events[0]);
     setEventsDisplay(
       events.filter(
         (x) =>
@@ -68,7 +69,17 @@ const AllPastOutreachEvents = () => {
             -1 ||
           x.userName
             .toLowerCase()
-            .search(searchRef.current.value.toLowerCase()) > -1
+            .search(searchRef.current.value.toLowerCase()) > -1     
+      )
+    );
+  };
+
+  const searchCityChange = () => {
+    setEventsDisplay(
+      events.filter(
+        (x) =>
+          x.location.city.toLowerCase().search(searchCityRef.current.value.toLowerCase()) > -1 ||
+          x.location.state.toLowerCase().search(searchCityRef.current.value.toLowerCase()) > -1   
       )
     );
   };
@@ -107,6 +118,33 @@ const AllPastOutreachEvents = () => {
                   placeholder="Search Outreach Events"
                   ref={searchRef}
                   onChange={searchChange}
+                  className="form-input w-fit md:w-[27rem] lg:w-[25rem] py-3 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-12 rounded-2xl"
+                />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 20 20"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6 pointer-events-none absolute top-6 transform -translate-y-1/2 left-3"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                  />
+                </svg>
+              </label>
+              <br/>
+
+              <label class="relative text-gray-400 focus-within:text-gray-600 ">
+                <input
+                  type="text"
+                  name="searchCityText"
+                  id="searchCityText"
+                  placeholder="Search Outreach Events by City/State"
+                  ref={searchCityRef}
+                  onChange={searchCityChange}
                   className="form-input w-fit md:w-[27rem] lg:w-[25rem] py-3 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-12 rounded-2xl"
                 />
                 <svg
