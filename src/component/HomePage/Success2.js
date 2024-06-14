@@ -104,7 +104,7 @@ function Success2() {
             <p>
               We are excited to share the work our nonprofit does through our
               <a
-                href="https://brightmindenrichment.org/job-openings/"
+                href="https://brightmindenrichment.org/about-us/"
                 target="_blank"
                 className="text-violet-600 underline"
               >
