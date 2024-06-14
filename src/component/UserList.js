@@ -5,23 +5,27 @@ import { db } from "./firebase";  // Ensure this path is correct for your Fireba
 function UserList() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true);
+      setError("");  // Reset error state on new fetch
       try {
         const querySnapshot = await getDocs(collection(db, "users"));
         const userList = [];
         querySnapshot.forEach((doc) => {
-          const userData = { id: doc.id, ...doc.data() };
-          if (userData.deviceType && userData.deviceType.trim() === "Web") {
+          const userData = { docId: doc.id, ...doc.data() }; // Access all fields from the document
+          // Filter to include only 'Web' deviceType
+          if (userData.deviceType === "Web") {
             userList.push(userData);
           }
         });
         setUsers(userList);
       } catch (error) {
         console.error("Error fetching user data:", error);
+        setError("Failed to fetch users.");  // Set error message
       } finally {
         setLoading(false);
       }
@@ -43,6 +47,10 @@ function UserList() {
     return <div>Loading...</div>;
   }
 
+  if (error) {
+    return <div>Error: {error}</div>;  // Display error if present
+  }
+
   return (
     <div style={{ padding: '20px' }}>
       <h2>User List</h2>
@@ -58,6 +66,7 @@ function UserList() {
       <table style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid #ccc' }}>
         <thead>
           <tr style={{ backgroundColor: '#a9a9a9' }}>
+            <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>UID</th> 
             <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Name</th>
             <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Email</th>
             <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Device Type</th>
@@ -65,7 +74,8 @@ function UserList() {
         </thead>
         <tbody>
           {filteredUsers.map(user => (
-            <tr key={user.id}>
+            <tr key={user.docId}>
+              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.uid}</td> 
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.username || "No name available"}</td>
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.email}</td>
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.deviceType}</td>
