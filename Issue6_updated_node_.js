@@ -10,6 +10,7 @@ if (!admin.apps.length) {
   });
 }
 console.log("test")
+
 const db = admin.firestore();
 
 async function getEmailsFromFirestore(collectionName) {
@@ -42,8 +43,8 @@ async function sendEmail(recipients) {
    */
   const senderEmail = 'hrcentral27@gmail.com'; // Update with your sender email address
   const senderPassword = 'xqxh jjzt hevf jxwv'; // Update with your sender email password
-  const subject = 'Weekly Update';
-  const body = 'This is your weekly update.';
+  const subject = 'Backend Support';
+  const body = 'Hello, This is the Backend Team.';
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
