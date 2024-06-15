@@ -198,9 +198,19 @@ export async function fetchOutreaches(helpRequestId) {
     }
 
     let outreaches = [];
-    snapshot.forEach((doc) => {
-      outreaches.push({ id: doc.id, ...doc.data() });
-    });
+    for (const doc of snapshot.docs) {
+      let outreachData = { id: doc.id, ...doc.data() };
+
+      if (outreachData.userId) {
+        const userName = await fetchUserName(outreachData.userId);
+        outreachData.userName = userName || "Unknown User";
+        logEvent("username: ", outreachData.userName);
+      } else {
+        outreachData.userName = "Unknown User";
+      }
+
+      outreaches.push(outreachData);
+    }
 
     console.log("Fetched outreaches: ", outreaches);
     return outreaches;
@@ -212,4 +222,4 @@ export async function fetchOutreaches(helpRequestId) {
     console.error("Error fetching outreaches: ", error);
     throw error;
   }
-}
+};
