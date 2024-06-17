@@ -103,7 +103,7 @@ const HomePageVisitlog = () => {
                         <div className="flex flex-col lg:flex-row justify-between">
                             
                             <div 
-                            className="flex flex-row cursor-pointer gap-2 items-center md:px-6"
+                            className="flex flex-row cursor-pointer gap-2 items-center"
                         onClick={() => { 
                             navigate("/allOutreachVisitLog");
                         }}
