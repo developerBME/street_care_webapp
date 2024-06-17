@@ -6,6 +6,7 @@ import {
   query,
   where,
   updateDoc,
+  or,
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -100,6 +101,42 @@ export const fetchUserName = async (uid) => {
     logEvent(
       "STREET_CARE_ERROR",
       `error on fetchUserName HelpRequestService.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
+export const fetchByCityOrState = async (searchValue) => {
+  try {
+    const helpReqRef = collection(db, HELP_REQ_COLLECTION);
+    // Full text search - Search filtering by City/State fields matching exact value
+    const helpRequestByLocationQuery = query(
+      helpReqRef,
+      or (where('location.state', '==', searchValue),
+      where('location.city', '==', searchValue) 
+      )
+      // For partial search - startsWith (Auto-complete search) - Search filtering on City field using range query
+      // where('location.city', '>=', searchValue), // Start at prefix
+      // where('location.city', '<=', searchValue + '\uf8ff') // End at prefix + any character that comes after the specified prefix 
+    );
+    const helpRequestDocRef = await getDocs(helpRequestByLocationQuery);
+    let helpRequestsByLoc = [];
+    for (const doc of helpRequestDocRef.docs) {
+      const helpRequestData = doc.data();
+      const id = doc.id;
+      const userName = await fetchUserName(helpRequestData.uid);
+      helpRequestsByLoc.push({
+        ...helpRequestData,
+        userName: userName,
+        id: id,
+      });
+    }
+    console.log(helpRequestsByLoc)
+    return helpRequestsByLoc;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchByCityOrState HelpRequestService.js- ${error.message}`
     );
     throw error;
   }
