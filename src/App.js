@@ -51,6 +51,7 @@ import PersonalVisitLogDetails from "./component/Community/PersonalVisitLogDetai
 import EmailUpdateConfirmation from "./component/UserProfile/ProfileSettings/EmailUpdateConfirmation";
 import DeleteAccConfirmation from "./component/UserProfile/ProfileSettings/DeleteAccConfirmation";
 import UpdateProfile from "./component/UserProfile/ProfileSettings/UpdateProfile";
+import UserDetails from "./component/UserDetails";
 
 function App() {
   const fAuth = getAuth();
@@ -128,6 +129,8 @@ function App() {
           <Route path="/userlist" element={<UserList/>}/>
           <Route path="/allnews" element={<Newscard />} />
           <Route path="/allnews/:id" element={<Readmorenews />} />
+          <Route path="/" element={<UserList />} />
+          <Route path="/user/:uid" element={<UserDetails />} />  // Route for user details
           <Route
             path="/verifyemail"
             element={

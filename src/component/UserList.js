@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "./firebase";  // Ensure this path is correct for your Firebase configuration
+import { useNavigate } from 'react-router-dom';  // Import useNavigate
 
 function UserList() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();  // Hook for navigation
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -33,7 +35,9 @@ function UserList() {
 
     fetchUsers();
   }, []);
-
+  const handleRowClick = (uid) => {
+    navigate(`/user/${uid}`);  // Navigate to the user details page
+  };
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -74,7 +78,7 @@ function UserList() {
         </thead>
         <tbody>
           {filteredUsers.map(user => (
-            <tr key={user.docId}>
+            <tr key={user.docId} onClick={() => handleRowClick(user.uid)} style={{ cursor: 'pointer' }}> 
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.uid}</td> 
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.username || "No name available"}</td>
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.email}</td>
