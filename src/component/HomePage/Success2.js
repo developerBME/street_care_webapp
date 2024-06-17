@@ -3,19 +3,8 @@ import React, { useState, useEffect } from "react";
 import Campaign from "../../images/campaign.svg";
 import { getDocs, collection, query } from "firebase/firestore";
 import { db } from "../firebase";
-import cbsNews from "../../images/cbsNews.png";
-import abc from "../../images/abc.png";
-import eye from "../../images/eye.png";
-import politico from "../../images/politico.png";
-import newsweek from "../../images/newsweek.png";
-import platinumSeal from "../../images/platinumSeal.png";
-import goldSeal from "../../images/goldSeal.png";
-import silverSeal from "../../images/silverSeal.png";
-import bronzeSeal from "../../images/bronzeSeal.png";
-import arrowRight from "../../images/arrowRight.png";
 import { useNavigate } from "react-router-dom";
 import { fetchVisitLogs } from "../VisitLogCardService";
-import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import HomePageVisitlog from "../HomePage/HomePageVisitlog";
 
 function Success2() {
@@ -232,7 +221,7 @@ function Success2() {
       </div>
       
 
-      <div className=" mt-10 w-full  justify-start items-start">
+      <div className=" mt-16 w-full  justify-start items-start">
       <HomePageVisitlog />
 
         </div>

@@ -97,19 +97,20 @@ const HomePageVisitlog = () => {
 
     return (
         <div>
-            <div className="  lg:py-12 bg-[#F7F7F7] flex-col justify-start items-start gap-4 w-full">
+            <div className="   bg-[#F7F7F7] flex-col justify-start items-start gap-4 w-full">
                 <div className="flex flex-col md:flex md:flex-row justify-between gap-4 md:gap-10">
                     <div className="">
                         <div className="flex flex-col lg:flex-row justify-between">
-                            <div className="font-medium text-2xl md:text-[45px] font-dmsans">
-                               Latest actions - Visit Log
-                            </div>
-                            <div
-                        className="flex cursor-pointer gap-2 items-center md:px-6"
+                            
+                            <div 
+                            className="flex flex-row cursor-pointer gap-2 items-center md:px-6"
                         onClick={() => { 
                             navigate("/allOutreachVisitLog");
                         }}
                     >
+                        <div className="font-medium text-2xl md:text-[45px] font-dmsans">
+                               Latest actions - Visit Log
+                            </div>
                        
                         <img
                             src={arrowRight}
@@ -121,7 +122,7 @@ const HomePageVisitlog = () => {
 
                     
                 </div>
-                <div className="py-8  ">
+                <div className="  ">
                 
                 {isLoading ? (
                     // <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
