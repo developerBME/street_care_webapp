@@ -186,10 +186,7 @@ export async function fetchOutreaches(helpRequestId) {
 
   try {
     const outreachesRef = collection(db, OUTREACHES_COLLECTION);
-    const outreachQuery = query(
-      outreachesRef,
-      where("helpRequest", "array-contains", helpRequestId)
-    );
+    const outreachQuery = query(outreachesRef, where("helpRequest", "array-contains", helpRequestId));
     const snapshot = await getDocs(outreachQuery);
 
     if (snapshot.empty) {
@@ -197,20 +194,18 @@ export async function fetchOutreaches(helpRequestId) {
       return [];
     }
 
-    let outreaches = [];
-    for (const doc of snapshot.docs) {
-      let outreachData = { id: doc.id, ...doc.data() };
+    const outreachPromises = [];
+    snapshot.forEach((doc) => {
+      const outreachData = doc.data();
+      const id = doc.id;
 
-      if (outreachData.userId) {
-        const userName = await fetchUserName(outreachData.userId);
-        outreachData.userName = userName || "Unknown User";
-        logEvent("username: ", outreachData.userName);
-      } else {
-        outreachData.userName = "Unknown User";
-      }
+      // Create a promise to fetch username for this outreach
+      const usernamePromise = outreachData.uid ? fetchUserName(outreachData.uid) : Promise.resolve("Unknown User");
+      outreachPromises.push(usernamePromise.then((userName) => ({ ...outreachData, userName, id })));
+    });
 
-      outreaches.push(outreachData);
-    }
+    // Wait for all username fetches to complete before returning data
+    const outreaches = await Promise.all(outreachPromises);
 
     console.log("Fetched outreaches: ", outreaches);
     return outreaches;
