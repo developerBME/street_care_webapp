@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import CustomButton from "../../Buttons/CustomButton";
-import errorImg from "../../../images/error.png";
 import { FcGoogle } from "react-icons/fc";
 import {
   getAuth,
@@ -46,6 +44,10 @@ const DeleteAccount = (props) => {
   const handleReauthentication = async () => {
     if (provider === GoogleAuthProvider.PROVIDER_ID) {
       const googleProvider = new GoogleAuthProvider();
+      googleProvider.setCustomParameters({
+        prompt: "select_account",
+        login_hint: email
+      });
       try {
         const result = await signInWithPopup(auth, googleProvider);
         if (result.user.email === email) {
@@ -203,8 +205,10 @@ const DeleteAccount = (props) => {
               <div className="w-full flex justify-center mt-6">
                 <button
                   id="delete-account-button"
-                  className="w-full flex items-center justify-center py-3.5 mt-2.5 bg-primary text-black"
                   onClick={handleDeleteUser}
+                  className={`text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
+                    reauthenticated ? "text-black bg-red hover:bg-[#cf003ec7]" : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+                    }`}
                 >
                   Delete your account
                 </button>
