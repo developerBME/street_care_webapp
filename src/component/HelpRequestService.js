@@ -106,37 +106,38 @@ export const fetchUserName = async (uid) => {
   }
 };
 
-export const fetchByCityOrState = async (searchValue) => {
+export const fetchByCity = async (searchValue) => {
   try {
     const helpReqRef = collection(db, HELP_REQ_COLLECTION);
-    // Full text search - Search filtering by City/State fields matching exact value
-    const helpRequestByLocationQuery = query(
+      // Performs partial search or auto-complete search (startsWith) by filtering results on the City field using a range query.
+      const helpRequestByCityQuery = query(
       helpReqRef,
-      or (where('location.state', '==', searchValue),
-      where('location.city', '==', searchValue) 
-      )
-      // For partial search - startsWith (Auto-complete search) - Search filtering on City field using range query
-      // where('location.city', '>=', searchValue), // Start at prefix
-      // where('location.city', '<=', searchValue + '\uf8ff') // End at prefix + any character that comes after the specified prefix 
+      where('location.city', '>=', searchValue), // Start at prefix
+      where('location.city', '<=', searchValue + '\uf8ff') // End at prefix + any character that comes after the specified prefix 
+
+      // Full text search - Search filtering by City/State fields matching exact value
+      // or (where('location.state', '==', searchValue),
+      // where('location.city', '==', searchValue) 
+      // )
     );
-    const helpRequestDocRef = await getDocs(helpRequestByLocationQuery);
-    let helpRequestsByLoc = [];
+    const helpRequestDocRef = await getDocs(helpRequestByCityQuery);
+    let helpRequestsByCity = [];
     for (const doc of helpRequestDocRef.docs) {
       const helpRequestData = doc.data();
       const id = doc.id;
       const userName = await fetchUserName(helpRequestData.uid);
-      helpRequestsByLoc.push({
+      helpRequestsByCity.push({
         ...helpRequestData,
         userName: userName,
         id: id,
       });
     }
-    console.log(helpRequestsByLoc)
-    return helpRequestsByLoc;
+    console.log(helpRequestsByCity)
+    return helpRequestsByCity;
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchByCityOrState HelpRequestService.js- ${error.message}`
+      `error on fetchByCity HelpRequestService.js- ${error.message}`
     );
     throw error;
   }
