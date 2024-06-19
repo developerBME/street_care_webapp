@@ -4,35 +4,43 @@ import { IoIosArrowBack } from "react-icons/io";
 import CustomButton from "../Buttons/CustomButton";
 import help_announcement from "../../images/help_announcement.png";
 import ConfirmationModal from "./ConfirmationModal";
-import { fetchHelpReqById, fetchUserName, fetchOutreaches } from "../HelpRequestService";
+import {
+  fetchHelpReqById,
+  fetchUserName,
+  fetchOutreaches,
+} from "../HelpRequestService";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import ICanHelpConfirmationModal from "./ICanHelpConfirmationModal";
 
 const ICanHelpForm = () => {
   const navigate = useNavigate();
-  const [success, setSuccess] = useState(false);
   const { id } = useParams();
   const [data, setData] = useState(null);
   const [username, setUserName] = useState("");
   const [outreaches, setOutreaches] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
       try {
         const result = await fetchHelpReqById(id);
         const user = await fetchUserName(result.uid);
-        const outreacheList = await fetchOutreaches(id);
+        const outreachList = await fetchOutreaches(id);
         setData(result);
         setUserName(user);
-        setOutreaches(outreacheList);
+        setOutreaches(outreachList);
+        setLoading(false);
       } catch (error) {
         console.error(error.message);
+        setError(error.message);
+        setLoading(false);
       }
     };
-    console.log("DATA");
-    console.log(data);
-    getData(); // Invoke the async function
-  }, []);
+    getData();
+  }, [id]);
 
   const fAuth = getAuth();
   onAuthStateChanged(fAuth, (user) => {
@@ -43,7 +51,7 @@ const ICanHelpForm = () => {
     }
   });
 
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  // const [modalIsOpen, setModalIsOpen] = useState(false);
   const openModal = () => {
     setModalIsOpen(true);
   };
@@ -60,6 +68,14 @@ const ICanHelpForm = () => {
       console.log(e);
     }
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="relative flex flex-col items-center ">
@@ -188,7 +204,7 @@ const ICanHelpForm = () => {
               </p>
             )}
           </div>
-          <div className="space-y-16 space-x-[15px]">
+          <div className="space-y-8 space-x-[15px]">
             <CustomButton
               label="I can help"
               name="buttondefault"
@@ -205,7 +221,8 @@ const ICanHelpForm = () => {
           {success && (
             <ICanHelpConfirmationModal
               id={id}
-              outreaches = {outreaches}
+              helpRequestId={data ? data.id : null} // Pass the help request ID to the modal
+              outreaches={outreaches}
             />
           )}
         </div>

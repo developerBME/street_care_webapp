@@ -76,13 +76,13 @@ function Profile() {
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center ">
         {/* Aniket */}
-        <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 mt-24 lg:mx-40 lg:mt-32 sm:mt-4 sm:mb-4 rounded-2xl bg-white text-black ">
+        <div className=" w-[95%] md:w-[90%] lg:w-[80%] mt-24 sm:mt-22 sm:mb-4 md:mx-20 md:mt-32 lg:mx-40 rounded-2xl bg-white text-black ">
           <UserInfo />
         </div>
         {/* Vishnu */}
         <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black mb-10">
-          <div className="flex flex-col gap-4 lg:gap-14 lg:p-24 pl-8 pt-4 pb-4 pr-8">
-            <div className="inline-flex flex-col sm:flex-row sm:space-x-16 justify-between ">
+          <div className="flex flex-col gap-4 md:px-12 md:py-16 lg:gap-14 lg:p-24 pl-8 pt-4 pb-4 pr-8">
+            <div className="inline-flex flex-col sm:flex-row sm:space-x-16 justify-between gap-2">
               <div class="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage text-left leading-[52px]">
                 My Outreaches
               </div>
@@ -96,9 +96,9 @@ function Profile() {
                 }}
               />
             </div>
-            <div className="">
-              <div className="w-full flex flex-col sm:flex-row bg-[#F2F6D8] p-4 rounded-xl gap-4  ">
-                <div className="text-neutral-800  text-[20px] font-medium font-bricolage leading-loose  ">
+            <div className="pt-4">
+              <div className="w-full flex flex-col sm:flex-row bg-[#F2F6D8] p-4 rounded-xl gap-4 justify-between">
+                <div className="text-neutral-800  text-[20px] font-medium font-bricolage leading-loose">
                   Now you can host your own outreach event.
                 </div>
                 <div className="h-fit">
@@ -146,7 +146,7 @@ function Profile() {
         </div>
 
         <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2  mb-8 rounded-2xl bg-white text-black mt-4">
-          <div className="flex flex-col gap-4 lg:gap-14 lg:p-24 pl-8 pt-4 pb-4 pr-8">
+          <div className="flex flex-col gap-4 md:py-16 md:px-12 lg:gap-14 lg:p-12 sm:pl-8 sm:pr-8 pl-4 pr-4 pt-4 pb-4 ">
             <OutreachVisitLogProfile />
           </div>
         </div>

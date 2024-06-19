@@ -284,7 +284,7 @@ function Signup2() {
       const userRef = doc(db, "users", currentUser.uid);
       await setDoc(userRef, userData);
 
-      sendEmailVerification(currentUser);
+      //sendEmailVerification(currentUser);
 
       logEvent("STREET_CARE_INFO_AUTH", `${email} has signed up`);
 

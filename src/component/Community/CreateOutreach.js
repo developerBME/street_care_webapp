@@ -21,7 +21,7 @@ const CreateOutreach = () => {
               </p>
             </div>
           </Link>
-          <div className="max-w-6xl mx-auto rounded-2xl mx-2 mb-32 xl:mx-40 bg-[#F8F9F0] p-4 lg:pt-[100px] lg:pb-[100px] lg:pr-[150px] lg:pl-[150px]">
+          <div className="max-w-6xl mx-auto rounded-2xl mb-32 xl:mx-40 bg-[#F8F9F0] p-4 lg:pt-[100px] lg:pb-[100px] lg:pr-[150px] lg:pl-[150px]">
             <Form hrid = {helpreqid}/>
           </div>
           </div>
