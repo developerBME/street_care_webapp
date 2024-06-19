@@ -94,6 +94,7 @@ const keepAlive = () => {
   setInterval(() => {}, 1 << 30); // Keep the process alive
 };
 
+// This is the test for email schedular
 keepAlive();
 
 
