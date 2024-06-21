@@ -415,7 +415,7 @@ function HelpRequestForm() {
                 Return to Community
               </p>
             </div>
-            <div className="rounded-2xl mx-2 mb-32 lg:mx-40 bg-[#F8F9F0] p-4 lg:pt-[100px] lg:pb-[100px] lg:pr-[150px] lg:pl-[150px]">
+            <div className="rounded-2xl mx-2 mb-32 lg:mx-40 bg-[#F8F9F0] p-10 lg:p-[80px]">
               <div>
                 <form>
                   <div>
