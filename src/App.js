@@ -129,7 +129,6 @@ function App() {
           <Route path="/userlist" element={<UserList/>}/>
           <Route path="/allnews" element={<Newscard />} />
           <Route path="/allnews/:id" element={<Readmorenews />} />
-          
           <Route path="/user/:uid" element={<UserDetails />} />  // Route for user details
           <Route
             path="/verifyemail"
