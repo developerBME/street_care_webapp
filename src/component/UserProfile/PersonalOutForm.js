@@ -290,7 +290,7 @@ function PersonalOutForm() {
     };
 
     try {
-      const logRef = collection(db, "testLog");
+      const logRef = collection(db, "testLogDev");
       const docRef = await addDoc(logRef, obj);
       if (docRef.id) {
         console.log(docRef.id);
