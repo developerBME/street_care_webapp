@@ -28,7 +28,7 @@ function Success() {
   useEffect(() => {
     const getValues = async () => {
       try {
-        const logOfUserRef = query(collection(db, "testLog"));
+        const logOfUserRef = query(collection(db, "testLogDev"));
         const data = await getDocs(logOfUserRef);
         let totalDonations = 0;
         let totalHelpedPeople = 0;
