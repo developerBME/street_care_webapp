@@ -13,8 +13,8 @@ import BMEcard from "./HomePage/BMEcard";
 import BMEcardnew from "./HomePage/BMEofficialCard";
 import Success2 from "./HomePage/Success2";
 //import Success from "./HomePage/Success"
-// import Landing from "./HomePage/Landing";
-import Landing from "./HomePage/Landing2";
+import Landing from "./HomePage/Landing";
+// import Landing from "./HomePage/Landing2";
 import Success from "./HomePage/Success";
 import News from "./HomePage/News";
 import Map from "./HomePage/Map";
