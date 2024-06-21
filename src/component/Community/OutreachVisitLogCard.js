@@ -40,7 +40,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
         </div>
 
         <h1 className="font-medium text-[24px] font-dmsans text-[#444746] line-clamp-1">
-          {visitLogCardData.description || ""}
+          {visitLogCardData?.description || ""}
         </h1>
 
         <div className="flex flex-row justify-between">
