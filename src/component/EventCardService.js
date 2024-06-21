@@ -61,6 +61,18 @@ export const fetchEvents = async () => {
   }
 };
 
+export async function calculateNumberOfPages(outreachesPerPage) {
+  if (outreachesPerPage < 1 || outreachesPerPage > 10) {
+    throw new Error("The number of outreaches per page must be between 1 and 10.");
+  }
+
+  const outreachEventsRef = collection(db, OUTREACH_EVENTS_COLLECTION);
+  const snapshot = await getDocs(outreachEventsRef);
+  const totalOutreaches = snapshot.size;
+
+  return Math.ceil(totalOutreaches / outreachesPerPage);
+}
+
 async function fetchUserDetailsBatch(userIds) {
   const userDetails = {};
   // Firestore limits 'in' queries to 10 items
