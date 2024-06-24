@@ -70,7 +70,7 @@ export async function calculateNumberOfPages(outreachesPerPage) {
   const totalOutreaches = snapshot.size;
 
   return Math.ceil(totalOutreaches / outreachesPerPage);
-}
+};
 
 async function fetchUserDetailsBatch(userIds) {
   const userDetails = {};
