@@ -22,6 +22,8 @@ const AllPastOutreachEvents = () => {
     setVisibleCards((prev) => prev + 12);
   };
 
+  const searchCityRef = useRef("");
+
   useEffect(() => {
     const fetchData = async () => {
       const pastOutreachEventsData = await fetchPastOutreachEvents(); // Fetch past outreach events
@@ -60,7 +62,6 @@ const AllPastOutreachEvents = () => {
 
   const searchChange = () => {
     console.log(searchRef.current.value);
-    console.log(events[0]);
     setEventsDisplay(
       events.filter(
         (x) =>
@@ -68,7 +69,7 @@ const AllPastOutreachEvents = () => {
             -1 ||
           x.userName
             .toLowerCase()
-            .search(searchRef.current.value.toLowerCase()) > -1
+            .search(searchRef.current.value.toLowerCase()) > -1     
       )
     );
   };

@@ -7,6 +7,7 @@ import {
   query,
   where,
   limit,
+  or
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -70,7 +71,7 @@ export async function calculateNumberOfPages(outreachesPerPage) {
   const totalOutreaches = snapshot.size;
 
   return Math.ceil(totalOutreaches / outreachesPerPage);
-};
+}
 
 async function fetchUserDetailsBatch(userIds) {
   const userDetails = {};
@@ -548,5 +549,40 @@ export const handleRsvp = async (
         navigate("/login", { replace: true });
       }
     });
+  }
+};
+
+export const fetchByCityOrState = async (searchValue) => {
+  try {
+    const pastOutreachRef = collection(db, PAST_OUTREACH_EVENTS_COLLECTION);
+    // Full text search - Search filtering by City/State fields matching exact value
+    const outreachByLocationQuery = query(
+      pastOutreachRef,where('location.city', '>=', searchValue), where('location.city', '<=', searchValue + '\uf8ff') // 
+      
+     //  or (where('location.city', '>=', searchValue), // Start at prefix
+      //     where('location.city', '<=', searchValue + '\uf8ff') // 
+      // )
+    );
+
+    const outreachDocRef = await getDocs(outreachByLocationQuery);
+
+    let outreachByLoc = [];
+    for (const doc of outreachDocRef.docs) {
+      const pastOutreachData = doc.data(); 
+      const id = doc.id;
+
+      outreachByLoc.push({
+        ...pastOutreachData,
+        id: id,
+      });
+    }
+    console.log(outreachByLoc)
+    return outreachByLoc;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchByCityOrState AllPastOrtreachEvents.js- ${error.message}`
+    );
+    throw error;
   }
 };

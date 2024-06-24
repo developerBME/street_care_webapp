@@ -4,6 +4,7 @@ import { getDocs, collection, query, where } from "firebase/firestore";
 import { db } from "./component/firebase";
 
 import Home from "./component/Home";
+import UserList from "./component/UserList";
 import NavBar from "./component/Navbar";
 import Footer from "./component/Footer";
 import Login from "./component/Login";
@@ -50,6 +51,7 @@ import PersonalVisitLogDetails from "./component/Community/PersonalVisitLogDetai
 import EmailUpdateConfirmation from "./component/UserProfile/ProfileSettings/EmailUpdateConfirmation";
 import DeleteAccConfirmation from "./component/UserProfile/ProfileSettings/DeleteAccConfirmation";
 import UpdateProfile from "./component/UserProfile/ProfileSettings/UpdateProfile";
+import UserDetails from "./component/UserDetails";
 
 import TestUser from "./component/Test/Test";
 import ListUser from "./component/Test/ListUser";
@@ -127,8 +129,11 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/ForgotPassword" element={<ForgotPassword />} />
           <Route path="/signup" element={<Signup2 />} />
+          <Route path="/userlist" element={<UserList/>}/>
           <Route path="/allnews" element={<Newscard />} />
           <Route path="/allnews/:id" element={<Readmorenews />} />
+          
+          <Route path="/user/:uid" element={<UserDetails />} />  // Route for user details
           <Route
             path="/verifyemail"
             element={
