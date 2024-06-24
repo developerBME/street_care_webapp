@@ -256,3 +256,15 @@ export async function fetchOutreaches(helpRequestId) {
     throw error;
   }
 };
+
+export async function calculateNumberOfPagesForHelpReq(helpReqPerPage) {
+  if (helpReqPerPage < 1 || helpReqPerPage > 10) {
+    throw new Error("The number of help requests per page must be between 1 and 10.");
+  }
+
+  const helpRequestRef = collection(db, HELP_REQ_COLLECTION);
+  const snapshot = await getDocs(helpRequestRef);
+  const totalHelpRequests = snapshot.size;
+
+  return Math.ceil(totalHelpRequests / helpReqPerPage);
+};

@@ -219,3 +219,16 @@ export const fetchPersonalVisitLogById = async (visitLogId) => {
     throw error;
   }
 };
+
+
+export async function calculateNumberOfPagesForVisitlog(visitlogPerPage) {
+  if (visitlogPerPage < 1 || visitlogPerPage > 10) {
+    throw new Error("The number of visitlogs per page must be between 1 and 10.");
+  }
+
+  const visitlogRef = collection(db, VISIT_LOG_COLLECTION);
+  const snapshot = await getDocs(visitlogRef);
+  const totalVisitlogs = snapshot.size;
+
+  return Math.ceil(totalVisitlogs / visitlogPerPage);
+};
