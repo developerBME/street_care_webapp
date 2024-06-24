@@ -7,7 +7,7 @@ import two from "../../images/community_bg3.png";
 
 function Metrics() {
   return (
-    <div className="bg-white rounded-3xl lg:text-[18px] md:text-[18px] text-[12px] relative z-[9] mx-[8px] md:mx-24 -bottom-16">
+    <div className="bg-white rounded-3xl lg:text-[18px] md:text-[18px] text-[12px] relative z-[9] md:mx-24 -bottom-16">
       <div className="flex flex-wrap h-fit">
         {/* Column 1 */}
         <div className="w-1/4 sm:w-1/4 md:w-1/4 lg:w-1/4 lg:px-[28px] lg:p-[20px] md:p-[18px] p-[18px] lg:text-left md:text-center sm:text-center text-center">
