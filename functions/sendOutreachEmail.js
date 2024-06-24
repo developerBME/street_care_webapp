@@ -2,6 +2,8 @@ const functions = require('firebase-functions');
 const { google } = require('googleapis');
 const nodemailer = require('nodemailer');
 const cors = require('cors')({ origin: true });
+//const admin = require('firebase-admin');
+//admin.initializeApp();
 
 const CLIENT_ID = '223295299587-dinnroh9j2lb858kphbgb96f8t6j0eq2.apps.googleusercontent.com';
 const CLIENT_SECRET = 'anpX22WnN_boI0nx64wDSGZX';
@@ -57,3 +59,6 @@ exports.sendOutreachEmail = functions.https.onRequest((req, res) => {
     }
   });
 });
+
+//const { deleteUserOutreaches } = require('./delUserOutreaches');
+//exports.deleteUserOutreaches = deleteUserOutreaches;

@@ -17,9 +17,19 @@ import {
   signInWithEmailAndPassword,
   EmailAuthProvider,
   reauthenticateWithCredential,
+  GoogleAuthProvider,
+  signInWithPopup,
+  reauthenticateWithPopup,
+  updateEmail,
+  sendEmailVerification,
+  unlink,
+  createUserWithEmailAndPassword,
+  updatePassword,
+  linkWithCredential,
 } from "firebase/auth";
-import { updateEmailId } from "../UpdateEmail";
+import { updateEmailId, updateSocialLoginEmail } from "../UpdateEmail";
 import { useNavigate } from "react-router-dom";
+import { auth } from "../../firebase";
 
 const UpdateEmailAddress = () => {
   const stepLabelMap = {
@@ -86,72 +96,141 @@ const UpdateEmailAddress = () => {
     };
   }, [seconds, minutes]);
 
-  //Old Email Verification step via reauthentication of current user login
+
+// Updating Email using 3 different approaches
+  //  1. Update email (Old google social login - new google social login)
+  // const handleEmailSubmit = async () => {
+  //   // const provider = new GoogleAuthProvider();
+  //   // const auth = getAuth();
+  //   // const result = await signInWithPopup(auth, provider);
+  //   // console.log(result)
+  //   const user = auth?.currentUser;//fauth.currentUser
+  //   const provider = new GoogleAuthProvider();
+  //   reauthenticateWithPopup(user,provider)
+  //   .then(() => {
+  //       // Update email in Firebase Authentication
+  //       //return updateEmail(user, email);
+  //       return updateSocialLoginEmail(email);
+  //   })
+  //   .then(() => {
+  //     // Send verification email to new address
+  //     // return sendEmailVerification(user);
+  //   })
+  //   .then(() => {
+  //     console.log("Verification email sent to new email address.");
+  //     //Unlink the Google provider associated with the old email
+  //     return unlink(user,'google.com');
+  //   })
+  //   .then(() => {
+  //     console.log('Google account unlinked.');
+  //     navigate("/profile/profilesettings/emailupdateconfirmation");
+  //     //alert("Your email address has been updated. Please verify your new email address.");
+  //   })
+  //   .catch((error) => {
+  //     console.error("Error updating email or sending verification:", error);
+  //     setError(error.message);
+  //   });
+  //   setMinutes(4);
+  //   setSeconds(59);
+  // }; 
+  
+
+  // 2. Update email (old google user - new user email pwd)
+  // const handleEmailSubmit = async () => {
+  //   try {
+  //       const user = auth?.currentUser;//fauth.currentUser
+  //       const provider = new GoogleAuthProvider();
+
+  //       // Re-authenticate the user with Google
+  //       await reauthenticateWithPopup(user, provider);
+  //       console.log('Re-authentication with Google successful.');
+
+  //       //update login
+  //       await updateSocialLoginEmail(email, password);
+  //       // Create Email/Password credential
+  //       const credential = EmailAuthProvider.credential(email, password);
+
+  //       // Link the new email/password credential to the user
+  //       await linkWithCredential(user, credential);
+  //       console.log('Email/password provider linked successfully.');
+
+  //       // Unlink Google provider
+  //       await unlink(user, 'google.com');
+  //       console.log('Google provider unlinked.');
+  //       navigate("/profile/profilesettings/emailupdateconfirmation");
+
+  //   } catch (error) {
+  //       setError(error.message);
+  //   }
+  // };
+
+  // Old User Email Verification step via reauthentication of current user login
+  // 3. Update email (old user email - new user email)
   const handleEmailSubmit = async () => {
-    // if (isSubmitted === 2) {
-    //   setIsSubmitted((prevState) => prevState - 1);
-    // } else {
-    //   setIsSubmitted((prevState) => prevState + 1);
-    // }
-
-    if (!password) {
-      updateErrorState("PassError", "Password is required");
-      console.log("!password");
-      return;
-    } else if (password) {
-      updateErrorState("PassError", "");
-      console.log("else if");
-    }
-
-    //G relogin code
-    //await reauthenticateWithPopup(auth.currentUser, provider);
-    //const user = getAuth().currentUser;
-
-    // Current user's reauthentication
-    const credential = EmailAuthProvider.credential(
-      fAuth.currentUser.email,
-      password
-    );
-    try {
-      const response = await reauthenticateWithCredential(
-        fAuth.currentUser,
-        credential
-      );
-      console.log("after relogin");
-      console.log(response);
-      console.log(email, fAuth?.currentUser.uid, Date.now().toString());
-      //sending verification code to new email after user relogin
-      const newEmailSendCodeResponse = await send2FA(
-        email,
-        fAuth?.currentUser.uid,
-        Date.now().toString()
-      );
-      console.log(newEmailSendCodeResponse);
-      if (
-        !email ||
-        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email) ||
-        ""
-      ) {
-        updateErrorState("EmailError", "Email is required");
+      // if (isSubmitted === 2) {
+      //   setIsSubmitted((prevState) => prevState - 1);
+      // } else {
+      //   setIsSubmitted((prevState) => prevState + 1);
+      // }
+  
+      if (!password) {
+        updateErrorState("PassError", "Password is required");
+        console.log("!password");
         return;
-      } else if (email) {
-        updateErrorState("EmailError", "");
+      } else if (password) {
+        updateErrorState("PassError", "");
+        console.log("else if");
       }
-      setCurrentStep("VERIFY_CODE");
-    } catch (error) {
-      // Reauthentication failed, handling the error
-      updateErrorState("PassError", "Incorrect Password");
-      console.error("Reauthentication Failed!", error);
-      console.log("catch error");
-      return;
-    }
+  
+      //G relogin code
+      //await reauthenticateWithPopup(auth.currentUser, provider);
+      //const user = getAuth().currentUser;
+  
+      // Current user's reauthentication
+      const credential = EmailAuthProvider.credential(
+        fAuth.currentUser.email,
+        password
+      );
+      try {
+        const response = await reauthenticateWithCredential(
+          fAuth.currentUser,
+          credential
+        );
+        console.log("after relogin");
+        console.log(response);
+        console.log(email, fAuth?.currentUser.uid, Date.now().toString());
+        //sending verification code to new email after user relogin
+        const newEmailSendCodeResponse = await send2FA(
+          email,
+          fAuth?.currentUser.uid,
+          Date.now().toString()
+        );
+        console.log(newEmailSendCodeResponse);
+        if (
+          !email ||
+          !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email) ||
+          ""
+        ) {
+          updateErrorState("EmailError", "Email is required");
+          return;
+        } else if (email) {
+          updateErrorState("EmailError", "");
+        }
+        setCurrentStep("VERIFY_CODE");
+      } catch (error) {
+        // Reauthentication failed, handling the error
+        updateErrorState("PassError", "Incorrect Password");
+        console.error("Reauthentication Failed!", error);
+        console.log("catch error");
+        return;
+      }
+  
+      setMinutes(4);
+      setSeconds(59);
+      // document.getElementById("email-update-form").reset();
+  };  
 
-    setMinutes(4);
-    setSeconds(59);
-    // document.getElementById("email-update-form").reset();
-  };
-
-  //New email verification step
+  // New email verification step
   const handleCodeSubmit = async () => {
     if (!verificationCode || "") {
       updateErrorState("CodeError", "Verification code is required");
@@ -182,7 +261,6 @@ const UpdateEmailAddress = () => {
       console.log("Invalid code");
       updateErrorState("CodeError", "Invalid code")
     }
-
     setVerificationCode("");
     // setCurrentStep("NEW_EMAIL");
   };
