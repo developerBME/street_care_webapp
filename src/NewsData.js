@@ -4,7 +4,7 @@ export const NewsCardData = [
       NewsTitle:
         "Military Families event for Street Care on Giving Tuesday, 12/1!",
       NewsDate: "Sep 1,2022",
-      NewsContent: "Teams of military families will make care kits for us.",
+      NewsContent: "Teams of military families will make care kits for us. Stay tuned.",
     },
     {
       id: '1',

@@ -366,15 +366,16 @@ function HomePage() {
       </div>
       {/*<div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black">
         <MoreAboutUs />
-      </div>*/}
+      </div>
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black">
         <MoreAboutUs2 />
       </div>
       {/* Aniket */}
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
         <Map />
-      </div>
-      <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+      </div> 
+    
+      <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black h-full">
         {/*<News />*/}
 
         <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
@@ -387,7 +388,7 @@ function HomePage() {
             ))}
             <div className="mt-16">
               <CustomButton
-                label="Load More News"
+                label="More News"
                 name="buttondefault"
                 onClick={() => {
                   navigate("/allnews");
