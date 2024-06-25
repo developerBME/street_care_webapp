@@ -58,25 +58,47 @@ export const fetchVisitLogs = async () => {
 
 const fetchOutreachEventData = async (eid) => {
   try {
-    // Reference to the outreach event ID
+    // Check if eid is valid
     if (!eid) {
+      console.warn("fetchOutreachEventData called with invalid eid:", eid);
       return "";
     }
+
+    // Reference to the outreach event ID
     const outReachEventRef = doc(db, OUTREACH_EVENTS_COLLECTION, eid);
     const outReachEventData = await getDoc(outReachEventRef);
+
+    // Check if the document exists
+    if (!outReachEventData.exists()) {
+      console.warn("Outreach event document does not exist for eid:", eid);
+      return {
+        description: "",
+        helpType: "",
+        eventDate: "",
+        location: "",
+        totalSlots: "",
+        filledSlots: ""
+      };
+    }
+
+    const data = outReachEventData.data();
+
+    // Return data with fallbacks for missing fields
     return {
-      description: outReachEventData?.data().description || "",
-      helpType: outReachEventData?.data().helpType || "",
-      eventDate: outReachEventData?.data().eventDate || "",
-      location: outReachEventData?.data().location || "",
-      totalSlots: outReachEventData?.data().totalSlots || "",
-      filledSlots: outReachEventData?.data().participants?.length || "",
+      description: data.description || "",
+      helpType: data.helpType || "",
+      eventDate: data.eventDate || "",
+      location: data.location || "",
+      totalSlots: data.totalSlots || "",
+      filledSlots: data.participants?.length || 0 // Ensure filledSlots is a number
     };
   } catch (error) {
+    // Log the error with additional context
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchOutreachEventData VisitLogCardService.js- ${error.message}`
+      `Error in fetchOutreachEventData (VisitLogCardService.js): ${error.message}`
     );
+    console.error("Error fetching outreach event data:", error);
     throw error;
   }
 };
@@ -196,4 +218,17 @@ export const fetchPersonalVisitLogById = async (visitLogId) => {
     );
     throw error;
   }
+};
+
+
+export async function calculateNumberOfPagesForVisitlog(visitlogPerPage) {
+  if (visitlogPerPage < 1 || visitlogPerPage > 10) {
+    throw new Error("The number of visitlogs per page must be between 1 and 10.");
+  }
+
+  const visitlogRef = collection(db, VISIT_LOG_COLLECTION);
+  const snapshot = await getDocs(visitlogRef);
+  const totalVisitlogs = snapshot.size;
+
+  return Math.ceil(totalVisitlogs / visitlogPerPage);
 };
