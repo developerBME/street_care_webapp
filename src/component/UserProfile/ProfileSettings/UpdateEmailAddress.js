@@ -46,6 +46,7 @@ const UpdateEmailAddress = () => {
 
   const [error, setError] = useState(null);
   const fAuth = getAuth();
+  const [providerId, setProviderId] = useState('');
   const navigate = useNavigate();
 
   // const [error, setError] = useState(null);
@@ -76,8 +77,12 @@ const UpdateEmailAddress = () => {
   const handleTogglePassword = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
-
   useEffect(() => {
+    const user = fAuth.currentUser;
+    if (user && user.providerData.length > 0) {
+      setProviderId(user.providerData[0].providerId);
+    }
+
     const interval = setInterval(() => {
       if (seconds > 0) {
         setSeconds(seconds - 1);
@@ -94,7 +99,7 @@ const UpdateEmailAddress = () => {
     return () => {
       clearInterval(interval);
     };
-  }, [seconds, minutes]);
+  }, [seconds, minutes, fAuth]);
 
 
 // Updating Email using 3 different approaches
@@ -167,6 +172,10 @@ const UpdateEmailAddress = () => {
   // Old User Email Verification step via reauthentication of current user login
   // 3. Update email (old user email - new user email)
   const handleEmailSubmit = async () => {
+      if (['google.com', 'facebook.com', 'twitter.com'].includes(providerId)) {
+            alert("Email update is not available for social accounts.");
+            return;
+          }
       // if (isSubmitted === 2) {
       //   setIsSubmitted((prevState) => prevState - 1);
       // } else {
@@ -533,11 +542,17 @@ const UpdateEmailAddress = () => {
                   </div>
                 </div>
               )}
+              {['google.com', 'facebook.com', 'twitter.com'].includes(providerId) && (
+                <div className="text-center text-red-500">
+                  Email update is disabled because your account is linked with a social media provider.
+                </div>
+              )}
               <CustomButton
                 name="buttondefault"
                 type="submit"
                 label={stepLabelMap[currentStep]}
                 onClick={stepFuncMap[currentStep]}
+                disabled={['google.com', 'facebook.com', 'twitter.com'].includes(providerId)} // Disable the button if logged in via social media
               ></CustomButton>
             </div>
           </div>
