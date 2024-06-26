@@ -224,13 +224,13 @@ function HomePage() {
         {" "}
         <Landing scorllFuntion={handleOutreachRef} />
       </div>
-       {/* <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+      {/* <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
         <Success/>
       </div>*/}
       <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
         <Success2 />
       </div>
-      <div
+      {/* <div
         id="outreach"
         className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black"
       >
@@ -282,7 +282,7 @@ function HomePage() {
             />
           </div>
         </div>
-      </div>
+      </div> */}
       {/* DIV BLOCK FOR ALL PAST OUTREACH EVENTS*/}
       <div
         id="pastoutreach"
@@ -291,11 +291,8 @@ function HomePage() {
         <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] scroll-m-16">
           <p className="flex flex-row font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] gap-4">
             {" "}
-            Past Outreach Events
-            <img
-                            src={arrowRight}
-                            className="w-6 h-7 lg:w-10 lg:h-10 "
-                        />
+            Outreach Events
+            <img src={arrowRight} className="w-6 h-7 lg:w-10 lg:h-10 " />
           </p>
 
           {isLoading ? (
@@ -373,8 +370,7 @@ function HomePage() {
       {/* Aniket */}
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
         <Map />
-      </div> 
-    
+      </div>
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black h-full">
         {/*<News />*/}
 
