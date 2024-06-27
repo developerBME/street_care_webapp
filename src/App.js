@@ -173,7 +173,7 @@ function App() {
 
             <Route path="/profile/commoutform" element={<CommOutForm />} />
             <Route
-              path="/profile/personaloutform"
+              path="/profile/visitlogform"
               element={<PersonalOutForm />}
             />
             <Route path="/createOutreach" element={<CreateOutreach />} />
@@ -239,7 +239,7 @@ function App() {
 
           <Route path="/test" element={<TestUser />} />
           <Route path="/list" element={<ListUser />} />
-          <Route path="/profile/personaloutform/:id" element={<PersonalOutForm />} />
+          <Route path="/profile/visitlogform/:id" element={<PersonalOutForm />} />
 
         </Routes>
         <Footer />

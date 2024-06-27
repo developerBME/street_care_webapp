@@ -37,7 +37,7 @@ const UserProfileCard = ({ cardData }) => {
               </Link>
             ) : (
               <Link
-                to={"commoutform"}
+                to={"personaloutform"}
                 className="px-6 py-2  border border-violet-950 rounded-full text-center text-violet-950 text-md font-semibold font-lato leading-normal"
               >
                 {buttonText}
