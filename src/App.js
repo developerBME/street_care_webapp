@@ -133,6 +133,7 @@ function App() {
           <Route path="/allnews" element={<Newscard />} />
           <Route path="/allnews/:id" element={<Readmorenews />} />
           
+
           <Route path="/user/:uid" element={<UserDetails />} />  // Route for user details
           <Route
             path="/verifyemail"
@@ -163,7 +164,7 @@ function App() {
               element={<UpdateEmailAddress />}
             />
             <Route
-              path="/profile/profilesettings/emailupdateconfirmation"
+              path="/profile/profilesettings/emailupdateconfirmation/:email"
               element={<EmailUpdateConfirmation />}
             />
             <Route
