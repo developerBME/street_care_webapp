@@ -200,6 +200,48 @@ export const fetchPersonalVisitLogs = async (uid) => {
   }
 };
 
+export const fetchPublicVisitLogs = async () => {
+  try {
+    const visitLogsRef = query(collection(db, PERSONAL_VISIT_LOG_COLLECTION), where("public", "==", true));
+    const visitLogSnapshot = await getDocs(visitLogsRef);
+    let visitLogs = [];
+    for (const doc of visitLogSnapshot.docs) {
+      const visitLogData = doc.data();
+      const outreachEventId = visitLogData.outreachEvent || "";
+      const outreachEventData = await fetchOutreachEventData(outreachEventId);
+      const uid = visitLogData.uid;
+      const userDetails = await fetchUserDetails(uid);
+      visitLogs.push({
+        id: doc.id,
+        whatGiven: visitLogData.whatGiven,
+        itemQty: visitLogData?.itemQty || "",
+        numberPeopleHelped: visitLogData?.numberPeopleHelped || "",
+        description: visitLogData?.description || "",
+        helpType: visitLogData?.helpType || "",
+        location: {
+          street: visitLogData?.street || "",
+          city: visitLogData?.city || "",
+          state: visitLogData?.state || "",
+          stateAbbv: visitLogData?.stateAbbv || "",
+          zipcode: visitLogData?.zipcode || ""
+        },
+        eventDate: visitLogData?.dateTime?.seconds
+          ? formatDate(new Date(visitLogData.dateTime.seconds * 1000))
+          : "",
+        userName: userDetails.username,
+        photoUrl: userDetails.photoUrl
+      });
+    }
+    return visitLogs;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchVisitLogs VisitLogCardService.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
 export const fetchPersonalVisitLogById = async (visitLogId) => {
   try {
     const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);

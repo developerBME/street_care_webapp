@@ -24,7 +24,7 @@ const NoOutreachDoc = ({ isPersonalVisitLog }) => {
                     label="Document Personal Visit Log"
                     name="buttondefault"
                     onClick={() => {
-                    navigate("/profile/select-outreach");
+                    navigate("/profile/visitlogform");
                     window.scrollTo(0, 0);
                     }}
                 />
@@ -52,7 +52,7 @@ const NoOutreachDoc = ({ isPersonalVisitLog }) => {
                 label="Document Personal Outreach"
                 name="buttondefault"
                 onClick={() => {
-                    navigate("/profile/select-outreach");
+                    navigate("/profile/visitlogform");
                     window.scrollTo(0, 0);
                   }}
                 ></CustomButton>
