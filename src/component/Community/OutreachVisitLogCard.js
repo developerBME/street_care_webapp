@@ -28,19 +28,24 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
           <div className="flex flex-row justify-normal space-x-2">
             <img className="w-[13px] h-[15px] my-[3px]" src={date} />
             <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
-              {formatDate(visitLogCardData?.eventDate)}
+              {visitLogCardData && visitLogCardData.eventDate
+                ? formatDate(visitLogCardData.eventDate)
+                : null}
             </div>
           </div>
           <div className="flex flex-row justify-normal space-x-2">
             <img className="w-[12px] h-[15px] my-[3px]" src={locate} />
             <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
-              {`${visitLogCardData?.location?.city}, ${visitLogCardData?.location?.stateAbbv || visitLogCardData?.location?.state}`}
+              {`${visitLogCardData?.location?.city}, ${
+                visitLogCardData?.location?.stateAbbv ||
+                visitLogCardData?.location?.state
+              }`}
             </div>
           </div>
         </div>
 
         <h1 className="font-medium text-[24px] font-dmsans text-[#444746] line-clamp-1">
-          {visitLogCardData.description || ""}
+          {visitLogCardData?.description || ""}
         </h1>
 
         <div className="flex flex-row justify-between">

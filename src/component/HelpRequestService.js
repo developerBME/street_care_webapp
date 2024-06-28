@@ -6,6 +6,7 @@ import {
   query,
   where,
   updateDoc,
+  or,
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -100,6 +101,43 @@ export const fetchUserName = async (uid) => {
     logEvent(
       "STREET_CARE_ERROR",
       `error on fetchUserName HelpRequestService.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
+export const fetchByCity = async (searchValue) => {
+  try {
+    const helpReqRef = collection(db, HELP_REQ_COLLECTION);
+      // Performs partial search or auto-complete search (startsWith) by filtering results on the City field using a range query.
+      const helpRequestByCityQuery = query(
+      helpReqRef,
+      where('location.city', '>=', searchValue), // Start at prefix
+      where('location.city', '<=', searchValue + '\uf8ff') // End at prefix + any character that comes after the specified prefix 
+
+      // Full text search - Search filtering by City/State fields matching exact value
+      // or (where('location.state', '==', searchValue),
+      // where('location.city', '==', searchValue) 
+      // )
+    );
+    const helpRequestDocRef = await getDocs(helpRequestByCityQuery);
+    let helpRequestsByCity = [];
+    for (const doc of helpRequestDocRef.docs) {
+      const helpRequestData = doc.data();
+      const id = doc.id;
+      const userName = await fetchUserName(helpRequestData.uid);
+      helpRequestsByCity.push({
+        ...helpRequestData,
+        userName: userName,
+        id: id,
+      });
+    }
+    console.log(helpRequestsByCity)
+    return helpRequestsByCity;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchByCity HelpRequestService.js- ${error.message}`
     );
     throw error;
   }
@@ -217,4 +255,16 @@ export async function fetchOutreaches(helpRequestId) {
     console.error("Error fetching outreaches: ", error);
     throw error;
   }
+};
+
+export async function calculateNumberOfPagesForHelpReq(helpReqPerPage) {
+  if (helpReqPerPage < 1 || helpReqPerPage > 10) {
+    throw new Error("The number of help requests per page must be between 1 and 10.");
+  }
+
+  const helpRequestRef = collection(db, HELP_REQ_COLLECTION);
+  const snapshot = await getDocs(helpRequestRef);
+  const totalHelpRequests = snapshot.size;
+
+  return Math.ceil(totalHelpRequests / helpReqPerPage);
 };

@@ -86,8 +86,8 @@ function PersonalOutForm() {
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
   const [descriptionHelped, setDescriptionHelped] = useState("");
-  const [isInfoShareCheckboxChecked, setInfoShareCheckboxChecked] =
-    useState(false);
+  const [isInfoShareCheckboxChecked, setInfoShareCheckboxChecked] = useState(false);
+  const [isPublic, setIsPublic] = useState(true);
   const infoShareCheckbox = useRef(null);
   const [showOptionalQuestions, setShowOptionalQuestions] = useState(false);
   const optDesc = useRef("");
@@ -475,7 +475,8 @@ function PersonalOutForm() {
       rating: rating,
       zipcode: postcode,
       street: street,
-      dateTime: Timestamp.fromDate(dateTime)
+      dateTime: Timestamp.fromDate(dateTime),
+      public: isPublic
     };
     console.log(obj);
 
@@ -822,13 +823,13 @@ function PersonalOutForm() {
             </div>
             {/*  */}
             <div className="w-fit h-fit md:px-[150px] md:py-[100px] flex-col justify-start items-start gap-16 inline-flex">
-              <div className="flex-col justify-start items-start gap-16 flex">
-                <div className="w-fit text-neutral-800 text-[57px] font-medium font-bricolage leading-[64px]">
+              <div className="flex-col justify-start items-start gap-4 md:gap-16 flex px-4 py-4 md:px-0 md:py-0">
+                <div className="w-fit text-neutral-800 md:text-[57px] font-medium font-bricolage md:leading-[64px] text-[32px] leading-[40px]">
                   Tell us more about who you helped!
                 </div>
                 <div className="self-stretch h-fit flex-col justify-center items-start gap-[24px] flex">
                   <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
-                    <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
+                    <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
                       Who did you help (and how many people)?*
                     </div>
                     {/*  */}
@@ -897,11 +898,11 @@ function PersonalOutForm() {
                   {/* Grid */}
 
                   <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
-                    <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
+                    <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
                       What kind of help did you provide?
                     </div>
 
-                    <div className="self-stretch w-full h-fit grid md:grid-cols-4 grid-cols-3 gap-2 ">
+                    <div className="self-stretch w-full h-fit grid md:grid-cols-4 grid-cols-2 gap-2 ">
                       {/* Grid Start */}
                       <div className=" justify-end items-end inline-flex ">
                         <input
@@ -1105,7 +1106,7 @@ function PersonalOutForm() {
 
                   {/*  */}
                   <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
-                    <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
+                    <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
                       Where did you see a person in need?*
                     </div>
                     {/*  */}
@@ -1137,7 +1138,7 @@ function PersonalOutForm() {
                         )}
                       </div>
 
-                      <div className="grid grid-cols-2 space-x-4">
+                      <div className="grid md:grid-cols-2 md:space-x-4 space-y-3 md:space-y-0">
                         <div className="space-y-1.5">
                           <p className="font-semibold font-['Inter'] text-[15px]">
                             Street*
@@ -1190,7 +1191,7 @@ function PersonalOutForm() {
                         </div>
                       </div>
 
-                      <div className=" grid grid-cols-2 space-x-4">
+                      <div className="grid md:grid-cols-2 md:space-x-4 space-y-3 md:space-y-0">
                         <div className="space-y-1.5">
                           <p className="font-semibold font-['Inter'] text-[15px]">
                             State*
@@ -1348,14 +1349,13 @@ function PersonalOutForm() {
                   <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                     {/* Grid 2 */}
                     
-                    <div className="w-full h-full grid grid-cols-2 gap-4 ">
+                    <div className="w-full h-full grid md:grid-cols-2 gap-4 ">
                       <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
-                        <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
-                          <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
+                        <div className="space-y-1.5">
+                          <div className="font-semibold font-['Inter'] text-[15px]">
                             Date *
                           </div>
                         </div>
-                        <br/>
                         <div className="self-stretch h-fit  border-collapse     ">
                           <div className=" h-14  justify-center items-start ">
                             {/* <input
@@ -1373,6 +1373,7 @@ function PersonalOutForm() {
                                 timeFormat="HH:mm"
                                 timeIntervals={15}
                                 dateFormat="Pp"
+                                wrapperClassName="w-full"
                                 customInput={
                                   <CustomInput
                                     id="date"
@@ -1440,7 +1441,7 @@ function PersonalOutForm() {
                       </div> */}
                     </div>
                     {/**/}
-                    <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
+                    <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
                       Total number of items donated by you?*
                     </div>
                     <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
@@ -1478,7 +1479,7 @@ function PersonalOutForm() {
                 </div>
 
                 <div className="self-stretch grow shrink basis-0 px-8 pt-[54px] pb-[55px] bg-stone-50 rounded-[30px] border border-stone-300 flex-col justify-start items-center gap-[29px] flex">
-                  <div className="self-stretch text-center text-black text-[22px] font-bold font-bricolage leading-7">
+                  <div className="self-stretch text-center text-black text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
                     Street Care helped me prep my outreach
                   </div>
                   <div className=" inline-flex ">
@@ -1516,7 +1517,7 @@ function PersonalOutForm() {
                     {/* <div className="flex-col justify-start items-start gap-16 flex"> */}
                     <div className="self-stretch h-fit flex-col justify-center items-start gap-[24px] flex">
                       <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
-                        <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
+                        <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
                           Who requires further help?*
                         </div>
                         <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
@@ -1562,7 +1563,7 @@ function PersonalOutForm() {
                         )} */}
                       </div>
                       <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
-                        <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
+                        <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
                           Can you describe the location or landmark of the
                           person(s) in need of help?*
                         </div>
@@ -1599,7 +1600,7 @@ function PersonalOutForm() {
                         </div>
                       </div>
                       <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
-                        <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
+                        <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
                           What time was the encounter?
                         </div>
                         <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
@@ -1622,11 +1623,11 @@ function PersonalOutForm() {
                       </div>
                       {/* <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex"> */}
                       <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
-                        <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
+                        <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
                           What further help is needed?
                         </div>
 
-                        <div className="self-stretch w-full h-fit grid md:grid-cols-4 grid-cols-3 gap-2 ">
+                        <div className="self-stretch w-full h-fit grid md:grid-cols-4 grid-cols-2 gap-2 ">
                           {/* Grid Start */}
                           <div className=" justify-end items-end inline-flex ">
                             <input
@@ -1805,7 +1806,7 @@ function PersonalOutForm() {
                       )} */}
                       </div>
 
-                      <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
+                      <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
                         When is the follow-up needed?
                       </div>
                       <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
@@ -1826,7 +1827,7 @@ function PersonalOutForm() {
                         </div>
                       </div>
 
-                      <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
+                      <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
                         Is there anything else other volunteers should know?
                       </div>
                       <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
@@ -1847,8 +1848,8 @@ function PersonalOutForm() {
                         </div>
                       </div>
 
-                      <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
-                        <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
+                      <div className="self-stretch h-fit flex-col justify-center  items-center md:items-start gap-[18px] flex">
+                        <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
                           Choose which information to share with the community
                           to improve assistance*
                         </div>
@@ -1892,7 +1893,7 @@ function PersonalOutForm() {
                       {/*  */}
 
                       <div>
-                        <div className="self-stretch text-neutral-800 text-[22px] font-bold font-bricolage leading-7">
+                        <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
                           In case of a serious situation, dial 911 immediately.
                         </div>
                       </div>
@@ -1911,7 +1912,18 @@ function PersonalOutForm() {
                   services and outreach to each person. That’s totally optional,
                   any information is great!
                 </span>
-                {/*  */}
+                {/* Toggle public form */}
+                <div className="flex items-center">
+                  <input 
+                    type="checkbox"
+                    id="isPublic"
+                    checked={isPublic}
+                    onClick={() => setIsPublic(prev => !prev)}
+                    className="w-[18px] h-[18px] bg-violet-700 rounded-sm cursor-pointer"
+                  />
+                  <span className="self-stretch font-bricolage text-[18px] ml-2">Make this visit log public?</span>
+                </div>
+                {/* Toggle public form end */}
                 <div className="justify-start items-start gap-4 inline-flex">
                   <div className="justify-start items-start gap-4 flex">
                   { id === undefined ? <CustomButton
