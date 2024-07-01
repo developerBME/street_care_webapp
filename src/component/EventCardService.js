@@ -356,12 +356,12 @@ export function formatDate(dateObj) {
   const weekday = days[dateObj.getDay()];
 
   // Extract hours, minutes, and the AM/PM part
-  const hours = dateObj.getHours();
+  let hours = dateObj.getHours();
   const minutes = dateObj.getMinutes();
   const ampm = hours >= 12 ? "PM" : "AM";
-  const formattedTime = `${hours % 12}:${minutes
-    .toString()
-    .padStart(2, "0")} ${ampm}`;
+  hours = hours % 12;
+  hours = hours ? hours : 12; // The hour '0' should be '12'
+  const formattedTime = `${hours}:${minutes.toString().padStart(2, "0")} ${ampm}`;
 
   return `${month} ${day}, ${year} ${weekday} ${formattedTime}`;
   // return `${month}/${day}/${year} - ${hours}:${minutes}`;
