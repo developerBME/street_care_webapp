@@ -41,7 +41,6 @@ const UpdateEmailAddress = () => {
 
   const [email, setEmail] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
-  const [newVerificationCode, setNewVerificationCode] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
 
@@ -49,7 +48,6 @@ const UpdateEmailAddress = () => {
   const fAuth = getAuth();
   const navigate = useNavigate();
   const currentUser = getAuth().currentUser;
-
 
   // const [error, setError] = useState(null);
 
@@ -74,9 +72,10 @@ const UpdateEmailAddress = () => {
     }));
   };
 
-  const resendCode = async () => {
+  const resendCode = async (e) => {
+    e.preventDefault();
     try {
-      await sendEmailVerification(currentUser);
+      await send2FA(email, fAuth?.currentUser.uid, Date.now().toString());
       console.log("Verification email sent");
     } catch (error) {
       setError(true);
@@ -525,7 +524,7 @@ const UpdateEmailAddress = () => {
                                 // className="disabled:text-black disabled:cursor-not-allowed
                                 // text-[#6840E0] cursor-pointer text-sm font-dmsans font-normal"
                                 className="text-[#6840E0] cursor-pointer text-sm font-dmsans font-normal"
-                                onClick={resendCode}
+                                onClick={(e) => resendCode(e)}
                               >
                                 Resend Code
                               </button>
