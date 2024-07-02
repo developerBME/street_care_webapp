@@ -356,12 +356,12 @@ export function formatDate(dateObj) {
   const weekday = days[dateObj.getDay()];
 
   // Extract hours, minutes, and the AM/PM part
-  const hours = dateObj.getHours();
+  let hours = dateObj.getHours();
   const minutes = dateObj.getMinutes();
   const ampm = hours >= 12 ? "PM" : "AM";
-  const formattedTime = `${hours % 12}:${minutes
-    .toString()
-    .padStart(2, "0")} ${ampm}`;
+  hours = hours % 12;
+  hours = hours ? hours : 12; // The hour '0' should be '12'
+  const formattedTime = `${hours}:${minutes.toString().padStart(2, "0")} ${ampm}`;
 
   return `${month} ${day}, ${year} ${weekday} ${formattedTime}`;
   // return `${month}/${day}/${year} - ${hours}:${minutes}`;
@@ -552,19 +552,36 @@ export const handleRsvp = async (
   }
 };
 
-export const fetchByCityOrState = async (searchValue) => {
+export const fetchByCityOrState = async (searchValue, startDate, endDate) => {
   try {
+
+    if (!searchValue || typeof searchValue !== 'string') {
+      console.error('Invalid search value');
+      return;
+    }
+  
+    if (!(startDate instanceof Date) || isNaN(startDate)) {
+      console.error('Invalid start date');
+      return;
+    }
+  
+    if (!(endDate instanceof Date) || isNaN(endDate)) {
+      console.error('Invalid end date');
+      return;
+    } 
+
     const pastOutreachRef = collection(db, PAST_OUTREACH_EVENTS_COLLECTION);
     // Full text search - Search filtering by City/State fields matching exact value
+
     const outreachByLocationQuery = query(
-      pastOutreachRef,where('location.city', '>=', searchValue), where('location.city', '<=', searchValue + '\uf8ff') // 
-      
-     //  or (where('location.city', '>=', searchValue), // Start at prefix
-      //     where('location.city', '<=', searchValue + '\uf8ff') // 
-      // )
+      pastOutreachRef, where('location.city', '==', searchValue),
+         where('eventDate', '>=', startDate),
+         where('eventDate', '<=', endDate)
     );
 
     const outreachDocRef = await getDocs(outreachByLocationQuery);
+
+    console.log(outreachDocRef);
 
     let outreachByLoc = [];
     for (const doc of outreachDocRef.docs) {
