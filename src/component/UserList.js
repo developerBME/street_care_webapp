@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import React, { useEffect, useState, useMemo } from "react";
+import { collection, getDocs, query, where, addDoc, deleteDoc, doc } from "firebase/firestore";
 import { db } from "./firebase";
-import { useNavigate } from 'react-router-dom';
 import { debounce } from 'lodash';
 
 function UserList() {
@@ -9,9 +8,8 @@ function UserList() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const navigate = useNavigate();
+  const [bannedUsers, setBannedUsers] = useState({});
 
-  // Fetch only 'Web' device type users from Firestore
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true);
@@ -35,59 +33,83 @@ function UserList() {
     fetchUsers();
   }, []);
 
-  const handleRowClick = useCallback((uid) => {
-    navigate(`/user/${uid}`); // Navigate to user details page on row click
-  }, [navigate]);
-
-  const debouncedSetSearchTerm = useCallback(debounce(setSearchTerm, 300), []);
-
-  const handleSearchChange = event => {
-    debouncedSetSearchTerm(event.target.value);
+  const toggleBanUser = async (email) => {
+    const isBanned = bannedUsers[email];
+    try {
+      if (!isBanned) {
+        await addDoc(collection(db, "bannedUser"), { email });
+        setBannedUsers(prev => ({ ...prev, [email]: true }));
+        alert(`User with email ${email} has been banned.`);
+      } else {
+        // For simplicity, assume each banned user's document key is their email
+        // This may need to change depending on your document structure
+        await deleteDoc(doc(db, "bannedUser", email));
+        setBannedUsers(prev => ({ ...prev, [email]: false }));
+        alert(`User with email ${email} has been unbanned.`);
+      }
+    } catch (error) {
+      console.error(`Error ${isBanned ? 'unbanning' : 'banning'} user:`, error);
+      alert(`Failed to ${isBanned ? 'unban' : 'ban'} user.`);
+    }
   };
 
-  // Memoize the filtered users to avoid unnecessary recalculations
+  const debouncedSearchChange = useMemo(() => debounce((value) => {
+    setSearchTerm(value);
+  }, 300), []);
+
+  const handleSearchChange = event => {
+    debouncedSearchChange(event.target.value);
+  };
+
   const filteredUsers = useMemo(() => {
     return users.filter(user =>
       user.username?.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [searchTerm, users]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div style={styles.loading}>Loading...</div>;
+  if (error) return <div style={styles.error}>Error: {error}</div>;
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>User List</h2>
-      <div style={{ marginTop: '50px', width: '100%', maxWidth: '600px' }}>
-        <input 
-          type="text"
-          placeholder="Search users..."
-          onChange={handleSearchChange}
-          style={{ padding: '10px', marginBottom: '20px', borderRadius: '5px', border: '1px solid #ccc', width: '100%' }}
-        />
-      </div>
-      <table style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid #ccc' }}>
+    <div style={styles.container}>
+      <h2 style={styles.header}>User List</h2>
+      <input 
+        type="text"
+        placeholder="Search users..."
+        onChange={handleSearchChange}
+        style={styles.searchInput}
+      />
+      <table style={styles.table}>
         <thead>
-          <tr style={{ backgroundColor: '#a9a9a9' }}>
-            <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>UID</th>
-            <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Name</th>
-            <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Email</th>
-            <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Device Type</th>
+          <tr>
+            <th style={styles.th}>UID</th>
+            <th style={styles.th}>Name</th>
+            <th style={styles.th}>Email</th>
+            <th style={styles.th}>Action</th>
+            <th style={styles.th}>Device Type</th>
           </tr>
         </thead>
         <tbody>
           {filteredUsers.length > 0 ? (
             filteredUsers.map(user => (
-              <tr key={user.docId} onClick={() => handleRowClick(user.uid)} style={{ cursor: 'pointer' }}>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.uid}</td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.username || "No name available"}</td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.email}</td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.deviceType}</td>
+              <tr key={user.docId} style={styles.tr}>
+                <td style={styles.td}>{user.uid}</td>
+                <td style={styles.td}>{user.username || "No name available"}</td>
+                <td style={styles.td}>{user.email}</td>
+                <td style={styles.td}>
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); toggleBanUser(user.email); }} 
+                    style={bannedUsers[user.email] ? styles.bannedButton : styles.button}
+                  >
+                    {bannedUsers[user.email] ? 'Unban' : 'Ban'}
+                  </button>
+                </td>
+                <td style={styles.td}>{user.deviceType}</td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="4" style={{ textAlign: 'center' }}>No users found</td>
+              <td colSpan="5" style={styles.noUsers}>No users found</td>
             </tr>
           )}
         </tbody>
@@ -95,5 +117,77 @@ function UserList() {
     </div>
   );
 }
+
+const styles = {
+  container: {
+    padding: '20px',
+    fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
+  },
+  header: {
+    textAlign: 'center',
+    color: '#333',
+    margin: '10px 0'
+  },
+  searchInput: {
+    padding: '10px',
+    marginBottom: '20px',
+    borderRadius: '5px',
+    border: '1px solid #ccc',
+    width: '100%',
+    boxSizing: 'border-box'
+  },
+  table: {
+    width: '100%',
+    borderCollapse: 'collapse',
+    marginTop: '20px'
+  },
+  th: {
+    border: '1px solid #ddd',
+    padding: '8px',
+    textAlign: 'left',
+    backgroundColor: '#f4f4f4'
+  },
+  td: {
+    border: '1px solid #ddd',
+    padding: '8px',
+    textAlign: 'center'
+  },
+  tr: {
+    ':hover': {
+      backgroundColor: '#f9f9f9'
+    }
+  },
+  button: {
+    padding: '5px 10px',
+    color: 'white',
+    backgroundColor: '#007BFF',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+  },
+  bannedButton: {
+    padding: '5px 10px',
+    color: 'white',
+    backgroundColor: '#6c757d', // Grey color to indicate "Banned"
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'not-allowed', // Cursor style to indicate non-actionable
+    boxShadow: 'none' // No shadow for banned state
+  },
+  loading: {
+    textAlign: 'center',
+    marginTop: '20px'
+  },
+  error: {
+    color: 'red',
+    textAlign: 'center',
+    marginTop: '20px'
+  },
+  noUsers: {
+    textAlign: 'center',
+    padding: '10px'
+  }
+};
 
 export default UserList;
