@@ -552,19 +552,36 @@ export const handleRsvp = async (
   }
 };
 
-export const fetchByCityOrState = async (searchValue) => {
+export const fetchByCityOrState = async (searchValue, startDate, endDate) => {
   try {
+
+    if (!searchValue || typeof searchValue !== 'string') {
+      console.error('Invalid search value');
+      return;
+    }
+  
+    if (!(startDate instanceof Date) || isNaN(startDate)) {
+      console.error('Invalid start date');
+      return;
+    }
+  
+    if (!(endDate instanceof Date) || isNaN(endDate)) {
+      console.error('Invalid end date');
+      return;
+    } 
+
     const pastOutreachRef = collection(db, PAST_OUTREACH_EVENTS_COLLECTION);
     // Full text search - Search filtering by City/State fields matching exact value
+
     const outreachByLocationQuery = query(
-      pastOutreachRef,where('location.city', '>=', searchValue), where('location.city', '<=', searchValue + '\uf8ff') // 
-      
-     //  or (where('location.city', '>=', searchValue), // Start at prefix
-      //     where('location.city', '<=', searchValue + '\uf8ff') // 
-      // )
+      pastOutreachRef, where('location.city', '==', searchValue),
+         where('eventDate', '>=', startDate),
+         where('eventDate', '<=', endDate)
     );
 
     const outreachDocRef = await getDocs(outreachByLocationQuery);
+
+    console.log(outreachDocRef);
 
     let outreachByLoc = [];
     for (const doc of outreachDocRef.docs) {
