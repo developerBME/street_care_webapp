@@ -5,7 +5,7 @@ import add from "../../images/add.png";
 import UserInfo from "./UserInfo";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import OutreachEventCard from "../Community/OutreachEventCard";
-import { formatDate, fetchUserEvents } from "../EventCardService";
+import { formatDate, fetchUserOutreaches } from "../EventCardService";
 import { auth } from "../firebase";
 import CustomButton from "../Buttons/CustomButton";
 // import { fetchPersonalVisitLogs } from "../VisitLogCardService";
@@ -28,7 +28,7 @@ function Profile() {
       if (user) {
         const uid = user.uid;
         console.log("UID is ", uid);
-        const eventsData = await fetchUserEvents(uid);
+        const eventsData = await fetchUserOutreaches();
         eventsData.sort((a, b) => a.eventDate - b.eventDate);
         setEvents(eventsData);
       } else {
@@ -47,7 +47,7 @@ function Profile() {
       if (user) {
         const uid = user.uid;
         console.log("UID is ", uid);
-        const eventsData = await fetchUserEvents(uid);
+        const eventsData = await fetchUserOutreaches();
 
         eventsData.sort((a, b) => a.eventDate - b.eventDate);
         setEvents(eventsData);

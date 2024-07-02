@@ -283,7 +283,7 @@ export const fetchEventById = async (eventId) => {
   }
 };
 
-export const fetchUserEvents = async (uid) => {
+/*export const fetchUserEvents = async (uid) => {
   try {
     const userQuery = query(
       collection(db, USERS_COLLECTION),
@@ -329,7 +329,7 @@ export const fetchUserEvents = async (uid) => {
     );
     throw error;
   }
-};
+};*/
 
 export function formatDate(dateObj) {
   // Extract date parts manually for custom format
@@ -582,6 +582,52 @@ export const fetchByCityOrState = async (searchValue) => {
     logEvent(
       "STREET_CARE_ERROR",
       `error on fetchByCityOrState AllPastOrtreachEvents.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
+
+export const fetchUserOutreaches = async () => {
+  try {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) {
+      throw new Error("User is not logged in.");
+    }
+
+    const userQuery = query(
+      collection(db, OUTREACH_EVENTS_COLLECTION),
+      where("uid", "==", user.uid)
+    );
+
+    const eventSnapshot = await getDocs(userQuery);
+    let userOutreaches = [];
+
+    for (const doc of eventSnapshot.docs) {
+      const eventData = doc.data();
+      const result = await fetchUserDetails(eventData.uid);
+      const userName = result.username;
+      const photoUrl = result.photoUrl;
+
+      let currentParticipants = eventData.participants || [];
+      userOutreaches.push({
+        ...eventData,
+        userName: userName,
+        id: doc.id,
+        label:
+          user && currentParticipants.includes(user.uid) ? "EDIT" : "RSVP",
+        nop: currentParticipants.length,
+        photoUrl: photoUrl,
+      });
+    }
+
+    return userOutreaches;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchUserOutreaches in EventCardService.js- ${error.message}`
     );
     throw error;
   }
