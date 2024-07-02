@@ -133,6 +133,7 @@ function App() {
           <Route path="/allnews" element={<Newscard />} />
           <Route path="/allnews/:id" element={<Readmorenews />} />
           
+
           <Route path="/user/:uid" element={<UserDetails />} />  // Route for user details
           <Route
             path="/verifyemail"
@@ -163,7 +164,7 @@ function App() {
               element={<UpdateEmailAddress />}
             />
             <Route
-              path="/profile/profilesettings/emailupdateconfirmation"
+              path="/profile/profilesettings/emailupdateconfirmation/:email"
               element={<EmailUpdateConfirmation />}
             />
             <Route
@@ -173,7 +174,7 @@ function App() {
 
             <Route path="/profile/commoutform" element={<CommOutForm />} />
             <Route
-              path="/profile/personaloutform"
+              path="/profile/visitlogform"
               element={<PersonalOutForm />}
             />
             <Route path="/createOutreach" element={<CreateOutreach />} />
@@ -239,7 +240,7 @@ function App() {
 
           <Route path="/test" element={<TestUser />} />
           <Route path="/list" element={<ListUser />} />
-          <Route path="/profile/personaloutform/:id" element={<PersonalOutForm />} />
+          <Route path="/profile/visitlogform/:id" element={<PersonalOutForm />} />
 
         </Routes>
         <Footer />
