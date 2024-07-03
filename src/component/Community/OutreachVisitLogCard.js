@@ -4,7 +4,6 @@ import defaultImage from "../../images/default_avatar.svg";
 import { useNavigate } from "react-router-dom";
 import date from "../../images/date.png";
 import locate from "../../images/location.png";
-import userSlots from "../../images/userSlots.png";
 import verifiedImg from "../../images/verified_purple.png";
 import { formatDate } from "../helper";
 import CardTags from "./CardTags";
