@@ -107,6 +107,42 @@ export const fetchUserName = async (uid) => {
   }
 };
 
+export const fetchHelpRequestByUser = async () => {
+  try {
+    const fAuth = getAuth();
+    const uid = fAuth?.currentUser?.uid;
+    //Fetching Help Requests created by the loggedIn user
+    const helpReqRef = collection(db, HELP_REQ_COLLECTION);
+      const allhelpRequestsByUserQuery = query(
+      helpReqRef,
+      where('uid', '==', uid)
+    );
+
+    const helpRequestDocRef = await getDocs(allhelpRequestsByUserQuery);
+    //const userName = await fetchUserName(uid);
+    const userName = fAuth?.currentUser?.displayName
+
+    let helpRequests = [];
+    for (const doc of helpRequestDocRef.docs) {
+      const helpRequestData = doc.data();
+      const id = doc.id;
+      helpRequests.push({
+        ...helpRequestData,
+        userName: userName,
+        id: id,
+      });
+    }
+    console.log(helpRequests)
+    return helpRequests;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchHelpRequestsByUser HelpRequestService.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
 export const fetchByCityAndDate = async (searchCityValue, startDate, endDate) => {
   try {
     if (!searchCityValue || typeof searchCityValue !== 'string') {
