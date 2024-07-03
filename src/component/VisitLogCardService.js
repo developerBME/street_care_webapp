@@ -106,7 +106,7 @@ const fetchOutreachEventData = async (eid) => {
 export const fetchVisitLogById = async (visitLogId) => {
   try {
     // Reference to the specific document in the visitlog collection
-    const visitLogRef = doc(db, VISIT_LOG_COLLECTION, visitLogId);
+    const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
     const visitLogSnap = await getDoc(visitLogRef);
     const visitLogData = visitLogSnap.data();
     const outreachEventId = visitLogData.outreachEvent || "";
@@ -114,18 +114,24 @@ export const fetchVisitLogById = async (visitLogId) => {
     const uid = visitLogData.uid;
     const userDetails = await fetchUserDetails(uid);
     return {
-      whatGiven: visitLogData.whatGiven,
-      description: outreachEventData?.description || "",
-      helpType: outreachEventData?.helpType || "",
-      location: outreachEventData?.location || "",
-      numberPeopleHelped: visitLogData.numberPeopleHelped,
-      itemQty: visitLogData.itemQty,
-      eventDate: outreachEventData?.eventDate?.seconds
-        ? formatDate(new Date(outreachEventData?.eventDate?.seconds * 1000))
-        : "",
+      id: doc.id,
+        whatGiven: visitLogData.whatGiven,
+        itemQty: visitLogData?.itemQty || "",
+        numberPeopleHelped: visitLogData?.numberPeopleHelped || "",
+        description: visitLogData?.description || "",
+        helpType: visitLogData?.helpType || "",
+        location: {
+          street: visitLogData?.street || "",
+          city: visitLogData?.city || "",
+          state: visitLogData?.state || "",
+          stateAbbv: visitLogData?.stateAbbv || "",
+          zipcode: visitLogData?.zipcode || ""
+        },
+        eventDate: visitLogData?.dateTime?.seconds
+          ? formatDate(new Date(visitLogData.dateTime.seconds * 1000))
+          : "",
       userName: userDetails.username,
       photoUrl: userDetails.photoUrl,
-      filledSlots: outreachEventData?.filledSlots || "",
     };
   } catch (error) {
     logEvent(

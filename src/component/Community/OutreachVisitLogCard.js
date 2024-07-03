@@ -80,12 +80,12 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
               }}
             />
           </div>
-          <div className="flex flex-row space-x-2">
+          {/* <div className="flex flex-row space-x-2">
             <img className="w-[20px] h-[14px] my-1" src={userSlots}></img>
             <div className="font-normal font-dmsans text-[14px]">
               {visitLogCardData?.filledSlots}
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
