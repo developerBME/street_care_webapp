@@ -200,7 +200,7 @@ function HomePage() {
   // Filter events to get only past events
   const upcomingEvents = events
     .filter((event) => {
-      const eventDate = new Date(event.eventDate.seconds * 1000);
+        const eventDate = new Date(event.eventDate?.seconds * 1000) || event.eventDate;
       return eventDate >= new Date(); // Check if the event date is before the current date
     })
     .slice(0, 3);
@@ -208,7 +208,7 @@ function HomePage() {
   // Filter events to get only past events
   const pastEvents = events
     .filter((event) => {
-      const eventDate = new Date(event.eventDate.seconds * 1000);
+        const eventDate = new Date(event.eventDate?.seconds * 1000) || event.eventDate;
       return eventDate < new Date(); // Check if the event date is before the current date
     })
     .slice(0, 3);
@@ -263,9 +263,9 @@ function HomePage() {
                     key={eventData.id}
                     cardData={{
                       ...eventData,
-                      eventDate: formatDate(
+                      eventDate: eventData.eventDate?.seconds ? formatDate(
                         new Date(eventData.eventDate.seconds * 1000)
-                      ),
+                      ) : eventData.eventDate,
                     }}
                   />
                 ))}
@@ -312,9 +312,9 @@ function HomePage() {
                   key={eventData.id}
                   cardData={{
                     ...eventData,
-                    eventDate: formatDate(
+                    eventDate: eventData.eventDate?.seconds ? formatDate(
                       new Date(eventData.eventDate.seconds * 1000)
-                    ),
+                    ) : eventData.eventDate,
                   }}
                 />
               ))}
