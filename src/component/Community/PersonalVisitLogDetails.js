@@ -1,22 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
-import profilePic from "../../images/avatar.jpg";
-import wavingHand from "../../images/waving_hand.png";
 import { fetchPersonalVisitLogById } from "../VisitLogCardService";
 import date from "../../images/date.png";
 import locate from "../../images/location.png";
-import userSlots from "../../images/userSlots.png";
-import verifiedImg from "../../images/verified_purple.png";
-import CustomButton from "../Buttons/CustomButton";
 
 const PersonalVisitLogDetails = () => {
-  // const navigate = useNavigate();
-  // const location = useLocation();
-  // const details = new URLSearchParams(location.search);
-  // const categories = details.getAll("categories");
   const { id } = useParams();
-  console.log("Personal Visit Log ID: " + id);
   const [data, setData] = useState(null);
   const navigate = useNavigate();
 
@@ -36,7 +26,17 @@ const PersonalVisitLogDetails = () => {
   return (
     <div className="relative flex flex-col items-center ">
       <div className=" mx-2 mb-16 lg:mx-40 mt-48 rounded-2xl bg-white text-black ">
-        {/*  */}
+        <div
+          className=" absolute flex mt-[-50px] items-center cursor-pointer "
+          onClick={() => {
+            navigate("/profile");
+          }}
+        >
+          <IoIosArrowBack className=" w-6 h-6" />{" "}
+          <p className=" font-bricolage text-xl font-bold leading-7">
+            Return to Profile
+          </p>
+        </div>
         <div className="px-[150px] py-[100px]">
           <div className="space-y-[64px]">
             <div className="font-medium font-dmsans text-[45px] text-neutral-800 leading-[52px]">
@@ -48,39 +48,24 @@ const PersonalVisitLogDetails = () => {
                 <div>{data?.userName}</div>
                 <img src={verifiedImg} className="w-5 h-5" />
               </div> */}
-              {console.log("Data: " + JSON.stringify(data))}
               <div className="px-6 py-4">
                 <div className="flex flex-col space-y-4">
                   <div className="flex flex-row justify-normal space-x-2">
                     <img className="w-[13px] h-[15px] my-[3px]" src={date} />
                     <div class="text-violet-900 text-sm font-medium font-['DM Sans'] leading-tight pt-0.5">
-                      {/* {details.get("date")} {details.get("date")} */}
-                       {data?.dateTime.toDate().toLocaleString().toString()}
-                      {/* {data?.date || ""} · {data?.time || ""} */}
+                      {data?.dateTime.toDate().toLocaleString().toString()}
                     </div>
                   </div>
                   <div className="flex flex-row justify-normal space-x-2">
                     <img className="w-[12px] h-[15px] my-[3px]" src={locate} />
                     <div class="text-violet-900 text-sm font-medium font-['DM Sans'] leading-tight pt-0.5">
-                      {/* {details.get("date")} {details.get("date")} */}
-                      {/* {data?.location?.city || ""},{" "}
-                      {data?.location?.state || ""} */}
-                      {data?.city || ""}, {data?.state || ""}
+                      {data?.city || ""}, {data?.stateAbbv || data?.state || ""}
                     </div>
                   </div>
                   <div class="text-zinc-700 text-[16px] font-normal font-['DM Sans'] leading-snug max-w-3xl">
-                    {/* {details.get("description")} */}
                     {data?.description || ""}
                   </div>
                   <div className="inline-flex items-center gap-2">
-                    {/* {categories.map((category, index) => (
-                      <div
-                        key={index}
-                        className="py-1 px-3 border border-[#C8C8C8] w-fit rounded-xl text-[10px] text-[#444746]"
-                      >
-                        {category}
-                      </div>
-                    ))} */}
                     {data?.whatGiven.map((item, index) => (
                       <div
                         key={index}
@@ -153,15 +138,6 @@ const PersonalVisitLogDetails = () => {
                 Share
               </button>
             </div> */}
-            <div className="mt-16">
-              <CustomButton
-                label="Return to Profile"
-                name="buttondefault"
-                onClick={() => {
-                  navigate("/profile");
-                }}
-              />
-            </div>
           </div>
         </div>
       </div>

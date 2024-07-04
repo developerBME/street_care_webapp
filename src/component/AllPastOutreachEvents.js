@@ -33,7 +33,9 @@ const AllPastOutreachEvents = () => {
         delete event.label;
       });
       const pastEvents = eventsData.filter((event) => {
-        const eventDate = new Date(event.eventDate.seconds * 1000);
+        const eventDate = event?.eventDate?.seconds
+          ? new Date(event.eventDate.seconds * 1000)
+          : event.eventDate;
         return eventDate < new Date(); // Check if the event date is before the current date
       });
 
@@ -69,7 +71,7 @@ const AllPastOutreachEvents = () => {
             -1 ||
           x.userName
             .toLowerCase()
-            .search(searchRef.current.value.toLowerCase()) > -1     
+            .search(searchRef.current.value.toLowerCase()) > -1
       )
     );
   };
@@ -142,9 +144,11 @@ const AllPastOutreachEvents = () => {
                     key={eventData.id}
                     cardData={{
                       ...eventData,
-                      eventDate: formatDate(
-                        new Date(eventData.eventDate.seconds * 1000)
-                      ),
+                      eventDate: eventData?.eventDate?.seconds
+                        ? formatDate(
+                            new Date(eventData.eventDate.seconds * 1000)
+                          )
+                        : eventData.eventDate,
                     }}
                   />
                 ))}

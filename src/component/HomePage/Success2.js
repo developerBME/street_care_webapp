@@ -62,8 +62,6 @@ function Success2() {
         Highlights of our success
       </p>
 
-     
-
       <div className="w-fit h-fit my-8 p-7 bg-white rounded-[30px] justify-start items-start lg:gap-5 lg:inline-flex">
         <div className="w-20 h-20 p-4 bg-gradient-to-br from-yellow-100 to-neutral-200 rounded-3xl justify-start items-start gap-2.5 flex">
           <div className="w-12 h-12 relative">
@@ -99,9 +97,7 @@ function Success2() {
               >
                 {" "}
                 Nonprofit Profile{" "}
-              </a>
-             
-            
+              </a>          
             </p>
           </div>
         </div>
@@ -109,8 +105,6 @@ function Success2() {
       {/* Grid */}
 
       <div className=" mt-10 w-full h-fit justify-start items-start">
-        {/*  */}
-
         <div className="w-full h-fit justify start items-start grid grid-cols-1 lg:grid-cols-3 font-bricolage">
           <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-t-2xl  lg:rounded-tr-none lg:rounded-tl-2xl shrink basis-0  px-8 py-4 bg-gradient-to-br from-emerald-300 to-neutral-200 gap-6 flex">
             <div className="text-violet-950 text-2xl lg:text-xl  font-medium leading-loose">
@@ -219,17 +213,10 @@ function Success2() {
           </div>
         </div>
       </div>
-      
-
+              
       <div className=" mt-16 w-full  justify-start items-start">
-      <HomePageVisitlog />
-
-        </div>
-
-
-
-
-
+           <HomePageVisitlog />
+      </div>
 
     </div>
   );
