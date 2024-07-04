@@ -22,7 +22,9 @@ const AllOutreachEvents = () => {
     const fetchData = async () => {
       const eventsData = await fetchEvents();
       const upcomingEvents = eventsData.filter((event) => {
-        const eventDate = new Date(event.eventDate?.seconds * 1000) || event.eventDate;
+        const eventDate = event?.eventDate?.seconds
+          ? new Date(event.eventDate.seconds * 1000)
+          : event.eventDate;
         return eventDate >= new Date(); // Check if the event date is before the current date
       });
       // Sort events in place based on their date
@@ -131,9 +133,11 @@ const AllOutreachEvents = () => {
                       key={eventData.id}
                       cardData={{
                         ...eventData,
-                        eventDate: eventData.eventDate?.seconds ? formatDate(
-                          new Date(eventData.eventDate.seconds * 1000)
-                        ) : eventData.eventDate,
+                        eventDate: eventData?.eventDate?.seconds
+                          ? formatDate(
+                              new Date(eventData.eventDate.seconds * 1000)
+                            )
+                          : eventData.eventDate,
                       }}
                     />
                   ))}
