@@ -80,7 +80,8 @@ function Profile() {
           <UserInfo />
         </div>
         {/* Vishnu */}
-        <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black mb-10">
+        {/* Signed Up outreaches section */}
+        {/* <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black mb-10">
           <div className="flex flex-col gap-4 md:px-12 md:py-16 lg:gap-14 lg:p-24 pl-8 pt-4 pb-4 pr-8">
             <div className="inline-flex flex-col sm:flex-row sm:space-x-16 justify-between gap-2">
               <div class="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage text-left leading-[52px]">
@@ -143,7 +144,7 @@ function Profile() {
               )}
             </div>
           </div>{" "}
-        </div>
+        </div> */}
 
         <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black mb-10">
           <div className="flex flex-col gap-4 md:px-12 md:py-16 lg:gap-14 lg:p-24 pl-8 pt-4 pb-4 pr-8">

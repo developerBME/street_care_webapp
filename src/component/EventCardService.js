@@ -7,14 +7,14 @@ import {
   query,
   where,
   limit,
-  or
+  or,
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import logEvent from "./FirebaseLogger";
 
 const OFFICIAL_EVENTS_COLLECTION = "officialEvents";
-const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
+const OUTREACH_EVENTS_COLLECTION = "outreachEventsDev";
 const PAST_OUTREACH_EVENTS_COLLECTION = "pastOutreachEvents";
 const USERS_COLLECTION = "users";
 const PERSONAL_VISIT_LOG = "personalVisitLog";
@@ -64,7 +64,9 @@ export const fetchEvents = async () => {
 
 export async function calculateNumberOfPages(outreachesPerPage) {
   if (outreachesPerPage < 1 || outreachesPerPage > 10) {
-    throw new Error("The number of outreaches per page must be between 1 and 10.");
+    throw new Error(
+      "The number of outreaches per page must be between 1 and 10."
+    );
   }
 
   const outreachEventsRef = collection(db, OUTREACH_EVENTS_COLLECTION);
@@ -366,7 +368,9 @@ export function formatDate(dateObj) {
   const ampm = hours >= 12 ? "PM" : "AM";
   hours = hours % 12;
   hours = hours ? hours : 12; // The hour '0' should be '12'
-  const formattedTime = `${hours}:${minutes.toString().padStart(2, "0")} ${ampm}`;
+  const formattedTime = `${hours}:${minutes
+    .toString()
+    .padStart(2, "0")} ${ampm}`;
 
   return `${month} ${day}, ${year} ${weekday} ${formattedTime}`;
   // return `${month}/${day}/${year} - ${hours}:${minutes}`;
@@ -559,29 +563,29 @@ export const handleRsvp = async (
 
 export const fetchByCityOrState = async (searchValue, startDate, endDate) => {
   try {
+    if (!searchValue || typeof searchValue !== "string") {
+      console.error("Invalid search value");
+      return;
+    }
 
-    if (!searchValue || typeof searchValue !== 'string') {
-      console.error('Invalid search value');
-      return;
-    }
-  
     if (!(startDate instanceof Date) || isNaN(startDate)) {
-      console.error('Invalid start date');
+      console.error("Invalid start date");
       return;
     }
-  
+
     if (!(endDate instanceof Date) || isNaN(endDate)) {
-      console.error('Invalid end date');
+      console.error("Invalid end date");
       return;
-    } 
+    }
 
     const pastOutreachRef = collection(db, PAST_OUTREACH_EVENTS_COLLECTION);
     // Full text search - Search filtering by City/State fields matching exact value
 
     const outreachByLocationQuery = query(
-      pastOutreachRef, where('location.city', '==', searchValue),
-         where('eventDate', '>=', startDate),
-         where('eventDate', '<=', endDate)
+      pastOutreachRef,
+      where("location.city", "==", searchValue),
+      where("eventDate", ">=", startDate),
+      where("eventDate", "<=", endDate)
     );
 
     const outreachDocRef = await getDocs(outreachByLocationQuery);
@@ -590,7 +594,7 @@ export const fetchByCityOrState = async (searchValue, startDate, endDate) => {
 
     let outreachByLoc = [];
     for (const doc of outreachDocRef.docs) {
-      const pastOutreachData = doc.data(); 
+      const pastOutreachData = doc.data();
       const id = doc.id;
 
       outreachByLoc.push({
@@ -598,7 +602,7 @@ export const fetchByCityOrState = async (searchValue, startDate, endDate) => {
         id: id,
       });
     }
-    console.log(outreachByLoc)
+    console.log(outreachByLoc);
     return outreachByLoc;
   } catch (error) {
     logEvent(
@@ -608,7 +612,6 @@ export const fetchByCityOrState = async (searchValue, startDate, endDate) => {
     throw error;
   }
 };
-
 
 export const fetchUserOutreaches = async () => {
   try {
@@ -638,8 +641,7 @@ export const fetchUserOutreaches = async () => {
         ...eventData,
         userName: userName,
         id: doc.id,
-        label:
-          user && currentParticipants.includes(user.uid) ? "EDIT" : "RSVP",
+        label: user && currentParticipants.includes(user.uid) ? "EDIT" : "RSVP",
         nop: currentParticipants.length,
         photoUrl: photoUrl,
       });
