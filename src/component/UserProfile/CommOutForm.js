@@ -16,6 +16,7 @@ import { db } from "../firebase";
 import CustomButton from "../Buttons/CustomButton";
 import ConfirmationModal from "./ConfirmationModal";
 import errorImg from "../../images/error.png";
+import { emailConfirmation } from "../EmailService";
 
 const starStyle = {
   width: 60,
@@ -50,6 +51,13 @@ function CommOutForm() {
     outreachError: "",
   });
 
+  const [isOtherChecked, setIsOtherChecked] = useState(false);
+  const [otherInputValue, setOtherInputValue] = useState("");
+
+  const handleOtherCheck = () => {
+    setIsOtherChecked(!isOtherChecked);
+  };
+
   const handleItemQtyChange = (e) => {
     const inputValue = e.target.value;
     if (/^[1-9]+\d*$/.test(inputValue) || inputValue === "") {
@@ -83,13 +91,13 @@ function CommOutForm() {
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  const openModal = () => {
-    setModalIsOpen(true);
-  };
+  // const openModal = () => {
+  //   setModalIsOpen(true);
+  // };
 
-  const closeModal = () => {
-    setModalIsOpen(false);
-  };
+  // const closeModal = () => {
+  //   setModalIsOpen(false);
+  // };
 
   // const tempsub = async (e) => {
   //   e.preventDefault();
@@ -106,7 +114,7 @@ function CommOutForm() {
       console.log(fAuth.currentUser.uid);
     } else {
       console.log("USER NOT FOUND!");
-      navigate("/login");
+      // navigate("/login");
     }
   });
 
@@ -122,6 +130,22 @@ function CommOutForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     let setReturn = false;
+    let setOtherBool = true;
+
+    let whatGivenArr = [...itemArray];
+    if (isOtherChecked) {
+      setOtherBool = false;
+      updateErrorState(
+        "checkboxesError",
+        "Please specify for other kind of help provided"
+      );
+      if (otherInputValue !== "") {
+        whatGivenArr.push(otherInputValue);
+        console.log(otherInputValue);
+        updateErrorState("checkboxesError", "");
+        setOtherBool = true;
+      }
+    }
     // Form Validation Start
     if (!numberHelped) {
       updateErrorState("numberHelpedError", "Number is required");
@@ -130,7 +154,7 @@ function CommOutForm() {
       updateErrorState("numberHelpedError", "");
     }
 
-    if (itemArray == "" || itemArray == []) {
+    if (whatGivenArr == [] || !setOtherBool) {
       updateErrorState(
         "checkboxesError",
         "Please provide the kind of help provided"
@@ -139,6 +163,16 @@ function CommOutForm() {
     } else {
       updateErrorState("checkboxesError", "");
     }
+
+    // if (itemArray == "" || itemArray == []) {
+    //   updateErrorState(
+    //     "checkboxesError",
+    //     "Please provide the kind of help provided"
+    //   );
+    //   setReturn = true;
+    // } else {
+    //   updateErrorState("checkboxesError", "");
+    // }
 
     if (!itemQty) {
       updateErrorState("itemQtyError", "Enter Quantity");
@@ -159,18 +193,35 @@ function CommOutForm() {
     let obj = {
       uid: fAuth.currentUser.uid,
       numberPeopleHelped: numberHelped,
-      whatGiven: itemArray,
+      whatGiven: whatGivenArr,
       itemQty: itemQty,
       rating: rating,
       outreachEvent: outreachRef.current.value,
     };
 
+    const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px">
+      <h1>Thank you for creating the outreach</h1>
+      <p>Your Community Outreach Form has been successfully created and you can view it in your profile.</p>
+      <p>Here are some of the details:</p>
+      <ul>
+      <li>Number of People Helped: ${numberHelped}</li>
+      <li>Outreach Event: ${outreachRef.current.value}</li>
+      <li>Item Quantity: ${itemQty}</li>
+      </ul>
+    </div>`;
+
     try {
-      const logRef = collection(db, "testLogDev");
+      const logRef = collection(db, "visitLogWebProd");
       const docRef = await addDoc(logRef, obj);
       if (docRef.id) {
         console.log(docRef.id);
         setSuccess(true);
+        emailConfirmation(
+          fAuth.currentUser.email,
+          fAuth.currentUser.displayName,
+          "",
+          emailHTML
+        );
         clearFields();
       }
     } catch (e) {
@@ -213,7 +264,7 @@ function CommOutForm() {
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center ">
-        <div className=" w-fit md:w-[930px] mx-2    mt-48 mb-16 rounded-2xl bg-[#F8F9F0] text-black ">
+        <div className="w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[930px] mx-2 mt-48 mb-16 rounded-2xl bg-[#F8F9F0] text-black ">
           <div className="items-center justify-center  h-full w-full mx-auto rounded-2xl ">
             {/*  */}
             <div className=" absolute flex mt-[-50px] items-center">
@@ -226,7 +277,7 @@ function CommOutForm() {
               </Link>
             </div>
             {/*  */}
-            <div className="w-fit h-fit md:px-[150px] md:py-[100px] flex-col justify-start items-start gap-16 inline-flex">
+            <div className="w-fit h-fit lg:px-[150px] lg:py-[100px] md:px-[100px] md:py-[80px] px-[40px] py-[16px] flex-col justify-start items-start gap-16 inline-flex">
               <div className="flex-col justify-start items-start gap-16 flex">
                 <div className="w-fit text-neutral-800 text-[57px] font-medium font-bricolage leading-[64px]">
                   Tell us more about who you helped!
@@ -274,16 +325,16 @@ function CommOutForm() {
                     Select the community outreach you have attended.
                   </div>
                   {/*  */}
-                  <div className="self-stretch w-full h-fit flex-col  flex ">
-                    <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
+                  <div className="self-stretch w-full h-fit flex-col flex ">
+                    <div className=" absolute w-fit bg-white ml-3 mt-[-5px] px-1 justify-start items-center inline-flex">
                       <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
                         Community Outreach
                       </div>
                     </div>
-                    <div className="self-stretch h-fit  border-collapse">
-                      <div className=" h-14 inline-flex w-full">
+                    <div className="self-stretch h-fit border-collapse">
+                      <div className="h-14 inline-flex w-full">
                         <select
-                          className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
+                          className={`text-zinc-900 w-full h-full px-3 rounded-[4px] text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
                             error.outreachError !== ""
                               ? "ring-red-500"
                               : "ring-gray-300"
@@ -293,7 +344,7 @@ function CommOutForm() {
                           onChange={handleOutreachChange}
                         >
                           <option value="" disabled>
-                            Select Outreach event
+                            Select Outreach Event
                           </option>
                           {outreach &&
                             outreach.map((event) => {
@@ -480,7 +531,7 @@ function CommOutForm() {
                         className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                         required=""
                         ref={(el) => (checkboxes.current[7] = el)}
-                        onChange={handleItemArray}
+                        onChange={handleOtherCheck}
                       ></input>
                       <label
                         for="other-option"
@@ -502,6 +553,37 @@ function CommOutForm() {
                     </div>
                   )}
                 </div>
+                {isOtherChecked && (
+                  <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
+                    <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
+                      <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
+                        Other
+                      </div>
+                    </div>
+                    <div className="self-stretch h-fit  border-collapse     ">
+                      <div className=" h-14  justify-center items-start ">
+                        <input
+                          id="otherInput"
+                          value={otherInputValue}
+                          placeholder="Other"
+                          className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border-0 text-[15px] font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
+                          required=""
+                          onChange={(e) => {
+                            setOtherInputValue(e.target.value);
+                          }}
+                        ></input>
+                      </div>
+                    </div>
+                    {error.checkboxesError && (
+                      <div className="inline-flex items-center">
+                        <img src={errorImg} className="w-3 h-3" />
+                        <p className="text-red-600 text-xs">
+                          {error.checkboxesError}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
                 {/*  */}
 
                 <div className="self-stretch grow shrink basis-0 px-8 pt-[54px] pb-[55px] bg-stone-50 rounded-[30px] border border-stone-300 flex-col justify-start items-center gap-[29px] flex">

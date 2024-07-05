@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import CustomButton from "../Buttons/CustomButton";
 import errorImg from "../../images/error.png";
 import successImg from "../../images/verified.png";
-import { getAuth } from "firebase/auth";
+import { onAuthStateChanged, getAuth } from "firebase/auth";
 import {
   collection,
   getDocs,
@@ -16,31 +16,48 @@ import { db, storage } from "../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import imageCompression from "browser-image-compression";
 import { useNavigate } from "react-router-dom";
-import arrowBack from "../../images/arrowBack.png";
+import defaultImage from "../../images/default_avatar.svg";
+import Avatar from "@mui/material/Avatar";
+import edit from "../../images/edit.png";
 
 const USERS_COLLECTION = "users";
-async function uploadProfileImage(file, currentUser, setLoading) {
+
+async function uploadProfileImage(
+  file,
+  currentUser,
+  setLoading,
+  setSuccess,
+  setAvatarLoading
+) {
   const fAuth = getAuth();
   const fileRef = ref(storage, "webappUserImages/" + fAuth.currentUser.uid);
-  setLoading(true);
-  const snapshot = await uploadBytes(fileRef, file);
-  const photoUrl = await getDownloadURL(fileRef);
-  console.log(photoUrl);
 
-  const userQuery = query(
-    collection(db, USERS_COLLECTION),
-    where("uid", "==", fAuth.currentUser.uid)
-  );
-  const userDocRef = await getDocs(userQuery);
-  const userDocID = userDocRef.docs[0].id;
-  // reference for the userdoc
-  const userRef = doc(db, USERS_COLLECTION, userDocID);
-  await updateDoc(userRef, {
-    photoUrl: photoUrl,
-  });
-  // updateProfile(currentUser,{photoURL:photoUrl})
-  setLoading(false);
-  alert("File Uploaded successfully");
+  setAvatarLoading(true); // Set avatar loading to true when starting the upload
+
+  try {
+    const snapshot = await uploadBytes(fileRef, file);
+    const photoUrl = await getDownloadURL(fileRef);
+
+    const userQuery = query(
+      collection(db, USERS_COLLECTION),
+      where("uid", "==", fAuth.currentUser.uid)
+    );
+    const userDocRef = await getDocs(userQuery);
+    const userDocID = userDocRef.docs[0].id;
+    const userRef = doc(db, USERS_COLLECTION, userDocID);
+    await updateDoc(userRef, {
+      photoUrl: photoUrl,
+    });
+
+    setLoading(false);
+    setSuccess("File Uploaded successfully");
+
+    setAvatarLoading(false); // Set avatar loading to false when upload is complete
+  } catch (error) {
+    setLoading(false);
+    console.error("Error uploading image:", error);
+    setAvatarLoading(false); // Set avatar loading to false on error
+  }
 }
 
 function AccSetting() {
@@ -51,10 +68,41 @@ function AccSetting() {
   const [userimageError, setUserimageError] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [avatarLoading, setAvatarLoading] = useState(false);
   const username = useRef("");
   const imgRef = useRef("");
   const fAuth = getAuth();
   const [loading, setLoading] = useState(false);
+
+  const [photoUrl, setPhotoUrl] = useState("");
+
+  const getUserData = async () => {
+    try {
+      const userRef = query(
+        collection(db, "users"),
+        where("uid", "==", fAuth?.currentUser?.uid)
+      );
+      const data = await getDocs(userRef);
+
+      if (data.docs[0]) {
+        setPhotoUrl(data.docs[0].data().photoUrl || defaultImage);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(fAuth, (user) => {
+      if (!user) {
+        // navigate("/login");
+      }
+    });
+
+    getUserData();
+
+    return () => unsubscribe();
+  }, [fAuth.currentUser]);
 
   const handleUsernameChange = (e) => {
     setNewUsername(e.target.value);
@@ -65,18 +113,16 @@ function AccSetting() {
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Check the file format
+      setAvatarLoading(true); // Set avatar loading to true when the user selects an image
       if (
         file.type !== "image/png" &&
         file.type !== "image/jpeg" &&
         file.type !== "image/svg+xml"
       ) {
         setUserimageError("Please select a valid PNG, JPG, or SVG image.");
+        setAvatarLoading(false); // Set avatar loading to false since the image type is invalid
         return;
       }
-
-      // Original image size
-      console.log("Original Image Size:", file.size, "bytes");
 
       try {
         const options = {
@@ -84,10 +130,11 @@ function AccSetting() {
         };
 
         const compressedFile = await imageCompression(file, options);
-        // Compressed image size
-        console.log("Compressed Image Size:", compressedFile.size, "bytes");
         setNewProfileImage(compressedFile);
         setUserimageError("");
+
+        const imageUrl = URL.createObjectURL(compressedFile);
+        setPhotoUrl(imageUrl);
       } catch (error) {
         setUserimageError(
           "Image compression failed. Please select a smaller image."
@@ -95,6 +142,7 @@ function AccSetting() {
       }
       setError("");
       setSuccess("");
+      setAvatarLoading(false); // Set avatar loading to false when the image processing is complete
     }
   };
 
@@ -111,17 +159,20 @@ function AccSetting() {
       );
       const userDocRef = await getDocs(userQuery);
       const userDocID = userDocRef.docs[0].id;
-      // reference for the userdoc
       const userRef = doc(db, USERS_COLLECTION, userDocID);
-      // const userDoc = await getDoc(userRef);
       await updateDoc(userRef, {
         username: username.current.value,
       });
-      setNewUsername("");
       setSuccess("Successfully updated display name");
     } else if (imgRef.current.value !== "") {
       setUserimageError("");
-      uploadProfileImage(newProfileImage, fAuth.currentUser, setLoading);
+      uploadProfileImage(
+        newProfileImage,
+        fAuth.currentUser,
+        setLoading,
+        setSuccess,
+        setAvatarLoading
+      );
       setSuccess("Successfully updated profile image");
       imgRef.current.value = "";
       setNewProfileImage(null);
@@ -144,16 +195,46 @@ function AccSetting() {
     setSuccess("");
   };
 
+  const handleEditClick = () => {
+    imgRef.current.click();
+  };
+
   return (
     <div className="relative flex flex-col items-center ">
-      <div class=" w-full px-10 md:px-0 h-screen flex items-center justify-center">
-        <div class="bg-white border border-gray-200 flex flex-col items-center justify-center px-4 md:px-8 lg:px-24 py-8 rounded-lg shadow-2xl">
-          <p className="text-[#212121] pl-0 pt-4 text-3xl md:pl-8 md:pt-0 xl:pl-0 xl:pt-0 sm:text-4xl font-medium font-dmsans leading-9 mb-4">
+      <div className="w-full px-10 md:px-0 h-screen flex items-center justify-center">
+        <div className="bg-white mt-[64px] border border-gray-200 flex flex-col items-center justify-center px-4 md:px-[128px] py-[100px] rounded-[30px] shadow-2xl">
+          <p className="text-[#212121] text-3xl sm:text-[45px] font-medium font-dmsans leading-9 mb-[32px]">
             Update Your Profile{" "}
           </p>
-          <form>
-            <div className="mb-4">
-              <label htmlFor="username" className="block text-gray-600 mb-2">
+          <div className="relative">
+            <div className="relative inline-block rounded-full border-2 border-violet-600">
+              <Avatar
+                src={photoUrl || defaultImage}
+                alt="User Avatar"
+                sx={{ width: 100, height: 100 }}
+              />
+              <div className="absolute bottom-5 right-5 transform translate-x-1/2 translate-y-1/2 -mb-2 -mr-2 cursor-pointer bg-white rounded-full">
+                <CustomButton
+                  label=""
+                  name="buttonicon8"
+                  icon={edit}
+                  className="w-8 h-8"
+                  onClick={handleEditClick}
+                />
+              </div>
+              {avatarLoading && (
+                <div className="absolute rounded-full text-center inset-0 flex items-center justify-center bg-black bg-opacity-50 p-2 m-0">
+                  <div className="text-white text-sm">Updating</div>
+                </div>
+              )}
+            </div>
+          </div>
+          <form className="md:w-[360px] mt-[24px]">
+            <div className="mb-4 space-y-1.5">
+              <label
+                htmlFor="username"
+                className="text-zinc-700 text-sm font-medium font-dmsans leading-tight"
+              >
                 Profile Name
               </label>
               <input
@@ -162,13 +243,13 @@ function AccSetting() {
                 value={newUsername}
                 ref={username}
                 onChange={handleUsernameChange}
-                className="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-blue-400"
+                className="w-full h-12 px-4 py-1 rounded border border-stone-300 justify-start items-center gap-2 inline-flex focus:ring focus:ring-blue-400"
               />
             </div>
-            <div className="mb-4">
+            <div className="mb-4 space-y-1.5 hidden">
               <label
                 htmlFor="profileImage"
-                className="block text-gray-600 mb-2"
+                className="text-zinc-700 text-sm font-medium font-dmsans leading-tight"
               >
                 Profile Image
               </label>
@@ -177,7 +258,7 @@ function AccSetting() {
                 accept="image/*"
                 ref={imgRef}
                 onChange={handleImageChange}
-                className="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-blue-400"
+                className="w-full h-12 px-4 py-2 rounded border border-stone-300 justify-start items-center gap-2 inline-flex focus:outline-none focus:ring focus:ring-blue-400"
               />
               {newProfileImage && (
                 <img
@@ -195,27 +276,21 @@ function AccSetting() {
             </div>
             {error && (
               <div className="inline-flex items-center">
-                <img src={errorImg} className="w-3 h-3" />
+                <img src={errorImg} className="w-3 h-3 px-16" />
                 <p className="text-red-600 text-xs">{error}</p>
               </div>
             )}
-            <div className="space-y-2 md:space-y-8 md:space-x-[15px] space-x-[5px]">
-              <CustomButton
-                label="Clear"
-                name="buttonborder"
-                onClick={clearFields}
-              />
-              <CustomButton
-                label="Cancel"
-                name="buttonborder"
-                onClick={handleCancel}
-              />
-              <CustomButton
-                label="Update Profile"
-                name="buttondefault"
+            <div className="mt-[32px] space-y-2 md:space-y-8 md:space-x-[15px] space-x-[5px]">
+              <button
                 onClick={(e) => handleSubmit(e)}
-                // disabled = {loading || !newProfileImage}
-              />
+                className={`w-full text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
+                  avatarLoading !== true
+                    ? "text-white bg-[#6840E0] hover:bg-[#504279]"
+                    : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+                }`}
+              >
+                Update Profile
+              </button>
             </div>
             {success && (
               <div className="inline-flex items-center">

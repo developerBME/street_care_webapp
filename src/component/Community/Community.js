@@ -6,6 +6,7 @@ import arrowDown from "../../images/arrowDown.png";
 import CommunityOutreachEvent from "./CommunityOutreachEvent";
 import HelpRequest from "./HelpRequest";
 import Banner from "./Banner";
+import CommunityVisitLog from "./CommunityVisitLog";
 
 function Community() {
   const [activeTab, setActiveTab] = useState("outreach");
@@ -22,14 +23,12 @@ function Community() {
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center ">
         {/* Shivani */}
-        <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-32 rounded-2xl bg-white text-black ">
-          {" "}
+        <div className=" w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 lg:mx-40 mt-32 rounded-2xl bg-white text-black mb-16">
           <Banner />
           {/* Remove this component and create a new one for your code  */}
         </div>
-
         {/* Vishnu */}
-        <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl">
+        {/* <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl">
           <div
             className={`h-[63px] inline-flex w-full rounded-2xl ${
               activeTab === "outreach" ? "bg-violet-50" : "bg-[#E2FAFF]"
@@ -56,7 +55,7 @@ function Community() {
               Help Request
             </button>
           </div>
-        </div>
+        </div> */}
         {/* <div className="block sm:hidden">
           {activeTab === "outreach" ? (
             <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
@@ -68,7 +67,7 @@ function Community() {
             </div>
           )}
           </div>*/}
-        {activeTab === "outreach" ? (
+        {/* {activeTab === "outreach" ? (
           <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black">
             <CommunityOutreachEvent />
           </div>
@@ -76,7 +75,19 @@ function Community() {
           <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-8 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
             <HelpRequest />
           </div>
-        )}
+        )} */}
+
+        {/* <div className="w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 mb-8 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
+          <HelpRequest />
+        </div> */}
+
+        <div className="w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black">
+          <CommunityOutreachEvent />
+        </div>
+
+        <div className="w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black">
+          <CommunityVisitLog />
+        </div>
 
         {/*<div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black hidden md:block">
           <CommunityOutreachEvent />

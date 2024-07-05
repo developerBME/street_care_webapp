@@ -1,6 +1,6 @@
 import React from "react";
 
-function CustomButton({ label, name, onClick, icon, disable }) {
+function CustomButton({ label, name, onClick, icon, disable, type }) {
   if (name == "buttonborder") {
     return (
       <button
@@ -46,6 +46,19 @@ function CustomButton({ label, name, onClick, icon, disable }) {
       <button
         onClick={onClick}
         className={` text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-white bg-[#6840E0] hover:bg-[#504279]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
+      >
+        {label}
+      </button>
+    );
+  } else if (name == "buttondefaultlong") {
+    return (
+      <button
+        onClick={onClick}
+        className={`w-full text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
           disable !== "true"
             ? "text-white bg-[#6840E0] hover:bg-[#504279]"
             : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
@@ -347,6 +360,19 @@ function CustomButton({ label, name, onClick, icon, disable }) {
         <img src={icon} className="w-5 h-5 " />
       </button>
     );
+  } else if (name == "buttonicon8small") {
+    return (
+      <button
+        onClick={onClick}
+        className={`text-[14px] w-fit inline-flex gap-2 font-medium py-[5px] px-[5px] border-[1px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#1F0A58] border-[#C8C8C8] hover:bg-violet-200"
+            : "text-[#bfbfbf] border[#d8d8d8] cursor-not-allowed hover:bg-white"
+        }`}
+      >
+        <img src={icon} className="w-4 h-4 text-[#7f56f1]" />
+      </button>
+    );
   } else if (name == "buttonlightsmall") {
     return (
       <button
@@ -531,6 +557,46 @@ function CustomButton({ label, name, onClick, icon, disable }) {
         }`}
       >
         <img src={icon} className="w-5 h-5 " />
+      </button>
+    );
+  } else if (name == "buttondefaultwide") {
+    return (
+      <button
+        onClick={onClick}
+        type={type}
+        className={` text-[16px] font-medium w-full py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-white bg-[#6840E0] hover:bg-[#504279]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
+      >
+        {label}
+      </button>
+    );
+  } else if (name == "deleteButton") {
+    return (
+      <button
+        onClick={onClick}
+        className={`text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-white bg-[#CF003E] hover:bg-[#cf003ec7]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
+      >
+        {label}
+      </button>
+    );
+  } else if (name == "editButton") {
+    return (
+      <button
+        onClick={onClick}
+        className={`text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#181818] bg-[#E6DCFF] hover:bg-[#c4b6e7]"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
+      >
+        {label}
       </button>
     );
   } else {

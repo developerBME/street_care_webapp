@@ -1,63 +1,94 @@
-import React from "react"
-import profilePic from "../../images/avatar.jpg"
-import wavingHand from "../../images/waving_hand.png"
-import CustomButton from "../Buttons/CustomButton"
+import React from "react";
+import CustomButton from "../Buttons/CustomButton";
 import defaultImage from "../../images/default_avatar.svg";
 import { useNavigate } from "react-router-dom";
+import date from "../../images/date.png";
+import locate from "../../images/location.png";
+import verifiedImg from "../../images/verified_purple.png";
+import { formatDate } from "../helper";
+import CardTags from "./CardTags";
 
-const OutreachVisitLogCard = ({visitLogCardData})=>{
-    const navigate = useNavigate();
+const OutreachVisitLogCard = ({ visitLogCardData }) => {
+  const navigate = useNavigate();
 
-    const handleViewDetailsClick = () => {
-        const details = {
-          name: "Joshua K",
-          date: "Sept 9, 2023",
-          location: "Brooklyn, NY 11238",
-          description:
-            "Tommy, a senior citizen in a wheelchair wearing a navy blue top and brown shoes.",
-          categories: ["Clothes", "Food and Drinks"],
-          need: "Childcare specialist needed",
-        };
-    
-        navigate(`/VisitLogDetails?${new URLSearchParams(details).toString()}`);
-      };
+  return (
+    <div className="bg-[#F5EEFE] min-w-full max-w-[320px] lg:w-full rounded-[30px] mb-4 flex flex-col justify-between p-6">
+      <div className="inline-flex items-center space-x-2 ">
+        <img
+          src={visitLogCardData.photoUrl || defaultImage}
+          className="w-8 h-8 rounded-full"
+        />
+        <div>{visitLogCardData.userName || "not defined"}</div>
+        <img src={verifiedImg} className="w-5 h-5" />
+      </div>
 
-
-    return (
-        <div className="bg-[#F5EEFE] rounded-2xl ">
-            <div className="inline-flex gap-2 items-center px-4 pt-6 py-2">
-                <img src={visitLogCardData.photoUrl || defaultImage} className="w-6 h-6 rounded-full"/>
-                {/* <div>Joshua K</div> */}
-                <div>{visitLogCardData.userName || "not defined"}</div>
+      <div className="my-3 space-y-3 w-full h-full flex flex-col">
+        <div className="flex flex-row justify-between">
+          <div className="flex flex-row justify-normal space-x-2">
+            <img className="w-[13px] h-[15px] my-[3px]" src={date} />
+            <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
+              {visitLogCardData && visitLogCardData.eventDate
+                ? formatDate(visitLogCardData.eventDate)
+                : null}
             </div>
-            <div className="px-6 py-2">
-                <div className="space-y-4">
-                    <div class="text-violet-900 text-sm font-medium font-['DM Sans'] leading-tight">{visitLogCardData.eventDate || ""} · {visitLogCardData.location.street || ""} {visitLogCardData.location.city || ""} {visitLogCardData.location.state || ""} {visitLogCardData.location.zipcode || ""}</div>
-                    {/* <div class="text-violet-900 text-sm font-medium font-['DM Sans'] leading-tight">Sept 9, 2023 · Brooklyn, NY 11238</div> */}
-                    {/* <div class="text-zinc-700 text-[10px] font-normal font-['DM Sans'] leading-snug">Tommy, a senior citizen in a wheelchair wearing a navy blue top and brown shoes.</div> */}
-                    <div class="text-zinc-700 text-[10px] font-normal font-['DM Sans'] leading-snug">{visitLogCardData.description || ""}</div>
-                    <div className="inline-flex items-center gap-2">
-                        {visitLogCardData?.whatGiven.map((item, index) => (
-                        <div className="py-1 px-3 border border-[#C8C8C8] w-fit rounded-xl text-[10px] text-[#444746]">{item}</div>
-                        ))}
-                        {/* <div className="py-1 px-3 border border-[#C8C8C8] w-fit rounded-xl text-[10px] text-[#444746]">Clothes</div>
-                        <div className="py-1 px-3 border border-[#C8C8C8] w-fit rounded-xl text-[10px] text-[#444746]">Food and Drinks</div> */}
-                    </div>
-                    <div className="w-full inline-flex items-center bg-white px-4 py-1 space-x-2.5 rounded-2xl">
-                        <img src={wavingHand} />
-                        <div className="font-normal font-['Inter'] text-[10px] text-[#181818]">
-                        {visitLogCardData.helpType || ""}
-                        {/* Childcare specialist needed */}
-                        </div>
-                    </div>
-                </div>
+          </div>
+          <div className="flex flex-row justify-normal space-x-2">
+            <img className="w-[12px] h-[15px] my-[3px]" src={locate} />
+            <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
+              {`${visitLogCardData?.location?.city}, ${
+                visitLogCardData?.location?.stateAbbv ||
+                visitLogCardData?.location?.state
+              }`}
             </div>
-            <div className="pt-2 px-6 pb-6 space-x-2">
-                <CustomButton label="View Details" name="buttonlightsmall" onClick={handleViewDetailsClick} />
-                <CustomButton label="Share" name="buttonsmallborder2"/>
-            </div>
+          </div>
         </div>
-    )
-}
+
+        <h1 className="font-medium text-[24px] font-dmsans text-[#444746] line-clamp-1">
+          {visitLogCardData?.description || ""}
+        </h1>
+
+        <div className="flex flex-row justify-between">
+          <div className="font-bold text-[14px] font-dmsans text-[#444746] line-clamp-1">
+            People Helped
+          </div>
+          <div className="font-bold text-[14px] font-dmsans text-[#444746] line-clamp-1">
+            {visitLogCardData?.numberPeopleHelped}
+          </div>
+        </div>
+
+        <div className="flex flex-row justify-between">
+          <div className="font-bold text-[14px] font-dmsans text-[#444746] line-clamp-1">
+            Items Donated
+          </div>
+          <div className="font-bold text-[14px] font-dmsans text-[#444746] line-clamp-1">
+            {visitLogCardData?.itemQty}
+          </div>
+        </div>
+
+        <CardTags tags={visitLogCardData?.whatGiven || []} />
+      </div>
+
+      <div className=" flex flex-col justify-end">
+        <div className="flex items-center justify-between gap-16 my-1">
+          <div class="group relative">
+            <CustomButton
+              label="View Details"
+              name="buttonlightsmall"
+              onClick={() => {
+                navigate(`/VisitLogDetails/${visitLogCardData.id}`);
+              }}
+            />
+          </div>
+          {/* <div className="flex flex-row space-x-2">
+            <img className="w-[20px] h-[14px] my-1" src={userSlots}></img>
+            <div className="font-normal font-dmsans text-[14px]">
+              {visitLogCardData?.filledSlots}
+            </div>
+          </div> */}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default OutreachVisitLogCard;
