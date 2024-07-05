@@ -28,7 +28,7 @@ describe("calculateNumberOfPages function", () => {
       expectedNumberOfPages,
       "Number of pages calculation is incorrect"
     );
-    expect(getDocs).toHaveBeenCalledWith(collection(db, "outreachEventsDev"));
+    expect(getDocs).toHaveBeenCalledWith(collection(db, "outreachEvents"));
   });
 
   test("throws an error when outreaches per page is less than 1", async () => {

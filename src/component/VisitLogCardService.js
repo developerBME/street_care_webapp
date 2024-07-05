@@ -14,14 +14,14 @@ import { fetchUserDetails, formatDate } from "./EventCardService";
 import logEvent from "./FirebaseLogger";
 
 const VISIT_LOG_COLLECTION = "testLog";
-const OUTREACH_EVENTS_COLLECTION = "outreachEventsDev";
+const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
 const USERS_COLLECTION = "users";
 const PERSONAL_VISIT_LOG_COLLECTION = "personalVisitLog";
 const VISIT_LOG_COLLECTION_PROD = "visitLogWebProd";
 
 export const fetchVisitLogs = async () => {
   try {
-    const visitLogsRef = collection(db, VISIT_LOG_COLLECTION_PROD);
+    const visitLogsRef = collection(db, PERSONAL_VISIT_LOG_COLLECTION);
     const visitLogSnapshot = await getDocs(visitLogsRef);
     let visitLogs = [];
     for (const doc of visitLogSnapshot.docs) {
@@ -107,7 +107,7 @@ const fetchOutreachEventData = async (eid) => {
 export const fetchVisitLogById = async (visitLogId) => {
   try {
     // Reference to the specific document in the visitlog collection
-    const visitLogRef = doc(db, VISIT_LOG_COLLECTION_PROD, visitLogId);
+    const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
     const visitLogSnap = await getDoc(visitLogRef);
     const visitLogData = visitLogSnap.data();
     const outreachEventId = visitLogData.outreachEvent || "";
@@ -187,7 +187,7 @@ export const fetchPersonalVisitLogs = async (uid) => {
     const visitLogsData = [];
 
     for (let visitLogId of visitLogIds) {
-      const visitLogRef = doc(db, VISIT_LOG_COLLECTION_PROD, visitLogId);
+      const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
       const visitLogDoc = await getDoc(visitLogRef);
       if (visitLogDoc.exists()) {
         const visitLogData = visitLogDoc.data();
@@ -210,7 +210,7 @@ export const fetchPersonalVisitLogs = async (uid) => {
 export const fetchPublicVisitLogs = async () => {
   try {
     const visitLogsRef = query(
-      collection(db, VISIT_LOG_COLLECTION_PROD),
+      collection(db, PERSONAL_VISIT_LOG_COLLECTION),
       where("public", "==", true)
     );
     const visitLogSnapshot = await getDocs(visitLogsRef);
@@ -254,7 +254,7 @@ export const fetchPublicVisitLogs = async () => {
 
 export const fetchPersonalVisitLogById = async (visitLogId) => {
   try {
-    const visitLogRef = doc(db, VISIT_LOG_COLLECTION_PROD, visitLogId);
+    const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
     const visitLogDoc = await getDoc(visitLogRef);
     if (visitLogDoc.exists()) {
       const visitLogData = visitLogDoc.data();
@@ -279,7 +279,7 @@ export async function calculateNumberOfPagesForVisitlog(visitlogPerPage) {
     );
   }
 
-  const visitlogRef = collection(db, VISIT_LOG_COLLECTION_PROD);
+  const visitlogRef = collection(db, PERSONAL_VISIT_LOG_COLLECTION);
   const snapshot = await getDocs(visitlogRef);
   const totalVisitlogs = snapshot.size;
 
