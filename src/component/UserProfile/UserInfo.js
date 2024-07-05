@@ -12,17 +12,9 @@ import edit from "../../images/edit.png";
 import tickMark from "../../images/tickMark.svg";
 
 import { db } from "../firebase";
-import {
-  getDocs,
-  collection,
-  query,
-  where,
-} from "firebase/firestore";
+import { getDocs, collection, query, where } from "firebase/firestore";
 
-import {
-  getAuth,
-  onAuthStateChanged,
-} from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import SuperpowerModal from "./SuperpowerModal";
 import CustomButton from "../Buttons/CustomButton";
@@ -133,7 +125,7 @@ const UserInfo = () => {
     const getDeedValues = async () => {
       try {
         const logOfUserRef = query(
-          collection(db, "testLog"),
+          collection(db, "visitLogWebProd"),
           where("uid", "==", fAuth?.currentUser?.uid)
         );
         const data = await getDocs(logOfUserRef);
@@ -239,7 +231,10 @@ const UserInfo = () => {
             {superpowers &&
               superpowers.map((superpower) => {
                 return (
-                  <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold whitespace-nowrap flex justify-center items-center" key={superpower}>
+                  <div
+                    className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold whitespace-nowrap flex justify-center items-center"
+                    key={superpower}
+                  >
                     <h6 className="text-[#212121] w-fit text-[14px] font-opensans">
                       {superpower}
                     </h6>

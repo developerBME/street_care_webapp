@@ -13,12 +13,11 @@ function Success2() {
   const [helpedPeople, setHelpedPeople] = useState("");
   const [visitLogs, setVisitLogs] = useState([]);
 
-
   const navigate = useNavigate();
   useEffect(() => {
     const getValues = async () => {
       try {
-        const logOfUserRef = query(collection(db, "testLog"));
+        const logOfUserRef = query(collection(db, "visitLogWebProd"));
         const data = await getDocs(logOfUserRef);
         let totalDonations = 0;
         let totalHelpedPeople = 0;
@@ -54,7 +53,6 @@ function Success2() {
     getValues();
   }, []);
 
-  
   return (
     <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
       <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
@@ -97,7 +95,7 @@ function Success2() {
               >
                 {" "}
                 Nonprofit Profile{" "}
-              </a>          
+              </a>
             </p>
           </div>
         </div>
@@ -213,11 +211,10 @@ function Success2() {
           </div>
         </div>
       </div>
-              
-      <div className=" mt-16 w-full  justify-start items-start">
-           <HomePageVisitlog />
-      </div>
 
+      <div className=" mt-16 w-full  justify-start items-start">
+        <HomePageVisitlog />
+      </div>
     </div>
   );
 }

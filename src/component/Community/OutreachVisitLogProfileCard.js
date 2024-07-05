@@ -29,7 +29,7 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
   // Function to delete visit log
   const deleteVisitLog = async () => {
     try {
-      const visitLogDoc = doc(db, "personalVisitLog", visitLogCardData.id);
+      const visitLogDoc = doc(db, "visitLogWebProd", visitLogCardData.id);
 
       const userQuery = query(
         collection(db, USERS_COLLECTION),
@@ -92,7 +92,8 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
             </div>
             <img alt="" className="w-4 h-4" src={location} />
             <div className="pt-0">
-              {visitLogCardData?.city || ""}, {visitLogCardData?.stateAbbv || visitLogCardData?.state || ""}
+              {visitLogCardData?.city || ""},{" "}
+              {visitLogCardData?.stateAbbv || visitLogCardData?.state || ""}
             </div>
           </div>
           <div className="relative ml-4">
@@ -140,12 +141,12 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
                     </a>
                   </li>
                   {showDeleteModal && (
-                  <DeleteModal
-                    handleClose={() => setShowDeleteModal(false)}
-                    handleDelete={deleteVisitLog}
-                    modalMsg={`Are you sure you want to delete this visit log?`}
-                  />
-                )}
+                    <DeleteModal
+                      handleClose={() => setShowDeleteModal(false)}
+                      handleDelete={deleteVisitLog}
+                      modalMsg={`Are you sure you want to delete this visit log?`}
+                    />
+                  )}
                 </ul>
               </div>
             )}
