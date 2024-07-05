@@ -211,7 +211,7 @@ function CommOutForm() {
     </div>`;
 
     try {
-      const logRef = collection(db, "testLog");
+      const logRef = collection(db, "visitLogWebProd");
       const docRef = await addDoc(logRef, obj);
       if (docRef.id) {
         console.log(docRef.id);

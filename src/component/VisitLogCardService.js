@@ -17,10 +17,11 @@ const VISIT_LOG_COLLECTION = "testLog";
 const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
 const USERS_COLLECTION = "users";
 const PERSONAL_VISIT_LOG_COLLECTION = "personalVisitLog";
+const VISIT_LOG_COLLECTION_PROD = "visitLogWebProd";
 
 export const fetchVisitLogs = async () => {
   try {
-    const visitLogsRef = collection(db, VISIT_LOG_COLLECTION);
+    const visitLogsRef = collection(db, VISIT_LOG_COLLECTION_PROD);
     const visitLogSnapshot = await getDocs(visitLogsRef);
     let visitLogs = [];
     for (const doc of visitLogSnapshot.docs) {
@@ -77,7 +78,7 @@ const fetchOutreachEventData = async (eid) => {
         eventDate: "",
         location: "",
         totalSlots: "",
-        filledSlots: ""
+        filledSlots: "",
       };
     }
 
@@ -90,7 +91,7 @@ const fetchOutreachEventData = async (eid) => {
       eventDate: data.eventDate || "",
       location: data.location || "",
       totalSlots: data.totalSlots || "",
-      filledSlots: data.participants?.length || 0 // Ensure filledSlots is a number
+      filledSlots: data.participants?.length || 0, // Ensure filledSlots is a number
     };
   } catch (error) {
     // Log the error with additional context
@@ -106,7 +107,7 @@ const fetchOutreachEventData = async (eid) => {
 export const fetchVisitLogById = async (visitLogId) => {
   try {
     // Reference to the specific document in the visitlog collection
-    const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
+    const visitLogRef = doc(db, VISIT_LOG_COLLECTION_PROD, visitLogId);
     const visitLogSnap = await getDoc(visitLogRef);
     const visitLogData = visitLogSnap.data();
     const outreachEventId = visitLogData.outreachEvent || "";
@@ -115,21 +116,21 @@ export const fetchVisitLogById = async (visitLogId) => {
     const userDetails = await fetchUserDetails(uid);
     return {
       id: doc.id,
-        whatGiven: visitLogData.whatGiven,
-        itemQty: visitLogData?.itemQty || "",
-        numberPeopleHelped: visitLogData?.numberPeopleHelped || "",
-        description: visitLogData?.description || "",
-        helpType: visitLogData?.helpType || "",
-        location: {
-          street: visitLogData?.street || "",
-          city: visitLogData?.city || "",
-          state: visitLogData?.state || "",
-          stateAbbv: visitLogData?.stateAbbv || "",
-          zipcode: visitLogData?.zipcode || ""
-        },
-        eventDate: visitLogData?.dateTime?.seconds
-          ? formatDate(new Date(visitLogData.dateTime.seconds * 1000))
-          : "",
+      whatGiven: visitLogData.whatGiven,
+      itemQty: visitLogData?.itemQty || "",
+      numberPeopleHelped: visitLogData?.numberPeopleHelped || "",
+      description: visitLogData?.description || "",
+      helpType: visitLogData?.helpType || "",
+      location: {
+        street: visitLogData?.street || "",
+        city: visitLogData?.city || "",
+        state: visitLogData?.state || "",
+        stateAbbv: visitLogData?.stateAbbv || "",
+        zipcode: visitLogData?.zipcode || "",
+      },
+      eventDate: visitLogData?.dateTime?.seconds
+        ? formatDate(new Date(visitLogData.dateTime.seconds * 1000))
+        : "",
       userName: userDetails.username,
       photoUrl: userDetails.photoUrl,
     };
@@ -186,7 +187,7 @@ export const fetchPersonalVisitLogs = async (uid) => {
     const visitLogsData = [];
 
     for (let visitLogId of visitLogIds) {
-      const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
+      const visitLogRef = doc(db, VISIT_LOG_COLLECTION_PROD, visitLogId);
       const visitLogDoc = await getDoc(visitLogRef);
       if (visitLogDoc.exists()) {
         const visitLogData = visitLogDoc.data();
@@ -208,7 +209,10 @@ export const fetchPersonalVisitLogs = async (uid) => {
 
 export const fetchPublicVisitLogs = async () => {
   try {
-    const visitLogsRef = query(collection(db, PERSONAL_VISIT_LOG_COLLECTION), where("public", "==", true));
+    const visitLogsRef = query(
+      collection(db, VISIT_LOG_COLLECTION_PROD),
+      where("public", "==", true)
+    );
     const visitLogSnapshot = await getDocs(visitLogsRef);
     let visitLogs = [];
     for (const doc of visitLogSnapshot.docs) {
@@ -229,13 +233,13 @@ export const fetchPublicVisitLogs = async () => {
           city: visitLogData?.city || "",
           state: visitLogData?.state || "",
           stateAbbv: visitLogData?.stateAbbv || "",
-          zipcode: visitLogData?.zipcode || ""
+          zipcode: visitLogData?.zipcode || "",
         },
         eventDate: visitLogData?.dateTime?.seconds
           ? formatDate(new Date(visitLogData.dateTime.seconds * 1000))
           : "",
         userName: userDetails.username,
-        photoUrl: userDetails.photoUrl
+        photoUrl: userDetails.photoUrl,
       });
     }
     return visitLogs;
@@ -250,7 +254,7 @@ export const fetchPublicVisitLogs = async () => {
 
 export const fetchPersonalVisitLogById = async (visitLogId) => {
   try {
-    const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
+    const visitLogRef = doc(db, VISIT_LOG_COLLECTION_PROD, visitLogId);
     const visitLogDoc = await getDoc(visitLogRef);
     if (visitLogDoc.exists()) {
       const visitLogData = visitLogDoc.data();
@@ -268,15 +272,16 @@ export const fetchPersonalVisitLogById = async (visitLogId) => {
   }
 };
 
-
 export async function calculateNumberOfPagesForVisitlog(visitlogPerPage) {
   if (visitlogPerPage < 1 || visitlogPerPage > 10) {
-    throw new Error("The number of visitlogs per page must be between 1 and 10.");
+    throw new Error(
+      "The number of visitlogs per page must be between 1 and 10."
+    );
   }
 
-  const visitlogRef = collection(db, VISIT_LOG_COLLECTION);
+  const visitlogRef = collection(db, VISIT_LOG_COLLECTION_PROD);
   const snapshot = await getDocs(visitlogRef);
   const totalVisitlogs = snapshot.size;
 
   return Math.ceil(totalVisitlogs / visitlogPerPage);
-};
+}
