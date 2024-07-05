@@ -7,6 +7,7 @@ import {
   onAuthStateChanged,
   FacebookAuthProvider,
   TwitterAuthProvider,
+  sendEmailVerification,
 } from "firebase/auth";
 import { auth, db } from "./firebase"; // Importing the auth instance
 import { useNavigate } from "react-router-dom";
@@ -17,6 +18,10 @@ import { AiFillApple, AiFillFacebook } from "react-icons/ai";
 import { BiLogoFacebookCircle } from "react-icons/bi";
 
 import { RiTwitterXFill } from "react-icons/ri";
+import errorImg from "../images/error.png";
+import { emailConfirmation } from "./EmailService";
+import CustomButton from "./Buttons/CustomButton";
+import logEvent from "./FirebaseLogger";
 
 const handleGoogleSignIn = async (e) => {
   e.preventDefault();
@@ -58,6 +63,10 @@ const handleGoogleSignIn = async (e) => {
       };
       const userRef = doc(db, "users", user.uid);
       setDoc(userRef, userData);
+      logEvent(
+        "STREET_CARE_INFO_AUTH",
+        `${user.email} has logged in via Google`
+      );
     }
 
     // setTimeout(() => {
@@ -70,6 +79,7 @@ const handleGoogleSignIn = async (e) => {
     const email = error.customData.email;
     // The AuthCredential type that was used.
     const credential = GoogleAuthProvider.credentialFromError(error);
+    logEvent("STREET_CARE_ERROR", `at Google login - ${errorMessage}`);
   }
 };
 
@@ -106,6 +116,10 @@ const handleFacebookSignIn = async (e) => {
       };
       const userRef = doc(db, "users", user.uid);
       setDoc(userRef, userData);
+      logEvent(
+        "STREET_CARE_INFO_AUTH",
+        `${user.email} has logged in via Facebook`
+      );
     }
 
     // setTimeout(() => {
@@ -118,6 +132,7 @@ const handleFacebookSignIn = async (e) => {
     const email = error.customData.email;
     // The AuthCredential type that was used.
     const credential = FacebookAuthProvider.credentialFromError(error);
+    logEvent("STREET_CARE_ERROR", `at Facebook login - ${errorMessage}`);
   }
 };
 
@@ -159,6 +174,10 @@ const handleTwitterSignIn = async (e) => {
       };
       const userRef = doc(db, "users", user.uid);
       setDoc(userRef, userData);
+      logEvent(
+        "STREET_CARE_INFO_AUTH",
+        `${user.email} has logged in via Twitter`
+      );
     }
 
     // setTimeout(() => {
@@ -171,6 +190,7 @@ const handleTwitterSignIn = async (e) => {
     const email = error.customData.email;
     // The AuthCredential type that was used.
     const credential = TwitterAuthProvider.credentialFromError(error);
+    logEvent("STREET_CARE_ERROR", `at Twitter login - ${errorMessage}`);
   }
 };
 
@@ -207,7 +227,7 @@ function Signup2() {
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/auth.user
-      navigate("/profile", { replace: true });
+      // navigate("/profile", { replace: true });
       // ...
     } else {
       // User is signed out
@@ -217,13 +237,6 @@ function Signup2() {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-    if (!userName) {
-      setError("Username is Mandatory");
-      updateErrorState("UsernameError", "UserName is required!");
-      return;
-    } else if (userName) {
-      updateErrorState("UsernameError", "");
-    }
     if (!email || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
       setError("Enter Valid Email Address");
       updateErrorState("EmailError", "Email is required!");
@@ -238,6 +251,16 @@ function Signup2() {
     } else if (password) {
       updateErrorState("PassError", "");
     }
+
+    if (!userName) {
+      setError("Username is Mandatory");
+      updateErrorState("UsernameError", "UserName is required!");
+      return;
+    } else if (userName) {
+      updateErrorState("UsernameError", "");
+    }
+
+    const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px"><h1>Thank you for creating the outreach</h1><p>You have succefully registered! Your username is ${userName} and regiestered email address is ${email}</p></div>`;
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -245,7 +268,7 @@ function Signup2() {
         password
       );
       const currentUser = userCredential.user;
-
+      console.log(currentUser);
       const userData = {
         dateCreated: new Date(),
         deviceType: "Web",
@@ -257,10 +280,15 @@ function Signup2() {
         photoUrl: "",
       };
 
-      //await firestore.collection('users').doc(currentUser.uid).set(userData);
+      // await firestore.collection('users').doc(currentUser.uid).set(userData);
       const userRef = doc(db, "users", currentUser.uid);
       await setDoc(userRef, userData);
 
+      //sendEmailVerification(currentUser);
+
+      logEvent("STREET_CARE_INFO_AUTH", `${email} has signed up`);
+
+      // emailConfirmation(email, fAuth.currentUser.displayName, "", emailHTML);
       // Clear inputs or navigate to a different page
       setUserName("");
       setEmail("");
@@ -269,15 +297,18 @@ function Signup2() {
       setLoginSuccess("Successfully signed up!");
       setError(""); // Clear out any existing error messages
 
-      setTimeout(() => {
-        navigate("/profile");
-      }, 6000); // Wait for 2 seconds to let the user see the success message
+      navigate("/verifyemail");
+
+      // setTimeout(() => {
+      //   navigate("/verifyemail");
+      // }, 1000); // Wait for 2 seconds to let the user see the success message
     } catch (error) {
       if (error.message === "Firebase: Error (auth/email-already-in-use).") {
         setError("Account already exists, please Log in.");
       } else {
         setError(error.message);
       }
+      logEvent("STREET_CARE_ERROR", `at signup - ${error.message}`);
       setLoginSuccess(""); // Clear out any success messages
     }
   };
@@ -285,20 +316,20 @@ function Signup2() {
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center ">
-        <div className=" w-fit mx-2 lg:mx-40 mt-32 mb-16 rounded-2xl bg-white text-black ">
-          <div className="items-center justify-center px-4 py-8 lg:px-32 lg:py-20 h-full w-full mx-auto rounded-2xl ">
+        <div className=" w-fit mx-2 lg:mx-40 mt-40 mb-16 rounded-2xl bg-white text-black ">
+          <div className="items-center justify-center px-4 py-8 lg:px-36 lg:py-24 h-full w-full mx-auto rounded-2xl ">
             {/* form */}
             <form id="login" onSubmit={handleSignUp}>
               <div className="w-fit text-neutral-800 text-5xl font-medium font-bricolage leading-[64px]">
                 Sign up
               </div>
-              <div className=" h-fit mt-14 flex flex-col justify-start items-start gap-9 ">
+              <div className=" h-fit mt-9 flex flex-col justify-start items-start gap-9 ">
                 <div className="flex-col justify-start items-start gap-4 flex">
                   <div
                     className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200 cursor-pointer"
                     onClick={handleGoogleSignIn}
                   >
-                    <div className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal">
+                    <div className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-medium font-inter leading-normal">
                       <button type="submit">Continue with Google</button>
                     </div>
                     <div className="w-8 h-8 left-[22.50px] top-[12px] absolute">
@@ -322,7 +353,7 @@ function Signup2() {
                     className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200 cursor-pointer"
                     onClick={handleTwitterSignIn}
                   >
-                    <div className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-semibold font-inter leading-normal">
+                    <div className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-medium font-inter leading-normal">
                       <button type="submit">Continue with Twitter</button>
                     </div>
                     <div className="w-8 h-8 left-[22.50px] top-[12px] absolute">
@@ -347,16 +378,16 @@ function Signup2() {
                 </div>
                 <div className="self-stretch h-fit flex-col justify-start items-start gap-4 flex">
                   <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
-                    <div className="self-stretch text-zinc-700 text-[15px] font-semibold font-inter leading-tight">
+                    <div className="self-stretch text-zinc-700 text-[15px] font-medium font-inter leading-tight">
                       Email*
                     </div>
-                    <div className="self-stretch  bg-white rounded border border-stone-300 justify-start items-center gap-2 inline-flex">
+                    <div className="self-stretch  bg-white rounded-md border-0 border-stone-300 justify-start items-center gap-2 inline-flex">
                       <div className="grow shrink basis-0 h-10 flex-col justify-center items-start inline-flex">
                         <input
                           type="email"
                           id="email"
                           placeholder="Enter your email"
-                          className={`text-zinc-700 w-full h-full px-4 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
+                          className={`text-zinc-700 w-full h-full rounded-md border-0 px-4 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
                             errormsg.EmailError !== ""
                               ? "ring-red-500"
                               : "ring-gray-300"
@@ -366,20 +397,25 @@ function Signup2() {
                       </div>
                     </div>
                     {errormsg.EmailError && (
-                      <div className="text-red-700">{errormsg.EmailError}</div>
+                      <div className="inline-flex items-center gap-1.5">
+                        <img src={errorImg} className="w-3 h-3" />
+                        <div className="text-red-700 font-dmsaans">
+                          {errormsg.EmailError}
+                        </div>
+                      </div>
                     )}
                   </div>
                   <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
-                    <div className="self-stretch text-zinc-700 text-[15px]  font-semibold font-inter leading-tight">
+                    <div className="self-stretch text-zinc-700 text-[15px] font-medium font-inter leading-tight">
                       Password*
                     </div>
-                    <div className="self-stretch  bg-white rounded border border-stone-300 justify-start items-center gap-2 inline-flex">
+                    <div className="self-stretch  bg-white rounded-md border-0 border-stone-300 justify-start items-center gap-2 inline-flex">
                       <div className="grow shrink basis-0 h-10 flex-col justify-center items-start inline-flex">
                         <input
                           type="password"
                           id="password"
                           placeholder="Enter your password"
-                          className={`text-zinc-700 w-full h-full px-4 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
+                          className={`text-zinc-700 w-full h-full px-4 text-[15px] border-0 rounded-md font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
                             errormsg.PassError !== ""
                               ? "ring-red-500"
                               : "ring-gray-300"
@@ -389,21 +425,26 @@ function Signup2() {
                       </div>
                     </div>
                     {errormsg.PassError && (
-                      <div className="text-red-700">{errormsg.PassError}</div>
+                      <div className="inline-flex items-center gap-1.5">
+                        <img src={errorImg} className="w-3 h-3" />
+                        <div className="text-red-700 font-dmsans">
+                          {errormsg.PassError}
+                        </div>
+                      </div>
                     )}
                   </div>
                   {/*  */}
                   <div className="self-stretch rounded-tl rounded-tr flex-col justify-start items-start gap-1.5 flex mb-2">
-                    <div className="self-stretch text-zinc-700 text-[15px]  font-semibold font-inter leading-tight">
+                    <div className="self-stretch text-zinc-700 text-[15px]  font-medium font-inter leading-tight">
                       What should we call you?*
                     </div>
-                    <div className="self-stretch  bg-white rounded border border-stone-300 justify-start items-center gap-2 inline-flex">
+                    <div className="self-stretch  bg-white rounded-md border-0 border-stone-300 justify-start items-center gap-2 inline-flex">
                       <div className="grow shrink basis-0 h-10 flex-col justify-center items-start inline-flex">
                         <input
                           type="text"
                           id="name"
                           placeholder="Enter your profile name"
-                          className={`text-zinc-700 w-full h-full px-4 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
+                          className={`text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
                             errormsg.UsernameError !== ""
                               ? "ring-red-500"
                               : "ring-gray-300"
@@ -413,21 +454,24 @@ function Signup2() {
                       </div>
                     </div>
                     {errormsg.UsernameError && (
-                      <div className="text-red-700">
-                        {errormsg.UsernameError}
+                      <div className="inline-flex items-center gap-1.5">
+                        <img src={errorImg} className="w-3 h-3" />
+                        <div className="text-red-700 font-dmsans">
+                          {errormsg.UsernameError}
+                        </div>
                       </div>
                     )}
                   </div>
                 </div>
               </div>
-
-              <div className="self-stretch text-center mt-4 mb-4">
-                {error && <p className="text-red-500">{error}</p>}
-                {loginSuccess && (
-                  <p className="text-green-500">{loginSuccess}</p>
-                )}
+              <div className="my-9">
+                <CustomButton
+                  name="buttondefaultwide"
+                  type="submit"
+                  label="Sign up"
+                ></CustomButton>
               </div>
-              <div className="self-stretch my-14 h-14 flex-col justify-start items-start gap-4 flex">
+              {/* <div className="self-stretch my-14 h-14 flex-col justify-start items-start gap-4 flex">
                 <div className="self-stretch justify-center items-center gap-2.5 inline-flex">
                   <button
                     type="submit"
@@ -436,8 +480,8 @@ function Signup2() {
                     Sign up with email
                   </button>
                 </div>
-              </div>
-              <div className="w-fit text-center mx-auto">
+              </div> */}
+              <div className="w-fit text-center mx-auto mt-2">
                 <span className="text-zinc-700 text-base font-normal font-open-sans leading-normal">
                   Already have an account?{" "}
                 </span>

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 
 import CustomButton from "../Buttons/CustomButton";
 import { useNavigate } from "react-router-dom";
+import OutreachEventCard from "./OutreachEventCard";
+import { fetchEventById, formatDate } from "../EventCardService";
 
 const ConfirmationModal = ({
   isOpen,
@@ -9,8 +11,21 @@ const ConfirmationModal = ({
   currSupPow,
   refreshUserQuery,
   id,
+  outreachEvents,
 }) => {
   const [success, setSuccess] = useState(false);
+  const [events, setEvents] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const eventsData = [];
+      for (let eventId of outreachEvents) {
+        const edata = await fetchEventById(eventId);
+        eventsData.push(edata);
+      }
+      setEvents(eventsData);
+    };
+    fetchData();
+  }, []);
 
   const navigate = useNavigate();
 
@@ -25,6 +40,17 @@ const ConfirmationModal = ({
               <div className="w-fit text-[#212121] text-4xl font-medium font-bricolage leading-[44px]">
                 Make sure you are not going alone
               </div>
+              {events.map((eventData) => (
+                <OutreachEventCard
+                  key={eventData.id}
+                  cardData={{
+                    ...eventData,
+                    eventDate: formatDate(
+                      new Date(eventData.eventDate.seconds * 1000)
+                    ),
+                  }}
+                />
+              ))}
               {/* <div className="w-fit h-fit  bg-gray-300  justify-end ">
                 <button className="text-6xl " onClick={closeModal}>
                   &times;
@@ -32,7 +58,11 @@ const ConfirmationModal = ({
               </div> */}
             </div>
             <div className="self-stretch text-[#616161] text-lg font-semibold font-['Open Sans'] leading-normal">
-            Group presence offers security and effectiveness in engaging with unfamiliar situations and individuals, benefiting both volunteers and the homeless. <br/> How outreach on Street Care works? <br/> We post the outreach for you and other volunteers can sign up to go with you.
+              Group presence offers security and effectiveness in engaging with
+              unfamiliar situations and individuals, benefiting both volunteers
+              and the homeless. <br /> How outreach on Street Care works? <br />{" "}
+              We post the outreach for you and other volunteers can sign up to
+              go with you.
             </div>
           </div>
           <div className="w-fit justify-start items-start gap-4 inline-flex">

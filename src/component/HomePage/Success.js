@@ -28,7 +28,7 @@ function Success() {
   useEffect(() => {
     const getValues = async () => {
       try {
-        const logOfUserRef = query(collection(db, "testLogDev"));
+        const logOfUserRef = query(collection(db, "visitLogWebProd"));
         const data = await getDocs(logOfUserRef);
         let totalDonations = 0;
         let totalHelpedPeople = 0;
@@ -375,11 +375,22 @@ function Success() {
             <img src={arrowRight} className="w-4 h-4" />
           </div>
         </div>
-        <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+        {
+          isLoading ? (
+            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+              <EventCardSkeleton />
+              <EventCardSkeleton />
+              <EventCardSkeleton />
+            </div>
+          ) :(
+            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
         {(visitLogs.slice(0,3).map((visitLogData) => (
           <OutreachVisitLogCard visitLogCardData={visitLogData}/>
               )))}
         </div>
+          )
+        }
+        
         
       </div> */}
     </div>

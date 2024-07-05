@@ -26,15 +26,15 @@ const NavBar = (props) => {
     signOut(fAuth)
       .then(() => {
         console.log("success");
+        navigate("/login");
+        props.setLoggedIn(false);
       })
       .catch((error) => {
         console.log(error);
         // An error happened.
       });
   };
-  useEffect(() => {
-    console.log(props);
-  }, []);
+
   const links = [
     {
       id: 1,
@@ -82,7 +82,7 @@ const NavBar = (props) => {
     {
       id: 2,
       label: "Account Settings",
-      link: "/profile/accsetting",
+      link: "/profile/profilesettings",
       icons: RiUserSettingsLine,
     },
     {
@@ -188,12 +188,15 @@ const NavBar = (props) => {
                       const Icon = e.icons;
 
                       return (
-                        <>
+                        <React.Fragment key={e.id}>
                           <li className=" px-3 cursor-pointer hover:bg-slate-200">
                             <Link
                               to={e.link}
                               onClick={() => {
-                                e.fireBaseSignOut();
+                                if (e.id === 3) {
+                                  // call some function or handle the event
+                                  e.fireBaseSignOut();
+                                }
                               }}
                               className=" w-[200px] h-10 inline-flex font-inter text-base font-normal leading-6 tracking-wide gap-3  items-center"
                             >
@@ -201,7 +204,7 @@ const NavBar = (props) => {
                               {e.label}
                             </Link>
                           </li>
-                        </>
+                        </React.Fragment>
                       );
                     })}
                   </ul>

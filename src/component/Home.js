@@ -6,17 +6,24 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
-import FAQs from "./HomePage/FAQs";
+// import FAQs from "./HomePage/FAQs";
+import FAQs from "./HomePage/FAQs2";
 import Eventcard from "./HomePage/Eventcard";
 import BMEcard from "./HomePage/BMEcard";
 import BMEcardnew from "./HomePage/BMEofficialCard";
+import Success2 from "./HomePage/Success2";
+//import Success from "./HomePage/Success"
 import Landing from "./HomePage/Landing";
+// import Landing from "./HomePage/Landing2";
 import Success from "./HomePage/Success";
 import News from "./HomePage/News";
 import Map from "./HomePage/Map";
-import Process from "./HomePage/Process";
-import MoreAboutUs from "./HomePage/MoreAboutUs";
+//import Process from "./HomePage/Process";
+import Process2 from "./HomePage/Process2";
+//import MoreAboutUs from "./HomePage/MoreAboutUs";
+import MoreAboutUs from "./HomePage/MoreAboutUs2";
 import Navbar from "./Navbar";
+import arrowRight from "../images/arrowRight.png";
 import OutreachEventCard from "./Community/OutreachEventCard";
 import {
   formatDate,
@@ -31,6 +38,7 @@ import CustomButton from "../component/Buttons/CustomButton";
 import { NewsCardData } from "../NewsData";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 import PastOutreachEventCardSkeleton from "./Skeletons/PastOutreachEventCardSkeleton";
+import MoreAboutUs2 from "./HomePage/MoreAboutUs2";
 
 function HomePage() {
   const navigate = useNavigate();
@@ -192,7 +200,7 @@ function HomePage() {
   // Filter events to get only past events
   const upcomingEvents = events
     .filter((event) => {
-      const eventDate = new Date(event.eventDate.seconds * 1000);
+        const eventDate = new Date(event.eventDate?.seconds * 1000) || event.eventDate;
       return eventDate >= new Date(); // Check if the event date is before the current date
     })
     .slice(0, 3);
@@ -200,7 +208,7 @@ function HomePage() {
   // Filter events to get only past events
   const pastEvents = events
     .filter((event) => {
-      const eventDate = new Date(event.eventDate.seconds * 1000);
+        const eventDate = new Date(event.eventDate?.seconds * 1000) || event.eventDate;
       return eventDate < new Date(); // Check if the event date is before the current date
     })
     .slice(0, 3);
@@ -216,8 +224,11 @@ function HomePage() {
         {" "}
         <Landing scorllFuntion={handleOutreachRef} />
       </div>
+       {/* <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+        <Success/>
+      </div>*/}
       <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
-        <Success />
+        <Success2 />
       </div>
       <div
         id="outreach"
@@ -227,10 +238,16 @@ function HomePage() {
           className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] scroll-m-24"
           ref={outreachRef}
         >
-          <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
+          <p className="flex flex-row font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] gap-4">
             {" "}
-            Upcoming Outreach Events:
+            Upcoming Outreach Events
+            <img
+                            src={arrowRight}
+                            className="w-6 h-7 lg:w-10 lg:h-10 "
+                        />
           </p>
+          
+                        
 
           {isLoading ? (
             <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
@@ -239,19 +256,21 @@ function HomePage() {
               <EventCardSkeleton />
             </div>
           ) : (
-            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-              {upcomingEvents.map((eventData) => (
-                <OutreachEventCard
-                  key={eventData.id}
-                  cardData={{
-                    ...eventData,
-                    eventDate: formatDate(
-                      new Date(eventData.eventDate.seconds * 1000)
-                    ),
-                  }}
-                />
-              ))}
-            </div>
+            <>
+              <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+                {upcomingEvents.map((eventData) => (
+                  <OutreachEventCard
+                    key={eventData.id}
+                    cardData={{
+                      ...eventData,
+                      eventDate: eventData.eventDate?.seconds ? formatDate(
+                        new Date(eventData.eventDate.seconds * 1000)
+                      ) : eventData.eventDate,
+                    }}
+                  />
+                ))}
+              </div>
+            </>
           )}
           <div className="mt-16">
             <CustomButton
@@ -270,9 +289,13 @@ function HomePage() {
         className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black"
       >
         <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] scroll-m-16">
-          <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
+          <p className="flex flex-row font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] gap-4">
             {" "}
-            Past Outreach Events:
+            Past Outreach Events
+            <img
+                            src={arrowRight}
+                            className="w-6 h-7 lg:w-10 lg:h-10 "
+                        />
           </p>
 
           {isLoading ? (
@@ -289,9 +312,9 @@ function HomePage() {
                   key={eventData.id}
                   cardData={{
                     ...eventData,
-                    eventDate: formatDate(
+                    eventDate: eventData.eventDate?.seconds ? formatDate(
                       new Date(eventData.eventDate.seconds * 1000)
-                    ),
+                    ) : eventData.eventDate,
                   }}
                 />
               ))}
@@ -335,17 +358,24 @@ function HomePage() {
 
       */}
       {/* Aniket */}
-      <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8  rounded-2xl bg-white text-black ">
+      {/*<div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8  rounded-2xl bg-white text-black ">
         <Process />
+      </div>*/}
+      <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8  rounded-2xl bg-white text-black ">
+        <Process2 />
+      </div>
+      {/*<div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black">
+        <MoreAboutUs />
       </div>
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black">
-        <MoreAboutUs />
+        <MoreAboutUs2 />
       </div>
       {/* Aniket */}
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
         <Map />
-      </div>
-      <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+      </div> 
+    
+      <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black h-full">
         {/*<News />*/}
 
         <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
@@ -358,7 +388,7 @@ function HomePage() {
             ))}
             <div className="mt-16">
               <CustomButton
-                label="Load More News"
+                label="More News"
                 name="buttondefault"
                 onClick={() => {
                   navigate("/allnews");
