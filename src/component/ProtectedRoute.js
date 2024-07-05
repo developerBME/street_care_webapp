@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import EmailVerificationModal from "./EmailVerificationModal";
+// import EmailVerificationModal from "./EmailVerificationModal";
 
 // import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export const ProtectedRoute = ({ user, loading }) => {
-  // console.log(user);
-  // console.log(loading);
+  console.log(user);
+  console.log(loading);
 
   if (loading) return null;
 
