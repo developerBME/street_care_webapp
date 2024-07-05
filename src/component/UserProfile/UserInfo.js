@@ -154,7 +154,7 @@ const UserInfo = () => {
     const getCreatedOutreaches = async () => {
       try {
         const logOfUserRef = query(
-          collection(db, "outreachEvents"),
+          collection(db, "outreachEventsDev"),
           where("uid", "==", fAuth?.currentUser?.uid)
         );
         const data = await getDocs(logOfUserRef);

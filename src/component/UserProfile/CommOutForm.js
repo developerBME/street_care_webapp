@@ -22,7 +22,7 @@ const starStyle = {
   width: 60,
   height: 60,
 };
-const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
+const OUTREACH_EVENTS_COLLECTION = "outreachEventsDev";
 function getLastWeeksDate() {
   const now = new Date();
 
