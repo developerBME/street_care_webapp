@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import OutreachVisitLogCard from "./Community/OutreachVisitLogCard";
 import { useNavigate, useLocation } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
-import { fetchVisitLogs } from "./VisitLogCardService";
+import { fetchPublicVisitLogs } from "./VisitLogCardService";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 
 const AllOutreachVisitLog = () => {
@@ -14,7 +14,7 @@ const AllOutreachVisitLog = () => {
 
   useEffect(() => {
     const getVisitLogs = async () => {
-      const visitLogsData = await fetchVisitLogs();
+      const visitLogsData = await fetchPublicVisitLogs();
       setVisitLogs(visitLogsData);
     };
     getVisitLogs();
