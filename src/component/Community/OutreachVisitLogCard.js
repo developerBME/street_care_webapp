@@ -4,7 +4,6 @@ import defaultImage from "../../images/default_avatar.svg";
 import { useNavigate } from "react-router-dom";
 import date from "../../images/date.png";
 import locate from "../../images/location.png";
-import userSlots from "../../images/userSlots.png";
 import verifiedImg from "../../images/verified_purple.png";
 import { formatDate } from "../helper";
 import CardTags from "./CardTags";
@@ -80,12 +79,12 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
               }}
             />
           </div>
-          <div className="flex flex-row space-x-2">
+          {/* <div className="flex flex-row space-x-2">
             <img className="w-[20px] h-[14px] my-1" src={userSlots}></img>
             <div className="font-normal font-dmsans text-[14px]">
               {visitLogCardData?.filledSlots}
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

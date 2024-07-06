@@ -86,7 +86,8 @@ function PersonalOutForm() {
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
   const [descriptionHelped, setDescriptionHelped] = useState("");
-  const [isInfoShareCheckboxChecked, setInfoShareCheckboxChecked] = useState(false);
+  const [isInfoShareCheckboxChecked, setInfoShareCheckboxChecked] =
+    useState(false);
   const [isPublic, setIsPublic] = useState(true);
   const infoShareCheckbox = useRef(null);
   const [showOptionalQuestions, setShowOptionalQuestions] = useState(false);
@@ -203,7 +204,7 @@ function PersonalOutForm() {
   const handleOptionalButtonClick = () => {
     setShowOptionalQuestions(!showOptionalQuestions);
   };
-    /* Firebase */
+  /* Firebase */
   const fAuth = getAuth();
   onAuthStateChanged(fAuth, (user) => {
     if (user) {
@@ -247,28 +248,30 @@ function PersonalOutForm() {
             itemArray.push(a);
           }
         });
-        
+
         const checkboxvalues = [];
         checkboxes.current.map((x) => {
           checkboxvalues.push(x.value);
         });
 
-        const hasOtherValues = logResult.whatGiven.filter(a=> !checkboxvalues.includes(a));
-        if(hasOtherValues.length > 0){
-          setIsOtherChecked(hasOtherValues.length>0);
+        const hasOtherValues = logResult.whatGiven.filter(
+          (a) => !checkboxvalues.includes(a)
+        );
+        if (hasOtherValues.length > 0) {
+          setIsOtherChecked(hasOtherValues.length > 0);
           setOtherInputValue(hasOtherValues[0]);
         }
 
         checkboxes.current.map((x) => {
-          const res = logResult.whatGiven.filter(a=> a == x.value)
-          if(res.length != 0){
+          const res = logResult.whatGiven.filter((a) => a == x.value);
+          if (res.length != 0) {
             x.checked = true;
-            setItemArray(itemArray,x.value);
+            setItemArray(itemArray, x.value);
           }
-          if(x.value == "Other" && hasOtherValues.length>0){
+          if (x.value == "Other" && hasOtherValues.length > 0) {
             x.checked = true;
           }
-        })
+        });
 
         setItemQty(logResult.itemQty);
         setRating(logResult.rating);
@@ -279,14 +282,13 @@ function PersonalOutForm() {
         //date.current.value = logResult.date ;
         //time.current.value = logResult.time ;
         setDateTime(logResult.dateTime.toDate());
-       
       } catch (error) {
         console.error(error.message);
       }
     };
 
     getStates();
-    if(id != undefined){
+    if (id != undefined) {
       getData();
     }
   }, []);
@@ -476,7 +478,7 @@ function PersonalOutForm() {
       zipcode: postcode,
       street: street,
       dateTime: Timestamp.fromDate(dateTime),
-      public: isPublic
+      public: isPublic,
     };
     console.log(obj);
 
@@ -531,14 +533,14 @@ function PersonalOutForm() {
   };
 
   const clearFields = () => {
-   // date.current.value = "";
+    // date.current.value = "";
     setNumberhelped("");
     setItemQty("");
     setItemArray([]);
     checkboxes.current.forEach((x) => {
       x.checked = false;
     });
-   // time.current.value = "";
+    // time.current.value = "";
     setRating(0);
     setState("");
     setCity("");
@@ -636,9 +638,11 @@ function PersonalOutForm() {
       checkboxvalues.push(x.value);
     });
 
-    const hasOtherValues = whatGivenArr.filter(a=> !checkboxvalues.includes(a));
-    if(hasOtherValues.length > 0){
-      whatGivenArr = whatGivenArr.filter(a=>a!=hasOtherValues[0])
+    const hasOtherValues = whatGivenArr.filter(
+      (a) => !checkboxvalues.includes(a)
+    );
+    if (hasOtherValues.length > 0) {
+      whatGivenArr = whatGivenArr.filter((a) => a != hasOtherValues[0]);
     }
 
     // Form Validation Start
@@ -662,7 +666,7 @@ function PersonalOutForm() {
     } else {
       updateErrorState("numberHelpedError", "");
     }
-   
+
     if (whatGivenArr == [] || !setOtherBool) {
       updateErrorState(
         "checkboxesError",
@@ -784,11 +788,11 @@ function PersonalOutForm() {
       rating: rating,
       zipcode: postcode,
       street: street,
-      dateTime: Timestamp.fromDate(dateTime)
+      dateTime: Timestamp.fromDate(dateTime),
     };
 
     try {
-      const logRef = doc(db, "personalVisitLog",id);
+      const logRef = doc(db, "personalVisitLog", id);
       await updateDoc(logRef, obj);
       setSuccess(true);
       clearFields();
@@ -1348,7 +1352,7 @@ function PersonalOutForm() {
 
                   <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                     {/* Grid 2 */}
-                    
+
                     <div className="w-full h-full grid md:grid-cols-2 gap-4 ">
                       <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
                         <div className="space-y-1.5">
@@ -1367,34 +1371,42 @@ function PersonalOutForm() {
                               onChange={handleDateChange}
                             ></input> */}
 
-                            <DatePicker selected={dateTime}
-                                onChange={(date) => { setDateTime(date); handleDateTimeChange(date); }}
-                                showTimeSelect
-                                timeFormat="HH:mm"
-                                timeIntervals={15}
-                                dateFormat="Pp"
-                                wrapperClassName="w-full"
-                                customInput={
-                                  <CustomInput
-                                    id="date"
-                                    className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
-                                      error.dateTimeError !== ""
-                                        ? "ring-red-500"
-                                        : "ring-gray-300"
-                                    }`}
-                                    ref={dateTimeRef}
-                                  /> 
-                                }
+                            <DatePicker
+                              selected={dateTime}
+                              onChange={(date) => {
+                                setDateTime(date);
+                                handleDateTimeChange(date);
+                              }}
+                              showTimeSelect
+                              timeFormat="HH:mm"
+                              timeIntervals={15}
+                              dateFormat="Pp"
+                              wrapperClassName="w-full"
+                              customInput={
+                                <CustomInput
+                                  id="date"
+                                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                                    error.dateTimeError !== ""
+                                      ? "ring-red-500"
+                                      : "ring-gray-300"
+                                  }`}
+                                  ref={dateTimeRef}
+                                />
+                              }
                             />
 
                             {error.dateTimeError && (
-                                              <div className="inline-flex items-center">
-                                                <img alt="" src={errorImg} className="w-3 h-3" />
-                                                <p className="text-red-600 text-xs mx-1">
-                                                  {error.dateTimeError}
-                                                </p>
-                                              </div>
-                                            )}
+                              <div className="inline-flex items-center">
+                                <img
+                                  alt=""
+                                  src={errorImg}
+                                  className="w-3 h-3"
+                                />
+                                <p className="text-red-600 text-xs mx-1">
+                                  {error.dateTimeError}
+                                </p>
+                              </div>
+                            )}
 
                             {/* {error.dateError && (
                             <div className="inline-flex items-center">
@@ -1544,7 +1556,11 @@ function PersonalOutForm() {
                               ></input>
                               {error.optDescError && (
                                 <div className="inline-flex items-center">
-                                  <img alt="" src={errorImg} className="w-3 h-3" />
+                                  <img
+                                    alt=""
+                                    src={errorImg}
+                                    className="w-3 h-3"
+                                  />
                                   <p className="text-red-600 text-xs ml-1">
                                     {error.optDescError}
                                   </p>
@@ -1589,7 +1605,11 @@ function PersonalOutForm() {
                               ></input>
                               {error.optLandmarkError && (
                                 <div className="inline-flex items-center">
-                                  <img alt="" src={errorImg} className="w-3 h-3" />
+                                  <img
+                                    alt=""
+                                    src={errorImg}
+                                    className="w-3 h-3"
+                                  />
                                   <p className="text-red-600 text-xs ml-1">
                                     {error.optLandmarkError}
                                   </p>
@@ -1914,40 +1934,47 @@ function PersonalOutForm() {
                 </span>
                 {/* Toggle public form */}
                 <div className="flex items-center">
-                  <input 
+                  <input
                     type="checkbox"
                     id="isPublic"
                     checked={isPublic}
-                    onClick={() => setIsPublic(prev => !prev)}
+                    onClick={() => setIsPublic((prev) => !prev)}
                     className="w-[18px] h-[18px] bg-violet-700 rounded-sm cursor-pointer"
                   />
-                  <span className="self-stretch font-bricolage text-[18px] ml-2">Make this visit log public?</span>
+                  <span className="self-stretch font-bricolage text-[18px] ml-2">
+                    Make this visit log public?
+                  </span>
                 </div>
                 {/* Toggle public form end */}
                 <div className="justify-start items-start gap-4 inline-flex">
                   <div className="justify-start items-start gap-4 flex">
-                  { id === undefined ? <CustomButton
-                                          label="Done"
-                                          name="buttondefault"
-                                          onClick={handleSubmit}
-                                        />
-                    :   <div><CustomButton
+                    {id === undefined ? (
+                      <CustomButton
+                        label="Done"
+                        name="buttondefault"
+                        onClick={handleSubmit}
+                      />
+                    ) : (
+                      <div>
+                        <CustomButton
                           label="Update"
                           name="buttondefault"
                           onClick={handleUpdateVisitLog}
-                        /> &nbsp;&nbsp;
+                        />{" "}
+                        &nbsp;&nbsp;
                         <CustomButton
                           label="Cancel"
                           name="buttondefault"
                           onClick={() => {
-                             navigate(-1);
+                            navigate(-1);
                           }}
-                        /></div>
-                    }                    
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
                 {/*  */}
-                {success && id==undefined && (
+                {success && id == undefined && (
                   // <div className="justify-start items-start gap-4 inline-flex">
                   //   <div className="justify-start items-start gap-4 flex">
                   //     Success!
@@ -1955,8 +1982,8 @@ function PersonalOutForm() {
                   // </div>
                   <ConfirmationModal isOpen={true} />
                 )}
-                {success && id!=undefined && (
-                    <UpdateVisitLogConfirmationModal isOpen={true} />
+                {success && id != undefined && (
+                  <UpdateVisitLogConfirmationModal isOpen={true} />
                 )}
               </div>
             </div>

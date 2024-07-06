@@ -7,7 +7,7 @@ import {
   query,
   where,
   limit,
-  or
+  or,
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -63,7 +63,9 @@ export const fetchEvents = async () => {
 
 export async function calculateNumberOfPages(outreachesPerPage) {
   if (outreachesPerPage < 1 || outreachesPerPage > 10) {
-    throw new Error("The number of outreaches per page must be between 1 and 10.");
+    throw new Error(
+      "The number of outreaches per page must be between 1 and 10."
+    );
   }
 
   const outreachEventsRef = collection(db, OUTREACH_EVENTS_COLLECTION);
@@ -283,7 +285,7 @@ export const fetchEventById = async (eventId) => {
   }
 };
 
-export const fetchUserEvents = async (uid) => {
+/*export const fetchUserEvents = async (uid) => {
   try {
     const userQuery = query(
       collection(db, USERS_COLLECTION),
@@ -329,7 +331,7 @@ export const fetchUserEvents = async (uid) => {
     );
     throw error;
   }
-};
+};*/
 
 export function formatDate(dateObj) {
   // Extract date parts manually for custom format
@@ -356,10 +358,12 @@ export function formatDate(dateObj) {
   const weekday = days[dateObj.getDay()];
 
   // Extract hours, minutes, and the AM/PM part
-  const hours = dateObj.getHours();
+  let hours = dateObj.getHours();
   const minutes = dateObj.getMinutes();
   const ampm = hours >= 12 ? "PM" : "AM";
-  const formattedTime = `${hours % 12}:${minutes
+  hours = hours % 12;
+  hours = hours ? hours : 12; // The hour '0' should be '12'
+  const formattedTime = `${hours}:${minutes
     .toString()
     .padStart(2, "0")} ${ampm}`;
 
@@ -552,23 +556,40 @@ export const handleRsvp = async (
   }
 };
 
-export const fetchByCityOrState = async (searchValue) => {
+export const fetchByCityOrState = async (searchValue, startDate, endDate) => {
   try {
+    if (!searchValue || typeof searchValue !== "string") {
+      console.error("Invalid search value");
+      return;
+    }
+
+    if (!(startDate instanceof Date) || isNaN(startDate)) {
+      console.error("Invalid start date");
+      return;
+    }
+
+    if (!(endDate instanceof Date) || isNaN(endDate)) {
+      console.error("Invalid end date");
+      return;
+    }
+
     const pastOutreachRef = collection(db, PAST_OUTREACH_EVENTS_COLLECTION);
     // Full text search - Search filtering by City/State fields matching exact value
+
     const outreachByLocationQuery = query(
-      pastOutreachRef,where('location.city', '>=', searchValue), where('location.city', '<=', searchValue + '\uf8ff') // 
-      
-     //  or (where('location.city', '>=', searchValue), // Start at prefix
-      //     where('location.city', '<=', searchValue + '\uf8ff') // 
-      // )
+      pastOutreachRef,
+      where("location.city", "==", searchValue),
+      where("eventDate", ">=", startDate),
+      where("eventDate", "<=", endDate)
     );
 
     const outreachDocRef = await getDocs(outreachByLocationQuery);
 
+    console.log(outreachDocRef);
+
     let outreachByLoc = [];
     for (const doc of outreachDocRef.docs) {
-      const pastOutreachData = doc.data(); 
+      const pastOutreachData = doc.data();
       const id = doc.id;
 
       outreachByLoc.push({
@@ -576,12 +597,56 @@ export const fetchByCityOrState = async (searchValue) => {
         id: id,
       });
     }
-    console.log(outreachByLoc)
+    console.log(outreachByLoc);
     return outreachByLoc;
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
       `error on fetchByCityOrState AllPastOrtreachEvents.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
+export const fetchUserOutreaches = async () => {
+  try {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) {
+      throw new Error("User is not logged in.");
+    }
+
+    const userQuery = query(
+      collection(db, OUTREACH_EVENTS_COLLECTION),
+      where("uid", "==", user.uid)
+    );
+
+    const eventSnapshot = await getDocs(userQuery);
+    let userOutreaches = [];
+
+    for (const doc of eventSnapshot.docs) {
+      const eventData = doc.data();
+      const result = await fetchUserDetails(eventData.uid);
+      const userName = result.username;
+      const photoUrl = result.photoUrl;
+
+      let currentParticipants = eventData.participants || [];
+      userOutreaches.push({
+        ...eventData,
+        userName: userName,
+        id: doc.id,
+        label: user && currentParticipants.includes(user.uid) ? "EDIT" : "RSVP",
+        nop: currentParticipants.length,
+        photoUrl: photoUrl,
+      });
+    }
+
+    return userOutreaches;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchUserOutreaches in EventCardService.js- ${error.message}`
     );
     throw error;
   }

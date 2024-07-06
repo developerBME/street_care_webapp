@@ -551,7 +551,7 @@ const Form = (hrid) => {
         }
         case "administrative_area_level_1": {
           state = component.long_name;
-          state_abbv = component.short_name
+          state_abbv = component.short_name;
           break;
         }
         default:
