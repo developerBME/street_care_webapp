@@ -1,15 +1,15 @@
-const admin = require('firebase-admin');
-const nodemailer = require('nodemailer');
-const schedule = require('node-schedule');
-const serviceAccount = require('./streetcare-d0f33-firebase-adminsdk-idx6g-e46500ba2b.json');
+const admin = require("firebase-admin");
+const nodemailer = require("nodemailer");
+const schedule = require("node-schedule");
+const serviceAccount = require("./streetcare-d0f33-firebase-adminsdk-idx6g-e46500ba2b.json");
 
 // Initialize the app if it hasn't been initialized already
 if (!admin.apps.length) {
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
+    credential: admin.credential.cert(serviceAccount),
   });
 }
-console.log("test")
+console.log("test");
 
 const db = admin.firestore();
 
@@ -22,7 +22,7 @@ async function getEmailsFromFirestore(collectionName) {
   try {
     const emails = [];
     const snapshot = await db.collection(collectionName).get();
-    snapshot.forEach(doc => {
+    snapshot.forEach((doc) => {
       const data = doc.data();
       if (data.email) {
         emails.push(data.email);
@@ -30,7 +30,7 @@ async function getEmailsFromFirestore(collectionName) {
     });
     return emails;
   } catch (error) {
-    console.error('An error occurred:', error);
+    console.error("An error occurred:", error);
     return [];
   }
 }
@@ -41,17 +41,17 @@ async function sendEmail(recipients) {
    *
    * @param {Array} recipients A list of email addresses.
    */
-  const senderEmail = 'hrcentral27@gmail.com'; // Update with your sender email address
-  const senderPassword = 'xqxh jjzt hevf jxwv'; // Update with your sender email password
-  const subject = 'Backend Support';
-  const body = 'Hello, This is the Backend Team.';
+  const senderEmail = "<EMAIL>"; // Update with your sender email address
+  const senderPassword = "<Password>"; // Update with your sender email password
+  const subject = "Backend Support";
+  const body = "Hello, This is the Backend Team.";
 
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: "gmail",
     auth: {
       user: senderEmail,
-      pass: senderPassword
-    }
+      pass: senderPassword,
+    },
   });
 
   for (const recipient of recipients) {
@@ -59,7 +59,7 @@ async function sendEmail(recipients) {
       from: senderEmail,
       to: recipient,
       subject: subject,
-      text: body
+      text: body,
     };
 
     try {
@@ -76,7 +76,7 @@ async function scheduleEmails() {
   /**
    * Retrieves emails from Firestore and sends them.
    */
-  const collectionName = 'kp1234'; // Update with your Firestore collection name
+  const collectionName = "kp1234"; // Update with your Firestore collection name
   const recipients = await getEmailsFromFirestore(collectionName);
   if (recipients.length > 0) {
     await sendEmail(recipients);
@@ -84,7 +84,7 @@ async function scheduleEmails() {
 }
 
 // Uncomment the below line for testing purposes (sends emails every 5 seconds)
-schedule.scheduleJob('*/5 * * * * *', scheduleEmails);
+schedule.scheduleJob("*/5 * * * * *", scheduleEmails);
 
 // Schedule the email to be sent every Monday at 9:00 AM
 // schedule.scheduleJob('0 9 * * 1', scheduleEmails);
@@ -95,7 +95,3 @@ const keepAlive = () => {
 };
 
 keepAlive();
-
-
-
-

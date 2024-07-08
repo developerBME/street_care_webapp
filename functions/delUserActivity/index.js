@@ -28,6 +28,8 @@ exports.delUserActivity = functions.firestore
     const helpRequestRef = admin.firestore().collection('helpRequests');
     const helpRequestQuery = helpRequestRef.where('uid', '==', userId);
 
+    // Remove user ID from participants array in outreach events
+    const participantsQuery = outreachesRef.where('participants', 'array-contains', userId);
     try {
       // Delete outreach documents
       const outreachesSnapshot = await outreachQuery.get();
@@ -72,6 +74,23 @@ exports.delUserActivity = functions.firestore
         });
         await helpRequestBatch.commit();
         console.log(`Deleted helpRequest documents for user ID: ${userId}`);
+      }
+
+      // Remove user ID from participants array in outreach events
+      const participantsSnapshot = await participantsQuery.get();
+      if (participantsSnapshot.empty) {
+        console.log(`No participants documents found for user ID: ${userId}`);
+      } else {
+        console.log(`Found ${participantsSnapshot.size} participants documents for user ID: ${userId}`);
+        const participantsBatch = admin.firestore().batch();
+        participantsSnapshot.forEach(doc => {
+          console.log(`Updating participants array in document ID: ${doc.id}`);
+          participantsBatch.update(doc.ref, {
+            participants: admin.firestore.FieldValue.arrayRemove(userId)
+          });
+        });
+        await participantsBatch.commit();
+        console.log(`Updated participants array for user ID: ${userId}`);
       }
     } catch (error) {
       console.error(`Error deleting documents for user ID: ${userId}`, error);
