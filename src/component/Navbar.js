@@ -29,7 +29,7 @@ const NavBar = (props) => {
         console.log("success");
         props.setUser(null);
         navigate("/login");
-        // props.setLoggedIn(false);
+        props.setLoggedIn(false);
       })
       .catch((error) => {
         console.log(error);
