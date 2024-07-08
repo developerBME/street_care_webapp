@@ -496,7 +496,7 @@ function PersonalOutForm() {
 
     try {
       console.log("Sending email...");
-      const logRef = collection(db, "visitLogWebProd");
+      const logRef = collection(db, "personalVisitLog");
       const docRef = await addDoc(logRef, obj);
       if (docRef.id) {
         console.log(docRef.id);
@@ -792,7 +792,7 @@ function PersonalOutForm() {
     };
 
     try {
-      const logRef = doc(db, "visitLogWebProd", id);
+      const logRef = doc(db, "personalVisitLog", id);
       await updateDoc(logRef, obj);
       setSuccess(true);
       clearFields();

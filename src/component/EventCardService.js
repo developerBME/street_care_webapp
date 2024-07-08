@@ -14,7 +14,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import logEvent from "./FirebaseLogger";
 
 const OFFICIAL_EVENTS_COLLECTION = "officialEvents";
-const OUTREACH_EVENTS_COLLECTION = "outreachEventsDev";
+const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
 const PAST_OUTREACH_EVENTS_COLLECTION = "pastOutreachEvents";
 const USERS_COLLECTION = "users";
 
@@ -519,6 +519,7 @@ export const handleRsvp = async (
           // check if event exists in current user and remove if exists
           if (currentEvents.includes(id)) {
             console.log("removing from user");
+            navigate("/profile");
             const userDocUpdate = doc(db, USERS_COLLECTION, userDocID);
             const i = currentEvents.indexOf(id);
             if (i > -1) {

@@ -24,7 +24,7 @@ describe("fetchOutreaches function", () => {
 
     expect(getDocs).toHaveBeenCalledWith(
       query(
-        collection(db, "outreachEventsDev"),
+        collection(db, "outreachEvents"),
         where("HelpRequest.id", "==", helpRequestId)
       )
     );
@@ -49,7 +49,7 @@ describe("fetchOutreaches function", () => {
 
     expect(getDocs).toHaveBeenCalledWith(
       query(
-        collection(db, "outreachEventsDev"),
+        collection(db, "outreachEvents"),
         where("HelpRequest.id", "==", helpRequestId)
       )
     );
