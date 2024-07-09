@@ -129,10 +129,9 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/ForgotPassword" element={<ForgotPassword />} />
           <Route path="/signup" element={<Signup2 />} />
-          <Route path="/userlist" element={<UserList/>}/>
+          <Route path="/admin-panel/userlist" element={<UserList/>}/>
           <Route path="/allnews" element={<Newscard />} />
           <Route path="/allnews/:id" element={<Readmorenews />} />
-          
           <Route path="/user/:uid" element={<UserDetails />} />  // Route for user details
           <Route
             path="/verifyemail"
