@@ -40,20 +40,20 @@ const VisitLogDetails = () => {
 
   return (
     <div className="relative flex flex-col items-center ">
-      <div className=" mx-2 mb-16 lg:mx-40 mt-48 rounded-2xl bg-white text-black ">
+      <div className="mx-2 mb-16 lg:mx-40 mt-48 rounded-2xl bg-white text-black w-full md:w-fit">
         <div
           className=" absolute flex mt-[-50px] items-center cursor-pointer "
           onClick={() => {
             navigate(returnTarget);
           }}
         >
-          <IoIosArrowBack className=" w-6 h-6" />{" "}
+          <IoIosArrowBack className="w-6 h-6" />{" "}
           <p className=" font-bricolage text-xl font-bold leading-7">
             {returnText}
           </p>
         </div>
-        <div className="px-[150px] py-[100px]">
-          <div className="space-y-[64px]">
+        <div className="md:px-[150px] md:py-[100px] px-[20px] py-[15px]">
+          <div className="md:space-y-[64px] space-y-[32px]">
             <div className="font-medium font-dmsans text-[45px] text-neutral-800 leading-[52px]">
               Visit Log Details
             </div>
