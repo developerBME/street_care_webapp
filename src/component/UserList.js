@@ -11,40 +11,56 @@ function UserList() {
   const [bannedUsers, setBannedUsers] = useState({});
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchUsersAndBannedStatus = async () => {
       setLoading(true);
       setError("");
+
       try {
         const usersQuery = query(collection(db, "users"), where("deviceType", "==", "Web"));
-        const querySnapshot = await getDocs(usersQuery);
-        const userList = querySnapshot.docs.map(doc => ({
+        const bannedQuery = query(collection(db, "bannedUser"));
+
+        const [userSnapshot, bannedSnapshot] = await Promise.all([
+          getDocs(usersQuery),
+          getDocs(bannedQuery)
+        ]);
+
+        const userList = userSnapshot.docs.map(doc => ({
           docId: doc.id,
           ...doc.data()
         }));
+
+        const bannedUserMap = {};
+        bannedSnapshot.docs.forEach(doc => {
+          bannedUserMap[doc.data().email] = doc.id; // Store the document ID as the value for quick access
+        });
+
         setUsers(userList);
+        setBannedUsers(bannedUserMap);
       } catch (error) {
-        console.error("Error fetching user data:", error);
-        setError("Failed to fetch users.");
+        console.error("Error fetching data:", error);
+        setError("Failed to fetch data.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUsers();
+    fetchUsersAndBannedStatus();
   }, []);
 
   const toggleBanUser = async (email) => {
     const isBanned = bannedUsers[email];
     try {
       if (!isBanned) {
-        await addDoc(collection(db, "bannedUser"), { email });
-        setBannedUsers(prev => ({ ...prev, [email]: true }));
+        const docRef = await addDoc(collection(db, "bannedUser"), { email });
+        setBannedUsers(prev => ({ ...prev, [email]: docRef.id }));
         alert(`User with email ${email} has been banned.`);
       } else {
-        // For simplicity, assume each banned user's document key is their email
-        // This may need to change depending on your document structure
-        await deleteDoc(doc(db, "bannedUser", email));
-        setBannedUsers(prev => ({ ...prev, [email]: false }));
+        await deleteDoc(doc(db, "bannedUser", isBanned));
+        setBannedUsers(prev => {
+          const newState = { ...prev };
+          delete newState[email];
+          return newState;
+        });
         alert(`User with email ${email} has been unbanned.`);
       }
     } catch (error) {
@@ -169,11 +185,11 @@ const styles = {
   bannedButton: {
     padding: '5px 10px',
     color: 'white',
-    backgroundColor: '#6c757d', // Grey color to indicate "Banned"
+    backgroundColor: '#6c757d',
     border: 'none',
     borderRadius: '4px',
-    cursor: 'not-allowed', // Cursor style to indicate non-actionable
-    boxShadow: 'none' // No shadow for banned state
+    cursor: 'not-allowed',
+    boxShadow: 'none'
   },
   loading: {
     textAlign: 'center',
