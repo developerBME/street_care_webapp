@@ -5,7 +5,7 @@ import add from "../../images/add.png";
 import UserInfo from "./UserInfo";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import OutreachEventCard from "../Community/OutreachEventCard";
-import { formatDate, fetchUserOutreaches } from "../EventCardService";
+import { formatDate, fetchUserOutreaches, fetchUserSignedUpOutreaches } from "../EventCardService";
 import { auth } from "../firebase";
 import CustomButton from "../Buttons/CustomButton";
 // import { fetchPersonalVisitLogs } from "../VisitLogCardService";
@@ -13,7 +13,8 @@ import OutreachVisitLogProfile from "../Community/OutreachVisitLogProfile";
 import NoOutreachDoc from "../Community/NoOutreachDoc";
 
 function Profile() {
-  const [events, setEvents] = useState([]);
+  const [createdEvents, setCreatedEvents] = useState([]);
+  const [signedUpEvents, setSignedUpEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [eventsDisplay, setEventsDisplay] = useState([]);
   const navigate = useNavigate();
@@ -28,19 +29,26 @@ function Profile() {
       if (user) {
         const uid = user.uid;
         console.log("UID is ", uid);
-        const eventsData = await fetchUserOutreaches();
-        eventsData.sort((a, b) => a.eventDate - b.eventDate);
-        setEvents(eventsData);
+        const createdEventsData = await fetchUserOutreaches();
+        createdEventsData.sort((a, b) => a.eventDate - b.eventDate);
+        const signedUpEventsData = await fetchUserSignedUpOutreaches();
+        signedUpEventsData.sort((a,b) => a.eventData - b.eventData);
+
+        setCreatedEvents(createdEventsData);
+        setSignedUpEvents(signedUpEventsData);
       } else {
         console.log("No user is signed in.");
-        setEvents([]);
+        setCreatedEvents([]);
+        setSignedUpEvents([]);
       }
     } catch (error) {
       console.error("Error Fetching data:", error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
-
-  useEffect(() => {
+  // commented because its duplicate
+  /*useEffect(() => {
     const fetchData = async () => {
       const user = auth.currentUser;
 
@@ -69,8 +77,10 @@ function Profile() {
       setIsLoading(false);
     } else {
       setIsLoading(false);
-    }
-  }, [eventsDisplay]);
+    }*/
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
@@ -168,11 +178,11 @@ function Profile() {
                   <EventCardSkeleton />
                   <EventCardSkeleton />
                 </div>
-              ) : events.length === 0 ? (
+              ) : createdEvents.length === 0 ? (
                 <NoOutreachDoc />
               ) : (
                 <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 mb-6">
-                  {events.map((eventData) => (
+                  {createdEvents.map((eventData) => (
                     <OutreachEventCard
                       key={eventData.id}
                       cardData={{
@@ -238,11 +248,11 @@ function Profile() {
                   <EventCardSkeleton />
                   <EventCardSkeleton />
                 </div>
-              ) : events.length === 0 ? (
+              ) : createdEvents.length === 0 ? (
                 <NoOutreachDoc />
               ) : (
                 <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 mb-6">
-                  {events.map((eventData) => (
+                  {createdEvents.map((eventData) => (
                     <OutreachEventCard
                       key={eventData.id}
                       cardData={{
