@@ -193,8 +193,8 @@ function Profile() {
           </div>{" "}
         </div>
         
-        <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl rounded-2xl bg-white text-black mb-4">
-          <div className="flex flex-col gap-4 md:py-16 md:px-12 lg:gap-14 lg:p-12 sm:pl-8 sm:pr-8 pl-4 pr-4 pt-4 pb-4 ">
+        <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black mb-10">
+          <div className="flex flex-col gap-4 md:px-12 md:py-16 lg:gap-14 lg:p-24 pl-8 pt-4 pb-4 pr-8">
             <OutreachVisitLogProfile />
           </div>
         </div>
