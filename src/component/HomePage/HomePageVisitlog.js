@@ -120,6 +120,15 @@ const HomePageVisitlog = () => {
             </div>
           )}
         </div>
+        <div className="mt-16">
+          <CustomButton
+            label="More Visit Logs"
+            name="buttondefault"
+            onClick={() => {
+              navigate("/allOutreachVisitLog");
+            }}
+          />
+        </div>
       </div>
     </div>
   );
