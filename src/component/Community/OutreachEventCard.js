@@ -144,6 +144,16 @@ const OutreachEventCard = ({
             {isProfilePage || label2 === "EDIT" ? (
               <div class="group relative">
                 <CustomButton
+                  label="View"
+                  name="buttonlight"
+                  onClick={() => {
+                    navigate(`/outreachsignup/${id}`, {
+                      state: { label: "EDIT" },
+                    });
+                  }}
+                ></CustomButton>
+
+                {/* <CustomButton
                   label="Edit"
                   name="buttonlight"
                   onClick={handleEditClick}
@@ -162,17 +172,28 @@ const OutreachEventCard = ({
                     eventDate={eventDate}
                     location={location}
                   />
-                )}
+                )} */}
               </div>
             ) : (
-              <div className="group relative">
-                <CustomButton
-                  label={label2}
-                  name="buttonlight"
-                  onClick={() => {
-                    navigate(`/outreachsignup/${id}`);
-                  }}
-                />
+              <div className="flex flex-row">
+                {/* <div className="group relative mr-2">
+                  <CustomButton
+                    label={label2}
+                    name="buttonlight"
+                    onClick={() => {
+                      navigate(`/outreachsignup/${id}`);
+                    }}
+                  />
+                </div> */}
+                <div className="group relative">
+                  <CustomButton
+                    label="View"
+                    name="buttonlight"
+                    onClick={() => {
+                      navigate(`/outreachsignup/${id}`);
+                    }}
+                  />
+                </div>
               </div>
             )}
 

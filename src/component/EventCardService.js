@@ -7,6 +7,7 @@ import {
   query,
   where,
   limit,
+  or,
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -16,6 +17,7 @@ const OFFICIAL_EVENTS_COLLECTION = "officialEvents";
 const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
 const PAST_OUTREACH_EVENTS_COLLECTION = "pastOutreachEvents";
 const USERS_COLLECTION = "users";
+const PERSONAL_VISIT_LOG = "personalVisitLog";
 
 export const fetchEvents = async () => {
   try {
@@ -59,6 +61,20 @@ export const fetchEvents = async () => {
     throw error;
   }
 };
+
+export async function calculateNumberOfPages(outreachesPerPage) {
+  if (outreachesPerPage < 1 || outreachesPerPage > 10) {
+    throw new Error(
+      "The number of outreaches per page must be between 1 and 10."
+    );
+  }
+
+  const outreachEventsRef = collection(db, OUTREACH_EVENTS_COLLECTION);
+  const snapshot = await getDocs(outreachEventsRef);
+  const totalOutreaches = snapshot.size;
+
+  return Math.ceil(totalOutreaches / outreachesPerPage);
+}
 
 async function fetchUserDetailsBatch(userIds) {
   const userDetails = {};
@@ -174,22 +190,26 @@ const fetchUserName = async (uid) => {
     where("uid", "==", uid)
   );
   const userDocRef = await getDocs(userQuery);
-  const userDocID = userDocRef.docs[0].id;
+
+  const userDocID = userDocRef.docs[0]?.id;  
   // reference for the userdoc
-  const userRef = doc(db, USERS_COLLECTION, userDocID);
-  const userDoc = await getDoc(userRef);
-  if (userDoc.exists()) {
-    return userDoc.data().username || "";
-  } else {
-    console.error("No user found with uid:", uid);
-    logEvent(
-      "STREET_CARE_ERROR",
-      `error on fetchUserName EventCardService.js- No user Found ${uid}`
-    );
-    throw new Error(
-      `error on fetchUserName EventCardService.js- No user Found ${uid}`
-    );
-    return "";
+  if(userDocID != undefined){
+    const userRef = doc(db, USERS_COLLECTION, userDocID);
+    const userDoc = await getDoc(userRef);
+    
+    if (userDoc != undefined || userDoc.exists()) {
+      return userDoc.data().username || "";
+    } else {
+      console.error("No user found with uid:", uid);
+      logEvent(
+        "STREET_CARE_ERROR",
+        `error on fetchUserName EventCardService.js- No user Found ${uid}`
+      );
+      throw new Error(
+        `error on fetchUserName EventCardService.js- No user Found ${uid}`
+      );
+      return "";
+    }
   }
 };
 
@@ -270,7 +290,7 @@ export const fetchEventById = async (eventId) => {
   }
 };
 
-export const fetchUserEvents = async (uid) => {
+/*export const fetchUserEvents = async (uid) => {
   try {
     const userQuery = query(
       collection(db, USERS_COLLECTION),
@@ -316,7 +336,7 @@ export const fetchUserEvents = async (uid) => {
     );
     throw error;
   }
-};
+};*/
 
 export function formatDate(dateObj) {
   // Extract date parts manually for custom format
@@ -343,10 +363,12 @@ export function formatDate(dateObj) {
   const weekday = days[dateObj.getDay()];
 
   // Extract hours, minutes, and the AM/PM part
-  const hours = dateObj.getHours();
+  let hours = dateObj.getHours();
   const minutes = dateObj.getMinutes();
   const ampm = hours >= 12 ? "PM" : "AM";
-  const formattedTime = `${hours % 12}:${minutes
+  hours = hours % 12;
+  hours = hours ? hours : 12; // The hour '0' should be '12'
+  const formattedTime = `${hours}:${minutes
     .toString()
     .padStart(2, "0")} ${ampm}`;
 
@@ -502,6 +524,7 @@ export const handleRsvp = async (
           // check if event exists in current user and remove if exists
           if (currentEvents.includes(id)) {
             console.log("removing from user");
+            navigate("/profile");
             const userDocUpdate = doc(db, USERS_COLLECTION, userDocID);
             const i = currentEvents.indexOf(id);
             if (i > -1) {
@@ -536,5 +559,155 @@ export const handleRsvp = async (
         navigate("/login", { replace: true });
       }
     });
+  }
+};
+
+export const fetchByCityOrState = async (searchValue, startDate, endDate) => {
+  try {
+    if (!searchValue || typeof searchValue !== "string") {
+      console.error("Invalid search value");
+      return;
+    }
+
+    if (!(startDate instanceof Date) || isNaN(startDate)) {
+      console.error("Invalid start date");
+      return;
+    }
+
+    if (!(endDate instanceof Date) || isNaN(endDate)) {
+      console.error("Invalid end date");
+      return;
+    }
+
+    const pastOutreachRef = collection(db, PAST_OUTREACH_EVENTS_COLLECTION);
+    // Full text search - Search filtering by City/State fields matching exact value
+
+    const outreachByLocationQuery = query(
+      pastOutreachRef,
+      where("location.city", "==", searchValue),
+      where("eventDate", ">=", startDate),
+      where("eventDate", "<=", endDate)
+    );
+
+    const outreachDocRef = await getDocs(outreachByLocationQuery);
+
+    console.log(outreachDocRef);
+
+    let outreachByLoc = [];
+    for (const doc of outreachDocRef.docs) {
+      const pastOutreachData = doc.data();
+      const id = doc.id;
+
+      outreachByLoc.push({
+        ...pastOutreachData,
+        id: id,
+      });
+    }
+    console.log(outreachByLoc);
+    return outreachByLoc;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchByCityOrState AllPastOrtreachEvents.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
+export const fetchUserOutreaches = async () => {
+  try {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) {
+      throw new Error("User is not logged in.");
+    }
+
+    const userQuery = query(
+      collection(db, OUTREACH_EVENTS_COLLECTION),
+      where("uid", "==", user.uid)
+    );
+
+    const eventSnapshot = await getDocs(userQuery);
+    let userOutreaches = [];
+
+    for (const doc of eventSnapshot.docs) {
+      const eventData = doc.data();
+      const result = await fetchUserDetails(eventData.uid);
+      const userName = result.username;
+      const photoUrl = result.photoUrl;
+
+      let currentParticipants = eventData.participants || [];
+      userOutreaches.push({
+        ...eventData,
+        userName: userName,
+        id: doc.id,
+        label: user && currentParticipants.includes(user.uid) ? "EDIT" : "RSVP",
+        nop: currentParticipants.length,
+        photoUrl: photoUrl,
+      });
+    }
+
+    return userOutreaches;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchUserOutreaches in EventCardService.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
+export const fetchVisitLogsByCityOrState = async (searchValue, startDate, endDate) => {
+  try {
+
+    if (!searchValue || typeof searchValue !== 'string') {
+      console.error('Invalid search value');
+      return;
+    }
+  
+    if (!(startDate instanceof Date) || isNaN(startDate)) {
+      console.error('Invalid start date');
+      return;
+    }
+  
+    if (!(endDate instanceof Date) || isNaN(endDate)) {
+      console.error('Invalid end date');
+      return;
+    } 
+
+    const visitlogs = collection(db, PERSONAL_VISIT_LOG);
+    // Full text search - Search filtering by City/State fields matching exact value
+
+    const visitlogsByLocationQuery = query(
+      visitlogs, where('city', '==', searchValue),
+         where('dateTime', '>=', startDate),
+         where('dateTime', '<=', endDate)
+    );
+
+    const visitLogDocRef = await getDocs(visitlogsByLocationQuery);
+
+    
+    let visitLogByCity = [];
+    for (const doc of visitLogDocRef.docs) {
+      console.log(doc.data().uid);
+
+      const visitLogData = doc.data(); 
+      const id = doc.id;
+      const userName = await fetchUserName(visitLogData.uid);
+      visitLogByCity.push({
+        ...visitLogData,
+        userName: userName,
+        id: id,
+      });
+    }
+    console.log(visitLogByCity)
+    return visitLogByCity;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchVisitLogByCityOrState EventCardService.js- ${error.message}`
+    );
+    throw error;
   }
 };

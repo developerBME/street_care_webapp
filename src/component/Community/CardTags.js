@@ -1,7 +1,6 @@
 import React from "react";
 
-const CardTags = ({ tags }) => {
-  let maxShown = 2;
+const CardTags = ({ tags, maxShown = 2 }) => {
   let moreCount = tags.length - maxShown;
   return (
     <div className="inline-flex items-center gap-2 flex-wrap">

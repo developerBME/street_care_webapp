@@ -1,10 +1,11 @@
 import CustomButton from "../../Buttons/CustomButton";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import React from "react";
 import { getAuth, signOut } from "firebase/auth";
 
 const EmailUpdateConfirmation = () => {
   const navigate = useNavigate();
+  const {email} = useParams();
 
   const fAuth = getAuth();
 
@@ -13,6 +14,7 @@ const EmailUpdateConfirmation = () => {
     window.location.reload();
     navigate("/login");
   };
+
 
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
@@ -26,7 +28,8 @@ const EmailUpdateConfirmation = () => {
               <div className="text-black text-base font-normal">
                 You can now login with{" "}
                 <span className="text-[#6840E0]">
-                  {fAuth.currentUser.email}
+                  {/* {fAuth.currentUser.email} */}
+                  {email}
                 </span>{" "}
                 and current password. Click the button below to log back into your account.
               </div>

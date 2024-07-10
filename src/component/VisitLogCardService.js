@@ -17,10 +17,11 @@ const VISIT_LOG_COLLECTION = "testLog";
 const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
 const USERS_COLLECTION = "users";
 const PERSONAL_VISIT_LOG_COLLECTION = "personalVisitLog";
+const VISIT_LOG_COLLECTION_PROD = "visitLogWebProd";
 
 export const fetchVisitLogs = async () => {
   try {
-    const visitLogsRef = collection(db, VISIT_LOG_COLLECTION);
+    const visitLogsRef = collection(db, PERSONAL_VISIT_LOG_COLLECTION);
     const visitLogSnapshot = await getDocs(visitLogsRef);
     let visitLogs = [];
     for (const doc of visitLogSnapshot.docs) {
@@ -58,25 +59,47 @@ export const fetchVisitLogs = async () => {
 
 const fetchOutreachEventData = async (eid) => {
   try {
-    // Reference to the outreach event ID
+    // Check if eid is valid
     if (!eid) {
+      console.warn("fetchOutreachEventData called with invalid eid:", eid);
       return "";
     }
+
+    // Reference to the outreach event ID
     const outReachEventRef = doc(db, OUTREACH_EVENTS_COLLECTION, eid);
     const outReachEventData = await getDoc(outReachEventRef);
+
+    // Check if the document exists
+    if (!outReachEventData.exists()) {
+      console.warn("Outreach event document does not exist for eid:", eid);
+      return {
+        description: "",
+        helpType: "",
+        eventDate: "",
+        location: "",
+        totalSlots: "",
+        filledSlots: "",
+      };
+    }
+
+    const data = outReachEventData.data();
+
+    // Return data with fallbacks for missing fields
     return {
-      description: outReachEventData?.data().description || "",
-      helpType: outReachEventData?.data().helpType || "",
-      eventDate: outReachEventData?.data().eventDate || "",
-      location: outReachEventData?.data().location || "",
-      totalSlots: outReachEventData?.data().totalSlots || "",
-      filledSlots: outReachEventData?.data().participants?.length || "",
+      description: data.description || "",
+      helpType: data.helpType || "",
+      eventDate: data.eventDate || "",
+      location: data.location || "",
+      totalSlots: data.totalSlots || "",
+      filledSlots: data.participants?.length || 0, // Ensure filledSlots is a number
     };
   } catch (error) {
+    // Log the error with additional context
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchOutreachEventData VisitLogCardService.js- ${error.message}`
+      `Error in fetchOutreachEventData (VisitLogCardService.js): ${error.message}`
     );
+    console.error("Error fetching outreach event data:", error);
     throw error;
   }
 };
@@ -84,7 +107,7 @@ const fetchOutreachEventData = async (eid) => {
 export const fetchVisitLogById = async (visitLogId) => {
   try {
     // Reference to the specific document in the visitlog collection
-    const visitLogRef = doc(db, VISIT_LOG_COLLECTION, visitLogId);
+    const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
     const visitLogSnap = await getDoc(visitLogRef);
     const visitLogData = visitLogSnap.data();
     const outreachEventId = visitLogData.outreachEvent || "";
@@ -92,18 +115,24 @@ export const fetchVisitLogById = async (visitLogId) => {
     const uid = visitLogData.uid;
     const userDetails = await fetchUserDetails(uid);
     return {
+      id: doc.id,
       whatGiven: visitLogData.whatGiven,
-      description: outreachEventData?.description || "",
-      helpType: outreachEventData?.helpType || "",
-      location: outreachEventData?.location || "",
-      numberPeopleHelped: visitLogData.numberPeopleHelped,
-      itemQty: visitLogData.itemQty,
-      eventDate: outreachEventData?.eventDate?.seconds
-        ? formatDate(new Date(outreachEventData?.eventDate?.seconds * 1000))
+      itemQty: visitLogData?.itemQty || "",
+      numberPeopleHelped: visitLogData?.numberPeopleHelped || "",
+      description: visitLogData?.description || "",
+      helpType: visitLogData?.helpType || "",
+      location: {
+        street: visitLogData?.street || "",
+        city: visitLogData?.city || "",
+        state: visitLogData?.state || "",
+        stateAbbv: visitLogData?.stateAbbv || "",
+        zipcode: visitLogData?.zipcode || "",
+      },
+      eventDate: visitLogData?.dateTime?.seconds
+        ? formatDate(new Date(visitLogData.dateTime.seconds * 1000))
         : "",
       userName: userDetails.username,
       photoUrl: userDetails.photoUrl,
-      filledSlots: outreachEventData?.filledSlots || "",
     };
   } catch (error) {
     logEvent(
@@ -178,6 +207,51 @@ export const fetchPersonalVisitLogs = async (uid) => {
   }
 };
 
+export const fetchPublicVisitLogs = async () => {
+  try {
+    const visitLogsRef = query(
+      collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+      where("public", "==", true)
+    );
+    const visitLogSnapshot = await getDocs(visitLogsRef);
+    let visitLogs = [];
+    for (const doc of visitLogSnapshot.docs) {
+      const visitLogData = doc.data();
+      const outreachEventId = visitLogData.outreachEvent || "";
+      const outreachEventData = await fetchOutreachEventData(outreachEventId);
+      const uid = visitLogData.uid;
+      const userDetails = await fetchUserDetails(uid);
+      visitLogs.push({
+        id: doc.id,
+        whatGiven: visitLogData.whatGiven,
+        itemQty: visitLogData?.itemQty || "",
+        numberPeopleHelped: visitLogData?.numberPeopleHelped || "",
+        description: visitLogData?.description || "",
+        helpType: visitLogData?.helpType || "",
+        location: {
+          street: visitLogData?.street || "",
+          city: visitLogData?.city || "",
+          state: visitLogData?.state || "",
+          stateAbbv: visitLogData?.stateAbbv || "",
+          zipcode: visitLogData?.zipcode || "",
+        },
+        eventDate: visitLogData?.dateTime?.seconds
+          ? formatDate(new Date(visitLogData.dateTime.seconds * 1000))
+          : "",
+        userName: userDetails.username,
+        photoUrl: userDetails.photoUrl,
+      });
+    }
+    return visitLogs;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchVisitLogs VisitLogCardService.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
 export const fetchPersonalVisitLogById = async (visitLogId) => {
   try {
     const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
@@ -197,3 +271,17 @@ export const fetchPersonalVisitLogById = async (visitLogId) => {
     throw error;
   }
 };
+
+export async function calculateNumberOfPagesForVisitlog(visitlogPerPage) {
+  if (visitlogPerPage < 1 || visitlogPerPage > 10) {
+    throw new Error(
+      "The number of visitlogs per page must be between 1 and 10."
+    );
+  }
+
+  const visitlogRef = collection(db, PERSONAL_VISIT_LOG_COLLECTION);
+  const snapshot = await getDocs(visitlogRef);
+  const totalVisitlogs = snapshot.size;
+
+  return Math.ceil(totalVisitlogs / visitlogPerPage);
+}
