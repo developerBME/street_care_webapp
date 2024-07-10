@@ -70,11 +70,11 @@ const CommunityOutreachEvent = () => {
   useEffect(() => {
     const fetchData = async () => {
       const eventsData = await fetchEvents();
-      const visitLogsData = await fetchVisitLogs();
-      setVisitLogs(visitLogsData);
+      // const visitLogsData = await fetchVisitLogs();
+      // setVisitLogs(visitLogsData);
       // Filter events to get only past events
       const upcomingEvents = eventsData.filter((event) => {
-        const eventDate = new Date(event.eventDate.seconds * 1000);
+        const eventDate = new Date(event.eventDate?.seconds * 1000) || event.eventDate;
         return eventDate >= new Date(); // Check if the event date is before the current date
       });
       // Sort events in place based on their date
@@ -103,7 +103,7 @@ const CommunityOutreachEvent = () => {
 
   const upcomingEvents = events
     .filter((event) => {
-      const eventDate = new Date(event.eventDate.seconds * 1000);
+      const eventDate = new Date(event.eventDate?.seconds * 1000) || event.eventDate;
       return eventDate >= new Date(); // Check if the event date is before the current date
     })
     .slice(0, 3);
@@ -174,9 +174,9 @@ const CommunityOutreachEvent = () => {
                       cardData={{
                         ...eventData,
                         label: 'View Details',
-                        eventDate: formatDate(
+                        eventDate: eventData.eventDate?.seconds ? formatDate(
                           new Date(eventData.eventDate.seconds * 1000)
-                        ),
+                        ) : eventData.eventDate,
                       }}
                     />
                   ))
@@ -186,9 +186,9 @@ const CommunityOutreachEvent = () => {
                       cardData={{
                         ...eventData,
                         label: 'View Details',
-                        eventDate: formatDate(
+                        eventDate: eventData.eventDate?.seconds ? formatDate(
                           new Date(eventData.eventDate.seconds * 1000)
-                        ),
+                        ) : eventData.eventDate,
                       }}
                     />
                   ))}

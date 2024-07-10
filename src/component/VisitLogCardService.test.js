@@ -17,14 +17,16 @@ describe("calculateNumberOfPagesForVisitlog function", () => {
 
     const result = await calculateNumberOfPagesForVisitlog(visitlogsPerPage);
 
-    expect(getDocs).toHaveBeenCalledWith(collection(db, "testLog"));
+    expect(getDocs).toHaveBeenCalledWith(collection(db, "personalVisitLog"));
     expect(result).toBe(expectedNumberOfPages);
   });
 
   test("throws an error when visitlogs per page is less than 1", async () => {
     const visitlogPerPage = 0;
 
-    await expect(calculateNumberOfPagesForVisitlog(visitlogPerPage)).rejects.toThrow(
+    await expect(
+      calculateNumberOfPagesForVisitlog(visitlogPerPage)
+    ).rejects.toThrow(
       "The number of visitlogs per page must be between 1 and 10."
     );
   });
@@ -32,7 +34,9 @@ describe("calculateNumberOfPagesForVisitlog function", () => {
   test("throws an error when visitlogs per page is more than 10", async () => {
     const visitlogsPerPage = 11;
 
-    await expect(calculateNumberOfPagesForVisitlog(visitlogsPerPage)).rejects.toThrow(
+    await expect(
+      calculateNumberOfPagesForVisitlog(visitlogsPerPage)
+    ).rejects.toThrow(
       "The number of visitlogs per page must be between 1 and 10."
     );
   });

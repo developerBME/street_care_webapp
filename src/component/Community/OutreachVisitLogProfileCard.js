@@ -1,23 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import location from "../../images/location_on.svg";
 import calendar from "../../images/calendar_month.svg";
 import CustomButton from "../Buttons/CustomButton";
 import { useNavigate } from "react-router-dom";
-import { doc, deleteDoc, query, collection, where, getDocs, getDoc, updateDoc } from "firebase/firestore";
+import {
+  doc,
+  deleteDoc,
+  query,
+  collection,
+  where,
+  getDocs,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { formatDate } from "../EventCardService";
+import DeleteModal from "./DeleteModal";
 
 const USERS_COLLECTION = "users";
 
 const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const fAuth = getAuth();
 
   // Function to delete visit log
-  const deleteVisitLog = async (id) => {
+  const deleteVisitLog = async () => {
     try {
-      const visitLogDoc = doc(db, "personalVisitLog", id);
+      const visitLogDoc = doc(db, "personalVisitLog", visitLogCardData.id);
 
       const userQuery = query(
         collection(db, USERS_COLLECTION),
@@ -31,7 +43,9 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
       // outreach event collection
       const docSnap = await getDoc(userRef);
       let personalVisitLogs = docSnap.data().personalVisitLogs || [];
-      personalVisitLogs = personalVisitLogs.filter((x) => x != id);
+      personalVisitLogs = personalVisitLogs.filter(
+        (x) => x != visitLogCardData.id
+      );
 
       await deleteDoc(visitLogDoc);
       await updateDoc(userRef, {
@@ -51,13 +65,16 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
 
   // Function to handle clicks outside dropdown menu to close it
   const handleOutsideClick = (event) => {
-    if (!event.target.closest(".dropdown-menu") && !event.target.closest(".menu-button")) {
+    if (
+      !event.target.closest(".dropdown-menu") &&
+      !event.target.closest(".menu-button")
+    ) {
       setIsDropdownOpen(false);
     }
   };
 
   // Event listener for handling clicks outside dropdown
-  React.useEffect(() => {
+  useEffect(() => {
     document.addEventListener("click", handleOutsideClick);
     return () => {
       document.removeEventListener("click", handleOutsideClick);
@@ -65,69 +82,18 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
   }, []);
 
   return (
-    <div className="bg-[#F5EEFE] rounded-[30px] flex flex-col h-full w-[245px] xl:w-[320px] 2xl:w-[354px] md:flex-1 items-start">
-      <div className="flex-1 w-full px-4 xl:py-1 lg:py-4 py-3">
-        <div className="space-y-4">
-          <div className="mt-2 ">
-            <div className="flex xl:justify-between xl:mt-5 mt-0 flex-col lg:flex-row">
-              <div className="text-violet-900 text-[12px] font-medium font-bricolage leading-tight flex flex-row">
-                <div>{<img alt="" className="w-4 h-4" src={calendar} />}</div>
-                <div className="px-1">
-                  {visitLogCardData?.dateTime.toDate().toLocaleString().toString()}
-                  {/* {visitLogCardData.date || ""} · {visitLogCardData.time} */}
-                </div>
-              </div>
-              <div className="text-violet-900 text-[12px] font-medium font-bricolage leading-tight flex flex-row mt-2 lg:mt-0">
-                <div>{<img alt="" className="w-4 h-4" src={location} />}</div>
-                <div className="pt-0">
-                  {visitLogCardData?.city || ""},{" "}
-                  {visitLogCardData?.state || ""}
-                </div>
-                <div className="px-1">
-                  <CustomButton
-                    label="Edit"
-                    name="buttonlightsmall"
-                    onClick={() => {
-                      navigate(`/profile/visitlogform/${visitLogCardData.id}`);
-                    }}
-                  />
-                </div>
-                <div className="px-1">
-                  <CustomButton
-                    label="Delete"
-                    name="buttonlightsmall"
-                    onClick={() => {(deleteVisitLog(visitLogCardData.id)) }}
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="text-zinc-700 text-[12px] font-normal font-bricolage leading-snug mt-2 mb-2 px-1">
-              {visitLogCardData.description || ""}
-            </div>
-            <div className="flex flex-col gap-0.5">
-              <div className="flex justify-between mt-2 mb-2 px-1">
-                <div className="text-neutral-900 text-[14px]  font-bold font-bricolage leading-tight text-left">
-                  People Helped
-                </div>
-                <div className="text-neutral-900 text-[18px] mt-[-5px] font-bold font-bricolage leading-tight text-right">
-                  {visitLogCardData.numberPeopleHelped || ""}{" "}
-                </div>
-              </div>
-              <div className="flex justify-between mt-2 mb-2 px-1">
-                <div className="text-neutral-900 text-[14px]  font-bold font-bricolage leading-tight text-left">
-                  Items Donated
-                </div>
-                <div className="text-neutral-900 text-[18px]  mt-[-5px] font-bold font-bricolage leading-tight text-right">
-                  {visitLogCardData.itemQty || ""}{" "}
-                </div>
-              </div>
-            </div>
+    <div className="bg-[#F5EEFE] rounded-[30px] flex flex-col h-full w-[245px] xl:w-[320px] 2xl:w-[354px] md:flex-1 items-start relative">
+      <div className="flex flex-col h-full w-full px-6 py-6">
+        <div className="flex justify-between items-center">
+          <div className="text-violet-900 text-[12px] font-medium font-bricolage leading-tight flex flex-row">
+            <img alt="" className="w-4 h-4" src={calendar} />
             <div className="px-1">
-              {visitLogCardData?.dateTime.toDate().toLocaleString().toString()}
+              {formatDate(new Date(visitLogCardData?.dateTime?.seconds * 1000))}
             </div>
             <img alt="" className="w-4 h-4" src={location} />
             <div className="pt-0">
-              {visitLogCardData?.city || ""}, {visitLogCardData?.state || ""}
+              {visitLogCardData?.city || ""},{" "}
+              {visitLogCardData?.stateAbbv || visitLogCardData?.state || ""}
             </div>
           </div>
           <div className="relative ml-4">
@@ -155,9 +121,11 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
                       label="Edit"
                       name="buttonlightsmall"
                       onClick={() => {
-                        navigate(`/profile/personaloutform/${visitLogCardData.id}`);
+                        navigate(
+                          `/profile/visitlogform/${visitLogCardData.id}`
+                        );
                       }}
-                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
                     >
                       Edit
                     </a>
@@ -166,14 +134,19 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
                     <a
                       label="Delete"
                       name="buttonlightsmall"
-                      onClick={() => {
-                        deleteVisitLog(visitLogCardData.id);
-                      }}
-                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      onClick={() => setShowDeleteModal(true)}
+                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
                     >
                       Delete
                     </a>
                   </li>
+                  {showDeleteModal && (
+                    <DeleteModal
+                      handleClose={() => setShowDeleteModal(false)}
+                      handleDelete={deleteVisitLog}
+                      modalMsg={`Are you sure you want to delete this visit log?`}
+                    />
+                  )}
                 </ul>
               </div>
             )}
