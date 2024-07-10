@@ -1,3 +1,38 @@
+/** PLEASE READ BELOW BEFORE YOU RUN THIS SCRIPT
+ * This script provides an interactive way for the user to manage documents
+ * in the pastOutreachEvents collection in Firebase Firestore. The user
+ * is prompted to choose between two actions:
+ *
+ * 1. Duplicate Documents:
+ *    - The script fetches the latest 20 documents from the pastOutreachEvents collection.
+ *    - These documents are then duplicated into the pastOutreachEventsTest collection,
+ *      maintaining the same document IDs.
+ *
+ * 2. Change Document Titles:
+ *    - The user is prompted to enter the current title of documents they want to update.
+ *    - The script checks if there are documents with the specified title in the
+ *      pastOutreachEvents collection.
+ *    - If documents are found, the user is prompted to enter a new title.
+ *    - The title of all matching documents is updated to the new title provided by the user.
+ *
+ * How to Use the Script:
+ *
+ * 1. Install Required Packages:
+ *    - Install Firebase Admin SDK and prompt-sync:
+ *      npm install firebase-admin prompt-sync
+ *
+ * 2. Run the Script:
+ *    - Execute the script using Node.js:
+ *      node DataDuplicator.js
+ *
+ * 3. Interactive Prompts:
+ *    - The script will prompt the user to choose an action:
+ *      - Enter 1 to duplicate documents.
+ *      - Enter 2 to change document titles.
+ *    - Follow the prompts to either duplicate the latest 20 documents or update
+ *      the titles of documents with a specific current title.
+ */
+
 const admin = require('firebase-admin');
 const path = require('path');
 const prompt = require('prompt-sync')({ sigint: true });
