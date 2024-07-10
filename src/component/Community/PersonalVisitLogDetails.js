@@ -59,10 +59,10 @@ const PersonalVisitLogDetails = () => {
       let personalVisitLogs = docSnap.data().personalVisitLogs || [];
       personalVisitLogs = personalVisitLogs.filter((x) => x != id);
 
-      // await deleteDoc(visitLogDoc);
-      // await updateDoc(userRef, {
-      //   personalVisitLogs: personalVisitLogs,
-      // });
+      await deleteDoc(visitLogDoc);
+      await updateDoc(userRef, {
+        personalVisitLogs: personalVisitLogs,
+      });
       alert("Log deleted successfully");
       navigate("/profile");
     } catch (err) {
