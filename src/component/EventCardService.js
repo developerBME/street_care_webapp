@@ -290,44 +290,38 @@ export const fetchEventById = async (eventId) => {
   }
 };
 
-export const fetchUserSignedUpOutreaches = async () => {
+export const fetchUserSignedUpOutreaches = async (uid) => {
   try {
     const fAuth = getAuth();
+    const outreachQuery = query(collection(db, OUTREACH_EVENTS_COLLECTION));
+    const snapshot = await getDocs(outreachQuery);
+
     let userSignedUpOutreaches = [];
 
-    onAuthStateChanged(fAuth, async (user) => {
-      if (user) {
-        const outreachQuery = query(collection(db, OUTREACH_EVENTS_COLLECTION));
-        const snapshot = await getDocs(outreachQuery);
+    for (const doc of snapshot.docs) {
+      const eventData = doc.data();
+      if (eventData.participants && eventData.participants.includes(uid)) {
+        const result = await fetchUserDetails(eventData.uid);
+        const userName = result.username;
+        const photoUrl = result.photoUrl;
 
-        for (const doc of snapshot.docs) {
-          const eventData = doc.data();
-          if (eventData.participants && eventData.participants.includes(user.uid)) {
-            const result = await fetchUserDetails(eventData.uid);
-            const userName = result.username;
-            const photoUrl = result.photoUrl;
-
-            let currentParticipants = eventData.participants || [];
-            userSignedUpOutreaches.push({
-              ...eventData,
-              userName: userName,
-              id: doc.id,
-              label:
-                fAuth.currentUser &&
-                currentParticipants.includes(fAuth?.currentUser?.uid)
-                  ? "EDIT"
-                  : "RSVP",
-              nop: currentParticipants.length,
-              photoUrl: photoUrl,
-            });
-          }
-        }
-      } else {
-        console.log("USER NOT FOUND!");
+        let currentParticipants = eventData.participants || [];
+        userSignedUpOutreaches.push({
+          ...eventData,
+          userName: userName,
+          id: doc.id,
+          label:
+            fAuth.currentUser &&
+            currentParticipants.includes(fAuth?.currentUser?.uid)
+              ? "EDIT"
+              : "RSVP",
+          nop: currentParticipants.length,
+          photoUrl: photoUrl,
+        });
       }
-    });
-    console.log("Signed-up outreaches:", userSignedUpOutreaches);
+    }
 
+    console.log("Signed-up outreaches:", userSignedUpOutreaches);
     return userSignedUpOutreaches;
   } catch (error) {
     logEvent(

@@ -29,9 +29,9 @@ function Profile() {
       if (user) {
         const uid = user.uid;
         console.log("UID is ", uid);
-        const createdEventsData = await fetchUserOutreaches();
+        const createdEventsData = await fetchUserOutreaches(uid);
         createdEventsData.sort((a, b) => a.eventDate - b.eventDate);
-        const signedUpEventsData = await fetchUserSignedUpOutreaches();
+        const signedUpEventsData = await fetchUserSignedUpOutreaches(uid);
         signedUpEventsData.sort((a,b) => a.eventData - b.eventData);
 
         setCreatedEvents(createdEventsData);
