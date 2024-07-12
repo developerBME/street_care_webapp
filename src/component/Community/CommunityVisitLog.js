@@ -80,7 +80,7 @@ const CommunityVisitLog = () => {
           <div className="">
             <div className="flex flex-row gap-4">
               <div className="text-[45px] font-medium font-dmsans">
-                Visit Log
+                Visit Log({visitLogs.length})
               </div>
               <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-medium font-dmsans leading-tight self-stretch">
                 <CustomButton
