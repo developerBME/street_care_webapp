@@ -92,7 +92,8 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
             </div>
             <img alt="" className="w-4 h-4" src={location} />
             <div className="pt-0">
-              {visitLogCardData?.city || ""}, {visitLogCardData?.stateAbbv || visitLogCardData?.state || ""}
+              {visitLogCardData?.city || ""},{" "}
+              {visitLogCardData?.stateAbbv || visitLogCardData?.state || ""}
             </div>
           </div>
           <div className="relative ml-4">
@@ -121,7 +122,7 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
                       name="buttonlightsmall"
                       onClick={() => {
                         navigate(
-                          `/profile/personaloutform/${visitLogCardData.id}`
+                          `/profile/visitlogform/${visitLogCardData.id}`
                         );
                       }}
                       className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
@@ -140,12 +141,12 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
                     </a>
                   </li>
                   {showDeleteModal && (
-                  <DeleteModal
-                    handleClose={() => setShowDeleteModal(false)}
-                    handleDelete={deleteVisitLog}
-                    modalMsg={`Are you sure you want to delete this visit log?`}
-                  />
-                )}
+                    <DeleteModal
+                      handleClose={() => setShowDeleteModal(false)}
+                      handleDelete={deleteVisitLog}
+                      modalMsg={`Are you sure you want to delete this visit log?`}
+                    />
+                  )}
                 </ul>
               </div>
             )}

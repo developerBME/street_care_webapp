@@ -57,11 +57,19 @@ const HomePageVisitlog = () => {
 
   const [visitLogs, setVisitLogs] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
-      const visitLogsData = await fetchPublicVisitLogs();
-      setVisitLogs(visitLogsData);
+      try {
+        const visitLogsData = await fetchPublicVisitLogs();
+        setVisitLogs(visitLogsData);
+      } catch (error) {
+        setIsError(true);
+        setVisitLogs([]);
+        setErrorMsg("Visit logs could not be loaded. Please try again later.");
+      }
     };
 
     fetchData();
@@ -102,6 +110,10 @@ const HomePageVisitlog = () => {
               <EventCardSkeleton />
               <EventCardSkeleton />
               <EventCardSkeleton />
+            </div>
+          ) : isError ? (
+            <div className="text-center text-neutral-900 text-[20px] leading-9">
+              {errorMsg}
             </div>
           ) : visitLogs.length > 0 ? (
             // <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">

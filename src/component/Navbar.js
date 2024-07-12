@@ -22,10 +22,12 @@ import { FaBars } from "react-icons/fa";
 const NavBar = (props) => {
   const [nav, setNav] = useState(false);
   const fAuth = getAuth();
+  const navigate = useNavigate();
   const fireBaseSignOut = async () => {
     signOut(fAuth)
       .then(() => {
         console.log("success");
+        props.setUser(null);
         navigate("/login");
         props.setLoggedIn(false);
       })
@@ -92,8 +94,6 @@ const NavBar = (props) => {
       icons: RiLogoutBoxRLine,
     },
   ];
-
-  const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
 

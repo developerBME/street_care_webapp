@@ -23,17 +23,11 @@ const DeleteModal = ({
         </h3>
         <div className="flex gap-x-2">
           <CustomButton
-            name="buttonlight"
+            name="deleteButton"
             label="Delete"
             onClick={handleDelete}
-          >
-            <p className="text-center mx-auto">Yes</p>
-            {/* Yes */}
-          </CustomButton>
-          <CustomButton name="buttonlight" label="Cancel" onClick={handleClose}>
-            <p className="text-center mx-auto">No</p>
-            {/* No */}
-          </CustomButton>
+          />
+          <CustomButton name="buttonborder" label="Cancel" onClick={handleClose} />
         </div>
       </div>
     </div>

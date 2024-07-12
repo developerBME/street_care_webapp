@@ -107,37 +107,77 @@ export const fetchUserName = async (uid) => {
   }
 };
 
-export const fetchByCityAndDate = async (searchCityValue, startDate, endDate) => {
+export const fetchHelpRequestByUser = async () => {
   try {
-    if (!searchCityValue || typeof searchCityValue !== 'string') {
-      console.error('Invalid search value');
+    const fAuth = getAuth();
+    const uid = fAuth?.currentUser?.uid;
+    //Fetching Help Requests created by the loggedIn user
+    const helpReqRef = collection(db, HELP_REQ_COLLECTION);
+      const allhelpRequestsByUserQuery = query(
+      helpReqRef,
+      where('uid', '==', uid)
+    );
+
+    const helpRequestDocRef = await getDocs(allhelpRequestsByUserQuery);
+    //const userName = await fetchUserName(uid);
+    const userName = fAuth?.currentUser?.displayName
+
+    let helpRequests = [];
+    for (const doc of helpRequestDocRef.docs) {
+      const helpRequestData = doc.data();
+      const id = doc.id;
+      helpRequests.push({
+        ...helpRequestData,
+        userName: userName,
+        id: id,
+      });
+    }
+    console.log(helpRequests)
+    return helpRequests;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchHelpRequestsByUser HelpRequestService.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
+export const fetchByCityAndDate = async (
+  searchCityValue,
+  startDate,
+  endDate
+) => {
+  try {
+    if (!searchCityValue || typeof searchCityValue !== "string") {
+      console.error("Invalid search value");
       return;
     }
-  
+
     if (!(startDate instanceof Date) || isNaN(startDate)) {
-      console.error('Invalid start date');
+      console.error("Invalid start date");
       return;
     }
-  
+
     if (!(endDate instanceof Date) || isNaN(endDate)) {
-      console.error('Invalid end date');
+      console.error("Invalid end date");
       return;
-    } 
+    }
 
     // JavaScript Date to Firestore Timestamps conversion
     const startDateTimestamp = Timestamp.fromDate(startDate);
     const endDateTimestamp = Timestamp.fromDate(endDate);
 
     const helpReqRef = collection(db, HELP_REQ_COLLECTION);
-      // Performs Full text keyword search filtering on the City field and range filtering on CreatedAt field using composite index filtering
-      const helpRequestByCityQuery = query(
+    // Performs Full text keyword search filtering on the City field and range filtering on CreatedAt field using composite index filtering
+    const helpRequestByCityQuery = query(
       helpReqRef,
-      where('location.city', '==', searchCityValue),
-      where('createdAt', '>=', startDateTimestamp),
-      where('createdAt', '<=', endDateTimestamp)
+      where("location.city", "==", searchCityValue),
+      where("createdAt", ">=", startDateTimestamp),
+      where("createdAt", "<=", endDateTimestamp)
       // For partial city search
       //where('location.city', '==', searchValue), // Start at prefix
-      //where('location.city', '<=', searchValue + '\uf8ff'), // End at prefix + any character that comes after the specified prefix 
+      //where('location.city', '<=', searchValue + '\uf8ff'), // End at prefix + any character that comes after the specified prefix
     );
 
     const helpRequestDocRef = await getDocs(helpRequestByCityQuery);
@@ -153,7 +193,7 @@ export const fetchByCityAndDate = async (searchCityValue, startDate, endDate) =>
         id: id,
       });
     }
-    console.log(helpRequestsByCity)
+    console.log(helpRequestsByCity);
     return helpRequestsByCity;
   } catch (error) {
     logEvent(
@@ -245,7 +285,10 @@ export async function fetchOutreaches(helpRequestId) {
 
   try {
     const outreachesRef = collection(db, OUTREACHES_COLLECTION);
-    const outreachQuery = query(outreachesRef, where("helpRequest", "array-contains", helpRequestId));
+    const outreachQuery = query(
+      outreachesRef,
+      where("helpRequest", "array-contains", helpRequestId)
+    );
     const snapshot = await getDocs(outreachQuery);
 
     if (snapshot.empty) {
@@ -259,8 +302,12 @@ export async function fetchOutreaches(helpRequestId) {
       const id = doc.id;
 
       // Create a promise to fetch username for this outreach
-      const usernamePromise = outreachData.uid ? fetchUserName(outreachData.uid) : Promise.resolve("Unknown User");
-      outreachPromises.push(usernamePromise.then((userName) => ({ ...outreachData, userName, id })));
+      const usernamePromise = outreachData.uid
+        ? fetchUserName(outreachData.uid)
+        : Promise.resolve("Unknown User");
+      outreachPromises.push(
+        usernamePromise.then((userName) => ({ ...outreachData, userName, id }))
+      );
     });
 
     // Wait for all username fetches to complete before returning data
@@ -276,11 +323,13 @@ export async function fetchOutreaches(helpRequestId) {
     console.error("Error fetching outreaches: ", error);
     throw error;
   }
-};
+}
 
 export async function calculateNumberOfPagesForHelpReq(helpReqPerPage) {
   if (helpReqPerPage < 1 || helpReqPerPage > 10) {
-    throw new Error("The number of help requests per page must be between 1 and 10.");
+    throw new Error(
+      "The number of help requests per page must be between 1 and 10."
+    );
   }
 
   const helpRequestRef = collection(db, HELP_REQ_COLLECTION);
@@ -288,4 +337,4 @@ export async function calculateNumberOfPagesForHelpReq(helpReqPerPage) {
   const totalHelpRequests = snapshot.size;
 
   return Math.ceil(totalHelpRequests / helpReqPerPage);
-};
+}
