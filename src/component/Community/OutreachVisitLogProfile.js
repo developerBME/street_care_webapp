@@ -9,6 +9,7 @@ import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import CustomButton from "../Buttons/CustomButton";
 import NoOutreachDoc from "./NoOutreachDoc";
 import { auth } from "../firebase";
+import NoDisplayData from "../UserProfile/NoDisplayData";
 
 const OutreachVisitLogProfile = () => {
   const [visibleItems, setVisibleItems] = useState(3);
@@ -98,7 +99,10 @@ const OutreachVisitLogProfile = () => {
             </button>
           )}
 
-          {visitLogs.length == 0 && <NoOutreachDoc isPersonalVisitLog={true} />}
+          {/* {visitLogs.length == 0 && <NoOutreachDoc isPersonalVisitLog={true} />} */}
+          {visitLogs.length == 0 && <NoDisplayData
+            name="visitlog"
+            label="No visit logs created" />}
         </>
       )}
     </div>
