@@ -8,6 +8,10 @@ const { collection, getDocs, query, where } = require("firebase/firestore");
 const { db } = require("./firebase");
 const assert = require("assert");
 
+const OUTREACH_EVENTS_COLLECTION = process.env.REACT_APP_FIREBASE_OUTREACH_EVENT_COLLECTION;
+const PERSONAL_VISITLOG_COLLECTION = process.env.REACT_APP_FIREBASE_PERSONAL_VISITLOG_COLLECTION;
+const PAST_OUTREACH_EVENTS_COLLECTION = process.env.REACT_APP_FIREBASE_PAST_OUTREACH_EVENT_COLLECTION;
+
 // Mock Firebase Firestore
 jest.mock("firebase/firestore");
 
@@ -29,7 +33,7 @@ describe("calculateNumberOfPages function", () => {
       expectedNumberOfPages,
       "Number of pages calculation is incorrect"
     );
-    expect(getDocs).toHaveBeenCalledWith(collection(db, "outreachEvents"));
+    expect(getDocs).toHaveBeenCalledWith(collection(db, OUTREACH_EVENTS_COLLECTION));
   });
 
   test("throws an error when outreaches per page is less than 1", async () => {
@@ -156,7 +160,7 @@ describe("fetchByCityOrState", () => {
 
     console.log("Results (matches found):", results);
 
-    expect(collection).toHaveBeenCalledWith(db, "pastOutreachEvents");
+    expect(collection).toHaveBeenCalledWith(db, PAST_OUTREACH_EVENTS_COLLECTION);
     expect(query).toHaveBeenCalledWith(
       mockCollectionRef,
       where("location.city", "==", searchValue),
@@ -191,7 +195,7 @@ describe("fetchByCityOrState", () => {
 
     console.log("Results (no matches found):", results);
 
-    expect(collection).toHaveBeenCalledWith(db, "pastOutreachEvents");
+    expect(collection).toHaveBeenCalledWith(db, PAST_OUTREACH_EVENTS_COLLECTION);
     expect(query).toHaveBeenCalledWith(
       mockCollectionRef,
       where("location.city", "==", searchValue),
@@ -306,7 +310,7 @@ describe('fetchVisitLogsByCityOrState function', () => {
     getDocs.mockResolvedValue(mockSnapshot);
     const visitlogs = await fetchVisitLogsByCityOrState(validSearchCityValue,validStartDate,validEndDate);//promise...write
     console.log("Results - no documents found:", visitlogs);
-    expect(getDocs).toHaveBeenCalledWith(query(collection(db, "personalVisitLog"), 
+    expect(getDocs).toHaveBeenCalledWith(query(collection(db, PERSONAL_VISITLOG_COLLECTION), 
       where("city", '==', validSearchCityValue),
       where("dateTime", '>=', validStartDate),
       where('dateTime', '<=', validEndDate)

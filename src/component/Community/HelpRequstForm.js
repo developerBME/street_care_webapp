@@ -11,7 +11,9 @@ import HelpRequestConfirmationModal from "../Community/HelpRequestConfirmationMo
 
 let autoComplete;
 
-export const GOOGLE_PLACES_API_KEY = "AIzaSyBpaLVj2EjhjCeHbTUXfcBhBoaQLVathvE";
+const HELP_REQUEST_COLLECTION = process.env.REACT_APP_FIREBASE_HELP_REQUEST_COLLECTION;
+
+export const GOOGLE_PLACES_API_KEY = process.env.REACT_APP_GOOGLE_PLACES_API_KEY;
 
 const loadScript = (url, callback) => {
   let script = document.createElement("script");
@@ -202,7 +204,7 @@ function HelpRequestForm() {
   //   </div>`;
 
   //   try {
-  //     const reqRef = collection(db, "helpRequests");
+  //     const reqRef = collection(db, HELP_REQ_COLLECTION);
   //     const docRef = await addDoc(reqRef, obj);
   //     if (docRef.id) {
   //       console.log(docRef.id);
@@ -307,7 +309,7 @@ function HelpRequestForm() {
     </div>`;
 
     try {
-      const reqRef = collection(db, "helpRequests");
+      const reqRef = collection(db, HELP_REQUEST_COLLECTION);
       const docRef = await addDoc(reqRef, obj);
       if (docRef.id) {
         setSuccess(true);

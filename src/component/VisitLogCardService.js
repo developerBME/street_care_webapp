@@ -4,20 +4,15 @@ import {
   getDocs,
   getDoc,
   doc,
-  updateDoc,
   query,
   where,
-  limit,
 } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { fetchUserDetails, formatDate } from "./EventCardService";
 import logEvent from "./FirebaseLogger";
 
-const VISIT_LOG_COLLECTION = "testLog";
-const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
-const USERS_COLLECTION = "users";
-const PERSONAL_VISIT_LOG_COLLECTION = "personalVisitLog";
-const VISIT_LOG_COLLECTION_PROD = "visitLogWebProd";
+const OUTREACH_EVENTS_COLLECTION = process.env.REACT_APP_FIREBASE_OUTREACH_EVENT_COLLECTION;;
+const USERS_COLLECTION = process.env.REACT_APP_FIREBASE_USER_COLLECTION;
+const PERSONAL_VISIT_LOG_COLLECTION = process.env.REACT_APP_FIREBASE_PERSONAL_VISITLOG_COLLECTION;
 
 export const fetchVisitLogs = async () => {
   try {

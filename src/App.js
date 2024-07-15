@@ -75,7 +75,7 @@ function App() {
         setLoadingUser(false);
         try {
           const userRef = query(
-            collection(db, "users"),
+            collection(db, process.env.REACT_APP_FIREBASE_USER_COLLECTION),
             where("uid", "==", fAuth?.currentUser?.uid)
           );
           const data = await getDocs(userRef);

@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import { db } from "../firebase";
 import EditUser from "./EditUser";
 
+const TESTUSER_COLLECTION = process.env.REACT_APP_FIREBASE_TESTUSER_COLLECTION;
+
 function ListUser() {
 
     const [userList, setUserList] = useState([]);
     const [userId, seteditUserId] = useState([]);
-    const usercollectionRef = collection(db, 'TestUser')
+    const usercollectionRef = collection(db, TESTUSER_COLLECTION)
 
 
     const getUserList = async() => {
@@ -35,7 +37,7 @@ function ListUser() {
 
     const deleteUser = async (id) => {
         try {
-            const userDoc = doc(db,"TestUser",id)
+            const userDoc = doc(db,TESTUSER_COLLECTION,id)
             await deleteDoc(userDoc);
             alert("User deleted successfully");
             getUserList();

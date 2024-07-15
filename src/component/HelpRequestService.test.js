@@ -6,6 +6,9 @@ import {
 import { collection, getDocs, where, query } from "firebase/firestore";
 import { db } from "./firebase"; // Ensure this import is correct
 
+const HELP_REQ_COLLECTION = process.env.REACT_APP_FIREBASE_HELP_REQUEST_COLLECTION;
+const OUTREACH_EVENTS_COLLECTION = process.env.REACT_APP_FIREBASE_OUTREACH_EVENT_COLLECTION;
+
 jest.mock("firebase/firestore");
 
 describe("fetchOutreaches function", () => {
@@ -24,7 +27,7 @@ describe("fetchOutreaches function", () => {
 
     expect(getDocs).toHaveBeenCalledWith(
       query(
-        collection(db, "outreachEvents"),
+        collection(db, OUTREACH_EVENTS_COLLECTION),
         where("HelpRequest.id", "==", helpRequestId)
       )
     );
@@ -49,7 +52,7 @@ describe("fetchOutreaches function", () => {
 
     expect(getDocs).toHaveBeenCalledWith(
       query(
-        collection(db, "outreachEvents"),
+        collection(db, OUTREACH_EVENTS_COLLECTION),
         where("HelpRequest.id", "==", helpRequestId)
       )
     );
@@ -70,7 +73,7 @@ describe("calculateNumberOfPagesForHelpReq function", () => {
 
     const result = await calculateNumberOfPagesForHelpReq(helpReqPerPage);
 
-    expect(getDocs).toHaveBeenCalledWith(collection(db, "helpRequests"));
+    expect(getDocs).toHaveBeenCalledWith(collection(db, HELP_REQ_COLLECTION));
     expect(result).toBe(expectedNumberOfPages);
   });
 
@@ -185,7 +188,7 @@ describe("fetchByCityAndDate function", () => {
     console.log("Results - no documents found:", helpRequests);
     expect(getDocs).toHaveBeenCalledWith(
       query(
-        collection(db, "helpRequests"),
+        collection(db, HELP_REQ_COLLECTION),
         where("location.city", "==", validSearchCityValue),
         where("createdAt", ">=", validStartDate),
         where("createdAt", "<=", validEndDate)

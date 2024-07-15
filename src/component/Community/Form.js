@@ -16,6 +16,9 @@ import { fetchHelpReqById } from "../HelpRequestService";
 import { emailConfirmation } from "../EmailService";
 import { Link } from "react-router-dom";
 
+const OUTREACH_EVENT_COLLECTION = process.env.REACT_APP_FIREBASE_OUTREACH_EVENT_COLLECTION;
+const HELP_REQUEST_COLLECTION = process.env.REACT_APP_FIREBASE_HELP_REQUEST_COLLECTION;
+
 const chipList = [
   "Childcare",
   "Counseling and Support",
@@ -52,7 +55,7 @@ const CustomInput = ({ value, onClick, onChange, id, className }) => (
 
 let autoComplete;
 
-export const GOOGLE_PLACES_API_KEY = "AIzaSyBpaLVj2EjhjCeHbTUXfcBhBoaQLVathvE";
+export const GOOGLE_PLACES_API_KEY = process.env.REACT_APP_GOOGLE_PLACES_API_KEY;
 
 const loadScript = (url, callback) => {
   let script = document.createElement("script");
@@ -222,7 +225,7 @@ const Form = (hrid) => {
           };
 
           // Insert doc in outreach event
-          const eventRef = collection(db, "outreachEvents");
+          const eventRef = collection(db, OUTREACH_EVENT_COLLECTION);
 
           async function postDoc(ref, obj) {
             const docRef = await addDoc(ref, obj);
@@ -232,7 +235,7 @@ const Form = (hrid) => {
 
           // check if flow comes from help request
           if (isHelpReqFlow) {
-            const helpRequestRef = doc(db, "helpRequests", hrid.hrid);
+            const helpRequestRef = doc(db, HELP_REQUEST_COLLECTION, hrid.hrid);
             const helpData = await fetchHelpReqById(hrid.hrid);
             let outreachEvent = helpData.outreachEvent || [];
             outreachEvent.push(ack);

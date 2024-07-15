@@ -4,6 +4,8 @@ import { calculateNumberOfPagesForVisitlog } from "./VisitLogCardService";
 
 jest.mock("firebase/firestore");
 
+const PERSONAL_VISIT_LOG_COLLECTION = process.env.REACT_APP_FIREBASE_PERSONAL_VISITLOG_COLLECTION;
+
 describe("calculateNumberOfPagesForVisitlog function", () => {
   test("calculates the number of pages correctly", async () => {
     const mockVisitlogSnapshot = {
@@ -17,7 +19,7 @@ describe("calculateNumberOfPagesForVisitlog function", () => {
 
     const result = await calculateNumberOfPagesForVisitlog(visitlogsPerPage);
 
-    expect(getDocs).toHaveBeenCalledWith(collection(db, "personalVisitLog"));
+    expect(getDocs).toHaveBeenCalledWith(collection(db, PERSONAL_VISIT_LOG_COLLECTION));
     expect(result).toBe(expectedNumberOfPages);
   });
 

@@ -9,6 +9,8 @@ import { Timestamp } from 'firebase/firestore';
 import {checkString,checkNumber} from "../helper/validator"
 import CreateBMEModal from "./CreateBMEModal";
 
+const EVENT_COLLECTION = process.env.REACT_APP_FIREBASE_BMEEVENT_COLLECTION
+
 const CustomInput = ({ value, onClick, onChange, id, className }) => (
   <div>
     <input
@@ -103,7 +105,7 @@ const BME_Form = () => {
             participants: [],
             approved: false,
           };
-          const eventRef = collection(db, "BMEEvents");
+          const eventRef = collection(db, EVENT_COLLECTION);
           const docRef = await addDoc(eventRef, obj);
           if (docRef.id) {
             console.log(docRef.id);

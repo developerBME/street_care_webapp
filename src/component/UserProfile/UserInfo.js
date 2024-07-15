@@ -19,6 +19,10 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import SuperpowerModal from "./SuperpowerModal";
 import CustomButton from "../Buttons/CustomButton";
 
+const USERS_COLLECTION = process.env.REACT_APP_FIREBASE_USER_COLLECTION;
+const PERSONAL_VISITLOG_COLLECTION = process.env.REACT_APP_FIREBASE_PERSONAL_VISITLOG_COLLECTION;
+const OUTREACH_EVENTS_COLLECTION = process.env.REACT_APP_FIREBASE_OUTREACH_EVENT_COLLECTION;
+
 const UserInfo = () => {
   const navigate = useNavigate();
   // const userId = "Uej8TTFv5aXghZ6S8JfzhTo0nWw2";
@@ -66,7 +70,7 @@ const UserInfo = () => {
       try {
         console.log("Attempt: " + attempt);
         const userRef = query(
-          collection(db, "users"),
+          collection(db, USERS_COLLECTION),
           where("uid", "==", fAuth?.currentUser?.uid)
         );
         const data = await getDocs(userRef);
@@ -125,7 +129,7 @@ const UserInfo = () => {
     const getDeedValues = async () => {
       try {
         const logOfUserRef = query(
-          collection(db, "personalVisitLog"),
+          collection(db, PERSONAL_VISITLOG_COLLECTION),
           where("uid", "==", fAuth?.currentUser?.uid)
         );
         const data = await getDocs(logOfUserRef);
@@ -154,7 +158,7 @@ const UserInfo = () => {
     const getCreatedOutreaches = async () => {
       try {
         const logOfUserRef = query(
-          collection(db, "outreachEvents"),
+          collection(db, OUTREACH_EVENTS_COLLECTION),
           where("uid", "==", fAuth?.currentUser?.uid)
         );
         const data = await getDocs(logOfUserRef);

@@ -15,7 +15,7 @@ function UserList() {
       setLoading(true);
       setError("");  // Reset error state on new fetch
       try {
-        const querySnapshot = await getDocs(collection(db, "users"));
+        const querySnapshot = await getDocs(collection(db, process.env.REACT_APP_FIREBASE_USER_COLLECTION));
         const userList = [];
         querySnapshot.forEach((doc) => {
           const userData = { docId: doc.id, ...doc.data() }; // Access all fields from the document

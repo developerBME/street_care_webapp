@@ -7,6 +7,8 @@ import { emailConfirmation } from "../EmailService";
 import { getAuth } from "firebase/auth";
 import { db } from "../firebase";
 
+const CONTACT_COLLECTION = process.env.REACT_APP_FIREBASE_CONTACT_COLLECTION;
+
 function Contact() {
   const [success, setSuccess] = useState(false);
   const firstNameRef = useRef(null);
@@ -108,7 +110,7 @@ function Contact() {
       };
 
       try {
-        const reqRef = collection(db, "contacts");
+        const reqRef = collection(db, CONTACT_COLLECTION);
         console.log(obj);
         const docRef = await addDoc(reqRef, obj);
         if (docRef.id) {

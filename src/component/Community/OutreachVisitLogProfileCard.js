@@ -18,7 +18,8 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { formatDate } from "../EventCardService";
 import DeleteModal from "./DeleteModal";
 
-const USERS_COLLECTION = "users";
+const USERS_COLLECTION = process.env.REACT_APP_FIREBASE_USER_COLLECTION;
+const PERSONAL_VISITLOG_COLLECTION = process.env.REACT_APP_FIREBASE_PERSONAL_VISITLOG_COLLECTION;
 
 const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
   // Function to delete visit log
   const deleteVisitLog = async () => {
     try {
-      const visitLogDoc = doc(db, "personalVisitLog", visitLogCardData.id);
+      const visitLogDoc = doc(db, PERSONAL_VISITLOG_COLLECTION , visitLogCardData.id);
 
       const userQuery = query(
         collection(db, USERS_COLLECTION),

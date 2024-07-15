@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import { db } from "../firebase";
 import CustomButton from "../Buttons/CustomButton";
 
+const TEST_COLLECTION = process.env.REACT_APP_FIREBASE_TESt_COLLECTION_SINDHUJA
+
 function CustomCRUD() {
 
     const [testUserList, setUserList] = useState([]);
-    const testUsercollectionRef = collection(db, 'test_collection_sindhuja')
+    const testUsercollectionRef = collection(db, TEST_COLLECTION)
 
     // New user states
     const [newUserName, setNewUserName] = useState("")
@@ -36,7 +38,7 @@ function CustomCRUD() {
     //DELETE USER
     const deleteUser = async (id) => {
         try {
-            const userDoc = doc(db,"test_collection_sindhuja",id)
+            const userDoc = doc(db,TEST_COLLECTION,id)
             await deleteDoc(userDoc);
             getTestUserList();
         } catch(err) {
@@ -47,7 +49,7 @@ function CustomCRUD() {
     //UPDATE USER
     const updateUser = async (id,) => {
         try {
-            const userDoc = doc(db,"test_collection_sindhuja",id)
+            const userDoc = doc(db,TEST_COLLECTION,id)
             await updateDoc(userDoc, {name : updatedName});
             getTestUserList();
         } catch(err) {

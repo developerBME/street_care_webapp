@@ -23,7 +23,7 @@ import { useNavigate } from "react-router-dom";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import imageCompression from "browser-image-compression";
 
-const USERS_COLLECTION = "users";
+const USERS_COLLECTION = process.env.REACT_APP_FIREBASE_USER_COLLECTION;;
 
 async function uploadProfileImage(
   file,
@@ -99,7 +99,7 @@ const UpdateProfile = () => {
   const getUserData = async () => {
     try {
       const userRef = query(
-        collection(db, "users"),
+        collection(db, USERS_COLLECTION),
         where("uid", "==", fAuth?.currentUser?.uid)
       );
       const data = await getDocs(userRef);

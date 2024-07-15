@@ -18,11 +18,14 @@ import ConfirmationModal from "./ConfirmationModal";
 import errorImg from "../../images/error.png";
 import { emailConfirmation } from "../EmailService";
 
+const PERSONAL_VISITLOG_COLLECTION = process.env.REACT_APP_FIREBASE_PERSONAL_VISITLOG_COLLECTION;
+const OUTREACH_EVENTS_COLLECTION = process.env.REACT_APP_FIREBASE_OUTREACH_EVENT_COLLECTION;
+
 const starStyle = {
   width: 60,
   height: 60,
 };
-const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
+
 function getLastWeeksDate() {
   const now = new Date();
 
@@ -211,7 +214,7 @@ function CommOutForm() {
     </div>`;
 
     try {
-      const logRef = collection(db, "personalVisitLog");
+      const logRef = collection(db, PERSONAL_VISITLOG_COLLECTION);
       const docRef = await addDoc(logRef, obj);
       if (docRef.id) {
         console.log(docRef.id);

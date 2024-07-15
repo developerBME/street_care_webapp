@@ -11,6 +11,9 @@ import { Timestamp } from "firebase/firestore";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { customUpdateEmail } from "./UpdateEmail2FA";
 
+const USERS_COLLECTION = process.env.REACT_APP_FIREBASE_USER_COLLECTION;
+const AUDITLOG_COLLECTION = process.env.REACT_APP_FIREBASE_AUDITLOG_COLLECTION;
+
 export async function updateEmailId(newEmailId) {
 
   try {
@@ -23,7 +26,7 @@ export async function updateEmailId(newEmailId) {
     const uid = user?.uid;
     console.log(uid);
 
-    const userRef = doc(db, "users", user?.uid);
+    const userRef = doc(db, USERS_COLLECTION, user?.uid);
     const userSnapshot = await getDoc(userRef);
     console.log(user)
   
@@ -43,7 +46,7 @@ export async function updateEmailId(newEmailId) {
       const result = await customUpdateEmail(user, newEmailId)      
       console.log(result);
 
-      const emailChangeLog = collection(db, "auditLog");
+      const emailChangeLog = collection(db, AUDITLOG_COLLECTION);
       await addDoc(emailChangeLog, {
         oldEmail,
         newEmail: newEmailId,
@@ -76,7 +79,7 @@ export async function updateSocialLoginEmail(newEmailId) {
     const uid = user?.uid;
     console.log(uid);
 
-    const userRef = doc(db, "users", user?.uid);
+    const userRef = doc(db, USERS_COLLECTION, user?.uid);
     const userSnapshot = await getDoc(userRef);
     console.log(user)
   
@@ -93,7 +96,7 @@ export async function updateSocialLoginEmail(newEmailId) {
 
       await updateEmail(user, newEmailId);// inbuilt update email with verification
 
-      const emailChangeLog = collection(db, "auditLog");
+      const emailChangeLog = collection(db, AUDITLOG_COLLECTION);
       await addDoc(emailChangeLog, {
         oldEmail,
         newEmail: newEmailId,

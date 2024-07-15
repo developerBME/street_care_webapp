@@ -2,6 +2,7 @@ import React,{useState, useEffect} from "react";
 import { updateDoc,doc } from "firebase/firestore";
 import { db } from "../firebase";
 
+const TESTUSER_COLLECTION = process.env.REACT_APP_FIREBASE_TESTUSER_COLLECTION;
 
 function EditUser({user, seteditUserId}){
 
@@ -11,7 +12,7 @@ function EditUser({user, seteditUserId}){
 
     const updateUser = async () =>{
         try{
-            const userDoc = doc(db,"TestUser",user.id)
+            const userDoc = doc(db,TESTUSER_COLLECTION,user.id)
             await updateDoc(userDoc, {name : updatedName, email: updatedEmail, contact: updatedContact});
             seteditUserId("")
             alert("User updated successfully")

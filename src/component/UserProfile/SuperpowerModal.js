@@ -30,6 +30,8 @@ const chipList = [
   "Pet Care",
 ];
 
+const USERS_COLLECTION = process.env.REACT_APP_FIREBASE_USER_COLLECTION;
+
 const SuperpowerModal = ({
   isOpen,
   closeModal,
@@ -58,12 +60,12 @@ const SuperpowerModal = ({
     e.preventDefault();
     try {
       const userQuery = query(
-        collection(db, "users"),
+        collection(db, USERS_COLLECTION),
         where("uid", "==", fAuth?.currentUser?.uid)
       );
       const userDocRef = await getDocs(userQuery);
       const userDocID = userDocRef.docs[0].id;
-      const userDocUpdate = doc(db, "users", userDocID);
+      const userDocUpdate = doc(db, USERS_COLLECTION, userDocID);
       const updateRef = await updateDoc(userDocUpdate, {
         superpowers: superpowers,
       });

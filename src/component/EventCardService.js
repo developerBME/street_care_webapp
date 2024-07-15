@@ -13,11 +13,11 @@ import { db } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import logEvent from "./FirebaseLogger";
 
-const OFFICIAL_EVENTS_COLLECTION = "officialEvents";
-const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
-const PAST_OUTREACH_EVENTS_COLLECTION = "pastOutreachEvents";
-const USERS_COLLECTION = "users";
-const PERSONAL_VISIT_LOG = "personalVisitLog";
+const OFFICIAL_EVENTS_COLLECTION = process.env.REACT_APP_FIREBASE_OFFICIAL_EVENTS_COLLECTION;
+const OUTREACH_EVENTS_COLLECTION = process.env.REACT_APP_FIREBASE_OUTREACH_EVENT_COLLECTION;
+const PAST_OUTREACH_EVENTS_COLLECTION = process.env.REACT_APP_FIREBASE_PAST_OUTREACH_EVENT_COLLECTION;
+const USERS_COLLECTION = process.env.REACT_APP_FIREBASE_USER_COLLECTION;
+const PERSONAL_VISIT_LOG_COLLECTION = process.env.REACT_APP_FIREBASE_PERSONAL_VISITLOG_COLLECTION;
 
 export const fetchEvents = async () => {
   try {
@@ -676,7 +676,7 @@ export const fetchVisitLogsByCityOrState = async (searchValue, startDate, endDat
       return;
     } 
 
-    const visitlogs = collection(db, PERSONAL_VISIT_LOG);
+    const visitlogs = collection(db, PERSONAL_VISIT_LOG_COLLECTION);
     // Full text search - Search filtering by City/State fields matching exact value
 
     const visitlogsByLocationQuery = query(

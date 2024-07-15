@@ -26,7 +26,8 @@ import UpdateVisitLogConfirmationModal from "./UpdateVisitLogConfirmationModal";
 import DatePicker from "react-datepicker";
 import { Timestamp } from "firebase/firestore";
 
-const USERS_COLLECTION = "users";
+const USERS_COLLECTION = process.env.REACT_APP_FIREBASE_USER_COLLECTION;
+const PERSONAL_VISITLOG_COLLECTION = process.env.REACT_APP_FIREBASE_PERSONAL_VISITLOG_COLLECTION;
 
 const CustomInput = ({ value, onClick, onChange, id, className }) => (
   <div>
@@ -43,7 +44,7 @@ const CustomInput = ({ value, onClick, onChange, id, className }) => (
 
 let autoComplete;
 
-export const GOOGLE_PLACES_API_KEY = "AIzaSyBpaLVj2EjhjCeHbTUXfcBhBoaQLVathvE";
+export const GOOGLE_PLACES_API_KEY = process.env.REACT_APP_GOOGLE_PLACES_API_KEY;
 
 const loadScript = (url, callback) => {
   let script = document.createElement("script");
@@ -496,7 +497,7 @@ function PersonalOutForm() {
 
     try {
       console.log("Sending email...");
-      const logRef = collection(db, "personalVisitLog");
+      const logRef = collection(db, PERSONAL_VISITLOG_COLLECTION);
       const docRef = await addDoc(logRef, obj);
       if (docRef.id) {
         console.log(docRef.id);
@@ -792,7 +793,7 @@ function PersonalOutForm() {
     };
 
     try {
-      const logRef = doc(db, "personalVisitLog", id);
+      const logRef = doc(db, PERSONAL_VISITLOG_COLLECTION, id);
       await updateDoc(logRef, obj);
       setSuccess(true);
       clearFields();

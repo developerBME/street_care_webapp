@@ -6,7 +6,6 @@ import { onAuthStateChanged, getAuth } from "firebase/auth";
 import {
   collection,
   getDocs,
-  getDoc,
   doc,
   updateDoc,
   query,
@@ -20,7 +19,7 @@ import defaultImage from "../../images/default_avatar.svg";
 import Avatar from "@mui/material/Avatar";
 import edit from "../../images/edit.png";
 
-const USERS_COLLECTION = "users";
+const USERS_COLLECTION = process.env.REACT_APP_FIREBASE_USER_COLLECTION;
 
 async function uploadProfileImage(
   file,
@@ -79,7 +78,7 @@ function AccSetting() {
   const getUserData = async () => {
     try {
       const userRef = query(
-        collection(db, "users"),
+        collection(db, USERS_COLLECTION),
         where("uid", "==", fAuth?.currentUser?.uid)
       );
       const data = await getDocs(userRef);

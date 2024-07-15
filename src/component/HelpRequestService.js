@@ -13,9 +13,9 @@ import { db } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import logEvent from "./FirebaseLogger";
 
-const HELP_REQ_COLLECTION = "helpRequests";
-const USERS_COLLECTION = "users";
-const OUTREACHES_COLLECTION = "outreachEvents";
+const HELP_REQ_COLLECTION = process.env.REACT_APP_FIREBASE_HELP_REQUEST_COLLECTION;
+const USERS_COLLECTION = process.env.REACT_APP_FIREBASE_USER_COLLECTION;
+const OUTREACH_EVENTS_COLLECTION = process.env.REACT_APP_FIREBASE_OUTREACH_EVENT_COLLECTION;
 
 export const fetchHelpRequests = async () => {
   try {
@@ -284,7 +284,7 @@ export async function fetchOutreaches(helpRequestId) {
   console.log("Fetching outreaches for helpRequestId: ", helpRequestId);
 
   try {
-    const outreachesRef = collection(db, OUTREACHES_COLLECTION);
+    const outreachesRef = collection(db, OUTREACH_EVENTS_COLLECTION);
     const outreachQuery = query(
       outreachesRef,
       where("helpRequest", "array-contains", helpRequestId)

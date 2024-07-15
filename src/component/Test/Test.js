@@ -6,6 +6,8 @@ import errorImg from "../../images/error.png";
 import { getAuth } from "firebase/auth";
 import { db } from "../firebase";
 
+const TESTUSER_COLLECTION = process.env.REACT_APP_FIREBASE_TESTUSER_COLLECTION;
+
 function TestUser() {
   const [success, setSuccess] = useState(false);
   const nameRef = useRef(null);
@@ -89,7 +91,7 @@ function TestUser() {
       };
 
       try {
-        const reqRef = collection(db, "TestUser");
+        const reqRef = collection(db, TESTUSER_COLLECTION);
         console.log(obj);
         const docRef = await addDoc(reqRef, obj);
         if (docRef.id) {

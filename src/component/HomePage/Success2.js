@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { fetchVisitLogs } from "../VisitLogCardService";
 import HomePageVisitlog from "../HomePage/HomePageVisitlog";
 
+const PERSONAL_VISITLOG_COLLECTION = process.env.REACT_APP_FIREBASE_PERSONAL_VISITLOG_COLLECTION;
+
 function Success2() {
   const [donations, setDonations] = useState("");
   const [helpedBy, setHelpedBy] = useState("");
@@ -17,7 +19,7 @@ function Success2() {
   useEffect(() => {
     const getValues = async () => {
       try {
-        const logOfUserRef = query(collection(db, "personalVisitLog"));
+        const logOfUserRef = query(collection(db, PERSONAL_VISITLOG_COLLECTION));
         const data = await getDocs(logOfUserRef);
         let totalDonations = 0;
         let totalHelpedPeople = 0;

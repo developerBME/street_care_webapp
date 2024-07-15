@@ -10,7 +10,7 @@ function UserDetails() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const docRef = doc(db, "users", uid);
+      const docRef = doc(db, process.env.REACT_APP_FIREBASE_USER_COLLECTION, uid);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
