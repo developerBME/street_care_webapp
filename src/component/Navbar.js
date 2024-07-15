@@ -137,12 +137,11 @@ const NavBar = (props) => {
           </NavLink>
         )}
 
-        <ul className="hidden items-center md:flex px-2    leading-6">
+        <ul className="hidden items-center md:flex px-2 leading-6">
           {links.map(({ id, link, label }) => (
             <li
               key={id}
-              className=" mx-6 my-3 text-lg  font-inter font-medium   
-        text-white hover:scale-105 hover:text-[#1FCFF0] duration-200"
+              className=" mx-6 my-3 text-lg  font-inter font-medium text-white hover:scale-105 hover:text-[#1FCFF0] duration-200"
             >
               <Link to={link}>{label}</Link>
             </li>
@@ -154,8 +153,7 @@ const NavBar = (props) => {
           </li> */}
           {!props.loggedIn && (
             <li
-              className=" mx-6 my-3 text-lg font-inter font-medium cursor-pointer  
-        text-white hover:scale-105 hover:text-[#1FCFF0] duration-200"
+              className=" mx-6 my-3 text-lg font-inter font-medium cursor-pointer text-white hover:scale-105 hover:text-[#1FCFF0] duration-200"
               onClick={() => navigate("/login")}
             >
               Login
@@ -189,7 +187,10 @@ const NavBar = (props) => {
 
                       return (
                         <React.Fragment key={e.id}>
-                          <li className=" px-3 cursor-pointer hover:bg-slate-200">
+                          <li
+                            className=" px-3 cursor-pointer hover:bg-slate-200"
+                            onClick={() => setOpen(false)}
+                          >
                             <Link
                               to={e.link}
                               onClick={() => {
