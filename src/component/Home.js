@@ -200,7 +200,8 @@ function HomePage() {
   // Filter events to get only past events
   const upcomingEvents = events
     .filter((event) => {
-        const eventDate = new Date(event.eventDate?.seconds * 1000) || event.eventDate;
+      const eventDate =
+        new Date(event.eventDate?.seconds * 1000) || event.eventDate;
       return eventDate >= new Date(); // Check if the event date is before the current date
     })
     .slice(0, 3);
@@ -208,7 +209,8 @@ function HomePage() {
   // Filter events to get only past events
   const pastEvents = events
     .filter((event) => {
-        const eventDate = new Date(event.eventDate?.seconds * 1000) || event.eventDate;
+      const eventDate =
+        new Date(event.eventDate?.seconds * 1000) || event.eventDate;
       return eventDate < new Date(); // Check if the event date is before the current date
     })
     .slice(0, 3);
@@ -224,7 +226,7 @@ function HomePage() {
         {" "}
         <Landing scorllFuntion={handleOutreachRef} />
       </div>
-       {/* <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+      {/* <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
         <Success/>
       </div>*/}
       <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
@@ -238,16 +240,16 @@ function HomePage() {
           className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] scroll-m-24"
           ref={outreachRef}
         >
-          <p className="flex flex-row font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] gap-4">
+          <p
+            className="flex flex-row font-bricolage cursor-pointer font-medium text-2xl md:text-[45px] text-[#1F0A58] gap-4"
+            onClick={() => {
+              navigate("/allOutreachEvents");
+            }}
+          >
             {" "}
             Upcoming Outreach Events
-            <img
-                            src={arrowRight}
-                            className="w-6 h-7 lg:w-10 lg:h-10 "
-                        />
+            <img src={arrowRight} className="w-6 h-7 lg:w-10 lg:h-10 " />
           </p>
-          
-                        
 
           {isLoading ? (
             <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
@@ -263,9 +265,11 @@ function HomePage() {
                     key={eventData.id}
                     cardData={{
                       ...eventData,
-                      eventDate: eventData.eventDate?.seconds ? formatDate(
-                        new Date(eventData.eventDate.seconds * 1000)
-                      ) : eventData.eventDate,
+                      eventDate: eventData.eventDate?.seconds
+                        ? formatDate(
+                            new Date(eventData.eventDate.seconds * 1000)
+                          )
+                        : eventData.eventDate,
                     }}
                   />
                 ))}
@@ -274,7 +278,7 @@ function HomePage() {
           )}
           <div className="mt-16">
             <CustomButton
-              label="More Outreach Events"
+              label="More Upcoming Outreach Events"
               name="buttondefault"
               onClick={() => {
                 navigate("/allOutreachEvents");
@@ -289,13 +293,15 @@ function HomePage() {
         className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black"
       >
         <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] scroll-m-16">
-          <p className="flex flex-row font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] gap-4">
+          <p
+            className="flex flex-row font-bricolage cursor-pointer font-medium text-2xl md:text-[45px] text-[#1F0A58] gap-4"
+            onClick={() => {
+              navigate("/allPastOutreachEvents");
+            }}
+          >
             {" "}
             Past Outreach Events
-            <img
-                            src={arrowRight}
-                            className="w-6 h-7 lg:w-10 lg:h-10 "
-                        />
+            <img src={arrowRight} className="w-6 h-7 lg:w-10 lg:h-10 " />
           </p>
 
           {isLoading ? (
@@ -312,9 +318,9 @@ function HomePage() {
                   key={eventData.id}
                   cardData={{
                     ...eventData,
-                    eventDate: eventData.eventDate?.seconds ? formatDate(
-                      new Date(eventData.eventDate.seconds * 1000)
-                    ) : eventData.eventDate,
+                    eventDate: eventData.eventDate?.seconds
+                      ? formatDate(new Date(eventData.eventDate.seconds * 1000))
+                      : eventData.eventDate,
                   }}
                 />
               ))}
@@ -322,7 +328,7 @@ function HomePage() {
           )}
           <div className="mt-16">
             <CustomButton
-              label="More Outreach Events"
+              label="More Past Outreach Events"
               name="buttondefault"
               onClick={() => {
                 navigate("/allPastOutreachEvents");
@@ -373,8 +379,7 @@ function HomePage() {
       {/* Aniket */}
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
         <Map />
-      </div> 
-    
+      </div>
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black h-full">
         {/*<News />*/}
 
