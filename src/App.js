@@ -21,7 +21,6 @@ import PersonalOutForm from "./component/UserProfile/PersonalOutForm";
 import Documenting from "./component/UserProfile/Documenting";
 import AccSetting from "./component/UserProfile/AccSetting";
 import OutreachSignup from "./component/Community/OutreachSignup";
-import CreateOutreach from "./component/Community/CreateOutreach";
 import HelpRequestForm from "./component/Community/HelpRequstForm";
 import HelpRequestEventWindow from "./component/Community/HelpRequestEventWindow";
 import DonateForm from "./component/Donate/DonateForm";
@@ -52,7 +51,7 @@ import EmailUpdateConfirmation from "./component/UserProfile/ProfileSettings/Ema
 import DeleteAccConfirmation from "./component/UserProfile/ProfileSettings/DeleteAccConfirmation";
 import UpdateProfile from "./component/UserProfile/ProfileSettings/UpdateProfile";
 import UserDetails from "./component/UserDetails";
-
+import CreateOutreach from "./component/CreateOutreach";
 function App() {
   const fAuth = getAuth();
   const [loggedIn, setLoggedIn] = useState(false);
@@ -127,6 +126,7 @@ function App() {
           <Route path="/ForgotPassword" element={<ForgotPassword />} />
           <Route path="/signup" element={<Signup2 />} />
           <Route path="/admin-panel/userlist" element={<UserList/>}/>
+          <Route path="/admin-panel/createoutreach" element={<CreateOutreach/>}/>
           <Route path="/allnews" element={<Newscard />} />
           <Route path="/allnews/:id" element={<Readmorenews />} />
           <Route path="/user/:uid" element={<UserDetails />} />  // Route for user details
