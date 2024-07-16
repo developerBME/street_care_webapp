@@ -2,9 +2,11 @@ import React from "react";
 import DocVec from "../../images/DocVec.svg";
 import { useNavigate } from "react-router-dom"; 
 import CustomButton from "../Buttons/CustomButton";
+import AllOutreachVisitLog from "../AllOutreachVisitLog";
 
 
 function NoDisplayData({name,label}){
+    const navigate = useNavigate();
     if (name=="signedupoutreaches"){
         return(
             <div>
@@ -19,17 +21,17 @@ function NoDisplayData({name,label}){
                 </div>
                 <div className="flex justify-center items-start gap-4 mt-9">
                     <CustomButton 
-                        label="Document Personal Outreach"
+                        label="Document Outreach"
                         name="buttondefault"
                         onClick={() => {
-                            window.scrollTo(0, 0);
+                            navigate("/createOutreach");
                         }}
                     />
                     <CustomButton 
                         label="Explore Outreach Events"
                         name="buttonlight"
                         onClick={() => {
-                            window.scrollTo(0, 0);
+                            navigate("/AllOutreachEvents");
                     }}
                     />
                 </div>
@@ -52,14 +54,14 @@ function NoDisplayData({name,label}){
                         label="Document visit logs"
                         name="buttondefault"
                         onClick={() => {
-                            window.scrollTo(0, 0);
+                            navigate("/profile/visitlogform");
                         }}
                     />
                     <CustomButton 
                         label="Explore visit logs"
                         name="buttonlight"
                         onClick={() => {
-                            window.scrollTo(0, 0);
+                            navigate("/AllOutreachVisitLog")
                     }}
                     />
                 </div>
@@ -82,14 +84,14 @@ function NoDisplayData({name,label}){
                         label="Document Help Requests"
                         name="buttondefault"
                         onClick={() => {
-                            window.scrollTo(0, 0);
+                            navigate("/createOutreach");
                         }}
                     />
                     <CustomButton 
                         label="Explore Help Requests"
                         name="buttonlight"
                         onClick={() => {
-                            window.scrollTo(0, 0);
+                            navigate("/AllHelpRequests");
                     }}
                     />
                 </div>
