@@ -8,6 +8,9 @@ import {
   updateDoc,
   or,
   Timestamp,
+  orderBy,
+  startAt,
+  limit
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -337,4 +340,16 @@ export async function calculateNumberOfPagesForHelpReq(helpReqPerPage) {
   const totalHelpRequests = snapshot.size;
 
   return Math.ceil(totalHelpRequests / helpReqPerPage);
+}
+
+export async function getHelpRequestsWithPageIndex(pageIndex = 0, numberOfEventsPerPage = 5){
+  const q = query(collection(db, HELP_REQ_COLLECTION), orderBy("createdAt","asc"));
+  const documentSnapshots = await getDocs(q);
+
+  const startIndex = pageIndex*numberOfEventsPerPage;
+  const startDoc = documentSnapshots.docs[startIndex];
+
+  let docsq = query(collection(db, HELP_REQ_COLLECTION), orderBy("createdAt","asc"), startAt(startDoc),limit(numberOfEventsPerPage));
+  const pageResults = await getDocs(docsq);
+  return pageResults;
 }
