@@ -7,8 +7,6 @@ import {
   query,
   where,
   limit,
-  orderBy,
-  startAt,
   or,
 } from "firebase/firestore";
 import { db } from "./firebase";
@@ -76,18 +74,6 @@ export async function calculateNumberOfPages(outreachesPerPage) {
   const totalOutreaches = snapshot.size;
 
   return Math.ceil(totalOutreaches / outreachesPerPage);
-}
-
-export async function getRequestsWithPageIndex(collectionName, pageIndex = 0, numberOfEventsPerPage = 5){
-  const q = query(collection(db, collectionName), orderBy("createdAt","asc"));
-  const documentSnapshots = await getDocs(q);
-
-  const startIndex = pageIndex*numberOfEventsPerPage;
-  const startDoc = documentSnapshots.docs[startIndex];
-
-  let docsq = query(collection(db, collectionName), orderBy("createdAt","asc"), startAt(startDoc),limit(numberOfEventsPerPage));
-  const pageResults = await getDocs(docsq);
-  return pageResults;
 }
 
 async function fetchUserDetailsBatch(userIds) {
