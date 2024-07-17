@@ -25,6 +25,9 @@ import { fetchPersonalVisitLogById } from "../VisitLogCardService";
 import UpdateVisitLogConfirmationModal from "./UpdateVisitLogConfirmationModal";
 import DatePicker from "react-datepicker";
 import { Timestamp } from "firebase/firestore";
+import InfoIcon from '@mui/icons-material/Info';
+// import { IconButton } from "@mui/material";
+import {Tooltip, IconButton, Icon} from '@mui/material';
 
 const USERS_COLLECTION = "users";
 
@@ -808,6 +811,17 @@ function PersonalOutForm() {
     );
   }, []);
 
+  const toolTipContent=(
+    <div>
+      Mention here the total quantity of items like 5, 12, 20..
+        <ul className="list-disc list-inside">
+          <li>Item: A single, standalone object. Count those individually (e.g., a book, a shirt, a toy, a food can). </li>
+          <li>Collection: Multiple similar items grouped together that cannot be counted. Count them as 1 item (e.g. 1 bag of toys, 1 bag of Legos, 1 box of pins). </li>
+          <li>Bulk Materials:  For materials like fabric, yarn, or crafting supplies,  note the number of pieces (e.g., 1 piece of 5 yards of fabric, 1 roll of wool). </li>
+        </ul>
+    </div>
+  );
+
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center ">
@@ -1455,6 +1469,11 @@ function PersonalOutForm() {
                     {/**/}
                     <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
                       Total number of items donated by you?*
+                      <Tooltip title={toolTipContent} placement="right" arrow>
+                        <IconButton>
+                          <InfoIcon/>
+                        </IconButton>
+                      </Tooltip>
                     </div>
                     <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
                       <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
@@ -1515,7 +1534,7 @@ function PersonalOutForm() {
                     will help us better assist people in need. If yes{" "}
                     <b>
                       <button
-                        className="hover:text-[#6840E0]"
+                        className="text-[#6840E0]"
                         onClick={handleOptionalButtonClick}
                       >
                         click here.
