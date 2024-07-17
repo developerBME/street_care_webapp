@@ -3,10 +3,12 @@ import {
   getDocs,
   getDoc,
   doc,
+  orderBy,
   updateDoc,
   query,
   where,
   limit,
+  startAt,
   or,
 } from "firebase/firestore";
 import { db } from "./firebase";
@@ -290,53 +292,47 @@ export const fetchEventById = async (eventId) => {
   }
 };
 
-/*export const fetchUserEvents = async (uid) => {
+export const fetchUserSignedUpOutreaches = async (uid) => {
   try {
-    const userQuery = query(
-      collection(db, USERS_COLLECTION),
-      where("uid", "==", uid)
-    );
-    const userDocRef = await getDocs(userQuery);
-    if (userDocRef.docs.length === 0) {
-      console.error("User document not found for uid:", uid);
-      return [];
-    }
-    // const userDocID = userDocRef.docs[0].id;
-    const userData = userDocRef.docs[0].data();
-    // reference for the userdoc
-    // const userRef = doc(db, USERS_COLLECTION, userDocID);
-    // const userDoc = await getDoc(userRef);
+    const fAuth = getAuth();
+    const outreachQuery = query(collection(db, OUTREACH_EVENTS_COLLECTION));
+    const snapshot = await getDocs(outreachQuery);
 
-    // if (!userDoc.exists()) {
-    //   console.error("User not found:", uid);
-    //   return [];
-    // }
+    let userSignedUpOutreaches = [];
 
-    // const eventIds = userDoc.data().outreachEvents || [];
-    const eventIds = userData.outreachEvents || [];
-    const eventsData = [];
+    for (const doc of snapshot.docs) {
+      const eventData = doc.data();
+      if (eventData.participants && eventData.participants.includes(uid)) {
+        const result = await fetchUserDetails(eventData.uid);
+        const userName = result.username;
+        const photoUrl = result.photoUrl;
 
-    for (let eventId of eventIds) {
-      const eventRef = doc(db, OUTREACH_EVENTS_COLLECTION, eventId);
-      const eventDoc = await getDoc(eventRef);
-      if (eventDoc.exists()) {
-        const eventData = eventDoc.data();
-        eventsData.push({
+        let currentParticipants = eventData.participants || [];
+        userSignedUpOutreaches.push({
           ...eventData,
-          id: eventDoc.id,
+          userName: userName,
+          id: doc.id,
+          label:
+            fAuth.currentUser &&
+            currentParticipants.includes(fAuth?.currentUser?.uid)
+              ? "EDIT"
+              : "RSVP",
+          nop: currentParticipants.length,
+          photoUrl: photoUrl,
         });
       }
     }
 
-    return eventsData;
+    console.log("Signed-up outreaches:", userSignedUpOutreaches);
+    return userSignedUpOutreaches;
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchUserEvents EventCardService.js- ${error.message}`
+      `error on fetchUserSignedUpOutreaches in EventCardService.js- ${error.message}`
     );
     throw error;
   }
-};*/
+};
 
 export function formatDate(dateObj) {
   // Extract date parts manually for custom format
@@ -647,7 +643,7 @@ export const fetchUserOutreaches = async () => {
         photoUrl: photoUrl,
       });
     }
-
+    console.log("Outreaches created by user:", userOutreaches);
     return userOutreaches;
   } catch (error) {
     logEvent(
@@ -711,3 +707,28 @@ export const fetchVisitLogsByCityOrState = async (searchValue, startDate, endDat
     throw error;
   }
 };
+export async function calculateNumberOfPagesForOutreach(outreachPerPage, currentPage=0){
+  const testoutreachRef = query(collection(db, PAST_OUTREACH_EVENTS_COLLECTION), orderBy("createdAt", "asc"));
+  const snapshot = await getDocs(testoutreachRef);
+  // console.log('Data : '+snapshot.docs);
+  const startIndex = outreachPerPage*currentPage;
+  const startDoc = snapshot.docs[startIndex];
+  console.log('starting is: '+ startDoc);
+
+  // const firstdoc=snapshot.docs(startAt);
+  // console.log('starting is: '+ firstdoc);
+
+
+  const outreachRef = query(collection(db, PAST_OUTREACH_EVENTS_COLLECTION),  orderBy("createdAt", "asc"), startAt(startDoc), limit(outreachPerPage))
+
+  const outres = await getDocs(outreachRef);
+  // console.log('outres '+ outres.docs);
+  outres.forEach((doc)=>{
+    // console.log(doc.data());
+    console.log(doc.id);
+  });
+  return outres;
+
+}
+
+const test = await calculateNumberOfPagesForOutreach(5,0)

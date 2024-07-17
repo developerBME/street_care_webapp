@@ -55,6 +55,8 @@ import UserDetails from "./component/UserDetails";
 
 import TestUser from "./component/Test/Test";
 import ListUser from "./component/Test/ListUser";
+import { ProtectedAdminRoute } from "./component/ProtectedAdminRoute";
+import TestAdmin from "./component/UserProfile/TestAdmin";
 
 function App() {
   const fAuth = getAuth();
@@ -144,6 +146,12 @@ function App() {
               />
             }
           />
+          <Route
+            element={
+              <ProtectedAdminRoute user={firebaseUser} loading={loadingUser} />
+            }>
+            <Route path="/testAdmin" element={<TestAdmin />} />
+          </Route>
           <Route
             element={
               <ProtectedRoute user={firebaseUser} loading={loadingUser} />

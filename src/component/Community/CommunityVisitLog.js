@@ -55,13 +55,22 @@ const CommunityVisitLog = () => {
     },
   ];
 
-  const [visitLogs, setVisitLogs] = useState(null);
+  const [visitLogs, setVisitLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [visitLogsDisplay, setVisitLogsDisplay] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const visitLogsData = await fetchPublicVisitLogs();
-      setVisitLogs(visitLogsData);
+      try {
+        const visitLogsData = await fetchPublicVisitLogs();
+        setVisitLogs(visitLogsData);
+      } catch (error) {
+        setIsError(true);
+        setVisitLogs([]);
+        setErrorMsg("Visit logs could not be loaded. Please try again later.");
+      }
     };
 
     fetchData();
@@ -73,6 +82,16 @@ const CommunityVisitLog = () => {
     }
   }, [visitLogs]);
 
+  useEffect(() => {
+    setVisitLogsDisplay(visitLogs);
+  }, [visitLogs]);
+
+  useEffect(() => {
+    if (visitLogsDisplay.length > 0) {
+      setIsLoading(false);
+    }
+  }, [visitLogsDisplay]);
+
   return (
     <div>
       <div className="p-4 lg:px-10 lg:py-12 bg-gradient-to-br from-[#D3C3FF] to-[#DEDCE4] rounded-t-2xl flex-col justify-start items-start gap-4 inline-flex w-full">
@@ -80,7 +99,9 @@ const CommunityVisitLog = () => {
           <div className="">
             <div className="flex flex-row gap-4">
               <div className="text-[45px] font-medium font-dmsans">
-                Visit Log
+                Visit Logs
+                ({visitLogs?.length || 0})
+                {/* Visit Log ({visitLogs !== null ? visitLogs.length : 0}) */}
               </div>
               <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-medium font-dmsans leading-tight self-stretch">
                 <CustomButton
@@ -123,7 +144,11 @@ const CommunityVisitLog = () => {
             <EventCardSkeleton />
             <EventCardSkeleton />
           </div>
-        ) : visitLogs.length > 0 ? (
+        ) : isError ? (
+          <div className="text-center text-neutral-900 text-[20px] leading-9">
+            {errorMsg}
+          </div>
+        ) : visitLogs?.length > 0 ? (
           // <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
           <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
             {visitLogs.slice(0, 3).map((visitLogData, index) => (
