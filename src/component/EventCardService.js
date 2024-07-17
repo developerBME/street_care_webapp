@@ -3,10 +3,12 @@ import {
   getDocs,
   getDoc,
   doc,
+  orderBy,
   updateDoc,
   query,
   where,
   limit,
+  startAt,
   or,
 } from "firebase/firestore";
 import { db } from "./firebase";
@@ -705,3 +707,28 @@ export const fetchVisitLogsByCityOrState = async (searchValue, startDate, endDat
     throw error;
   }
 };
+export async function calculateNumberOfPagesForOutreach(outreachPerPage, currentPage=0){
+  const testoutreachRef = query(collection(db, PAST_OUTREACH_EVENTS_COLLECTION), orderBy("createdAt", "asc"));
+  const snapshot = await getDocs(testoutreachRef);
+  // console.log('Data : '+snapshot.docs);
+  const startIndex = outreachPerPage*currentPage;
+  const startDoc = snapshot.docs[startIndex];
+  console.log('starting is: '+ startDoc);
+
+  // const firstdoc=snapshot.docs(startAt);
+  // console.log('starting is: '+ firstdoc);
+
+
+  const outreachRef = query(collection(db, PAST_OUTREACH_EVENTS_COLLECTION),  orderBy("createdAt", "asc"), startAt(startDoc), limit(outreachPerPage))
+
+  const outres = await getDocs(outreachRef);
+  // console.log('outres '+ outres.docs);
+  outres.forEach((doc)=>{
+    // console.log(doc.data());
+    console.log(doc.id);
+  });
+  return outres;
+
+}
+
+const test = await calculateNumberOfPagesForOutreach(5,0)
