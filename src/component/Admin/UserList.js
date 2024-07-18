@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { collection, getDocs, query, where, addDoc, deleteDoc, doc } from "firebase/firestore";
-import { db } from "./firebase";
+import { db } from "../firebase";
 import { debounce } from 'lodash';
 
 function UserList() {
