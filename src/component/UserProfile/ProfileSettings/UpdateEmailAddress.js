@@ -416,7 +416,7 @@ const UpdateEmailAddress = () => {
                                 className="absolute right-4 top-2/4 transform -translate-y-2/4 cursor-pointer"
                                 onClick={handleTogglePassword}
                               >
-                                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                {showPassword ? <FaEye /> : <FaEyeSlash />}
                               </div>
                             </div>
                           </div>
