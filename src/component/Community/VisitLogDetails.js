@@ -6,7 +6,6 @@ import { fetchVisitLogById } from "../VisitLogCardService";
 import date from "../../images/date.png";
 import locate from "../../images/location.png";
 import verifiedImg from "../../images/verified_purple.png";
-import CustomButton from "../Buttons/CustomButton";
 import { formatDate } from "../helper";
 import CardTags from "./CardTags";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
@@ -17,13 +16,8 @@ const VisitLogDetails = () => {
   const { id } = useParams();
   const [data, setData] = useState(null);
 
-  const returnTarget =
-    location.state && location.state.from === "home" ? "/" : "/Community";
-
-  const returnText =
-    location.state && location.state.from === "home"
-      ? "Return to Home"
-      : "Return to Community";
+  const returnTarget = "/allOutreachVisitLog"; 
+  const returnText = "Return to Visit Logs"; 
 
   useEffect(() => {
     const getData = async () => {
@@ -36,7 +30,7 @@ const VisitLogDetails = () => {
     };
 
     getData(); // Invoke the async function
-  }, []);
+  }, [id]);
 
   return (
     <div className="relative flex flex-col items-center ">
