@@ -211,7 +211,7 @@ function CommOutForm() {
     </div>`;
 
     try {
-      const logRef = collection(db, "testLog");
+      const logRef = collection(db, "personalVisitLog");
       const docRef = await addDoc(logRef, obj);
       if (docRef.id) {
         console.log(docRef.id);
@@ -264,7 +264,7 @@ function CommOutForm() {
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center ">
-        <div className=" w-fit md:w-[930px] mx-2    mt-48 mb-16 rounded-2xl bg-[#F8F9F0] text-black ">
+        <div className="w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[930px] mx-2 mt-48 mb-16 rounded-2xl bg-[#F8F9F0] text-black ">
           <div className="items-center justify-center  h-full w-full mx-auto rounded-2xl ">
             {/*  */}
             <div className=" absolute flex mt-[-50px] items-center">
@@ -277,7 +277,7 @@ function CommOutForm() {
               </Link>
             </div>
             {/*  */}
-            <div className="w-fit h-fit md:px-[150px] md:py-[100px] flex-col justify-start items-start gap-16 inline-flex">
+            <div className="w-fit h-fit lg:px-[150px] lg:py-[100px] md:px-[100px] md:py-[80px] px-[40px] py-[16px] flex-col justify-start items-start gap-16 inline-flex">
               <div className="flex-col justify-start items-start gap-16 flex">
                 <div className="w-fit text-neutral-800 text-[57px] font-medium font-bricolage leading-[64px]">
                   Tell us more about who you helped!

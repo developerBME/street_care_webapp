@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import OutreachVisitLogCard from "./Community/OutreachVisitLogCard";
 import { useNavigate, useLocation } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
-import CustomButton from "./Buttons/CustomButton";
-import { fetchVisitLogs } from "./VisitLogCardService";
+import { fetchPublicVisitLogs } from "./VisitLogCardService";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 
 const AllOutreachVisitLog = () => {
@@ -15,7 +14,7 @@ const AllOutreachVisitLog = () => {
 
   useEffect(() => {
     const getVisitLogs = async () => {
-      const visitLogsData = await fetchVisitLogs();
+      const visitLogsData = await fetchPublicVisitLogs();
       setVisitLogs(visitLogsData);
     };
     getVisitLogs();
@@ -59,14 +58,12 @@ const AllOutreachVisitLog = () => {
             All Outreach Visit Logs
           </p>
           {isLoading ? (
-            // <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
             <div className="w-full h-fit flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 pt-9 gap-5">
               <EventCardSkeleton />
               <EventCardSkeleton />
               <EventCardSkeleton />
             </div>
           ) : (
-            // <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
             <div className="w-full h-fit flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-2 pt-9 gap-5">
               {visitLogs.map((visitLogData) => (
                 <OutreachVisitLogCard visitLogCardData={visitLogData} />
