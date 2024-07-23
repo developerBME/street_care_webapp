@@ -130,8 +130,13 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/ForgotPassword" element={<ForgotPassword />} />
           <Route path="/signup" element={<Signup2 />} />
-          <Route path="/admin-panel/userlist" element={<UserList/>}/>
-          <Route path="/admin-panel/createoutreach" element={<CreateOutreach/>}/>
+          <Route
+            element={
+              <ProtectedAdminRoute user={firebaseUser} loading={loadingUser} />
+            }>
+            <Route path="/admin-panel/userlist" element={<UserList/>}/>
+            <Route path="/admin-panel/createoutreach" element={<CreateOutreach/>}/>
+          </Route>
           <Route path="/allnews" element={<Newscard />} />
           <Route path="/allnews/:id" element={<Readmorenews />} />
           <Route path="/user/:uid" element={<UserDetails />} /> // Route for
