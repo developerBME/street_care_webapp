@@ -17,9 +17,20 @@ import {
   signInWithEmailAndPassword,
   EmailAuthProvider,
   reauthenticateWithCredential,
+  GoogleAuthProvider,
+  signInWithPopup,
+  reauthenticateWithPopup,
+  updateEmail,
+  sendEmailVerification,
+  unlink,
+  createUserWithEmailAndPassword,
+  updatePassword,
+  linkWithCredential,
 } from "firebase/auth";
-import { updateEmailId } from "../UpdateEmail";
+import { updateEmailId, updateSocialLoginEmail } from "../UpdateEmail";
 import { useNavigate } from "react-router-dom";
+import { auth } from "../../firebase";
+import EmailUpdateConfirmation from "./EmailUpdateConfirmation";
 
 const UpdateEmailAddress = () => {
   const stepLabelMap = {
@@ -30,13 +41,14 @@ const UpdateEmailAddress = () => {
 
   const [email, setEmail] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
-  const [newVerificationCode, setNewVerificationCode] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
 
   const [error, setError] = useState(null);
   const fAuth = getAuth();
+  const [providerId, setProviderId] = useState('');
   const navigate = useNavigate();
+  const currentUser = getAuth().currentUser;
 
   // const [error, setError] = useState(null);
 
@@ -44,6 +56,9 @@ const UpdateEmailAddress = () => {
 
   const [minutes, setMinutes] = useState(4);
   const [seconds, setSeconds] = useState(59);
+
+  const [newEmailAddress, setNewEmailAddress] = useState({ email });
+  console.log(newEmailAddress);
 
   const [errormsg, setErrors] = useState({
     EmailError: "",
@@ -58,7 +73,16 @@ const UpdateEmailAddress = () => {
     }));
   };
 
-  const resendCode = () => {
+  const resendCode = async (e) => {
+    e.preventDefault();
+    try {
+      await send2FA(email, fAuth?.currentUser.uid, Date.now().toString());
+      console.log("Verification email sent");
+    } catch (error) {
+      setError(true);
+      console.error("Error sending verification email:", error);
+    }
+
     setMinutes(4);
     setSeconds(59);
   };
@@ -68,6 +92,11 @@ const UpdateEmailAddress = () => {
   };
 
   useEffect(() => {
+    const user = fAuth.currentUser;
+    if (user && user.providerData.length > 0) {
+      setProviderId(user.providerData[0].providerId);
+    }
+
     const interval = setInterval(() => {
       if (seconds > 0) {
         setSeconds(seconds - 1);
@@ -84,15 +113,87 @@ const UpdateEmailAddress = () => {
     return () => {
       clearInterval(interval);
     };
-  }, [seconds, minutes]);
+  }, [seconds, minutes, fAuth]);
 
-  //Old Email Verification step via reauthentication of current user login
+
+  // Updating Email using 3 different approaches
+  //  1. Update email (Old google social login - new google social login)
+  // const handleEmailSubmit = async () => {
+  //   // const provider = new GoogleAuthProvider();
+  //   // const auth = getAuth();
+  //   // const result = await signInWithPopup(auth, provider);
+  //   // console.log(result)
+  //   const user = auth?.currentUser;//fauth.currentUser
+  //   const provider = new GoogleAuthProvider();
+  //   reauthenticateWithPopup(user,provider)
+  //   .then(() => {
+  //       // Update email in Firebase Authentication
+  //       //return updateEmail(user, email);
+  //       return updateSocialLoginEmail(email);
+  //   })
+  //   .then(() => {
+  //     // Send verification email to new address
+  //     // return sendEmailVerification(user);
+  //   })
+  //   .then(() => {
+  //     console.log("Verification email sent to new email address.");
+  //     //Unlink the Google provider associated with the old email
+  //     return unlink(user,'google.com');
+  //   })
+  //   .then(() => {
+  //     console.log('Google account unlinked.');
+  //     navigate("/profile/profilesettings/emailupdateconfirmation");
+  //     //alert("Your email address has been updated. Please verify your new email address.");
+  //   })
+  //   .catch((error) => {
+  //     console.error("Error updating email or sending verification:", error);
+  //     setError(error.message);
+  //   });
+  //   setMinutes(4);
+  //   setSeconds(59);
+  // };
+
+  // 2. Update email (old google user - new user email pwd)
+  // const handleEmailSubmit = async () => {
+  //   try {
+  //       const user = auth?.currentUser;//fauth.currentUser
+  //       const provider = new GoogleAuthProvider();
+
+  //       // Re-authenticate the user with Google
+  //       await reauthenticateWithPopup(user, provider);
+  //       console.log('Re-authentication with Google successful.');
+
+  //       //update login
+  //       await updateSocialLoginEmail(email, password);
+  //       // Create Email/Password credential
+  //       const credential = EmailAuthProvider.credential(email, password);
+
+  //       // Link the new email/password credential to the user
+  //       await linkWithCredential(user, credential);
+  //       console.log('Email/password provider linked successfully.');
+
+  //       // Unlink Google provider
+  //       await unlink(user, 'google.com');
+  //       console.log('Google provider unlinked.');
+  //       navigate("/profile/profilesettings/emailupdateconfirmation");
+
+  //   } catch (error) {
+  //       setError(error.message);
+  //   }
+  // };
+
+  // Old User Email Verification step via reauthentication of current user login
+  // 3. Update email (old user email - new user email)
   const handleEmailSubmit = async () => {
-    // if (isSubmitted === 2) {
-    //   setIsSubmitted((prevState) => prevState - 1);
-    // } else {
-    //   setIsSubmitted((prevState) => prevState + 1);
-    // }
+      if (['google.com', 'twitter.com'].includes(providerId)) {
+            alert("Email update is not available for social accounts.");
+            return;
+          }
+      // if (isSubmitted === 2) {
+      //   setIsSubmitted((prevState) => prevState - 1);
+      // } else {
+      //   setIsSubmitted((prevState) => prevState + 1);
+      // }
 
     if (!password) {
       updateErrorState("PassError", "Password is required");
@@ -151,7 +252,7 @@ const UpdateEmailAddress = () => {
     // document.getElementById("email-update-form").reset();
   };
 
-  //New email verification step
+  // New email verification step
   const handleCodeSubmit = async () => {
     if (!verificationCode || "") {
       updateErrorState("CodeError", "Verification code is required");
@@ -177,12 +278,11 @@ const UpdateEmailAddress = () => {
     if (response.status === 200) {
       //On verifying code, updating email
       updateEmailId(email);
-      navigate("/profile/profilesettings/emailupdateconfirmation");
+      navigate(`/profile/profilesettings/emailupdateconfirmation/${email}`);
     } else {
       console.log("Invalid code");
-      updateErrorState("CodeError", "Invalid code")
+      updateErrorState("CodeError", "Invalid code");
     }
-
     setVerificationCode("");
     // setCurrentStep("NEW_EMAIL");
   };
@@ -316,7 +416,7 @@ const UpdateEmailAddress = () => {
                                 className="absolute right-4 top-2/4 transform -translate-y-2/4 cursor-pointer"
                                 onClick={handleTogglePassword}
                               >
-                                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                {showPassword ? <FaEye /> : <FaEyeSlash />}
                               </div>
                             </div>
                           </div>
@@ -435,7 +535,7 @@ const UpdateEmailAddress = () => {
                                 // className="disabled:text-black disabled:cursor-not-allowed
                                 // text-[#6840E0] cursor-pointer text-sm font-dmsans font-normal"
                                 className="text-[#6840E0] cursor-pointer text-sm font-dmsans font-normal"
-                                onClick={resendCode}
+                                onClick={(e) => resendCode(e)}
                               >
                                 Resend Code
                               </button>
@@ -455,11 +555,17 @@ const UpdateEmailAddress = () => {
                   </div>
                 </div>
               )}
+              {['google.com', 'facebook.com', 'twitter.com'].includes(providerId) && (
+                <div className="text-center text-red-500">
+                  Email update is disabled because your account is linked with a social media provider.
+                </div>
+              )}
               <CustomButton
                 name="buttondefault"
                 type="submit"
                 label={stepLabelMap[currentStep]}
                 onClick={stepFuncMap[currentStep]}
+                disabled={['google.com', 'facebook.com', 'twitter.com'].includes(providerId)} // Disable the button if logged in via social media
               ></CustomButton>
             </div>
           </div>
@@ -487,7 +593,8 @@ const UpdateEmailAddress = () => {
                     )}
                   </div>
                   <div className="text-base font-normal">
-                    Confirm existing password associated with the existing email and the enter your new email address.
+                    Confirm existing password associated with the existing email
+                    and the enter your new email address.
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">

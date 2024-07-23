@@ -50,8 +50,16 @@ import PersonalVisitLogDetails from "./component/Community/PersonalVisitLogDetai
 import EmailUpdateConfirmation from "./component/UserProfile/ProfileSettings/EmailUpdateConfirmation";
 import DeleteAccConfirmation from "./component/UserProfile/ProfileSettings/DeleteAccConfirmation";
 import UpdateProfile from "./component/UserProfile/ProfileSettings/UpdateProfile";
+
 import UserDetails from "./component/Admin/UserDetails";
 import CreateOutreachAdmin from "./component/Admin/CreateOutreachAdmin";
+
+
+import TestUser from "./component/Test/Test";
+import ListUser from "./component/Test/ListUser";
+import { ProtectedAdminRoute } from "./component/ProtectedAdminRoute";
+import TestAdmin from "./component/UserProfile/TestAdmin";
+
 function App() {
   const fAuth = getAuth();
   const [loggedIn, setLoggedIn] = useState(false);
@@ -125,11 +133,14 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/ForgotPassword" element={<ForgotPassword />} />
           <Route path="/signup" element={<Signup2 />} />
+
           <Route path="/admin-panel/userlist" element={<UserList/>}/>
           <Route path="/admin-panel/createoutreachadmin" element={<CreateOutreachAdmin/>}/>
+
           <Route path="/allnews" element={<Newscard />} />
           <Route path="/allnews/:id" element={<Readmorenews />} />
-          <Route path="/user/:uid" element={<UserDetails />} />  // Route for user details
+          <Route path="/user/:uid" element={<UserDetails />} /> // Route for
+          user details
           <Route
             path="/verifyemail"
             element={
@@ -139,6 +150,13 @@ function App() {
               />
             }
           />
+          <Route
+            element={
+              <ProtectedAdminRoute user={firebaseUser} loading={loadingUser} />
+            }
+          >
+            <Route path="/testAdmin" element={<TestAdmin />} />
+          </Route>
           <Route
             element={
               <ProtectedRoute user={firebaseUser} loading={loadingUser} />
@@ -159,7 +177,7 @@ function App() {
               element={<UpdateEmailAddress />}
             />
             <Route
-              path="/profile/profilesettings/emailupdateconfirmation"
+              path="/profile/profilesettings/emailupdateconfirmation/:email"
               element={<EmailUpdateConfirmation />}
             />
             <Route
@@ -173,6 +191,7 @@ function App() {
               element={<PersonalOutForm />}
             />
            
+
             <Route path="/helpRequestForm" element={<HelpRequestForm />} />
           </Route>
           <Route
@@ -180,18 +199,14 @@ function App() {
             element={<DeleteAccConfirmation />}
           />
           <Route path="/profile/select-outreach" element={<Documenting />} />
-
           {/* <Route path="/profile/commoutform" element={<ComingSoon />} /> */}
-
           <Route path="/outreachsignup" element={<OutreachSignup />} />
           <Route path="/outreachsignup/:id" element={<OutreachSignup />} />
-
           <Route
             path="/helpRequestEventWindow"
             element={<HelpRequestEventWindow />}
           />
           {/* <Route path="/helpRequestEventWindow" element={<ComingSoon />} /> */}
-
           {/* <Route path="/helpRequestForm" element={<ComingSoon />} /> */}
           <Route path="/community/icanhelp/:id" element={<ICanHelpForm />} />
           {/* <Route path="/icanhelp" element={<ComingSoon />} /> */}
@@ -207,7 +222,6 @@ function App() {
             path="/allOutreachVisitLog"
             element={<AllOutreachVisitLog />}
           />
-
           <Route path="/sample_form" element={<Sample_form />} />
           <Route path="visitLogDetails" element={<VisitLogDetails />} />
           <Route path="visitLogDetails/:id" element={<VisitLogDetails />} />
@@ -224,6 +238,16 @@ function App() {
           <Route
             path="/community/allHelpRequests"
             element={<AllHelpRequests />}
+          />
+          <Route
+            path="/community/allHelpRequests"
+            element={<AllHelpRequests />}
+          />
+          <Route path="/test" element={<TestUser />} />
+          <Route path="/list" element={<ListUser />} />
+          <Route
+            path="/profile/visitlogform/:id"
+            element={<PersonalOutForm />}
           />
         </Routes>
         <Footer />

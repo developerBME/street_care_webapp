@@ -75,6 +75,7 @@ function HelpRequestForm() {
   const [street, setStreet] = useState("");
   const [cityName, setCityName] = useState("");
   const [stateName, setStateName] = useState("");
+  const [stateAbbv, setStateAbbv] = useState("");
   const [postcode, setPostcode] = useState("");
 
   const fAuth = getAuth();
@@ -288,6 +289,7 @@ function HelpRequestForm() {
         street: street,
         city: cityName,
         state: stateName,
+        stateAbbv: stateAbbv,
         zipcode: postcode,
       },
       skills: helpType,
@@ -346,6 +348,7 @@ function HelpRequestForm() {
     let postcode = "";
     let city = "";
     let state = "";
+    let state_abbv = "";
 
     for (const component of addressObject.address_components) {
       const componentType = component.types[0];
@@ -374,6 +377,7 @@ function HelpRequestForm() {
         }
         case "administrative_area_level_1": {
           state = component.long_name;
+          state_abbv = component.short_name;
           break;
         }
         default:
@@ -384,6 +388,7 @@ function HelpRequestForm() {
     setStreet(street);
     setCityName(city);
     setStateName(state);
+    setStateAbbv(state_abbv);
     setPostcode(postcode);
   };
 
@@ -410,7 +415,7 @@ function HelpRequestForm() {
                 Return to Community
               </p>
             </div>
-            <div className="rounded-2xl mx-2 mb-32 lg:mx-40 bg-[#F8F9F0] p-4 lg:pt-[100px] lg:pb-[100px] lg:pr-[150px] lg:pl-[150px]">
+            <div className="rounded-2xl mx-2 mb-32 lg:mx-40 bg-[#F8F9F0] p-10 lg:p-[80px]">
               <div>
                 <form>
                   <div>

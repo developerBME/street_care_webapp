@@ -9,6 +9,14 @@
         "firebase-debug.log",
         "firebase-debug.*.log"
       ]
+    },
+    {
+      "source": "functions/delUserActivity",
+      "codebase": "del-user-activity"
+    },
+    {
+      "source": "functions/decodeToken",
+      "codebase": "decode-token"
     }
   ]
 }

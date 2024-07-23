@@ -116,7 +116,7 @@ const AllHelpRequests = () => {
             </div>
           ) : (
             <>
-              <div className="sm:p-4 lg:px-2 lg:py-10 flex flex-col bg-[#F7F7F7] gap-4 lg:gap-8 rounded-b-2xl">
+              <div className="sm:p-4 lg:px-2 lg:pt-10 lg:pb-6 flex flex-col bg-[#F7F7F7] gap-4 lg:gap-8 rounded-b-2xl">
                 {helpRequestsDisplay
                   .slice(0, visibleItems)
                   .map((item, index) => (
@@ -127,7 +127,7 @@ const AllHelpRequests = () => {
                 helpRequestsDisplay.length !== 0 &&
                 helpRequestsDisplay.length > visibleItems && (
                   <button
-                    className="w-fit rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 flex text-center text-[#1F0A58] hover:bg-[#1F0A58] hover:text-white text-[13px] font-medium font-dmsans leading-tight self-stretch px-6 py-2.5"
+                    className="w-fit rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 flex text-center text-[#1F0A58] hover:bg-[#1F0A58] hover:text-white text-[13px] font-medium font-dmsans leading-tight self-stretch px-6 py-2.5 mt-2"
                     onClick={loadMore}
                   >
                     Load 5 More

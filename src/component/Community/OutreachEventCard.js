@@ -8,28 +8,7 @@ import userSlots from "../../images/userSlots.png";
 import date from "../../images/date.png";
 import locate from "../../images/location.png";
 import { formatDate } from "../helper";
-
-const DisplaySkills = ({skills}) => {
-  let maxShown = 2;
-  let moreCount = skills.length - maxShown;
-  return (
-    <div className="inline-flex items-center gap-2 flex-wrap">
-      {skills.slice(0, maxShown).map((item, index) => (
-        <div
-          className={`py-1 px-3 border border-[#C8C8C8] rounded-xl text-[12px] text-[#444746] overflow-hidden text-ellipsis whitespace-nowrap max-w-fit ${moreCount > 0 ? "basis-1/3" : "basis-1/2"}`}
-          key={item}
-        >
-          {item}
-        </div>
-      ))}
-      {moreCount > 0 && (
-        <div className="text-[12px] text-[#444746] overflow-hidden text-ellipsis whitespace-nowrap font-bold max-w-fit">
-          +{moreCount} more
-        </div>
-      )}
-    </div>
-  )
-}
+import CardTags from "./CardTags";
 
 const OutreachEventCard = ({
   cardData,
@@ -68,7 +47,8 @@ const OutreachEventCard = ({
     <div className="bg-[#F5EEFE] min-w-full max-w-[320px] lg:w-full rounded-[30px] mb-4 flex flex-col justify-between p-6">
       {!isProfilePage && !isPastEvent ? (
         <div className="inline-flex items-center space-x-2 ">
-          <img alt=""
+          <img
+            alt=""
             src={photoUrl || defaultImage}
             className="w-8 h-8 rounded-full"
           />
@@ -96,13 +76,15 @@ const OutreachEventCard = ({
             </div>
           </div>
 
-          <h1 className="font-medium font-dmsans text-[24px] line-clamp-1">{title}</h1>
+          <h1 className="font-medium font-dmsans text-[24px] line-clamp-1">
+            {title}
+          </h1>
 
           <div className="font-medium text-[14px] font-dmsans text-[#444746] line-clamp-2 h-10">
             {description}
           </div>
 
-          <DisplaySkills skills={skills} />
+          <CardTags tags={skills} />
         </div>
       ) : (
         <div className="my-3 space-y-3 w-full h-full flex flex-col">
@@ -115,9 +97,13 @@ const OutreachEventCard = ({
                 </div>
               </div>
               <div className="flex flex-row justify-normal space-x-2">
-                <img alt="" className="w-[12px] h-[15px] my-[2px]" src={locate} />
+                <img
+                  alt=""
+                  className="w-[12px] h-[15px] my-[2px]"
+                  src={locate}
+                />
                 <div className="font-medium font-dmsans text-[12px] text-[#37168B]">
-                  {location.city}, {location.state}
+                  {location.city}, {location.stateAbbv || location.state}
                 </div>
               </div>
             </div>
@@ -130,20 +116,26 @@ const OutreachEventCard = ({
                 </div>
               </div>
               <div className="flex flex-row justify-normal space-x-2">
-                <img alt="" className="w-[12px] h-[15px] my-[3px]" src={locate} />
+                <img
+                  alt=""
+                  className="w-[12px] h-[15px] my-[3px]"
+                  src={locate}
+                />
                 <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
-                  {location.city}, {location.state}
+                  {location.city}, {location.stateAbbv || location.state}
                 </div>
               </div>
             </div>
           )}
-          <h1 className="font-medium font-dmsans text-[24px] line-clamp-1">{title}</h1>
+          <h1 className="font-medium font-dmsans text-[24px] line-clamp-1">
+            {title}
+          </h1>
 
           <div className="font-medium text-[14px] font-dmsans text-[#444746] line-clamp-2 h-10">
             {description}
           </div>
 
-          <DisplaySkills skills={skills} />
+          <CardTags tags={skills} />
         </div>
       )}
       {!isPastEvent ? (
@@ -152,6 +144,16 @@ const OutreachEventCard = ({
             {isProfilePage || label2 === "EDIT" ? (
               <div class="group relative">
                 <CustomButton
+                  label="View"
+                  name="buttonlight"
+                  onClick={() => {
+                    navigate(`/outreachsignup/${id}`, {
+                      state: { label: "EDIT" },
+                    });
+                  }}
+                ></CustomButton>
+
+                {/* <CustomButton
                   label="Edit"
                   name="buttonlight"
                   onClick={handleEditClick}
@@ -170,23 +172,38 @@ const OutreachEventCard = ({
                     eventDate={eventDate}
                     location={location}
                   />
-                )}
+                )} */}
               </div>
             ) : (
-              <div class="group relative">
-                <CustomButton
-                  label={label2}
-                  name="buttonlight"
-                  onClick={() => {
-                    navigate(`/outreachsignup/${id}`);
-                  }}
-                />
+              <div className="flex flex-row">
+                {/* <div className="group relative mr-2">
+                  <CustomButton
+                    label={label2}
+                    name="buttonlight"
+                    onClick={() => {
+                      navigate(`/outreachsignup/${id}`);
+                    }}
+                  />
+                </div> */}
+                <div className="group relative">
+                  <CustomButton
+                    label="View"
+                    name="buttonlight"
+                    onClick={() => {
+                      navigate(`/outreachsignup/${id}`);
+                    }}
+                  />
+                </div>
               </div>
             )}
 
             {!isProfilePage ? (
               <div className="flex flex-row space-x-2">
-                <img alt="" className="w-[20px] h-[14px] my-1" src={userSlots}></img>
+                <img
+                  alt=""
+                  className="w-[20px] h-[14px] my-1"
+                  src={userSlots}
+                ></img>
                 <div className="font-normal font-dmsans text-[14px]">
                   {nop}/{totalSlots}
                 </div>
