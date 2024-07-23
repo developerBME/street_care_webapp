@@ -3,7 +3,6 @@ import OutreachEventCard from "./Community/OutreachEventCard";
 import { formatDate, fetchEvents } from "./EventCardService";
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
-import search_icon from "../images/search_icon.png";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 
 const AllOutreachEvents = () => {
@@ -31,7 +30,6 @@ const AllOutreachEvents = () => {
       });
       // Sort events in place based on their date
       upcomingEvents.sort((a, b) => a.eventDate - b.eventDate);
-
       setEvents(upcomingEvents);
     };
 
