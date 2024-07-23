@@ -10,6 +10,7 @@ import CustomButton from "../Buttons/CustomButton";
 import NoOutreachDoc from "./NoOutreachDoc";
 import { auth } from "../firebase";
 import NoDisplayData from "../UserProfile/NoDisplayData";
+import ErrorMessage from "../ErrorMessage";
 
 const OutreachVisitLogProfile = () => {
   const [visibleItems, setVisibleItems] = useState(3);
@@ -80,9 +81,7 @@ const OutreachVisitLogProfile = () => {
           <EventCardSkeleton />
         </div>
       ) : isError ? (
-        <div className="text-center text-neutral-900 text-[20px] leading-9">
-          {errorMsg}
-        </div>
+        <ErrorMessage displayName="Visit Logs" />
       ) : (
         <>
           {visitLogs?.length > 0 && (

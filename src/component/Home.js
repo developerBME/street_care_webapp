@@ -1,28 +1,23 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  getAuth,
-  signInWithPopup,
-  GoogleAuthProvider,
-  onAuthStateChanged,
-} from "firebase/auth";
-import { useNavigate, Link } from "react-router-dom";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 // import FAQs from "./HomePage/FAQs";
 import FAQs from "./HomePage/FAQs2";
-import Eventcard from "./HomePage/Eventcard";
-import BMEcard from "./HomePage/BMEcard";
-import BMEcardnew from "./HomePage/BMEofficialCard";
+// import Eventcard from "./HomePage/Eventcard";
+// import BMEcard from "./HomePage/BMEcard";
+// import BMEcardnew from "./HomePage/BMEofficialCard";
 import Success2 from "./HomePage/Success2";
 //import Success from "./HomePage/Success"
 import Landing from "./HomePage/Landing";
 // import Landing from "./HomePage/Landing2";
-import Success from "./HomePage/Success";
+// import Success from "./HomePage/Success";
 import News from "./HomePage/News";
 import Map from "./HomePage/Map";
 //import Process from "./HomePage/Process";
 import Process2 from "./HomePage/Process2";
 //import MoreAboutUs from "./HomePage/MoreAboutUs";
-import MoreAboutUs from "./HomePage/MoreAboutUs2";
-import Navbar from "./Navbar";
+// import MoreAboutUs from "./HomePage/MoreAboutUs2";
+// import Navbar from "./Navbar";
 import arrowRight from "../images/arrowRight.png";
 import OutreachEventCard from "./Community/OutreachEventCard";
 import {
@@ -38,7 +33,8 @@ import CustomButton from "../component/Buttons/CustomButton";
 import { NewsCardData } from "../NewsData";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 import PastOutreachEventCardSkeleton from "./Skeletons/PastOutreachEventCardSkeleton";
-import MoreAboutUs2 from "./HomePage/MoreAboutUs2";
+import ErrorMessage from "./ErrorMessage";
+// import MoreAboutUs2 from "./HomePage/MoreAboutUs2";
 
 function HomePage() {
   const navigate = useNavigate();
@@ -137,42 +133,89 @@ function HomePage() {
     },
   ];
 
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState(null);
   const [offevents, setOffevents] = useState([]);
   const [newsevents, setnewsevents] = useState([]);
-  const [eventsDisplay, setEventsDisplay] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState({
+    events: false,
+    officialEvents: false,
+    news: false,
+  });
+  const [errorMsg, setErrorMsg] = useState({
+    events: false,
+    officialEvents: false,
+    news: false,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
-      const eventsData = await fetchEvents();
+      try {
+        const eventsData = await fetchEvents();
 
-      // Sort events in place based on their date
-      // eventsData.sort((a, b) => a.eventDate - b.eventDate);
-
-      // setEvents(eventsData);
-
-      // Display 3 upcoming events
-      eventsData.sort((a, b) => a.eventDate - b.eventDate);
-      setEvents(eventsData);
+        eventsData.sort((a, b) => a.eventDate - b.eventDate);
+        setEvents(eventsData);
+      } catch (error) {
+        setIsError((prev) => {
+          return {
+            ...prev,
+            events: true,
+          };
+        });
+        setEvents([]);
+        setErrorMsg((prev) => {
+          return {
+            ...prev,
+            events: "Events could not be loaded. Please try again later.",
+          };
+        });
+      }
     };
     const fetchOfficialData = async () => {
-      const eventsData = await fetchOfficialEvents();
-      // Sort events in place based on their date
-      // eventsData.sort((a, b) => a.eventDate - b.eventDate);
-      // setOffevents(eventsData);
+      try {
+        const eventsData = await fetchOfficialEvents();
 
-      // Display 3 upcoming events
-      eventsData.sort((a, b) => a.eventDate - b.eventDate);
-      let limitedData = eventsData.slice(0, 3);
-      setOffevents(limitedData);
+        eventsData.sort((a, b) => a.eventDate - b.eventDate);
+        let limitedData = eventsData.slice(0, 3);
+        setOffevents(limitedData);
+      } catch (error) {
+        setIsError((prev) => {
+          return {
+            ...prev,
+            officialEvents: true,
+          };
+        });
+        setOffevents([]);
+        setErrorMsg((prev) => {
+          return {
+            ...prev,
+            events: "Events could not be loaded. Please try again later.",
+          };
+        });
+      }
     };
 
     const fetchnewsData = async () => {
-      // Display 3 news initially
-      let limitedData = NewsCardData.slice(0, 3);
-      setnewsevents(limitedData);
+      try {
+        // Display 3 news initially
+        let limitedData = NewsCardData.slice(0, 3);
+        setnewsevents(limitedData);
+      } catch (error) {
+        setIsError((prev) => {
+          return {
+            ...prev,
+            news: true,
+          };
+        });
+        setnewsevents([]);
+        setErrorMsg((prev) => {
+          return {
+            ...prev,
+            events: "News events could not be loaded. Please try again later.",
+          };
+        });
+      }
     };
 
     fetchData();
@@ -181,15 +224,10 @@ function HomePage() {
   }, []);
 
   useEffect(() => {
-    setEventsDisplay(events);
-    // searchRef.current = "";
-  }, [events]);
-
-  useEffect(() => {
-    if (eventsDisplay.length > 0) {
+    if (events) {
       setIsLoading(false);
     }
-  }, [eventsDisplay]);
+  }, [events]);
 
   const outreachRef = useRef();
 
@@ -199,21 +237,25 @@ function HomePage() {
 
   // Filter events to get only past events
   const upcomingEvents = events
-    .filter((event) => {
-      const eventDate =
-        new Date(event.eventDate?.seconds * 1000) || event.eventDate;
-      return eventDate >= new Date(); // Check if the event date is before the current date
-    })
-    .slice(0, 3);
+    ? events
+        .filter((event) => {
+          const eventDate =
+            new Date(event.eventDate?.seconds * 1000) || event.eventDate;
+          return eventDate >= new Date(); // Check if the event date is before the current date
+        })
+        .slice(0, 3)
+    : [];
 
   // Filter events to get only past events
   const pastEvents = events
-    .filter((event) => {
-      const eventDate =
-        new Date(event.eventDate?.seconds * 1000) || event.eventDate;
-      return eventDate < new Date(); // Check if the event date is before the current date
-    })
-    .slice(0, 3);
+    ? events
+        .filter((event) => {
+          const eventDate =
+            new Date(event.eventDate?.seconds * 1000) || event.eventDate;
+          return eventDate < new Date(); // Check if the event date is before the current date
+        })
+        .slice(0, 3)
+    : [];
 
   useEffect(() => {
     document.title = "Home - Street Care";
@@ -248,7 +290,7 @@ function HomePage() {
           >
             {" "}
             Upcoming Outreach Events
-            <img src={arrowRight} className="w-6 h-7 lg:w-10 lg:h-10 " />
+            <img alt="" src={arrowRight} className="w-6 h-7 lg:w-10 lg:h-10 " />
           </p>
 
           {isLoading ? (
@@ -257,6 +299,8 @@ function HomePage() {
               <EventCardSkeleton />
               <EventCardSkeleton />
             </div>
+          ) : isError.events ? (
+            <ErrorMessage displayName="Outreaches" />
           ) : (
             <>
               <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
@@ -301,7 +345,7 @@ function HomePage() {
           >
             {" "}
             Past Outreach Events
-            <img src={arrowRight} className="w-6 h-7 lg:w-10 lg:h-10 " />
+            <img alt="" src={arrowRight} className="w-6 h-7 lg:w-10 lg:h-10 " />
           </p>
 
           {isLoading ? (
@@ -310,6 +354,8 @@ function HomePage() {
               <PastOutreachEventCardSkeleton />
               <PastOutreachEventCardSkeleton />
             </div>
+          ) : isError.events ? (
+            <ErrorMessage displayName="Outreaches" />
           ) : (
             <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
               {pastEvents.map((eventData) => (
@@ -388,9 +434,13 @@ function HomePage() {
             Past Events
           </p>
           <div className=" grid grid-cols-1 gap-x-8 gap-y-8 mt-6 sm:pt-4 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-            {newsevents.map((eventData) => (
-              <News key={eventData.id} NewsCardData={eventData} />
-            ))}
+            {isError.news ? (
+              <ErrorMessage displayName="News Events" />
+            ) : (
+              newsevents.map((eventData) => (
+                <News key={eventData.id} NewsCardData={eventData} />
+              ))
+            )}
             <div className="mt-16">
               <CustomButton
                 label="More News"
