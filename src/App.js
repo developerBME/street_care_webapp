@@ -4,7 +4,7 @@ import { getDocs, collection, query, where } from "firebase/firestore";
 import { db } from "./component/firebase";
 
 import Home from "./component/Home";
-import UserList from "./component/UserList";
+import UserList from "./component/Admin/UserList";
 import NavBar from "./component/Navbar";
 import Footer from "./component/Footer";
 import Login from "./component/Login";
@@ -50,7 +50,10 @@ import PersonalVisitLogDetails from "./component/Community/PersonalVisitLogDetai
 import EmailUpdateConfirmation from "./component/UserProfile/ProfileSettings/EmailUpdateConfirmation";
 import DeleteAccConfirmation from "./component/UserProfile/ProfileSettings/DeleteAccConfirmation";
 import UpdateProfile from "./component/UserProfile/ProfileSettings/UpdateProfile";
-import UserDetails from "./component/UserDetails";
+
+import UserDetails from "./component/Admin/UserDetails";
+import CreateOutreachAdmin from "./component/Admin/CreateOutreachAdmin";
+
 
 import TestUser from "./component/Test/Test";
 import ListUser from "./component/Test/ListUser";
@@ -130,13 +133,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/ForgotPassword" element={<ForgotPassword />} />
           <Route path="/signup" element={<Signup2 />} />
-          <Route
-            element={
-              <ProtectedAdminRoute user={firebaseUser} loading={loadingUser} />
-            }>
-            <Route path="/admin-panel/userlist" element={<UserList/>}/>
-            <Route path="/admin-panel/createoutreach" element={<CreateOutreach/>}/>
-          </Route>
+
+          <Route path="/admin-panel/userlist" element={<UserList/>}/>
+          <Route path="/admin-panel/createoutreachadmin" element={<CreateOutreachAdmin/>}/>
+
           <Route path="/allnews" element={<Newscard />} />
           <Route path="/allnews/:id" element={<Readmorenews />} />
           <Route path="/user/:uid" element={<UserDetails />} /> // Route for
@@ -186,12 +186,12 @@ function App() {
             />
 
             <Route path="/profile/commoutform" element={<CommOutForm />} />
-            <Route path="/profile/visitlogform" element={<PersonalOutForm />} />
-            <Route path="/createOutreach" element={<CreateOutreach />} />
             <Route
-              path="/createOutreach/:helpreqid"
-              element={<CreateOutreach />}
+              path="/profile/personaloutform"
+              element={<PersonalOutForm />}
             />
+           
+
             <Route path="/helpRequestForm" element={<HelpRequestForm />} />
           </Route>
           <Route
