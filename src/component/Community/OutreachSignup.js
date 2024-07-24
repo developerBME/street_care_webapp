@@ -224,7 +224,7 @@ const OutreachSignup = () => {
                 {label === "EDIT" ? (
                   <>
                     <CustomButton
-                      label="Edit"
+                      label="Withdraw"
                       name="buttondefault"
                       onClick={handleEditClick}
                     />
