@@ -19,15 +19,15 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
       onClick={handleViewDetails}
     >
       <div className="space-y-2">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center text-sm text-gray-600">
+        <div className="flex justify-between items-center text-sm text-[#37168B]">
+          <div className="flex items-center">
             <img className="w-4 h-4 mr-1" src={date} alt="Date" />
             {visitLogCardData && visitLogCardData.eventDate ? formatDate(visitLogCardData.eventDate) : null}
           </div>
-        </div>
-        <div className="flex items-center text-sm text-gray-600">
-          <img className="w-4 h-4 mr-1" src={locate} alt="Location" />
-          {`${visitLogCardData?.location?.city}, ${visitLogCardData?.location?.stateAbbv || visitLogCardData?.location?.state}`}
+          <div className="flex items-center">
+            <img className="w-4 h-4 mr-1" src={locate} alt="Location" />
+            {`${visitLogCardData?.location?.city}, ${visitLogCardData?.location?.stateAbbv || visitLogCardData?.location?.state}`}
+          </div>
         </div>
         <h1 className="font-medium text-lg text-gray-800 line-clamp-2">
           {visitLogCardData?.description || ""}
