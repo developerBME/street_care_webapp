@@ -317,7 +317,7 @@ const fetchUserName = async (uid) => {
   }
 };
 
-export const fetchVisitLogsByCityOrState = async (searchValue, startDate, endDate, paginate=false, recordsPerPage=5, pageIndex=0 ) => {
+export const fetchVisitLogsByCityOrState = async (searchValue, startDate, endDate, pageIndex=null,  recordsPerPage=5) => {
   try {
 
     if (!searchValue || typeof searchValue !== 'string') {
@@ -349,8 +349,6 @@ export const fetchVisitLogsByCityOrState = async (searchValue, startDate, endDat
     
     let visitLogByCity = [];
     for (const doc of visitLogDocRef.docs) {
-      console.log(doc.data().uid);
-
       const visitLogData = doc.data(); 
       const id = doc.id;
       const userName = await fetchUserName(visitLogData.uid);
@@ -361,7 +359,7 @@ export const fetchVisitLogsByCityOrState = async (searchValue, startDate, endDat
       });
     }
 
-    if(paginate){
+    if(pageIndex!==null){
       const paginatedRecords = visitLogByCity.slice(pageIndex*recordsPerPage,(pageIndex+1)*recordsPerPage);
       if(paginatedRecords.length===0){
         return visitLogByCity.slice(0,recordsPerPage);
