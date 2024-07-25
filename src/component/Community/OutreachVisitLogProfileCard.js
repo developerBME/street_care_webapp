@@ -93,7 +93,7 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
                 </div>
             </div>
             
-            <div className="my-Location flex flex-row">
+            <div className="my-Location flex flex-row pt-2.5">
                 <img alt="" className="w-4 h-4" src={location} />
                 <div className="pt-0">
                   {visitLogCardData?.city || ""},{" "}
