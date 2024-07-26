@@ -214,7 +214,7 @@ const Form = (hrid) => {
             },
             helpType: helpRef.current.value,
             skills: helpType,
-            createdAt: Date(),
+            createdAt: Timestamp.fromDate(new Date()),
             interests: 0,
             participants: [],
             approved: false,
