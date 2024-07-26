@@ -150,17 +150,18 @@ const AllOutreachEvents = () => {
           {/* Pagination buttons */}
           <div className="flex justify-center mt-4">
             {[...Array(totalPages).keys()].map((i) => (
-              <button
+                <button
                 key={i + 1}
-                className={`mx-2 px-4 py-2 border ${
+                className={`mx-2 px-4 py-2 border rounded-full ${
                   currentPage === i + 1
-                    ? "bg-[#1F0A58] text-white"
-                    : "bg-white text-[#1F0A58]"
+                    ? "bg-[#E0D7EC] text-black border-[#1F0A58]"
+                    : "bg-white text-black border-[#9B82CF]"
                 }`}
                 onClick={() => onPageChange(i + 1)}
               >
                 {i + 1}
               </button>
+            
             ))}
           </div>
         </div>
