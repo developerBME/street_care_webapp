@@ -360,6 +360,19 @@ function CustomButton({ label, name, onClick, icon, disable, type }) {
         <img src={icon} className="w-5 h-5 " />
       </button>
     );
+  } else if (name == "buttonicon8small") {
+    return (
+      <button
+        onClick={onClick}
+        className={`text-[14px] w-fit inline-flex gap-2 font-medium py-[5px] px-[5px] border-[1px] rounded-full transition ease-in-out delay-300 ${
+          disable !== "true"
+            ? "text-[#1F0A58] border-[#C8C8C8] hover:bg-violet-200"
+            : "text-[#bfbfbf] border[#d8d8d8] cursor-not-allowed hover:bg-white"
+        }`}
+      >
+        <img src={icon} className="w-4 h-4 text-[#7f56f1]" />
+      </button>
+    );
   } else if (name == "buttonlightsmall") {
     return (
       <button

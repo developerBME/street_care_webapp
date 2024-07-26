@@ -12,17 +12,9 @@ import edit from "../../images/edit.png";
 import tickMark from "../../images/tickMark.svg";
 
 import { db } from "../firebase";
-import {
-  getDocs,
-  collection,
-  query,
-  where,
-} from "firebase/firestore";
+import { getDocs, collection, query, where } from "firebase/firestore";
 
-import {
-  getAuth,
-  onAuthStateChanged,
-} from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import SuperpowerModal from "./SuperpowerModal";
 import CustomButton from "../Buttons/CustomButton";
@@ -133,7 +125,7 @@ const UserInfo = () => {
     const getDeedValues = async () => {
       try {
         const logOfUserRef = query(
-          collection(db, "testLog"),
+          collection(db, "personalVisitLog"),
           where("uid", "==", fAuth?.currentUser?.uid)
         );
         const data = await getDocs(logOfUserRef);
@@ -212,16 +204,17 @@ const UserInfo = () => {
           <img
             src={photoUrl || defaultImage}
             alt="..."
-            className="rounded-full md:w-64 md:h-48 lg:w-72 lg:h-56 border-none md:mt-16 lg:mt-20 h-32 w-32 mx-auto mt-8 mb-4 "
+            className="rounded-full md:w-64 md:h-48 lg:w-72 lg:h-56 border-4 border-[#E8E8E8] md:mt-16 lg:mt-20 h-32 w-32 mx-auto mt-8 mb-4 "
           />
-          <div className="absolute left-0 bottom-0 ml-4 mb-2 md:ml-0 md:mb-0">
+          {/* Removing extra update profile button  */}
+          {/* <div className="absolute left-0 bottom-0 ml-4 mb-2 md:ml-0 md:mb-0">
             <CustomButton
               label=""
               name="buttonicon8"
               icon={edit}
-              onClick={() => navigate("/profile/accsetting")}
+              onClick={() => navigate("/profile/profilesettings/updateprofile")}
             />
-          </div>
+          </div> */}
         </div>
         <div className="w-[99%] py-4 md:mt-16 lg:mt-20">
           <div className="px-4">
@@ -234,11 +227,14 @@ const UserInfo = () => {
           </div>
 
           {/* <div className=" w-full px-4 pb-2 flex overflow-x-auto md:grid md:grid-cols-2 md:gap-y-2 lg:flex lg:flex-wrap"> */}
-          <div className=" w-full px-4 pb-2 flex overflow-x-auto md:flex md:flex-wrap md:gap-y-2">
+          <div className=" w-full px-4 pb-2 flex overflow-x-auto flex-wrap gap-y-2">
             {superpowers &&
               superpowers.map((superpower) => {
                 return (
-                  <div className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold whitespace-nowrap flex justify-center items-center" key={superpower}>
+                  <div
+                    className="px-4 py-2 mr-2 h-10 bg-[#DEF6EB] rounded-full border border-[#CACACA] font-semibold whitespace-nowrap flex justify-center items-center"
+                    key={superpower}
+                  >
                     <h6 className="text-[#212121] w-fit text-[14px] font-opensans">
                       {superpower}
                     </h6>
@@ -333,7 +329,7 @@ const UserInfo = () => {
               ></img>
             </div>
             <div className="grow shrink basis-0 flex flex-col">
-              <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121] self-stretch">
+              <h1 className="text-sm font-bold mt-1 lg:mt-2 pb-1 font-bricolage text-[#212121] self-stretch">
                 Neighborhood All-Star
               </h1>
               <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161] self-stretch">
@@ -354,7 +350,7 @@ const UserInfo = () => {
               ></img>
             </div>
             <div className="grow shrink basis-0 flex flex-col">
-              <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121] self-stretch">
+              <h1 className="text-sm font-bold mt-1 lg:mt-2 pb-1 font-bricolage text-[#212121] self-stretch">
                 Benevolent Donor
                 {/* {achievments.benevolent_donor && <> true</>} */}
               </h1>
@@ -373,7 +369,7 @@ const UserInfo = () => {
               ></img>
             </div>
             <div className="grow shrink basis-0 flex flex-col">
-              <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121] self-stretch">
+              <h1 className="text-sm font-bold mt-1 lg:mt-2 pb-1 font-bricolage text-[#212121] self-stretch">
                 Benevolent Donor
                 {/* {achievments.benevolent_donor && <> true</>} */}
               </h1>
@@ -394,7 +390,7 @@ const UserInfo = () => {
               ></img>
             </div>
             <div className="grow shrink basis-0 flex flex-col">
-              <h1 className="text-sm font-bold mt-1 pb-1 font-bricolage text-[#212121] self-stretch">
+              <h1 className="text-sm font-bold mt-1 lg:mt-2 pb-1 font-bricolage text-[#212121] self-stretch">
                 Outreach All-Star
               </h1>
               <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161] self-stretch">

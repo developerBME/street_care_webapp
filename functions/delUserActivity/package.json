@@ -1,0 +1,13 @@
+{
+  "name": "delUserActivity",
+  "description": "Cloud Functions to handle the deletion of user outreaches and personal visitLogs",
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^11.11.1",
+    "firebase-functions": "^4.9.0"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "private": true
+}

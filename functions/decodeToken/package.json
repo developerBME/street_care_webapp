@@ -1,0 +1,13 @@
+{
+  "name": "decodeToken",
+  "description": "Cloud Functions to handle the decoding of the access Token ",
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^11.11.1",
+    "firebase-functions": "^4.9.0"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "private": true
+}

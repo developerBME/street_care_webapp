@@ -22,6 +22,8 @@ const AllPastOutreachEvents = () => {
     setVisibleCards((prev) => prev + 12);
   };
 
+  const searchCityRef = useRef("");
+
   useEffect(() => {
     const fetchData = async () => {
       const pastOutreachEventsData = await fetchPastOutreachEvents(); // Fetch past outreach events
@@ -31,7 +33,9 @@ const AllPastOutreachEvents = () => {
         delete event.label;
       });
       const pastEvents = eventsData.filter((event) => {
-        const eventDate = new Date(event.eventDate.seconds * 1000);
+        const eventDate = event?.eventDate?.seconds
+          ? new Date(event.eventDate.seconds * 1000)
+          : event.eventDate;
         return eventDate < new Date(); // Check if the event date is before the current date
       });
 
@@ -60,7 +64,6 @@ const AllPastOutreachEvents = () => {
 
   const searchChange = () => {
     console.log(searchRef.current.value);
-    console.log(events[0]);
     setEventsDisplay(
       events.filter(
         (x) =>
@@ -141,9 +144,11 @@ const AllPastOutreachEvents = () => {
                     key={eventData.id}
                     cardData={{
                       ...eventData,
-                      eventDate: formatDate(
-                        new Date(eventData.eventDate.seconds * 1000)
-                      ),
+                      eventDate: eventData?.eventDate?.seconds
+                        ? formatDate(
+                            new Date(eventData.eventDate.seconds * 1000)
+                          )
+                        : eventData.eventDate,
                     }}
                   />
                 ))}

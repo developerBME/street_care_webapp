@@ -209,6 +209,7 @@ const Form = (hrid) => {
               street: streetRef.current.value,
               city: cityRef.current.value,
               state: stateRef.current.value,
+              stateAbbv: stateAbbv,
               zipcode: zipcodeRef.current.value,
             },
             helpType: helpRef.current.value,
@@ -493,6 +494,7 @@ const Form = (hrid) => {
   const [street, setStreet] = useState("");
   const [cityName, setCityName] = useState("");
   const [stateName, setStateName] = useState("");
+  const [stateAbbv, setStateAbbv] = useState("");
   const [postcode, setPostCode] = useState("");
 
   const handleScriptLoad = (updateQuery, autoCompleteRef) => {
@@ -520,6 +522,7 @@ const Form = (hrid) => {
     let postcode = "";
     let city = "";
     let state = "";
+    let state_abbv = "";
 
     for (const component of addressObject.address_components) {
       const componentType = component.types[0];
@@ -548,6 +551,7 @@ const Form = (hrid) => {
         }
         case "administrative_area_level_1": {
           state = component.long_name;
+          state_abbv = component.short_name;
           break;
         }
         default:
@@ -558,6 +562,7 @@ const Form = (hrid) => {
     setStreet(street);
     setCityName(city);
     setStateName(state);
+    setStateAbbv(state_abbv);
     setPostCode(postcode);
   };
 
@@ -571,7 +576,7 @@ const Form = (hrid) => {
   return (
     <div>
       <form className="space-y-6 " onSubmit={handleSubmit}>
-        <div>
+        <div className="md:p-12 lg:p-0">
           <div className="lg:text-5xl text-3xl font-medium font-bricolage pb-4 lg:pb-16">
             Create Outreach Event
           </div>
@@ -1025,7 +1030,7 @@ const Form = (hrid) => {
             <div></div>
           </div>
         </div>
-        <div className="space-y-6">
+        <div className="space-y-6 md:px-12 lg:px-0">
           <div className="font-semibold font-bricolage text-[22px]">
             What kind of help they need?
           </div>
@@ -1073,7 +1078,7 @@ const Form = (hrid) => {
           <div className=" space-y-2">
             {chipList.map((value, index) => (
               <Chip
-                keyName={"chip-" + index}
+                key={value}
                 val={value}
                 setter={handleHelpTypeArray}
                 clear={clear}
@@ -1082,7 +1087,7 @@ const Form = (hrid) => {
             ))}
           </div>
         </div>
-        <div className="space-y-16 space-x-[15px]">
+        <div className="space-y-16 space-x-[15px] md:px-12 md:pb-12 lg:px-0 lg:pb-0">
           <Link to="/profile">
             <button
               type="button"

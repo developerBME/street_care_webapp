@@ -22,11 +22,13 @@ const AllOutreachEvents = () => {
     const fetchData = async () => {
       const eventsData = await fetchEvents();
       const upcomingEvents = eventsData.filter((event) => {
+
         if (!event.eventDate || !event.eventDate.seconds) {
           return false; // Skip events with undefined eventDate or seconds
         }
         const eventDate = new Date(event.eventDate.seconds * 1000);
         return eventDate >= new Date(); // Filter only upcoming events
+
       });
       // Sort events by date
       upcomingEvents.sort((a, b) => a.eventDate - b.eventDate);
@@ -145,6 +147,7 @@ const AllOutreachEvents = () => {
                 <p>No results found</p>
               )}
             </div>
+
           )}
 
           {/* Pagination buttons */}
