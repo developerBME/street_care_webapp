@@ -204,7 +204,7 @@ const Form = (hrid) => {
             eventDate: Timestamp.fromDate(startDate),
             eventEndTime: Timestamp.fromDate(endDate),
             eventStartTime: Timestamp.fromDate(startDate),
-            totalSlots: maxCapRef.current.value,
+            totalSlots: Math.round(Number(maxCapRef.current.value)),
             location: {
               street: streetRef.current.value,
               city: cityRef.current.value,
