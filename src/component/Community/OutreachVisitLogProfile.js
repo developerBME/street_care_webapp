@@ -10,6 +10,7 @@ import CustomButton from "../Buttons/CustomButton";
 import NoOutreachDoc from "./NoOutreachDoc";
 import { auth } from "../firebase";
 import NoDisplayData from "../UserProfile/NoDisplayData";
+import ErrorMessage from "../ErrorMessage";
 
 const OutreachVisitLogProfile = () => {
   const [visibleItems, setVisibleItems] = useState(3);
@@ -56,12 +57,11 @@ const OutreachVisitLogProfile = () => {
   };
 
   return (
-    <div>
-      <div className="flex flex-col justify-between sm:flex-row sm:space-x-16 mb-10 gap-2">
+    <>
+      <div className="inline-flex flex-col sm:flex-row sm:space-x-16 justify-between gap-2">
         <div className="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage text-left leading-[52px]">
           My Visit Logs
         </div>
-
         <CustomButton
           label="Document New Visit Log"
           className="text-right"
@@ -72,17 +72,22 @@ const OutreachVisitLogProfile = () => {
           }}
         />
       </div>
+      <div className="pt-4">
+        <div className="w-full flex flex-col sm:flex-row bg-[#F2F6D8] p-4 rounded-xl gap-4 justify-between">
+          <div className="text-neutral-800  text-[20px] font-medium font-bricolage leading-loose">
+            View your documented visit logs here.
+          </div>
+        </div>
+      </div>
 
       {isLoading ? (
-          <div className="flex space-x-4 md:justify-between md:items-center w-full h-fit gap-2 grid-flow-col overflow-x-auto">
+          <div className="flex md:justify-between md:items-center w-full h-fit gap-2 grid-flow-col overflow-x-auto">
             <EventCardSkeleton />
             <EventCardSkeleton />
             <EventCardSkeleton />
           </div>
         ) : isError ? (
-          <div className="text-center text-neutral-900 text-[20px] leading-9">
-            {errorMsg}
-          </div>
+          <ErrorMessage displayName="Visit Logs" />
         ) : (
           <>
             {visitLogs?.length > 0 && (
@@ -98,8 +103,6 @@ const OutreachVisitLogProfile = () => {
             </div>
           ))}
         </div>
-       
-         
           )}
 
           {visibleItems < visitLogs?.length && (
@@ -112,12 +115,12 @@ const OutreachVisitLogProfile = () => {
           )}
 
           {/* {visitLogs.length == 0 && <NoOutreachDoc isPersonalVisitLog={true} />} */}
-          {visitLogs.length == 0 && <NoDisplayData
-            name="visitlog"
-            label="No visit logs created" />}
+          {visitLogs.length == 0 && (
+            <NoDisplayData name="visitlog" label="No visit logs created" />
+          )}
         </>
       )}
-    </div>
+    </>
   );
 };
 

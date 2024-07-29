@@ -204,7 +204,7 @@ const Form = (hrid) => {
             eventDate: Timestamp.fromDate(startDate),
             eventEndTime: Timestamp.fromDate(endDate),
             eventStartTime: Timestamp.fromDate(startDate),
-            totalSlots: maxCapRef.current.value,
+            totalSlots: Math.round(Number(maxCapRef.current.value)),
             location: {
               street: streetRef.current.value,
               city: cityRef.current.value,
@@ -633,7 +633,9 @@ const Form = (hrid) => {
                 Maximum capacity of participants allowed*
               </p>
               <input
-                type="text"
+                type="number"
+                min='0'
+                step='1'
                 className="h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
                 id="max-cap"
                 ref={maxCapRef}
@@ -755,6 +757,7 @@ const Form = (hrid) => {
                 </p>
                 <input
                   type="text"
+                  maxlength="5"
                   className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
                     error.zipError !== "" ? "ring-red-500" : "ring-gray-300"
                   }`}
