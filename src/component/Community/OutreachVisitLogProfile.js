@@ -98,7 +98,7 @@ const OutreachVisitLogProfile = () => {
                 <OutreachVisitLogProfileCard
                   visitLogCardData={visitLogData}
                   onRefresh={handleRefresh}
-                />
+                />dsfsafsf
               </div>
             </div>
           ))}
@@ -106,12 +106,16 @@ const OutreachVisitLogProfile = () => {
           )}
 
           {visibleItems < visitLogs?.length && (
-            <button
-              className="w-fit rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 flex text-center text-[#1F0A58] hover:bg-[#1F0A58] hover:text-white text-[13px] font-medium font-dmsans leading-tight self-stretch px-6 py-2.5 mt-7"
-              onClick={loadMore}
-            >
-              Load More
-            </button>
+              <div className="mt-16">
+          <CustomButton
+            label="More of My Visit Logs"
+            name="buttondefault"
+            onClick={() => {
+              navigate("/allOutreachVisitLog");
+            }}
+          />
+        </div>
+            
           )}
 
           {/* {visitLogs.length == 0 && <NoOutreachDoc isPersonalVisitLog={true} />} */}
