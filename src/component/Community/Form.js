@@ -353,10 +353,21 @@ const Form = (hrid) => {
     updateErrorState("helpError", "");
   };
   const handleStimeChange = (e) => {
+    setStartDate(e);
+    if (endDate && e >= endDate) {
+      setEndDate(null);
+    }
     updateErrorState("stimeError", "");
   };
   const handleEtimeChange = (e) => {
+    if (e > startDate) {
+      setEndDate(e);
+    }
     updateErrorState("etimeError", "");
+  };
+
+  const filterEndTime = (time) => {
+    return startDate ? time > startDate : true;
   };
 
   const handleSubmit = async (e) => {
@@ -1008,6 +1019,9 @@ const Form = (hrid) => {
                   timeFormat="HH:mm"
                   timeIntervals={15}
                   dateFormat="Pp"
+                  disabled={!startDate}
+                  minDate={startDate}
+                  filterTime={filterEndTime}
                   customInput={
                     <CustomInput
                       id="date"
