@@ -654,6 +654,37 @@ export const fetchUserOutreaches = async () => {
   }
 };
 
+export const fetchTopVisitLogs= async () => {
+  try {
+    const visitlogs = collection(db, PERSONAL_VISIT_LOG);
+    const visitlogsByLocationQuery = query(
+      visitlogs, 
+      orderBy('dateTime', 'desc'), // Order visit logs by the 'dateTime' field in descending order to get the newest entries first
+      limit(6) // Limit to top 6 records
+    );
+    const visitLogDocRef = await getDocs(visitlogsByLocationQuery);
+    let visitLogs = [];
+    for (const doc of visitLogDocRef.docs) {
+      const visitLogData = doc.data(); 
+      const id = doc.id;
+      const userName = await fetchUserName(visitLogData.uid);
+      visitLogs.push({
+        ...visitLogData,
+        userName: userName,
+        id: id,
+      });
+    }
+    console.log(visitLogs)
+    return visitLogs;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchTopVisitLogs EventCardService.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
 export const fetchVisitLogsByCityOrState = async (searchValue, startDate, endDate) => {
   try {
 
@@ -684,25 +715,25 @@ export const fetchVisitLogsByCityOrState = async (searchValue, startDate, endDat
     const visitLogDocRef = await getDocs(visitlogsByLocationQuery);
 
     
-    let visitLogByCity = [];
+    let visitLogs = [];
     for (const doc of visitLogDocRef.docs) {
       console.log(doc.data().uid);
 
       const visitLogData = doc.data(); 
       const id = doc.id;
       const userName = await fetchUserName(visitLogData.uid);
-      visitLogByCity.push({
+      visitLogs.push({
         ...visitLogData,
         userName: userName,
         id: id,
       });
     }
-    console.log(visitLogByCity)
-    return visitLogByCity;
+    console.log(visitLogs)
+    return visitLogs;
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchVisitLogByCityOrState EventCardService.js- ${error.message}`
+      `error on fetchvisitLogsOrState EventCardService.js- ${error.message}`
     );
     throw error;
   }
