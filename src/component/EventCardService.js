@@ -15,6 +15,7 @@ import {
 import { db } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import logEvent from "./FirebaseLogger";
+import { Timestamp } from 'firebase/firestore';
 
 const OFFICIAL_EVENTS_COLLECTION = "officialEvents";
 const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
@@ -187,35 +188,6 @@ export const fetchOfficialEvents = async () => {
   }
 };
 
-const fetchUserName = async (uid) => {
-  // Reference to the uid instead of the docid of the user.
-  const userQuery = query(
-    collection(db, USERS_COLLECTION),
-    where("uid", "==", uid)
-  );
-  const userDocRef = await getDocs(userQuery);
-
-  const userDocID = userDocRef.docs[0]?.id;  
-  // reference for the userdoc
-  if(userDocID != undefined){
-    const userRef = doc(db, USERS_COLLECTION, userDocID);
-    const userDoc = await getDoc(userRef);
-    
-    if (userDoc != undefined || userDoc.exists()) {
-      return userDoc.data().username || "";
-    } else {
-      console.error("No user found with uid:", uid);
-      logEvent(
-        "STREET_CARE_ERROR",
-        `error on fetchUserName EventCardService.js- No user Found ${uid}`
-      );
-      throw new Error(
-        `error on fetchUserName EventCardService.js- No user Found ${uid}`
-      );
-      return "";
-    }
-  }
-};
 
 export const fetchUserDetails = async (uid) => {
   try {
@@ -745,61 +717,74 @@ export const fetchUserOutreaches = async () => {
   }
 };
 
-export const fetchVisitLogsByCityOrState = async (searchValue, startDate, endDate) => {
+export const fetchTopVisitLogs= async () => {
   try {
-
-    if (!searchValue || typeof searchValue !== 'string') {
-      console.error('Invalid search value');
-      return;
-    }
-  
-    if (!(startDate instanceof Date) || isNaN(startDate)) {
-      console.error('Invalid start date');
-      return;
-    }
-  
-    if (!(endDate instanceof Date) || isNaN(endDate)) {
-      console.error('Invalid end date');
-      return;
-    } 
-
     const visitlogs = collection(db, PERSONAL_VISIT_LOG);
-    // Full text search - Search filtering by City/State fields matching exact value
-
-    const visitlogsByLocationQuery = query(
-      visitlogs, where('city', '==', searchValue),
-         where('dateTime', '>=', startDate),
-         where('dateTime', '<=', endDate)
+    const visitlogsQuery = query(
+      visitlogs, 
+      orderBy('dateTime', 'desc'), // Order visit logs by the 'dateTime' field in descending order to get the newest entries first
+      limit(6) // Limit to top 6 records
     );
-
-    const visitLogDocRef = await getDocs(visitlogsByLocationQuery);
-
-    
-    let visitLogByCity = [];
+    const visitLogDocRef = await getDocs(visitlogsQuery);
+    let visitLogs = [];
     for (const doc of visitLogDocRef.docs) {
-      console.log(doc.data().uid);
-
       const visitLogData = doc.data(); 
       const id = doc.id;
       const userName = await fetchUserName(visitLogData.uid);
-      visitLogByCity.push({
+      visitLogs.push({
         ...visitLogData,
         userName: userName,
         id: id,
+        eventDate: visitLogData?.dateTime?.seconds
+          ? formatDate(new Date(visitLogData.dateTime.seconds * 1000))
+          : ""
       });
     }
-    console.log(visitLogByCity)
-    return visitLogByCity;
+    console.log(visitLogs)
+    return visitLogs;
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchVisitLogByCityOrState EventCardService.js- ${error.message}`
+      `error on fetchTopVisitLogs EventCardService.js- ${error.message}`
     );
     throw error;
   }
 };
 
 
+<<<<<<< HEAD
+=======
+const fetchUserName = async (uid) => {
+  // Reference to the uid instead of the docid of the user.
+  const userQuery = query(
+    collection(db, USERS_COLLECTION),
+    where("uid", "==", uid)
+  );
+  const userDocRef = await getDocs(userQuery);
+
+  const userDocID = userDocRef.docs[0]?.id;  
+  // reference for the userdoc
+  if(userDocID != undefined){
+    const userRef = doc(db, USERS_COLLECTION, userDocID);
+    const userDoc = await getDoc(userRef);
+
+    if (userDoc != undefined || userDoc.exists()) {
+      return userDoc.data().username || "";
+    } else {
+      console.error("No user found with uid:", uid);
+      logEvent(
+        "STREET_CARE_ERROR",
+        `error on fetchUserName EventCardService.js- No user Found ${uid}`
+      );
+      throw new Error(
+        `error on fetchUserName EventCardService.js- No user Found ${uid}`
+      );
+      return "";
+    }
+  }
+};
+
+>>>>>>> origin/feature
 export async function calculateNumberOfPagesForOutreach(outreachPerPage, currentPage=0){
   const testoutreachRef = query(collection(db, PAST_OUTREACH_EVENTS_COLLECTION), orderBy("createdAt", "asc"));
   const snapshot = await getDocs(testoutreachRef);
@@ -826,3 +811,41 @@ export async function calculateNumberOfPagesForOutreach(outreachPerPage, current
 }
 
 const test = await calculateNumberOfPagesForOutreach(5,0)
+
+export const fetchTopOutreaches = async () => {
+  try {
+    const outreachRef = collection(db, OUTREACH_EVENTS_COLLECTION);
+
+    // // Create query to fetch the latest 6 records based on creation date
+    const latestRecordsQuery = query(
+      outreachRef,
+      orderBy("eventDate", "desc"),
+      limit(6)
+    );
+
+    const snapshots = await getDocs(latestRecordsQuery);
+
+    let outreaches = [];
+    for (const doc of snapshots.docs) {
+      const outreachData = doc.data(); 
+      const id = doc.id;
+      const userName = await fetchUserName(outreachData.uid);
+      outreaches.push({
+        ...outreachData,
+        userName: userName,
+        id: id,
+      });
+    }
+    console.log(outreaches)
+    return outreaches;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `Error in fetchLatestRecords - ${error.message}`
+    );
+    throw error;
+  }
+};
+
+//  const testlatestfunc = await fetchTopOutreaches();
+//  console.log(testlatestfunc);

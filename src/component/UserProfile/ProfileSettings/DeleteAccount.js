@@ -10,8 +10,7 @@ import {
   GoogleAuthProvider,
 } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
-import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
-import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
@@ -208,9 +207,9 @@ const DeleteAccount = (props) => {
     //                   className="absolute inset-y-0 right-0 flex items-center px-2 text-gray-500"
     //                 >
     //                   {showPassword ? (
-    //                     <VisibilityOffOutlinedIcon />
+    //                     <FaEye />
     //                   ) : (
-    //                     <VisibilityOutlinedIcon />
+    //                     <FaEyeSlash />
     //                   )}
     //                 </button>
     //                 {errormsg.PassError && (
@@ -372,12 +371,12 @@ const DeleteAccount = (props) => {
                     <button
                       type="button"
                       onClick={handleTogglePassword}
-                      className="absolute top-2 right-0 flex items-center px-2 mt-[-2] text-gray-500"
+                      className="absolute inset-y-0 right-3 flex items-center px-2 text-gray-500"
                     >
                       {showPassword ? (
-                        <VisibilityOffOutlinedIcon />
+                        <FaEye />
                       ) : (
-                        <VisibilityOutlinedIcon />
+                        <FaEyeSlash />
                       )}
                     </button>
                     {errormsg.PassError && (

@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import arrowRight from "../../images/arrowRight.png";
 import OutreachVisitLogCard from "./OutreachVisitLogCard";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
-import { fetchEvents, formatDate } from "../EventCardService";
-import { fetchVisitLogs, fetchPublicVisitLogs } from "../VisitLogCardService";
+import { fetchTopVisitLogs } from "../EventCardService";
 import CustomButton from "../Buttons/CustomButton";
+import ErrorMessage from "../ErrorMessage";
 
 const CommunityVisitLog = () => {
   const navigate = useNavigate();
@@ -64,7 +64,7 @@ const CommunityVisitLog = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const visitLogsData = await fetchPublicVisitLogs();
+        const visitLogsData = await fetchTopVisitLogs();
         setVisitLogs(visitLogsData);
       } catch (error) {
         setIsError(true);
@@ -145,10 +145,8 @@ const CommunityVisitLog = () => {
             <EventCardSkeleton />
           </div>
         ) : isError ? (
-          <div className="text-center text-neutral-900 text-[20px] leading-9">
-            {errorMsg}
-          </div>
-        ) : visitLogs?.length > 0 ? (
+          <ErrorMessage displayName="Visit Logs" />
+        ) : visitLogs.length > 0 ? (
           // <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
           <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
             {visitLogs.slice(0, 3).map((visitLogData, index) => (

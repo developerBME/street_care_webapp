@@ -18,8 +18,9 @@ import { getAuth, signOut } from "firebase/auth";
 import defaultImage from "../images/default_avatar.svg";
 import { FaTimes } from "react-icons/fa";
 import { FaBars } from "react-icons/fa";
+import CustomButton from "../component/Buttons/CustomButton";
 
-const NavBar = (props) => {
+const Admin_NavBar = (props) => {
   const [nav, setNav] = useState(false);
   const fAuth = getAuth();
   const navigate = useNavigate();
@@ -27,12 +28,12 @@ const NavBar = (props) => {
     signOut(fAuth)
       .then(() => {
         console.log("success");
-        // props.setUser(null);
+        props.setUser(null);
         navigate("/login");
         props.setLoggedIn(false);
       })
       .catch((error) => {
-        console.log("error", error);
+        console.log(error);
         // An error happened.
       });
   };
@@ -40,7 +41,7 @@ const NavBar = (props) => {
   const links = [
     {
       id: 1,
-      label: "Home",
+      label: "About",
       link: "/",
     },
     {
@@ -53,11 +54,11 @@ const NavBar = (props) => {
       label: "Community",
       link: "community",
     },
-    // {
-    //   id: 4,
-    //   label: "Contact",
-    //   link: "contact",
-    // },
+    {
+      id: 4,
+      label: "Contact",
+      link: "contact",
+    },
   ];
 
   const sideNavLinks = [
@@ -113,21 +114,15 @@ const NavBar = (props) => {
   }, [menuRef]);
 
   return (
-    <div className="h-full w-fit ">
-      <div className="z-30 w-full flex fixed justify-between items-center h-[80px] text-white  bg-nav px-4">
-        <div
-          onClick={() => navigate("/")}
-          className=" cursor-pointer flex-nowrap"
-        >
-          <h1 className=" text-[28px]  ml-4 font-bricolage font-medium leading-9 ">
-            Street Care
-          </h1>
+     <div className="h-full w-fit font-dmsans">
+       <div className="z-30 w-full flex fixed justify-between items-center h-[80px] text-white  bg-[#1F0A58] px-4">
+        <div onClick={() => navigate("/")} className="cursor-pointer flex-nowrap">
+          <h1 className="text-[28px] ml-4 font-medium leading-9">Street Care</h1>
         </div>
         {props.loggedIn && (
           <NavLink
             to="/profile"
-            className="invisible aria-[current=page]:visible md:aria-[current=page]:hidden md:hidden mx-6 my-3 text-lg  font-inter font-medium
-             text-white hover:scale-105 hover:text-[#1FCFF0] duration-200 "
+            className="invisible aria-[current=page]:visible md:aria-[current=page]:hidden md:hidden mx-6 my-3 text-lg font-medium text-white hover:scale-105 hover:text-[#1FCFF0] duration-200"
             onClick={() => {
               fireBaseSignOut();
             }}
@@ -136,36 +131,33 @@ const NavBar = (props) => {
             Logout
           </NavLink>
         )}
-
         <ul className="hidden items-center md:flex px-2 leading-6">
           {links.map(({ id, link, label }) => (
             <li
               key={id}
-              className=" mx-6 my-3 text-lg  font-inter font-medium text-white hover:scale-105 hover:text-[#1FCFF0] duration-200"
+              className="mx-6 my-3 text-lg font-medium text-white hover:scale-105 hover:text-[#1FCFF0] duration-200"
             >
               <Link to={link}>{label}</Link>
             </li>
           ))}
-          {/* <li>
-            <button class="bg-white hover:bg-yellow-300 text-black text-lg font-inter font-bold py-3 px-6 rounded-full">
-              Donate
-            </button>
-          </li> */}
+          <div className="text-purple-800 px-4 py-2 rounded-full text-sm font-medium leading-5 text-center">
+            <CustomButton
+              label="Donate"
+              name="buttondefault"
+              onClick={() => {}}
+            />
+          </div>
           {!props.loggedIn && (
             <li
-              className=" mx-6 my-3 text-lg font-inter font-medium cursor-pointer text-white hover:scale-105 hover:text-[#1FCFF0] duration-200"
+              className="mx-6 my-3 text-lg font-medium cursor-pointer text-white hover:scale-105 hover:text-[#1FCFF0] duration-200"
               onClick={() => navigate("/login")}
             >
               Login
             </li>
           )}
-          {/*  */}
-
-          {/*  */}
           {props.loggedIn && (
             <li>
-              {/*  */}
-              <div className="" ref={menuRef}>
+              <div ref={menuRef}>
                 <Avatar
                   onClick={() => {
                     setOpen(!open);
@@ -175,31 +167,26 @@ const NavBar = (props) => {
                   src={props.photoUrl || defaultImage}
                   sx={{ width: 58, height: 56 }}
                 />
-
                 <div
-                  className={`  absolute top-20 right-7 py-4 bg-neutral-100 rounded-2xl  ${
-                    open ? " visible " : " invisible"
-                  } text-black`}
+                  className={`absolute top-20 right-7 py-4 bg-neutral-100 rounded-2xl ${open ? "visible" : "invisible"} text-black`}
                 >
-                  <ul className=" ">
+                  <ul>
                     {dropdownitems.map((e, i) => {
                       const Icon = e.icons;
-
                       return (
                         <React.Fragment key={e.id}>
                           <li
-                            className=" px-3 cursor-pointer hover:bg-slate-200"
+                            className="px-3 cursor-pointer hover:bg-slate-200"
                             onClick={() => setOpen(false)}
                           >
                             <Link
                               to={e.link}
                               onClick={() => {
                                 if (e.id === 3) {
-                                  // call some function or handle the event
                                   e.fireBaseSignOut();
                                 }
                               }}
-                              className=" w-[200px] h-10 inline-flex font-inter text-base font-normal leading-6 tracking-wide gap-3  items-center"
+                              className="w-[200px] h-10 inline-flex text-base font-normal leading-6 tracking-wide gap-3 items-center"
                             >
                               <Icon size={24} />
                               {e.label}
@@ -211,26 +198,18 @@ const NavBar = (props) => {
                   </ul>
                 </div>
               </div>
-              {/*  */}
             </li>
           )}
         </ul>
       </div>
       <div>
-        {/* <div
-          onClick={() => setNav(!nav)}
-          className=" fixed cursor-pointer right-8 top-7 pr-4 z-50 text-gray-500 md:hidden"
-        >
-          {nav ? <FaTimes size={30} /> : <FaBars size={30} />}
-        </div> */}
         {nav && (
-          <div className="flex flex-col  fixed z-40 justify-center items-center w-full h-screen bg-nav text-white">
-            <ul className="">
+          <div className="flex flex-col fixed z-40 justify-center items-center w-full h-screen bg-purple-800 text-white">
+            <ul>
               {sideNavLinks.map(({ id, link }) => (
                 <li
                   key={id}
-                  className="px-4 cursor-pointer capitalize text-lg font-inter font-medium py-6 text-center
-        text-white hover:scale-105 duration-200"
+                  className="px-4 cursor-pointer capitalize text-lg font-medium py-6 text-center text-white hover:scale-105 duration-200"
                 >
                   <Link onClick={() => setNav(!nav)} to={link}>
                     {link}
@@ -238,11 +217,8 @@ const NavBar = (props) => {
                 </li>
               ))}
               <li>
-                {/* <button class=" items-stretch bg-white hover:bg-yellow-300 text-black font-inter text-xl font-bold py-3 px-7 rounded-full">
-              Donate
-            </button> */}
-                <div className="w-[328px] h-14 px-8 py-4 bg-white rounded-[100px] border border-white justify-center items-center gap-2.5 inline-flex">
-                  <div className="text-center text-black text-lg font-bold font-inter leading-normal">
+                <div className="w-[328px] h-14 px-8 py-4 bg-white rounded-full border border-white justify-center items-center inline-flex">
+                  <div className="text-center text-black text-lg font-bold leading-normal">
                     Donate
                   </div>
                 </div>
@@ -251,17 +227,17 @@ const NavBar = (props) => {
           </div>
         )}
       </div>
-      <div className=" fixed  w-full  block md:hidden z-40 bottom-0">
-        <div className="  w-full h-20 px-2 bg-neutral-100 justify-start items-start gap-2 inline-flex mt-auto ">
+      <div className="fixed w-full block md:hidden z-40 bottom-0">
+        <div className="w-full h-20 px-2 bg-neutral-100 justify-start items-start gap-2 inline-flex">
           <div className="grow shrink basis-0 pt-3 pb-4 flex-col justify-center items-center gap-1 inline-flex">
             <NavLink
-              to="/"
+              to="/about"
               className="aria-[current=page]:bg-purple-200 w-16 h-8 rounded-2xl justify-center py-1 px-5 items-center inline-flex"
             >
               <AiFillHome className="w-6 h-6 text-[#1F0A58]" />
             </NavLink>
-            <div className="self-stretch text-center text-zinc-900 text-xs font-semibold font-roboto leading-none tracking-wide">
-              Home
+            <div className="self-stretch text-center text-zinc-900 text-xs font-semibold leading-none tracking-wide">
+              About
             </div>
           </div>
           <div className="grow shrink basis-0 pt-3 pb-4 flex-col justify-center items-center gap-1 inline-flex">
@@ -269,9 +245,9 @@ const NavBar = (props) => {
               to="/community"
               className="aria-[current=page]:bg-purple-200 w-16 h-8 rounded-2xl justify-center py-1 px-5 items-center inline-flex"
             >
-              <img src={communityicon} className="w-6 h-6 " />
+              <img src={communityicon} className="w-6 h-6" />
             </NavLink>
-            <div className="self-stretch text-center text-zinc-700 text-xs font-medium font-roboto leading-none tracking-wide">
+            <div className="self-stretch text-center text-zinc-700 text-xs font-medium leading-none tracking-wide">
               Community
             </div>
           </div>
@@ -280,10 +256,21 @@ const NavBar = (props) => {
               to="/howtohelp"
               className="aria-[current=page]:bg-purple-200 w-16 h-8 rounded-2xl justify-center py-1 px-5 items-center inline-flex"
             >
-              <GiGraduateCap className="w-6 h-6  text-[#1F0A58]" />
+              <GiGraduateCap className="w-6 h-6 text-[#1F0A58]" />
             </NavLink>
-            <div className="self-stretch text-center text-zinc-700 text-xs font-medium font-roboto leading-none tracking-wide">
+            <div className="self-stretch text-center text-zinc-700 text-xs font-medium leading-none tracking-wide">
               How to help
+            </div>
+          </div>
+          <div className="grow shrink basis-0 pt-3 pb-4 flex-col justify-center items-center gap-1 inline-flex">
+            <NavLink
+              to="/contact"
+              className="aria-[current=page]:bg-purple-200 w-16 h-8 rounded-2xl justify-center py-1 px-5 items-center inline-flex"
+            >
+              <AiFillHome className="w-6 h-6 text-[#1F0A58]" />
+            </NavLink>
+            <div className="self-stretch text-center text-zinc-900 text-xs font-semibold leading-none tracking-wide">
+              Contact
             </div>
           </div>
           <div className="grow shrink basis-0 pt-3 pb-4 flex-col justify-center items-center gap-1 inline-flex">
@@ -291,10 +278,9 @@ const NavBar = (props) => {
               to="/profile"
               className="aria-[current=page]:bg-purple-200 w-16 h-8 rounded-2xl justify-center py-1 px-5 items-center inline-flex"
             >
-              <RiAccountCircleFill className="w-6 h-6  text-[#1F0A58]" />
+              <RiAccountCircleFill className="w-6 h-6 text-[#1F0A58]" />
             </NavLink>
-
-            <div className="self-stretch text-center text-zinc-700 text-xs font-medium font-roboto leading-none tracking-wide">
+            <div className="self-stretch text-center text-zinc-700 text-xs font-medium leading-none tracking-wide">
               Me
             </div>
           </div>
@@ -304,4 +290,4 @@ const NavBar = (props) => {
   );
 };
 
-export default NavBar;
+export default Admin_NavBar;
