@@ -33,17 +33,12 @@ async function changeDocumentTitles() {
   const collection = 'pastOutreachEventsTest';
 
   try {
-    // Prompt user for the current and new titles
     const currentTitle = prompt('Enter the current title of the documents to update: ').trim();
     const newTitle = prompt('Enter the new title for the documents: ').trim();
-
-    // Validate inputs
     if (!currentTitle || !newTitle) {
       console.log('Current title and new title must be provided.');
       return;
     }
-
-    // Fetch documents with the specified current title
     const snapshot = await db.collection(collection)
       .where('title', '==', currentTitle)
       .get();
@@ -52,7 +47,6 @@ async function changeDocumentTitles() {
       return;
     }
 
-    // Update titles using batch update
     const batch = db.batch();
     snapshot.forEach(doc => {
       const docRef = db.collection(collection).doc(doc.id);
