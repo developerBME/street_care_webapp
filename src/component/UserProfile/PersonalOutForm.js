@@ -1848,12 +1848,34 @@ function PersonalOutForm() {
                       </div> */}
                         <div className="self-stretch h-fit  border-collapse">
                           <div className=" h-14  justify-center items-start ">
-                            <input
+                            {/* <input
                               id="furtherHelpFollowUp"
                               placeholder="2023-01-01"
                               className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
                               required=""
-                            ></input>
+                            ></input> */}
+                            <DatePicker
+                              selected={dateTime}
+                              onChange={(date) => {
+                                setDateTime(date);
+                                handleDateTimeChange(date);
+                              }}
+                              showTimeSelect
+                              timeFormat="HH:mm" // Adjust time format as needed
+                              dateFormat="dd/MM/yyyy HH:mm" // Adjust date format to include time
+                              minDate={new Date(new Date().getTime() + 24 * 60 * 60 * 1000)}
+                              wrapperClassName="w-full"
+                              customInput={
+                                <CustomInput
+                                  id="date"
+                                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                                    error.dateTimeError   
+                            !== "" ? "ring-red-500" : "ring-gray-300"
+                                  }`}
+                                  ref={dateTimeRef}
+                                />
+                              }
+                            />
                           </div>
                         </div>
                       </div>
