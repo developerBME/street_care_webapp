@@ -657,12 +657,12 @@ export const fetchUserOutreaches = async () => {
 export const fetchTopVisitLogs= async () => {
   try {
     const visitlogs = collection(db, PERSONAL_VISIT_LOG);
-    const visitlogsByLocationQuery = query(
+    const visitlogsQuery = query(
       visitlogs, 
       orderBy('dateTime', 'desc'), // Order visit logs by the 'dateTime' field in descending order to get the newest entries first
       limit(6) // Limit to top 6 records
     );
-    const visitLogDocRef = await getDocs(visitlogsByLocationQuery);
+    const visitLogDocRef = await getDocs(visitlogsQuery);
     let visitLogs = [];
     for (const doc of visitLogDocRef.docs) {
       const visitLogData = doc.data(); 
