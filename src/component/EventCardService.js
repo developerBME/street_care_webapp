@@ -14,6 +14,7 @@ import {
 import { db } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import logEvent from "./FirebaseLogger";
+import { Timestamp } from 'firebase/firestore';
 
 const OFFICIAL_EVENTS_COLLECTION = "officialEvents";
 const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
@@ -732,3 +733,54 @@ export async function calculateNumberOfPagesForOutreach(outreachPerPage, current
 }
 
 const test = await calculateNumberOfPagesForOutreach(5,0)
+
+export const fetchLatestRecords = async () => {
+  try {
+    const outreachRef = collection(db, OUTREACH_EVENTS_COLLECTION);
+
+    // // Create query to fetch the latest 6 records based on creation date
+    const latestRecordsQuery = query(
+      outreachRef,
+    );
+    const snapshots = await getDocs(latestRecordsQuery);
+
+    const records = snapshots.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    
+    const convertedRecords = records.map(record => {
+      let createdAt;
+      if (record.createdAt instanceof Timestamp) {
+        // Convert Firestore Timestamp to Date
+        createdAt = record.createdAt.toDate();
+      } else if (typeof record.createdAt === 'string') {
+        // Convert string to Date
+        createdAt = new Date(record.createdAt);
+      }
+      if (!createdAt || isNaN(createdAt .getTime())) {
+        return null; // Exclude records with undefined or invalid dates
+      }
+      console.log(createdAt);
+
+      return {
+        ...record,
+        createdAt : createdAt
+      };
+    }).filter(record => record !== null);
+
+    const sortedRecords = convertedRecords.sort((a, b) => b.createdAt - a.createdAt).slice(0, 6);
+  
+    return sortedRecords;
+
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `Error in fetchLatestRecords - ${error.message}`
+    );
+    throw error;
+  }
+};
+
+// const testlatestfunc = await fetchLatestRecords();
+// console.log(testlatestfunc);
