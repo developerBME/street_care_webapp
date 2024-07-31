@@ -734,7 +734,7 @@ export async function calculateNumberOfPagesForOutreach(outreachPerPage, current
 
 const test = await calculateNumberOfPagesForOutreach(5,0)
 
-export const fetchLatestRecords = async () => {
+export const fetchTopOutreaches = async () => {
   try {
     const outreachRef = collection(db, OUTREACH_EVENTS_COLLECTION);
 
@@ -782,5 +782,5 @@ export const fetchLatestRecords = async () => {
   }
 };
 
-// const testlatestfunc = await fetchLatestRecords();
+// const testlatestfunc = await fetchTopOutreaches();
 // console.log(testlatestfunc);
