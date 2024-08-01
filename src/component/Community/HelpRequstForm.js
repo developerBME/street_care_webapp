@@ -293,7 +293,7 @@ function HelpRequestForm() {
         zipcode: postcode,
       },
       skills: helpType,
-      createdAt: Timestamp.fromDate(new Date()), //date type to firebase timestamp
+      createdAt: Timestamp.fromDate(new Date()),
       status: "Need Help", // This is default for every new HR
     };
 
