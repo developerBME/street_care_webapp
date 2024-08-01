@@ -3,6 +3,9 @@
  * in the pastOutreachEvents collection in Firebase Firestore. The user
  * is prompted to choose between two actions:
  *
+ * The source and destination collection can be changed in lines 50, and 51 respectively.
+ *
+ *
  * 1. Duplicate Documents:
  *    - The script fetches the latest 20 documents from the pastOutreachEvents collection.
  *    - These documents are then duplicated into the pastOutreachEventsTest collection,
