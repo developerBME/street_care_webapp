@@ -747,13 +747,19 @@ export const fetchTopOutreaches = async () => {
 
     const snapshots = await getDocs(latestRecordsQuery);
 
-    const latestRecords = snapshots.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
-    
-    return latestRecords;
-
+    let outreaches = [];
+    for (const doc of snapshots.docs) {
+      const outreachData = doc.data(); 
+      const id = doc.id;
+      const userName = await fetchUserName(outreachData.uid);
+      outreaches.push({
+        ...outreachData,
+        userName: userName,
+        id: id,
+      });
+    }
+    console.log(outreaches)
+    return outreaches;
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
