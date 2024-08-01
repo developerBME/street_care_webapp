@@ -27,12 +27,12 @@ const NavBar = (props) => {
     signOut(fAuth)
       .then(() => {
         console.log("success");
-        props.setUser(null);
+        // props.setUser(null);
         navigate("/login");
         props.setLoggedIn(false);
       })
       .catch((error) => {
-        console.log(error);
+        console.log("error", error);
         // An error happened.
       });
   };
