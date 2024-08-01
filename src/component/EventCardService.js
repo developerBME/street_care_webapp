@@ -741,37 +741,18 @@ export const fetchTopOutreaches = async () => {
     // // Create query to fetch the latest 6 records based on creation date
     const latestRecordsQuery = query(
       outreachRef,
+      orderBy("eventDate", "desc"),
+      limit(6)
     );
+
     const snapshots = await getDocs(latestRecordsQuery);
 
-    const records = snapshots.docs.map(doc => ({
+    const latestRecords = snapshots.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     }));
     
-    const convertedRecords = records.map(record => {
-      let createdAt;
-      if (record.createdAt instanceof Timestamp) {
-        // Convert Firestore Timestamp to Date
-        createdAt = record.createdAt.toDate();
-      } else if (typeof record.createdAt === 'string') {
-        // Convert string to Date
-        createdAt = new Date(record.createdAt);
-      }
-      if (!createdAt || isNaN(createdAt .getTime())) {
-        return null; // Exclude records with undefined or invalid dates
-      }
-      console.log(createdAt);
-
-      return {
-        ...record,
-        createdAt : createdAt
-      };
-    }).filter(record => record !== null);
-
-    const sortedRecords = convertedRecords.sort((a, b) => b.createdAt - a.createdAt).slice(0, 6);
-  
-    return sortedRecords;
+    return latestRecords;
 
   } catch (error) {
     logEvent(
@@ -782,5 +763,5 @@ export const fetchTopOutreaches = async () => {
   }
 };
 
-// const testlatestfunc = await fetchTopOutreaches();
-// console.log(testlatestfunc);
+//  const testlatestfunc = await fetchTopOutreaches();
+//  console.log(testlatestfunc);
