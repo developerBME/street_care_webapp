@@ -647,9 +647,10 @@ export const fetchByCityOrStates = async (searchValue, startDate, endDate, total
       console.error("Invalid end date");
       return;
     }
-
-    //-----------------------------------------------------------------------
-    const pastOutreachRef = collection(db, PAST_OUTREACH_EVENTS_COLLECTION);
+    // const pastOutreachRef = collection(db, PAST_OUTREACH_EVENTS_COLLECTION);
+    const pastOutreachRef = query( collection(db, PAST_OUTREACH_EVENTS_COLLECTION) ,where("location.city", "==", searchValue),
+      where("eventDate", ">=", startDate),
+      where("eventDate", "<=", endDate));
     const snapshots = await getDocs(pastOutreachRef);
     const curr_page=0;
     const start_Index = outreachPerPages*curr_page;
@@ -660,12 +661,7 @@ export const fetchByCityOrStates = async (searchValue, startDate, endDate, total
     console.log('Test1:');
 
 
-    const outreachByLocationQuery = query(
-      pastOutreachRef,
-      where("location.city", "==", searchValue),
-      where("eventDate", ">=", startDate),
-      where("eventDate", "<=", endDate),  startAt(init_doc), limit(outreachPerPages)
-    );
+    const outreachByLocationQuery = query(pastOutreachRef,startAt(init_doc), limit(outreachPerPages));
 
     while(outreachPerPages < totaloutreaches )
 
@@ -704,7 +700,6 @@ const cityToSearch = "Ottawa";
 const startDateTime = new Date("2020-07-01"); 
 const endDateTime = new Date("2023-07-01");
 const outreachPerPages = 15;
-//  = 70
 
 (async () => {
   try {
@@ -718,9 +713,6 @@ const outreachPerPages = 15;
   }
 })();
 // const test1 = await ('Ottawa','07/24/2021', '09/24/2021');
-
-
-
 
 // code by Adarsh ends..................
 
@@ -824,7 +816,7 @@ export const fetchVisitLogsByCityOrState = async (searchValue, startDate, endDat
     throw error;
   }
 };
-/*
+
 
 export async function calculateNumberOfPagesForOutreach(outreachPerPage, currentPage=0){
   const testoutreachRef = query(collection(db, PAST_OUTREACH_EVENTS_COLLECTION), orderBy("createdAt", "asc"));
@@ -852,4 +844,3 @@ export async function calculateNumberOfPagesForOutreach(outreachPerPage, current
 }
 
 const test = await calculateNumberOfPagesForOutreach(5,0)
-*/
