@@ -22,13 +22,11 @@ const AllOutreachEvents = () => {
     const fetchData = async () => {
       const eventsData = await fetchEvents();
       const upcomingEvents = eventsData.filter((event) => {
-
         if (!event.eventDate || !event.eventDate.seconds) {
           return false; // Skip events with undefined eventDate or seconds
         }
         const eventDate = new Date(event.eventDate.seconds * 1000);
         return eventDate >= new Date(); // Filter only upcoming events
-
       });
       // Sort events by date
       upcomingEvents.sort((a, b) => a.eventDate - b.eventDate);
@@ -67,6 +65,14 @@ const AllOutreachEvents = () => {
   const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
   const currentEvents = eventsDisplay.slice(indexOfFirstEvent, indexOfLastEvent);
   const totalPages = Math.ceil(eventsDisplay.length / eventsPerPage); // Calculate total pages
+
+  // Color variables
+  const inactiveBgColor = "bg-white";
+  const inactiveTextColor = "text-black";
+  const inactiveBorderColor = "border-[#9B82CF]";
+  const activeBgColor = "bg-[#E0D7EC]";
+  const activeTextColor = "text-black";
+  const activeBorderColor = "border-[#1F0A58]";
 
   return (
     <div className="relative flex flex-col items-center">
@@ -147,24 +153,22 @@ const AllOutreachEvents = () => {
                 <p>No results found</p>
               )}
             </div>
-
           )}
 
           {/* Pagination buttons */}
           <div className="flex justify-center mt-4">
             {[...Array(totalPages).keys()].map((i) => (
-                <button
+              <button
                 key={i + 1}
                 className={`mx-2 px-4 py-2 border rounded-full ${
                   currentPage === i + 1
-                    ? "bg-[#E0D7EC] text-black border-[#1F0A58]"
-                    : "bg-white text-black border-[#9B82CF]"
+                    ? `${activeBgColor} ${activeTextColor} ${activeBorderColor}`
+                    : `${inactiveBgColor} ${inactiveTextColor} ${inactiveBorderColor}`
                 }`}
                 onClick={() => onPageChange(i + 1)}
               >
                 {i + 1}
               </button>
-            
             ))}
           </div>
         </div>
