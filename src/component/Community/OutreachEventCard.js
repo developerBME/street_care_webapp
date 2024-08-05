@@ -15,6 +15,7 @@ const OutreachEventCard = ({
   isProfilePage,
   refresh,
   isPastEvent,
+  openModal,
 }) => {
   const {
     id,
@@ -44,7 +45,10 @@ const OutreachEventCard = ({
   };
 
   return (
-    <div className="bg-[#F5EEFE] min-w-full max-w-[320px] lg:w-full rounded-[30px] mb-4 flex flex-col justify-between p-6">
+    <div
+      className="bg-[#F5EEFE] min-w-full max-w-[320px] lg:w-full rounded-[30px] mb-4 flex flex-col justify-between p-6"
+      onClick={openModal}
+    >
       {!isProfilePage && !isPastEvent ? (
         <div className="inline-flex items-center space-x-2 ">
           <img
@@ -147,7 +151,7 @@ const OutreachEventCard = ({
                   label="View"
                   name="buttonlight"
                   onClick={() => {
-                    navigate(`/outreachsignup/${id}`, {
+                    navigate('/outreachsignup/${id}', {
                       state: { label: "EDIT" },
                     });
                   }}
@@ -161,7 +165,7 @@ const OutreachEventCard = ({
 
                 {showModal && (
                   <EditModal
-                    handleClose={handleCloseModal}
+                    handleClose={handleModalClose}
                     id={id}
                     label={label}
                     navigate={navigate}

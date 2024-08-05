@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Modal } from "@mui/material";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 // import FAQs from "./HomePage/FAQs";
@@ -35,6 +36,8 @@ import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 import PastOutreachEventCardSkeleton from "./Skeletons/PastOutreachEventCardSkeleton";
 import ErrorMessage from "./ErrorMessage";
 // import MoreAboutUs2 from "./HomePage/MoreAboutUs2";
+import OutreachSignupModal from "./Community/OutreachSignupModal";
+import RSVPConfirmationModal from "./UserProfile/RSVPConfirmationModal";
 
 function HomePage() {
   const navigate = useNavigate();
@@ -149,6 +152,26 @@ function HomePage() {
     news: false,
   });
 
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [showSignUpModal, setShowSignUpModal] = useState(false);
+
+  const openModal = (event) => {
+    setSelectedEvent(event);
+  };
+
+  const closeModal = () => {
+    setSelectedEvent(null);
+  };
+
+  const onSignUp = () => {
+    setSelectedEvent(null);
+    setShowSignUpModal(true);
+  };
+
+  const closeSignUpModal = () => {
+    setShowSignUpModal(false);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -260,7 +283,7 @@ function HomePage() {
   useEffect(() => {
     document.title = "Home - Street Care";
   }, []);
-
+ 
   return (
     // <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
     <div className="relative flex flex-col items-center ">
@@ -310,11 +333,15 @@ function HomePage() {
                     cardData={{
                       ...eventData,
                       eventDate: eventData.eventDate?.seconds
-                        ? formatDate(
-                            new Date(eventData.eventDate.seconds * 1000)
-                          )
+                        ? formatDate(new Date(eventData.eventDate.seconds * 1000))
                         : eventData.eventDate,
                     }}
+                    openModal={() => openModal({
+                      ...eventData,
+                      eventDate: eventData.eventDate?.seconds
+                        ? formatDate(new Date(eventData.eventDate.seconds * 1000))
+                        : eventData.eventDate,
+                    })}
                   />
                 ))}
               </div>
@@ -456,6 +483,12 @@ function HomePage() {
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-16 rounded-2xl bg-white text-black ">
         <FAQs />
       </div>
+      <Modal open={!!selectedEvent}>
+        <OutreachSignupModal data={{...selectedEvent}} closeModal={closeModal} onSignUp={onSignUp}/>
+      </Modal>
+      <Modal open={showSignUpModal}>
+       <RSVPConfirmationModal closeSignUpModal={closeSignUpModal}/>
+      </Modal>
     </div>
     // </div>
   );
