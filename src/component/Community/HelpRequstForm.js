@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import Chip from "../Community/Chip";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, Timestamp } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
 import arrowBack from "../../images/arrowBack.png";
@@ -293,7 +293,7 @@ function HelpRequestForm() {
         zipcode: postcode,
       },
       skills: helpType,
-      createdAt: Date(),
+      createdAt: Timestamp.fromDate(new Date()),
       status: "Need Help", // This is default for every new HR
     };
 
