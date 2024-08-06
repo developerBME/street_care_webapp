@@ -82,7 +82,10 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
   }, []);
 
   return (
-<div className="bg-[#F5EEFE] rounded-[30px] flex flex-col h-full w-full md:w-fit xl:w-[320px] 2xl:w-[354px] md:flex-1 items-start relative">
+<div className="bg-[#F5EEFE] rounded-[30px] flex flex-col h-full w-full md:w-fit xl:w-[320px] 2xl:w-[354px] md:flex-1 items-start relative cursor-pointer" 
+onClick={() => {
+            navigate(`/PersonalVisitLogDetails/${visitLogCardData.id}`);
+          }}>
 <div className="bg-[#F5EEFE] min-w-full max-w-[320px] lg:w-full rounded-[30px] flex flex-col justify-between">
         <div className="flex justify-between items-center">
           <div className="text-violet-900 text-[12px] font-medium font-bricolage leading-tight flex flex-col">
@@ -190,15 +193,6 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
             ))}
           </div>
         </div>
-      </div>
-      <div className="pt-2 px-4 pb-6 space-x-2 items-center justify-center my-2">
-        <CustomButton
-          label="View Details"
-          name="buttonlightsmall"
-          onClick={() => {
-            navigate(`/PersonalVisitLogDetails/${visitLogCardData.id}`);
-          }}
-        />
       </div>
     </div>
   );
