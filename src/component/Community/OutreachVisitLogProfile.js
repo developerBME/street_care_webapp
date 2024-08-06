@@ -98,7 +98,7 @@ const OutreachVisitLogProfile = () => {
                 <OutreachVisitLogProfileCard
                   visitLogCardData={visitLogData}
                   onRefresh={handleRefresh}
-                />dsfsafsf
+                />
               </div>
             </div>
           ))}
@@ -106,12 +106,12 @@ const OutreachVisitLogProfile = () => {
           )}
 
           {visibleItems < visitLogs?.length && (
-              <div className="mt-16">
+              <div className="">
           <CustomButton
             label="More of My Visit Logs"
             name="buttondefault"
             onClick={() => {
-              navigate("/allOutreachVisitLog");
+              navigate("/myvisitlogs");
             }}
           />
         </div>
