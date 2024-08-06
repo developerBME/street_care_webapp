@@ -57,6 +57,7 @@ import TestUser from "./component/Test/Test";
 import ListUser from "./component/Test/ListUser";
 import { ProtectedAdminRoute } from "./component/ProtectedAdminRoute";
 import TestAdmin from "./component/UserProfile/TestAdmin";
+import AllSignedUpOutreaches from "./component/UserProfile/AllSignedUpOutreaches";
 
 function App() {
   const fAuth = getAuth();
@@ -223,6 +224,11 @@ function App() {
           <Route
             path="/allOutreachVisitLog"
             element={<AllOutreachVisitLog />}
+          />
+
+          <Route
+            path="profile/allSignedUpOutreaches"
+            element={<AllSignedUpOutreaches />}
           />
 
           <Route path="/sample_form" element={<Sample_form />} />
