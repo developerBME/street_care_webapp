@@ -26,7 +26,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
           </div>
           <div className="flex items-center">
             <img className="w-4 h-4 mr-1" src={locate} alt="Location" />
-            {`${visitLogCardData?.location?.city}, ${visitLogCardData?.location?.stateAbbv || visitLogCardData?.location?.state}`}
+            {`${visitLogCardData?.location?.city || visitLogCardData?.city}, ${visitLogCardData?.location?.stateAbbv || visitLogCardData?.stateAbbv || visitLogCardData?.location?.state}`}
           </div>
         </div>
         <h1 className="font-medium text-lg text-gray-800 line-clamp-2">
