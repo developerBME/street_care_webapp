@@ -130,10 +130,10 @@ const HomePageVisitlog = () => {
         </div>
         <div className="mt-16">
           <CustomButton
-            label="More Visit Logs"
+            label="More Signed Up Outreaches"
             name="buttondefault"
             onClick={() => {
-              navigate("/allOutreachVisitLog");
+              navigate("");
             }}
           />
         </div>
