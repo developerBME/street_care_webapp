@@ -204,7 +204,7 @@ const Form = (hrid) => {
             eventDate: Timestamp.fromDate(startDate),
             eventEndTime: Timestamp.fromDate(endDate),
             eventStartTime: Timestamp.fromDate(startDate),
-            totalSlots: maxCapRef.current.value,
+            totalSlots: Math.round(Number(maxCapRef.current.value)),
             location: {
               street: streetRef.current.value,
               city: cityRef.current.value,
@@ -214,7 +214,7 @@ const Form = (hrid) => {
             },
             helpType: helpRef.current.value,
             skills: helpType,
-            createdAt: Date(),
+            createdAt: Timestamp.fromDate(new Date()),
             interests: 0,
             participants: [],
             approved: false,
@@ -353,10 +353,21 @@ const Form = (hrid) => {
     updateErrorState("helpError", "");
   };
   const handleStimeChange = (e) => {
+    setStartDate(e);
+    if (endDate && e >= endDate) {
+      setEndDate(null);
+    }
     updateErrorState("stimeError", "");
   };
   const handleEtimeChange = (e) => {
+    if (e > startDate) {
+      setEndDate(e);
+    }
     updateErrorState("etimeError", "");
+  };
+
+  const filterEndTime = (time) => {
+    return startDate ? time > startDate : true;
   };
 
   const handleSubmit = async (e) => {
@@ -633,7 +644,9 @@ const Form = (hrid) => {
                 Maximum capacity of participants allowed*
               </p>
               <input
-                type="text"
+                type="number"
+                min='0'
+                step='1'
                 className="h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
                 id="max-cap"
                 ref={maxCapRef}
@@ -755,6 +768,7 @@ const Form = (hrid) => {
                 </p>
                 <input
                   type="text"
+                  maxlength="5"
                   className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
                     error.zipError !== "" ? "ring-red-500" : "ring-gray-300"
                   }`}
@@ -1005,6 +1019,9 @@ const Form = (hrid) => {
                   timeFormat="HH:mm"
                   timeIntervals={15}
                   dateFormat="Pp"
+                  disabled={!startDate}
+                  minDate={startDate}
+                  filterTime={filterEndTime}
                   customInput={
                     <CustomInput
                       id="date"

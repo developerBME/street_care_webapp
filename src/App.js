@@ -54,11 +54,11 @@ import UpdateProfile from "./component/UserProfile/ProfileSettings/UpdateProfile
 import UserDetails from "./component/Admin/UserDetails";
 import CreateOutreachAdmin from "./component/Admin/CreateOutreachAdmin";
 
-
 import TestUser from "./component/Test/Test";
 import ListUser from "./component/Test/ListUser";
 import { ProtectedAdminRoute } from "./component/ProtectedAdminRoute";
 import TestAdmin from "./component/UserProfile/TestAdmin";
+import MoreVisitLogs from "./component/Community/MoreVisitLogs";
 
 function App() {
   const fAuth = getAuth();
@@ -133,10 +133,11 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/ForgotPassword" element={<ForgotPassword />} />
           <Route path="/signup" element={<Signup2 />} />
-
-          <Route path="/admin-panel/userlist" element={<UserList/>}/>
-          <Route path="/admin-panel/createoutreachadmin" element={<CreateOutreachAdmin/>}/>
-
+          <Route path="/admin-panel/userlist" element={<UserList />} />
+          <Route
+            path="/admin-panel/createoutreachadmin"
+            element={<CreateOutreachAdmin />}
+          />
           <Route path="/allnews" element={<Newscard />} />
           <Route path="/allnews/:id" element={<Readmorenews />} />
           <Route path="/user/:uid" element={<UserDetails />} /> // Route for
@@ -190,7 +191,6 @@ function App() {
               path="/profile/personaloutform"
               element={<PersonalOutForm />}
             />
-           
 
             <Route path="/helpRequestForm" element={<HelpRequestForm />} />
           </Route>
@@ -249,6 +249,7 @@ function App() {
             path="/profile/visitlogform/:id"
             element={<PersonalOutForm />}
           />
+          <Route path="/myvisitlogs" element={<MoreVisitLogs />} />
         </Routes>
         <Footer />
       </Router>
