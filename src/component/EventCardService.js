@@ -631,7 +631,7 @@ export const fetchPastOutreaches = async () => {
 }
 
 
-export const fetchByCityOrStates = async (searchValue, startDate, endDate, totaloutreaches, outreachPerPages) => {
+export const fetchByCityOrStates = async (searchValue, startDate, endDate, totaloutreaches,curr_page,outreachPerPages) => {
   try {
     if (!searchValue || typeof searchValue !== "string") {
       console.error("Invalid search value");
@@ -652,7 +652,6 @@ export const fetchByCityOrStates = async (searchValue, startDate, endDate, total
       where("eventDate", ">=", startDate),
       where("eventDate", "<=", endDate));
     const snapshots = await getDocs(pastOutreachRef);
-    const curr_page=0;
     const start_Index = outreachPerPages*curr_page;
     const init_doc = snapshots.docs[start_Index];
 
@@ -699,12 +698,13 @@ export const fetchByCityOrStates = async (searchValue, startDate, endDate, total
 const cityToSearch = "Ottawa"; 
 const startDateTime = new Date("2020-07-01"); 
 const endDateTime = new Date("2023-07-01");
-const outreachPerPages = 15;
+const curr_page=1;
+const outreachPerPages = 2;
 
 (async () => {
   try {
     const totaloutreaches = await fetchPastOutreaches()
-    const outreachByLocation = await fetchByCityOrStates(cityToSearch, startDateTime, endDateTime,  totaloutreaches, outreachPerPages);
+    const outreachByLocation = await fetchByCityOrStates(cityToSearch, startDateTime, endDateTime,  totaloutreaches, curr_page, outreachPerPages);
     console.log("Fetched outreach data:", outreachByLocation);
     console.log('fetchPastOutreaches: '+ await fetchPastOutreaches());
 
