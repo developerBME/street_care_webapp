@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import arrowRight from "../../images/arrowRight.png";
 import OutreachVisitLogCard from "./OutreachVisitLogCard";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
-import { fetchEvents, formatDate } from "../EventCardService";
-import { fetchVisitLogs, fetchPublicVisitLogs } from "../VisitLogCardService";
+import { fetchTopVisitLogs } from "../EventCardService";
 import CustomButton from "../Buttons/CustomButton";
 import ErrorMessage from "../ErrorMessage";
 
@@ -65,7 +64,7 @@ const CommunityVisitLog = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const visitLogsData = await fetchPublicVisitLogs();
+        const visitLogsData = await fetchTopVisitLogs();
         setVisitLogs(visitLogsData);
       } catch (error) {
         setIsError(true);

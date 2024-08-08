@@ -8,7 +8,7 @@ const Process2 = () => {
       </p>
       <div className="  grid grid-cols-1 gap-8 mt-6 sm:pt-4  lg:max-w-none lg:grid-cols-4 mx-auto">
         <article
-          key="4"
+          key="1"
           className="flex max-w-2xl flex-col items-start justify-normal border-t-4 border-violet-600 bg-white h-full"
         >
           <h1 className="text-black text-xl pt-4 px-4 font-bricolage font-medium">
@@ -32,7 +32,7 @@ const Process2 = () => {
           </p>
         </article>{" "}
         <article
-          key="2"
+          key="3"
           className="flex max-w-2xl flex-col items-start justify-normal border-t-4 border-violet-600  bg-white h-fit"
         >
           <h1 className="text-black text-xl pt-4 px-4 font-bricolage font-medium">
