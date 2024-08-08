@@ -92,21 +92,33 @@ const SignedUpOutreaches = () => {
             label="No outreach events created"
           />
         ) : (
-          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 mb-6">
-            {signedUpEvents.slice(0, 3).map((eventData) => (
-              <OutreachEventCard
-                key={eventData.id}
-                cardData={{
-                  ...eventData,
-                  eventDate: formatDate(
-                    new Date(eventData.eventDate.seconds * 1000)
-                  ),
-                }}
-                isProfilePage={true}
-                refresh={fetchData}
-              />
-            ))}
+          <div>
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 mb-6">
+              {signedUpEvents.slice(0, 3).map((eventData) => (
+                <OutreachEventCard
+                  key={eventData.id}
+                  cardData={{
+                    ...eventData,
+                    eventDate: formatDate(
+                      new Date(eventData.eventDate.seconds * 1000)
+                    ),
+                  }}
+                  isProfilePage={true}
+                  refresh={fetchData}
+                />
+              ))}
+            </div>
+            <div>
+            <CustomButton
+              label="More Signed Up Outreaches"
+              name="buttondefault"
+              onClick={() => {
+                navigate("/profile/allSignedUpOutreaches");
+              }}
+            />
           </div>
+          </div>
+          
         )}
       </div>
     </>
