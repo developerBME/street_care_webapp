@@ -1,6 +1,8 @@
 /** PLEASE READ BELOW BEFORE YOU RUN THIS SCRIPT
  * This script provides an interactive way for the user to convert the createdAt field
- * from a string to a Firestore Timestamp in the outreachEvents collection in Firebase Firestore.
+ * from a string to a Firestore Timestamp in the pastOutreachEventsTest collection in Firebase Firestore.
+ * 
+ * The collection name can be changed in line 30.
  *
  * How to Use the Script:
  *

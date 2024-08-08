@@ -3,6 +3,8 @@
  * in the pastOutreachEventsTest collection in Firebase Firestore. The user
  * is prompted to enter the current title of documents they want to update and
  * a new title to replace it.
+ * 
+ * You can change this collection name in the line 35.
  *
  * How to Use the Script:
  *
