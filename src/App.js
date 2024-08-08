@@ -57,6 +57,7 @@ import TestUser from "./component/Test/Test";
 import ListUser from "./component/Test/ListUser";
 import { ProtectedAdminRoute } from "./component/ProtectedAdminRoute";
 import TestAdmin from "./component/UserProfile/TestAdmin";
+import MoreVisitLogs from "./component/Community/MoreVisitLogs"
 import AllSignedUpOutreaches from "./component/UserProfile/AllSignedUpOutreaches";
 
 function App() {
@@ -255,6 +256,8 @@ function App() {
           <Route path="/test" element={<TestUser />} />
           <Route path="/list" element={<ListUser />} />
           <Route path="/profile/visitlogform/:id" element={<PersonalOutForm />} />
+
+          <Route path="/myvisitlogs" element={<MoreVisitLogs />} />
 
         </Routes>
         <Footer />

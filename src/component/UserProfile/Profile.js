@@ -17,12 +17,15 @@ import OutreachVisitLogProfile from "../Community/OutreachVisitLogProfile";
 // import NoOutreachDoc from "../Community/NoOutreachDoc";
 import NoDisplayData from "./NoDisplayData";
 import SignedUpOutreaches from "./SignedUpOutreaches";
+import ErrorMessage from "../ErrorMessage";
 
 function Profile() {
   const [createdEvents, setCreatedEvents] = useState([]);
   // const [signedUpEvents, setSignedUpEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [eventsDisplay, setEventsDisplay] = useState([]);
+  const [isError, setIsError] = useState(false);
+
   const navigate = useNavigate();
 
   const fetchData = async () => {
@@ -49,6 +52,7 @@ function Profile() {
       }
     } catch (error) {
       console.error("Error Fetching data:", error.message);
+      setIsError(true);
     } finally {
       setIsLoading(false);
     }
@@ -202,6 +206,8 @@ function Profile() {
                   <EventCardSkeleton />
                   <EventCardSkeleton />
                 </div>
+              ) : isError ? (
+                <ErrorMessage displayName="Outreaches" />
               ) : createdEvents.length === 0 ? (
                 <NoDisplayData
                   name="signedupoutreaches"
