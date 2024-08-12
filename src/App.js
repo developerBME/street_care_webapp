@@ -159,6 +159,7 @@ function App() {
               <ProtectedAdminRoute user={firebaseUser} loading={loadingUser} />
             }>
             <Route path="/testAdmin" element={<TestAdmin />} />
+            <Route path="/admin-panel/userlist" element={<UserList />} />
           </Route>
           <Route
             element={
