@@ -391,11 +391,6 @@ export const fetchVisitLogsByCityOrState = async (searchValue, startDate, endDat
       throw new Error(`Not enough documents to access page of index : ${pageIndex}`);
       }
 
-    console.log(`visit log doc ref`);
-    visitLogDocRef.forEach((doc)=>{
-      console.log(`visitlogref: ${doc.id} => ${doc.data()}`);
-    });
-
     let visitLogByCity = [];
     for (const doc of visitLogDocRef.docs) {
       const visitLogData = doc.data(); 
@@ -417,8 +412,3 @@ export const fetchVisitLogsByCityOrState = async (searchValue, startDate, endDat
     throw error;
   }
 };
-
-const startdate = new Date('2024-07-06T00:00:00');
-const enddate = new Date('2024-07-11T00:00:00');
-fetchVisitLogsByCityOrState('Jersey City', startdate, enddate, 3, 2);
-console.log(`startdate, ${typeof(startdate)}`);
