@@ -9,6 +9,7 @@ import {
   handleHelpRecieved,
   handleReopenHelpRequest,
 } from "../HelpRequestService";
+import { Timestamp } from "@firebase/firestore";
 
 const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
   const [showDetails, setShowDetails] = useState(false);
@@ -29,8 +30,10 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
     createdAt,
   } = helpRequestCardData;
 
+  const createdAtDate = (createdAt instanceof Timestamp) ? createdAt.toDate() : new Date(createdAt);
+
   const currentTimestamp = new Date().getTime();
-  const timeDifference = currentTimestamp - Date.parse(createdAt);
+  const timeDifference = currentTimestamp - createdAtDate.getTime();
   // Convert the time difference to seconds, minutes, hours, and days
   const seconds = Math.floor(timeDifference / 1000);
   const minutes = Math.floor(seconds / 60);

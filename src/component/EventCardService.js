@@ -14,6 +14,7 @@ import {
 import { db } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import logEvent from "./FirebaseLogger";
+import { Timestamp } from 'firebase/firestore';
 
 const OFFICIAL_EVENTS_COLLECTION = "officialEvents";
 const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
@@ -654,6 +655,37 @@ export const fetchUserOutreaches = async () => {
   }
 };
 
+export const fetchTopVisitLogs= async () => {
+  try {
+    const visitlogs = collection(db, PERSONAL_VISIT_LOG);
+    const visitlogsQuery = query(
+      visitlogs, 
+      orderBy('dateTime', 'desc'), // Order visit logs by the 'dateTime' field in descending order to get the newest entries first
+      limit(6) // Limit to top 6 records
+    );
+    const visitLogDocRef = await getDocs(visitlogsQuery);
+    let visitLogs = [];
+    for (const doc of visitLogDocRef.docs) {
+      const visitLogData = doc.data(); 
+      const id = doc.id;
+      const userName = await fetchUserName(visitLogData.uid);
+      visitLogs.push({
+        ...visitLogData,
+        userName: userName,
+        id: id,
+      });
+    }
+    console.log(visitLogs)
+    return visitLogs;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchTopVisitLogs EventCardService.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
 export const fetchVisitLogsByCityOrState = async (searchValue, startDate, endDate) => {
   try {
 
@@ -684,25 +716,25 @@ export const fetchVisitLogsByCityOrState = async (searchValue, startDate, endDat
     const visitLogDocRef = await getDocs(visitlogsByLocationQuery);
 
     
-    let visitLogByCity = [];
+    let visitLogs = [];
     for (const doc of visitLogDocRef.docs) {
       console.log(doc.data().uid);
 
       const visitLogData = doc.data(); 
       const id = doc.id;
       const userName = await fetchUserName(visitLogData.uid);
-      visitLogByCity.push({
+      visitLogs.push({
         ...visitLogData,
         userName: userName,
         id: id,
       });
     }
-    console.log(visitLogByCity)
-    return visitLogByCity;
+    console.log(visitLogs)
+    return visitLogs;
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchVisitLogByCityOrState EventCardService.js- ${error.message}`
+      `error on fetchvisitLogsOrState EventCardService.js- ${error.message}`
     );
     throw error;
   }
@@ -732,3 +764,41 @@ export async function calculateNumberOfPagesForOutreach(outreachPerPage, current
 }
 
 const test = await calculateNumberOfPagesForOutreach(5,0)
+
+export const fetchTopOutreaches = async () => {
+  try {
+    const outreachRef = collection(db, OUTREACH_EVENTS_COLLECTION);
+
+    // // Create query to fetch the latest 6 records based on creation date
+    const latestRecordsQuery = query(
+      outreachRef,
+      orderBy("eventDate", "desc"),
+      limit(6)
+    );
+
+    const snapshots = await getDocs(latestRecordsQuery);
+
+    let outreaches = [];
+    for (const doc of snapshots.docs) {
+      const outreachData = doc.data(); 
+      const id = doc.id;
+      const userName = await fetchUserName(outreachData.uid);
+      outreaches.push({
+        ...outreachData,
+        userName: userName,
+        id: id,
+      });
+    }
+    console.log(outreaches)
+    return outreaches;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `Error in fetchLatestRecords - ${error.message}`
+    );
+    throw error;
+  }
+};
+
+//  const testlatestfunc = await fetchTopOutreaches();
+//  console.log(testlatestfunc);

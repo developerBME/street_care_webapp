@@ -59,6 +59,7 @@ import { ProtectedAdminRoute } from "./component/ProtectedAdminRoute";
 import TestAdmin from "./component/UserProfile/TestAdmin";
 import Admin_HomePage from "./admin/admin_homePage.js";
 import Dashboard from "./admin/admin_dashboard.js";
+import MoreVisitLogs from "./component/Community/MoreVisitLogs"
 
 function App() {
   const fAuth = getAuth();
@@ -253,6 +254,8 @@ function App() {
           <Route path="/test" element={<TestUser />} />
           <Route path="/list" element={<ListUser />} />
           <Route path="/profile/visitlogform/:id" element={<PersonalOutForm />} />
+
+          <Route path="/myvisitlogs" element={<MoreVisitLogs />} />
 
         </Routes>
         <Footer />
