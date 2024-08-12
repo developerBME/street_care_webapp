@@ -194,7 +194,7 @@ const AllSignedUpOutreaches = () => {
             {/* Search Bar */}
             <input
               type="text"
-              placeholder="Search by user name"
+              placeholder="Search Title"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="p-2 border border-gray-300 rounded-md ml-4 w-1/2 md:w-1/3"
