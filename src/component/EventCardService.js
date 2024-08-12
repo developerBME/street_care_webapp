@@ -658,6 +658,36 @@ export const fetchTopVisitLogs= async () => {
 };
 
 
+const fetchUserName = async (uid) => {
+  // Reference to the uid instead of the docid of the user.
+  const userQuery = query(
+    collection(db, USERS_COLLECTION),
+    where("uid", "==", uid)
+  );
+  const userDocRef = await getDocs(userQuery);
+
+  const userDocID = userDocRef.docs[0]?.id;  
+  // reference for the userdoc
+  if(userDocID != undefined){
+    const userRef = doc(db, USERS_COLLECTION, userDocID);
+    const userDoc = await getDoc(userRef);
+
+    if (userDoc != undefined || userDoc.exists()) {
+      return userDoc.data().username || "";
+    } else {
+      console.error("No user found with uid:", uid);
+      logEvent(
+        "STREET_CARE_ERROR",
+        `error on fetchUserName EventCardService.js- No user Found ${uid}`
+      );
+      throw new Error(
+        `error on fetchUserName EventCardService.js- No user Found ${uid}`
+      );
+      return "";
+    }
+  }
+};
+
 export async function calculateNumberOfPagesForOutreach(outreachPerPage, currentPage=0){
   const testoutreachRef = query(collection(db, PAST_OUTREACH_EVENTS_COLLECTION), orderBy("createdAt", "asc"));
   const snapshot = await getDocs(testoutreachRef);
