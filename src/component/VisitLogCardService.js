@@ -8,6 +8,8 @@ import {
   query,
   where,
   limit,
+  orderBy,
+  startAfter,
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { fetchUserDetails, formatDate } from "./EventCardService";
@@ -336,17 +338,64 @@ export const fetchVisitLogsByCityOrState = async (searchValue, startDate, endDat
     } 
 
     const visitlogs = collection(db, PERSONAL_VISIT_LOG);
-    // Full text search - Search filtering by City/State fields matching exact value
 
-    const visitlogsByLocationQuery = query(
+    let pageQuery = null;
+    let visitlogsByLocationQuery = null;
+
+    if (pageIndex !== null) {
+      if (pageIndex === 0) {
+        pageQuery = query(
+          visitlogs,
+          where('city', '==', searchValue),
+          where('dateTime', '>=', startDate),
+          where('dateTime', '<=', endDate),
+          orderBy('dateTime','asc'),
+          limit(recordsPerPage)
+        );
+      } else {
+        const prevPageQuery = query(
+          visitlogs,
+          where('city', '==', searchValue),
+          where('dateTime', '>=', startDate),
+          where('dateTime', '<=', endDate),
+          orderBy('dateTime','asc'),
+          limit(pageIndex * recordsPerPage)
+        );
+       
+        const documentSnapshots = await getDocs(prevPageQuery);
+        const lastVisible = documentSnapshots.docs[documentSnapshots.docs.length - 1];
+        pageQuery = query(
+          visitlogs,
+          where('city', '==', searchValue),
+          where('dateTime', '>=', startDate),
+          where('dateTime', '<=', endDate),
+          orderBy('dateTime','asc'),
+          limit(recordsPerPage),
+          startAfter(lastVisible)
+        );
+      }
+      visitlogsByLocationQuery = pageQuery;
+    }
+    else {
+    visitlogsByLocationQuery = query(
       visitlogs, where('city', '==', searchValue),
          where('dateTime', '>=', startDate),
-         where('dateTime', '<=', endDate)
+         where('dateTime', '<=', endDate),
+         orderBy('dateTime','asc')
     );
+  }
 
     const visitLogDocRef = await getDocs(visitlogsByLocationQuery);
 
-    
+    if (visitLogDocRef.docs.length===0 && pageIndex!==null){
+      throw new Error(`Not enough documents to access page of index : ${pageIndex}`);
+      }
+
+    console.log(`visit log doc ref`);
+    visitLogDocRef.forEach((doc)=>{
+      console.log(`visitlogref: ${doc.id} => ${doc.data()}`);
+    });
+
     let visitLogByCity = [];
     for (const doc of visitLogDocRef.docs) {
       const visitLogData = doc.data(); 
@@ -358,15 +407,6 @@ export const fetchVisitLogsByCityOrState = async (searchValue, startDate, endDat
         id: id,
       });
     }
-
-    if(pageIndex!==null){
-      const paginatedRecords = visitLogByCity.slice(pageIndex*recordsPerPage,(pageIndex+1)*recordsPerPage);
-      if(paginatedRecords.length===0){
-        return visitLogByCity.slice(0,recordsPerPage);
-      }
-      return paginatedRecords;
-    }
-
     return visitLogByCity;
 
   } catch (error) {
@@ -377,3 +417,8 @@ export const fetchVisitLogsByCityOrState = async (searchValue, startDate, endDat
     throw error;
   }
 };
+
+const startdate = new Date('2024-07-06T00:00:00');
+const enddate = new Date('2024-07-11T00:00:00');
+fetchVisitLogsByCityOrState('Jersey City', startdate, enddate, 3, 2);
+console.log(`startdate, ${typeof(startdate)}`);
