@@ -70,7 +70,7 @@ function PersonalOutForm() {
   // const ratingChanged = (newRating) => {
   //   console.log(newRating);
   // };
-  const dateTimeRef = useRef("");
+  const dateTimeRef = useRef(null);
   const date = useRef("");
   const time = useRef("");
   const cityRef = useRef("");
@@ -96,6 +96,7 @@ function PersonalOutForm() {
   const [showOptionalQuestions, setShowOptionalQuestions] = useState(false);
   const optDesc = useRef("");
   const optLandmark = useRef("");
+  const today = new Date();
   //////STATES FOR OPTIONAL PART OF THE FORM
   // const furtherHelpDescription = useRef("");
   // const furtherHelpLocation = useRef("");
@@ -174,15 +175,9 @@ function PersonalOutForm() {
     }
   };
 
-  const handleDateTimeChange = (e) => {
+  const handleDateTimeChange = (date) => {
     updateErrorState("dateTimeError", "");
-  };
-
-  const handleDateChange = (e) => {
-    updateErrorState("dateError", "");
-  };
-  const handleTimeChange = (e) => {
-    updateErrorState("timeError", "");
+    console.log('Selected date:', date);
   };
 
   const handleCityChange = (e) => {
@@ -562,7 +557,7 @@ function PersonalOutForm() {
   const [stateName, setStateName] = useState("");
   const [stateAbbv, setStateAbbv] = useState("");
   const [postcode, setPostcode] = useState("");
-  const [dateTime, setDateTime] = useState();
+  const [dateTime, setDateTime] = useState(new Date());
 
   const handleScriptLoad = (updateQuery, autoCompleteRef) => {
     autoComplete = new window.google.maps.places.Autocomplete(
@@ -1391,20 +1386,17 @@ function PersonalOutForm() {
                                 setDateTime(date);
                                 handleDateTimeChange(date);
                               }}
-                              showTimeSelect
-                              timeFormat="HH:mm"
-                              timeIntervals={15}
-                              dateFormat="Pp"
+                              showTimeSelect={false} // Remove time selection
+                              dateFormat="dd/MM/yyyy" // Adjust format as needed
+                              maxDate={today} // Prevent selecting dates after today
                               wrapperClassName="w-full"
                               customInput={
                                 <CustomInput
-                                  id="date"
-                                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
-                                    error.dateTimeError !== ""
-                                      ? "ring-red-500"
-                                      : "ring-gray-300"
-                                  }`}
-                                  ref={dateTimeRef}
+                                id="date"
+                                className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                                  error.dateTimeError !== "" ? "ring-red-500" : "ring-gray-300"
+                                }`}
+                                ref={dateTimeRef}
                                 />
                               }
                             />
@@ -1856,12 +1848,34 @@ function PersonalOutForm() {
                       </div> */}
                         <div className="self-stretch h-fit  border-collapse">
                           <div className=" h-14  justify-center items-start ">
-                            <input
+                            {/* <input
                               id="furtherHelpFollowUp"
                               placeholder="2023-01-01"
                               className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
                               required=""
-                            ></input>
+                            ></input> */}
+                            <DatePicker
+                              selected={dateTime}
+                              onChange={(date) => {
+                                setDateTime(date);
+                                handleDateTimeChange(date);
+                              }}
+                              showTimeSelect
+                              timeFormat="HH:mm" // Adjust time format as needed
+                              dateFormat="dd/MM/yyyy HH:mm" // Adjust date format to include time
+                              minDate={new Date(new Date().getTime() + 24 * 60 * 60 * 1000)}
+                              wrapperClassName="w-full"
+                              customInput={
+                                <CustomInput
+                                  id="date"
+                                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                                    error.dateTimeError   
+                            !== "" ? "ring-red-500" : "ring-gray-300"
+                                  }`}
+                                  ref={dateTimeRef}
+                                />
+                              }
+                            />
                           </div>
                         </div>
                       </div>
