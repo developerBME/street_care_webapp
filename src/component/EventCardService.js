@@ -673,6 +673,9 @@ export const fetchTopVisitLogs= async () => {
         ...visitLogData,
         userName: userName,
         id: id,
+        eventDate: visitLogData?.dateTime?.seconds
+          ? formatDate(new Date(visitLogData.dateTime.seconds * 1000))
+          : ""
       });
     }
     console.log(visitLogs)

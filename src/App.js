@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes,useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { getDocs, collection, query, where } from "firebase/firestore";
 import { db } from "./component/firebase";
@@ -57,6 +57,8 @@ import TestUser from "./component/Test/Test";
 import ListUser from "./component/Test/ListUser";
 import { ProtectedAdminRoute } from "./component/ProtectedAdminRoute";
 import TestAdmin from "./component/UserProfile/TestAdmin";
+import Admin_HomePage from "./admin/admin_homePage.js";
+import Dashboard from "./admin/admin_dashboard.js";
 import MoreVisitLogs from "./component/Community/MoreVisitLogs"
 import AllSignedUpOutreaches from "./component/UserProfile/AllSignedUpOutreaches";
 
@@ -231,6 +233,8 @@ function App() {
             path="profile/allSignedUpOutreaches"
             element={<AllSignedUpOutreaches />}
           />
+          <Route path="/admin" element={<Admin_HomePage />}/>
+
 
           <Route path="/sample_form" element={<Sample_form />} />
           <Route path="visitLogDetails" element={<VisitLogDetails />} />
