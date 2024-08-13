@@ -60,6 +60,7 @@ import TestAdmin from "./component/UserProfile/TestAdmin";
 import Admin_HomePage from "./admin/admin_homePage.js";
 import Dashboard from "./admin/admin_dashboard.js";
 import MoreVisitLogs from "./component/Community/MoreVisitLogs"
+import AllSignedUpOutreaches from "./component/UserProfile/AllSignedUpOutreaches";
 
 function App() {
   const fAuth = getAuth();
@@ -228,7 +229,12 @@ function App() {
             element={<AllOutreachVisitLog />}
           />
 
+          <Route
+            path="profile/allSignedUpOutreaches"
+            element={<AllSignedUpOutreaches />}
+          />
           <Route path="/admin" element={<Admin_HomePage />}/>
+
 
           <Route path="/sample_form" element={<Sample_form />} />
           <Route path="visitLogDetails" element={<VisitLogDetails />} />
