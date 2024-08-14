@@ -133,7 +133,6 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/ForgotPassword" element={<ForgotPassword />} />
           <Route path="/signup" element={<Signup2 />} />
-          <Route path="/admin-panel/userlist" element={<UserList />} />
           <Route
             path="/admin-panel/createoutreachadmin"
             element={<CreateOutreachAdmin />}
@@ -157,6 +156,7 @@ function App() {
             }
           >
             <Route path="/testAdmin" element={<TestAdmin />} />
+            <Route path="/admin-panel/userlist" element={<UserList />} />
           </Route>
           <Route
             element={
