@@ -44,7 +44,10 @@ const OutreachEventCard = ({
   };
 
   return (
-    <div className="bg-[#F5EEFE] min-w-full max-w-[320px] lg:w-full rounded-[30px] mb-4 flex flex-col justify-between p-6">
+    <div className="bg-[#F5EEFE] min-w-full max-w-[320px] lg:w-full rounded-[30px] mb-4 flex flex-col justify-between p-6 cursor-pointer"
+    onClick={() => {
+      navigate(`/outreachsignup/${id}`);
+    }} >
       {!isProfilePage && !isPastEvent ? (
         <div className="inline-flex items-center space-x-2 ">
           <img
@@ -185,19 +188,13 @@ const OutreachEventCard = ({
                     }}
                   />
                 </div> */}
-                <div className="group relative">
-                  <CustomButton
-                    label="View"
-                    name="buttonlight"
-                    onClick={() => {
-                      navigate(`/outreachsignup/${id}`);
-                    }}
-                  />
-                </div>
+                
               </div>
             )}
 
-            {!isProfilePage ? (
+
+              {/* This code is for adding number of volunteer ppl value to show up. */}
+            {/* {!isProfilePage ? (
               <div className="flex flex-row space-x-2">
                 <img
                   alt=""
@@ -210,7 +207,7 @@ const OutreachEventCard = ({
               </div>
             ) : (
               <div></div>
-            )}
+            )} */}
           </div>
         </div>
       ) : (
