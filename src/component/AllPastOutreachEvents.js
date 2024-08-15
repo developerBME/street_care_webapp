@@ -12,6 +12,8 @@ import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 
 const AllPastOutreachEvents = () => {
   const [events, setEvents] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [eventsPerPage] = useState(6);
   const navigate = useNavigate();
   const searchRef = useRef("");
   const [eventsDisplay, setEventsDisplay] = useState([]);
@@ -76,6 +78,84 @@ const AllPastOutreachEvents = () => {
     );
   };
 
+  const indexOfLastEvent = currentPage * eventsPerPage;
+  const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
+  const currentEvents = eventsDisplay.slice(indexOfFirstEvent, indexOfLastEvent);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  
+  const totalPages = Math.ceil(eventsDisplay.length / eventsPerPage);
+  
+  
+  const renderPaginationButtons = () => {
+    const buttons = [];
+    const pageRange = 3;
+  
+    if (currentPage > 1) {
+      buttons.push(
+        <button
+          key="first"
+          onClick={() => paginate(1)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          1
+        </button>
+      );
+    }
+  
+      if (currentPage > 1) {
+        buttons.push(
+          <button
+            key="prev"
+            onClick={() => paginate(currentPage - 1)}
+            className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+          >
+            Prev
+          </button>
+        );
+      }
+  
+      for (let i = Math.max(1, currentPage - pageRange); i <= Math.min(totalPages, currentPage + pageRange); i++) {
+        buttons.push(
+          <button
+            key={i}
+            onClick={() => paginate(i)}
+            className={`mx-1 px-3 py-1 rounded-full ${
+              currentPage === i ? "bg-[#1F0A58] text-white" : "bg-gray-200 text-gray-600"
+            }`}
+          >
+            {i}
+          </button>
+        );
+      }
+  
+      if (currentPage < totalPages) {
+        buttons.push(
+          <button
+            key="next"
+            onClick={() => paginate(currentPage + 1)}
+            className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+          >
+            Next
+          </button>
+        );
+      }
+  
+    if (currentPage < totalPages) {
+      buttons.push(
+        <button
+          key="last"
+          onClick={() => paginate(totalPages)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          {totalPages}
+        </button>
+      );
+    }
+  
+    return buttons;
+  };
+
   return (
     <div className="relative flex flex-col items-center ">
       <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-16 lg:mx-40 mt-48 rounded-2xl bg-white text-black ">
@@ -137,8 +217,8 @@ const AllPastOutreachEvents = () => {
             </div>
           ) : (
             <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-              {eventsDisplay.length > 0 &&
-                eventsDisplay.slice(0, visibleCards).map((eventData) => (
+              {currentEvents.length > 0 &&
+                currentEvents.slice(0, visibleCards).map((eventData) => (
                   <OutreachEventCard
                     isPastEvent={true}
                     key={eventData.id}
@@ -155,15 +235,17 @@ const AllPastOutreachEvents = () => {
               {/* {eventsDisplay.length < 1 && <p>No results found</p>} */}
             </div>
           )}
-
-          {visibleCards < eventsDisplay.length && (
+          <div className="flex justify-center mt-8">
+            {renderPaginationButtons()}
+          </div>
+          {/* {visibleCards < eventsDisplay.length && (
             <button
               className="w-fit rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 flex text-center text-[#1F0A58] hover:bg-[#1F0A58] hover:text-white text-[13px] font-medium font-dmsans leading-tight self-stretch px-6 py-2.5"
               onClick={loadMore}
             >
               Load More
             </button>
-          )}
+          )} */}
         </div>
       </div>
     </div>

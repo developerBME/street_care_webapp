@@ -8,6 +8,8 @@ import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 
 const AllOutreachEvents = () => {
   const [events, setEvents] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [eventsPerPage] = useState(6);
   const navigate = useNavigate();
   const searchRef = useRef("");
   const [eventsDisplay, setEventsDisplay] = useState([]);
@@ -60,6 +62,84 @@ const AllOutreachEvents = () => {
             .search(searchRef.current.value.toLowerCase()) > -1
       )
     );
+  };
+
+  const indexOfLastEvent = currentPage * eventsPerPage;
+  const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
+  const currentEvents = eventsDisplay.slice(indexOfFirstEvent, indexOfLastEvent);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  
+  const totalPages = Math.ceil(eventsDisplay.length / eventsPerPage);
+  
+  
+  const renderPaginationButtons = () => {
+    const buttons = [];
+    const pageRange = 3;
+  
+    if (currentPage > 1) {
+      buttons.push(
+        <button
+          key="first"
+          onClick={() => paginate(1)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          1
+        </button>
+      );
+    }
+  
+      if (currentPage > 1) {
+        buttons.push(
+          <button
+            key="prev"
+            onClick={() => paginate(currentPage - 1)}
+            className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+          >
+            Prev
+          </button>
+        );
+      }
+  
+      for (let i = Math.max(1, currentPage - pageRange); i <= Math.min(totalPages, currentPage + pageRange); i++) {
+        buttons.push(
+          <button
+            key={i}
+            onClick={() => paginate(i)}
+            className={`mx-1 px-3 py-1 rounded-full ${
+              currentPage === i ? "bg-[#1F0A58] text-white" : "bg-gray-200 text-gray-600"
+            }`}
+          >
+            {i}
+          </button>
+        );
+      }
+  
+      if (currentPage < totalPages) {
+        buttons.push(
+          <button
+            key="next"
+            onClick={() => paginate(currentPage + 1)}
+            className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+          >
+            Next
+          </button>
+        );
+      }
+  
+    if (currentPage < totalPages) {
+      buttons.push(
+        <button
+          key="last"
+          onClick={() => paginate(totalPages)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          {totalPages}
+        </button>
+      );
+    }
+  
+    return buttons;
   };
 
   return (
@@ -127,8 +207,8 @@ const AllOutreachEvents = () => {
             ) : (
               // <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
               <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
-                {eventsDisplay.length > 0 &&
-                  eventsDisplay.map((eventData) => (
+                {currentEvents.length > 0 &&
+                  currentEvents.map((eventData) => (
                     <OutreachEventCard
                       key={eventData.id}
                       cardData={{
@@ -144,7 +224,9 @@ const AllOutreachEvents = () => {
               </div>
             )}
           </>
-
+          <div className="flex justify-center mt-8">
+            {renderPaginationButtons()}
+          </div>
           {/* <>
             {isLoading ? (
               <div className="flex justify-between items-center w-full h-fit">

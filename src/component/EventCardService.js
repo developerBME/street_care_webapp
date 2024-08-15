@@ -777,9 +777,13 @@ export const fetchTopOutreaches = async () => {
     );
 
     const snapshots = await getDocs(latestRecordsQuery);
-
+  
     let outreaches = [];
     for (const doc of snapshots.docs) {
+      const eventData = doc.data();
+
+      let currentParticipants = eventData.participants || [];
+
       const outreachData = doc.data(); 
       const id = doc.id;
       const userName = await fetchUserName(outreachData.uid);
@@ -787,6 +791,7 @@ export const fetchTopOutreaches = async () => {
         ...outreachData,
         userName: userName,
         id: id,
+        nop: currentParticipants.length,
       });
     }
     console.log(outreaches)
