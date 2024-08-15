@@ -24,7 +24,6 @@ import {
   formatDate,
   fetchEvents,
   fetchOfficialEvents,
-  fetchTopOutreaches,
 } from "./EventCardService";
 
 import BMEcardimg1 from "../images/BMEofficialcardimg1.png";
@@ -153,7 +152,7 @@ function HomePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const eventsData = await fetchTopOutreaches();
+        const eventsData = await fetchEvents();
 
         eventsData.sort((a, b) => a.eventDate - b.eventDate);
         setEvents(eventsData);
