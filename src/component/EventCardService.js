@@ -694,24 +694,6 @@ export const fetchByCityOrStates = async (searchValue, startDate, endDate, total
   }
 };
 
-
-const cityToSearch = "Ottawa"; 
-const startDateTime = new Date("2020-07-01"); 
-const endDateTime = new Date("2023-07-01");
-const curr_page=1;
-const outreachPerPages = 2;
-
-(async () => {
-  try {
-    const totaloutreaches = await fetchPastOutreaches()
-    const outreachByLocation = await fetchByCityOrStates(cityToSearch, startDateTime, endDateTime,  totaloutreaches, curr_page, outreachPerPages);
-    console.log("Fetched outreach data:", outreachByLocation);
-    console.log('fetchPastOutreaches: '+ await fetchPastOutreaches());
-
-  } catch (error) {
-    console.error("Error fetching outreach data:", error);
-  }
-})();
 // const test1 = await ('Ottawa','07/24/2021', '09/24/2021');
 
 // code by Adarsh ends..................
