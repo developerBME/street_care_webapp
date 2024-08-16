@@ -29,6 +29,13 @@ import {
 } from "./Signup";
 import CustomButton from "./Buttons/CustomButton";
 import logEvent from "./FirebaseLogger";
+import { db } from "./firebase";
+import {
+  collection,
+  getDocs,
+  query,
+  where
+} from "firebase/firestore";
 
 function Login() {
   const navigate = useNavigate();
@@ -38,10 +45,12 @@ function Login() {
   const [error, setError] = useState(null);
   const [loginSuccess, setLoginSuccess] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  //const [banUser, setBannedUser] = useState("");
 
   const [errormsg, setErrors] = useState({
     PassError: "",
     EmailError: "",
+    BannedUserError: ""
   });
 
   const updateErrorState = (key, value) => {
@@ -86,41 +95,62 @@ function Login() {
       updateErrorState("PassError", "");
     }
 
-    // Set persistence based on the rememberMe state
-    const persistenceType = rememberMe
-      ? browserLocalPersistence
-      : browserSessionPersistence;
-    setPersistence(auth, persistenceType)
-      .then(async () => {
-        await signInWithEmailAndPassword(auth, email, password);
-        setLoginSuccess("Successfully logged in!");
-        setError(""); // Clearing out any existing error messages
-        // navigate(-1, { preventScrollReset: true });
-        navigate("/profile");
-        logEvent("STREET_CARE_INFO_AUTH", `${email} has logged in`);
-      })
-      .catch((error) => {
-        // setError(error.message);
-        if (error.code === "auth/user-not-found") {
-          setError(
-            <div className="flex flex-col">
-              <div className="flex items-center">
-                <img src={errorImg} className="w-3 h-3 mr-2" />
-                <div>User not found.</div>
-              </div>
-              <div className="flex items-center">
-                <img src={errorImg} className="w-3 h-3 mr-2" />
+    try {
+      const userQuery = query(
+        collection(db, 'bannedUser'),
+        where("email", "==", email)
+      );
+      const querySnapshot = await getDocs(userQuery);
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach((doc) => {
+          const userData = doc.data();
+          if(userData.email == email){
+            console.log(userData.email);
+            updateErrorState("BannedUserError", "User Profile is Banned! Please Contact Admin");
+          }
+        });
+      }
+      else{
+        updateErrorState("BannedUserError", "");
+        // Set persistence based on the rememberMe state
+        const persistenceType = rememberMe
+        ? browserLocalPersistence
+        : browserSessionPersistence;
+        setPersistence(auth, persistenceType)
+        .then(async () => {
+          await signInWithEmailAndPassword(auth, email, password);
+          setLoginSuccess("Successfully logged in!");
+          setError(""); // Clearing out any existing error messages
+          // navigate(-1, { preventScrollReset: true });
+          navigate("/profile");
+          logEvent("STREET_CARE_INFO_AUTH", `${email} has logged in`);
+        })
+        .catch((error) => {
+          // setError(error.message);
+          if (error.code === "auth/user-not-found") {
+            setError(
+              <div className="flex flex-col">
+                <div className="flex items-center">
+                  <img src={errorImg} className="w-3 h-3 mr-2" />
+                  <div>User not found.</div>
+                </div>
+                <div className="flex items-center">
+                  <img src={errorImg} className="w-3 h-3 mr-2" />
 
-                <div>Please check your email address and password.</div>
+                  <div>Please check your email address and password.</div>
+                </div>
               </div>
-            </div>
-          );
-        } else {
-          setError(error.message);
-        }
-        logEvent("STREET_CARE_ERROR", `at login - ${error.message}`);
-        setLoginSuccess(""); // Clearing out any success messages
-      });
+            );
+          } else {
+            setError(error.message);
+          }
+          logEvent("STREET_CARE_ERROR", `at login - ${error.message}`);
+          setLoginSuccess(""); // Clearing out any success messages
+        });
+      }
+    } catch (error) {
+      console.error('Error searching email: ', error);
+    }
   };
 
   const [showPassword, setShowPassword] = useState(false);
@@ -291,6 +321,17 @@ function Login() {
                   >
                     Forgot your password?
                   </div>
+
+                  {
+                    errormsg.BannedUserError && (
+                      <div className="inline-flex items-center gap-1.5">
+                        <img src={errorImg} className="w-3 h-3" />
+                        <div className="text-red-700 font-dmsans">
+                          {errormsg.BannedUserError}
+                        </div>
+                      </div>
+                    )
+                  }
                 </div>
               </div>
 
