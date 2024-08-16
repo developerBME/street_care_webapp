@@ -154,6 +154,8 @@ function HomePage() {
 
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
+  const [showWithdrawnModal, setShowWithdrawnModal] = useState(false);
+  const [triggerEffect, setTriggerEffect] = useState(false);
 
   const openModal = (event) => {
     setSelectedEvent(event);
@@ -166,85 +168,77 @@ function HomePage() {
   const onSignUp = () => {
     setSelectedEvent(null);
     setShowSignUpModal(true);
+    loadData();
   };
-
+  
   const closeSignUpModal = () => {
     setShowSignUpModal(false);
+    setTriggerEffect(prev => !prev);
+  };
+  
+  const onEventWithdraw = () => {
+    setSelectedEvent(null);
+    setShowWithdrawnModal(true);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const eventsData = await fetchEvents();
+  const closeWithdrawModal = () => {
+    setShowWithdrawnModal(false);
+  }
 
-        eventsData.sort((a, b) => a.eventDate - b.eventDate);
-        setEvents(eventsData);
-      } catch (error) {
-        setIsError((prev) => {
-          return {
-            ...prev,
-            events: true,
-          };
-        });
-        setEvents([]);
-        setErrorMsg((prev) => {
-          return {
-            ...prev,
-            events: "Events could not be loaded. Please try again later.",
-          };
-        });
-      }
-    };
-    const fetchOfficialData = async () => {
-      try {
-        const eventsData = await fetchOfficialEvents();
+  const fetchData = async () => {
+    try {
+      const eventsData = await fetchEvents();
+      eventsData.sort((a, b) => a.eventDate - b.eventDate);
+      setEvents(eventsData);
+    } catch (error) {
+      setIsError(prev => ({ ...prev, events: true }));
+      setEvents([]);
+      setErrorMsg(prev => ({
+        ...prev,
+        events: "Events could not be loaded. Please try again later.",
+      }));
+    }
+  };
 
-        eventsData.sort((a, b) => a.eventDate - b.eventDate);
-        let limitedData = eventsData.slice(0, 3);
-        setOffevents(limitedData);
-      } catch (error) {
-        setIsError((prev) => {
-          return {
-            ...prev,
-            officialEvents: true,
-          };
-        });
-        setOffevents([]);
-        setErrorMsg((prev) => {
-          return {
-            ...prev,
-            events: "Events could not be loaded. Please try again later.",
-          };
-        });
-      }
-    };
+  const fetchOfficialData = async () => {
+    try {
+      const eventsData = await fetchOfficialEvents();
+      eventsData.sort((a, b) => a.eventDate - b.eventDate);
+      const limitedData = eventsData.slice(0, 3);
+      setOffevents(limitedData);
+    } catch (error) {
+      setIsError(prev => ({ ...prev, officialEvents: true }));
+      setOffevents([]);
+      setErrorMsg(prev => ({
+        ...prev,
+        officialEvents: "Official events could not be loaded. Please try again later.",
+      }));
+    }
+  };
 
-    const fetchnewsData = async () => {
-      try {
-        // Display 3 news initially
-        let limitedData = NewsCardData.slice(0, 3);
-        setnewsevents(limitedData);
-      } catch (error) {
-        setIsError((prev) => {
-          return {
-            ...prev,
-            news: true,
-          };
-        });
-        setnewsevents([]);
-        setErrorMsg((prev) => {
-          return {
-            ...prev,
-            events: "News events could not be loaded. Please try again later.",
-          };
-        });
-      }
-    };
+  const fetchnewsData = async () => {
+    try {
+      const limitedData = NewsCardData.slice(0, 3);
+      setnewsevents(limitedData);
+    } catch (error) {
+      setIsError(prev => ({ ...prev, news: true }));
+      setnewsevents([]);
+      setErrorMsg(prev => ({
+        ...prev,
+        news: "News events could not be loaded. Please try again later.",
+      }));
+    }
+  };
 
+  const loadData = () => {
     fetchData();
     fetchOfficialData();
     fetchnewsData();
-  }, []);
+  };
+
+  useEffect(() => {
+    loadData();
+  }, [triggerEffect]);
 
   useEffect(() => {
     if (events) {
@@ -484,10 +478,13 @@ function HomePage() {
         <FAQs />
       </div>
       <Modal open={!!selectedEvent}>
-        <OutreachSignupModal data={{...selectedEvent}} closeModal={closeModal} onSignUp={onSignUp}/>
+        <OutreachSignupModal data={{...selectedEvent}} closeModal={closeModal} onSignUp={onSignUp} onEventWithdraw={onEventWithdraw}/>
       </Modal>
       <Modal open={showSignUpModal}>
-       <RSVPConfirmationModal closeSignUpModal={closeSignUpModal}/>
+       <RSVPConfirmationModal closeModal={closeSignUpModal} type='edit'/>
+      </Modal>
+      <Modal open={showWithdrawnModal}>
+       <RSVPConfirmationModal closeModal={closeWithdrawModal} type='withdraw' />
       </Modal>
     </div>
     // </div>

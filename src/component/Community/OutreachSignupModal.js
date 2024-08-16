@@ -10,7 +10,7 @@ import EditModal from "./EditModal";
 import { handleRsvp } from "../EventCardService";
 import { formatDate } from "../helper";
 
-const OutreachSignupModal = ({ data, mode, closeModal, onSignUp}) => {
+const OutreachSignupModal = ({ data, closeModal, onSignUp, onEventWithdraw}) => {
   const navigate = useNavigate();
   const [label2, setLabel2] = useState("RSVP");
   const [showEditModal, setShowEditModal] = useState(false);
@@ -22,7 +22,6 @@ const OutreachSignupModal = ({ data, mode, closeModal, onSignUp}) => {
   const handleCloseEditModal = () => {
     setShowEditModal(false);
   };
-  console.log('data: ', data);
 
   return (
     <div className="relative flex flex-col items-center">
@@ -133,7 +132,7 @@ const OutreachSignupModal = ({ data, mode, closeModal, onSignUp}) => {
 
             <div className="justify-start items-start gap-[15px] inline-flex">
               <div className="h-10 bg-[#6840E0] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex">
-                {mode === "EDIT" ? (
+                {data.label === "EDIT" ? (
                   <>
                     <CustomButton
                       label="Withdraw"
@@ -144,13 +143,14 @@ const OutreachSignupModal = ({ data, mode, closeModal, onSignUp}) => {
                       <EditModal
                         handleClose={handleCloseEditModal}
                         id={data.id}
-                        label={mode}
+                        label={data.label}
                         navigate={navigate}
-                        label2={label2}
+                        label2={'EDIT'}
                         setLabel2={setLabel2}
                         title={data.title}
                         eventDate={data.eventDate}
                         location={data.location}
+                        onEventWithdraw={onEventWithdraw}
                       />
                     )}
                   </>
