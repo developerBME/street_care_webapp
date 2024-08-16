@@ -77,7 +77,7 @@ const EventOutrachesSection = () => {
             // Filter events to get only past events
             const upcomingEvents = eventsData.filter((event) => {
                 const eventDate = new Date(event.eventDate.seconds * 1000);
-                return eventDate >= new Date(); // Check if the event date is before the current date
+                return eventDate <= new Date(); // Check if the event date is before the current date
             });
             // Sort events in place based on their date
             upcomingEvents.sort((a, b) => a.eventDate - b.eventDate);
@@ -114,7 +114,7 @@ const EventOutrachesSection = () => {
     const upcomingEvents = events
         .filter((event) => {
             const eventDate = new Date(event.eventDate.seconds * 1000);
-            return eventDate >= new Date(); // Check if the event date is before the current date
+            return eventDate <= new Date(); // Check if the event date is before the current date
         })
         .slice(0, 3);
 
