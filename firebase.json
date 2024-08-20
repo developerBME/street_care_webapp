@@ -17,6 +17,10 @@
     {
       "source": "functions/decodeToken",
       "codebase": "decode-token"
+    },
+    {
+      "source": "functions/exportToExcel",
+      "codebase": "export-to-excel"
     }
   ]
 }
