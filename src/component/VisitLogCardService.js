@@ -9,11 +9,10 @@ import {
   orderBy,
   where,
   limit,
-  orderBy,
   startAfter,
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { fetchUserDetails, formatDate , fetchUserName} from "./EventCardService";
+import { fetchUserDetails, formatDate } from "./EventCardService";
 import logEvent from "./FirebaseLogger";
 
 const VISIT_LOG_COLLECTION = "testLog";
