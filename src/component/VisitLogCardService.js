@@ -9,6 +9,8 @@ import {
   orderBy,
   where,
   limit,
+  orderBy,
+  startAfter,
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { fetchUserDetails, formatDate , fetchUserName} from "./EventCardService";
@@ -19,6 +21,7 @@ const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
 const USERS_COLLECTION = "users";
 const PERSONAL_VISIT_LOG_COLLECTION = "personalVisitLog";
 const VISIT_LOG_COLLECTION_PROD = "visitLogWebProd";
+const PERSONAL_VISIT_LOG = "personalVisitLog";
 
 export const fetchVisitLogs = async () => {
   try {
@@ -317,3 +320,127 @@ export async function calculateNumberOfPagesForVisitlog(visitlogPerPage) {
 
   return Math.ceil(totalVisitlogs / visitlogPerPage);
 }
+
+const fetchUserName = async (uid) => {
+  // Reference to the uid instead of the docid of the user.
+  const userQuery = query(
+    collection(db, USERS_COLLECTION),
+    where("uid", "==", uid)
+  );
+  const userDocRef = await getDocs(userQuery);
+
+  const userDocID = userDocRef.docs[0]?.id;  
+  // reference for the userdoc
+  if(userDocID != undefined){
+    const userRef = doc(db, USERS_COLLECTION, userDocID);
+    const userDoc = await getDoc(userRef);
+    
+    if (userDoc != undefined || userDoc.exists()) {
+      return userDoc.data().username || "";
+    } else {
+      console.error("No user found with uid:", uid);
+      logEvent(
+        "STREET_CARE_ERROR",
+        `error on fetchUserName VisitLogCardService.js- No user Found ${uid}`
+      );
+      throw new Error(
+        `error on fetchUserName VisitLogCardService.js- No user Found ${uid}`
+      );
+      return "";
+    }
+  }
+};
+
+export const fetchVisitLogsByCityOrState = async (searchValue, startDate, endDate, pageIndex=null,  recordsPerPage=5) => {
+  try {
+
+    if (!searchValue || typeof searchValue !== 'string') {
+      console.error('Invalid search value');
+      return;
+    }
+  
+    if (!(startDate instanceof Date) || isNaN(startDate)) {
+      console.error('Invalid start date');
+      return;
+    }
+  
+    if (!(endDate instanceof Date) || isNaN(endDate)) {
+      console.error('Invalid end date');
+      return;
+    } 
+
+    const visitlogs = collection(db, PERSONAL_VISIT_LOG);
+
+    let pageQuery = null;
+    let visitlogsByLocationQuery = null;
+
+    if (pageIndex !== null) {
+      if (pageIndex === 0) {
+        pageQuery = query(
+          visitlogs,
+          where('city', '==', searchValue),
+          where('dateTime', '>=', startDate),
+          where('dateTime', '<=', endDate),
+          orderBy('dateTime','asc'),
+          limit(recordsPerPage)
+        );
+      } else {
+        const prevPageQuery = query(
+          visitlogs,
+          where('city', '==', searchValue),
+          where('dateTime', '>=', startDate),
+          where('dateTime', '<=', endDate),
+          orderBy('dateTime','asc'),
+          limit(pageIndex * recordsPerPage)
+        );
+       
+        const documentSnapshots = await getDocs(prevPageQuery);
+        const lastVisible = documentSnapshots.docs[documentSnapshots.docs.length - 1];
+        pageQuery = query(
+          visitlogs,
+          where('city', '==', searchValue),
+          where('dateTime', '>=', startDate),
+          where('dateTime', '<=', endDate),
+          orderBy('dateTime','asc'),
+          limit(recordsPerPage),
+          startAfter(lastVisible)
+        );
+      }
+      visitlogsByLocationQuery = pageQuery;
+    }
+    else {
+    visitlogsByLocationQuery = query(
+      visitlogs, where('city', '==', searchValue),
+         where('dateTime', '>=', startDate),
+         where('dateTime', '<=', endDate),
+         orderBy('dateTime','asc')
+    );
+  }
+
+    const visitLogDocRef = await getDocs(visitlogsByLocationQuery);
+
+    if (visitLogDocRef.docs.length===0 && pageIndex!==null){
+      throw new Error(`Not enough documents to access page of index : ${pageIndex}`);
+      }
+
+    let visitLogByCity = [];
+    for (const doc of visitLogDocRef.docs) {
+      const visitLogData = doc.data(); 
+      const id = doc.id;
+      const userName = await fetchUserName(visitLogData.uid);
+      visitLogByCity.push({
+        ...visitLogData,
+        userName: userName,
+        id: id,
+      });
+    }
+    return visitLogByCity;
+
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchVisitLogByCityOrState VisitLogCardService.js- ${error.message}`
+    );
+    throw error;
+  }
+};

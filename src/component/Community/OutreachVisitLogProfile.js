@@ -81,42 +81,41 @@ const OutreachVisitLogProfile = () => {
       </div>
 
       {isLoading ? (
-        <div className="flex md:justify-between md:items-center w-full h-fit gap-2 grid-flow-col overflow-x-auto">
-          <EventCardSkeleton />
-          <EventCardSkeleton />
-          <EventCardSkeleton />
-        </div>
-      ) : isError ? (
-        <ErrorMessage displayName="Visit Logs" />
-      ) : (
-        <>
-          {visitLogs?.length > 0 && (
-            <div className="px-2 pb-4 grid grid-flow-col overflow-x-auto gap-2 md:px-0 md:pb-12 md:grid md:grid-cols-3 md:gap-y-4 md:gap-x-12 md:grid-rows-2 lg:gap-x-3 lg:grid-cols-3 lg:gap-y-3 lg:grid-rows-1  xl:px-0 xl:pb-16 xl:grid xl:grid-rows-1 xl:grid-cols-3 xl:gap-4">
-              {/* <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2 gap-y-2 mb-6"> */}
-              {visitLogs.slice(0, visibleItems).map((visitLogData, index) => (
-                <div key={visitLogData.id} className="flex md:p-2">
-                  <div className="flex">
-                    {/* <OutreachVisitLogCard
-                    visitLogCardData={visitLogData}
-                    IsNotProfile={false}
-                  /> */}
-                    <OutreachVisitLogProfileCard
-                      visitLogCardData={visitLogData}
-                      onRefresh={handleRefresh}
-                    />
-                  </div>
-                </div>
-              ))}
+          <div className="flex md:justify-between md:items-center w-full h-fit gap-2 grid-flow-col overflow-x-auto">
+            <EventCardSkeleton />
+            <EventCardSkeleton />
+            <EventCardSkeleton />
+          </div>
+        ) : isError ? (
+          <ErrorMessage displayName="Visit Logs" />
+        ) : (
+          <>
+            {visitLogs?.length > 0 && (
+          <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {visitLogs.slice(0, visibleItems).map((visitLogData) => (
+            <div key={visitLogData.id} className="bg-[#F5EEFE] w-full rounded-[30px] mb-4 flex flex-col justify-between p-6">
+              <div className="flex w-full">
+                <OutreachVisitLogProfileCard
+                  visitLogCardData={visitLogData}
+                  onRefresh={handleRefresh}
+                />
+              </div>
             </div>
+          ))}
+        </div>
           )}
 
           {visibleItems < visitLogs?.length && (
-            <button
-              className="w-fit rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 flex text-center text-[#1F0A58] hover:bg-[#1F0A58] hover:text-white text-[13px] font-medium font-dmsans leading-tight self-stretch px-6 py-2.5 mt-7"
-              onClick={loadMore}
-            >
-              Load More
-            </button>
+              <div className="">
+          <CustomButton
+            label="More of My Visit Logs"
+            name="buttondefault"
+            onClick={() => {
+              navigate("/myvisitlogs");
+            }}
+          />
+        </div>
+            
           )}
 
           {/* {visitLogs.length == 0 && <NoOutreachDoc isPersonalVisitLog={true} />} */}
