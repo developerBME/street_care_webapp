@@ -66,6 +66,7 @@ import TestAdmin from "./component/UserProfile/TestAdmin";
 import Admin_HomePage from "./admin/admin_homePage.js";
 import Dashboard from "./admin/admin_dashboard.js";
 import MoreVisitLogs from "./component/Community/MoreVisitLogs";
+import CreateOutreach from "./component/Community/CreateOutreach";
 import AllSignedUpOutreaches from "./component/UserProfile/AllSignedUpOutreaches";
 
 function App() {
@@ -199,6 +200,8 @@ function App() {
               path="/profile/personaloutform"
               element={<PersonalOutForm />}
             />
+
+            <Route path="/createOutreach" element={<CreateOutreach />} />
 
             <Route path="/helpRequestForm" element={<HelpRequestForm />} />
           </Route>
