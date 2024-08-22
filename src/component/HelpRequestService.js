@@ -110,6 +110,37 @@ export const fetchUserName = async (uid) => {
   }
 };
 
+export const fetchTopHelpRequests = async () => {
+  try {
+    const helpReqRef = collection(db, HELP_REQ_COLLECTION);
+      const allTopHelpRequestsByQuery = query(
+      helpReqRef,
+      orderBy('createdAt', 'desc'), // Order help requests by the 'createdAt' field in descending order to get the newest entries first
+      limit(6) // Limit to top 6 records
+    );
+    const helpRequestDocRef = await getDocs(allTopHelpRequestsByQuery);
+    let helpRequests = [];
+    for (const doc of helpRequestDocRef.docs) {
+      const helpRequestData = doc.data();
+      const id = doc.id;
+      const userName = await fetchUserName(helpRequestData.uid);
+      helpRequests.push({
+        ...helpRequestData,
+        userName: userName,
+        id: id,
+      });
+    }
+    console.log(helpRequests)
+    return helpRequests;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchTopHelpRequests HelpRequestService.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
 export const fetchHelpRequestByUser = async () => {
   try {
     const fAuth = getAuth();

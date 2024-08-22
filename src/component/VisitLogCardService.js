@@ -6,9 +6,9 @@ import {
   doc,
   updateDoc,
   query,
+  orderBy,
   where,
   limit,
-  orderBy,
   startAfter,
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -173,6 +173,37 @@ export const fetchVisitLogById = async (visitLogId) => {
 //   where(firebase.firestore.FieldPath.documentId(), "in", [id1,id2])
 // );
 // const userDocRef = await getDocs(userQuery);
+
+export const fetchTopVisitLogs= async () => {
+  try {
+    const visitlogs = collection(db, PERSONAL_VISIT_LOG_COLLECTION);
+    const visitlogsQuery = query(
+      visitlogs, 
+      orderBy('dateTime', 'desc'), // Order visit logs by the 'dateTime' field in descending order to get the newest entries first
+      limit(6) // Limit to top 6 records
+    );
+    const visitLogDocRef = await getDocs(visitlogsQuery);
+    let visitLogs = [];
+    for (const doc of visitLogDocRef.docs) {
+      const visitLogData = doc.data(); 
+      const id = doc.id;
+      const userName = await fetchUserName(visitLogData.uid);
+      visitLogs.push({
+        ...visitLogData,
+        userName: userName,
+        id: id,
+      });
+    }
+    console.log(visitLogs)
+    return visitLogs;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchTopVisitLogs EventCardService.js- ${error.message}`
+    );
+    throw error;
+  }
+};
 
 export const fetchPersonalVisitLogs = async (uid) => {
   try {
