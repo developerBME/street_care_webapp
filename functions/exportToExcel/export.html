@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoke Firebase Function</title>
+</head>
+<body>
+<h1>Export to Excel</h1>
+<input type="date" id="dateInput">
+<button id="exportButton">Export</button>
+
+<script>
+        document.getElementById('exportButton').addEventListener('click', async () => {
+            const date = document.getElementById('dateInput').value;
+
+            if (!date) {
+                alert('Please select a date');
+                return;
+            }
+            //min a week ago
+            //today
+
+            const url = `https://us-central1-streetcare-d0f33.cloudfunctions.net/exportToExcel?date=${date}`;
+
+            try {
+                const response = await fetch(url);
+                const result = await response.text();
+
+                if (response.ok) {
+                    alert(result);
+                } else {
+                    alert(`Error: ${result}`);
+                }
+            } catch (error) {
+                console.error('Error invoking Firebase function:', error);
+                alert('Error invoking Firebase function');
+            }
+        });
+    </script>
+</body>
+</html>
