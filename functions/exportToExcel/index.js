@@ -138,3 +138,4 @@ exports.exportToExcel = functions.https.onRequest(async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+// Function end point - https://us-central1-streetcare-d0f33.cloudfunctions.net/exportToExcel
