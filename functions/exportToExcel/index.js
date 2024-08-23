@@ -42,12 +42,8 @@ function getStartEndOfDate(dateString) {
 
 async function fetchRecordsForDate(collectionName, dateString) {
   try {
-    const { start, end } = getStartEndOfDate(dateString);
-
     const snapshot = await db.collection(collectionName)
-      .where('DateOfSignature', '>=', start)
-      .where('DateOfSignature', '<=', end)
-      .orderBy('DateOfSignature', 'desc')
+      .where('DateOfSignature', '==', dateString)
       .get();
 
     if (snapshot.empty) {

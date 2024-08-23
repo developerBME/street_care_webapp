@@ -11,15 +11,38 @@
 <button id="exportButton">Export</button>
 
 <script>
+        // Function to get the start and end dates for the last 7 days
+        function getLast7DaysRange() {
+            const currentDate = new Date();
+            const endOfRange = new Date(currentDate);
+            const startOfRange = new Date(currentDate);
+
+            // Set the start of the range to 7 days before today
+            startOfRange.setDate(currentDate.getDate() - 6); // 7 days ago including today
+
+            return {
+                start: startOfRange.toISOString().split('T')[0], // Format YYYY-MM-DD
+                end: endOfRange.toISOString().split('T')[0]
+            };
+        }
+
+        // Set the min and max attributes for the date input field
+        function setDateInputRange() {
+            const { start, end } = getLast7DaysRange();
+            const dateInput = document.getElementById('dateInput');
+            dateInput.setAttribute('min', start);
+            dateInput.setAttribute('max', end);
+        }
+
+        window.onload = setDateInputRange;
+
         document.getElementById('exportButton').addEventListener('click', async () => {
             const date = document.getElementById('dateInput').value;
 
             if (!date) {
-                alert('Please select a date');
+                alert('Please select a date within the last 7 days (including today)');
                 return;
             }
-            //min a week ago
-            //today
 
             const url = `https://us-central1-streetcare-d0f33.cloudfunctions.net/exportToExcel?date=${date}`;
 
