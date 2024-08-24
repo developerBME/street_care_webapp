@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io"; // Import both icons
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import OutreachVisitLogProfileCard from "./OutreachVisitLogProfileCard";
 import { useNavigate } from "react-router-dom";
 import { fetchPersonalVisitLogs } from "../VisitLogCardService";
@@ -16,7 +16,7 @@ const MoreVisitLogs = () => {
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
-  const logsPerPage = 10; // Number of logs per page
+  const logsPerPage = 6; // Updated to match AllOutreachVisitLog
 
   const navigate = useNavigate();
 
@@ -59,6 +59,14 @@ const MoreVisitLogs = () => {
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  // Color variables for pagination (similar to AllOutreachVisitLog)
+  const inactiveBgColor = "bg-white";
+  const inactiveTextColor = "text-black";
+  const inactiveBorderColor = "border-[#9B82CF]";
+  const activeBgColor = "bg-[#E0D7EC]";
+  const activeTextColor = "text-black";
+  const activeBorderColor = "border-[#1F0A58]";
+
   return (
     <div className="relative flex flex-col items-center ">
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-16 lg:mx-40 mt-48 rounded-2xl bg-white text-black">
@@ -76,7 +84,7 @@ const MoreVisitLogs = () => {
             My Visit Logs
           </p>
           <div className="pt-4 pb-3">
-            <div className="w-full flex flex-col sm:flex-row bg-[#F2F6D8] p-4 rounded-xl gap-4 justify-between ">
+            <div className="w-full flex flex-col sm:flex-row bg-[#F2F6D8] p-4 rounded-xl gap-4 justify-between">
               <div className="text-neutral-800 text-[20px] font-medium font-bricolage leading-loose">
                 View your documented visit logs here.
               </div>
@@ -112,43 +120,19 @@ const MoreVisitLogs = () => {
               )}
               {/* Pagination */}
               <div className="flex justify-center mt-8">
-                <button
-                  onClick={() => paginate(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className={`px-4 py-2 rounded-full ${
-                    currentPage === 1 ? "bg-gray-300" : "bg-[#1F0A58] text-white"
-                  }`}
-                >
-                  <IoIosArrowBack />
-                </button>
-                <div className="flex items-center gap-2 mx-4">
-                  {Array.from({
-                    length: Math.ceil(visitLogs.length / logsPerPage),
-                  }).map((_, index) => (
-                    <button
-                      key={index + 1}
-                      onClick={() => paginate(index + 1)}
-                      className={`px-3 py-1 rounded-full ${
-                        currentPage === index + 1
-                          ? "bg-[#1F0A58] text-white"
-                          : "bg-white text-[#1F0A58] border border-[#1F0A58]"
-                      }`}
-                    >
-                      {index + 1}
-                    </button>
-                  ))}
-                </div>
-                <button
-                  onClick={() => paginate(currentPage + 1)}
-                  disabled={currentPage === Math.ceil(visitLogs.length / logsPerPage)}
-                  className={`px-4 py-2 rounded-full ${
-                    currentPage === Math.ceil(visitLogs.length / logsPerPage)
-                      ? "bg-gray-300"
-                      : "bg-[#1F0A58] text-white"
-                  }`}
-                >
-                  <IoIosArrowForward />
-                </button>
+                {[...Array(Math.ceil(visitLogs.length / logsPerPage)).keys()].map((i) => (
+                  <button
+                    key={i + 1}
+                    className={`mx-2 px-4 py-2 border rounded-full ${
+                      currentPage === i + 1
+                        ? `${activeBgColor} ${activeTextColor} ${activeBorderColor}`
+                        : `${inactiveBgColor} ${inactiveTextColor} ${inactiveBorderColor}`
+                    }`}
+                    onClick={() => paginate(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
               </div>
             </>
           )}
