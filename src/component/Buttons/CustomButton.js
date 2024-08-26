@@ -1,6 +1,6 @@
 import React from "react";
 
-function CustomButton({ label, name, onClick, icon, disable, type }) {
+function CustomButton({ label, name, onClick, icon, disable, type, textColor }) {
   if (name == "buttonborder") {
     return (
       <button
@@ -326,7 +326,7 @@ function CustomButton({ label, name, onClick, icon, disable, type }) {
         onClick={onClick}
         className={`text-[14px] font-medium py-[5px] px-[24px] border-[1px] rounded-full transition ease-in-out delay-300 ${
           disable !== "true"
-            ? "text-[#1F0A58] border-[#C8C8C8] hover:bg-violet-200"
+            ? `text-[${textColor ? textColor : "#1F0A58"}] border-[#C8C8C8] hover:bg-violet-200`
             : "text-[#bfbfbf] border[#d8d8d8] cursor-not-allowed hover:bg-white"
         }`}
       >
