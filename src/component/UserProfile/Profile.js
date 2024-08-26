@@ -35,6 +35,8 @@ function Profile() {
         const signedUpEventsData = await fetchUserSignedUpOutreaches(uid);
         signedUpEventsData.sort((a,b) => a.eventData - b.eventData);
 
+        console.log("Signed Up Events Data:", signedUpEventsData);
+
         setCreatedEvents(createdEventsData);
         setSignedUpEvents(signedUpEventsData);
       } else {
@@ -179,13 +181,13 @@ function Profile() {
                   <EventCardSkeleton />
                   <EventCardSkeleton />
                 </div>
-              ) : createdEvents.length === 0 ? (
+              ) : signedUpEvents.length === 0 ? (
                 <NoDisplayData
                 name="signedupoutreaches" 
                 label="No outreach events created"/>
               ) : (
                 <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 mb-6">
-                  {createdEvents.map((eventData) => (
+                  {signedUpEvents.map((eventData) => (
                     <OutreachEventCard
                       key={eventData.id}
                       cardData={{
