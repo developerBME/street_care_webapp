@@ -68,6 +68,7 @@ import Dashboard from "./admin/admin_dashboard.js";
 import MoreVisitLogs from "./component/Community/MoreVisitLogs";
 import CreateOutreach from "./component/Community/CreateOutreach";
 import AllSignedUpOutreaches from "./component/UserProfile/AllSignedUpOutreaches";
+import OutreachEvents from "./component/Admin/OutreachEvents";
 
 function App() {
   const fAuth = getAuth();
@@ -266,6 +267,10 @@ function App() {
             element={<PersonalOutForm />}
           />
           <Route path="/myvisitlogs" element={<MoreVisitLogs />} />
+
+          {/* Admin Routes */}
+          <Route path="/admin/outreach-events" element={<OutreachEvents />} />
+
         </Routes>
         <Footer />
       </Router>
