@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import { fetchPublicVisitLogs } from "./VisitLogCardService";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
-import { parse } from 'date-fns';
+import { parse } from "date-fns";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -17,6 +17,10 @@ const AllOutreachVisitLog = () => {
   const [startDate, setStartDate] = useState(new Date("2024-01-02"));
   const [endDate, setEndDate] = useState(new Date());
   const searchRef = useRef("");
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const logsPerPage = 6; // Adjust the number of logs per page
 
   useEffect(() => {
     const getVisitLogs = async () => {
@@ -42,7 +46,7 @@ const AllOutreachVisitLog = () => {
   const handleSortChange = (e) => {
     const sortBy = e.target.value;
     setSortOption(sortBy);
-  
+
     if (sortBy === "city") {
       const sortedLogs = [...filteredVisitLogs].sort((a, b) =>
         a.location.city.localeCompare(b.location.city)
@@ -69,6 +73,14 @@ const AllOutreachVisitLog = () => {
       filterByDate();
     }
   }, [startDate, endDate, sortOption]);
+
+  // Get current logs based on pagination
+  const indexOfLastLog = currentPage * logsPerPage;
+  const indexOfFirstLog = indexOfLastLog - logsPerPage;
+  const currentLogs = filteredVisitLogs.slice(indexOfFirstLog, indexOfLastLog);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const returnTarget = "/";
   const returnText = "Return to Home";
@@ -116,7 +128,6 @@ const AllOutreachVisitLog = () => {
                 >
                   <path
                     strokeLinecap="round"
-                    
                     d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
                   />
                 </svg>
@@ -130,7 +141,7 @@ const AllOutreachVisitLog = () => {
                   onChange={handleSortChange}
                   className="form-select w-fit md:w-[8rem] py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block rounded-2xl"
                 >
-                  <option value="startDate">Start Date</option>            
+                  <option value="startDate">Start Date</option>
                   <option value="endDate">End Date</option>
                   <option value="city">City</option>
                 </select>
@@ -168,20 +179,38 @@ const AllOutreachVisitLog = () => {
               <EventCardSkeleton />
             </div>
           ) : (
-            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-              {filteredVisitLogs.length > 0 ? (
-                filteredVisitLogs.map((visitLogData) => (
-                  <OutreachVisitLogCard
-                    key={visitLogData.id}
-                    visitLogCardData={visitLogData}
-                  />
-                ))
-              ) : (
-                <p className="col-span-3 text-center text-gray-500">
-                  No logs found.
-                </p>
-              )}
-            </div>
+            <>
+              <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+                {currentLogs.length > 0 ? (
+                  currentLogs.map((visitLogData) => (
+                    <OutreachVisitLogCard
+                      key={visitLogData.id}
+                      visitLogCardData={visitLogData}
+                    />
+                  ))
+                ) : (
+                  <p className="col-span-3 text-center text-gray-500">
+                    No logs found.
+                  </p>
+                )}
+              </div>
+              {/* Pagination */}
+              <div className="flex justify-center mt-8">
+                {[...Array(Math.ceil(filteredVisitLogs.length / logsPerPage)).keys()].map((i) => (
+                  <button
+                    key={i + 1}
+                    className={`mx-2 px-4 py-2 border rounded-full ${
+                      currentPage === i + 1
+                        ? "bg-[#E0D7EC] text-black border-[#1F0A58]"
+                        : "bg-white text-black border-[#9B82CF]"
+                    }`}
+                    onClick={() => paginate(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+              </div>
+            </>
           )}
         </div>
       </div>
