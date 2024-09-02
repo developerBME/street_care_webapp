@@ -154,7 +154,6 @@ export const fetchVisitLogById = async (visitLogId) => {
     const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
     const visitLogSnap = await getDoc(visitLogRef);
     let visitLogs = await visitLogHelperFunction(visitLogSnap);
-    console.log(visitLogs[0].photoUrl);
 
     return visitLogs[0];
   } catch (error) {
