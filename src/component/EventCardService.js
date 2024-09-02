@@ -582,6 +582,168 @@ export const fetchByCityOrState = async (searchValue, startDate, endDate) => {
   }
 };
 
+
+//@code by Adarsh starts -------
+
+export const fetchPastOutreaches = async () => {
+  try {
+    const pastOureachEventsRef = collection(db,PAST_OUTREACH_EVENTS_COLLECTION);
+    const outreachDocRef = await getDocs(pastOureachEventsRef);
+
+    const totaloutreaches= outreachDocRef.size;
+    // const totaloutreaches = count(outreachDocRef.data())
+    return totaloutreaches;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchPastOutreachEvents EventCardService.js- ${error.message}`
+    );
+    throw error;
+  }
+}
+
+
+
+export const fetchByCityOrStates = async (searchValue, startDate, endDate,curr_page,outreachPerPages) => {
+  try {
+
+      const pastOureachEventsRef = collection(db,PAST_OUTREACH_EVENTS_COLLECTION);
+      const outreachDocRef = await getDocs(pastOureachEventsRef);
+
+      const totaloutreaches= outreachDocRef.size;
+      // const totaloutreaches = count(outreachDocRef.data())
+      // return totaloutreaches;
+    if (!searchValue || typeof searchValue !== "string"|| searchValue ==''|| searchValue =="") {
+
+      const pastOutreachRef = query( collection(db, PAST_OUTREACH_EVENTS_COLLECTION), where("eventDate", ">=", startDate), where("eventDate", "<=", endDate), orderBy("eventDate", "desc"));
+      const snapshots = await getDocs(pastOutreachRef);
+      const tot = snapshots.size;
+      console.log('tot:'+tot)
+
+      if (tot!=0 ){
+
+      const start_Index = outreachPerPages*curr_page;
+      const init_doc = snapshots.docs[start_Index];
+
+      const outreachByLocationQuery = query(pastOutreachRef,startAt(init_doc), limit(outreachPerPages));
+
+      while(outreachPerPages < totaloutreaches )
+          {
+              const outreachDocRef = await getDocs(outreachByLocationQuery);
+              console.log('Test7:');
+              // console.log('outreachDocRef:'+outreachDocRef);
+
+              let outreachByLoc = [];
+              for (const doc of outreachDocRef.docs) {
+                  const pastOutreachData = doc.data();
+                  const id = doc.id;
+                  // console.log('id wrt loc: '+id);
+
+                  outreachByLoc.push({
+                  ...pastOutreachData,
+                      id: id,
+                  });
+              }
+          return {tot, outreachByLoc};
+          }
+      }
+
+      console.error("No PastOutreaches available for the given date range");
+      throw new Error("No PastOutreaches available for the given date range and city");
+    }
+
+
+    if (!(startDate instanceof Date) || isNaN(startDate)) {
+      console.error("Invalid start date");
+      return;
+    }
+
+    if (!(endDate instanceof Date) || isNaN(endDate)) {
+      console.error("Invalid end date");
+      return;
+    }
+
+    // const pastOutreachRef = collection(db, PAST_OUTREACH_EVENTS_COLLECTION);
+    const pastOutreachRef = query( collection(db, PAST_OUTREACH_EVENTS_COLLECTION) ,where("location.city", "==", searchValue),
+      where("eventDate", ">=", startDate), where("eventDate", "<=", endDate));
+    const snapshots = await getDocs(pastOutreachRef);
+    const tot = snapshots.size
+    console.log('total snapshots:'+ tot);
+    const start_Index = outreachPerPages*curr_page;
+    const init_doc = snapshots.docs[start_Index];
+
+
+    // Full text search - Search filtering by City/State fields matching exact value
+    if (tot!=0 ){
+      
+    console.log('Test1:');
+
+
+    const outreachByLocationQuery = query(pastOutreachRef,startAt(init_doc), limit(outreachPerPages));
+
+    while(outreachPerPages < totaloutreaches )
+
+      {
+        const outreachDocRef = await getDocs(outreachByLocationQuery);
+        console.log('Test2:');
+        // console.log('outreachDocRef:'+outreachDocRef);
+
+        let outreachByLoc = [];
+        for (const doc of outreachDocRef.docs) {
+            const pastOutreachData = doc.data();
+            const id = doc.id;
+            // console.log('id wrt loc: '+id);
+
+            outreachByLoc.push({
+            ...pastOutreachData,
+              id: id,
+            });
+          }
+        return {tot,outreachByLoc};
+      }
+  }
+  console.error("No PastOutreaches available for the given date range and city");
+  throw new Error("No PastOutreaches available for the given date range and city");
+  // console.log('outreachByLoc: '+outreachByLoc);
+    
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchByCityOrState AllPastOrtreachEvents.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+/*
+const cityToSearch = "Ottawa"; 
+const startDateTime = new Date("2020-07-01"); 
+const endDateTime = new Date("2023-07-01");
+const curr_page=0;
+const outreachPerPages = 5;
+
+
+(async () => {
+try {
+  // const totaloutreaches = await fetchPastOutreaches()
+  const outreachByLocation = await fetchByCityOrStates(cityToSearch, startDateTime, endDateTime, curr_page, outreachPerPages);
+  console.log("Fetched outreach data:", outreachByLocation);
+  // console.log('fetchPastOutreaches: '+ await fetchPastOutreaches());
+
+} catch (error) {
+  console.error("Error fetching outreach data:", error);
+}
+})();
+
+
+// const test1 = await ('Ottawa','07/24/2021', '09/24/2021');
+
+// code by Adarsh ends..................
+*/
+
+
+
+
+
 export const fetchUserOutreaches = async () => {
   try {
     const auth = getAuth();
