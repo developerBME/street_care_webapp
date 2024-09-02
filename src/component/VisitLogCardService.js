@@ -221,15 +221,7 @@ export const fetchPersonalVisitLogs = async (uid) => {
     const visitLogsData = [];
 
     for (let visitLogId of visitLogIds) {
-      const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
-      const visitLogDoc = await getDoc(visitLogRef);
-      if (visitLogDoc.exists()) {
-        const visitLogData = visitLogDoc.data();
-        visitLogsData.push({
-          ...visitLogData,
-          id: visitLogId,
-        });
-      }
+      visitLogsData.push(await fetchPersonalVisitLogById(visitLogId));
     }
     return visitLogsData;
   } catch (error) {
