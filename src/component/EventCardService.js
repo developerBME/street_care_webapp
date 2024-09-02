@@ -14,7 +14,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import logEvent from "./FirebaseLogger";
 
 const OFFICIAL_EVENTS_COLLECTION = "officialEvents";
-const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
+const OUTREACH_EVENTS_COLLECTION = "outreachEventsDev"; //Change this back to outreachEvents in dev branch
 const PAST_OUTREACH_EVENTS_COLLECTION = "pastOutreachEvents";
 const USERS_COLLECTION = "users";
 

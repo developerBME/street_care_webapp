@@ -14,14 +14,16 @@ import { fetchUserDetails, formatDate } from "./EventCardService";
 import logEvent from "./FirebaseLogger";
 
 const VISIT_LOG_COLLECTION = "testLog";
-const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
+const OUTREACH_EVENTS_COLLECTION = "outreachEventsDev"; //Change this back to outreachEvents in dev branch
 const USERS_COLLECTION = "users";
 const PERSONAL_VISIT_LOG_COLLECTION = "personalVisitLog";
 const VISIT_LOG_COLLECTION_PROD = "visitLogWebProd";
 
 export const fetchVisitLogs = async () => {
   try {
-    const visitLogsRef = collection(db, PERSONAL_VISIT_LOG_COLLECTION);
+    // const visitLogsRef = collection(db, PERSONAL_VISIT_LOG_COLLECTION); Change back to this line in dev branch
+    const visitLogsRef = collection(db, VISIT_LOG_COLLECTION_PROD);
+
     const visitLogSnapshot = await getDocs(visitLogsRef);
     let visitLogs = [];
     for (const doc of visitLogSnapshot.docs) {
@@ -210,7 +212,8 @@ export const fetchPersonalVisitLogs = async (uid) => {
 export const fetchPublicVisitLogs = async () => {
   try {
     const visitLogsRef = query(
-      collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+      // collection(db, PERSONAL_VISIT_LOG_COLLECTION), Change back to this line in dev branch
+      collection(db, VISIT_LOG_COLLECTION_PROD),
       where("public", "==", true)
     );
     const visitLogSnapshot = await getDocs(visitLogsRef);

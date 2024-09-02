@@ -222,7 +222,9 @@ const Form = (hrid) => {
           };
 
           // Insert doc in outreach event
-          const eventRef = collection(db, "outreachEvents");
+          // const eventRef = collection(db, "outreachEvents"); //change back to this line in dev branch
+          const eventRef = collection(db, "outreachEventsDev");
+
 
           async function postDoc(ref, obj) {
             const docRef = await addDoc(ref, obj);
