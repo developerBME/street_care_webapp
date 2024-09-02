@@ -72,7 +72,7 @@ const AllOutreachVisitLog = () => {
     if (sortOption === "startDate" || sortOption === "endDate") {
       filterByDate();
     }
-  }, [startDate, endDate, sortOption]);
+  }, [filterByDate,startDate, endDate, sortOption]);
 
   // Get current logs based on pagination
   const indexOfLastLog = currentPage * logsPerPage;
