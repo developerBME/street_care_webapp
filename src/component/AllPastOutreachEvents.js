@@ -42,7 +42,7 @@ const AllPastOutreachEvents = () => {
       const combinedEvents = [...pastEvents, ...pastOutreachEventsData];
 
       // Sort events in place based on their date
-      combinedEvents.sort((a, b) => a.eventDate - b.eventDate);
+      combinedEvents.sort((a, b) => b.eventDate - a.eventDate);
 
       setEvents(combinedEvents);
     };
@@ -98,7 +98,8 @@ const AllPastOutreachEvents = () => {
             <div className="">
               <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] lg:mt-2">
                 {" "}
-                Past outreach events
+                Past Outreach Events 
+                {/* //Changing this to Outreach events. Combine Upcoming Outreaches and Past Outreaches in the future*/}
               </p>
             </div>
             <div className=" mt-6 lg:mt-0">

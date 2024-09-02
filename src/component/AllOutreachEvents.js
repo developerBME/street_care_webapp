@@ -27,8 +27,8 @@ const AllOutreachEvents = () => {
           : event.eventDate;
         return eventDate >= new Date(); // Check if the event date is before the current date
       });
-      // Sort events in place based on their date
-      upcomingEvents.sort((a, b) => a.eventDate - b.eventDate);
+      // Sort events in place based on their date in descending order
+      upcomingEvents.sort((a, b) => b.eventDate - a.eventDate);
 
       setEvents(upcomingEvents);
     };
@@ -84,7 +84,7 @@ const AllOutreachEvents = () => {
             <div className="">
               <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] lg:mt-2">
                 {" "}
-                Upcoming outreach events
+                Upcoming Outreach Events
               </p>
             </div>
             <div className=" mt-6 lg:mt-0">

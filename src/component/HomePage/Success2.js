@@ -17,6 +17,7 @@ function Success2() {
   useEffect(() => {
     const getValues = async () => {
       try {
+        // const logOfUserRef = query(collection(db, "personalVisitLog")); //change back to this line in dev branch.
         const logOfUserRef = query(collection(db, "visitLogWebProd"));
         const data = await getDocs(logOfUserRef);
         let totalDonations = 0;
@@ -195,13 +196,15 @@ function Success2() {
 
           <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-b-2xl lg:rounded-tr-none lg:rounded-bl-none shrink basis-0 px-8 py-4 bg-gradient-to-br from-orange-300 to-neutral-200 justify-start  gap-6 flex">
             <div className="text-violet-950 text-2xl lg:text-xl font-medium leading-loose">
-              App User Rating
+              {/* App User Rating */}
+              Chapter Members
             </div>
             <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
               <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
                 <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
                   {/* {donations} */}
-                  4.9/5
+                  {/* 4.9/5 */}
+                  1000+
                 </div>
               </div>
               {/* <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">

@@ -29,6 +29,7 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
   // Function to delete visit log
   const deleteVisitLog = async () => {
     try {
+      // const visitLogDoc = doc(db, "personalVisitLog", visitLogCardData.id); //change back to personalVisitLog in dev branch
       const visitLogDoc = doc(db, "visitLogWebProd", visitLogCardData.id);
 
       const userQuery = query(

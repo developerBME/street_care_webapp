@@ -22,7 +22,7 @@ const starStyle = {
   width: 60,
   height: 60,
 };
-const OUTREACH_EVENTS_COLLECTION = "outreachEventsDev";
+const OUTREACH_EVENTS_COLLECTION = "outreachEventsDev"; //change back to outreachEvents in dev branch
 function getLastWeeksDate() {
   const now = new Date();
 
@@ -211,6 +211,7 @@ function CommOutForm() {
     </div>`;
 
     try {
+      // const logRef = collection(db, "personalVisitLog"); //change back to this line in dev branch
       const logRef = collection(db, "visitLogWebProd");
       const docRef = await addDoc(logRef, obj);
       if (docRef.id) {
