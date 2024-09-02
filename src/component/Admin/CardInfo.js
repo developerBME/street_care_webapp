@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Card = ({ children, bgColor }) => {
+const CardInfo = ({ children, bgColor }) => {
   return (
     <div className={`p-6 shadow-md rounded-[30px] ${bgColor}`}>
       {children}
@@ -8,4 +8,4 @@ const Card = ({ children, bgColor }) => {
   );
 }
 
-export default Card;
+export default CardInfo;

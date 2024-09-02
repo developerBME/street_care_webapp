@@ -3,7 +3,7 @@ import { collection, getDocs, query, where, addDoc, deleteDoc, doc } from "fireb
 import { db } from "../firebase";
 import { debounce } from 'lodash';
 
-function UserList() {
+export default function UserList() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -240,4 +240,3 @@ function UserList() {
   );
 }
 
-export default UserList;

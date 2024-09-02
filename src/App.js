@@ -46,7 +46,7 @@ import Temp_Profile from "./component/Temp_Profile";
 import { ProtectedRoute } from "./component/ProtectedRoute";
 import EmailVerificationModal from "./component/EmailVerificationModal";
 
-import Sample_form from "./component/Sample_form";
+import SampleForm from "./component/Sample_form";
 import AllHelpRequests from "./component/AllHelpRequests";
 import ProfileSettings from "./component/UserProfile/ProfileSettings";
 import UpdateEmailAddress from "./component/UserProfile/ProfileSettings/UpdateEmailAddress";
@@ -55,7 +55,7 @@ import PersonalVisitLogDetails from "./component/Community/PersonalVisitLogDetai
 import EmailUpdateConfirmation from "./component/UserProfile/ProfileSettings/EmailUpdateConfirmation";
 import DeleteAccConfirmation from "./component/UserProfile/ProfileSettings/DeleteAccConfirmation";
 import UpdateProfile from "./component/UserProfile/ProfileSettings/UpdateProfile";
-
+import UserListNew from "./component/Admin/UserList.js"
 //import UserDetails from "./component/admin_test/UserDetails.js";
 import CreateOutreachAdmin from "./component/admin_test/CreateOutreachAdmin.js";
 
@@ -63,8 +63,8 @@ import TestUser from "./component/Test/Test";
 import ListUser from "./component/Test/ListUser";
 import { ProtectedAdminRoute } from "./component/ProtectedAdminRoute";
 import TestAdmin from "./component/UserProfile/TestAdmin";
-import Admin_HomePage from "./admin/admin_homePage.js";
-import Dashboard from "./admin/admin_dashboard.js";
+import AdminHomePage from './component/Admin/AdminHomePage.js';
+import Dashboard from "./component/Admin/AdminDashboard.js"
 import MoreVisitLogs from "./component/Community/MoreVisitLogs";
 import CreateOutreach from "./component/Community/CreateOutreach";
 import AllSignedUpOutreaches from "./component/UserProfile/AllSignedUpOutreaches";
@@ -166,6 +166,7 @@ function App() {
           >
             <Route path="/testAdmin" element={<TestAdmin />} />
             <Route path="/admin-panel/userlist" element={<UserList />} />
+            <Route path="/admin/userManagement" element={<UserListNew/>}/>
           </Route>
           <Route
             element={
@@ -237,8 +238,8 @@ function App() {
             path="profile/allSignedUpOutreaches"
             element={<AllSignedUpOutreaches />}
           />
-          <Route path="/admin" element={<Admin_HomePage />} />
-          <Route path="/sample_form" element={<Sample_form />} />
+          <Route path="/admin" element={<AdminHomePage />} />
+          <Route path="/sample_form" element={<SampleForm />} />
           <Route path="visitLogDetails" element={<VisitLogDetails />} />
           <Route path="visitLogDetails/:id" element={<VisitLogDetails />} />
           <Route
