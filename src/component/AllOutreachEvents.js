@@ -27,8 +27,8 @@ const AllOutreachEvents = () => {
           : event.eventDate;
         return eventDate >= new Date(); // Check if the event date is before the current date
       });
-      // Sort events in place based on their date
-      upcomingEvents.sort((a, b) => a.eventDate - b.eventDate);
+      // Sort events in place based on their date in descending order
+      upcomingEvents.sort((a, b) => b.eventDate - a.eventDate);
 
       setEvents(upcomingEvents);
     };
