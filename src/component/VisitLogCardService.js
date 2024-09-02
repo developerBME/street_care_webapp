@@ -109,7 +109,9 @@ const fetchOutreachEventData = async (eid) => {
 export const fetchVisitLogById = async (visitLogId) => {
   try {
     // Reference to the specific document in the visitlog collection
-    const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
+    // const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId); //change back to this line in dev branch
+    const visitLogRef = doc(db, VISIT_LOG_COLLECTION_PROD, visitLogId);
+
     const visitLogSnap = await getDoc(visitLogRef);
     const visitLogData = visitLogSnap.data();
     const outreachEventId = visitLogData.outreachEvent || "";
@@ -189,7 +191,8 @@ export const fetchPersonalVisitLogs = async (uid) => {
     const visitLogsData = [];
 
     for (let visitLogId of visitLogIds) {
-      const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
+      // const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId); //change back to this line in dev branch
+      const visitLogRef = doc(db, VISIT_LOG_COLLECTION_PROD, visitLogId);
       const visitLogDoc = await getDoc(visitLogRef);
       if (visitLogDoc.exists()) {
         const visitLogData = visitLogDoc.data();
@@ -257,7 +260,8 @@ export const fetchPublicVisitLogs = async () => {
 
 export const fetchPersonalVisitLogById = async (visitLogId) => {
   try {
-    const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
+    // const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId); //change to this line in dev branch
+    const visitLogRef = doc(db, VISIT_LOG_COLLECTION_PROD, visitLogId);
     const visitLogDoc = await getDoc(visitLogRef);
     if (visitLogDoc.exists()) {
       const visitLogData = visitLogDoc.data();
@@ -282,7 +286,8 @@ export async function calculateNumberOfPagesForVisitlog(visitlogPerPage) {
     );
   }
 
-  const visitlogRef = collection(db, PERSONAL_VISIT_LOG_COLLECTION);
+  // const visitlogRef = collection(db, PERSONAL_VISIT_LOG_COLLECTION); //change to this line in dev branch
+  const visitlogRef = collection(db, VISIT_LOG_COLLECTION_PROD);
   const snapshot = await getDocs(visitlogRef);
   const totalVisitlogs = snapshot.size;
 
