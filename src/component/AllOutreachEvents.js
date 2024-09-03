@@ -25,10 +25,10 @@ const AllOutreachEvents = () => {
         const eventDate = event?.eventDate?.seconds
           ? new Date(event.eventDate.seconds * 1000)
           : event.eventDate;
-        return eventDate >= new Date(); // Check if the event date is before the current date
+        return eventDate >= new Date(); // Check if the event date is after the current date
       });
-      // Sort events in place based on their date in descending order
-      upcomingEvents.sort((a, b) => b.eventDate - a.eventDate);
+      // Sort events in place based on their date in ascending order
+      upcomingEvents.sort((a, b) => a.eventDate - b.eventDate);
 
       setEvents(upcomingEvents);
     };
@@ -116,34 +116,32 @@ const AllOutreachEvents = () => {
             </div>
           </div>
 
-          <>
-            {isLoading ? (
-              // <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
-              <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
-                <EventCardSkeleton />
-                <EventCardSkeleton />
-                <EventCardSkeleton />
-              </div>
-            ) : (
-              // <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
-              <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
-                {eventsDisplay.length > 0 &&
-                  eventsDisplay.map((eventData) => (
-                    <OutreachEventCard
-                      key={eventData.id}
-                      cardData={{
-                        ...eventData,
-                        eventDate: eventData?.eventDate?.seconds
-                          ? formatDate(
-                              new Date(eventData.eventDate.seconds * 1000)
-                            )
-                          : eventData.eventDate,
-                      }}
-                    />
-                  ))}
-              </div>
-            )}
-          </>
+          {isLoading ? (
+            // <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
+            <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
+              <EventCardSkeleton />
+              <EventCardSkeleton />
+              <EventCardSkeleton />
+            </div>
+          ) : (
+            // <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
+            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+              {eventsDisplay.length > 0 &&
+                eventsDisplay.map((eventData) => (
+                  <OutreachEventCard
+                    key={eventData.id}
+                    cardData={{
+                      ...eventData,
+                      eventDate: eventData?.eventDate?.seconds
+                        ? formatDate(
+                            new Date(eventData.eventDate.seconds * 1000)
+                          )
+                        : eventData.eventDate,
+                    }}
+                  />
+                ))}
+            </div>
+          )}
 
           {/* <>
             {isLoading ? (

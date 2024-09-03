@@ -29,6 +29,8 @@ import {
   fetchEvents,
   fetchOfficialEvents,
 } from "./EventCardService";
+import HomePageUpcomingOutreach from "./HomePage/HomePageUpcomingOutreach";
+import HomePagePastOutreach from "./HomePage/HomePagePastOutreach";
 
 import BMEcardimg1 from "../images/BMEofficialcardimg1.png";
 import BMEcardimg2 from "../images/BMEofficialcardimg2.png";
@@ -153,9 +155,9 @@ function HomePage() {
       // setEvents(eventsData);
 
       // Display 3 upcoming events in descending order
-      eventsData.sort((a, b) => b.eventDate - a.eventDate);
+      eventsData.sort((a, b) => a.eventDate - b.eventDate);
       setEvents(eventsData);
-      console.log('After fetching');
+      // console.log('After fetching');
     };
     
     const fetchOfficialData = async () => {
@@ -198,11 +200,11 @@ function HomePage() {
     outreachRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Filter events to get only past events
+  // Filter events to get only upcoming events
   const upcomingEvents = events
     .filter((event) => {
         const eventDate = new Date(event.eventDate?.seconds * 1000) || event.eventDate;
-      return eventDate >= new Date(); // Check if the event date is before the current date
+      return eventDate >= new Date(); // Check if the event date is after the current date
     })
     .slice(0, 3);
 
@@ -238,11 +240,15 @@ function HomePage() {
         id="outreach"
         className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black"
       >
-        <div
+        <HomePageUpcomingOutreach />
+        {/* <div
           className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] scroll-m-24"
           ref={outreachRef}
         >
-          <p className="flex flex-row font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] gap-4">
+          <p className="flex flex-row font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] gap-4 cursor-pointer"
+          onClick={() => {
+            navigate("/allOutreachEvents");
+          }}>
             {" "}
             Upcoming Outreach Events
             <img
@@ -285,7 +291,7 @@ function HomePage() {
               }}
             />
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* DIV BLOCK FOR ALL PAST OUTREACH EVENTS*/}
@@ -293,18 +299,24 @@ function HomePage() {
         id="pastoutreach"
         className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black"
       >
-        <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] scroll-m-16">
-          <p className="flex flex-row font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] gap-4">
+        <HomePagePastOutreach />
+        {/* Remove this section, we have a separate component for it. */}
+
+        {/* <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] scroll-m-16">
+          <p className="flex flex-row font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] gap-4 cursor-pointer"
+          onClick={() => {
+            navigate("/allPastOutreachEvents");
+          }}>
             {" "}
-            Past Outreach Events 
+            Past Outreach Events  */}
             {/* Changing this to Outreach Events from past outreach events. Combine upcoming outreaches and past outreaches in the future. */}
-            <img
+            {/* <img
               src={arrowRight}
               className="w-6 h-7 lg:w-10 lg:h-10"
             />
-          </p>
+          </p> */}
 
-          {isLoading ? (
+          {/* {isLoading ? (
             <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
               <PastOutreachEventCardSkeleton />
               <PastOutreachEventCardSkeleton />
@@ -335,8 +347,10 @@ function HomePage() {
               }}
             />
           </div>
-        </div>
+        </div> */}
       </div>
+{/* Remove this section, we have a separate component for it. */}
+
       {/*Vedant*/} {/*BME OFFCIIAL GATHERING BLOCK START*/}
       {/* 
      <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
