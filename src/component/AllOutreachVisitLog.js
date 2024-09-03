@@ -103,7 +103,7 @@ const AllOutreachVisitLog = () => {
           <div className="lg:flex justify-between items-center mb-6">
             <div>
               <p className="font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] lg:mt-2">
-                All Outreach Visit Logs
+                Visit Logs
               </p>
             </div>
             <div className="flex items-center gap-4 mt-6 lg:mt-0">
@@ -117,12 +117,13 @@ const AllOutreachVisitLog = () => {
                   ref={searchRef}
                   onChange={searchChange}
                   className="form-input w-fit md:w-[20rem] lg:w-[18rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-10 rounded-2xl"
+                  style={{ borderRadius: '0px' }}
                 />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
-                  viewBox="0 0 20 20"
-                  strokeWidth="1.5"
+                  viewBox="0 0 24 24"
+                  strokeWidth="2.0"
                   stroke="currentColor"
                   className="w-5 h-5 pointer-events-none absolute top-1/2 transform -translate-y-1/2 left-3"
                 >
@@ -140,6 +141,7 @@ const AllOutreachVisitLog = () => {
                   value={sortOption}
                   onChange={handleSortChange}
                   className="form-select w-fit md:w-[8rem] py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block rounded-2xl"
+                  style={{ borderRadius: '0px' }}
                 >
                   <option value="startDate">Start Date</option>
                   <option value="endDate">End Date</option>
