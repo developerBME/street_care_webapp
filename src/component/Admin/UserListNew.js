@@ -3,7 +3,7 @@ import { collection, getDocs, query, where, addDoc, deleteDoc, doc } from "fireb
 import { db } from "../firebase";
 import { debounce } from 'lodash';
 
-export default function UserList() {
+export default function UserListNew() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");

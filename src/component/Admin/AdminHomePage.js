@@ -4,18 +4,18 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import { getDocs, collection, query, where } from "firebase/firestore";
 import { db } from "../component/firebase";
-import AdminNavBar from "../component/Navbar";
-import AdminFooter from "../component/Footer";
+// import AdminNavBar from "../component/Navbar";
+// import AdminFooter from "../component/Footer";
 import AdminDashboard from "./AdminDashboard";
 //import AdminNavBar from "./AdminNavbar";
 //import AdminFooter from "./admin_footer";
 
 function AdminHomePage() {
   const fAuth = getAuth();
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [photoUrl, setPhotoUrl] = useState("");
-  const [firebaseUser, setFirebaseUser] = useState({});
-  const [loadingUser, setLoadingUser] = useState(true);
+  // const [loggedIn, setLoggedIn] = useState(false);
+  // const [photoUrl, setPhotoUrl] = useState("");
+  // const [firebaseUser, setFirebaseUser] = useState({});
+  // const [loadingUser, setLoadingUser] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(fAuth, async (user) => {
@@ -48,15 +48,15 @@ function AdminHomePage() {
 
   return(
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
-      <AdminNavBar
+      {/* <AdminNavBar
         loggedIn={loggedIn}
         photoUrl={photoUrl}
         setLoggedIn={setLoggedIn}
-        />
+        /> */}
         
         <AdminDashboard />
 
-        <AdminFooter />
+        {/* <AdminFooter /> */}
     </div>
   );
 }

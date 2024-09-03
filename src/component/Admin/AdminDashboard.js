@@ -6,7 +6,7 @@ import user_list from "../images/user_list.svg";
 import users from "../images/users.svg";
 import Avatar from "@mui/material/Avatar";
 import Card from './CardInfo';
-import UserList from '';
+import UserListNew from './UserListNew';
 
 const AdminDashboard = () => {
   return (
@@ -50,7 +50,7 @@ const AdminDashboard = () => {
             </Card>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
-            <button onClick={UserList} className="w-full">
+            <button onClick={UserListNew} className="w-full">
               <Card bgColor="bg-[#F7F7F7]">
                 <div className="flex flex-col items-center">
                   <div className="w-16 h-16 rounded-full flex items-center justify-center mb-2">

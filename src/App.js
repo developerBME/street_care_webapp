@@ -55,7 +55,7 @@ import PersonalVisitLogDetails from "./component/Community/PersonalVisitLogDetai
 import EmailUpdateConfirmation from "./component/UserProfile/ProfileSettings/EmailUpdateConfirmation";
 import DeleteAccConfirmation from "./component/UserProfile/ProfileSettings/DeleteAccConfirmation";
 import UpdateProfile from "./component/UserProfile/ProfileSettings/UpdateProfile";
-import UserListNew from "./component/Admin/UserList.js"
+import UserListNew from "./component/Admin/UserListNew.js"
 //import UserDetails from "./component/admin_test/UserDetails.js";
 import CreateOutreachAdmin from "./component/admin_test/CreateOutreachAdmin.js";
 
@@ -68,6 +68,7 @@ import Dashboard from "./component/Admin/AdminDashboard.js"
 import MoreVisitLogs from "./component/Community/MoreVisitLogs";
 import CreateOutreach from "./component/Community/CreateOutreach";
 import AllSignedUpOutreaches from "./component/UserProfile/AllSignedUpOutreaches";
+
 
 function App() {
   const fAuth = getAuth();
