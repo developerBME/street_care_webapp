@@ -64,7 +64,7 @@ const AllOutreachVisitLog = () => {
               <EventCardSkeleton />
             </div>
           ) : (
-            <div className="w-full h-fit flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-2 pt-9 gap-5">
+            <div className="w-full h-fit flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 pt-9 gap-5">
               {visitLogs.map((visitLogData) => (
                 <OutreachVisitLogCard visitLogCardData={visitLogData} />
               ))}

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import arrowRight from "../../images/arrowRight.png";
 import OutreachVisitLogCard from "../Community/OutreachVisitLogCard";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
-import { fetchEvents, formatDate } from "../EventCardService";
+// import { fetchEvents, formatDate } from "../EventCardService";
 import { fetchVisitLogs, fetchPublicVisitLogs } from "../VisitLogCardService";
 import CustomButton from "../Buttons/CustomButton";
 
@@ -61,6 +61,13 @@ const HomePageVisitlog = () => {
   useEffect(() => {
     const fetchData = async () => {
       const visitLogsData = await fetchPublicVisitLogs();
+      // const latestVisitLogs = visitLogsData.filter((event) => {
+      //   const eventDate = event?.eventDate?.seconds
+      //   ? new Date(event.eventDate.seconds * 1000)
+      //   : event.eventDate;
+      //   return eventDate <= new Date();
+      // });
+      // latestVisitLogs.sort((a, b) => b.eventDate - a.eventDate);
       setVisitLogs(visitLogsData);
     };
 
@@ -119,6 +126,15 @@ const HomePageVisitlog = () => {
               No visit logs found.
             </div>
           )}
+        </div>
+        <div className="mt-16">
+          <CustomButton
+            label="More Visit Logs"
+            name="buttondefault"
+            onClick={() => {
+              navigate("/allOutreachVisitLog");
+            }}
+          />
         </div>
       </div>
     </div>
