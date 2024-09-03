@@ -12,10 +12,10 @@ import AdminDashboard from "./AdminDashboard";
 
 function AdminHomePage() {
   const fAuth = getAuth();
-  // const [loggedIn, setLoggedIn] = useState(false);
-  // const [photoUrl, setPhotoUrl] = useState("");
-  // const [firebaseUser, setFirebaseUser] = useState({});
-  // const [loadingUser, setLoadingUser] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [photoUrl, setPhotoUrl] = useState("");
+  const [firebaseUser, setFirebaseUser] = useState({});
+  const [loadingUser, setLoadingUser] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(fAuth, async (user) => {
