@@ -144,7 +144,7 @@ const OutreachEventCard = ({
             {isProfilePage || label2 === "EDIT" ? (
               <div class="group relative">
                 <CustomButton
-                  label="Edit"
+                  label="Withdraw"
                   name="buttonlight"
                   onClick={handleEditClick}
                 ></CustomButton>

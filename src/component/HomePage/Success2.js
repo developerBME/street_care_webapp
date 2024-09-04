@@ -185,7 +185,7 @@ function Success2() {
               <div className=" px-5 xl:px-8 w-fit py-2 bg-white rounded-[100px]">
                 <div className="text-violet-950  font-bricolage text-[28px] font-normal leading-[64px] whitespace-nowrap">
                   {/* {donations} */}
-                  Up to 67 Million
+                   50 Million+ People
                 </div>
               </div>
               {/* <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
