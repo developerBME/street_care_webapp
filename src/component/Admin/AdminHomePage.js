@@ -3,7 +3,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 //import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { getDocs, collection, query, where } from "firebase/firestore";
-import { db } from "../component/firebase";
+import { db } from "../../component/firebase";
 // import AdminNavBar from "../component/Navbar";
 // import AdminFooter from "../component/Footer";
 import AdminDashboard from "./AdminDashboard";

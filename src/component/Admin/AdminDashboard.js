@@ -1,14 +1,16 @@
 import React from 'react';
-import outreach from "../images/outreach_events.svg";
-import visit from "../images/visit_logs.svg";
-import help from "../images/help_request.svg";
-import user_list from "../images/user_list.svg";
-import users from "../images/users.svg";
+import { useNavigate } from 'react-router-dom';
+import outreach from "../../images/outreach_events.svg";
+import visit from "../../images/visit_logs.svg";
+import help from "../../images/help_request.svg";
+import user_list from "../../images/user_list.svg";
+import users from "../../images/users.svg";
 import Avatar from "@mui/material/Avatar";
 import Card from './CardInfo';
 import UserListNew from './UserListNew';
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   return (
     <div className="relative flex flex-col items-center font-dmsans">
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-10 mt-32 rounded-2xl text-black">
@@ -50,7 +52,7 @@ const AdminDashboard = () => {
             </Card>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
-            <button onClick={UserListNew} className="w-full">
+            <button onClick={() => navigate('/user-management')} className="w-full">
               <Card bgColor="bg-[#F7F7F7]">
                 <div className="flex flex-col items-center">
                   <div className="w-16 h-16 rounded-full flex items-center justify-center mb-2">
