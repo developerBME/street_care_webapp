@@ -8,6 +8,7 @@ import {
   query,
   where,
   limit,
+  orderBy,
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { fetchUserDetails, formatDate } from "./EventCardService";
@@ -217,6 +218,7 @@ export const fetchPublicVisitLogs = async () => {
     const visitLogsRef = query(
       // collection(db, PERSONAL_VISIT_LOG_COLLECTION), Change back to this line in dev branch
       collection(db, VISIT_LOG_COLLECTION_PROD),
+      orderBy("dateTime", "desc"),
       where("public", "==", true)
     );
     const visitLogSnapshot = await getDocs(visitLogsRef);
