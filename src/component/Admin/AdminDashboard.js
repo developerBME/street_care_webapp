@@ -52,13 +52,13 @@ const AdminDashboard = () => {
             </Card>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
-            <button onClick={() => navigate('/user-management')} className="w-full">
+            <button onClick={() => navigate('/admin/userManagement')} className="w-full">
               <Card bgColor="bg-[#F7F7F7]">
                 <div className="flex flex-col items-center">
                   <div className="w-16 h-16 rounded-full flex items-center justify-center mb-2">
                     <Avatar            
                       src={user_list}
-                      sx={{ width: 80, height: 80 }}
+                      sx={{ width: 100, height: 100 }}
                     />
                   </div>
                   <p className="text-black text-[24px] font-[500]">User Management</p>
