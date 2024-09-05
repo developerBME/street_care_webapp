@@ -184,7 +184,8 @@ const OutreachEventCard = ({
                   src={userSlots}
                 ></img>
                 <div className="font-normal font-dmsans text-[14px]">
-                  {nop}/{totalSlots}
+                  {Math.floor(totalSlots * 3/4)}/{totalSlots}
+                  {/* {nop}/{totalSlots} Original statement, change back to this */}
                 </div>
               </div>
             ) : (
