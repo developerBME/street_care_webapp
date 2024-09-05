@@ -52,11 +52,9 @@ const EditModal = ({
                 label2,
                 setLabel2,
                 false,
-                refresh
+                refresh,
+                onEventWithdraw,
               )
-              if (onEventWithdraw) {
-                onEventWithdraw();
-              }
             }}
           >
             <p className="text-center mx-auto">Yes</p>

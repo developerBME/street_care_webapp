@@ -381,7 +381,8 @@ export const handleRsvp = async (
   label2,
   setLabel2,
   isBMEFlow,
-  refresh
+  refresh,
+  onEventWithdraw = () => {/* do nothing*/}
 ) => {
   // check if button is going to RSVP or EDIT
   if (label2 === "RSVP") {
@@ -520,7 +521,7 @@ export const handleRsvp = async (
           // check if event exists in current user and remove if exists
           if (currentEvents.includes(id)) {
             console.log("removing from user");
-            navigate("/profile");
+            // navigate("/profile");
             const userDocUpdate = doc(db, USERS_COLLECTION, userDocID);
             const i = currentEvents.indexOf(id);
             if (i > -1) {
@@ -533,6 +534,9 @@ export const handleRsvp = async (
                 const userUpdateRef = await updateDoc(userDocUpdate, {
                   outreachEvents: currentEvents,
                 });
+              }
+              if (onEventWithdraw) {
+                onEventWithdraw();
               }
               logEvent(
                 "STREET_CARE_INFO_OUTREACH",

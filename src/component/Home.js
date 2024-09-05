@@ -168,7 +168,7 @@ function HomePage() {
   const onSignUp = () => {
     setSelectedEvent(null);
     setShowSignUpModal(true);
-    loadData();
+    setIsLoading(true);
   };
   
   const closeSignUpModal = () => {
@@ -179,6 +179,8 @@ function HomePage() {
   const onEventWithdraw = () => {
     setSelectedEvent(null);
     setShowWithdrawnModal(true);
+    setIsLoading(true);
+    setTriggerEffect(prev => !prev);
   };
 
   const closeWithdrawModal = () => {
