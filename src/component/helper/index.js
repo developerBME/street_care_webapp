@@ -29,7 +29,7 @@ module.exports = {
         let formattedDate = monthNumber.toString().padStart(2, '0') + '/' +
                             day.toString().padStart(2, '0') + '/' +
                             year + ' ' +
-                            hours.toString().padStart(2, '0') + ':' +
+                            hours.toString() + ':' +
                             minutes.toString().padStart(2, '0') + ' ' +
                             ampm;
     
