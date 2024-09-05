@@ -46,7 +46,7 @@ export const fetchEvents = async () => {
           fAuth.currentUser &&
           currentParticipants.includes(fAuth?.currentUser?.uid)
             ? "EDIT"
-            : "RSVP",
+            : "View",
         nop: currentParticipants.length,
         photoUrl: photoUrl,
       });
