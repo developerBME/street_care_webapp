@@ -61,7 +61,7 @@ function Success2() {
         Highlights of our success
       </p>
 
-      <div className="w-fit h-fit my-8 p-7 bg-white rounded-[30px] justify-start items-start lg:gap-5 lg:inline-flex">
+      {/* <div className="w-fit h-fit my-8 p-7 bg-white rounded-[30px] justify-start items-start lg:gap-5 lg:inline-flex">
         <div className="w-20 h-20 p-4 bg-gradient-to-br from-yellow-100 to-neutral-200 rounded-3xl justify-start items-start gap-2.5 flex">
           <div className="w-12 h-12 relative">
             <img src={Campaign} className=""></img>
@@ -99,8 +99,8 @@ function Success2() {
               </a>
             </p>
           </div>
-        </div>
-      </div>
+        </div> 
+      </div> */}
       {/* Grid */}
 
       <div className=" mt-10 w-full h-fit justify-start items-start">
@@ -215,9 +215,9 @@ function Success2() {
         </div>
       </div>
 
-      <div className=" mt-16 w-full  justify-start items-start">
+      {/* <div className=" mt-16 w-full  justify-start items-start">
         <HomePageVisitlog />
-      </div>
+      </div> */}
     </div>
   );
 }

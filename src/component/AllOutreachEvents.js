@@ -127,7 +127,7 @@ const AllOutreachEvents = () => {
             // <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
             <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
               {eventsDisplay.length > 0 &&
-                eventsDisplay.map((eventData) => (
+                eventsDisplay.slice(0, visibleCards).map((eventData) => (
                   <OutreachEventCard
                     key={eventData.id}
                     cardData={{
