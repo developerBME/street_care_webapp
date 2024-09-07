@@ -131,7 +131,7 @@ const OutreachEventCard = ({
             {title}
           </h1>
 
-          <div className="font-medium text-[14px] font-dmsans text-[#444746] line-clamp-2 h-10">
+          <div className="font-medium text-[14px] font-dmsans text-[#444746] h-25">
             {description}
           </div>
 
