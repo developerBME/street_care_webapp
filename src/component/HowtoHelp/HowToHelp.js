@@ -178,7 +178,7 @@ const renderStepContent = (selectedStep) => {
             </div>
             <div className="flex w-full justify-end">
               <div>
-                <img alt="" src={howtohelp} />
+                {/* <img alt="" src={howtohelp} /> */}
               </div>
             </div>
           </div>
@@ -222,7 +222,7 @@ const renderStepContent = (selectedStep) => {
             </div>
             <div className="flex  w-full justify-end">
               <div className="flex ">
-                <img alt="" src={howtohelp} />
+                {/* <img alt="" src={howtohelp} /> */}
               </div>
             </div>
           </div>
@@ -372,7 +372,7 @@ function HowToHelp() {
                 </div>
               </div>
               <div className="w-full">
-                <img alt="" src={howtohelp} className="w-full" />
+                {/* <img alt="" src={howtohelp} className="w-full" /> */}
               </div>
             </div>
           </div>
