@@ -147,7 +147,7 @@ const NavBar = (props) => {
             </li>
           ))}
           {/* <li>
-            <button class="bg-white hover:bg-yellow-300 text-black text-lg font-inter font-bold py-3 px-6 rounded-full">
+            <button className="bg-white hover:bg-yellow-300 text-black text-lg font-inter font-bold py-3 px-6 rounded-full">
               Donate
             </button>
           </li> */}
@@ -238,7 +238,7 @@ const NavBar = (props) => {
                 </li>
               ))}
               <li>
-                {/* <button class=" items-stretch bg-white hover:bg-yellow-300 text-black font-inter text-xl font-bold py-3 px-7 rounded-full">
+                {/* <button className=" items-stretch bg-white hover:bg-yellow-300 text-black font-inter text-xl font-bold py-3 px-7 rounded-full">
               Donate
             </button> */}
                 <div className="w-[328px] h-14 px-8 py-4 bg-white rounded-[100px] border border-white justify-center items-center gap-2.5 inline-flex">

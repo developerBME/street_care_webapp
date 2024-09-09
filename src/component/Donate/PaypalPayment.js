@@ -21,7 +21,7 @@ const PaypalPayment = () => {
                 type="checkbox"
                 id="donationbehalf-option"
                 value="donationbehalf"
-                class="w-[18px] h-[18px] cursor-pointer accent-[#5F36D6]"
+                className="w-[18px] h-[18px] cursor-pointer accent-[#5F36D6]"
                 required=""
                 checked={isDonationBehalfChecked}
                 onChange={handleDonationBehalfCheckboxChange}
