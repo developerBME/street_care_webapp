@@ -55,7 +55,9 @@ function Metrics() {
         <div className=" h-full w-1/4 sm:w-1/4 md:w-1/4 lg:w-1/4 lg:px-[28px] lg:py-[20px] md:p-[18px] p-[18px] lg:text-left md:text-center sm:text-center text-center">
           {/* Column content */}
           <p className="font-bold text-violet-800 lg:mb-[24px] md:mb-[10px] sm:mb-[15px] text-center">
-            Help Requests
+            {/* Help Requests */} 
+            {/* Change back to Help Requests */}
+            Outreaches
           </p>
           <p className=" text-center">
             <span className="text-xl mt-auto font-bold lg:text-[38px] md:text-[28px] sm:text-[38px] lg:inline-block md:block block sm:mb-[10px]">

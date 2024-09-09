@@ -1,18 +1,36 @@
-import React, { useState, useEffect } from "react";
-import OutreachEventCard from "./OutreachEventCard";
-import { useNavigate } from "react-router-dom";
-import arrowRight from "../../images/arrowRight.png";
+import React, { useState, useEffect, useRef } from "react";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useNavigate, Link } from "react-router-dom";
+import { formatDate, fetchEvents } from "../EventCardService";
+import PastOutreachEventCardSkeleton from "../Skeletons/PastOutreachEventCardSkeleton";
+import OutreachEventCard from "../Community/OutreachEventCard";
 import CustomButton from "../Buttons/CustomButton";
-import { fetchEvents, formatDate } from "../EventCardService";
-import { fetchVisitLogs } from "../VisitLogCardService";
-import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
+import arrowRight from "../../images/arrowRight.png";
 
-const CommunityOutreachEvent = () => {
-  const [visibleItems, setVisibleItems] = useState(3);
+const CommunityOutreachEventsPast = () => {
   const navigate = useNavigate();
+  const fAuth = getAuth();
+
+  onAuthStateChanged(fAuth, (user) => {
+    if (user) {
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/auth.user
+      console.log(user);
+      // ...
+    } else {
+      // User is signed out
+      // ...
+    }
+  });
+
+  const [events, setEvents] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [eventsDisplay, setEventsDisplay] = useState([]);
+  const [visibleItems, setVisibleItems] = useState(3);
   const loadMore = () => {
     setVisibleItems((prev) => prev + 3);
   };
+
   const cardData = [
     {
       userName: "William Smith",
@@ -58,41 +76,19 @@ const CommunityOutreachEvent = () => {
     },
   ];
 
-  const [events, setEvents] = useState([]);
-  const [visitLogs, setVisitLogs] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [eventsDisplay, setEventsDisplay] = useState([]);
-  const [filteredEvents, setFilteredEvents] = useState([]);
-  const [states, setStates] = useState([]);
-  const [selectedState, setSelectedState] = useState("");
-  const [dropdownVisible, setDropdownVisible] = useState(false);
-
   useEffect(() => {
     const fetchData = async () => {
       const eventsData = await fetchEvents();
-      // const visitLogsData = await fetchVisitLogs();
-      // setVisitLogs(visitLogsData);
-      // Filter events to get only past events
-      const upcomingEvents = eventsData.filter((event) => {
-        const eventDate = new Date(event.eventDate?.seconds * 1000) || event.eventDate;
-        return eventDate >= new Date(); // Check if the event date is before the current date
-      });
-      // Sort events in place based on their date
-      upcomingEvents.sort((a, b) => a.eventDate - b.eventDate);
-
-      setEvents(upcomingEvents);
-      // Extract states and remove duplicates
-      const extractedStates = [
-        ...new Set(upcomingEvents.map((event) => event.location.state)),
-      ];
-      setStates(extractedStates);
+      // Sort events in descending order
+      eventsData.sort((a, b) => b.eventDate - a.eventDate);
+      setEvents(eventsData);
     };
-
     fetchData();
   }, []);
 
   useEffect(() => {
     setEventsDisplay(events);
+    // searchRef.current = "";
   }, [events]);
 
   useEffect(() => {
@@ -101,15 +97,27 @@ const CommunityOutreachEvent = () => {
     }
   }, [eventsDisplay]);
 
-  const upcomingEvents = events
+  const outreachRef = useRef();
+
+  const handleOutreachRef = () => {
+    outreachRef.current.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // Filter events to get only past events
+  const pastEvents = events
     .filter((event) => {
-      const eventDate = new Date(event.eventDate?.seconds * 1000) || event.eventDate;
-      return eventDate >= new Date(); // Check if the event date is before the current date
+      const eventDate =
+        new Date(event.eventDate?.seconds * 1000) || event.eventDate;
+      return eventDate < new Date(); // Check if the event date is before the current date
     })
     .slice(0, 3);
 
+  //   useEffect(() => {
+  //     document.title = "Home - Street Care";
+  //   }, []);
+
   return (
-    <div>
+    <>
       <div className="p-4 lg:px-10 lg:py-12 bg-gradient-to-br from-[#D3C3FF] to-[#DEDCE4] rounded-t-2xl flex-col justify-start items-start gap-4 inline-flex w-full">
         <div className="flex flex-col md:flex md:flex-row justify-between gap-4 md:gap-10">
           <div className="">
@@ -117,7 +125,7 @@ const CommunityOutreachEvent = () => {
               <div className="text-[45px] font-medium font-dmsans">
                 {/* Outreach - extending help, resources, and compassion to those in
             need */}
-                Upcoming Outreaches ({upcomingEvents.length})
+                Past Outreaches ({pastEvents.length})
               </div>
               <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-medium font-dmsans leading-tight self-stretch">
                 <CustomButton
@@ -128,7 +136,6 @@ const CommunityOutreachEvent = () => {
                   }}
                 />
               </div>
-
             </div>
             <div className="text-md font-medium font-dmsans text-[#181818] mt-2">
               {/* Homeless outreach involves both community-wide and personal efforts
@@ -137,15 +144,15 @@ const CommunityOutreachEvent = () => {
             while personal outreach involves one-on-one assistance. Homeless
             outreach is crucial because it provides immediate help and fosters
             empathy, building a more compassionate society. */}
-              What are outreaches and how can they help you? If you are ready
-              to help people now, kindly sign up to outreaches
+              What are outreaches and how can they help you? If you are ready to
+              help people now, kindly sign up to outreaches
             </div>
           </div>
 
           <div
             className="flex flex-row cursor-pointer gap-2 items-center"
             onClick={() => {
-              navigate("/allOutreachEvents");
+              navigate("/allPastOutreachEvents");
             }}
           >
             <div className="font-medium text-[16px] lg:text-[20px] font-dmsans text-[#37168B] whitespace-nowrap">
@@ -156,42 +163,28 @@ const CommunityOutreachEvent = () => {
         </div>
       </div>
       <div className="px-4 py-8 pb-4 lg:px-10 lg:pb-10">
-        <div className="flex items-center justify-between">
-        </div>
+        <div className="flex items-center justify-between"></div>
         <>
           {isLoading ? (
             <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
-              <EventCardSkeleton />
-              <EventCardSkeleton />
-              <EventCardSkeleton />
+              <PastOutreachEventCardSkeleton />
+              <PastOutreachEventCardSkeleton />
+              <PastOutreachEventCardSkeleton />
             </div>
           ) : (
             <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
-              {selectedState === ""
-                ? upcomingEvents.map((eventData) => (
-                    <OutreachEventCard
-                      key={eventData.id}
-                      cardData={{
-                        ...eventData,
-                        label: 'View Details',
-                        eventDate: eventData.eventDate?.seconds ? formatDate(
-                          new Date(eventData.eventDate.seconds * 1000)
-                        ) : eventData.eventDate,
-                      }}
-                    />
-                  ))
-                : filteredEvents.map((eventData) => (
-                    <OutreachEventCard
-                      key={eventData.id}
-                      cardData={{
-                        ...eventData,
-                        label: 'View Details',
-                        eventDate: eventData.eventDate?.seconds ? formatDate(
-                          new Date(eventData.eventDate.seconds * 1000)
-                        ) : eventData.eventDate,
-                      }}
-                    />
-                  ))}
+              {pastEvents.map((eventData) => (
+                <OutreachEventCard
+                  isPastEvent={true}
+                  key={eventData.id}
+                  cardData={{
+                    ...eventData,
+                    eventDate: eventData.eventDate?.seconds
+                      ? formatDate(new Date(eventData.eventDate.seconds * 1000))
+                      : eventData.eventDate,
+                  }}
+                />
+              ))}
             </div>
           )}
         </>
@@ -204,8 +197,8 @@ const CommunityOutreachEvent = () => {
           </button>
         )}
       </div>
-    </div>
+    </>
   );
 };
 
-export default CommunityOutreachEvent;
+export default CommunityOutreachEventsPast;
