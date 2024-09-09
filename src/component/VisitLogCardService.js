@@ -107,36 +107,55 @@ const fetchOutreachEventData = async (eid) => {
   }
 };
 
+const visitLogHelperFunction = async (visitLogSnap) => {
+  try {
+    let visitLogs = [];
+    const docsArray = visitLogSnap.docs ? visitLogSnap.docs : [visitLogSnap];
+    for (const doc of docsArray) {
+      const visitLogData = doc.data();
+      //const outreachEventId = visitLogData.outreachEvent || "";
+      //const outreachEventData = await fetchOutreachEventData(outreachEventId);
+      const uid = visitLogData.uid;
+      const userDetails = await fetchUserDetails(uid);
+      visitLogs.push({
+        id: doc.id,
+        whatGiven: visitLogData.whatGiven,
+        itemQty: visitLogData?.itemQty || "",
+        numberPeopleHelped: visitLogData?.numberPeopleHelped || "",
+        description: visitLogData?.description || "",
+        helpType: visitLogData?.helpType || "",
+        location: {
+          street: visitLogData?.street || "",
+          city: visitLogData?.city || "",
+          state: visitLogData?.state || "",
+          stateAbbv: visitLogData?.stateAbbv || "",
+          zipcode: visitLogData?.zipcode || "",
+        },
+        eventDate: visitLogData?.dateTime?.seconds
+          ? formatDate(new Date(visitLogData.dateTime.seconds * 1000))
+          : "",
+        userName: userDetails.username,
+        photoUrl: userDetails.photoUrl,
+      });
+    }
+    return visitLogs;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on visitLogHelperFunction VisitLogCardService.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
 export const fetchVisitLogById = async (visitLogId) => {
   try {
     // Reference to the specific document in the visitlog collection
     const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
     const visitLogSnap = await getDoc(visitLogRef);
-    const visitLogData = visitLogSnap.data();
-    const outreachEventId = visitLogData.outreachEvent || "";
-    const outreachEventData = await fetchOutreachEventData(outreachEventId);
-    const uid = visitLogData.uid;
-    const userDetails = await fetchUserDetails(uid);
-    return {
-      id: doc.id,
-      whatGiven: visitLogData.whatGiven,
-      itemQty: visitLogData?.itemQty || "",
-      numberPeopleHelped: visitLogData?.numberPeopleHelped || "",
-      description: visitLogData?.description || "",
-      helpType: visitLogData?.helpType || "",
-      location: {
-        street: visitLogData?.street || "",
-        city: visitLogData?.city || "",
-        state: visitLogData?.state || "",
-        stateAbbv: visitLogData?.stateAbbv || "",
-        zipcode: visitLogData?.zipcode || "",
-      },
-      eventDate: visitLogData?.dateTime?.seconds
-        ? formatDate(new Date(visitLogData.dateTime.seconds * 1000))
-        : "",
-      userName: userDetails.username,
-      photoUrl: userDetails.photoUrl,
-    };
+    let visitLogs = await visitLogHelperFunction(visitLogSnap);
+
+    return visitLogs[0];
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
@@ -174,18 +193,18 @@ export const fetchVisitLogById = async (visitLogId) => {
 // );
 // const userDocRef = await getDocs(userQuery);
 
-export const fetchTopVisitLogs= async () => {
+export const fetchTopVisitLogs = async () => {
   try {
     const visitlogs = collection(db, PERSONAL_VISIT_LOG_COLLECTION);
     const visitlogsQuery = query(
-      visitlogs, 
-      orderBy('dateTime', 'desc'), // Order visit logs by the 'dateTime' field in descending order to get the newest entries first
+      visitlogs,
+      orderBy("dateTime", "desc"), // Order visit logs by the 'dateTime' field in descending order to get the newest entries first
       limit(6) // Limit to top 6 records
     );
     const visitLogDocRef = await getDocs(visitlogsQuery);
     let visitLogs = [];
     for (const doc of visitLogDocRef.docs) {
-      const visitLogData = doc.data(); 
+      const visitLogData = doc.data();
       const id = doc.id;
       const userName = await fetchUserName(visitLogData.uid);
       visitLogs.push({
@@ -194,7 +213,7 @@ export const fetchTopVisitLogs= async () => {
         id: id,
       });
     }
-    console.log(visitLogs)
+    console.log(visitLogs);
     return visitLogs;
   } catch (error) {
     logEvent(
@@ -221,7 +240,15 @@ export const fetchPersonalVisitLogs = async (uid) => {
     const visitLogsData = [];
 
     for (let visitLogId of visitLogIds) {
-      visitLogsData.push(await fetchPersonalVisitLogById(visitLogId));
+      const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
+      const visitLogDoc = await getDoc(visitLogRef);
+      if (visitLogDoc.exists()) {
+        const visitLogData = visitLogDoc.data();
+        visitLogsData.push({
+          ...visitLogData,
+          id: visitLogId,
+        });
+      }
     }
     return visitLogsData;
   } catch (error) {
@@ -240,34 +267,7 @@ export const fetchPublicVisitLogs = async () => {
       where("public", "==", true)
     );
     const visitLogSnapshot = await getDocs(visitLogsRef);
-    let visitLogs = [];
-    for (const doc of visitLogSnapshot.docs) {
-      const visitLogData = doc.data();
-      const outreachEventId = visitLogData.outreachEvent || "";
-      const outreachEventData = await fetchOutreachEventData(outreachEventId);
-      const uid = visitLogData.uid;
-      const userDetails = await fetchUserDetails(uid);
-      visitLogs.push({
-        id: doc.id,
-        whatGiven: visitLogData.whatGiven,
-        itemQty: visitLogData?.itemQty || "",
-        numberPeopleHelped: visitLogData?.numberPeopleHelped || "",
-        description: visitLogData?.description || "",
-        helpType: visitLogData?.helpType || "",
-        location: {
-          street: visitLogData?.street || "",
-          city: visitLogData?.city || "",
-          state: visitLogData?.state || "",
-          stateAbbv: visitLogData?.stateAbbv || "",
-          zipcode: visitLogData?.zipcode || "",
-        },
-        eventDate: visitLogData?.dateTime?.seconds
-          ? formatDate(new Date(visitLogData.dateTime.seconds * 1000))
-          : "",
-        userName: userDetails.username,
-        photoUrl: userDetails.photoUrl,
-      });
-    }
+    let visitLogs = await visitLogHelperFunction(visitLogSnapshot);
     return visitLogs;
   } catch (error) {
     logEvent(
@@ -320,7 +320,7 @@ const fetchUserName = async (uid) => {
   );
   const userDocRef = await getDocs(userQuery);
 
-  const userDocID = userDocRef.docs[0]?.id;  
+  const userDocID = userDocRef.docs[0]?.id;
   // reference for the userdoc
   if(userDocID !== undefined){
     const userRef = doc(db, USERS_COLLECTION, userDocID);
@@ -342,23 +342,28 @@ const fetchUserName = async (uid) => {
   }
 };
 
-export const fetchVisitLogsByCityOrState = async (searchValue, startDate, endDate, pageIndex=null,  recordsPerPage=5) => {
+export const fetchVisitLogsByCityOrState = async (
+  searchValue,
+  startDate,
+  endDate,
+  pageIndex = null,
+  recordsPerPage = 5
+) => {
   try {
+    if (!searchValue || typeof searchValue !== "string") {
+      console.error("Invalid search value");
+      return;
+    }
 
-    if (!searchValue || typeof searchValue !== 'string') {
-      console.error('Invalid search value');
-      return;
-    }
-  
     if (!(startDate instanceof Date) || isNaN(startDate)) {
-      console.error('Invalid start date');
+      console.error("Invalid start date");
       return;
     }
-  
+
     if (!(endDate instanceof Date) || isNaN(endDate)) {
-      console.error('Invalid end date');
+      console.error("Invalid end date");
       return;
-    } 
+    }
 
     const visitlogs = collection(db, PERSONAL_VISIT_LOG);
 
@@ -369,54 +374,57 @@ export const fetchVisitLogsByCityOrState = async (searchValue, startDate, endDat
       if (pageIndex === 0) {
         pageQuery = query(
           visitlogs,
-          where('city', '==', searchValue),
-          where('dateTime', '>=', startDate),
-          where('dateTime', '<=', endDate),
-          orderBy('dateTime','asc'),
+          where("city", "==", searchValue),
+          where("dateTime", ">=", startDate),
+          where("dateTime", "<=", endDate),
+          orderBy("dateTime", "asc"),
           limit(recordsPerPage)
         );
       } else {
         const prevPageQuery = query(
           visitlogs,
-          where('city', '==', searchValue),
-          where('dateTime', '>=', startDate),
-          where('dateTime', '<=', endDate),
-          orderBy('dateTime','asc'),
+          where("city", "==", searchValue),
+          where("dateTime", ">=", startDate),
+          where("dateTime", "<=", endDate),
+          orderBy("dateTime", "asc"),
           limit(pageIndex * recordsPerPage)
         );
-       
+
         const documentSnapshots = await getDocs(prevPageQuery);
-        const lastVisible = documentSnapshots.docs[documentSnapshots.docs.length - 1];
+        const lastVisible =
+          documentSnapshots.docs[documentSnapshots.docs.length - 1];
         pageQuery = query(
           visitlogs,
-          where('city', '==', searchValue),
-          where('dateTime', '>=', startDate),
-          where('dateTime', '<=', endDate),
-          orderBy('dateTime','asc'),
+          where("city", "==", searchValue),
+          where("dateTime", ">=", startDate),
+          where("dateTime", "<=", endDate),
+          orderBy("dateTime", "asc"),
           limit(recordsPerPage),
           startAfter(lastVisible)
         );
       }
       visitlogsByLocationQuery = pageQuery;
+    } else {
+      visitlogsByLocationQuery = query(
+        visitlogs,
+        where("city", "==", searchValue),
+        where("dateTime", ">=", startDate),
+        where("dateTime", "<=", endDate),
+        orderBy("dateTime", "asc")
+      );
     }
-    else {
-    visitlogsByLocationQuery = query(
-      visitlogs, where('city', '==', searchValue),
-         where('dateTime', '>=', startDate),
-         where('dateTime', '<=', endDate),
-         orderBy('dateTime','asc')
-    );
-  }
 
     const visitLogDocRef = await getDocs(visitlogsByLocationQuery);
 
-    if (visitLogDocRef.docs.length===0 && pageIndex!==null){
-      throw new Error(`Not enough documents to access page of index : ${pageIndex}`);
-      }
+    if (visitLogDocRef.docs.length === 0 && pageIndex !== null) {
+      throw new Error(
+        `Not enough documents to access page of index : ${pageIndex}`
+      );
+    }
 
     let visitLogByCity = [];
     for (const doc of visitLogDocRef.docs) {
-      const visitLogData = doc.data(); 
+      const visitLogData = doc.data();
       const id = doc.id;
       const userName = await fetchUserName(visitLogData.uid);
       visitLogByCity.push({
@@ -426,7 +434,6 @@ export const fetchVisitLogsByCityOrState = async (searchValue, startDate, endDat
       });
     }
     return visitLogByCity;
-
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
