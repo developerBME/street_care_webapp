@@ -3,7 +3,11 @@ import { useNavigate } from "react-router-dom";
 import arrowRight from "../../images/arrowRight.png";
 import OutreachVisitLogCard from "../Community/OutreachVisitLogCard";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
+<<<<<<< HEAD
 import { fetchTopVisitLogs } from "../EventCardService";
+=======
+import { fetchTopVisitLogs } from "../VisitLogCardService";
+>>>>>>> 1b3ced5b32f243b8463efc11e7fe17c2cccac1b7
 import ErrorMessage from "../ErrorMessage";
 import CustomButton from "../Buttons/CustomButton";
 

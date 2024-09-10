@@ -200,12 +200,10 @@ import {
     );
     throw error;
   }
- };
- 
- 
- 
- 
- export const fetchUserDetails = async (uid) => {
+};
+
+
+export const fetchUserDetails = async (uid) => {
   try {
     // Reference to the uid instead of the docid of the user.
     const userQuery = query(
@@ -885,80 +883,40 @@ import {
     );
     throw error;
   }
- };
- 
- 
- export const fetchTopVisitLogs= async () => {
-  try {
-    const visitlogs = collection(db, PERSONAL_VISIT_LOG);
-    const visitlogsQuery = query(
-      visitlogs,
-      orderBy('dateTime', 'desc'), // Order visit logs by the 'dateTime' field in descending order to get the newest entries first
-      limit(6) // Limit to top 6 records
-    );
-    const visitLogDocRef = await getDocs(visitlogsQuery);
-    let visitLogs = [];
-    for (const doc of visitLogDocRef.docs) {
-      const visitLogData = doc.data();
-      const id = doc.id;
-      const userName = await fetchUserName(visitLogData.uid);
-      visitLogs.push({
-        ...visitLogData,
-        userName: userName,
-        id: id,
-        eventDate: visitLogData?.dateTime?.seconds
-          ? formatDate(new Date(visitLogData.dateTime.seconds * 1000))
-          : ""
-      });
-    }
-  //   console.log(visitLogs)
-    return visitLogs;
-  } catch (error) {
-    logEvent(
-      "STREET_CARE_ERROR",
-      `error on fetchTopVisitLogs EventCardService.js- ${error.message}`
-    );
-    throw error;
-  }
- };
- 
- 
- 
- 
- const fetchUserName = async (uid) => {
-  // Reference to the uid instead of the docid of the user.
-  const userQuery = query(
-    collection(db, USERS_COLLECTION),
-    where("uid", "==", uid)
-  );
-  const userDocRef = await getDocs(userQuery);
- 
- 
-  const userDocID = userDocRef.docs[0]?.id; 
-  // reference for the userdoc
-  if(userDocID != undefined){
-    const userRef = doc(db, USERS_COLLECTION, userDocID);
-    const userDoc = await getDoc(userRef);
- 
- 
-    if (userDoc != undefined || userDoc.exists()) {
-      return userDoc.data().username || "";
-    } else {
-      console.error("No user found with uid:", uid);
-      logEvent(
-        "STREET_CARE_ERROR",
-        `error on fetchUserName EventCardService.js- No user Found ${uid}`
-      );
-      throw new Error(
-        `error on fetchUserName EventCardService.js- No user Found ${uid}`
-      );
-      return "";
-    }
-  }
- };
- 
- 
- export async function calculateNumberOfPagesForOutreach(outreachPerPage, currentPage=0){
+};
+
+
+// const fetchUserName = async (uid) => {
+//   // Reference to the uid instead of the docid of the user.
+//   const userQuery = query(
+//     collection(db, USERS_COLLECTION),
+//     where("uid", "==", uid)
+//   );
+//   const userDocRef = await getDocs(userQuery);
+
+//   const userDocID = userDocRef.docs[0]?.id;  
+//   // reference for the userdoc
+//   if(userDocID != undefined){
+//     const userRef = doc(db, USERS_COLLECTION, userDocID);
+//     const userDoc = await getDoc(userRef);
+
+//     if (userDoc != undefined || userDoc.exists()) {
+//       return userDoc.data().username || "";
+//     } else {
+//       console.error("No user found with uid:", uid);
+//       logEvent(
+//         "STREET_CARE_ERROR",
+//         `error on fetchUserName EventCardService.js- No user Found ${uid}`
+//       );
+//       throw new Error(
+//         `error on fetchUserName EventCardService.js- No user Found ${uid}`
+//       );
+//       return "";
+//     }
+//   }
+// };
+
+export async function calculateNumberOfPagesForOutreach(outreachPerPage, currentPage=0){
   const testoutreachRef = query(collection(db, PAST_OUTREACH_EVENTS_COLLECTION), orderBy("createdAt", "asc"));
   const snapshot = await getDocs(testoutreachRef);
   // console.log('Data : '+snapshot.docs);
@@ -1011,10 +969,10 @@ import {
     for (const doc of snapshots.docs) {
       const outreachData = doc.data();
       const id = doc.id;
-      const userName = await fetchUserName(outreachData.uid);
+      const userDetails = await fetchUserDetails(outreachData.uid);
       outreaches.push({
         ...outreachData,
-        userName: userName,
+        userName: userDetails?.username,
         id: id,
       });
     }

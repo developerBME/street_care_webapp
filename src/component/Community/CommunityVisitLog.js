@@ -3,7 +3,11 @@ import { useNavigate } from "react-router-dom";
 import arrowRight from "../../images/arrowRight.png";
 import OutreachVisitLogCard from "./OutreachVisitLogCard";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
+<<<<<<< HEAD
 import { fetchTopVisitLogs } from "../EventCardService";
+=======
+import { fetchTopVisitLogs } from "../VisitLogCardService";
+>>>>>>> 1b3ced5b32f243b8463efc11e7fe17c2cccac1b7
 import CustomButton from "../Buttons/CustomButton";
 import ErrorMessage from "../ErrorMessage";
 
@@ -99,8 +103,7 @@ const CommunityVisitLog = () => {
           <div className="">
             <div className="flex flex-row gap-4">
               <div className="text-[45px] font-medium font-dmsans">
-                Visit Logs
-                ({visitLogs?.length || 0})
+                Visit Logs ({visitLogs?.length || 0})
                 {/* Visit Log ({visitLogs !== null ? visitLogs.length : 0}) */}
               </div>
               <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-medium font-dmsans leading-tight self-stretch">
@@ -108,7 +111,7 @@ const CommunityVisitLog = () => {
                   label="Create a Visit Log"
                   name="buttondefault"
                   onClick={() => {
-                    navigate("/profile/visitlogform");
+                    navigate("/profile/personaloutform");
                   }}
                 />
               </div>
