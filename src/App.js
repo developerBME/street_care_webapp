@@ -145,17 +145,9 @@ function App() {
           <Route path="/ForgotPassword" element={<ForgotPassword />} />
           <Route path="/signup" element={<Signup2 />} />
           <Route
-<<<<<<< HEAD
-            element={
-              <ProtectedAdminRoute user={firebaseUser} loading={loadingUser} />
-            }>
-            <Route path="/admin-panel/userlist" element={<UserList/>}/>
-          </Route>
-=======
             path="/admin-panel/createoutreachadmin"
             element={<CreateOutreachAdmin />}
           />
->>>>>>> 1b3ced5b32f243b8463efc11e7fe17c2cccac1b7
           <Route path="/allnews" element={<Newscard />} />
           <Route path="/allnews/:id" element={<Readmorenews />} />
           {/* <Route path="/user/:uid" element={<UserDetails />} /> // Route for
@@ -176,10 +168,7 @@ function App() {
           >
             <Route path="/testAdmin" element={<TestAdmin />} />
             <Route path="/admin-panel/userlist" element={<UserList />} />
-<<<<<<< HEAD
-=======
             <Route path="/admin/userManagement" element={<UserListNew/>}/>
->>>>>>> 1b3ced5b32f243b8463efc11e7fe17c2cccac1b7
           </Route>
           <Route
             element={
