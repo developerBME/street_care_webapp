@@ -85,8 +85,7 @@ function Banner() {
               Community
             </p>
             <p className="text-[#181818] lg:text-[24px] leading-8">
-              Participate in our outreaches to help those in need to become our
-              superhero!
+              Participate in our outreaches to help those in need and become a superhero!
             </p>
             <p className="text-[#181818] lg:text-[24px] leading-8 mt-4 pr-5">
               Or, know someone in need? Create a help request for others to
