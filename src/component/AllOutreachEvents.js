@@ -64,15 +64,80 @@ const AllOutreachEvents = () => {
   const indexOfLastEvent = currentPage * eventsPerPage;
   const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
   const currentEvents = eventsDisplay.slice(indexOfFirstEvent, indexOfLastEvent);
-  const totalPages = Math.ceil(eventsDisplay.length / eventsPerPage); // Calculate total pages
 
-  // Color variables
-  const inactiveBgColor = "bg-white";
-  const inactiveTextColor = "text-black";
-  const inactiveBorderColor = "border-[#9B82CF]";
-  const activeBgColor = "bg-[#E0D7EC]";
-  const activeTextColor = "text-black";
-  const activeBorderColor = "border-[#1F0A58]";
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  
+  const totalPages = Math.ceil(eventsDisplay.length / eventsPerPage);
+  
+  
+  const renderPaginationButtons = () => {
+    const buttons = [];
+    const pageRange = 3;
+  
+    if (currentPage > 1) {
+      buttons.push(
+        <button
+          key="first"
+          onClick={() => paginate(1)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          1
+        </button>
+      );
+    }
+  
+      if (currentPage > 1) {
+        buttons.push(
+          <button
+            key="prev"
+            onClick={() => paginate(currentPage - 1)}
+            className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+          >
+            Prev
+          </button>
+        );
+      }
+  
+      for (let i = Math.max(1, currentPage - pageRange); i <= Math.min(totalPages, currentPage + pageRange); i++) {
+        buttons.push(
+          <button
+            key={i}
+            onClick={() => paginate(i)}
+            className={`mx-1 px-3 py-1 rounded-full ${
+              currentPage === i ? "bg-[#1F0A58] text-white" : "bg-gray-200 text-gray-600"
+            }`}
+          >
+            {i}
+          </button>
+        );
+      }
+  
+      if (currentPage < totalPages) {
+        buttons.push(
+          <button
+            key="next"
+            onClick={() => paginate(currentPage + 1)}
+            className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+          >
+            Next
+          </button>
+        );
+      }
+  
+    if (currentPage < totalPages) {
+      buttons.push(
+        <button
+          key="last"
+          onClick={() => paginate(totalPages)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          {totalPages}
+        </button>
+      );
+    }
+  
+    return buttons;
+  };
 
   return (
     <div className="relative flex flex-col items-center">

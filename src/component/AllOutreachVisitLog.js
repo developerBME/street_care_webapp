@@ -4,6 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import { fetchPublicVisitLogs } from "./VisitLogCardService";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
+<<<<<<< HEAD
+import { parse } from "date-fns";
+=======
+<<<<<<< HEAD
+import { parse } from 'date-fns';
+=======
 import { parse } from "date-fns";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
