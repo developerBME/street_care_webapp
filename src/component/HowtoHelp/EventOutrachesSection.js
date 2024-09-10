@@ -128,7 +128,7 @@ const EventOutrachesSection = () => {
               <div className="text-[57px] font-medium font-dmsans">
                 {/* Outreach - extending help, resources, and compassion to those in
             need */}
-                Sign up to do outreaches now!
+                Sign up for outreaches now!
               </div>
 
               <div

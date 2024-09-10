@@ -461,10 +461,10 @@ function HowToHelp() {
         </div>
 
         <div className=" w-[95%] md:w-[90%] lg:w-[79%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
-          {/*  */}
-          <div className="items-center justify-center p-8 lg:p-16 h-full w-full rounded-2xl bg-[#F7F7F7] ">
-            <div className="flex-col justify-start items-start gap-10 inline-flex">
-              <div className="space-y-12">
+          
+          {/* <div className="items-center justify-center p-8 lg:p-16 h-full w-full rounded-2xl bg-[#F7F7F7] "> */}
+            {/* <div className="flex-col justify-start items-start gap-10 inline-flex"> */}
+              {/* <div className="space-y-12">
                 <div className="font-bricolage text-[57px] text-[#273164] font-medium">
                   What else can I do to help?
                 </div>
@@ -514,13 +514,13 @@ function HowToHelp() {
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
+              </div> */}
+            {/* </div> */}
+          {/* </div> */}
         </div>
-        <div className="  w-[95%] md:w-[90%] lg:w-[75%] mx-2 lg:mx-40 mt-8 mb-20 rounded-2xl bg-white text-black ">
-          {/* section 2 */}
-          {/* <div className="items-center justify-center p-8 lg:py-24 lg:px-36 h-full w-full rounded-2xl bg-[#F7F7F7] ">
+        {/* <div className="  w-[95%] md:w-[90%] lg:w-[75%] mx-2 lg:mx-40 mt-8 mb-20 rounded-2xl bg-white text-black ">
+          section 2
+           <div className="items-center justify-center p-8 lg:py-24 lg:px-36 h-full w-full rounded-2xl bg-[#F7F7F7] ">
             <div className="text-neutral-800 text-2xl font-medium font-bricolage leading-loose">
               Next...
             </div>
@@ -531,8 +531,8 @@ function HowToHelp() {
               label="Send the guide to a friend"
               name="buttondefault"
             />
-          </div> */}
-        </div>
+          </div>
+        </div> */}
       </div>
     </div>
   );

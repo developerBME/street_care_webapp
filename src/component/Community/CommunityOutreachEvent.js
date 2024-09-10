@@ -101,6 +101,12 @@ const CommunityOutreachEvent = () => {
     }
   }, [eventsDisplay]);
 
+  const upcomingEventsNumber = events
+  .filter((event) => {
+    const eventDate = new Date(event.eventDate?.seconds * 1000) || event.eventDate;
+    return eventDate >= new Date(); // Check if the event date is before the current date
+  });
+
   const upcomingEvents = events
     .filter((event) => {
       const eventDate = new Date(event.eventDate?.seconds * 1000) || event.eventDate;
@@ -117,7 +123,7 @@ const CommunityOutreachEvent = () => {
               <div className="text-[45px] font-medium font-dmsans">
                 {/* Outreach - extending help, resources, and compassion to those in
             need */}
-                Upcoming Outreaches ({upcomingEvents.length})
+                Upcoming Outreaches ({upcomingEventsNumber.length})
               </div>
               <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-medium font-dmsans leading-tight self-stretch">
                 <CustomButton
@@ -137,8 +143,7 @@ const CommunityOutreachEvent = () => {
             while personal outreach involves one-on-one assistance. Homeless
             outreach is crucial because it provides immediate help and fosters
             empathy, building a more compassionate society. */}
-              What are outreaches and how can they help you? If you are ready
-              to help people now, kindly sign up to outreaches
+              What are outreaches and how can they help you? If you are ready to help people now, kindly sign up to outreaches.
             </div>
           </div>
 
