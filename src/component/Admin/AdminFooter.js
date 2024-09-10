@@ -57,7 +57,7 @@ const iconLinks = [
   },
 ];
 
-function Admin_Footer() {
+function AdminFooter() {
   return (
     <footer class="bg-nav mb-20 md:mb-0">
       <div class=" lg:mx-auto  h-fit w-full max-w-screen-xl">
@@ -183,4 +183,4 @@ function Admin_Footer() {
   );
 }
 
-export default Admin_Footer;
+export default AdminFooter;

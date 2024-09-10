@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import Landing from "../HomePage/Landing";
-import Form from "./Form";
+import Form from "../Community/Form";
 import arrowBack from "../../images/arrowBack.png";
 import { useParams } from "react-router-dom";
 
@@ -44,4 +44,3 @@ const CreateOutreach = () => {
 }
 
 export default CreateOutreach;
-

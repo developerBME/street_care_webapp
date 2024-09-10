@@ -200,12 +200,19 @@ import {
     );
     throw error;
   }
+<<<<<<< HEAD
  };
  
  
  
  
  export const fetchUserDetails = async (uid) => {
+=======
+};
+
+
+export const fetchUserDetails = async (uid) => {
+>>>>>>> 1b3ced5b32f243b8463efc11e7fe17c2cccac1b7
   try {
     // Reference to the uid instead of the docid of the user.
     const userQuery = query(
@@ -885,6 +892,7 @@ import {
     );
     throw error;
   }
+<<<<<<< HEAD
  };
  
  
@@ -959,6 +967,42 @@ import {
  
  
  export async function calculateNumberOfPagesForOutreach(outreachPerPage, currentPage=0){
+=======
+};
+
+
+// const fetchUserName = async (uid) => {
+//   // Reference to the uid instead of the docid of the user.
+//   const userQuery = query(
+//     collection(db, USERS_COLLECTION),
+//     where("uid", "==", uid)
+//   );
+//   const userDocRef = await getDocs(userQuery);
+
+//   const userDocID = userDocRef.docs[0]?.id;  
+//   // reference for the userdoc
+//   if(userDocID != undefined){
+//     const userRef = doc(db, USERS_COLLECTION, userDocID);
+//     const userDoc = await getDoc(userRef);
+
+//     if (userDoc != undefined || userDoc.exists()) {
+//       return userDoc.data().username || "";
+//     } else {
+//       console.error("No user found with uid:", uid);
+//       logEvent(
+//         "STREET_CARE_ERROR",
+//         `error on fetchUserName EventCardService.js- No user Found ${uid}`
+//       );
+//       throw new Error(
+//         `error on fetchUserName EventCardService.js- No user Found ${uid}`
+//       );
+//       return "";
+//     }
+//   }
+// };
+
+export async function calculateNumberOfPagesForOutreach(outreachPerPage, currentPage=0){
+>>>>>>> 1b3ced5b32f243b8463efc11e7fe17c2cccac1b7
   const testoutreachRef = query(collection(db, PAST_OUTREACH_EVENTS_COLLECTION), orderBy("createdAt", "asc"));
   const snapshot = await getDocs(testoutreachRef);
   // console.log('Data : '+snapshot.docs);
@@ -1011,10 +1055,10 @@ import {
     for (const doc of snapshots.docs) {
       const outreachData = doc.data();
       const id = doc.id;
-      const userName = await fetchUserName(outreachData.uid);
+      const userDetails = await fetchUserDetails(outreachData.uid);
       outreaches.push({
         ...outreachData,
-        userName: userName,
+        userName: userDetails?.username,
         id: id,
       });
     }
