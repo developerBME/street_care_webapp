@@ -194,7 +194,7 @@ export const fetchTopVisitLogs= async () => {
         id: id,
       });
     }
-    console.log(visitLogs)
+    // console.log(visitLogs)
     return visitLogs;
   } catch (error) {
     logEvent(

@@ -270,7 +270,11 @@ export const fetchUserSignedUpOutreaches = async (uid) => {
     const outreachQuery = query(collection(db, OUTREACH_EVENTS_COLLECTION));
     const snapshot = await getDocs(outreachQuery);
 
+    // snapshot.forEach((doc)=>{
+    //   console.log(doc.data());
+    // });
     let userSignedUpOutreaches = [];
+    console.log(`singed up outreaches user: ${fAuth.currentUser.uid}`);
 
     for (const doc of snapshot.docs) {
       const eventData = doc.data();
@@ -584,12 +588,23 @@ export const fetchByCityOrState = async (searchValue, startDate, endDate) => {
 
 export const fetchUserOutreaches = async () => {
   try {
-    const auth = getAuth();
+    const auth = await getAuth();
+    console.log(auth);
     const user = auth.currentUser;
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log(`auth user logged in ${user.currentUser}`);
+      } else {
+        console.log(`auth user logged out ${user?.currentUser?.uid}`);
+      }
+    });
+    console.log(user);
+    // console.log(`currentUser: ${user.uid}`);
 
-    if (!user) {
-      throw new Error("User is not logged in.");
-    }
+    // if (!user) {
+    //   throw new Error("User is not logged in.");
+    // }
+    console.log(`userid dummy: ${user}, ${user.uid}`);
 
     const userQuery = query(
       collection(db, OUTREACH_EVENTS_COLLECTION),
@@ -597,8 +612,13 @@ export const fetchUserOutreaches = async () => {
     );
 
     const eventSnapshot = await getDocs(userQuery);
-    let userOutreaches = [];
 
+    console.log(`user outreaches length: ${eventSnapshot}`);
+    eventSnapshot.forEach((doc)=>{
+      console.log(doc.data());
+    });
+
+    let userOutreaches = [];
     for (const doc of eventSnapshot.docs) {
       const eventData = doc.data();
       const result = await fetchUserDetails(eventData.uid);
@@ -660,28 +680,15 @@ const fetchUserName = async (uid) => {
 export async function calculateNumberOfPagesForOutreach(outreachPerPage, currentPage=0){
   const testoutreachRef = query(collection(db, PAST_OUTREACH_EVENTS_COLLECTION), orderBy("createdAt", "asc"));
   const snapshot = await getDocs(testoutreachRef);
-  // console.log('Data : '+snapshot.docs);
   const startIndex = outreachPerPage*currentPage;
   const startDoc = snapshot.docs[startIndex];
-  console.log('starting is: '+ startDoc);
-
-  // const firstdoc=snapshot.docs(startAt);
-  // console.log('starting is: '+ firstdoc);
-
 
   const outreachRef = query(collection(db, PAST_OUTREACH_EVENTS_COLLECTION),  orderBy("createdAt", "asc"), startAt(startDoc), limit(outreachPerPage))
 
   const outres = await getDocs(outreachRef);
-  // console.log('outres '+ outres.docs);
-  outres.forEach((doc)=>{
-    // console.log(doc.data());
-    console.log(doc.id);
-  });
   return outres;
 
 }
-
-const test = await calculateNumberOfPagesForOutreach(5,0)
 
 export const fetchTopOutreaches = async () => {
   try {
@@ -720,3 +727,71 @@ export const fetchTopOutreaches = async () => {
 
 //  const testlatestfunc = await fetchTopOutreaches();
 //  console.log(testlatestfunc);
+
+// const userOutreaches = await fetchUserOutreaches();
+// console.log(`fetchUserOutreaches : `);
+// console.log(userOutreaches);
+
+// const usersignedupoutreaches = await fetchUserSignedUpOutreaches("5wWnB7azzlTVNMfhfv4CWAKK1hL2");
+// console.log(`fetchUsersignedupoutreaches : `);
+// console.log(usersignedupoutreaches);
+
+export const dummy = async (signedUp = false) => {
+  try {
+    const auth = getAuth();
+    console.log(auth);
+    const user = auth.currentUser;
+    console.log(`currentUser: ${user.uid}`);
+
+    if (!user) {
+      throw new Error("User is not logged in.");
+    }
+
+    let userQuery = null;
+    userQuery = query(
+      collection(db, OUTREACH_EVENTS_COLLECTION),
+      where("uid", "==", user.uid)
+    );
+    if(signedUp){
+      userQuery = query(
+        collection(db, OUTREACH_EVENTS_COLLECTION)
+      );
+    }
+    const eventSnapshot = await getDocs(userQuery);
+
+    console.log(`user outreaches length: ${eventSnapshot.length}`);
+    eventSnapshot.forEach((doc)=>{
+      console.log(doc.data());
+    });
+
+    let userOutreaches = [];
+    for (const doc of eventSnapshot.docs) {
+      const eventData = doc.data();
+      const result = await fetchUserDetails(eventData.uid);
+      const userName = result.username;
+      const photoUrl = result.photoUrl;
+
+      let currentParticipants = eventData.participants || [];
+      userOutreaches.push({
+        ...eventData,
+        userName: userName,
+        id: doc.id,
+        label: user && currentParticipants.includes(user.uid) ? "EDIT" : "RSVP",
+        nop: currentParticipants.length,
+        photoUrl: photoUrl,
+      });
+    }
+    console.log("Outreaches created by user dummy:", userOutreaches);
+    return userOutreaches;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchUserOutreaches in EventCardService.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
+// const dummyout = await dummy(false);
+// console.log(`dummyOut : `);
+// console.log(dummyout);
