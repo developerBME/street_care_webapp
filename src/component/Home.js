@@ -194,10 +194,14 @@ function HomePage() {
     }
   }, [eventsDisplay]);
 
-  const outreachRef = useRef();
+  const outreachRef = useRef(null);
 
   const handleOutreachRef = () => {
-    outreachRef.current.scrollIntoView({ behavior: "smooth" });
+    if(outreachRef.current) {
+      outreachRef.current.scrollIntoView({ behavior: "smooth" });
+    } else{
+      console.error("outreach.current is undefined");
+    }
   };
 
   // Filter events to get only upcoming events
@@ -238,6 +242,7 @@ function HomePage() {
 
       <div
         id="outreach"
+        ref={outreachRef}
         className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black"
       >
         <HomePageUpcomingOutreach />
