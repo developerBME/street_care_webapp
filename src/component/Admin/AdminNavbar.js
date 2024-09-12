@@ -20,7 +20,7 @@ import { FaTimes } from "react-icons/fa";
 import { FaBars } from "react-icons/fa";
 import CustomButton from "../component/Buttons/CustomButton";
 
-const Admin_NavBar = (props) => {
+const AdminNavbar = (props) => {
   const [nav, setNav] = useState(false);
   const fAuth = getAuth();
   const navigate = useNavigate();
@@ -290,4 +290,4 @@ const Admin_NavBar = (props) => {
   );
 };
 
-export default Admin_NavBar;
+export default AdminNavbar;
