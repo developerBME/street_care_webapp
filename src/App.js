@@ -68,6 +68,7 @@ import Dashboard from "./component/Admin/AdminDashboard.js"
 import MoreVisitLogs from "./component/Community/MoreVisitLogs";
 import CreateOutreach from "./component/Community/CreateOutreach";
 import AllSignedUpOutreaches from "./component/UserProfile/AllSignedUpOutreaches";
+import AllCreatedOutreaches from "./component/UserProfile/AllCreatedOutreaches.js";
 import OutreachEvents from "./component/Admin/OutreachEvents";
 
 
@@ -240,6 +241,11 @@ function App() {
             path="profile/allSignedUpOutreaches"
             element={<AllSignedUpOutreaches />}
           />
+          <Route
+            path="profile/allCreatedOutreaches"
+            element={<AllCreatedOutreaches />}
+          />
+
           <Route path="/admin" element={<AdminHomePage />} />
           <Route path="/sample_form" element={<SampleForm />} />
           <Route path="visitLogDetails" element={<VisitLogDetails />} />
