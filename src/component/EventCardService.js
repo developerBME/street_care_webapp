@@ -714,11 +714,11 @@ export const fetchByCityOrStates = async (searchValue, startDate, endDate,curr_p
     throw error;
   }
 };
-/*
-const cityToSearch = "Ottawa"; 
+/* 
+const cityToSearch = ""; 
 const startDateTime = new Date("2020-07-01"); 
 const endDateTime = new Date("2023-07-01");
-const curr_page=0;
+const curr_page=1;
 const outreachPerPages = 5;
 
 
@@ -734,11 +734,11 @@ try {
 }
 })();
 
-
+*/
 // const test1 = await ('Ottawa','07/24/2021', '09/24/2021');
 
 // code by Adarsh ends..................
-*/
+
 
 
 
