@@ -17,6 +17,7 @@ const AdminDashboard = () => {
         <h2 className="text-4xl font-bold mb-4 text-start">Admin Control</h2>
         <p className="mb-6 text-start">Edit user details, track website activity, manage events, and handle support requests</p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          {/* <button onClick={() => navigate('/admin/userManagement')} className="w-full col-span-1 md:col-span-2"> */}
               <Card bgColor="bg-gradient-to-b from-[#D3C4FF] to-[#DEDCE4]">
               <div className="flex flex-col items-center">
                 <div className="w-16 h-16 rounded-full flex items-center justify-center mb-2">
@@ -28,6 +29,8 @@ const AdminDashboard = () => {
                 <p className="text-black text-[24px] font-[500]">Outreach events</p>
               </div>
             </Card>
+            {/* </button> */}
+            {/* <button onClick={() => navigate('/admin/userManagement')} className="w-full col-span-1 md:col-span-2"> */}
             <Card bgColor="bg-gradient-to-b from-[#D3F2CE] to-[#E7E7E7]">
               <div className="flex flex-col items-center">
                 <div className="w-16 h-16 flex items-center justify-center mb-2">
@@ -39,6 +42,8 @@ const AdminDashboard = () => {
                 <p className="text-black text-[24px] font-[500]">Visit Logs</p>
               </div>
             </Card>
+               {/* </button> */}
+            {/* <button onClick={() => navigate('/admin/userManagement')} className="w-full col-span-1 md:col-span-2"> */}
             <Card bgColor="bg-gradient-to-b from-[#FFF8BA] to-[#EAE7DC]">
               <div className="flex flex-col items-center">
                 <div className="w-16 h-16 rounded-full flex items-center justify-center mb-2">
@@ -50,6 +55,7 @@ const AdminDashboard = () => {
                 <p className="text-black text-[24px] font-[500]">Help Requests</p>
               </div>
             </Card>
+               {/* </button> */}
           </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
               <button onClick={() => navigate('/admin/userManagement')} className="w-full col-span-1 md:col-span-2">
