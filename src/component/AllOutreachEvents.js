@@ -5,6 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import search_icon from "../images/search_icon.png";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
+import { Modal } from "@mui/material";
+import OutreachSignupModal from "./Community/OutreachSignupModal";
+import RSVPConfirmationModal from "./UserProfile/RSVPConfirmationModal";
 
 const AllOutreachEvents = () => {
   const [events, setEvents] = useState([]);
@@ -14,25 +17,66 @@ const AllOutreachEvents = () => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [visibleCards, setVisibleCards] = useState(12);
+
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [showSignUpModal, setShowSignUpModal] = useState(false);
+  const [showWithdrawnModal, setShowWithdrawnModal] = useState(false);
+  const [triggerEffect, setTriggerEffect] = useState(false);
+
   const loadMore = () => {
     setVisibleCards((prev) => prev + 12);
   };
 
+  
+  const openModal = (event) => {
+    setSelectedEvent(event);
+  };
+
+  const closeModal = () => {
+    setSelectedEvent(null);
+  };
+
+  const onSignUp = () => {
+    setSelectedEvent(null);
+    setShowSignUpModal(true);
+    setIsLoading(true);
+  };
+  
+  const closeSignUpModal = () => {
+    setShowSignUpModal(false);
+    setTriggerEffect(prev => !prev);
+  };
+  
+  const onEventWithdraw = () => {
+    setSelectedEvent(null);
+    setShowWithdrawnModal(true);
+    setIsLoading(true);
+    setTriggerEffect(prev => !prev);
+  };
+
+  const closeWithdrawModal = () => {
+    setShowWithdrawnModal(false);
+  }
+
+  const fetchData = async () => {
+    const eventsData = await fetchEvents();
+    const upcomingEvents = eventsData.filter((event) => {
+      const eventDate = event?.eventDate?.seconds
+        ? new Date(event.eventDate.seconds * 1000)
+        : event.eventDate;
+      return eventDate >= new Date(); // Check if the event date is before the current date
+    });
+    // Sort events in place based on their date
+    upcomingEvents.sort((a, b) => a.eventDate - b.eventDate);
+
+    setEvents(upcomingEvents);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      const eventsData = await fetchEvents();
-      const upcomingEvents = eventsData.filter((event) => {
-        const eventDate = event?.eventDate?.seconds
-          ? new Date(event.eventDate.seconds * 1000)
-          : event.eventDate;
-        return eventDate >= new Date(); // Check if the event date is before the current date
-      });
-      // Sort events in place based on their date
-      upcomingEvents.sort((a, b) => a.eventDate - b.eventDate);
+    fetchData();
+  }, [triggerEffect]);
 
-      setEvents(upcomingEvents);
-    };
-
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -139,6 +183,12 @@ const AllOutreachEvents = () => {
                             )
                           : eventData.eventDate,
                       }}
+                      openModal={() => openModal({
+                        ...eventData,
+                        eventDate: eventData.eventDate?.seconds
+                          ? formatDate(new Date(eventData.eventDate.seconds * 1000))
+                          : eventData.eventDate,
+                      })}
                     />
                   ))}
               </div>
@@ -180,6 +230,15 @@ const AllOutreachEvents = () => {
           )}
         </div>
       </div>
+      <Modal open={!!selectedEvent}>
+        <OutreachSignupModal data={{...selectedEvent}} closeModal={closeModal} onSignUp={onSignUp} onEventWithdraw={onEventWithdraw}/>
+      </Modal>
+      <Modal open={showSignUpModal}>
+       <RSVPConfirmationModal closeModal={closeSignUpModal} type='edit'/>
+      </Modal>
+      <Modal open={showWithdrawnModal}>
+       <RSVPConfirmationModal closeModal={closeWithdrawModal} type='withdraw' />
+      </Modal>
     </div>
   );
 };
