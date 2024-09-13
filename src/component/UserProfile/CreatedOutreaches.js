@@ -56,7 +56,7 @@ return (
   <>
           
             <div className="inline-flex flex-col sm:flex-row sm:space-x-16 justify-between gap-2">
-              <div class="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage text-left leading-[52px]">
+              <div className="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage text-left leading-[52px]">
                 Created Outreaches
               </div>
               <CustomButton
@@ -78,40 +78,51 @@ return (
             </div>
 
             <div className="block overflow-x-auto overflow-y-hidden">
-              {isLoading ? (
-                <div className="flex justify-between items-center w-full h-fit gap-2">
-                  <EventCardSkeleton />
-                  <EventCardSkeleton />
-                  <EventCardSkeleton />
-                </div>
-              ) : isError ? (
-                <ErrorMessage displayName="Outreaches" />
-              ) : createdEvents.length === 0 ? (
-                <NoDisplayData
-                  name="signedupoutreaches"
-                  label="No outreach events created"
+        {isLoading ? (
+          <div className="flex justify-between items-center w-full h-fit gap-2">
+            <EventCardSkeleton />
+            <EventCardSkeleton />
+            <EventCardSkeleton />
+          </div>
+        ) : isError ? (
+          <ErrorMessage displayName="Outreaches" />
+        ) : createdEvents.length === 0 ? (
+          <NoDisplayData
+            name="createdoutreaches"
+            label="No outreach events created"
+          />
+        ) : (
+          <div>
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 mb-6">
+              {createdEvents.slice(0, 3).map((eventData) => (
+                <OutreachEventCard
+                  key={eventData.id}
+                  cardData={{
+                    ...eventData,
+                    eventDate: formatDate(
+                      new Date(eventData.eventDate.seconds * 1000)
+                    ),
+                  }}
+                  isProfilePage={true}
+                  refresh={fetchData}
                 />
-              ) : (
-                <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 mb-6">
-                  {createdEvents.map((eventData) => (
-                    <OutreachEventCard
-                      key={eventData.id}
-                      cardData={{
-                        ...eventData,
-                        eventDate: formatDate(
-                          new Date(eventData.eventDate.seconds * 1000)
-                        ),
-                      }}
-                      isProfilePage={true}
-                      refresh={fetchData}
-                    />
-                  ))}
-                </div>
-              )}
+              ))}
             </div>
+            <div>
+            <CustomButton
+              label="More Created Outreaches"
+              name="buttondefault"
+              onClick={() => {
+                navigate("/profile/allCreatedOutreaches");
+              }}
+            />
+          </div>
+          </div>
           
-        </>
-);
+        )}
+      </div>
+    </>
+  );
 };
 
 export default CreatedOutreaches;

@@ -57,7 +57,7 @@ const PersonalVisitLogDetails = () => {
       // outreach event collection
       const docSnap = await getDoc(userRef);
       let personalVisitLogs = docSnap.data().personalVisitLogs || [];
-      personalVisitLogs = personalVisitLogs.filter((x) => x != id);
+      personalVisitLogs = personalVisitLogs.filter((x) => x !== id);
 
       await deleteDoc(visitLogDoc);
       await updateDoc(userRef, {

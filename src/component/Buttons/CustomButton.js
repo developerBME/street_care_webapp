@@ -564,10 +564,38 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
       <button
         onClick={onClick}
         type={type}
-        className={` text-[16px] font-medium w-full py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
+        className={` text-[16px] font-medium w-full py-[10px] px-[24px] rounded-full transition ease-in-out ${
           disable !== "true"
             ? "text-white bg-[#6840E0] hover:bg-[#504279]"
             : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
+      >
+        {label}
+      </button>
+    );
+  } else if (name == "buttondInprogressWide") {
+    return (
+      <button
+        onClick={onClick}
+        type={type}
+        className={` text-[16px] font-medium w-full py-[10px] px-[24px] rounded-full transition ease-in-out ${
+          disable !== "true"
+            ? "text-[#181818] bg-[#FFD100] hover:bg-[#F5BF34]"
+            : "text-[#181818] bg-[#FFD100] cursor-not-allowed"
+        }`}
+      >
+        {label}
+      </button>
+    );
+  } else if (name == "buttonClosedWide") {
+    return (
+      <button
+        onClick={onClick}
+        type={type}
+        className={` text-[16px] font-medium w-full py-[10px] px-[24px] rounded-full transition ease-in-out border border-[#565656] ${
+          disable !== "true"
+            ? "text-[#181818] bg-white hover:bg-gray-100"
+            : "text-[#181818] bg-white cursor-not-allowed"
         }`}
       >
         {label}

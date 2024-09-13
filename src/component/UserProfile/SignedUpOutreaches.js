@@ -54,7 +54,7 @@ const SignedUpOutreaches = () => {
   return (
     <>
       <div className="inline-flex flex-col sm:flex-row sm:space-x-16 justify-between gap-2">
-        <div class="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage text-left leading-[52px]">
+        <div className="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage text-left leading-[52px]">
           Signed Up Outreaches
         </div>
         <CustomButton
