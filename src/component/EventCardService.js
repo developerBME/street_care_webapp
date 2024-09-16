@@ -763,7 +763,7 @@ export const fetchByCityOrStates = async (searchValue, startDate, endDate,curr_p
 const cityToSearch = ""; 
 const startDateTime = new Date("2020-07-01"); 
 const endDateTime = new Date("2023-07-01");
-const curr_page=1;
+const curr_page=0;
 const outreachPerPages = 5;
 
 
