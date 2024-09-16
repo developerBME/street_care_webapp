@@ -632,7 +632,6 @@ import {
     );
     throw error;
   }
-<<<<<<< HEAD
 };
 
 
@@ -643,20 +642,6 @@ export const fetchPastOutreaches = async () => {
     const pastOureachEventsRef = collection(db,PAST_OUTREACH_EVENTS_COLLECTION);
     const outreachDocRef = await getDocs(pastOureachEventsRef);
 
-=======
- };
- 
- 
- //@code by Adarsh starts -------
- 
- 
- export const fetchPastOutreaches = async () => {
-  try {
-    const pastOureachEventsRef = collection(db,PAST_OUTREACH_EVENTS_COLLECTION);
-    const outreachDocRef = await getDocs(pastOureachEventsRef);
- 
- 
->>>>>>> 62f6958e1fdcd7b7f242601858a4cdf9d7b25e69
     const totaloutreaches= outreachDocRef.size;
     // const totaloutreaches = count(outreachDocRef.data())
     return totaloutreaches;
@@ -667,7 +652,6 @@ export const fetchPastOutreaches = async () => {
     );
     throw error;
   }
-<<<<<<< HEAD
 }
 
 
@@ -678,38 +662,14 @@ export const fetchByCityOrStates = async (searchValue, startDate, endDate,curr_p
       const pastOureachEventsRef = collection(db,PAST_OUTREACH_EVENTS_COLLECTION);
       const outreachDocRef = await getDocs(pastOureachEventsRef);
 
-=======
- }
- 
- 
- 
- 
- 
- 
- export const fetchByCityOrStates = async (searchValue, startDate, endDate,curr_page,outreachPerPages) => {
-  try {
- 
- 
-      const pastOureachEventsRef = collection(db,PAST_OUTREACH_EVENTS_COLLECTION);
-      const outreachDocRef = await getDocs(pastOureachEventsRef);
- 
- 
->>>>>>> 62f6958e1fdcd7b7f242601858a4cdf9d7b25e69
       const totaloutreaches= outreachDocRef.size;
       // const totaloutreaches = count(outreachDocRef.data())
       // return totaloutreaches;
     if (!searchValue || typeof searchValue !== "string"|| searchValue ==''|| searchValue =="") {
-<<<<<<< HEAD
-
-=======
- 
- 
->>>>>>> 62f6958e1fdcd7b7f242601858a4cdf9d7b25e69
       const pastOutreachRef = query( collection(db, PAST_OUTREACH_EVENTS_COLLECTION), where("eventDate", ">=", startDate), where("eventDate", "<=", endDate), orderBy("eventDate", "desc"));
       const snapshots = await getDocs(pastOutreachRef);
       const tot = snapshots.size;
       console.log('tot:'+tot)
-<<<<<<< HEAD
 
       if (tot!=0 ){
 
@@ -718,48 +678,21 @@ export const fetchByCityOrStates = async (searchValue, startDate, endDate,curr_p
 
       const outreachByLocationQuery = query(pastOutreachRef,startAt(init_doc), limit(outreachPerPages));
 
-=======
- 
- 
-      if (tot!=0 ){
- 
- 
-      const start_Index = outreachPerPages*curr_page;
-      const init_doc = snapshots.docs[start_Index];
- 
- 
-      const outreachByLocationQuery = query(pastOutreachRef,startAt(init_doc), limit(outreachPerPages));
- 
- 
->>>>>>> 62f6958e1fdcd7b7f242601858a4cdf9d7b25e69
       while(outreachPerPages < totaloutreaches )
           {
               const outreachDocRef = await getDocs(outreachByLocationQuery);
               console.log('Test7:');
               // console.log('outreachDocRef:'+outreachDocRef);
-<<<<<<< HEAD
-
-=======
- 
- 
->>>>>>> 62f6958e1fdcd7b7f242601858a4cdf9d7b25e69
               let outreachByLoc = [];
               for (const doc of outreachDocRef.docs) {
                   const pastOutreachData = doc.data();
                   const id = doc.id;
                   // console.log('id wrt loc: '+id);
-<<<<<<< HEAD
-
-=======
- 
- 
->>>>>>> 62f6958e1fdcd7b7f242601858a4cdf9d7b25e69
                   outreachByLoc.push({
                   ...pastOutreachData,
                       id: id,
                   });
               }
-<<<<<<< HEAD
           return {tot, outreachByLoc};
           }
       }
@@ -769,50 +702,14 @@ export const fetchByCityOrStates = async (searchValue, startDate, endDate,curr_p
     }
 
 
-=======
-              return { tot, outreachByLoc };
-          }
-      }
- 
- 
-      console.error("No PastOutreaches available for the given date range");
-      throw new Error("No PastOutreaches available for the given date range and city");
-    }
- 
- 
- 
- 
->>>>>>> 62f6958e1fdcd7b7f242601858a4cdf9d7b25e69
     if (!(startDate instanceof Date) || isNaN(startDate)) {
       console.error("Invalid start date");
       return;
     }
-<<<<<<< HEAD
-
-=======
- 
- 
->>>>>>> 62f6958e1fdcd7b7f242601858a4cdf9d7b25e69
     if (!(endDate instanceof Date) || isNaN(endDate)) {
       console.error("Invalid end date");
       return;
     }
-<<<<<<< HEAD
-
-=======
- 
- 
-    /*if (searchValue == '' || searchValue == null ||)
-      {
-     
- 
- 
- 
- 
-      }*/
- 
- 
->>>>>>> 62f6958e1fdcd7b7f242601858a4cdf9d7b25e69
     // const pastOutreachRef = collection(db, PAST_OUTREACH_EVENTS_COLLECTION);
     const pastOutreachRef = query( collection(db, PAST_OUTREACH_EVENTS_COLLECTION) ,where("location.city", "==", searchValue),
       where("eventDate", ">=", startDate), where("eventDate", "<=", endDate));
@@ -821,7 +718,6 @@ export const fetchByCityOrStates = async (searchValue, startDate, endDate,curr_p
     console.log('total snapshots:'+ tot);
     const start_Index = outreachPerPages*curr_page;
     const init_doc = snapshots.docs[start_Index];
-<<<<<<< HEAD
 
 
     // Full text search - Search filtering by City/State fields matching exact value
@@ -834,67 +730,27 @@ export const fetchByCityOrStates = async (searchValue, startDate, endDate,curr_p
 
     while(outreachPerPages < totaloutreaches )
 
-=======
- 
- 
- 
- 
-    // Full text search - Search filtering by City/State fields matching exact value
-    if (tot!=0 ){
-     
-    console.log('Test1:');
- 
- 
- 
- 
-    const outreachByLocationQuery = query(pastOutreachRef,startAt(init_doc), limit(outreachPerPages));
- 
- 
-    while(outreachPerPages < totaloutreaches )
- 
- 
->>>>>>> 62f6958e1fdcd7b7f242601858a4cdf9d7b25e69
       {
         const outreachDocRef = await getDocs(outreachByLocationQuery);
         console.log('Test2:');
         // console.log('outreachDocRef:'+outreachDocRef);
-<<<<<<< HEAD
-
-=======
- 
- 
->>>>>>> 62f6958e1fdcd7b7f242601858a4cdf9d7b25e69
         let outreachByLoc = [];
         for (const doc of outreachDocRef.docs) {
             const pastOutreachData = doc.data();
             const id = doc.id;
             // console.log('id wrt loc: '+id);
-<<<<<<< HEAD
-
-=======
- 
- 
->>>>>>> 62f6958e1fdcd7b7f242601858a4cdf9d7b25e69
             outreachByLoc.push({
             ...pastOutreachData,
               id: id,
             });
           }
-<<<<<<< HEAD
         return {tot,outreachByLoc};
-=======
-          return { tot, outreachByLoc };
->>>>>>> 62f6958e1fdcd7b7f242601858a4cdf9d7b25e69
       }
   }
   console.error("No PastOutreaches available for the given date range and city");
   throw new Error("No PastOutreaches available for the given date range and city");
   // console.log('outreachByLoc: '+outreachByLoc);
-<<<<<<< HEAD
     
-=======
-   
->>>>>>> 62f6958e1fdcd7b7f242601858a4cdf9d7b25e69
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
@@ -902,7 +758,6 @@ export const fetchByCityOrStates = async (searchValue, startDate, endDate,curr_p
     );
     throw error;
   }
-<<<<<<< HEAD
 };
 /* 
 const cityToSearch = ""; 
@@ -935,45 +790,6 @@ try {
 
 
 export const fetchUserOutreaches = async () => {
-=======
- };
- 
- 
- // const cityToSearch = "Ottawa";
- // const startDateTime = new Date("2024-07-01");
- // const endDateTime = new Date("2023-07-01");
- // const curr_page=0;
- // const outreachPerPages = 5;
- 
- 
- // (async () => {
- // try {
- //   // const totaloutreaches = await fetchPastOutreaches()
- //   const outreachByLocation = await fetchByCityOrStates(cityToSearch, startDateTime, endDateTime, curr_page, outreachPerPages);
- //   console.log("Fetched outreach data:", outreachByLocation);
- //   // console.log('fetchPastOutreaches: '+ await fetchPastOutreaches());
- 
- 
- // } catch (error) {
- //   console.error("Error fetching outreach data:", error);
- // }
- // })();
- 
- 
- 
- 
- // const test1 = await ('Ottawa','07/24/2021', '09/24/2021');
- 
- 
- // code by Adarsh ends..................
- 
- 
- 
- 
- 
- 
- export const fetchUserOutreaches = async () => {
->>>>>>> 62f6958e1fdcd7b7f242601858a4cdf9d7b25e69
   try {
     const auth = getAuth();
     const user = auth.currentUser;
