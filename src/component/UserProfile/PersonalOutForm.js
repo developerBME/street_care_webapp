@@ -27,7 +27,7 @@ import DatePicker from "react-datepicker";
 import { Timestamp } from "firebase/firestore";
 import InfoIcon from '@mui/icons-material/Info';
 // import { IconButton } from "@mui/material";
-import {Tooltip, IconButton, Icon} from '@mui/material';
+import {Tooltip, IconButton} from '@mui/material';
 
 const USERS_COLLECTION = "users";
 

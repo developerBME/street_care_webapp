@@ -318,11 +318,11 @@ const fetchUserName = async (uid) => {
 
   const userDocID = userDocRef.docs[0]?.id;
   // reference for the userdoc
-  if (userDocID != undefined) {
+  if(userDocID !== undefined){
     const userRef = doc(db, USERS_COLLECTION, userDocID);
     const userDoc = await getDoc(userRef);
-
-    if (userDoc != undefined || userDoc.exists()) {
+    
+    if (userDoc !== undefined || userDoc.exists()) {
       return userDoc.data().username || "";
     } else {
       console.error("No user found with uid:", uid);
