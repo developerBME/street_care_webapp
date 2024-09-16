@@ -703,7 +703,6 @@ export const fetchOutreaches = async (signedUp = false, uid) => {
 
   } catch (error) {
     logEvent("STREET_CARE_ERROR", `error on fetchOutreaches in EventCardService.js - ${error.message}`);
-    throw error;src/component/EventCardService.js
-  }
+    throw error;  }
 };
 
