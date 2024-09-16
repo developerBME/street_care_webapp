@@ -169,7 +169,9 @@ function App() {
           >
             <Route path="/testAdmin" element={<TestAdmin />} />
             <Route path="/admin-panel/userlist" element={<UserList />} />
+            <Route path="/admin" element={<AdminHomePage />} />
             <Route path="/admin/userManagement" element={<UserListNew/>}/>
+            <Route path="/admin/outreach-events" element={<OutreachEvents />} />
           </Route>
           <Route
             element={
@@ -247,6 +249,7 @@ function App() {
           />
 
           <Route path="/admin" element={<AdminHomePage />} />
+
           <Route path="/sample_form" element={<SampleForm />} />
           <Route path="visitLogDetails" element={<VisitLogDetails />} />
           <Route path="visitLogDetails/:id" element={<VisitLogDetails />} />
@@ -277,7 +280,7 @@ function App() {
           <Route path="/myvisitlogs" element={<MoreVisitLogs />} />
 
           {/* Admin Routes */}
-          <Route path="/admin/outreach-events" element={<OutreachEvents />} />
+          
 
         </Routes>
         <Footer />
