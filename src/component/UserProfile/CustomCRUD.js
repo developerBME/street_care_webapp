@@ -82,7 +82,7 @@ function CustomCRUD() {
                 <input placeholder="age.." type ="number" onChange = {(e) => setNewUserAge(Number(e.target.value))}/>
                 <CustomButton
                     name="buttondefault"
-                    class="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2  rounded transition duration-150"
+                    className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2  rounded transition duration-150"
                     label="Submit"
                     onClick={(onSubmitUser)}
                 ></CustomButton>
@@ -95,13 +95,13 @@ function CustomCRUD() {
                         <input placeholder="update name..." onChange={(e) => setUpdatedName(e.target.value)}/>
                         <CustomButton
                             name="buttondefault"
-                            class="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2  rounded transition duration-150"
+                            className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2  rounded transition duration-150"
                             label="Update"
                             onClick={()=>(updateUser(user.id))}
                         ></CustomButton>
                         <CustomButton
                             name="buttondefault"
-                            class="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2  rounded transition duration-150"
+                            className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2  rounded transition duration-150"
                             label="Delete"
                             onClick={()=>(deleteUser(user.id))}
                         ></CustomButton>
@@ -113,7 +113,7 @@ function CustomCRUD() {
             {/*   <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 mt-24  lg:mx-40 lg:mt-32 rounded-2xl bg-white text-black ">
                     <div className="flex flex-col gap-4 lg:gap-14 lg:p-24 pl-8 pt-4 pb-4 pr-8">
                         <div className="inline-flex flex-col sm:flex-row sm:space-x-16 ">
-                        <div class="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage leading-[52px]">
+                        <div className="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage leading-[52px]">
                             <CustomCRUD></CustomCRUD>
                         </div>
                         </div>

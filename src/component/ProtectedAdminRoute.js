@@ -24,7 +24,7 @@ export const ProtectedAdminRoute = ({ user, loading }) => {
     fetchUserVerification();
   });
   
-  if (loading || !fetchComplete) return null; 
+  if (loading || !fetchComplete) return <Navigate to="/" />; 
 
   if (!user || !Object.keys(user).length) return <Navigate to="/login" />;
 

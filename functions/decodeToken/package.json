@@ -3,6 +3,7 @@
   "description": "Cloud Functions to handle the decoding of the access Token ",
   "main": "index.js",
   "dependencies": {
+    "decodeToken": "file:",
     "firebase-admin": "^11.11.1",
     "firebase-functions": "^4.9.0"
   },

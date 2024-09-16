@@ -80,7 +80,7 @@ const AllHelpRequests = () => {
               </p>
             </div>
             <div className=" mt-6 lg:mt-0">
-              <label class="relative text-gray-400 focus-within:text-gray-600 ">
+              <label className="relative text-gray-400 focus-within:text-gray-600 ">
                 <input
                   type="text"
                   name="searchText"
@@ -96,7 +96,7 @@ const AllHelpRequests = () => {
                   viewBox="0 0 20 20"
                   strokeWidth="1.5"
                   stroke="currentColor"
-                  class="w-6 h-6 pointer-events-none absolute top-6 transform -translate-y-1/2 left-3"
+                  className="w-6 h-6 pointer-events-none absolute top-6 transform -translate-y-1/2 left-3"
                 >
                   <path
                     strokeLinecap="round"

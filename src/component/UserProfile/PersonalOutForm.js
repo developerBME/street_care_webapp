@@ -27,7 +27,7 @@ import DatePicker from "react-datepicker";
 import { Timestamp } from "firebase/firestore";
 import InfoIcon from '@mui/icons-material/Info';
 // import { IconButton } from "@mui/material";
-import {Tooltip, IconButton, Icon} from '@mui/material';
+import {Tooltip, IconButton} from '@mui/material';
 
 const USERS_COLLECTION = "users";
 
@@ -261,12 +261,12 @@ function PersonalOutForm() {
         }
 
         checkboxes.current.map((x) => {
-          const res = logResult.whatGiven.filter((a) => a == x.value);
-          if (res.length != 0) {
+          const res = logResult.whatGiven.filter((a) => a === x.value);
+          if (res.length !== 0) {
             x.checked = true;
             setItemArray(itemArray, x.value);
           }
-          if (x.value == "Other" && hasOtherValues.length > 0) {
+          if (x.value === "Other" && hasOtherValues.length > 0) {
             x.checked = true;
           }
         });
@@ -286,13 +286,13 @@ function PersonalOutForm() {
     };
 
     getStates();
-    if (id != undefined) {
+    if (id !== undefined) {
       getData();
     }
   }, []);
 
   async function getCities(e) {
-    const stateCode = stateList.filter((x) => x.name == e.target.value)[0]
+    const stateCode = stateList.filter((x) => x.name === e.target.value)[0]
       .postalAbreviation;
     const response = await fetch(
       "https://parseapi.back4app.com/classes/Usabystate_" +
@@ -640,7 +640,7 @@ function PersonalOutForm() {
       (a) => !checkboxvalues.includes(a)
     );
     if (hasOtherValues.length > 0) {
-      whatGivenArr = whatGivenArr.filter((a) => a != hasOtherValues[0]);
+      whatGivenArr = whatGivenArr.filter((a) => a !== hasOtherValues[0]);
     }
 
     // Form Validation Start
@@ -1036,7 +1036,7 @@ function PersonalOutForm() {
                           for="social-option"
                           className="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300"
                         >
-                          <div class="w-full h-full mb-6  text-base font-semibold ">
+                          <div className="w-full h-full mb-6  text-base font-semibold ">
                             Social Worker /Psychiatrist
                           </div>
                         </label>
@@ -1779,7 +1779,7 @@ function PersonalOutForm() {
                               for="social-option"
                               className="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300"
                             >
-                              <div class="w-full h-full mb-6  text-base font-semibold ">
+                              <div className="w-full h-full mb-6  text-base font-semibold ">
                                 Social Worker /Psychiatrist
                               </div>
                             </label>
@@ -2007,7 +2007,7 @@ function PersonalOutForm() {
                   </div>
                 </div>
                 {/*  */}
-                {success && id == undefined && (
+                {success && id === undefined && (
                   // <div className="justify-start items-start gap-4 inline-flex">
                   //   <div className="justify-start items-start gap-4 flex">
                   //     Success!
@@ -2015,7 +2015,7 @@ function PersonalOutForm() {
                   // </div>
                   <ConfirmationModal isOpen={true} />
                 )}
-                {success && id != undefined && (
+                {success && id !== undefined && (
                   <UpdateVisitLogConfirmationModal isOpen={true} />
                 )}
               </div>
