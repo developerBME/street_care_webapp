@@ -275,7 +275,10 @@ export const fetchUserSignedUpOutreaches = async () => {
 
     const userSignedUpOutreaches = await fetchOutreaches(true, user.uid); // Fetch events the user signed up for
     return userSignedUpOutreaches;
-  } catch (error) {
+
+  } 
+  
+  catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
       `error on fetchUserSignedUpOutreaches in EventCardService.js - ${error.message}`
@@ -538,8 +541,6 @@ export const fetchByCityOrState = async (searchValue, startDate, endDate) => {
 
     const outreachDocRef = await getDocs(outreachByLocationQuery);
 
-    console.log(outreachDocRef);
-
     let outreachByLoc = [];
     for (const doc of outreachDocRef.docs) {
       const pastOutreachData = doc.data();
@@ -550,7 +551,6 @@ export const fetchByCityOrState = async (searchValue, startDate, endDate) => {
         id: id,
       });
     }
-    console.log(outreachByLoc);
     return outreachByLoc;
   } catch (error) {
     logEvent(
@@ -563,27 +563,17 @@ export const fetchByCityOrState = async (searchValue, startDate, endDate) => {
 
 export const fetchUserOutreaches = async () => {
   try {
-    const auth = await getAuth();
-    console.log(auth);
+    const auth = getAuth();
     const user = auth.currentUser;
-    /* onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log(`auth user logged in ${user.currentUser}`);
-      } else {
-        console.log(`auth user logged out ${user?.currentUser?.uid}`);
-      }
-    });*/
-    console.log(user);
-    // console.log(`currentUser: ${user.uid}`);
-
     if (!user) {
       throw new Error("User is not logged in.");
     }
-    console.log(`userid dummy: ${user}, ${user.uid}`);
 
     const userOutreaches = await fetchOutreaches(false, user.uid);
     return userOutreaches;
-  } catch (error) {
+
+  } 
+  catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
       `error on fetchUserOutreaches in EventCardService.js- ${error.message}`
@@ -660,7 +650,6 @@ export const fetchTopOutreaches = async () => {
         id: id,
       });
     }
-    console.log(outreaches)
     return outreaches;
   } catch (error) {
     logEvent(
@@ -670,17 +659,6 @@ export const fetchTopOutreaches = async () => {
     throw error;
   }
 };
-
-//  const testlatestfunc = await fetchTopOutreaches();
-//  console.log(testlatestfunc);
-
-// const userOutreaches = await fetchUserOutreaches();
-// console.log(`fetchUserOutreaches : `);
-// console.log(userOutreaches);
-
-// const usersignedupoutreaches = await fetchUserSignedUpOutreaches("5wWnB7azzlTVNMfhfv4CWAKK1hL2");
-// console.log(`fetchUsersignedupoutreaches : `);
-// console.log(usersignedupoutreaches);
 
 export const fetchOutreaches = async (signedUp = false, uid) => {
   try {
@@ -720,14 +698,12 @@ export const fetchOutreaches = async (signedUp = false, uid) => {
       }
     }
     
-    console.log(signedUp ? "Signed-up outreaches:" : "Created outreaches:", userOutreaches);
+    // console.log(signedUp ? "Signed-up outreaches:" : "Created outreaches:", userOutreaches);
     return userOutreaches;
+
   } catch (error) {
     logEvent("STREET_CARE_ERROR", `error on fetchOutreaches in EventCardService.js - ${error.message}`);
-    throw error;
+    throw error;src/component/EventCardService.js
   }
 };
 
-// const dummyout = await dummy(false);
-// console.log(`dummyOut : `);
-// console.log(dummyout);
