@@ -19,9 +19,6 @@ const AllOutreachEvents = () => {
 
 	const navigate = useNavigate();
 	const searchRef = useRef(''); // Reference for the search input
-	const [eventsDisplay, setEventsDisplay] = useState([]);
-
-	const [isLoading, setIsLoading] = useState(true);
 	const [visibleCards, setVisibleCards] = useState(12);
 
 	const [selectedEvent, setSelectedEvent] = useState(null);
