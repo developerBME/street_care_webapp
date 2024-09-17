@@ -16,14 +16,18 @@ exports.decodeToken = functions.https.onRequest(async (req, res) => {
       const token = req.body.token;
       const decodedToken = await admin.auth().verifyIdToken(token);
       console.log(decodedToken)
-      //Hardcoded email for testing purpose
-      if(decodedToken?.email === 'laxmi@brightmindenrichment.org') {
+      const adminUsersCollection = admin.firestore().collection('adminUsers');
+      const adminUsersSnapshot = await adminUsersCollection.where('email', '==', decodedToken?.email).get();
+      // adminUsersSnapshot.forEach(doc => {
+      //    console.log('Document Data:', doc.data());
+      // });
+      if (!adminUsersSnapshot.empty) {
         res.status(200).json({ flag: true });
       } else {
         res.status(200).json({ flag: false });
       }
     } catch (error) {
-      console.error('Error verifying / Decoding token:', error);
+      console.error('Error Decoding token / Retrieving collection data:', error);
       res.status(401).json({ error: 'Verification Failed' });
     }
   });

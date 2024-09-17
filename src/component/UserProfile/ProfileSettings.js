@@ -1,9 +1,11 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import { MdOutlineAccountCircle } from "react-icons/md";
 import { MdAlternateEmail } from "react-icons/md";
 import { MdLockOutline } from "react-icons/md";
 import { Link } from "react-router-dom";
 import arrowBack from "../../images/arrowBack.png";
+import { getAuth } from "firebase/auth";
 
 const settingOptions = [
   {
@@ -28,6 +30,26 @@ const settingOptions = [
 ];
 
 function ProfileSettings() {
+  const [providerId, setProviderId] = useState("");
+  const fAuth = getAuth();
+
+  useEffect(() => {
+    const user = fAuth.currentUser;
+    if (user && user.providerData.length > 0) {
+      setProviderId(user.providerData[0].providerId);
+    }
+  }, [fAuth]);
+
+  const filteredOptions = settingOptions.filter(
+    (option) => option.key !== "updateEmail"
+  );
+
+  const finalOptions = ["google.com", "facebook.com", "twitter.com"].includes(
+    providerId
+  )
+    ? filteredOptions
+    : settingOptions;
+
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <div className="relative flex flex-col items-center gap-8 ">
@@ -54,7 +76,7 @@ function ProfileSettings() {
               <div className="flex-col justify-start items-start gap-1 inline-flex w-full">
                 <div className="w-full">
                   <div className="flex flex-col">
-                    {settingOptions.map((option) => (
+                    {finalOptions.map((option) => (
                       <Link
                         to={option.href}
                         key={option.key}

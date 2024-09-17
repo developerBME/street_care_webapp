@@ -493,7 +493,7 @@ function About() {
                 <div className="h-fit my-2 flex-col justify-end items-end gap-2 inline-flex">
                   <CustomButton
                     label="Visit the Store"
-                    class="w-full text-center text-neutral-900 text-xs xl:text-sm font-medium font-dmsans leading-tight"
+                    className="w-full text-center text-neutral-900 text-xs xl:text-sm font-medium font-dmsans leading-tight"
                     name="buttonlight"
                     onClick={() => {
                       window.open(

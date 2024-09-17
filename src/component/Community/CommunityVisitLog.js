@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import arrowRight from "../../images/arrowRight.png";
 import OutreachVisitLogCard from "./OutreachVisitLogCard";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
-import { fetchEvents, formatDate } from "../EventCardService";
-import { fetchVisitLogs, fetchPublicVisitLogs } from "../VisitLogCardService";
+import { fetchTopVisitLogs } from "../VisitLogCardService";
 import CustomButton from "../Buttons/CustomButton";
 import ErrorMessage from "../ErrorMessage";
 
@@ -65,7 +64,7 @@ const CommunityVisitLog = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const visitLogsData = await fetchPublicVisitLogs();
+        const visitLogsData = await fetchTopVisitLogs();
         setVisitLogs(visitLogsData);
       } catch (error) {
         setIsError(true);
@@ -100,8 +99,7 @@ const CommunityVisitLog = () => {
           <div className="">
             <div className="flex flex-row gap-4">
               <div className="text-[45px] font-medium font-dmsans">
-                Visit Logs
-                ({visitLogs?.length || 0})
+                Visit Logs ({visitLogs?.length || 0})
                 {/* Visit Log ({visitLogs !== null ? visitLogs.length : 0}) */}
               </div>
               <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-medium font-dmsans leading-tight self-stretch">
@@ -109,7 +107,7 @@ const CommunityVisitLog = () => {
                   label="Create a Visit Log"
                   name="buttondefault"
                   onClick={() => {
-                    navigate("/profile/visitlogform");
+                    navigate("/profile/personaloutform");
                   }}
                 />
               </div>

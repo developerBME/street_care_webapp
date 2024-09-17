@@ -4,6 +4,8 @@ import {
   formatDate,
   fetchEvents,
   fetchPastOutreachEvents,
+  fetchByCityOrStates,
+  fetchPastOutreaches,
 } from "./EventCardService";
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
@@ -12,43 +14,35 @@ import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 
 const AllPastOutreachEvents = () => {
   const [events, setEvents] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [outreachPerPages] = useState(6);
   const navigate = useNavigate();
   const searchRef = useRef("");
   const [eventsDisplay, setEventsDisplay] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [visibleCards, setVisibleCards] = useState(12);
   const loadMore = () => {
     setVisibleCards((prev) => prev + 12);
   };
 
   const searchCityRef = useRef("");
+  const [endDateTime, setEndDateTime] = useState(() => {
+    const today = new Date();
+    return today;
+  });
+
+  const [startDateTime, setStartDateTime] = useState(() => {
+    const today = new Date();
+    today.setDate(today.getDate() - 7);
+    return today;
+  });
 
   useEffect(() => {
-    const fetchData = async () => {
-      const pastOutreachEventsData = await fetchPastOutreachEvents(); // Fetch past outreach events
-
-      const eventsData = await fetchEvents();
-      eventsData.forEach((event) => {
-        delete event.label;
-      });
-      const pastEvents = eventsData.filter((event) => {
-        const eventDate = event?.eventDate?.seconds
-          ? new Date(event.eventDate.seconds * 1000)
-          : event.eventDate;
-        return eventDate < new Date(); // Check if the event date is before the current date
-      });
-
-      const combinedEvents = [...pastEvents, ...pastOutreachEventsData];
-
-      // Sort events in place based on their date
-      combinedEvents.sort((a, b) => a.eventDate - b.eventDate);
-
-      setEvents(combinedEvents);
-    };
-
-    fetchData();
-  }, []);
+    fetchCity();
+  }, [currentPage, startDateTime, endDateTime]);
 
   useEffect(() => {
     setEventsDisplay(events);
@@ -62,6 +56,53 @@ const AllPastOutreachEvents = () => {
     }
   }, [eventsDisplay]);
 
+  const fetchCity = async () => {
+    try {
+      setIsLoading(true);
+      setErrorMessage("");
+  
+      const cityToSearch = "";
+      const { tot, outreachByLoc } = await fetchByCityOrStates(cityToSearch, startDateTime, endDateTime, currentPage, outreachPerPages);
+  
+      if (outreachByLoc.length > 0) {
+        const pastEvents = outreachByLoc.filter((event) => {
+          const eventDate = event?.eventDate?.seconds
+            ? new Date(event.eventDate.seconds * 1000)
+            : event.eventDate;
+          return eventDate < new Date();
+        });
+  
+        setEvents(pastEvents);
+        console.log("total", Math.ceil(tot / outreachPerPages) - 1);
+        setTotalPages(Math.ceil(tot / outreachPerPages) - 1);
+      } else {
+        throw new Error("No past outreach events found for the selected date range.");
+      }
+    } catch (error) {
+      setErrorMessage(error.message);
+      setEvents([]);
+      setTotalPages(0);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // const fetchCity = async () => {
+  //   setIsLoading(true);
+  //   const cityToSearch = "";
+  //   const outreachByLoc = await fetchByCityOrStates(cityToSearch, startDateTime, endDateTime, currentPage, outreachPerPages);
+      
+  //   const pastEvents = outreachByLoc.filter((event) => {
+  //     const eventDate = event?.eventDate?.seconds
+  //       ? new Date(event.eventDate.seconds * 1000)
+  //       : event.eventDate;
+  //     return eventDate < new Date(); // Check if the event date is before the current date
+  //   });
+  //   setEvents(pastEvents);
+  //   //setTotalPages(cityCountTotal);
+  // };
+
+
   const searchChange = () => {
     console.log(searchRef.current.value);
     setEventsDisplay(
@@ -74,6 +115,95 @@ const AllPastOutreachEvents = () => {
             .search(searchRef.current.value.toLowerCase()) > -1
       )
     );
+  };
+
+  const handleClickPrev = () => {
+    console.log(eventsDisplay)
+    setCurrentPage(currentPage - 1);
+  };
+
+  const handleClickNext = () => {
+    console.log("after next",eventsDisplay)
+    setCurrentPage(currentPage + 1);
+  };
+
+  const handleStartDateChange = (e) => {
+    const newDate = new Date(e.target.value);
+    setStartDateTime(newDate);
+  };
+
+  const handleEndDateChange = (e) => {
+    const newDate = new Date(e.target.value);
+    setEndDateTime(newDate);
+  };
+  
+  const renderPaginationButtons = () => {
+    const buttons = [];
+    const pageRange = 3;
+
+    if (currentPage > 0) {
+      buttons.push(
+        <button
+          key="first"
+          onClick={() => setCurrentPage(0)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          0
+        </button>
+      );
+    }
+
+      if (currentPage > 0) {
+        buttons.push(
+          <button
+            key="prev"
+            onClick={() => handleClickPrev()}
+            className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+          >
+            Prev
+          </button>
+        );
+      }
+
+      for (let i = Math.max(1, currentPage - pageRange); i <= Math.min(totalPages, currentPage + pageRange); i++) {
+        buttons.push(
+          <button
+            key={i}
+            onClick={() => setCurrentPage(i)}
+            className={`mx-1 px-3 py-1 rounded-full ${
+              currentPage === i ? "bg-[#1F0A58] text-white" : "bg-gray-200 text-gray-600"
+            }`}
+          >
+            {i}
+          </button>
+        );
+      }
+  
+      if (currentPage < totalPages - 1) {
+        buttons.push(
+          <button
+            key="next"
+            onClick={() => handleClickNext()}
+            className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+          >
+            Next
+          </button>
+        );
+      }
+
+      if (currentPage < totalPages - 1) {
+        buttons.push(
+          <button
+            key="last"
+            onClick={() => setCurrentPage(totalPages)}
+            className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+          >
+            {totalPages}
+          </button>
+        );
+      }
+  
+    return buttons;
   };
 
   return (
@@ -102,7 +232,7 @@ const AllPastOutreachEvents = () => {
               </p>
             </div>
             <div className=" mt-6 lg:mt-0">
-              <label class="relative text-gray-400 focus-within:text-gray-600 ">
+              <label className="relative text-gray-400 focus-within:text-gray-600 ">
                 <input
                   type="text"
                   name="searchText"
@@ -118,7 +248,7 @@ const AllPastOutreachEvents = () => {
                   viewBox="0 0 20 20"
                   strokeWidth="1.5"
                   stroke="currentColor"
-                  class="w-6 h-6 pointer-events-none absolute top-6 transform -translate-y-1/2 left-3"
+                  className="w-6 h-6 pointer-events-none absolute top-6 transform -translate-y-1/2 left-3"
                 >
                   <path
                     strokeLinecap="round"
@@ -129,6 +259,33 @@ const AllPastOutreachEvents = () => {
               </label>
             </div>
           </div>
+
+          <div className="mt-6 lg:mt-0">
+            <div className="flex items-center space-x-4">
+              <div>
+                <label className="block text-gray-700">Start Date</label>
+                <input
+                  type="date"
+                  value={startDateTime.toISOString().split("T")[0]}
+                  onChange={handleStartDateChange}
+                  className="form-input py-2 px-4 border border-[#CACACA] rounded-lg"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700">End Date</label>
+                <input
+                  type="date"
+                  value={endDateTime.toISOString().split("T")[0]}
+                  onChange={handleEndDateChange}
+                  className="form-input py-2 px-4 border border-[#CACACA] rounded-lg"
+                />
+              </div>
+            </div>
+          </div>
+          
+          {errorMessage && (
+            <p className="text-red-500 text-center mt-4">{errorMessage}</p>
+          )}
           {isLoading ? (
             <div className="flex justify-between items-center w-full h-fit">
               <EventCardSkeleton />
@@ -137,33 +294,34 @@ const AllPastOutreachEvents = () => {
             </div>
           ) : (
             <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-              {eventsDisplay.length > 0 &&
-                eventsDisplay.slice(0, visibleCards).map((eventData) => (
-                  <OutreachEventCard
-                    isPastEvent={true}
-                    key={eventData.id}
-                    cardData={{
-                      ...eventData,
-                      eventDate: eventData?.eventDate?.seconds
-                        ? formatDate(
-                            new Date(eventData.eventDate.seconds * 1000)
-                          )
-                        : eventData.eventDate,
-                    }}
-                  />
-                ))}
-              {/* {eventsDisplay.length < 1 && <p>No results found</p>} */}
+            {eventsDisplay.length > 0 &&
+              eventsDisplay.map((eventData) => (
+                <OutreachEventCard
+                  isPastEvent={true}
+                  key={eventData.id}
+                  cardData={{
+                    ...eventData,
+                    eventDate: eventData?.eventDate?.seconds
+                      ? formatDate(
+                          new Date(eventData.eventDate.seconds * 1000)
+                        )
+                      : eventData.eventDate,
+                  }}
+                />
+              ))}
             </div>
           )}
-
-          {visibleCards < eventsDisplay.length && (
+          <div className="flex justify-center mt-8">
+            {renderPaginationButtons()}
+          </div>
+          {/* {visibleCards < eventsDisplay.length && (
             <button
               className="w-fit rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 flex text-center text-[#1F0A58] hover:bg-[#1F0A58] hover:text-white text-[13px] font-medium font-dmsans leading-tight self-stretch px-6 py-2.5"
               onClick={loadMore}
             >
               Load More
             </button>
-          )}
+          )} */}
         </div>
       </div>
     </div>

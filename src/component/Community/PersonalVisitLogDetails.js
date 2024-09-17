@@ -57,7 +57,7 @@ const PersonalVisitLogDetails = () => {
       // outreach event collection
       const docSnap = await getDoc(userRef);
       let personalVisitLogs = docSnap.data().personalVisitLogs || [];
-      personalVisitLogs = personalVisitLogs.filter((x) => x != id);
+      personalVisitLogs = personalVisitLogs.filter((x) => x !== id);
 
       await deleteDoc(visitLogDoc);
       await updateDoc(userRef, {
@@ -99,17 +99,17 @@ const PersonalVisitLogDetails = () => {
                 <div className="flex flex-col space-y-4">
                   <div className="flex flex-row justify-normal space-x-2">
                     <img className="w-[13px] h-[15px] my-[3px]" src={date} alt="date" />
-                    <div class="text-violet-900 text-sm font-medium font-['DM Sans'] leading-tight pt-0.5">
+                    <div className="text-violet-900 text-sm font-medium font-['DM Sans'] leading-tight pt-0.5">
                       {data?.dateTime.toDate().toLocaleString().toString()}
                     </div>
                   </div>
                   <div className="flex flex-row justify-normal space-x-2">
                     <img className="w-[12px] h-[15px] my-[3px]" src={locate} alt = "location" />
-                    <div class="text-violet-900 text-sm font-medium font-['DM Sans'] leading-tight pt-0.5">
+                    <div className="text-violet-900 text-sm font-medium font-['DM Sans'] leading-tight pt-0.5">
                       {data?.city || ""}, {data?.stateAbbv || data?.state || ""}
                     </div>
                   </div>
-                  <div class="text-zinc-700 text-[16px] font-normal font-['DM Sans'] leading-snug max-w-3xl">
+                  <div className="text-zinc-700 text-[16px] font-normal font-['DM Sans'] leading-snug max-w-3xl">
                     {data?.description || ""}
                   </div>
                   <div className="inline-flex items-center gap-2">

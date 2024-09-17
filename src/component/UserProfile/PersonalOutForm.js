@@ -27,7 +27,7 @@ import DatePicker from "react-datepicker";
 import { Timestamp } from "firebase/firestore";
 import InfoIcon from '@mui/icons-material/Info';
 // import { IconButton } from "@mui/material";
-import {Tooltip, IconButton, Icon} from '@mui/material';
+import {Tooltip, IconButton} from '@mui/material';
 
 const USERS_COLLECTION = "users";
 
@@ -70,7 +70,7 @@ function PersonalOutForm() {
   // const ratingChanged = (newRating) => {
   //   console.log(newRating);
   // };
-  const dateTimeRef = useRef("");
+  const dateTimeRef = useRef(null);
   const date = useRef("");
   const time = useRef("");
   const cityRef = useRef("");
@@ -96,6 +96,7 @@ function PersonalOutForm() {
   const [showOptionalQuestions, setShowOptionalQuestions] = useState(false);
   const optDesc = useRef("");
   const optLandmark = useRef("");
+  const today = new Date();
   //////STATES FOR OPTIONAL PART OF THE FORM
   // const furtherHelpDescription = useRef("");
   // const furtherHelpLocation = useRef("");
@@ -174,15 +175,9 @@ function PersonalOutForm() {
     }
   };
 
-  const handleDateTimeChange = (e) => {
+  const handleDateTimeChange = (date) => {
     updateErrorState("dateTimeError", "");
-  };
-
-  const handleDateChange = (e) => {
-    updateErrorState("dateError", "");
-  };
-  const handleTimeChange = (e) => {
-    updateErrorState("timeError", "");
+    console.log('Selected date:', date);
   };
 
   const handleCityChange = (e) => {
@@ -266,12 +261,12 @@ function PersonalOutForm() {
         }
 
         checkboxes.current.map((x) => {
-          const res = logResult.whatGiven.filter((a) => a == x.value);
-          if (res.length != 0) {
+          const res = logResult.whatGiven.filter((a) => a === x.value);
+          if (res.length !== 0) {
             x.checked = true;
             setItemArray(itemArray, x.value);
           }
-          if (x.value == "Other" && hasOtherValues.length > 0) {
+          if (x.value === "Other" && hasOtherValues.length > 0) {
             x.checked = true;
           }
         });
@@ -291,13 +286,13 @@ function PersonalOutForm() {
     };
 
     getStates();
-    if (id != undefined) {
+    if (id !== undefined) {
       getData();
     }
   }, []);
 
   async function getCities(e) {
-    const stateCode = stateList.filter((x) => x.name == e.target.value)[0]
+    const stateCode = stateList.filter((x) => x.name === e.target.value)[0]
       .postalAbreviation;
     const response = await fetch(
       "https://parseapi.back4app.com/classes/Usabystate_" +
@@ -562,7 +557,7 @@ function PersonalOutForm() {
   const [stateName, setStateName] = useState("");
   const [stateAbbv, setStateAbbv] = useState("");
   const [postcode, setPostcode] = useState("");
-  const [dateTime, setDateTime] = useState();
+  const [dateTime, setDateTime] = useState(new Date());
 
   const handleScriptLoad = (updateQuery, autoCompleteRef) => {
     autoComplete = new window.google.maps.places.Autocomplete(
@@ -645,7 +640,7 @@ function PersonalOutForm() {
       (a) => !checkboxvalues.includes(a)
     );
     if (hasOtherValues.length > 0) {
-      whatGivenArr = whatGivenArr.filter((a) => a != hasOtherValues[0]);
+      whatGivenArr = whatGivenArr.filter((a) => a !== hasOtherValues[0]);
     }
 
     // Form Validation Start
@@ -1041,7 +1036,7 @@ function PersonalOutForm() {
                           for="social-option"
                           className="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300"
                         >
-                          <div class="w-full h-full mb-6  text-base font-semibold ">
+                          <div className="w-full h-full mb-6  text-base font-semibold ">
                             Social Worker /Psychiatrist
                           </div>
                         </label>
@@ -1391,20 +1386,17 @@ function PersonalOutForm() {
                                 setDateTime(date);
                                 handleDateTimeChange(date);
                               }}
-                              showTimeSelect
-                              timeFormat="HH:mm"
-                              timeIntervals={15}
-                              dateFormat="Pp"
+                              showTimeSelect={false} // Remove time selection
+                              dateFormat="dd/MM/yyyy" // Adjust format as needed
+                              maxDate={today} // Prevent selecting dates after today
                               wrapperClassName="w-full"
                               customInput={
                                 <CustomInput
-                                  id="date"
-                                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
-                                    error.dateTimeError !== ""
-                                      ? "ring-red-500"
-                                      : "ring-gray-300"
-                                  }`}
-                                  ref={dateTimeRef}
+                                id="date"
+                                className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                                  error.dateTimeError !== "" ? "ring-red-500" : "ring-gray-300"
+                                }`}
+                                ref={dateTimeRef}
                                 />
                               }
                             />
@@ -1787,7 +1779,7 @@ function PersonalOutForm() {
                               for="social-option"
                               className="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300"
                             >
-                              <div class="w-full h-full mb-6  text-base font-semibold ">
+                              <div className="w-full h-full mb-6  text-base font-semibold ">
                                 Social Worker /Psychiatrist
                               </div>
                             </label>
@@ -1856,12 +1848,34 @@ function PersonalOutForm() {
                       </div> */}
                         <div className="self-stretch h-fit  border-collapse">
                           <div className=" h-14  justify-center items-start ">
-                            <input
+                            {/* <input
                               id="furtherHelpFollowUp"
                               placeholder="2023-01-01"
                               className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
                               required=""
-                            ></input>
+                            ></input> */}
+                            <DatePicker
+                              selected={dateTime}
+                              onChange={(date) => {
+                                setDateTime(date);
+                                handleDateTimeChange(date);
+                              }}
+                              showTimeSelect
+                              timeFormat="HH:mm" // Adjust time format as needed
+                              dateFormat="dd/MM/yyyy HH:mm" // Adjust date format to include time
+                              minDate={new Date(new Date().getTime() + 24 * 60 * 60 * 1000)}
+                              wrapperClassName="w-full"
+                              customInput={
+                                <CustomInput
+                                  id="date"
+                                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                                    error.dateTimeError   
+                            !== "" ? "ring-red-500" : "ring-gray-300"
+                                  }`}
+                                  ref={dateTimeRef}
+                                />
+                              }
+                            />
                           </div>
                         </div>
                       </div>
@@ -1993,7 +2007,7 @@ function PersonalOutForm() {
                   </div>
                 </div>
                 {/*  */}
-                {success && id == undefined && (
+                {success && id === undefined && (
                   // <div className="justify-start items-start gap-4 inline-flex">
                   //   <div className="justify-start items-start gap-4 flex">
                   //     Success!
@@ -2001,7 +2015,7 @@ function PersonalOutForm() {
                   // </div>
                   <ConfirmationModal isOpen={true} />
                 )}
-                {success && id != undefined && (
+                {success && id !== undefined && (
                   <UpdateVisitLogConfirmationModal isOpen={true} />
                 )}
               </div>

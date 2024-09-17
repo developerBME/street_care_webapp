@@ -44,6 +44,10 @@ const OutreachSignup = () => {
     };
 
     getData(); // Invoke the async function
+
+    if(label === 'EDIT') {
+      setLabel2('EDIT');
+    }
   }, []);
 
   const [showModal, setShowModal] = useState(false);
@@ -182,8 +186,8 @@ const OutreachSignup = () => {
 
                 {data ? (
                   <div className="inline-flex items-center gap-2 flex-wrap">
-                    {data.skills.map((item, index) => (
-                      <div className="py-1 px-3 border border-[#C8C8C8] w-fit rounded-xl text-[12px] text-[#444746]">
+                    {data.skills.map((item) => (
+                      <div key={item} className="py-1 px-3 border border-[#C8C8C8] w-fit rounded-xl text-[12px] text-[#444746]">
                         {item}
                       </div>
                     ))}
@@ -224,7 +228,7 @@ const OutreachSignup = () => {
                 {label === "EDIT" ? (
                   <>
                     <CustomButton
-                      label="Edit"
+                      label="Withdraw"
                       name="buttondefault"
                       onClick={handleEditClick}
                     />
