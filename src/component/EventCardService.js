@@ -286,57 +286,33 @@ import {
     );
     throw error;
   }
- };
- 
- 
- export const fetchUserSignedUpOutreaches = async (uid) => {
+};
+
+export const fetchUserSignedUpOutreaches = async () => {
   try {
-    const fAuth = getAuth();
-    const outreachQuery = query(collection(db, OUTREACH_EVENTS_COLLECTION));
-    const snapshot = await getDocs(outreachQuery);
- 
- 
-    let userSignedUpOutreaches = [];
- 
- 
-    for (const doc of snapshot.docs) {
-      const eventData = doc.data();
-      if (eventData.participants && eventData.participants.includes(uid)) {
-        const result = await fetchUserDetails(eventData.uid);
-        const userName = result.username;
-        const photoUrl = result.photoUrl;
- 
- 
-        let currentParticipants = eventData.participants || [];
-        userSignedUpOutreaches.push({
-          ...eventData,
-          userName: userName,
-          id: doc.id,
-          label:
-            fAuth.currentUser &&
-            currentParticipants.includes(fAuth?.currentUser?.uid)
-              ? "EDIT"
-              : "RSVP",
-          nop: currentParticipants.length,
-          photoUrl: photoUrl,
-        });
-      }
+    const auth = getAuth();
+    const user = auth.currentUser;
+    
+    if (!user) {
+      throw new Error("User is not logged in.");
     }
- 
- 
-    console.log("Signed-up outreaches:", userSignedUpOutreaches);
+
+    const userSignedUpOutreaches = await fetchOutreaches(true, user.uid); // Fetch events the user signed up for
     return userSignedUpOutreaches;
-  } catch (error) {
+
+  } 
+  
+  catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchUserSignedUpOutreaches in EventCardService.js- ${error.message}`
+      `error on fetchUserSignedUpOutreaches in EventCardService.js - ${error.message}`
     );
     throw error;
   }
- };
- 
- 
- export function formatDate(dateObj) {
+};
+
+
+export function formatDate(dateObj) {
   // Extract date parts manually for custom format
   const monthNames = [
     "Jan",
@@ -623,7 +599,6 @@ import {
         id: id,
       });
     }
-    console.log(outreachByLoc);
     return outreachByLoc;
   } catch (error) {
     logEvent(
@@ -793,43 +768,15 @@ export const fetchUserOutreaches = async () => {
   try {
     const auth = getAuth();
     const user = auth.currentUser;
- 
- 
     if (!user) {
       throw new Error("User is not logged in.");
     }
- 
- 
-    const userQuery = query(
-      collection(db, OUTREACH_EVENTS_COLLECTION),
-      where("uid", "==", user.uid)
-    );
- 
- 
-    const eventSnapshot = await getDocs(userQuery);
-    let userOutreaches = [];
- 
- 
-    for (const doc of eventSnapshot.docs) {
-      const eventData = doc.data();
-      const result = await fetchUserDetails(eventData.uid);
-      const userName = result.username;
-      const photoUrl = result.photoUrl;
- 
- 
-      let currentParticipants = eventData.participants || [];
-      userOutreaches.push({
-        ...eventData,
-        userName: userName,
-        id: doc.id,
-        label: user && currentParticipants.includes(user.uid) ? "EDIT" : "RSVP",
-        nop: currentParticipants.length,
-        photoUrl: photoUrl,
-      });
-    }
-    console.log("Outreaches created by user:", userOutreaches);
+
+    const userOutreaches = await fetchOutreaches(false, user.uid);
     return userOutreaches;
-  } catch (error) {
+
+  } 
+  catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
       `error on fetchUserOutreaches in EventCardService.js- ${error.message}`
@@ -912,7 +859,6 @@ export const fetchUserOutreaches = async () => {
  export async function calculateNumberOfPagesForOutreach(outreachPerPage, currentPage=0){
   const testoutreachRef = query(collection(db, PAST_OUTREACH_EVENTS_COLLECTION), orderBy("createdAt", "asc"));
   const snapshot = await getDocs(testoutreachRef);
-  // console.log('Data : '+snapshot.docs);
   const startIndex = outreachPerPage*currentPage;
   const startDoc = snapshot.docs[startIndex];
   // console.log('starting is: '+ startDoc);
@@ -928,21 +874,11 @@ export const fetchUserOutreaches = async () => {
  
  
   const outres = await getDocs(outreachRef);
-  // console.log('outres '+ outres.docs);
-  outres.forEach((doc)=>{
-    // console.log(doc.data());
-  //   console.log(doc.id); //printing the pagination ids
-  });
   return outres;
- 
- 
- }
- 
- 
- const test = await calculateNumberOfPagesForOutreach(5,0)
- 
- 
- export const fetchTopOutreaches = async () => {
+
+}
+
+export const fetchTopOutreaches = async () => {
   try {
     const outreachRef = collection(db, OUTREACH_EVENTS_COLLECTION);
  
@@ -969,7 +905,6 @@ export const fetchUserOutreaches = async () => {
         id: id,
       });
     }
-    console.log(outreaches)
     return outreaches;
   } catch (error) {
     logEvent(
@@ -978,9 +913,51 @@ export const fetchUserOutreaches = async () => {
     );
     throw error;
   }
- };
- 
- 
- //  const testlatestfunc = await fetchTopOutreaches();
- //  console.log(testlatestfunc);
- 
+};
+
+export const fetchOutreaches = async (signedUp = false, uid) => {
+  try {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    
+    if (!user) {
+      throw new Error("User is not logged in.");
+    }
+
+    // If fetching signed-up outreaches, query all events; otherwise, query only user-created events
+    let userQuery = signedUp
+      ? query(collection(db, OUTREACH_EVENTS_COLLECTION))
+      : query(collection(db, OUTREACH_EVENTS_COLLECTION), where("uid", "==", user.uid));
+
+    const eventSnapshot = await getDocs(userQuery);
+    let userOutreaches = [];
+
+    for (const doc of eventSnapshot.docs) {
+      const eventData = doc.data();
+      let currentParticipants = eventData.participants || [];
+
+      // If signedUp, filter by participation; otherwise, just check the created events
+      if (!signedUp || (signedUp && currentParticipants.includes(uid))) {
+        const result = await fetchUserDetails(eventData.uid);
+        const userName = result.username;
+        const photoUrl = result.photoUrl;
+
+        userOutreaches.push({
+          ...eventData,
+          userName: userName,
+          id: doc.id,
+          label: currentParticipants.includes(user.uid) ? "EDIT" : "RSVP",
+          nop: currentParticipants.length,
+          photoUrl: photoUrl,
+        });
+      }
+    }
+    
+    // console.log(signedUp ? "Signed-up outreaches:" : "Created outreaches:", userOutreaches);
+    return userOutreaches;
+
+  } catch (error) {
+    logEvent("STREET_CARE_ERROR", `error on fetchOutreaches in EventCardService.js - ${error.message}`);
+    throw error;  }
+};
+
