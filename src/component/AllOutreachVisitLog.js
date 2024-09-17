@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import { fetchPublicVisitLogs } from "./VisitLogCardService";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
-import { parse } from "date-fns";
+import { parse } from 'date-fns';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -46,7 +46,6 @@ const AllOutreachVisitLog = () => {
   const handleSortChange = (e) => {
     const sortBy = e.target.value;
     setSortOption(sortBy);
-
     if (sortBy === "city") {
       const sortedLogs = [...filteredVisitLogs].sort((a, b) =>
         a.location.city.localeCompare(b.location.city)
