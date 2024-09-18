@@ -41,7 +41,7 @@ const Chip = (props) => {
           type="checkbox"
           id={props.val}
           value=""
-          class="hidden"
+          className="hidden"
           required=""
           checked={clicked}
         ></input>

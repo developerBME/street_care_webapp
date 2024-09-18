@@ -145,7 +145,7 @@ const OutreachEventCard = ({
         <div className=" flex flex-col justify-end">
           <div className="flex items-center justify-between gap-16 my-1">
             {isProfilePage || label2 === "EDIT" ? (
-              <div class="group relative">
+              <div className="group relative">
                 <CustomButton
                   label="View"
                   name="buttonlight"
