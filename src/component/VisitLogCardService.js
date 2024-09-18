@@ -213,7 +213,7 @@ export const fetchTopVisitLogs = async () => {
         id: id,
       });
     }
-    console.log(visitLogs);
+    // console.log(visitLogs)
     return visitLogs;
   } catch (error) {
     logEvent(
@@ -234,20 +234,16 @@ export const fetchPersonalVisitLogs = async (uid) => {
     if (userDocRef.docs.length === 0) {
       console.error("User document not found for uid:", uid);
       return [];
-    }
+    }    
     const userData = userDocRef.docs[0].data();
     const visitLogIds = userData.personalVisitLogs || [];
     const visitLogsData = [];
 
     for (let visitLogId of visitLogIds) {
-      const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
-      const visitLogDoc = await getDoc(visitLogRef);
-      if (visitLogDoc.exists()) {
-        const visitLogData = visitLogDoc.data();
-        visitLogsData.push({
-          ...visitLogData,
-          id: visitLogId,
-        });
+      // console.log(visitLogId);
+      const visitLog = await fetchPersonalVisitLogById(visitLogId)
+      if( visitLog != undefined ){
+        visitLogsData.push(visitLog);
       }
     }
     return visitLogsData;
@@ -322,11 +318,11 @@ const fetchUserName = async (uid) => {
 
   const userDocID = userDocRef.docs[0]?.id;
   // reference for the userdoc
-  if (userDocID != undefined) {
+  if(userDocID !== undefined){
     const userRef = doc(db, USERS_COLLECTION, userDocID);
     const userDoc = await getDoc(userRef);
-
-    if (userDoc != undefined || userDoc.exists()) {
+    
+    if (userDoc !== undefined || userDoc.exists()) {
       return userDoc.data().username || "";
     } else {
       console.error("No user found with uid:", uid);

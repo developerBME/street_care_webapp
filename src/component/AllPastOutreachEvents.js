@@ -8,7 +8,7 @@ import {
   fetchPastOutreaches,
 } from "./EventCardService";
 import { useNavigate } from "react-router-dom";
-import { IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import search_icon from "../images/search_icon.png";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 
@@ -139,7 +139,19 @@ const AllPastOutreachEvents = () => {
   
   const renderPaginationButtons = () => {
     const buttons = [];
-    const pageRange = 3;
+    const pageRange = 1;
+
+    if (currentPage > 0) {
+      buttons.push(
+        <button
+          key="prev"
+          onClick={() => handleClickPrev()}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          <IoIosArrowBack/>
+        </button>
+      );
+    }
 
     if (currentPage > 0) {
       buttons.push(
@@ -152,18 +164,6 @@ const AllPastOutreachEvents = () => {
         </button>
       );
     }
-
-      if (currentPage > 0) {
-        buttons.push(
-          <button
-            key="prev"
-            onClick={() => handleClickPrev()}
-            className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
-          >
-            Prev
-          </button>
-        );
-      }
 
       for (let i = Math.max(1, currentPage - pageRange); i <= Math.min(totalPages, currentPage + pageRange); i++) {
         buttons.push(
@@ -178,18 +178,6 @@ const AllPastOutreachEvents = () => {
           </button>
         );
       }
-  
-      if (currentPage < totalPages - 1) {
-        buttons.push(
-          <button
-            key="next"
-            onClick={() => handleClickNext()}
-            className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
-          >
-            Next
-          </button>
-        );
-      }
 
       if (currentPage < totalPages - 1) {
         buttons.push(
@@ -199,6 +187,18 @@ const AllPastOutreachEvents = () => {
             className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
           >
             {totalPages}
+          </button>
+        );
+      }
+
+      if (currentPage < totalPages - 1) {
+        buttons.push(
+          <button
+            key="next"
+            onClick={() => handleClickNext()}
+            className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+          >
+            <IoIosArrowForward/>
           </button>
         );
       }
@@ -232,7 +232,7 @@ const AllPastOutreachEvents = () => {
               </p>
             </div>
             <div className=" mt-6 lg:mt-0">
-              <label class="relative text-gray-400 focus-within:text-gray-600 ">
+              <label className="relative text-gray-400 focus-within:text-gray-600 ">
                 <input
                   type="text"
                   name="searchText"
@@ -248,7 +248,7 @@ const AllPastOutreachEvents = () => {
                   viewBox="0 0 20 20"
                   strokeWidth="1.5"
                   stroke="currentColor"
-                  class="w-6 h-6 pointer-events-none absolute top-6 transform -translate-y-1/2 left-3"
+                  className="w-6 h-6 pointer-events-none absolute top-6 transform -translate-y-1/2 left-3"
                 >
                   <path
                     strokeLinecap="round"
@@ -311,7 +311,7 @@ const AllPastOutreachEvents = () => {
               ))}
             </div>
           )}
-          <div className="flex justify-center mt-8">
+          <div className="flex justify-end mt-8">
             {renderPaginationButtons()}
           </div>
           {/* {visibleCards < eventsDisplay.length && (

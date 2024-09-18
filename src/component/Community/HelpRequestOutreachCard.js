@@ -63,7 +63,7 @@ const HelpRequestOutreachCard = ({ data }) => {
             0/{data.totalSlots}
           </div>
         </div>
-        <div class="group relative mt-2">
+        <div className="group relative mt-2">
           <CustomButton
             label="View Details"
             name="buttonlight"
