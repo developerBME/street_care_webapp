@@ -931,3 +931,51 @@ export const fetchOutreaches = async (signedUp = false, uid) => {
     throw error;
   }
 };
+
+export const delUserOutreach = async (eventID) => {
+  try {
+    const fAuth = getAuth();
+    const user = fAuth.currentUser;
+
+    if (!user) {
+      throw new Error("User is not logged in.");
+    }
+
+    const outreachDocRef = doc(db, OUTREACH_EVENTS_COLLECTION, eventID);
+    const outreachDocSnapshot = await getDoc(outreachDocRef);
+
+    if (!outreachDocSnapshot.exists()) {
+      // console.log(`Outreach with ID: ${eventID} does not exist.`);
+      return;
+    }
+
+    await deleteDoc(outreachDocRef);
+    // console.log(`Outreach with ID: ${eventID} deleted`);
+
+    const usersSnapshot = await getDocs(collection(db, USERS_COLLECTION));
+
+    usersSnapshot.forEach(async (userDoc) => {
+      const userDocRef = doc(db, USERS_COLLECTION, userDoc.id);
+      const userData = userDoc.data();
+
+      if (
+        userData.outreachEvents &&
+        userData.outreachEvents.includes(eventID)
+      ) {
+        await updateDoc(userDocRef, {
+          outreachEvents: arrayRemove(eventID),
+        });
+
+        // console.log(
+        //   `Removed outreach ID: ${eventID} from user with ID: ${userDoc.id}`
+        // );
+      }
+    });
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `Error in delUserOutreach EventCardService.js - ${error.message}`
+    );
+    throw error;
+  }
+};
