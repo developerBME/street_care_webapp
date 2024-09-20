@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import OutreachEventCard from "./Community/OutreachEventCard";
-import { formatDate, fetchEvents } from "./EventCardService";
+import { fetchEvents } from "./EventCardService";
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
+import { formatDate } from "./HelperFunction";
 
 // Main component for displaying all outreach events
 const AllOutreachEvents = () => {

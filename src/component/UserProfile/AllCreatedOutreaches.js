@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import OutreachEventCard from "../Community/OutreachEventCard";
-import { formatDate, fetchUserOutreaches } from "../EventCardService";
+import { fetchUserOutreaches } from "../EventCardService";
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import EventCardSkeleton from "../../component/Skeletons/EventCardSkeleton";
 import { auth } from "../firebase";
+import { formatDate } from "./../HelperFunction";
 
 const AllCreatedOutreaches = () => {
   const navigate = useNavigate();

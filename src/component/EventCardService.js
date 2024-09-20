@@ -15,6 +15,7 @@ import {
  import { getAuth, onAuthStateChanged } from "firebase/auth";
  import logEvent from "./FirebaseLogger";
  import { Timestamp } from 'firebase/firestore';
+ import { fetchUserName, formatDate } from "./HelperFunction";
  
  
  const OFFICIAL_EVENTS_COLLECTION = "officialEvents";
@@ -106,8 +107,6 @@ import {
       };
     });
   }
- 
- 
   return userDetails;
  }
  
@@ -334,49 +333,6 @@ import {
     throw error;
   }
  };
- 
- 
- export function formatDate(dateObj) {
-  // Extract date parts manually for custom format
-  const monthNames = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
- 
- 
-  const month = monthNames[dateObj.getMonth()];
-  // const month = dateObj.getMonth() + 1;
-  const day = dateObj.getDate();
-  const year = dateObj.getFullYear();
-  const weekday = days[dateObj.getDay()];
- 
- 
-  // Extract hours, minutes, and the AM/PM part
-  let hours = dateObj.getHours();
-  const minutes = dateObj.getMinutes();
-  const ampm = hours >= 12 ? "PM" : "AM";
-  hours = hours % 12;
-  hours = hours ? hours : 12; // The hour '0' should be '12'
-  const formattedTime = `${hours}:${minutes
-    .toString()
-    .padStart(2, "0")} ${ampm}`;
- 
- 
-  return `${month} ${day}, ${year} ${weekday} ${formattedTime}`;
-  // return `${month}/${day}/${year} - ${hours}:${minutes}`;
-  // return `${month}/${day}/${year} - ${formattedTime}`;
- }
  
  
  export const handleRsvp = async (
@@ -872,42 +828,6 @@ export const fetchUserOutreaches = async () => {
     throw error;
   }
  };
- 
- 
- 
- 
- const fetchUserName = async (uid) => {
-  // Reference to the uid instead of the docid of the user.
-  const userQuery = query(
-    collection(db, USERS_COLLECTION),
-    where("uid", "==", uid)
-  );
-  const userDocRef = await getDocs(userQuery);
- 
- 
-  const userDocID = userDocRef.docs[0]?.id; 
-  // reference for the userdoc
-  if(userDocID != undefined){
-    const userRef = doc(db, USERS_COLLECTION, userDocID);
-    const userDoc = await getDoc(userRef);
- 
- 
-    if (userDoc != undefined || userDoc.exists()) {
-      return userDoc.data().username || "";
-    } else {
-      console.error("No user found with uid:", uid);
-      logEvent(
-        "STREET_CARE_ERROR",
-        `error on fetchUserName EventCardService.js- No user Found ${uid}`
-      );
-      throw new Error(
-        `error on fetchUserName EventCardService.js- No user Found ${uid}`
-      );
-      return "";
-    }
-  }
- };
- 
  
  export async function calculateNumberOfPagesForOutreach(outreachPerPage, currentPage=0){
   const testoutreachRef = query(collection(db, PAST_OUTREACH_EVENTS_COLLECTION), orderBy("createdAt", "asc"));

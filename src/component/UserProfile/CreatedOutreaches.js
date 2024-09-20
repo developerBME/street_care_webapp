@@ -3,11 +3,12 @@ import { useNavigate } from "react-router-dom";
 import icon from "../../images/icon.png";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import OutreachEventCard from "../Community/OutreachEventCard";
-import { formatDate, fetchUserOutreaches } from "../EventCardService";
+import {fetchUserOutreaches } from "../EventCardService";
 import { auth } from "../firebase";
 import CustomButton from "../Buttons/CustomButton";
 import NoDisplayData from "./NoDisplayData";
 import ErrorMessage from "../ErrorMessage";
+import { formatDate } from "./../HelperFunction";
 
 function CreatedOutreaches() {
   const [createdEvents, setCreatedEvents] = useState([]);
