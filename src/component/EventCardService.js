@@ -63,6 +63,7 @@ export const fetchEvents = async () => {
 		);
 		throw error;
 	}
+
 };
 
 export async function calculateNumberOfPages(outreachesPerPage) {
@@ -986,3 +987,4 @@ export const fetchTopOutreaches = async () => {
 
 //  const testlatestfunc = await fetchTopOutreaches();
 //  console.log(testlatestfunc);
+
