@@ -52,3 +52,16 @@
 .borderAccordion::before {
   @apply border border-2 border-[#F7F7F7];
 }
+
+
+.primary-bg-color {
+  background-color: #6840E0;
+}
+
+.secondary-bg-color {
+  background-color: #F3EDF7;
+}
+
+.rounded-container {
+  border-radius: 50%;
+}
