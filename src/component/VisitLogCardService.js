@@ -215,7 +215,7 @@ export const fetchTopVisitLogs = async () => {
         id: id,
       });
     }
-    console.log(visitLogs);
+    // console.log(visitLogs)
     return visitLogs;
   } catch (error) {
     logEvent(
@@ -242,7 +242,7 @@ export const fetchPersonalVisitLogs = async (uid) => {
     const visitLogsData = [];
 
     for (let visitLogId of visitLogIds) {
-      console.log(visitLogId);
+      // console.log(visitLogId);
       const visitLog = await fetchPersonalVisitLogById(visitLogId)
       if( visitLog != undefined ){
         visitLogsData.push(visitLog);
