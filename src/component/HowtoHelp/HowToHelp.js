@@ -134,7 +134,7 @@ const renderStepContent = (selectedStep) => {
                 <br />
                 <br />
                 Outreaches are created by users who are willing to help for a
-                particular cause for which they could provide help.
+                particular cause where they can make a difference.
               </div>
             </div>
             <div className="space-y-2 pb-32">
@@ -384,10 +384,9 @@ function HowToHelp() {
                   How to help with Street Care
                 </div>
                 <div className="font-dmsans text-1 text-grey-300 font-normal">
-                We’ve made a simple guide on how you can contribute to the help homeless.
+                We’ve created a simple guide on how you can contribute to the help homeless.
                  Join our team of 700+ members and contribute in your own way. 
                  Over 35% of our volunteers are first-time volunteers.
-
                 </div>
               </div>
               {/* Desktop screen */}

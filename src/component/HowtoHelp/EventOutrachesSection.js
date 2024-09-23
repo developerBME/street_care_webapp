@@ -130,7 +130,6 @@ const EventOutrachesSection = () => {
             need */}
                 Sign up for outreaches now!
               </div>
-
               <div
                 className="flex flex-row cursor-pointer gap-2 items-center"
                 onClick={() => {
@@ -143,11 +142,11 @@ const EventOutrachesSection = () => {
                 <img src={arrowRight} className="w-2 h-2 lg:w-4 lg:h-4 " />
               </div>
             </div>
-            {/* <div className="font-dmsans text-1 text-grey-300 font-normal py-2">
-              We’ve made a simple guide on how you can contribute to the
+            <div className="font-dmsans text-1 text-grey-300 font-normal py-2">
+              We’ve made a simple guide on how you can contribute to help the
               homeless. Join our team of 700+ members and contribute in your own
               way. More than 35% of our volunteers are first-time volunteers.
-            </div> */}
+            </div>
           </div>
         </div>
       </div>
