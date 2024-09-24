@@ -171,7 +171,7 @@ const OutreachEventCard = ({
 									label="View"
 									name="buttonlight"
 									onClick={() => {
-										navigate('/outreachsignup/${id}', {
+										navigate(`/outreachsignup/${id}`, {
 											state: { label: 'EDIT' },
 										});
 									}}
