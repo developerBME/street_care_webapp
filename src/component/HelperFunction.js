@@ -5,13 +5,13 @@ import {
 import { db } from "./firebase";
 
 
-console.log('Test101');
+
 const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
 const HELP_REQ_COLLECTION = "helpRequests";
 const PERSONAL_VISIT_LOG_COLLECTION = "personalVisitLog";
 
 async function calculateNumberOfPages(collectionType, itemsPerPage) {
-  console.log('Test102');
+
   if (itemsPerPage < 1 || itemsPerPage > 10) {
       throw new Error("The number of items per page must be between 1 and 10.");
   }
