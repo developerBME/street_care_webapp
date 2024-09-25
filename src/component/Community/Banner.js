@@ -17,7 +17,7 @@ function Metrics() {
           </p>
           <p className=" text-center">
             <span className="text-xl font-bold lg:text-[38px] md:text-[28px] sm:text-[38px] lg:inline-block md:block block sm:mb-[10px]">
-              1031
+              1000+
             </span>{" "}
           </p>
           <p className="text-[#1F0A58] text-center">homeless people</p>
@@ -31,7 +31,7 @@ function Metrics() {
           </p>
           <p className="text-center">
             <span className="text-xl font-bold lg:text-[38px] md:text-[28px] sm:text-[38px] lg:inline-block md:block block sm:mb-[10px]">
-              264
+              400+
             </span>{" "}
           </p>
           <p className="text-[#1F0A58] text-center">volunteers</p>
@@ -59,7 +59,7 @@ function Metrics() {
           </p>
           <p className=" text-center">
             <span className="text-xl mt-auto font-bold lg:text-[38px] md:text-[28px] sm:text-[38px] lg:inline-block md:block block sm:mb-[10px]">
-              14
+              
             </span>{" "}
           </p>
           <p className="text-[#1F0A58] text-center">available</p>
