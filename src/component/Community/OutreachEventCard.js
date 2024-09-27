@@ -168,7 +168,7 @@ const OutreachEventCard = ({
 						{isProfilePage || label2 === 'EDIT' ? (
 							<div className="group relative">
 								<CustomButton
-									label="Withdraw"
+									label="View"
 									name="buttonlight"
 									onClick={() => {
 										navigate(`/outreachsignup/${id}`, {
@@ -221,8 +221,7 @@ const OutreachEventCard = ({
                   src={userSlots}
                 ></img>
                 <div className="font-normal font-dmsans text-[14px]">
-                  {Math.floor(totalSlots * 3/4)}/{totalSlots}
-                  {/* {nop}/{totalSlots} Original statement, change back to this */}
+                  {nop}/{totalSlots}
                 </div>
               </div>
             ) : (
