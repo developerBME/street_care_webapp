@@ -1,8 +1,10 @@
 import React from "react";
-import defaultImage from "../../images/default_avatar.svg";
 import { useNavigate } from "react-router-dom";
-import date from "../../images/date.png";
-import locate from "../../images/location.png";
+import dateIcon from "../../images/date.png";
+import locationIcon from "../../images/location.png";
+
+import verifiedImg from "../../images/verified_purple.png";
+import defaultImage from "../../images/default_avatar.svg";
 import { formatDate } from "../helper";
 import CardTags from "./CardTags";
 
@@ -15,36 +17,47 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
 
   return (
     <div
-      className="bg-[#F5EEFE] min-w-full max-w-[320px] lg:w-full rounded-[16px] mb-4 flex flex-col justify-between p-4 h-[300px] relative cursor-pointer"
+      className="bg-[#F5EEFE] w-[320px] rounded-[30px] mb-4 flex flex-col p-[24px] h-auto cursor-pointer border-b-[1px] border-gray-200"
       onClick={handleViewDetails}
     >
-      <div className="space-y-2">
-        <div className="flex justify-between items-center text-sm text-[#37168B]">
-          <div className="flex items-center">
-            <img className="w-4 h-4 mr-1" src={date} alt="Date" />
-            {visitLogCardData && visitLogCardData.eventDate ? formatDate(visitLogCardData.eventDate) : null}
-          </div>
-          <div className="flex items-center">
-            <img className="w-4 h-4 mr-1" src={locate} alt="Location" />
-            {`${visitLogCardData?.location?.city || visitLogCardData?.city}, ${visitLogCardData?.location?.stateAbbv || visitLogCardData?.stateAbbv || visitLogCardData?.location?.state}`}
-          </div>
+      <div className="inline-flex items-center space-x-2 ">
+          <img
+            alt=""
+            src={visitLogCardData.defaultImage || defaultImage}
+            className="w-8 h-8 rounded-full"
+          />
+          <div className="font-normal font-inter text-[13px] ">{visitLogCardData.userName}</div>
+          <img alt="" src={verifiedImg} className="w-5 h-5" />
         </div>
-        <h1 className="font-medium text-lg text-gray-800 line-clamp-2">
-          {visitLogCardData?.description || ""}
-        </h1>
+      
+      <div className="flex justify-between items-center mt-2">
+        <div className="flex items-center">
+          <img className="w-4 h-4" src={dateIcon} alt="Date" />
+          <span className="ml-2 text-sm">{visitLogCardData && visitLogCardData.eventDate ? formatDate(visitLogCardData.eventDate) : null}</span>
+        </div>
+        <div className="flex items-center">
+          <img className="w-3 h-4" src={locationIcon} alt="Location" />
+          <span className="ml-2 text-sm">{`${visitLogCardData?.location?.city || visitLogCardData?.city}, ${visitLogCardData?.location?.stateAbbv || visitLogCardData?.stateAbbv || visitLogCardData?.location?.state}`}</span>
+        </div>
       </div>
-
-      <div className="mt-auto space-y-2">
-        <div className="flex justify-between text-sm text-gray-800">
-          <div className="font-bold">People Helped</div>
-          <div className="font-bold">{visitLogCardData?.numberPeopleHelped}</div>
-        </div>
-        <div className="flex justify-between text-sm text-gray-800">
-          <div className="font-bold">Items Donated</div>
-          <div className="font-bold">{visitLogCardData?.itemQty}</div>
-        </div>
+      
+      <div className="flex justify-between items-center mt-4">
+        <div className="text-sm font-bold">People Helped</div>
+        <div className="text-xl font-bold">{visitLogCardData?.numberPeopleHelped}</div>
+      </div>
+      
+      <div className="flex justify-between items-center mt-2">
+        <div className="text-sm font-bold">Items Donated</div>
+        <div className="text-xl font-bold">{visitLogCardData?.itemQty}</div>
+      </div>
+      
+      <div className="mt-3">  {/* Adjusted gap from 12px here */}
         <CardTags tags={visitLogCardData?.whatGiven || []} />
       </div>
+
+      <p className="text-sm mt-2 line-clamp-2">
+        {visitLogCardData?.description || ""}
+      </p>
     </div>
   );
 };

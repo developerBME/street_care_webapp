@@ -484,7 +484,7 @@ function DonateForm() {
                       type="checkbox"
                       id="agreement-option"
                       value="agreement"
-                      class="w-[18px] h-[18px] cursor-pointer accent-[#5F36D6]"
+                      className="w-[18px] h-[18px] cursor-pointer accent-[#5F36D6]"
                       required=""
                       ref={agreementCheckbox}
                       checked={isAgreementCheckboxChecked}
@@ -580,7 +580,7 @@ function DonateForm() {
                         type="checkbox"
                         id="otherAmount-option"
                         value="otherAmount"
-                        class="w-[18px] h-[18px] cursor-pointer accent-[#5F36D6]"
+                        className="w-[18px] h-[18px] cursor-pointer accent-[#5F36D6]"
                         required=""
                       ></input>
                     </div>
@@ -598,7 +598,7 @@ function DonateForm() {
                         type="checkbox"
                         id="gift-option"
                         value="gift"
-                        class="w-[18px] h-[18px] cursor-pointer accent-[#5F36D6]"
+                        className="w-[18px] h-[18px] cursor-pointer accent-[#5F36D6]"
                         required=""
                         checked={isNameDivChecked}
                         onChange={handleNameDivCheckboxChange}
@@ -737,7 +737,7 @@ function DonateForm() {
                             type="checkbox"
                             id="donationbehalf-option"
                             value="donationbehalf"
-                            class="w-[18px] h-[18px] cursor-pointer accent-[#5F36D6]"
+                            className="w-[18px] h-[18px] cursor-pointer accent-[#5F36D6]"
                             required=""
                             checked={isDonationBehalfCheckedPP}
                             onChange={handleDonationBehalfCheckboxChangePP}
@@ -1118,7 +1118,7 @@ function DonateForm() {
                             type="checkbox"
                             id="donationbehalf-option"
                             value="donationbehalf"
-                            class="w-[18px] h-[18px] cursor-pointer accent-[#5F36D6]"
+                            className="w-[18px] h-[18px] cursor-pointer accent-[#5F36D6]"
                             required=""
                             checked={isDonationBehalfChecked}
                             onChange={handleDonationBehalfCheckboxChange}
