@@ -8,7 +8,6 @@ import FAQs from "./HomePage/FAQs2";
 // import BMEcard from "./HomePage/BMEcard";
 // import BMEcardnew from "./HomePage/BMEofficialCard";
 import Success2 from "./HomePage/Success2";
-//import Success from "./HomePage/Success"
 import Landing from "./HomePage/Landing";
 // import Landing from "./HomePage/Landing2";
 // import Success from "./HomePage/Success";
@@ -26,6 +25,8 @@ import {
   fetchEvents,
   fetchOfficialEvents,
 } from "./EventCardService";
+import HomePageUpcomingOutreach from "./HomePage/HomePageUpcomingOutreach";
+import HomePagePastOutreach from "./HomePage/HomePagePastOutreach";
 
 import BMEcardimg1 from "../images/BMEofficialcardimg1.png";
 import BMEcardimg2 from "../images/BMEofficialcardimg2.png";
@@ -170,12 +171,12 @@ function HomePage() {
     setShowSignUpModal(true);
     setIsLoading(true);
   };
-  
+
   const closeSignUpModal = () => {
     setShowSignUpModal(false);
     setTriggerEffect(prev => !prev);
   };
-  
+
   const onEventWithdraw = () => {
     setSelectedEvent(null);
     setShowWithdrawnModal(true);
@@ -190,6 +191,13 @@ function HomePage() {
   const fetchData = async () => {
     try {
       const eventsData = await fetchEvents();
+
+      // Sort events in place based on their date
+      // eventsData.sort((a, b) => a.eventDate - b.eventDate);
+
+      // setEvents(eventsData);
+
+      // Display 3 upcoming events in descending order
       eventsData.sort((a, b) => a.eventDate - b.eventDate);
       setEvents(eventsData);
     } catch (error) {
@@ -254,7 +262,7 @@ function HomePage() {
     outreachRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Filter events to get only past events
+  // Filter events to get only upcoming events
   const upcomingEvents = events
     ? events
         .filter((event) => {
@@ -279,7 +287,7 @@ function HomePage() {
   useEffect(() => {
     document.title = "Home - Street Care";
   }, []);
- 
+
   return (
     // <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
     <div className="relative flex flex-col items-center ">

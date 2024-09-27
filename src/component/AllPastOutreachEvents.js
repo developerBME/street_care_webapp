@@ -60,10 +60,10 @@ const AllPastOutreachEvents = () => {
     try {
       setIsLoading(true);
       setErrorMessage("");
-  
+
       const cityToSearch = "";
       const { tot, outreachByLoc } = await fetchByCityOrStates(cityToSearch, startDateTime, endDateTime, currentPage, outreachPerPages);
-  
+
       if (outreachByLoc.length > 0) {
         const pastEvents = outreachByLoc.filter((event) => {
           const eventDate = event?.eventDate?.seconds
@@ -71,7 +71,7 @@ const AllPastOutreachEvents = () => {
             : event.eventDate;
           return eventDate < new Date();
         });
-  
+
         setEvents(pastEvents);
         console.log("total", Math.ceil(tot / outreachPerPages) - 1);
         setTotalPages(Math.ceil(tot / outreachPerPages) - 1);
@@ -91,7 +91,7 @@ const AllPastOutreachEvents = () => {
   //   setIsLoading(true);
   //   const cityToSearch = "";
   //   const outreachByLoc = await fetchByCityOrStates(cityToSearch, startDateTime, endDateTime, currentPage, outreachPerPages);
-      
+
   //   const pastEvents = outreachByLoc.filter((event) => {
   //     const eventDate = event?.eventDate?.seconds
   //       ? new Date(event.eventDate.seconds * 1000)
@@ -136,7 +136,7 @@ const AllPastOutreachEvents = () => {
     const newDate = new Date(e.target.value);
     setEndDateTime(newDate);
   };
-  
+
   const renderPaginationButtons = () => {
     const buttons = [];
     const pageRange = 1;
@@ -202,7 +202,7 @@ const AllPastOutreachEvents = () => {
           </button>
         );
       }
-  
+
     return buttons;
   };
 
@@ -228,7 +228,7 @@ const AllPastOutreachEvents = () => {
             <div className="">
               <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] lg:mt-2">
                 {" "}
-                Past outreach events
+                Past Outreach Events
               </p>
             </div>
             <div className=" mt-6 lg:mt-0">
@@ -282,7 +282,7 @@ const AllPastOutreachEvents = () => {
               </div>
             </div>
           </div>
-          
+
           {errorMessage && (
             <p className="text-red-500 text-center mt-4">{errorMessage}</p>
           )}

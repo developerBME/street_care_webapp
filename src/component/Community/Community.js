@@ -7,6 +7,8 @@ import CommunityOutreachEvent from "./CommunityOutreachEvent";
 import HelpRequest from "./HelpRequest";
 import Banner from "./Banner";
 import CommunityVisitLog from "./CommunityVisitLog";
+import CommunityOutreachEventsPast from "./CommunityOutreachEventsPast";
+
 
 function Community() {
   const [activeTab, setActiveTab] = useState("outreach");
@@ -82,9 +84,13 @@ function Community() {
           <CommunityOutreachEvent />
         </div>
 
-        <div className="w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black">
+        {/* <div className="w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black">
+          <CommunityOutreachEventsPast />
+        </div> */}
+
+        {/* <div className="w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black">
           <CommunityVisitLog />
-        </div>
+        </div> */}
 
         <div className="w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 mb-8 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
           <HelpRequest />

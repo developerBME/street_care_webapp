@@ -234,7 +234,7 @@ export const fetchPersonalVisitLogs = async (uid) => {
     if (userDocRef.docs.length === 0) {
       console.error("User document not found for uid:", uid);
       return [];
-    }    
+    }
     const userData = userDocRef.docs[0].data();
     const visitLogIds = userData.personalVisitLogs || [];
     const visitLogsData = [];
@@ -321,7 +321,7 @@ const fetchUserName = async (uid) => {
   if(userDocID !== undefined){
     const userRef = doc(db, USERS_COLLECTION, userDocID);
     const userDoc = await getDoc(userRef);
-    
+
     if (userDoc !== undefined || userDoc.exists()) {
       return userDoc.data().username || "";
     } else {

@@ -99,7 +99,8 @@ const VisitLogDetails = () => {
 
                   <div className="flex flex-row justify-between">
                     <div className="font-bold text-[14px] font-dmsans text-[#444746] line-clamp-1">
-                      Items Donated
+                      Participants 
+                      {/* Changed from Items Donated on frontend */}
                     </div>
                     <div className="font-bold text-[14px] font-dmsans text-[#444746] line-clamp-1">
                       {data?.itemQty}

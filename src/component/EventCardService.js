@@ -779,9 +779,9 @@ export const fetchByCityOrStates = async (
 		throw error;
 	}
 };
-/* 
-const cityToSearch = ""; 
-const startDateTime = new Date("2020-07-01"); 
+/*
+const cityToSearch = "";
+const startDateTime = new Date("2020-07-01");
 const endDateTime = new Date("2023-07-01");
 const curr_page=0;
 const outreachPerPages = 5;
