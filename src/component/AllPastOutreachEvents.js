@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import OutreachEventCard from "./Community/OutreachEventCard";
 import {
-  formatDate,
   fetchEvents,
   fetchPastOutreachEvents,
   fetchByCityOrStates,
@@ -11,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import search_icon from "../images/search_icon.png";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
+import { formatDate } from "./HelperFunction";
 
 const AllPastOutreachEvents = () => {
   const [events, setEvents] = useState([]);

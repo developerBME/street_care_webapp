@@ -15,6 +15,7 @@ import {
 import { db } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import logEvent from "./FirebaseLogger";
+import { fetchUserName} from "./HelperFunction";
 
 const HELP_REQ_COLLECTION = "helpRequests";
 const USERS_COLLECTION = "users";
@@ -78,33 +79,6 @@ export const fetchHelpReqById = async (helpReqId) => {
     logEvent(
       "STREET_CARE_ERROR",
       `error on fetchHelpReqById HelpRequestService.js- ${error.message}`
-    );
-    throw error;
-  }
-};
-
-export const fetchUserName = async (uid) => {
-  try {
-    // Reference to the uid instead of the docid of the user.
-    const userQuery = query(
-      collection(db, USERS_COLLECTION),
-      where("uid", "==", uid)
-    );
-    const userDocRef = await getDocs(userQuery);
-    const userDocID = userDocRef.docs[0].id;
-    // reference for the userdoc
-    const userRef = doc(db, USERS_COLLECTION, userDocID);
-    const userDoc = await getDoc(userRef);
-    if (userDoc.exists()) {
-      return userDoc.data().username || "";
-    } else {
-      console.error("No user found with uid:", uid);
-      return "";
-    }
-  } catch (error) {
-    logEvent(
-      "STREET_CARE_ERROR",
-      `error on fetchUserName HelpRequestService.js- ${error.message}`
     );
     throw error;
   }
@@ -237,40 +211,6 @@ export const fetchByCityAndDate = async (
     throw error;
   }
 };
-
-export function formatDate(dateObj) {
-  // Extract date parts manually for custom format
-  const monthNames = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-
-  const month = monthNames[dateObj.getMonth()];
-  const day = dateObj.getDate();
-  const year = dateObj.getFullYear();
-  const weekday = days[dateObj.getDay()];
-
-  // Extract hours, minutes, and the AM/PM part
-  const hours = dateObj.getHours();
-  const minutes = dateObj.getMinutes();
-  const ampm = hours >= 12 ? "PM" : "AM";
-  const formattedTime = `${hours % 12}:${minutes
-    .toString()
-    .padStart(2, "0")} ${ampm}`;
-
-  return `${month} ${day}, ${year} ${weekday} ${formattedTime}`;
-}
 
 export const handleHelpRecieved = async (e, id, refresh) => {
   try {

@@ -6,7 +6,6 @@ import UserInfo from './UserInfo';
 import EventCardSkeleton from '../Skeletons/EventCardSkeleton';
 import OutreachEventCard from '../Community/OutreachEventCard';
 import {
-	formatDate,
 	fetchUserOutreaches,
 	fetchUserSignedUpOutreaches,
 } from '../EventCardService';
@@ -20,6 +19,7 @@ import SignedUpOutreaches from './SignedUpOutreaches';
 import CreatedOutreaches from './CreatedOutreaches';
 import CreatedHelpRequests from './CreatedHelpRequests';
 import ErrorMessage from '../ErrorMessage';
+import { formatDate } from './../HelperFunction';
 
 function Profile() {
 	const [createdEvents, setCreatedEvents] = useState([]);

@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import CustomButton from "../Buttons/CustomButton";
 import { useNavigate } from "react-router-dom";
 import OutreachEventCard from "./OutreachEventCard";
-import { fetchEventById, formatDate } from "../EventCardService";
+import { fetchEventById} from "../EventCardService";
+import { formatDate } from "./../HelperFunction";
 
 const ConfirmationModal = ({
   isOpen,
