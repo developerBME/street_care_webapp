@@ -13,7 +13,7 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 
 const SHEET_ID = '1rMucKP9lKsJMhsAo33azC0te_MIlmOWQofsvqKwLD28';
-const RANGE = 'Sheet1!A1:Z1000';
+const RANGE = 'Sheet1!A1:Z2000';
 const COLLECTION_NAME = 'BMEMembershipForm';
 
 async function initializeGoogleSheetsAPI(serviceAccount) {
@@ -29,25 +29,12 @@ function flattenArray(arr) {
   return arr.join(', ');
 }
 
-function getStartEndOfDate(dateString) {
-  const date = new Date(dateString);
-  const start = new Date(date);
-  start.setHours(0, 0, 0, 0);
-
-  const end = new Date(date);
-  end.setHours(23, 59, 59, 999);
-
-  return { start, end };
-}
-
-async function fetchRecordsForDate(collectionName, dateString) {
+async function fetchAllRecords(collectionName) {
   try {
-    const snapshot = await db.collection(collectionName)
-      .where('DateOfSignature', '==', dateString)
-      .get();
+    const snapshot = await db.collection(collectionName).get();
 
     if (snapshot.empty) {
-      throw new Error(`No documents found for the date: ${dateString}.`);
+      throw new Error(`No documents found in the collection: ${collectionName}.`);
     }
 
     const records = [];
@@ -66,39 +53,30 @@ async function fetchRecordsForDate(collectionName, dateString) {
   }
 }
 
-async function fetchExistingGoogleSheetData(sheetsApi, sheetId, range) {
+async function clearGoogleSheet(sheetsApi, sheetId, range) {
   try {
-    const response = await sheetsApi.spreadsheets.values.get({
+    const request = {
       spreadsheetId: sheetId,
       range: range,
-    });
-
-    return response.data.values || [];
+      resource: {
+        values: [['']],
+      },
+    };
+    await sheetsApi.spreadsheets.values.clear(request);
   } catch (error) {
-    console.error('Error fetching data from Google Sheet:', error);
+    console.error('Error clearing Google Sheet:', error);
     throw error;
   }
 }
 
 async function updateGoogleSheet(newRecords, sheetsApi, sheetId, range) {
   try {
-    const existingData = await fetchExistingGoogleSheetData(sheetsApi, sheetId, range);
-
-    const newEntries = newRecords.filter(record => {
-      return !existingData.some(row => row[0] === record[0]);
-    });
-
-    if (newEntries.length === 0) {
-      console.log('No new records to add.');
-      return;
-    }
-
     const request = {
       spreadsheetId: sheetId,
       range: range,
       valueInputOption: 'RAW',
       resource: {
-        values: newEntries,
+        values: newRecords,
       },
     };
 
@@ -114,24 +92,14 @@ async function updateGoogleSheet(newRecords, sheetsApi, sheetId, range) {
   }
 }
 
-exports.exportToExcel = functions.https.onRequest(async (req, res) => {
+exports.exportToExcel = functions.pubsub.schedule('every Sunday 00:00').timeZone('America/New_York').onRun(async () => {
   try {
-    const dateString = req.query.date; //(e.g., ?date=2024-08-20)
-
-    if (!dateString) {
-      return res.status(400).send('Bad Request: date query parameter is required');
-    }
-
     const sheetsApi = await initializeGoogleSheetsAPI(serviceAccount);
-
-    const records = await fetchRecordsForDate(COLLECTION_NAME, dateString);
-
+    const records = await fetchAllRecords(COLLECTION_NAME);
+    await clearGoogleSheet(sheetsApi, SHEET_ID, RANGE);
     await updateGoogleSheet(records, sheetsApi, SHEET_ID, RANGE);
-
-    res.status(200).send('Google Sheet updated successfully.');
+    console.log('Google Sheet updated successfully with all records.');
   } catch (error) {
-    console.error('Error in exportToExcel function:', error);
-    res.status(500).send('Internal Server Error');
+    console.error('Error in exportAllRecordsToExcel function:', error);
   }
 });
-// Function end point - https://us-central1-streetcare-d0f33.cloudfunctions.net/exportToExcel
