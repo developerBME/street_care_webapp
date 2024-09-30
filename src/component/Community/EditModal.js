@@ -13,6 +13,7 @@ const EditModal = ({
   title,
   eventDate,
   location,
+  onEventWithdraw,
 }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -42,7 +43,7 @@ const EditModal = ({
           <CustomButton
             name="buttonlight"
             label="Yes"
-            onClick={(e) =>
+            onClick={(e) => {
               handleRsvp(
                 e,
                 id,
@@ -51,9 +52,10 @@ const EditModal = ({
                 label2,
                 setLabel2,
                 false,
-                refresh
+                refresh,
+                onEventWithdraw,
               )
-            }
+            }}
           >
             <p className="text-center mx-auto">Yes</p>
             {/* Yes */}

@@ -68,6 +68,7 @@ import Dashboard from "./component/Admin/AdminDashboard.js"
 import MoreVisitLogs from "./component/Community/MoreVisitLogs";
 import CreateOutreach from "./component/Community/CreateOutreach";
 import AllSignedUpOutreaches from "./component/UserProfile/AllSignedUpOutreaches";
+import AllCreatedOutreaches from "./component/UserProfile/AllCreatedOutreaches.js";
 import OutreachEvents from "./component/Admin/OutreachEvents";
 
 
@@ -168,7 +169,9 @@ function App() {
           >
             <Route path="/testAdmin" element={<TestAdmin />} />
             <Route path="/admin-panel/userlist" element={<UserList />} />
+            <Route path="/admin" element={<AdminHomePage />} />
             <Route path="/admin/userManagement" element={<UserListNew/>}/>
+            <Route path="/admin/outreach-events" element={<OutreachEvents />} />
           </Route>
           <Route
             element={
@@ -240,7 +243,13 @@ function App() {
             path="profile/allSignedUpOutreaches"
             element={<AllSignedUpOutreaches />}
           />
+          <Route
+            path="profile/allCreatedOutreaches"
+            element={<AllCreatedOutreaches />}
+          />
+
           <Route path="/admin" element={<AdminHomePage />} />
+
           <Route path="/sample_form" element={<SampleForm />} />
           <Route path="visitLogDetails" element={<VisitLogDetails />} />
           <Route path="visitLogDetails/:id" element={<VisitLogDetails />} />
@@ -271,7 +280,7 @@ function App() {
           <Route path="/myvisitlogs" element={<MoreVisitLogs />} />
 
           {/* Admin Routes */}
-          <Route path="/admin/outreach-events" element={<OutreachEvents />} />
+          
 
         </Routes>
         <Footer />

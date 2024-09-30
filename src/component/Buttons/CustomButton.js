@@ -618,12 +618,13 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
     return (
       <button
         onClick={onClick}
-        className={`text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
+        className={`text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 inline-flex ${
           disable !== "true"
             ? "text-[#181818] bg-[#E6DCFF] hover:bg-[#c4b6e7]"
             : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
         }`}
       >
+        {icon && (<img src={icon} className="w-5 h-5 " />)}
         {label}
       </button>
     );

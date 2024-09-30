@@ -359,19 +359,6 @@ export async function fetchOutreaches(helpRequestId) {
   }
 }
 
-export async function calculateNumberOfPagesForHelpReq(helpReqPerPage) {
-  if (helpReqPerPage < 1 || helpReqPerPage > 10) {
-    throw new Error(
-      "The number of help requests per page must be between 1 and 10."
-    );
-  }
-
-  const helpRequestRef = collection(db, HELP_REQ_COLLECTION);
-  const snapshot = await getDocs(helpRequestRef);
-  const totalHelpRequests = snapshot.size;
-
-  return Math.ceil(totalHelpRequests / helpReqPerPage);
-}
 
 export async function getHelpRequestsWithPageIndex(pageIndex = 0, numberOfEventsPerPage = 5){
   const q = query(collection(db, HELP_REQ_COLLECTION), orderBy("createdAt","asc"));
