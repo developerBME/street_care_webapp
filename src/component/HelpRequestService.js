@@ -299,9 +299,11 @@ export async function fetchOutreaches(helpRequestId) {
   }
 }
 
+
 export async function calculateNumberOfPagesForHelpReq(helpReqPerPage) {
   return getNumberOfPages(helpReqPerPage, HELP_REQ_COLLECTION);
 }
+
 
 export async function getHelpRequestsWithPageIndex(pageIndex = 0, numberOfEventsPerPage = 5){
   const q = query(collection(db, HELP_REQ_COLLECTION), orderBy("createdAt","asc"));

@@ -296,6 +296,7 @@ export const fetchPersonalVisitLogById = async (visitLogId) => {
   }
 };
 
+
 export async function calculateNumberOfPagesForVisitlog(visitlogsPerPage) {
   return getNumberOfPages(visitlogsPerPage, PERSONAL_VISIT_LOG_COLLECTION);
   }
