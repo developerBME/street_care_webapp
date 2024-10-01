@@ -13,7 +13,7 @@ import {
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { fetchUserDetails } from "./EventCardService";
-import { fetchUserName, formatDate } from "./HelperFunction";
+import { fetchUserName, formatDate, getNumberOfPages } from "./HelperFunction";
 
 import logEvent from "./FirebaseLogger";
 
@@ -296,19 +296,9 @@ export const fetchPersonalVisitLogById = async (visitLogId) => {
   }
 };
 
-export async function calculateNumberOfPagesForVisitlog(visitlogPerPage) {
-  if (visitlogPerPage < 1 || visitlogPerPage > 10) {
-    throw new Error(
-      "The number of visitlogs per page must be between 1 and 10."
-    );
+export async function calculateNumberOfPagesForVisitlog(visitlogsPerPage) {
+  return getNumberOfPages(visitlogsPerPage, PERSONAL_VISIT_LOG_COLLECTION);
   }
-
-  const visitlogRef = collection(db, PERSONAL_VISIT_LOG_COLLECTION);
-  const snapshot = await getDocs(visitlogRef);
-  const totalVisitlogs = snapshot.size;
-
-  return Math.ceil(totalVisitlogs / visitlogPerPage);
-}
 
 export const fetchVisitLogsByCityOrState = async (
   searchValue,

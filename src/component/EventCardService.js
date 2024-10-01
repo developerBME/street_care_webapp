@@ -15,7 +15,7 @@ import {
  import { getAuth, onAuthStateChanged } from "firebase/auth";
  import logEvent from "./FirebaseLogger";
  import { Timestamp } from 'firebase/firestore';
- import { fetchUserName, formatDate } from "./HelperFunction";
+ import { fetchUserName, formatDate, getNumberOfPages } from "./HelperFunction";
  
  const OFFICIAL_EVENTS_COLLECTION = "officialEvents";
  const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
@@ -69,23 +69,10 @@ import {
  };
  
  
- export async function calculateNumberOfPages(outreachesPerPage) {
-  if (outreachesPerPage < 1 || outreachesPerPage > 10) {
-    throw new Error(
-      "The number of outreaches per page must be between 1 and 10."
-    );
+ export async function calculateNumberOfPagesForOutreach(outreachesPerPage) {
+  return getNumberOfPages(outreachesPerPage, OUTREACH_EVENTS_COLLECTION);
   }
- 
- 
-  const outreachEventsRef = collection(db, OUTREACH_EVENTS_COLLECTION);
-  const snapshot = await getDocs(outreachEventsRef);
-  const totalOutreaches = snapshot.size;
- 
- 
-  return Math.ceil(totalOutreaches / outreachesPerPage);
- }
- 
- 
+
  async function fetchUserDetailsBatch(userIds) {
   const userDetails = {};
   // Firestore limits 'in' queries to 10 items
@@ -818,37 +805,37 @@ export const fetchUserOutreaches = async () => {
  };
  
   
- export async function calculateNumberOfPagesForOutreach(outreachPerPage, currentPage=0){
-  const testoutreachRef = query(collection(db, PAST_OUTREACH_EVENTS_COLLECTION), orderBy("createdAt", "asc"));
-  const snapshot = await getDocs(testoutreachRef);
-  // console.log('Data : '+snapshot.docs);
-  const startIndex = outreachPerPage*currentPage;
-  const startDoc = snapshot.docs[startIndex];
-  // console.log('starting is: '+ startDoc);
+//  export async function calculateNumberOfPagesForOutreach(outreachPerPage, currentPage=0){
+//   const testoutreachRef = query(collection(db, PAST_OUTREACH_EVENTS_COLLECTION), orderBy("createdAt", "asc"));
+//   const snapshot = await getDocs(testoutreachRef);
+//   // console.log('Data : '+snapshot.docs);
+//   const startIndex = outreachPerPage*currentPage;
+//   const startDoc = snapshot.docs[startIndex];
+//   // console.log('starting is: '+ startDoc);
  
  
-  // const firstdoc=snapshot.docs(startAt);
-  // console.log('starting is: '+ firstdoc);
+//   // const firstdoc=snapshot.docs(startAt);
+//   // console.log('starting is: '+ firstdoc);
  
  
  
  
-  const outreachRef = query(collection(db, PAST_OUTREACH_EVENTS_COLLECTION),  orderBy("createdAt", "asc"), startAt(startDoc), limit(outreachPerPage))
+//   const outreachRef = query(collection(db, PAST_OUTREACH_EVENTS_COLLECTION),  orderBy("createdAt", "asc"), startAt(startDoc), limit(outreachPerPage))
  
  
-  const outres = await getDocs(outreachRef);
-  // console.log('outres '+ outres.docs);
-  outres.forEach((doc)=>{
-    // console.log(doc.data());
-  //   console.log(doc.id); //printing the pagination ids
-  });
-  return outres;
+//   const outres = await getDocs(outreachRef);
+//   // console.log('outres '+ outres.docs);
+//   outres.forEach((doc)=>{
+//     // console.log(doc.data());
+//   //   console.log(doc.id); //printing the pagination ids
+//   });
+//   return outres;
  
  
- }
+//  }
  
  
- const test = await calculateNumberOfPagesForOutreach(5,0)
+//  const test = await calculateNumberOfPagesForOutreach(5,0)
  
  
  export const fetchTopOutreaches = async () => {

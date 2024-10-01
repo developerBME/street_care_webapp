@@ -74,3 +74,13 @@ export async function fetchUserName(uid){
   
     return `${month} ${day}, ${year} ${weekday} ${formattedTime}`;
   }
+
+  export async function getNumberOfPages(recordsPerPage, collectionRef) {
+    if (recordsPerPage < 1 || recordsPerPage > 10) {
+      throw new Error(
+        "Number of Records should be between 1 and 10 : "+collectionRef
+      );
+    }
+    const snapshot = await getDocs(collection(db, collectionRef));  
+    return Math.ceil(snapshot.size / recordsPerPage);
+   }

@@ -15,7 +15,7 @@ import {
 import { db } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import logEvent from "./FirebaseLogger";
-import { fetchUserName} from "./HelperFunction";
+import { fetchUserName, getNumberOfPages} from "./HelperFunction";
 
 const HELP_REQ_COLLECTION = "helpRequests";
 const USERS_COLLECTION = "users";
@@ -300,17 +300,7 @@ export async function fetchOutreaches(helpRequestId) {
 }
 
 export async function calculateNumberOfPagesForHelpReq(helpReqPerPage) {
-  if (helpReqPerPage < 1 || helpReqPerPage > 10) {
-    throw new Error(
-      "The number of help requests per page must be between 1 and 10."
-    );
-  }
-
-  const helpRequestRef = collection(db, HELP_REQ_COLLECTION);
-  const snapshot = await getDocs(helpRequestRef);
-  const totalHelpRequests = snapshot.size;
-
-  return Math.ceil(totalHelpRequests / helpReqPerPage);
+  return getNumberOfPages(helpReqPerPage, HELP_REQ_COLLECTION);
 }
 
 export async function getHelpRequestsWithPageIndex(pageIndex = 0, numberOfEventsPerPage = 5){
