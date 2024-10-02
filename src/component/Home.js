@@ -22,11 +22,10 @@ import Process2 from "./HomePage/Process2";
 import arrowRight from "../images/arrowRight.png";
 import OutreachEventCard from "./Community/OutreachEventCard";
 import {
-  formatDate,
   fetchEvents,
   fetchOfficialEvents,
 } from "./EventCardService";
-
+import { formatDate } from "./HelperFunction";
 import BMEcardimg1 from "../images/BMEofficialcardimg1.png";
 import BMEcardimg2 from "../images/BMEofficialcardimg2.png";
 import BMEcardimg3 from "../images/BMEofficialcardimg3.png";
