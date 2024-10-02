@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import arrowRight from "../../images/arrowRight.png";
 import CustomButton from "../Buttons/CustomButton";
 import { fetchEvents, formatDate } from "../EventCardService";
-import { fetchVisitLogs } from "../VisitLogCardService";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 
 const CommunityOutreachEvent = () => {
@@ -13,53 +12,8 @@ const CommunityOutreachEvent = () => {
   const loadMore = () => {
     setVisibleItems((prev) => prev + 3);
   };
-  const cardData = [
-    {
-      userName: "William Smith",
-      title: "BK Fort Green Outreach",
-      eventDate: "Sept 9, 2023 SAT 5:00pm",
-      location: {
-        street: "200 Eastern Pkwy",
-        city: "Brooklyn",
-        state: "NY",
-        zipcode: "11238",
-      },
-      helpType: "Childcare Specialist needed",
-      totalSlots: 20,
-      interests: 5,
-    },
-    {
-      userName: "William Smith",
-      title: "BK Fort Green Outreach",
-      eventDate: "Sept 9, 2023 SAT 5:00pm",
-      location: {
-        street: "200 Eastern Pkwy",
-        city: "Brooklyn",
-        state: "NY",
-        zipcode: "11238",
-      },
-      helpType: "Childcare Specialist needed",
-      totalSlots: 20,
-      interests: 5,
-    },
-    {
-      userName: "William Smith",
-      title: "BK Fort Green Outreach",
-      eventDate: "Sept 9, 2023 SAT 5:00pm",
-      location: {
-        street: "200 Eastern Pkwy",
-        city: "Brooklyn",
-        state: "NY",
-        zipcode: "11238",
-      },
-      helpType: "Childcare Specialist needed",
-      totalSlots: 20,
-      interests: 5,
-    },
-  ];
 
   const [events, setEvents] = useState([]);
-  const [visitLogs, setVisitLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [eventsDisplay, setEventsDisplay] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
@@ -70,14 +24,14 @@ const CommunityOutreachEvent = () => {
   useEffect(() => {
     const fetchData = async () => {
       const eventsData = await fetchEvents();
-      // const visitLogsData = await fetchVisitLogs();
-      // setVisitLogs(visitLogsData);
-      // Filter events to get only past events
+
+      // Filter events to get only upcoming events
       const upcomingEvents = eventsData.filter((event) => {
         const eventDate = new Date(event.eventDate?.seconds * 1000) || event.eventDate;
-        return eventDate >= new Date(); // Check if the event date is before the current date
+        return eventDate >= new Date(); // Check if the event date is after the current date
       });
-      // Sort events in place based on their date
+
+      // Sort events based on their date
       upcomingEvents.sort((a, b) => a.eventDate - b.eventDate);
 
       setEvents(upcomingEvents);
@@ -92,21 +46,11 @@ const CommunityOutreachEvent = () => {
   }, []);
 
   useEffect(() => {
-    setEventsDisplay(events);
-  }, [events]);
-
-  useEffect(() => {
-    if (eventsDisplay.length > 0) {
+    setEventsDisplay(events.slice(0, visibleItems));
+    if (events.length > 0) {
       setIsLoading(false);
     }
-  }, [eventsDisplay]);
-
-  const upcomingEvents = events
-    .filter((event) => {
-      const eventDate = new Date(event.eventDate?.seconds * 1000) || event.eventDate;
-      return eventDate >= new Date(); // Check if the event date is before the current date
-    })
-    .slice(0, 3);
+  }, [events, visibleItems]);
 
   return (
     <div>
@@ -115,9 +59,7 @@ const CommunityOutreachEvent = () => {
           <div className="">
             <div className="flex flex-row gap-4">
               <div className="text-[45px] font-medium font-dmsans">
-                {/* Outreach - extending help, resources, and compassion to those in
-            need */}
-                Outreaches ({upcomingEvents.length})
+                Outreaches ({events.length})
               </div>
               <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-medium font-dmsans leading-tight self-stretch">
                 <CustomButton
@@ -128,15 +70,8 @@ const CommunityOutreachEvent = () => {
                   }}
                 />
               </div>
-
             </div>
             <div className="text-md font-medium font-dmsans text-[#181818] mt-2">
-              {/* Homeless outreach involves both community-wide and personal efforts
-            to support individuals experiencing homelessness. Community outreach
-            brings together groups and organizations to create systemic change,
-            while personal outreach involves one-on-one assistance. Homeless
-            outreach is crucial because it provides immediate help and fosters
-            empathy, building a more compassionate society. */}
               What are help requests and how can they help you? If you are ready
               to help people now, kindly sign up to outreaches
             </div>
@@ -156,8 +91,6 @@ const CommunityOutreachEvent = () => {
         </div>
       </div>
       <div className="px-4 py-8 pb-4 lg:px-10 lg:pb-10">
-        <div className="flex items-center justify-between">
-        </div>
         <>
           {isLoading ? (
             <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
@@ -168,7 +101,7 @@ const CommunityOutreachEvent = () => {
           ) : (
             <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
               {selectedState === ""
-                ? upcomingEvents.map((eventData) => (
+                ? eventsDisplay.map((eventData) => (
                     <OutreachEventCard
                       key={eventData.id}
                       cardData={{
@@ -195,14 +128,6 @@ const CommunityOutreachEvent = () => {
             </div>
           )}
         </>
-        {visibleItems < cardData.length && (
-          <button
-            className="w-full px-6 py-2.5 rounded-full text-sm font-medium text-violet-950 font-['DM Sans'] border border-stone-300"
-            onClick={loadMore}
-          >
-            Load More
-          </button>
-        )}
       </div>
     </div>
   );

@@ -1,12 +1,39 @@
-import React from "react";
 import "../../App.css";
-
+import React, { useState, useEffect } from "react";
 import banner from "../../images/community_banner.png";
 import one from "../../images/community_bg1.png";
 import two from "../../images/community_bg3.png";
+import { fetchHelpRequests } from "../HelpRequestService";
+
+function Spinner() {
+  return (
+    <div className="spinner"></div>
+  );
+}
 
 function Metrics() {
+  const [helpRequests, setHelpRequests] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const helpRequestData = await fetchHelpRequests();
+        setHelpRequests(helpRequestData);
+      } catch (error) {
+        console.error("Error fetching help requests:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const numberOfHelpRequests = helpRequests.length;
+
   return (
+    
     <div className="bg-white rounded-3xl lg:text-[18px] md:text-[18px] text-[12px] relative z-[9] md:mx-24 -bottom-16">
       <div className="flex flex-wrap h-fit">
         {/* Column 1 */}
@@ -59,8 +86,7 @@ function Metrics() {
           </p>
           <p className=" text-center">
             <span className="text-xl mt-auto font-bold lg:text-[38px] md:text-[28px] sm:text-[38px] lg:inline-block md:block block sm:mb-[10px]">
-              
-            </span>{" "}
+            {isLoading ? "Loading..." : numberOfHelpRequests}</span>{" "}
           </p>
           <p className="text-[#1F0A58] text-center">available</p>
         </div>
@@ -100,7 +126,7 @@ function Banner() {
           </div>
         </div>
       </div>
-      <Metrics />
+      <Metrics  />
     </div>
   );
 }
