@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import { fetchPublicVisitLogs } from "./VisitLogCardService";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
-import { parse } from 'date-fns';
+import { parse } from "date-fns";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -58,7 +58,7 @@ const AllOutreachVisitLog = () => {
     const sortedLogs = visitLogs.filter((log) => {
       const dateFormat = "MMM d, yyyy EEE hh:mm a"; // Define the date format
       const logDate = parse(log.eventDate, dateFormat, new Date());
-
+      console.log(log.eventDate);
       if (startDate && logDate < startDate) return false;
       if (endDate && logDate > endDate) return false;
       return true;
@@ -71,7 +71,7 @@ const AllOutreachVisitLog = () => {
     if (sortOption === "startDate" || sortOption === "endDate") {
       filterByDate();
     }
-  }, [filterByDate,startDate, endDate, sortOption]);
+  }, [filterByDate, startDate, endDate, sortOption]);
 
   // Get current logs based on pagination
   const indexOfLastLog = currentPage * logsPerPage;
@@ -116,7 +116,7 @@ const AllOutreachVisitLog = () => {
                   ref={searchRef}
                   onChange={searchChange}
                   className="form-input w-fit md:w-[20rem] lg:w-[18rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-10 rounded-2xl"
-                  style={{ borderRadius: '0px' }}
+                  style={{ borderRadius: "0px" }}
                 />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -135,12 +135,14 @@ const AllOutreachVisitLog = () => {
 
               {/* Sort by filter */}
               <div className="flex items-center">
-                <label className="mr-2 text-gray-500 font-medium">Filter:</label>
+                <label className="mr-2 text-gray-500 font-medium">
+                  Filter:
+                </label>
                 <select
                   value={sortOption}
                   onChange={handleSortChange}
                   className="form-select w-fit md:w-[8rem] py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block rounded-2xl"
-                  style={{ borderRadius: '0px' }}
+                  style={{ borderRadius: "0px" }}
                 >
                   <option value="startDate">Start Date</option>
                   <option value="endDate">End Date</option>
@@ -197,7 +199,11 @@ const AllOutreachVisitLog = () => {
               </div>
               {/* Pagination */}
               <div className="flex justify-center mt-8">
-                {[...Array(Math.ceil(filteredVisitLogs.length / logsPerPage)).keys()].map((i) => (
+                {[
+                  ...Array(
+                    Math.ceil(filteredVisitLogs.length / logsPerPage)
+                  ).keys(),
+                ].map((i) => (
                   <button
                     key={i + 1}
                     className={`mx-2 px-4 py-2 border rounded-full ${
