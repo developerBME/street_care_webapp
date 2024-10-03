@@ -129,6 +129,13 @@ function Profile() {
               <div class="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage text-left leading-[52px]">
                 Signed Up Outreaches
               </div>
+              <CustomButton
+              label="More Signed Up Outreaches"
+              name="buttondefault"
+              onClick={() => {
+                navigate("/profile/allSignedUpOutreaches");
+              }}
+            />
             </div>
             {/* <div className="pt-4">
               <div className="w-full flex flex-col sm:flex-row bg-[#F2F6D8] p-4 rounded-xl gap-4 justify-between">
@@ -152,7 +159,7 @@ function Profile() {
                 />
               ) : (
                 <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 mb-6">
-                  {signedUpEvents.map((eventData) => (
+                  {signedUpEvents.slice(0,3).map((eventData) => (
                     <OutreachEventCard
                       key={eventData.id}
                       cardData={{
