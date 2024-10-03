@@ -12,7 +12,9 @@ import {
   startAfter,
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { fetchUserDetails, formatDate } from "./EventCardService";
+import { fetchUserDetails } from "./EventCardService";
+import { fetchUserName, formatDate, getNumberOfPages } from "./HelperFunction";
+
 import logEvent from "./FirebaseLogger";
 
 const VISIT_LOG_COLLECTION = "testLog";
@@ -294,49 +296,10 @@ export const fetchPersonalVisitLogById = async (visitLogId) => {
   }
 };
 
-export async function calculateNumberOfPagesForVisitlog(visitlogPerPage) {
-  if (visitlogPerPage < 1 || visitlogPerPage > 10) {
-    throw new Error(
-      "The number of visitlogs per page must be between 1 and 10."
-    );
+
+export async function calculateNumberOfPagesForVisitlog(visitlogsPerPage) {
+  return getNumberOfPages(visitlogsPerPage, PERSONAL_VISIT_LOG_COLLECTION);
   }
-
-  const visitlogRef = collection(db, PERSONAL_VISIT_LOG_COLLECTION);
-  const snapshot = await getDocs(visitlogRef);
-  const totalVisitlogs = snapshot.size;
-
-  return Math.ceil(totalVisitlogs / visitlogPerPage);
-}
-
-const fetchUserName = async (uid) => {
-  // Reference to the uid instead of the docid of the user.
-  const userQuery = query(
-    collection(db, USERS_COLLECTION),
-    where("uid", "==", uid)
-  );
-  const userDocRef = await getDocs(userQuery);
-
-  const userDocID = userDocRef.docs[0]?.id;
-  // reference for the userdoc
-  if(userDocID !== undefined){
-    const userRef = doc(db, USERS_COLLECTION, userDocID);
-    const userDoc = await getDoc(userRef);
-    
-    if (userDoc !== undefined || userDoc.exists()) {
-      return userDoc.data().username || "";
-    } else {
-      console.error("No user found with uid:", uid);
-      logEvent(
-        "STREET_CARE_ERROR",
-        `error on fetchUserName VisitLogCardService.js- No user Found ${uid}`
-      );
-      throw new Error(
-        `error on fetchUserName VisitLogCardService.js- No user Found ${uid}`
-      );
-      return "";
-    }
-  }
-};
 
 export const fetchVisitLogsByCityOrState = async (
   searchValue,

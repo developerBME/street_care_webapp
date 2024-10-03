@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Modal } from "@mui/material";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 // import FAQs from "./HomePage/FAQs";
@@ -21,11 +22,10 @@ import Process2 from "./HomePage/Process2";
 import arrowRight from "../images/arrowRight.png";
 import OutreachEventCard from "./Community/OutreachEventCard";
 import {
-  formatDate,
   fetchEvents,
   fetchOfficialEvents,
 } from "./EventCardService";
-
+import { formatDate } from "./HelperFunction";
 import BMEcardimg1 from "../images/BMEofficialcardimg1.png";
 import BMEcardimg2 from "../images/BMEofficialcardimg2.png";
 import BMEcardimg3 from "../images/BMEofficialcardimg3.png";
@@ -35,6 +35,8 @@ import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 import PastOutreachEventCardSkeleton from "./Skeletons/PastOutreachEventCardSkeleton";
 import ErrorMessage from "./ErrorMessage";
 // import MoreAboutUs2 from "./HomePage/MoreAboutUs2";
+import OutreachSignupModal from "./Community/OutreachSignupModal";
+import RSVPConfirmationModal from "./UserProfile/RSVPConfirmationModal";
 
 function HomePage() {
   const navigate = useNavigate();
@@ -149,79 +151,95 @@ function HomePage() {
     news: false,
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const eventsData = await fetchEvents();
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [showSignUpModal, setShowSignUpModal] = useState(false);
+  const [showWithdrawnModal, setShowWithdrawnModal] = useState(false);
+  const [triggerEffect, setTriggerEffect] = useState(false);
 
-        eventsData.sort((a, b) => a.eventDate - b.eventDate);
-        setEvents(eventsData);
-      } catch (error) {
-        setIsError((prev) => {
-          return {
-            ...prev,
-            events: true,
-          };
-        });
-        setEvents([]);
-        setErrorMsg((prev) => {
-          return {
-            ...prev,
-            events: "Events could not be loaded. Please try again later.",
-          };
-        });
-      }
-    };
-    const fetchOfficialData = async () => {
-      try {
-        const eventsData = await fetchOfficialEvents();
+  const openModal = (event) => {
+    setSelectedEvent(event);
+  };
 
-        eventsData.sort((a, b) => a.eventDate - b.eventDate);
-        let limitedData = eventsData.slice(0, 3);
-        setOffevents(limitedData);
-      } catch (error) {
-        setIsError((prev) => {
-          return {
-            ...prev,
-            officialEvents: true,
-          };
-        });
-        setOffevents([]);
-        setErrorMsg((prev) => {
-          return {
-            ...prev,
-            events: "Events could not be loaded. Please try again later.",
-          };
-        });
-      }
-    };
+  const closeModal = () => {
+    setSelectedEvent(null);
+  };
 
-    const fetchnewsData = async () => {
-      try {
-        // Display 3 news initially
-        let limitedData = NewsCardData.slice(0, 3);
-        setnewsevents(limitedData);
-      } catch (error) {
-        setIsError((prev) => {
-          return {
-            ...prev,
-            news: true,
-          };
-        });
-        setnewsevents([]);
-        setErrorMsg((prev) => {
-          return {
-            ...prev,
-            events: "News events could not be loaded. Please try again later.",
-          };
-        });
-      }
-    };
+  const onSignUp = () => {
+    setSelectedEvent(null);
+    setShowSignUpModal(true);
+    setIsLoading(true);
+  };
+  
+  const closeSignUpModal = () => {
+    setShowSignUpModal(false);
+    setTriggerEffect(prev => !prev);
+  };
+  
+  const onEventWithdraw = () => {
+    setSelectedEvent(null);
+    setShowWithdrawnModal(true);
+    setIsLoading(true);
+    setTriggerEffect(prev => !prev);
+  };
 
+  const closeWithdrawModal = () => {
+    setShowWithdrawnModal(false);
+  }
+
+  const fetchData = async () => {
+    try {
+      const eventsData = await fetchEvents();
+      eventsData.sort((a, b) => a.eventDate - b.eventDate);
+      setEvents(eventsData);
+    } catch (error) {
+      setIsError(prev => ({ ...prev, events: true }));
+      setEvents([]);
+      setErrorMsg(prev => ({
+        ...prev,
+        events: "Events could not be loaded. Please try again later.",
+      }));
+    }
+  };
+
+  const fetchOfficialData = async () => {
+    try {
+      const eventsData = await fetchOfficialEvents();
+      eventsData.sort((a, b) => a.eventDate - b.eventDate);
+      const limitedData = eventsData.slice(0, 3);
+      setOffevents(limitedData);
+    } catch (error) {
+      setIsError(prev => ({ ...prev, officialEvents: true }));
+      setOffevents([]);
+      setErrorMsg(prev => ({
+        ...prev,
+        officialEvents: "Official events could not be loaded. Please try again later.",
+      }));
+    }
+  };
+
+  const fetchnewsData = async () => {
+    try {
+      const limitedData = NewsCardData.slice(0, 3);
+      setnewsevents(limitedData);
+    } catch (error) {
+      setIsError(prev => ({ ...prev, news: true }));
+      setnewsevents([]);
+      setErrorMsg(prev => ({
+        ...prev,
+        news: "News events could not be loaded. Please try again later.",
+      }));
+    }
+  };
+
+  const loadData = () => {
     fetchData();
     fetchOfficialData();
     fetchnewsData();
-  }, []);
+  };
+
+  useEffect(() => {
+    loadData();
+  }, [triggerEffect]);
 
   useEffect(() => {
     if (events) {
@@ -260,7 +278,7 @@ function HomePage() {
   useEffect(() => {
     document.title = "Home - Street Care";
   }, []);
-
+ 
   return (
     // <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
     <div className="relative flex flex-col items-center ">
@@ -310,11 +328,15 @@ function HomePage() {
                     cardData={{
                       ...eventData,
                       eventDate: eventData.eventDate?.seconds
-                        ? formatDate(
-                            new Date(eventData.eventDate.seconds * 1000)
-                          )
+                        ? formatDate(new Date(eventData.eventDate.seconds * 1000))
                         : eventData.eventDate,
                     }}
+                    openModal={() => openModal({
+                      ...eventData,
+                      eventDate: eventData.eventDate?.seconds
+                        ? formatDate(new Date(eventData.eventDate.seconds * 1000))
+                        : eventData.eventDate,
+                    })}
                   />
                 ))}
               </div>
@@ -456,6 +478,15 @@ function HomePage() {
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-16 rounded-2xl bg-white text-black ">
         <FAQs />
       </div>
+      <Modal open={!!selectedEvent}>
+        <OutreachSignupModal data={{...selectedEvent}} closeModal={closeModal} onSignUp={onSignUp} onEventWithdraw={onEventWithdraw}/>
+      </Modal>
+      <Modal open={showSignUpModal}>
+       <RSVPConfirmationModal closeModal={closeSignUpModal} type='edit'/>
+      </Modal>
+      <Modal open={showWithdrawnModal}>
+       <RSVPConfirmationModal closeModal={closeWithdrawModal} type='withdraw' />
+      </Modal>
     </div>
     // </div>
   );

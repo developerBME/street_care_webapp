@@ -96,6 +96,17 @@ const HelpRequest = () => {
             ))}
           </div>
         </div>
+      
+       {/* {visibleItems < helpRequests.length && (
+          <button
+            className="w-fit rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 flex text-center text-[#1F0A58] hover:bg-[#1F0A58] hover:text-white text-[13px] font-medium font-dmsans leading-tight self-stretch px-6 py-2.5"
+            onClick={loadMore}
+          >
+            Load 5 More
+          </button>
+        )}*/}
+      </div>
+      
       )}
     </div>
   );

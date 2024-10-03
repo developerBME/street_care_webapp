@@ -5,6 +5,7 @@ import arrowRight from "../../images/arrowRight.png";
 import CustomButton from "../Buttons/CustomButton";
 import { fetchEvents, formatDate } from "../EventCardService";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
+import { formatDate } from "./../HelperFunction";
 
 const CommunityOutreachEvent = () => {
   const [visibleItems, setVisibleItems] = useState(3);

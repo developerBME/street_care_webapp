@@ -179,7 +179,7 @@ const OutreachEvents = (props) => {
     paginate();
   }, [pageNumber, paginate]);
 
-  const searchChange = (event) => {
+  const searchChange = useCallback((event) => {
     event.preventDefault();
     let searchTerm = event.target.value.toLowerCase();
 
@@ -192,7 +192,7 @@ const OutreachEvents = (props) => {
             .slice(0, 10)
         : dummyData.slice(0, 10)
     );
-  };
+  }, []);
 
   const filterNames = useCallback((values) => {
     setOutreachData(
@@ -207,7 +207,6 @@ const OutreachEvents = (props) => {
   }, []);
 
   const sortTable = (key) => {
-    console.log("key: ", key);
     let sortType = (tableHeaders[key].sorted + 1) % 3;
     setTableHeaders((prev) => ({
       ...initTableHeaders,
