@@ -379,7 +379,7 @@ export default function UserListNew() {
               </tbody>
             </table>
             <div className={`flex justify-between p-4 ${isMobile ? "flex-col items-start" : "items-center"}`}>
-              <div>Showing {usersPerPage} results per page</div>
+              <div>Showing {usersPerPage} of {filteredUsers.length} users</div>
               <div className="flex justify-between md:justify-end mt-6 items-center">
                 {currentPage === 1 ? (
                   <IoChevronBackCircle className="w-8 h-8 text-[#565656]" />
