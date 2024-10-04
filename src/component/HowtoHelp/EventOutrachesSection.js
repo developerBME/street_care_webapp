@@ -76,7 +76,7 @@ const EventOutrachesSection = () => {
             setVisitLogs(visitLogsData);
             // Filter events to get only past events
             const upcomingEvents = eventsData.filter((event) => {
-                const eventDate = new Date(event.eventDate.seconds * 1000);
+                const eventDate = new Date(event?.eventDate?.seconds * 1000);
                 return eventDate <= new Date(); // Check if the event date is before the current date
             });
             // Sort events in place based on their date

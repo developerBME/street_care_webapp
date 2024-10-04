@@ -176,6 +176,14 @@ export const fetchOfficialEvents = async () => {
 export const fetchUserDetails = async (uid) => {
 	try {
 		// Reference to the uid instead of the docid of the user.
+		// Check if uid is valid
+		if (!uid) {
+			console.warn("Invalid User Id", uid);
+			return {
+				username: '',
+				photoUrl: '',
+			};
+		}
 		const userQuery = query(
 			collection(db, USERS_COLLECTION),
 			where('uid', '==', uid)
@@ -183,6 +191,7 @@ export const fetchUserDetails = async (uid) => {
 		const userDocRef = await getDocs(userQuery);
 		// const userDocID = userDocRef.docs[0].id;
 		const userData = userDocRef.docs[0]?.data();
+
 		return {
 			username: userData?.username || '',
 			photoUrl: userData?.photoUrl || '',
