@@ -193,6 +193,14 @@ import {
  export const fetchUserDetails = async (uid) => {
   try {
     // Reference to the uid instead of the docid of the user.
+	// Check if uid is valid
+	if (!uid) {
+		console.warn("Invalid User Id", uid);
+		return {
+				username: '',
+				photoUrl: '',
+		};
+	}
     const userQuery = query(
       collection(db, USERS_COLLECTION),
       where("uid", "==", uid)
