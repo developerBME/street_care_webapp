@@ -15,8 +15,8 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
-import { formatDate } from "../EventCardService";
 import DeleteModal from "./DeleteModal";
+import { formatDate } from "./../HelperFunction";
 
 const USERS_COLLECTION = "users";
 

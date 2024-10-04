@@ -5,9 +5,10 @@ import arrowDropDown from "../../images/arrowDropDown.png";
 import arrowRight from "../../images/arrowRight.png";
 import CustomButton from "../Buttons/CustomButton";
 import OutreachVisitLogCard from "../Community/OutreachVisitLogCard";
-import { fetchEvents, formatDate } from "../EventCardService";
+import { fetchEvents } from "../EventCardService";
 import { fetchVisitLogs } from "../VisitLogCardService";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
+import { formatDate } from "./../HelperFunction";
 
 const EventOutrachesSection = () => {
     const [visibleItems, setVisibleItems] = useState(3);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import OutreachEventCard from "./Community/OutreachEventCard";
-import { formatDate, fetchEvents } from "./EventCardService";
+import { fetchEvents } from "./EventCardService";
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
@@ -10,6 +10,8 @@ import RSVPConfirmationModal from "./UserProfile/RSVPConfirmationModal";
 import { parse } from "date-fns";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { formatDate } from "./HelperFunction";
+
 
 // Main component for displaying all outreach events
 const AllOutreachEvents = () => {
