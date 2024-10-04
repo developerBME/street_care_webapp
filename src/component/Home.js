@@ -21,13 +21,10 @@ import Process2 from "./HomePage/Process2";
 import arrowRight from "../images/arrowRight.png";
 import OutreachEventCard from "./Community/OutreachEventCard";
 import {
-  formatDate,
   fetchEvents,
   fetchOfficialEvents,
 } from "./EventCardService";
-import HomePageUpcomingOutreach from "./HomePage/HomePageUpcomingOutreach";
-import HomePagePastOutreach from "./HomePage/HomePagePastOutreach";
-
+import { formatDate } from "./HelperFunction";
 import BMEcardimg1 from "../images/BMEofficialcardimg1.png";
 import BMEcardimg2 from "../images/BMEofficialcardimg2.png";
 import BMEcardimg3 from "../images/BMEofficialcardimg3.png";
@@ -268,7 +265,7 @@ function HomePage() {
         .filter((event) => {
           const eventDate =
             new Date(event.eventDate?.seconds * 1000) || event.eventDate;
-          return eventDate >= new Date(); // Check if the event date is before the current date
+          return eventDate >= new Date(); // Check if the event date is after the current date
         })
         .slice(0, 3)
     : [];
