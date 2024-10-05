@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
-import { formatDate, fetchEvents } from "../EventCardService";
+import { fetchEvents } from "../EventCardService";
 import PastOutreachEventCardSkeleton from "../Skeletons/PastOutreachEventCardSkeleton";
 import OutreachEventCard from "../Community/OutreachEventCard";
 import CustomButton from "../Buttons/CustomButton";
 import arrowRight from "../../images/arrowRight.png";
+import { formatDate } from "./../HelperFunction";
 
 const CommunityOutreachEventsPast = () => {
   const navigate = useNavigate();
