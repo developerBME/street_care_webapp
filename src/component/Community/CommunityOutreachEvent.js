@@ -4,7 +4,9 @@ import { useNavigate } from "react-router-dom";
 import arrowRight from "../../images/arrowRight.png";
 import CustomButton from "../Buttons/CustomButton";
 import { fetchEvents, formatDate } from "../EventCardService";
+import { fetchVisitLogs } from "../VisitLogCardService";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
+import { formatDate } from "./../HelperFunction";
 
 const CommunityOutreachEvent = () => {
   const [visibleItems, setVisibleItems] = useState(3);

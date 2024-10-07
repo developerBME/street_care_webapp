@@ -6,12 +6,12 @@ import help_announcement from "../../images/help_announcement.png";
 import ConfirmationModal from "./ConfirmationModal";
 import {
   fetchHelpReqById,
-  fetchUserName,
   fetchOutreaches,
 } from "../HelpRequestService";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import ICanHelpConfirmationModal from "./ICanHelpConfirmationModal";
 import { Timestamp } from "@firebase/firestore";
+import { fetchUserName } from "./../HelperFunction";
 
 const ICanHelpForm = () => {
   const navigate = useNavigate();
