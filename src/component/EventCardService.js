@@ -17,8 +17,8 @@ import logEvent from './FirebaseLogger';
 import { Timestamp } from 'firebase/firestore';
 
 const OFFICIAL_EVENTS_COLLECTION = 'officialEvents';
-const OUTREACH_EVENTS_COLLECTION = 'outreachEvents';
-const PAST_OUTREACH_EVENTS_COLLECTION = 'pastOutreachEvents';
+const OUTREACH_EVENTS_COLLECTION = 'outreachEventsDev';
+// const PAST_OUTREACH_EVENTS_COLLECTION = 'pastOutreachEvents';
 const USERS_COLLECTION = 'users';
 const PERSONAL_VISIT_LOG = 'personalVisitLog';
 
@@ -118,7 +118,7 @@ export const fetchPastOutreachEvents = async () => {
 	try {
 		const pastOureachEventsRef = collection(
 			db,
-			PAST_OUTREACH_EVENTS_COLLECTION
+			OUTREACH_EVENTS_COLLECTION
 		);
 		const eventSnapshot = await getDocs(pastOureachEventsRef);
 
@@ -588,7 +588,7 @@ export const fetchByCityOrState = async (searchValue, startDate, endDate) => {
 			return;
 		}
 
-		const pastOutreachRef = collection(db, PAST_OUTREACH_EVENTS_COLLECTION);
+		const pastOutreachRef = collection(db, OUTREACH_EVENTS_COLLECTION);
 		// Full text search - Search filtering by City/State fields matching exact value
 
 		const outreachByLocationQuery = query(
@@ -629,7 +629,7 @@ export const fetchPastOutreaches = async () => {
 	try {
 		const pastOureachEventsRef = collection(
 			db,
-			PAST_OUTREACH_EVENTS_COLLECTION
+			OUTREACH_EVENTS_COLLECTION
 		);
 		const outreachDocRef = await getDocs(pastOureachEventsRef);
 
@@ -655,7 +655,7 @@ export const fetchByCityOrStates = async (
 	try {
 		const pastOureachEventsRef = collection(
 			db,
-			PAST_OUTREACH_EVENTS_COLLECTION
+			OUTREACH_EVENTS_COLLECTION
 		);
 		const outreachDocRef = await getDocs(pastOureachEventsRef);
 
@@ -669,7 +669,7 @@ export const fetchByCityOrStates = async (
 			searchValue == ''
 		) {
 			const pastOutreachRef = query(
-				collection(db, PAST_OUTREACH_EVENTS_COLLECTION),
+				collection(db, OUTREACH_EVENTS_COLLECTION),
 				where('eventDate', '>=', startDate),
 				where('eventDate', '<=', endDate),
 				orderBy('eventDate', 'desc')
@@ -726,7 +726,7 @@ export const fetchByCityOrStates = async (
 		}
 		// const pastOutreachRef = collection(db, PAST_OUTREACH_EVENTS_COLLECTION);
 		const pastOutreachRef = query(
-			collection(db, PAST_OUTREACH_EVENTS_COLLECTION),
+			collection(db, OUTREACH_EVENTS_COLLECTION),
 			where('location.city', '==', searchValue),
 			where('eventDate', '>=', startDate),
 			where('eventDate', '<=', endDate)
@@ -920,7 +920,7 @@ export async function calculateNumberOfPagesForOutreach(
 	currentPage = 0
 ) {
 	const testoutreachRef = query(
-		collection(db, PAST_OUTREACH_EVENTS_COLLECTION),
+		collection(db, OUTREACH_EVENTS_COLLECTION),
 		orderBy('createdAt', 'asc')
 	);
 	const snapshot = await getDocs(testoutreachRef);
@@ -933,7 +933,7 @@ export async function calculateNumberOfPagesForOutreach(
 	// console.log('starting is: '+ firstdoc);
 
 	const outreachRef = query(
-		collection(db, PAST_OUTREACH_EVENTS_COLLECTION),
+		collection(db, OUTREACH_EVENTS_COLLECTION),
 		orderBy('createdAt', 'asc'),
 		startAt(startDoc),
 		limit(outreachPerPage)
