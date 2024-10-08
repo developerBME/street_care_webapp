@@ -10,7 +10,7 @@ import {
   Timestamp,
   orderBy,
   startAt,
-  limit
+  limit,
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -37,6 +37,7 @@ export const fetchHelpRequests = async () => {
 
     for (const doc of helpSnapshot.docs) {
       const helpData = doc.data();
+      console.log("Help Data: ", helpData);
       const id = doc.id;
       const userName = await fetchUserName(helpData.uid);
 
@@ -113,9 +114,9 @@ export const fetchUserName = async (uid) => {
 export const fetchTopHelpRequests = async () => {
   try {
     const helpReqRef = collection(db, HELP_REQ_COLLECTION);
-      const allTopHelpRequestsByQuery = query(
+    const allTopHelpRequestsByQuery = query(
       helpReqRef,
-      orderBy('createdAt', 'desc'), // Order help requests by the 'createdAt' field in descending order to get the newest entries first
+      orderBy("createdAt", "desc"), // Order help requests by the 'createdAt' field in descending order to get the newest entries first
       limit(6) // Limit to top 6 records
     );
     const helpRequestDocRef = await getDocs(allTopHelpRequestsByQuery);
@@ -130,7 +131,7 @@ export const fetchTopHelpRequests = async () => {
         id: id,
       });
     }
-    console.log(helpRequests)
+    console.log(helpRequests);
     return helpRequests;
   } catch (error) {
     logEvent(
@@ -147,14 +148,14 @@ export const fetchHelpRequestByUser = async () => {
     const uid = fAuth?.currentUser?.uid;
     //Fetching Help Requests created by the loggedIn user
     const helpReqRef = collection(db, HELP_REQ_COLLECTION);
-      const allhelpRequestsByUserQuery = query(
+    const allhelpRequestsByUserQuery = query(
       helpReqRef,
-      where('uid', '==', uid)
+      where("uid", "==", uid)
     );
 
     const helpRequestDocRef = await getDocs(allhelpRequestsByUserQuery);
     //const userName = await fetchUserName(uid);
-    const userName = fAuth?.currentUser?.displayName
+    const userName = fAuth?.currentUser?.displayName;
 
     let helpRequests = [];
     for (const doc of helpRequestDocRef.docs) {
@@ -166,7 +167,7 @@ export const fetchHelpRequestByUser = async () => {
         id: id,
       });
     }
-    console.log(helpRequests)
+    console.log(helpRequests);
     return helpRequests;
   } catch (error) {
     logEvent(
@@ -272,43 +273,24 @@ export function formatDate(dateObj) {
   return `${month} ${day}, ${year} ${weekday} ${formattedTime}`;
 }
 
-export const handleHelpRecieved = async (e, id, refresh) => {
+export const handleUpdateHelpRequestStatus = async (e, id, status, refresh) => {
   try {
     e.preventDefault();
-    // Reference to the specific document in the Help Request collection
     const helpRequestRef = doc(db, HELP_REQ_COLLECTION, id);
-    const updateRef = await updateDoc(helpRequestRef, {
-      status: "Help Received",
-    });
-    console.log("HELP REQ UPDATED");
-    if (typeof refresh == "function") {
-      refresh();
-    }
-  } catch (error) {
-    logEvent(
-      "STREET_CARE_ERROR",
-      `error on fetchUserName HelpRequestService.js- ${error.message}`
-    );
-    throw error;
-  }
-};
 
-export const handleReopenHelpRequest = async (e, id, refresh) => {
-  try {
-    e.preventDefault();
-    // Reference to the specific document in the Help Request collection
-    const helpRequestRef = doc(db, HELP_REQ_COLLECTION, id);
-    const updateRef = await updateDoc(helpRequestRef, {
-      status: "Need Help",
+    await updateDoc(helpRequestRef, {
+      status: status,
     });
+
     console.log("HELP REQ UPDATED");
+
     if (typeof refresh == "function") {
       refresh();
     }
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on handleReopenHelpRequest HelpRequestService.js- ${error.message}`
+      `error on handleUpdateHelpRequestStatus HelpRequestService.js- ${error.message}`
     );
     throw error;
   }
@@ -373,14 +355,25 @@ export async function calculateNumberOfPagesForHelpReq(helpReqPerPage) {
   return Math.ceil(totalHelpRequests / helpReqPerPage);
 }
 
-export async function getHelpRequestsWithPageIndex(pageIndex = 0, numberOfEventsPerPage = 5){
-  const q = query(collection(db, HELP_REQ_COLLECTION), orderBy("createdAt","asc"));
+export async function getHelpRequestsWithPageIndex(
+  pageIndex = 0,
+  numberOfEventsPerPage = 5
+) {
+  const q = query(
+    collection(db, HELP_REQ_COLLECTION),
+    orderBy("createdAt", "asc")
+  );
   const documentSnapshots = await getDocs(q);
 
-  const startIndex = pageIndex*numberOfEventsPerPage;
+  const startIndex = pageIndex * numberOfEventsPerPage;
   const startDoc = documentSnapshots.docs[startIndex];
 
-  let docsq = query(collection(db, HELP_REQ_COLLECTION), orderBy("createdAt","asc"), startAt(startDoc),limit(numberOfEventsPerPage));
+  let docsq = query(
+    collection(db, HELP_REQ_COLLECTION),
+    orderBy("createdAt", "asc"),
+    startAt(startDoc),
+    limit(numberOfEventsPerPage)
+  );
   const pageResults = await getDocs(docsq);
   return pageResults;
 }

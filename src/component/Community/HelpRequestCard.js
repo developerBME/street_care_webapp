@@ -6,8 +6,7 @@ import CustomButton from "../Buttons/CustomButton";
 import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import {
-  handleHelpRecieved,
-  handleReopenHelpRequest,
+  handleUpdateHelpRequestStatus,
 } from "../HelpRequestService";
 import { Timestamp } from "@firebase/firestore";
 
@@ -30,7 +29,8 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
     createdAt,
   } = helpRequestCardData;
 
-  const createdAtDate = (createdAt instanceof Timestamp) ? createdAt.toDate() : new Date(createdAt);
+  const createdAtDate =
+    createdAt instanceof Timestamp ? createdAt.toDate() : new Date(createdAt);
 
   const currentTimestamp = new Date().getTime();
   const timeDifference = currentTimestamp - createdAtDate.getTime();
@@ -178,7 +178,8 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
                     ? () => {
                         navigate(`/login`);
                       }
-                    : (e) => handleHelpRecieved(e, id, refresh)
+                    : (e) =>
+                        handleUpdateHelpRequestStatus(e, id, "Help Received", refresh)
                 }
               >
                 Mark as Help Recieved
@@ -211,7 +212,9 @@ const HelpRequestCard = ({ helpRequestCardData, refresh }) => {
                 <CustomButton
                   label="Reopen Help Request"
                   name="buttonborder"
-                  onClick={(e) => handleReopenHelpRequest(e, id, refresh)}
+                  onClick={(e) =>
+                    handleUpdateHelpRequestStatus(e, id, "Need Help", refresh)
+                  }
                 />
               </div>
             )}
