@@ -18,7 +18,7 @@ import { fetchUserName, formatDate, getNumberOfPages } from "./HelperFunction";
 import logEvent from "./FirebaseLogger";
 
 const VISIT_LOG_COLLECTION = "testLog";
-const OUTREACH_EVENTS_COLLECTION = "outreachEventsDev";
+const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
 const USERS_COLLECTION = "users";
 const PERSONAL_VISIT_LOG_COLLECTION = "personalVisitLog";
 const VISIT_LOG_COLLECTION_PROD = "visitLogWebProd";
