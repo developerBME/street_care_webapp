@@ -19,7 +19,8 @@ import {
  
  const OFFICIAL_EVENTS_COLLECTION = "officialEvents";
  const OUTREACH_EVENTS_COLLECTION = "outreachEventsDev";
- const PAST_OUTREACH_EVENTS_COLLECTION = "pastOutreachEvents";
+ const PAST_OUTREACH_EVENTS_COLLECTION = "outreachEventsDev";
+// const PAST_OUTREACH_EVENTS_COLLECTION = "pastOutreachEvents";
  const USERS_COLLECTION = "users";
  // const PERSONAL_VISIT_LOG = "personalVisitLog";
  

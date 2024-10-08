@@ -20,7 +20,7 @@ import logEvent from "./FirebaseLogger";
 const VISIT_LOG_COLLECTION = "testLog";
 const OUTREACH_EVENTS_COLLECTION = "outreachEventsDev";
 const USERS_COLLECTION = "users";
-const PERSONAL_VISIT_LOG_COLLECTION = "personalVisitLog";
+// const PERSONAL_VISIT_LOG_COLLECTION = "personalVisitLog";
 const VISIT_LOG_COLLECTION_PROD = "visitLogWebProd";
 const PERSONAL_VISIT_LOG = "personalVisitLog";
 
