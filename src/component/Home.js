@@ -21,13 +21,10 @@ import Process2 from "./HomePage/Process2";
 import arrowRight from "../images/arrowRight.png";
 import OutreachEventCard from "./Community/OutreachEventCard";
 import {
-  formatDate,
   fetchEvents,
   fetchOfficialEvents,
 } from "./EventCardService";
-import HomePageUpcomingOutreach from "./HomePage/HomePageUpcomingOutreach";
-import HomePagePastOutreach from "./HomePage/HomePagePastOutreach";
-
+import { formatDate } from "./HelperFunction";
 import BMEcardimg1 from "../images/BMEofficialcardimg1.png";
 import BMEcardimg2 from "../images/BMEofficialcardimg2.png";
 import BMEcardimg3 from "../images/BMEofficialcardimg3.png";
@@ -268,7 +265,7 @@ function HomePage() {
         .filter((event) => {
           const eventDate =
             new Date(event.eventDate?.seconds * 1000) || event.eventDate;
-          return eventDate >= new Date(); // Check if the event date is before the current date
+          return eventDate >= new Date(); // Check if the event date is after the current date
         })
         .slice(0, 3)
     : [];
@@ -460,7 +457,7 @@ function HomePage() {
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black h-full">
         {/*<News />*/}
 
-        <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
+        {/* <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
           <p className=" text-[25px] lg:text-[45px] font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
             Past Events
           </p>
@@ -482,8 +479,9 @@ function HomePage() {
               />
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
+
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-16 rounded-2xl bg-white text-black ">
         <FAQs />
       </div>

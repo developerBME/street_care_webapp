@@ -1,5 +1,5 @@
 const {
-  calculateNumberOfPages,
+  calculateNumberOfPagesForOutreach,
   formatDate,
   fetchByCityOrState,
   fetchVisitLogsByCityOrState
@@ -11,7 +11,7 @@ const assert = require("assert");
 // Mock Firebase Firestore
 jest.mock("firebase/firestore");
 
-describe("calculateNumberOfPages function", () => {
+describe("calculateNumberOfPagesForOutreach function", () => {
   test("calculates the number of pages correctly", async () => {
     const mockOutreachSnapshot = {
       size: 25, // Mocking the total count of outreaches
@@ -22,7 +22,7 @@ describe("calculateNumberOfPages function", () => {
     const outreachesPerPage = 5;
     const expectedNumberOfPages = 5; // 25 / 5 = 5
 
-    const result = await calculateNumberOfPages(outreachesPerPage);
+    const result = await calculateNumberOfPagesForOutreach(outreachesPerPage);
 
     assert.strictEqual(
       result,
@@ -37,7 +37,7 @@ describe("calculateNumberOfPages function", () => {
 
     await assert.rejects(
       async () => {
-        await calculateNumberOfPages(outreachesPerPage);
+        await calculateNumberOfPagesForOutreach(outreachesPerPage);
       },
       { message: "The number of outreaches per page must be between 1 and 10." }
     );
@@ -48,7 +48,7 @@ describe("calculateNumberOfPages function", () => {
 
     await assert.rejects(
       async () => {
-        await calculateNumberOfPages(outreachesPerPage);
+        await calculateNumberOfPagesForOutreach(outreachesPerPage);
       },
       { message: "The number of outreaches per page must be between 1 and 10." }
     );
