@@ -955,17 +955,33 @@ export const delUserOutreach = async (eventID) => {
       throw new Error("User is not logged in.");
     }
 
+    const uid = user.uid;
+
     const outreachDocRef = doc(db, OUTREACH_EVENTS_COLLECTION, eventID);
     const outreachDocSnapshot = await getDoc(outreachDocRef);
 
     if (!outreachDocSnapshot.exists()) {
-      // console.log(`Outreach with ID: ${eventID} does not exist.`);
       return;
     }
 
+    //Deleting event from Outreach Events
     await deleteDoc(outreachDocRef);
-    // console.log(`Outreach with ID: ${eventID} deleted`);
 
+    //Updating createdEvents field in the users collection 
+    const currentUserDocRef = doc(db, USERS_COLLECTION, uid);
+    const currentUserDocSnapshot = await getDoc(currentUserDocRef);
+
+    if (currentUserDocSnapshot.exists()) {
+      const currentUserData = currentUserDocSnapshot.data();
+
+      if (currentUserData.createdEvents && currentUserData.createdEvents.includes(eventID)) {
+        await updateDoc(currentUserDocRef, {
+          createdEvents: arrayRemove(eventID),
+        });
+      }
+    }
+
+    //Updating outreachEvents field in the users collection 
     const usersSnapshot = await getDocs(collection(db, USERS_COLLECTION));
 
     usersSnapshot.forEach(async (userDoc) => {
@@ -979,10 +995,6 @@ export const delUserOutreach = async (eventID) => {
         await updateDoc(userDocRef, {
           outreachEvents: arrayRemove(eventID),
         });
-
-        // console.log(
-        //   `Removed outreach ID: ${eventID} from user with ID: ${userDoc.id}`
-        // );
       }
     });
   } catch (error) {
