@@ -17,6 +17,7 @@ const AllOutreachVisitLog = () => {
   const [startDate, setStartDate] = useState(new Date("2024-01-02"));
   const [endDate, setEndDate] = useState(new Date());
   const searchRef = useRef("");
+  const searchCity = useRef(""); // Reference for the search city input
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
@@ -36,22 +37,30 @@ const AllOutreachVisitLog = () => {
     const searchValue = searchRef.current.value.toLowerCase();
     setFilteredVisitLogs(
       visitLogs.filter(
-        (log) =>
-          log.location.city.toLowerCase().includes(searchValue) ||
-          log.description.toLowerCase().includes(searchValue)
+        (x) =>
+          x.title.toLowerCase().includes(searchValue) ||
+          x.userName.toLowerCase().includes(searchValue) ||
+          x.location.city.toLowerCase().includes(searchValue) ||
+          x.description.toLowerCase().includes(searchValue)
       )
     );
   };
 
   const handleSortChange = (e) => {
+    setFilteredVisitLogs(filteredVisitLogs);
     const sortBy = e.target.value;
     setSortOption(sortBy);
-    if (sortBy === "city") {
-      const sortedLogs = [...filteredVisitLogs].sort((a, b) =>
-        a.location.city.localeCompare(b.location.city)
-      );
-      setFilteredVisitLogs(sortedLogs);
-    }
+    setFilteredVisitLogs(visitLogs);
+  };
+
+  // Handle search city input change
+  const searchCityChange = () => {
+    const searchValue = searchCity.current.value.toLowerCase();
+    setFilteredVisitLogs(
+      visitLogs.filter((x) =>
+        x.location.city.toLowerCase().includes(searchValue)
+      )
+    );
   };
 
   const filterByDate = () => {
@@ -68,10 +77,10 @@ const AllOutreachVisitLog = () => {
   };
 
   useEffect(() => {
-    if (sortOption === "startDate" || sortOption === "endDate") {
+    if (sortOption === "datePeriod") {
       filterByDate();
     }
-  }, [filterByDate, startDate, endDate, sortOption]);
+  }, [startDate, endDate, sortOption]);
 
   // Get current logs based on pagination
   const indexOfLastLog = currentPage * logsPerPage;
@@ -144,14 +153,29 @@ const AllOutreachVisitLog = () => {
                   className="form-select w-fit md:w-[8rem] py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block rounded-2xl"
                   style={{ borderRadius: "0px" }}
                 >
-                  <option value="startDate">Start Date</option>
-                  <option value="endDate">End Date</option>
+                  <option value="">None</option>
+
                   <option value="city">City</option>
+                  <option value="datePeriod">Date Period</option>
                 </select>
               </div>
 
+              {/* Conditional rendering of City search */}
+              {sortOption === "city" && (
+                <input
+                  type="text"
+                  name="searchCity"
+                  id="searchCity"
+                  placeholder="Search City"
+                  ref={searchCity}
+                  onChange={searchCityChange}
+                  className="form-input w-fit md:w-[12rem] lg:w-[8rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-2 rounded-2xl"
+                  style={{ borderRadius: "0px" }}
+                />
+              )}
+
               {/* Conditional rendering of DatePickers */}
-              {sortOption === "startDate" && (
+              {sortOption === "datePeriod" && (
                 <DatePicker
                   selected={startDate}
                   onChange={(date) => setStartDate(date)}
@@ -159,10 +183,10 @@ const AllOutreachVisitLog = () => {
                   startDate={startDate}
                   endDate={endDate}
                   placeholderText="Select Start Date"
-                  className="form-input w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block rounded-2xl"
+                  className="form-input w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
                 />
               )}
-              {sortOption === "endDate" && (
+              {sortOption === "datePeriod" && (
                 <DatePicker
                   selected={endDate}
                   onChange={(date) => setEndDate(date)}
@@ -170,7 +194,7 @@ const AllOutreachVisitLog = () => {
                   startDate={startDate}
                   endDate={endDate}
                   placeholderText="Select End Date"
-                  className="form-input w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block rounded-2xl"
+                  className="form-input w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
                 />
               )}
             </div>
