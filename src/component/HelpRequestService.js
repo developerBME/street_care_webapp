@@ -212,47 +212,70 @@ export const fetchByCityAndDate = async (
   }
 };
 
-export const handleHelpRecieved = async (e, id, refresh) => {
+export const handleUpdateHelpRequestStatus = async (e, id, status, refresh) => {
   try {
     e.preventDefault();
-    // Reference to the specific document in the Help Request collection
     const helpRequestRef = doc(db, HELP_REQ_COLLECTION, id);
-    const updateRef = await updateDoc(helpRequestRef, {
-      status: "Help Received",
+
+    await updateDoc(helpRequestRef, {
+      status: status,
     });
+
     console.log("HELP REQ UPDATED");
+
     if (typeof refresh == "function") {
       refresh();
     }
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchUserName HelpRequestService.js- ${error.message}`
+      `error on handleUpdateHelpRequestStatus HelpRequestService.js- ${error.message}`
     );
     throw error;
   }
 };
 
-export const handleReopenHelpRequest = async (e, id, refresh) => {
-  try {
-    e.preventDefault();
-    // Reference to the specific document in the Help Request collection
-    const helpRequestRef = doc(db, HELP_REQ_COLLECTION, id);
-    const updateRef = await updateDoc(helpRequestRef, {
-      status: "Need Help",
-    });
-    console.log("HELP REQ UPDATED");
-    if (typeof refresh == "function") {
-      refresh();
-    }
-  } catch (error) {
-    logEvent(
-      "STREET_CARE_ERROR",
-      `error on handleReopenHelpRequest HelpRequestService.js- ${error.message}`
-    );
-    throw error;
-  }
-};
+// export const handleHelpRecieved = async (e, id, refresh) => {
+//   try {
+//     e.preventDefault();
+//     // Reference to the specific document in the Help Request collection
+//     const helpRequestRef = doc(db, HELP_REQ_COLLECTION, id);
+//     const updateRef = await updateDoc(helpRequestRef, {
+//       status: "Help Received",
+//     });
+//     console.log("HELP REQ UPDATED");
+//     if (typeof refresh == "function") {
+//       refresh();
+//     }
+//   } catch (error) {
+//     logEvent(
+//       "STREET_CARE_ERROR",
+//       `error on fetchUserName HelpRequestService.js- ${error.message}`
+//     );
+//     throw error;
+//   }
+// };
+
+// export const handleReopenHelpRequest = async (e, id, refresh) => {
+//   try {
+//     e.preventDefault();
+//     // Reference to the specific document in the Help Request collection
+//     const helpRequestRef = doc(db, HELP_REQ_COLLECTION, id);
+//     const updateRef = await updateDoc(helpRequestRef, {
+//       status: "Need Help",
+//     });
+//     console.log("HELP REQ UPDATED");
+//     if (typeof refresh == "function") {
+//       refresh();
+//     }
+//   } catch (error) {
+//     logEvent(
+//       "STREET_CARE_ERROR",
+//       `error on handleReopenHelpRequest HelpRequestService.js- ${error.message}`
+//     );
+//     throw error;
+//   }
+// };
 
 export async function fetchOutreaches(helpRequestId) {
   console.log("Fetching outreaches for helpRequestId: ", helpRequestId);
