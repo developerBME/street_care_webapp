@@ -5,8 +5,9 @@ import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import OutreachEventCard from "../Community/OutreachEventCard";
 import { auth } from "../firebase";
 import CustomButton from "../Buttons/CustomButton";
-import { formatDate, fetchUserSignedUpOutreaches } from "../EventCardService";
+import { fetchUserSignedUpOutreaches } from "../EventCardService";
 import { useNavigate } from "react-router-dom";
+import { formatDate } from "./../HelperFunction";
 
 const SignedUpOutreaches = () => {
   const [signedUpEvents, setSignedUpEvents] = useState([]);

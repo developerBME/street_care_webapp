@@ -9,20 +9,23 @@ import RSVPConfirmationModal from "./RSVPConfirmationModal";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import OutreachEventCard from "../Community/OutreachEventCard";
 import {
-  formatDate,
-  fetchUserOutreaches,
-  fetchUserSignedUpOutreaches,
-} from "../EventCardService";
-import { auth } from "../firebase";
-import CustomButton from "../Buttons/CustomButton";
+	fetchUserOutreaches,
+	fetchUserSignedUpOutreaches,
+} from '../EventCardService';
+import { auth } from '../firebase';
+import CustomButton from '../Buttons/CustomButton';
+
 // import { fetchPersonalVisitLogs } from "../VisitLogCardService";
 import OutreachVisitLogProfile from "../Community/OutreachVisitLogProfile";
 // import NoOutreachDoc from "../Community/NoOutreachDoc";
-import NoDisplayData from "./NoDisplayData";
-import SignedUpOutreaches from "./SignedUpOutreaches";
-import CreatedOutreaches from "./CreatedOutreaches";
-import CreatedHelpRequests from "./CreatedHelpRequests";
-import ErrorMessage from "../ErrorMessage";
+
+import NoDisplayData from './NoDisplayData';
+import SignedUpOutreaches from './SignedUpOutreaches';
+import CreatedOutreaches from './CreatedOutreaches';
+import CreatedHelpRequests from './CreatedHelpRequests';
+import ErrorMessage from '../ErrorMessage';
+import { formatDate } from './../HelperFunction';
+
 
 function Profile() {
   const [createdEvents, setCreatedEvents] = useState([]);

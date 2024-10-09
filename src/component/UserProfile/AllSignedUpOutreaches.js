@@ -113,13 +113,14 @@
 
 import React, { useState, useEffect } from "react";
 import OutreachEventCard from "../Community/OutreachEventCard";
-import { formatDate, fetchUserSignedUpOutreaches } from "../EventCardService";
+import { fetchUserSignedUpOutreaches } from "../EventCardService";
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import EventCardSkeleton from "../../component/Skeletons/EventCardSkeleton";
 import { auth } from "../firebase";
 import { Modal } from "@mui/material";
 import OutreachSignupModal from "../Community/OutreachSignupModal";
+import { formatDate } from "./../HelperFunction";
 
 const AllSignedUpOutreaches = () => {
   const navigate = useNavigate();

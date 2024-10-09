@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import CustomButton from "../Buttons/CustomButton";
 import { useNavigate } from "react-router-dom";
-import { fetchEventById, formatDate } from "../EventCardService";
+import { fetchEventById} from "../EventCardService";
 import OutreachEventCard from "./OutreachEventCard";
 import { fetchOutreaches } from "../HelpRequestService";
 import date from "../../images/date.png";
@@ -10,6 +10,7 @@ import defaultImage from "../../images/default_avatar.svg";
 import verifiedImg from "../../images/verified_purple.png";
 import userSlots from "../../images/userSlots.png";
 import HelpRequestOutreachCard from "./HelpRequestOutreachCard";
+import { formatDate } from "./../HelperFunction";
 
 const ICanHelpConfirmationModal = ({ id }) => {
   const navigate = useNavigate();
