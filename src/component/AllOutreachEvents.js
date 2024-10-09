@@ -11,7 +11,7 @@ import { parse } from "date-fns";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { formatDate } from "./HelperFunction";
-
+import Pagination from "./Pagination";
 
 // Main component for displaying all outreach events
 const AllOutreachEvents = () => {
@@ -320,21 +320,15 @@ const AllOutreachEvents = () => {
           )}
 
           {/* Pagination buttons */}
-          <div className="flex justify-center mt-4">
-            {[...Array(totalPages).keys()].map((i) => (
-              <button
-                key={i + 1}
-                className={`mx-2 px-4 py-2 border rounded-full ${
-                  currentPage === i + 1
-                    ? `${activeBgColor} ${activeTextColor} ${activeBorderColor}`
-                    : `${inactiveBgColor} ${inactiveTextColor} ${inactiveBorderColor}`
-                }`}
-                onClick={() => onPageChange(i + 1)}
-              >
-                {i + 1}
-              </button>
-            ))}
-          </div>
+          {eventsDisplay.length > eventsPerPage && (
+            <Pagination
+              totalData={eventsDisplay.length}
+              pageNumber={currentPage}
+              pageSize={eventsPerPage}
+              handlePageChange={(page) => onPageChange(page)}
+              itemName={"events"}
+            />
+          )}
         </div>
       </div>
       <Modal open={!!selectedEvent}>
