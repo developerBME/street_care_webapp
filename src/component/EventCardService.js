@@ -10,6 +10,8 @@ import {
   limit,
   startAt,
   or,
+  arrayRemove,
+  deleteDoc,
  } from "firebase/firestore";
  import { db } from "./firebase";
  import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -889,3 +891,63 @@ export const fetchUserOutreaches = async () => {
  //  const testlatestfunc = await fetchTopOutreaches();
  //  console.log(testlatestfunc);
  
+
+ export const delUserOutreach = async (eventID) => {
+  try {
+    const fAuth = getAuth();
+    const user = fAuth.currentUser;
+    
+    if (!user) {
+      throw new Error("User is not logged in.");
+    }
+
+    const uid = user.uid;
+
+    const outreachDocRef = doc(db, OUTREACH_EVENTS_COLLECTION, eventID);
+    const outreachDocSnapshot = await getDoc(outreachDocRef);
+
+    if (!outreachDocSnapshot.exists()) {
+      return;
+    }
+
+    //Deleting event from Outreach Events
+    await deleteDoc(outreachDocRef);
+
+    //Updating createdEvents field in the users collection 
+    const currentUserDocRef = doc(db, USERS_COLLECTION, uid);
+    const currentUserDocSnapshot = await getDoc(currentUserDocRef);
+
+    if (currentUserDocSnapshot.exists()) {
+      const currentUserData = currentUserDocSnapshot.data();
+
+      if (currentUserData.createdOutreaches && currentUserData.createdOutreaches.includes(eventID)) {
+        await updateDoc(currentUserDocRef, {
+          createdOutreaches: arrayRemove(eventID),
+        });
+      }
+    }
+
+    //Updating outreachEvents field in the users collection 
+    const usersSnapshot = await getDocs(collection(db, USERS_COLLECTION));
+
+    usersSnapshot.forEach(async (userDoc) => {
+      const userDocRef = doc(db, USERS_COLLECTION, userDoc.id);
+      const userData = userDoc.data();
+
+      if (
+        userData.outreachEvents &&
+        userData.outreachEvents.includes(eventID)
+      ) {
+        await updateDoc(userDocRef, {
+          outreachEvents: arrayRemove(eventID),
+        });
+      }
+    });
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `Error in delUserOutreach EventCardService.js - ${error.message}`
+    );
+    throw error;
+  }
+};
