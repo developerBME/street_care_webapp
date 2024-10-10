@@ -118,14 +118,43 @@ import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import EventCardSkeleton from "../../component/Skeletons/EventCardSkeleton";
 import { auth } from "../firebase";
+import { Modal } from "@mui/material";
+import OutreachSignupModal from "../Community/OutreachSignupModal";
 import { formatDate } from "./../HelperFunction";
 
 const AllSignedUpOutreaches = () => {
   const navigate = useNavigate();
   const [signedUpEvents, setSignedUpEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [isError, setIsError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [showSignUpModal, setShowSignUpModal] = useState(false);
+  const [showWithdrawnModal, setShowWithdrawnModal] = useState(false);
+  const [triggerEffect, setTriggerEffect] = useState(false);
+
+  const openModal = (event) => {
+    console.log("Rudviq");
+    setSelectedEvent(event);
+  };
+
+  const closeModal = () => {
+    setSelectedEvent(null);
+  };
+
+  const onSignUp = () => {
+    setSelectedEvent(null);
+    setShowSignUpModal(true);
+    setIsLoading(true);
+  };
+
+  const onEventWithdraw = () => {
+    setSelectedEvent(null);
+    setShowWithdrawnModal(true);
+    setIsLoading(true);
+    setTriggerEffect((prev) => !prev);
+  };
+
   
   // State for search query
   const [searchQuery, setSearchQuery] = useState("");
@@ -210,6 +239,7 @@ const AllSignedUpOutreaches = () => {
           ) : (
             <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
               {filteredEvents.map((signedUpEventsData) => (
+                
                 <OutreachEventCard
                   key={signedUpEventsData.id}
                   cardData={{
@@ -220,12 +250,31 @@ const AllSignedUpOutreaches = () => {
                   }}
                   isProfilePage={true}
                   refresh={fetchData}
+                  openModal={() =>
+                    openModal({
+                      ...signedUpEventsData,
+                      eventDate: signedUpEventsData.eventDate?.seconds
+                        ? formatDate(
+                            new Date(signedUpEventsData.eventDate.seconds * 1000)
+                          )
+                        : signedUpEventsData.eventDate,
+                    })
+                  }
                 />
               ))}
             </div>
           )}
         </div>
       </div>
+
+      <Modal open={!!selectedEvent}>
+          <OutreachSignupModal
+            data={{ ...selectedEvent }}
+            closeModal={closeModal}
+            onSignUp={onSignUp}
+            onEventWithdraw={onEventWithdraw}
+          />
+      </Modal>
     </div>
   );
 };
