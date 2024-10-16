@@ -15,6 +15,78 @@ import { formatDate } from "./HelperFunction";
 
 // Main component for displaying all outreach events
 const AllOutreachEvents = () => {
+
+  const renderPaginationButtons = () => {
+    const buttons = [];
+    const pageRange = 1;
+
+    if (currentPage > 1) {
+      buttons.push(
+        <button
+          key="prev"
+          onClick={() => onPageChange(currentPage - 1)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          <IoIosArrowBack/>
+        </button>
+      );
+    }
+
+    if (currentPage > pageRange + 1) {
+      buttons.push(
+        <button
+          key="first"
+          onClick={() => onPageChange(1)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          1
+        </button>
+      );
+      buttons.push(<span key="ellipsis-start" className="mx-1">...</span>);
+    }
+
+    for (let i = Math.max(1, currentPage - pageRange); i <= Math.min(totalPages, currentPage + pageRange); i++) {
+      buttons.push(
+        <button
+          key={i}
+          onClick={() => onPageChange(i)}
+          className={`mx-1 px-3 py-1 rounded-full ${
+            currentPage === i ? "bg-[#1F0A58] text-white" : "bg-gray-200 text-gray-600"
+          }`}
+        >
+          {i}
+        </button>
+      );
+    }
+
+    if (currentPage < totalPages - pageRange) {
+      buttons.push(<span key="ellipsis-end" className="mx-1">...</span>);
+      buttons.push(
+        <button
+          key="last"
+          onClick={() => onPageChange(totalPages)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          {totalPages}
+        </button>
+      );
+    }
+
+    if (currentPage < totalPages) {
+      buttons.push(
+        <button
+          key="next"
+          onClick={() => onPageChange(currentPage + 1)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          <IoIosArrowForward/>
+        </button>
+      );
+    }
+
+    return buttons;
+  };
+
   // State variables
   const [events, setEvents] = useState([]); // Stores all events
   const [eventsDisplay, setEventsDisplay] = useState([]); // Stores events to be displayed based on search and pagination
@@ -282,6 +354,18 @@ const AllOutreachEvents = () => {
             </div>
           </div>
 
+          {/* Pagination buttons */}
+          {/* Add event count and pagination at the bottom */}
+          <div className="flex justify-between items-center mt-8 w-full mb-11">
+            <p className="text-gray-600">
+              Showing {currentEvents.length} of {eventsDisplay.length} events
+            </p>
+
+            <div className="flex justify-end">
+              {renderPaginationButtons()}
+            </div>
+          </div>
+
           {/* Display loading skeletons or events */}
           {isLoading ? (
             <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -320,21 +404,17 @@ const AllOutreachEvents = () => {
           )}
 
           {/* Pagination buttons */}
-          <div className="flex justify-center mt-4">
-            {[...Array(totalPages).keys()].map((i) => (
-              <button
-                key={i + 1}
-                className={`mx-2 px-4 py-2 border rounded-full ${
-                  currentPage === i + 1
-                    ? `${activeBgColor} ${activeTextColor} ${activeBorderColor}`
-                    : `${inactiveBgColor} ${inactiveTextColor} ${inactiveBorderColor}`
-                }`}
-                onClick={() => onPageChange(i + 1)}
-              >
-                {i + 1}
-              </button>
-            ))}
+          {/* Add event count and pagination at the bottom */}
+          <div className="flex justify-between items-center mt-8 w-full">
+            <p className="text-gray-600">
+              Showing {currentEvents.length} of {eventsDisplay.length} events
+            </p>
+
+            <div className="flex justify-end">
+              {renderPaginationButtons()}
+            </div>
           </div>
+
         </div>
       </div>
       <Modal open={!!selectedEvent}>
