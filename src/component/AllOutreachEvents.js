@@ -11,7 +11,7 @@ import { parse } from "date-fns";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { formatDate } from "./HelperFunction";
-
+import Pagination from "./Pagination";
 
 // Main component for displaying all outreach events
 const AllOutreachEvents = () => {
