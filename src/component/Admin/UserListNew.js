@@ -4,8 +4,9 @@ import {
   getDocs,
   query,
   addDoc,
-  deleteDoc,
+  deleteDoc, where,
   doc,
+  orderBy, limit
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { debounce } from "lodash";
@@ -80,7 +81,78 @@ export default function UserListNew() {
       }
     };
 
+    const fetchOutreachData = async () => {
+      // Fetch users who have deviceType "Web"
+      const usersQuery = query(collection(db, "users"));//, where("deviceType", "==", "Android"));
+      const userSnapshot = await getDocs(usersQuery);
+      
+      const userList = userSnapshot.docs.map(doc => ({
+        docId: doc.id,
+        ...doc.data()
+      }));
+    
+      const androidOutreachCollectionName = "outreachEventsAndroid";
+      const outreachCollectionName = "outreachEvents";
+    
+      const androidOutreachQuery = query(collection(db, androidOutreachCollectionName));
+      const outreachQuery = query(collection(db, outreachCollectionName));
+    
+      const [androidOutreachSnapshot, outreachSnapshot] = await Promise.all([
+        getDocs(androidOutreachQuery),
+        getDocs(outreachQuery)
+      ]);
+  
+      // Map the documents into arrays
+      const androidOutreachData = androidOutreachSnapshot.docs.map(doc => ({
+        docId: doc.id,
+        ...doc.data()
+      }));
+    
+      const allOutreachData = outreachSnapshot.docs.map(doc => ({
+        docId: doc.id,
+        ...doc.data()
+      }));
+  
+      const outreachDataList = [];
+  
+      userList.forEach(user => {
+        if(user.deviceType=="Android"){
+          const androidUserOutreachData = androidOutreachData
+          .filter(outreach => outreach.uid === user.docId) 
+          .sort((a, b) => b.createdAt - a.createdAt); 
+
+          if (androidUserOutreachData.length > 0) {
+            outreachDataList.push({
+              userId: user.docId,
+              userData: user,
+              outreachData: androidUserOutreachData[0], // Get the latest outreach
+              totalOutreaches: androidUserOutreachData.length // Total outreach count
+            });
+          }
+        }
+        else{
+          const userOutreachData = allOutreachData
+          .filter(outreach => outreach.uid === user.docId) // Filter by uid
+          .sort((a, b) => b.createdAt - a.createdAt); // Sort by createdAt in descending order
+    
+          // Check if userOutreachData has values before pushing
+          if (userOutreachData.length > 0) {
+            outreachDataList.push({
+              userId: user.docId,
+              userData: user,
+              outreachData: userOutreachData[0], // Get the latest outreach
+              totalOutreaches: userOutreachData.length // Total outreach count
+            });
+          }
+        }
+      });
+      console.log(outreachDataList);
+    
+      return outreachDataList;
+    };
+
     fetchUsersAndBannedStatus();
+    fetchOutreachData();
   }, []);
 
   const toggleBanUser = async (email) => {
