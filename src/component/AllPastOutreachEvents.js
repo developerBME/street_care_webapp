@@ -60,10 +60,16 @@ const AllPastOutreachEvents = () => {
     try {
       setIsLoading(true);
       setErrorMessage("");
-  
+
       const cityToSearch = "";
-      const { tot, outreachByLoc } = await fetchByCityOrStates(cityToSearch, startDateTime, endDateTime, currentPage, outreachPerPages);
-  
+      const { tot, outreachByLoc } = await fetchByCityOrStates(
+        cityToSearch,
+        startDateTime,
+        endDateTime,
+        currentPage,
+        outreachPerPages
+      );
+
       if (outreachByLoc.length > 0) {
         const pastEvents = outreachByLoc.filter((event) => {
           const eventDate = event?.eventDate?.seconds
@@ -71,12 +77,14 @@ const AllPastOutreachEvents = () => {
             : event.eventDate;
           return eventDate < new Date();
         });
-  
+
         setEvents(pastEvents);
         console.log("total", Math.ceil(tot / outreachPerPages) - 1);
         setTotalPages(Math.ceil(tot / outreachPerPages) - 1);
       } else {
-        throw new Error("No past outreach events found for the selected date range.");
+        throw new Error(
+          "No past outreach events found for the selected date range."
+        );
       }
     } catch (error) {
       setErrorMessage(error.message);
@@ -91,7 +99,7 @@ const AllPastOutreachEvents = () => {
   //   setIsLoading(true);
   //   const cityToSearch = "";
   //   const outreachByLoc = await fetchByCityOrStates(cityToSearch, startDateTime, endDateTime, currentPage, outreachPerPages);
-      
+
   //   const pastEvents = outreachByLoc.filter((event) => {
   //     const eventDate = event?.eventDate?.seconds
   //       ? new Date(event.eventDate.seconds * 1000)
@@ -102,28 +110,24 @@ const AllPastOutreachEvents = () => {
   //   //setTotalPages(cityCountTotal);
   // };
 
-
   const searchChange = () => {
-    console.log(searchRef.current.value);
+    console.log(events);
     setEventsDisplay(
       events.filter(
         (x) =>
           x.title.toLowerCase().search(searchRef.current.value.toLowerCase()) >
-            -1 ||
-          x.userName
-            .toLowerCase()
-            .search(searchRef.current.value.toLowerCase()) > -1
+          -1
       )
     );
   };
 
   const handleClickPrev = () => {
-    console.log(eventsDisplay)
+    console.log(eventsDisplay);
     setCurrentPage(currentPage - 1);
   };
 
   const handleClickNext = () => {
-    console.log("after next",eventsDisplay)
+    console.log("after next", eventsDisplay);
     setCurrentPage(currentPage + 1);
   };
 
@@ -136,7 +140,7 @@ const AllPastOutreachEvents = () => {
     const newDate = new Date(e.target.value);
     setEndDateTime(newDate);
   };
-  
+
   const renderPaginationButtons = () => {
     const buttons = [];
     const pageRange = 1;
@@ -148,7 +152,7 @@ const AllPastOutreachEvents = () => {
           onClick={() => handleClickPrev()}
           className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
         >
-          <IoIosArrowBack/>
+          <IoIosArrowBack />
         </button>
       );
     }
@@ -165,44 +169,50 @@ const AllPastOutreachEvents = () => {
       );
     }
 
-      for (let i = Math.max(1, currentPage - pageRange); i <= Math.min(totalPages, currentPage + pageRange); i++) {
-        buttons.push(
-          <button
-            key={i}
-            onClick={() => setCurrentPage(i)}
-            className={`mx-1 px-3 py-1 rounded-full ${
-              currentPage === i ? "bg-[#1F0A58] text-white" : "bg-gray-200 text-gray-600"
-            }`}
-          >
-            {i}
-          </button>
-        );
-      }
+    for (
+      let i = Math.max(1, currentPage - pageRange);
+      i <= Math.min(totalPages, currentPage + pageRange);
+      i++
+    ) {
+      buttons.push(
+        <button
+          key={i}
+          onClick={() => setCurrentPage(i)}
+          className={`mx-1 px-3 py-1 rounded-full ${
+            currentPage === i
+              ? "bg-[#1F0A58] text-white"
+              : "bg-gray-200 text-gray-600"
+          }`}
+        >
+          {i}
+        </button>
+      );
+    }
 
-      if (currentPage < totalPages - 1) {
-        buttons.push(
-          <button
-            key="last"
-            onClick={() => setCurrentPage(totalPages)}
-            className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
-          >
-            {totalPages}
-          </button>
-        );
-      }
+    if (currentPage < totalPages - 1) {
+      buttons.push(
+        <button
+          key="last"
+          onClick={() => setCurrentPage(totalPages)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          {totalPages}
+        </button>
+      );
+    }
 
-      if (currentPage < totalPages - 1) {
-        buttons.push(
-          <button
-            key="next"
-            onClick={() => handleClickNext()}
-            className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
-          >
-            <IoIosArrowForward/>
-          </button>
-        );
-      }
-  
+    if (currentPage < totalPages - 1) {
+      buttons.push(
+        <button
+          key="next"
+          onClick={() => handleClickNext()}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          <IoIosArrowForward />
+        </button>
+      );
+    }
+
     return buttons;
   };
 
@@ -282,10 +292,7 @@ const AllPastOutreachEvents = () => {
               </div>
             </div>
           </div>
-          
-          {errorMessage && (
-            <p className="text-red-500 text-center mt-4">{errorMessage}</p>
-          )}
+
           {isLoading ? (
             <div className="flex justify-between items-center w-full h-fit">
               <EventCardSkeleton />
@@ -293,22 +300,31 @@ const AllPastOutreachEvents = () => {
               <EventCardSkeleton />
             </div>
           ) : (
-            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-            {eventsDisplay.length > 0 &&
-              eventsDisplay.map((eventData) => (
-                <OutreachEventCard
-                  isPastEvent={true}
-                  key={eventData.id}
-                  cardData={{
-                    ...eventData,
-                    eventDate: eventData?.eventDate?.seconds
-                      ? formatDate(
-                          new Date(eventData.eventDate.seconds * 1000)
-                        )
-                      : eventData.eventDate,
-                  }}
-                />
-              ))}
+            <div
+              className={`w-full ${
+                eventsDisplay.length > 0
+                  ? "flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-x-4 gap-y-1"
+                  : "flex justify-center items-center"
+              }`}
+            >
+              {eventsDisplay.length > 0 ? (
+                eventsDisplay.map((eventData) => (
+                  <OutreachEventCard
+                    isPastEvent={true}
+                    key={eventData.id}
+                    cardData={{
+                      ...eventData,
+                      eventDate: eventData?.eventDate?.seconds
+                        ? formatDate(
+                            new Date(eventData.eventDate.seconds * 1000)
+                          )
+                        : eventData.eventDate,
+                    }}
+                  />
+                ))
+              ) : (
+                <p className="text-4xl text-center">No events available.</p>
+              )}
             </div>
           )}
           <div className="flex justify-end mt-8">
