@@ -17,7 +17,7 @@ import { fetchUserName, formatDate, getNumberOfPages } from "./HelperFunction";
 
 import logEvent from "./FirebaseLogger";
 
-const VISIT_LOG_COLLECTION = "testLog";
+// const VISIT_LOG_COLLECTION = "testLog";
 const OUTREACH_EVENTS_COLLECTION = "outreachEventsDev";
 const USERS_COLLECTION = "users";
 // const PERSONAL_VISIT_LOG_COLLECTION = "personalVisitLog";
@@ -213,6 +213,9 @@ export const fetchTopVisitLogs = async () => {
         ...visitLogData,
         userName: userName,
         id: id,
+        eventDate: visitLogData?.dateTime?.seconds
+                  ? formatDate(new Date(visitLogData.dateTime.seconds * 1000))
+                  : "",
       });
     }
     // console.log(visitLogs)
@@ -244,7 +247,7 @@ export const fetchPersonalVisitLogs = async (uid) => {
     for (let visitLogId of visitLogIds) {
       // console.log(visitLogId);
       const visitLog = await fetchPersonalVisitLogById(visitLogId)
-      if( visitLog != undefined ){
+      if( visitLog !== undefined ){
         visitLogsData.push(visitLog);
       }
     }
