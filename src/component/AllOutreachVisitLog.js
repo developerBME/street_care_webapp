@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import OutreachVisitLogCard from "./Community/OutreachVisitLogCard";
 import { useNavigate } from "react-router-dom";
-import { IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowBack, IoIosArrowForward} from "react-icons/io";
 import { fetchPublicVisitLogs } from "./VisitLogCardService";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 import { parse } from "date-fns";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Pagination from "./Pagination";
 
 const AllOutreachVisitLog = () => {
   const navigate = useNavigate();
@@ -22,6 +23,85 @@ const AllOutreachVisitLog = () => {
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const logsPerPage = 6; // Adjust the number of logs per page
+
+
+  const renderPaginationButtons = () => {
+    const buttons = [];
+    const pageRange = 1;
+
+    if (currentPage > 1) {
+      buttons.push(
+        <button
+          key="prev"
+          onClick={() => paginate(currentPage - 1)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          <IoIosArrowBack/>
+        </button>
+      );
+    }
+
+    if (currentPage > pageRange + 1) {
+      buttons.push(
+        <button
+          key="first"
+          onClick={() => paginate(1)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          1
+        </button>
+      );
+      buttons.push(<span key="ellipsis-start" className="mx-1">...</span>);
+    }
+
+    for (let i = Math.max(1, currentPage - pageRange); i <= Math.min(totalPages, currentPage + pageRange); i++) {
+      buttons.push(
+        <button
+          key={i}
+          onClick={() => paginate(i)}
+          className={`mx-1 px-3 py-1 rounded-full ${
+            currentPage === i ? "bg-[#1F0A58] text-white" : "bg-gray-200 text-gray-600"
+          }`}
+        >
+          {i}
+        </button>
+      );
+    }
+
+    if (currentPage < totalPages - pageRange) {
+      buttons.push(<span key="ellipsis-end" className="mx-1">...</span>);
+      buttons.push(
+        <button
+          key="last"
+          onClick={() => paginate(totalPages)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          {totalPages}
+        </button>
+      );
+    }
+
+    if (currentPage < totalPages) {
+      buttons.push(
+        <button
+          key="next"
+          onClick={() => paginate(currentPage + 1)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          <IoIosArrowForward/>
+        </button>
+      );
+    }
+
+    return buttons;
+  };
+  const indexOfLastVisitLog = currentPage * logsPerPage;
+  const indexOfFirstVisitLog = indexOfLastVisitLog - logsPerPage;
+  const currentVisitLogs = visitLogs.slice(
+    indexOfFirstVisitLog,
+    indexOfLastVisitLog
+  );
+  const totalPages = Math.ceil(filteredVisitLogs.length / logsPerPage);
 
   useEffect(() => {
     const getVisitLogs = async () => {
@@ -199,6 +279,15 @@ const AllOutreachVisitLog = () => {
               )}
             </div>
           </div>
+          <div className="flex justify-between items-center mt-8 w-full mb-11">
+            <p className="text-gray-600">
+              Showing {currentVisitLogs.length} of {filteredVisitLogs.length} events
+            </p>
+
+            <div className="flex justify-end">
+              {renderPaginationButtons()}
+            </div>
+          </div>
           {isLoading ? (
             <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
               <EventCardSkeleton />
@@ -221,25 +310,14 @@ const AllOutreachVisitLog = () => {
                   </p>
                 )}
               </div>
-              {/* Pagination */}
-              <div className="flex justify-center mt-8">
-                {[
-                  ...Array(
-                    Math.ceil(filteredVisitLogs.length / logsPerPage)
-                  ).keys(),
-                ].map((i) => (
-                  <button
-                    key={i + 1}
-                    className={`mx-2 px-4 py-2 border rounded-full ${
-                      currentPage === i + 1
-                        ? "bg-[#E0D7EC] text-black border-[#1F0A58]"
-                        : "bg-white text-black border-[#9B82CF]"
-                    }`}
-                    onClick={() => paginate(i + 1)}
-                  >
-                    {i + 1}
-                  </button>
-                ))}
+              <div className="flex justify-between items-center mt-8 w-full mb-11">
+                <p className="text-gray-600">
+                  Showing {currentVisitLogs.length} of {filteredVisitLogs.length} events
+                </p>
+
+                <div className="flex justify-end">
+                  {renderPaginationButtons()}
+                </div>
               </div>
             </>
           )}
