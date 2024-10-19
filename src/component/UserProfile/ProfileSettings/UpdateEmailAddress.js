@@ -46,6 +46,7 @@ const UpdateEmailAddress = () => {
 
   const [error, setError] = useState(null);
   const fAuth = getAuth();
+  const [providerId, setProviderId] = useState('');
   const navigate = useNavigate();
   const currentUser = getAuth().currentUser;
 
@@ -91,6 +92,11 @@ const UpdateEmailAddress = () => {
   };
 
   useEffect(() => {
+    const user = fAuth.currentUser;
+    if (user && user.providerData.length > 0) {
+      setProviderId(user.providerData[0].providerId);
+    }
+
     const interval = setInterval(() => {
       if (seconds > 0) {
         setSeconds(seconds - 1);
@@ -107,7 +113,8 @@ const UpdateEmailAddress = () => {
     return () => {
       clearInterval(interval);
     };
-  }, [seconds, minutes]);
+  }, [seconds, minutes, fAuth]);
+
 
   // Updating Email using 3 different approaches
   //  1. Update email (Old google social login - new google social login)
@@ -178,11 +185,15 @@ const UpdateEmailAddress = () => {
   // Old User Email Verification step via reauthentication of current user login
   // 3. Update email (old user email - new user email)
   const handleEmailSubmit = async () => {
-    // if (isSubmitted === 2) {
-    //   setIsSubmitted((prevState) => prevState - 1);
-    // } else {
-    //   setIsSubmitted((prevState) => prevState + 1);
-    // }
+      if (['google.com', 'twitter.com'].includes(providerId)) {
+            alert("Email update is not available for social accounts.");
+            return;
+          }
+      // if (isSubmitted === 2) {
+      //   setIsSubmitted((prevState) => prevState - 1);
+      // } else {
+      //   setIsSubmitted((prevState) => prevState + 1);
+      // }
 
     if (!password) {
       updateErrorState("PassError", "Password is required");
@@ -405,7 +416,7 @@ const UpdateEmailAddress = () => {
                                 className="absolute right-4 top-2/4 transform -translate-y-2/4 cursor-pointer"
                                 onClick={handleTogglePassword}
                               >
-                                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                {showPassword ? <FaEye /> : <FaEyeSlash />}
                               </div>
                             </div>
                           </div>
@@ -544,11 +555,17 @@ const UpdateEmailAddress = () => {
                   </div>
                 </div>
               )}
+              {['google.com', 'facebook.com', 'twitter.com'].includes(providerId) && (
+                <div className="text-center text-red-500">
+                  Email update is disabled because your account is linked with a social media provider.
+                </div>
+              )}
               <CustomButton
                 name="buttondefault"
                 type="submit"
                 label={stepLabelMap[currentStep]}
                 onClick={stepFuncMap[currentStep]}
+                disabled={['google.com', 'facebook.com', 'twitter.com'].includes(providerId)} // Disable the button if logged in via social media
               ></CustomButton>
             </div>
           </div>

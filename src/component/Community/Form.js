@@ -2,13 +2,13 @@ import React, { useRef, useState, useEffect } from "react";
 
 import Chip from "../Community/Chip";
 import arrowDown from "../../images/arrowDown.png";
-import { doc, updateDoc, addDoc, collection, getDoc } from "firebase/firestore";
+import { doc, updateDoc, addDoc, collection, getDoc, query } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import errorImg from "../../images/error.png";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
-import { Timestamp } from "firebase/firestore";
+import { Timestamp,where,getDocs } from "firebase/firestore";
 import { checkString, checkNumber } from "../helper/validator";
 import { UpdateDisabledRounded } from "@mui/icons-material";
 import CreateOutreachModal from "./CreateOutreachModal";
@@ -36,6 +36,8 @@ const chipList = [
   "Social Integration",
   "Pet Care",
 ];
+
+const USERS_COLLECTION = "users";
 
 const CustomInput = ({ value, onClick, onChange, id, className }) => (
   <div>
@@ -204,7 +206,7 @@ const Form = (hrid) => {
             eventDate: Timestamp.fromDate(startDate),
             eventEndTime: Timestamp.fromDate(endDate),
             eventStartTime: Timestamp.fromDate(startDate),
-            totalSlots: maxCapRef.current.value,
+            totalSlots: Math.round(Number(maxCapRef.current.value)),
             location: {
               street: streetRef.current.value,
               city: cityRef.current.value,
@@ -214,7 +216,7 @@ const Form = (hrid) => {
             },
             helpType: helpRef.current.value,
             skills: helpType,
-            createdAt: Date(),
+            createdAt: Timestamp.fromDate(new Date()),
             interests: 0,
             participants: [],
             approved: false,
@@ -231,6 +233,24 @@ const Form = (hrid) => {
             return docRef.id;
           }
           const ack = await postDoc(eventRef, obj);
+
+          //added outreach to user collection 
+          const userQuery = query(
+            collection(db, USERS_COLLECTION),
+            where("uid", "==", fAuth?.currentUser?.uid)
+          );
+          const userDocRef = await getDocs(userQuery);
+          const userDocID = userDocRef.docs[0].id;
+          console.log(userDocID);
+          // reference for the userdoc
+          const userRef = doc(db, USERS_COLLECTION, userDocID);
+          // outreach event collection
+          const docSnap = await getDoc(userRef);
+          let createdOutreaches = docSnap.data().createdOutreaches || [];
+          createdOutreaches.push(ack);
+          const updateRef = await updateDoc(userRef, {
+            createdOutreaches: createdOutreaches,
+          });
 
           // check if flow comes from help request
           if (isHelpReqFlow) {
@@ -355,10 +375,21 @@ const Form = (hrid) => {
     updateErrorState("helpError", "");
   };
   const handleStimeChange = (e) => {
+    setStartDate(e);
+    if (endDate && e >= endDate) {
+      setEndDate(null);
+    }
     updateErrorState("stimeError", "");
   };
   const handleEtimeChange = (e) => {
+    if (e > startDate) {
+      setEndDate(e);
+    }
     updateErrorState("etimeError", "");
+  };
+
+  const filterEndTime = (time) => {
+    return startDate ? time > startDate : true;
   };
 
   const handleSubmit = async (e) => {
@@ -491,7 +522,7 @@ const Form = (hrid) => {
   const [endDate, setEndDate] = useState();
 
   //Address Autocomplete functionality
-  const [query, setQuery] = useState();
+  const [adQuery, setQuery] = useState();
   const autoCompleteRef = useRef(null);
   const [street, setStreet] = useState("");
   const [cityName, setCityName] = useState("");
@@ -517,8 +548,8 @@ const Form = (hrid) => {
     const addressObject = await autoComplete.getPlace();
     console.log("addressObject: ", addressObject);
 
-    const query = addressObject.formatted_address;
-    updateQuery(query);
+    const adQuery = addressObject.formatted_address;
+    updateQuery(adQuery);
 
     let street = "";
     let postcode = "";
@@ -635,7 +666,9 @@ const Form = (hrid) => {
                 Maximum capacity of participants allowed*
               </p>
               <input
-                type="text"
+                type="number"
+                min='0'
+                step='1'
                 className="h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
                 id="max-cap"
                 ref={maxCapRef}
@@ -664,7 +697,7 @@ const Form = (hrid) => {
                 type="text"
                 ref={autoCompleteRef}
                 onChange={(event) => setQuery(event.target.value)}
-                value={query}
+                value={adQuery}
                 placeholder="Enter Address"
                 className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
                   error.idError !== "" ? "ring-red-500" : "ring-gray-300"
@@ -757,6 +790,7 @@ const Form = (hrid) => {
                 </p>
                 <input
                   type="text"
+                  maxlength="5"
                   className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
                     error.zipError !== "" ? "ring-red-500" : "ring-gray-300"
                   }`}
@@ -1007,6 +1041,9 @@ const Form = (hrid) => {
                   timeFormat="HH:mm"
                   timeIntervals={15}
                   dateFormat="Pp"
+                  disabled={!startDate}
+                  minDate={startDate}
+                  filterTime={filterEndTime}
                   customInput={
                     <CustomInput
                       id="date"

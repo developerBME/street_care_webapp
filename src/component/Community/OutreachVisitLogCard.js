@@ -1,93 +1,63 @@
 import React from "react";
-import CustomButton from "../Buttons/CustomButton";
-import defaultImage from "../../images/default_avatar.svg";
 import { useNavigate } from "react-router-dom";
-import date from "../../images/date.png";
-import locate from "../../images/location.png";
+import dateIcon from "../../images/date.png";
+import locationIcon from "../../images/location.png";
+
 import verifiedImg from "../../images/verified_purple.png";
+import defaultImage from "../../images/default_avatar.svg";
 import { formatDate } from "../helper";
 import CardTags from "./CardTags";
 
 const OutreachVisitLogCard = ({ visitLogCardData }) => {
   const navigate = useNavigate();
 
+  const handleViewDetails = () => {
+    navigate(`/VisitLogDetails/${visitLogCardData.id}`);
+  };
+
   return (
-    <div className="bg-[#F5EEFE] min-w-full max-w-[320px] lg:w-full rounded-[30px] mb-4 flex flex-col justify-between p-6">
+    <div
+      className="bg-[#F5EEFE] w-[320px] rounded-[30px] mb-4 flex flex-col p-[24px] h-auto cursor-pointer border-b-[1px] border-gray-200"
+      onClick={handleViewDetails}
+    >
       <div className="inline-flex items-center space-x-2 ">
-        <img
-          src={visitLogCardData.photoUrl || defaultImage}
-          className="w-8 h-8 rounded-full"
-        />
-        <div>{visitLogCardData.userName || "not defined"}</div>
-        <img src={verifiedImg} className="w-5 h-5" />
+          <img
+            alt=""
+            src={visitLogCardData.defaultImage || defaultImage}
+            className="w-8 h-8 rounded-full"
+          />
+          <div className="font-normal font-inter text-[13px] ">{visitLogCardData.userName}</div>
+          <img alt="" src={verifiedImg} className="w-5 h-5" />
+        </div>
+
+      <div className="flex justify-between items-center mt-2">
+        <div className="flex items-center">
+          <img className="w-4 h-4" src={dateIcon} alt="Date" />
+          <span className="ml-2 text-sm">{visitLogCardData && visitLogCardData.eventDate ? formatDate(visitLogCardData.eventDate) : null}</span>
+        </div>
+        <div className="flex items-center">
+          <img className="w-3 h-4" src={locationIcon} alt="Location" />
+          <span className="ml-2 text-sm">{`${visitLogCardData?.location?.city || visitLogCardData?.city}, ${visitLogCardData?.location?.stateAbbv || visitLogCardData?.stateAbbv || visitLogCardData?.location?.state}`}</span>
+        </div>
       </div>
 
-      <div className="my-3 space-y-3 w-full h-full flex flex-col">
-        <div className="flex flex-row justify-between">
-          <div className="flex flex-row justify-normal space-x-2">
-            <img className="w-[13px] h-[15px] my-[3px]" src={date} />
-            <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
-              {visitLogCardData && visitLogCardData.eventDate
-                ? formatDate(visitLogCardData.eventDate)
-                : null}
-            </div>
-          </div>
-          <div className="flex flex-row justify-normal space-x-2">
-            <img className="w-[12px] h-[15px] my-[3px]" src={locate} />
-            <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
-              {`${visitLogCardData?.location?.city}, ${
-                visitLogCardData?.location?.stateAbbv ||
-                visitLogCardData?.location?.state
-              }`}
-            </div>
-          </div>
-        </div>
+      <div className="flex justify-between items-center mt-4">
+        <div className="text-sm font-bold">People Helped</div>
+        <div className="text-xl font-bold">{visitLogCardData?.numberPeopleHelped}</div>
+      </div>
 
-        <h1 className="font-medium text-[24px] font-dmsans text-[#444746] line-clamp-1">
-          {visitLogCardData?.description || ""}
-        </h1>
+      <div className="flex justify-between items-center mt-2">
+        <div className="text-sm font-bold">Items Donated</div>
+        <div className="text-xl font-bold">{visitLogCardData?.itemQty}</div>
+      </div>
 
-        <div className="flex flex-row justify-between">
-          <div className="font-bold text-[14px] font-dmsans text-[#444746] line-clamp-1">
-            People Helped
-          </div>
-          <div className="font-bold text-[14px] font-dmsans text-[#444746] line-clamp-1">
-            {visitLogCardData?.numberPeopleHelped}
-          </div>
-        </div>
-
-        <div className="flex flex-row justify-between">
-          <div className="font-bold text-[14px] font-dmsans text-[#444746] line-clamp-1">
-            Participants 
-            {/* Changed from Items Donated on frontend */}
-          </div>
-          <div className="font-bold text-[14px] font-dmsans text-[#444746] line-clamp-1">
-            {visitLogCardData?.itemQty}
-          </div>
-        </div>
-
+      <div className="mt-3">  {/* Adjusted gap from 12px here */}
         <CardTags tags={visitLogCardData?.whatGiven || []} />
       </div>
 
-      <div className=" flex flex-col justify-end">
-        <div className="flex items-center justify-between gap-16 my-1">
-          <div class="group relative">
-            <CustomButton
-              label="View Details"
-              name="buttonlightsmall"
-              onClick={() => {
-                navigate(`/VisitLogDetails/${visitLogCardData.id}`);
-              }}
-            />
-          </div>
-          {/* <div className="flex flex-row space-x-2">
-            <img className="w-[20px] h-[14px] my-1" src={userSlots}></img>
-            <div className="font-normal font-dmsans text-[14px]">
-              {visitLogCardData?.filledSlots}
-            </div>
-          </div> */}
-        </div>
-      </div>
+      <p className="text-sm mt-2 line-clamp-2">
+        {visitLogCardData?.description || ""}
+      </p>
     </div>
   );
 };

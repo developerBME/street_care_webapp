@@ -1,37 +1,30 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  getAuth,
-  signInWithPopup,
-  GoogleAuthProvider,
-  onAuthStateChanged,
-} from "firebase/auth";
-import { useNavigate, Link } from "react-router-dom";
+import { Modal } from "@mui/material";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 // import FAQs from "./HomePage/FAQs";
 import FAQs from "./HomePage/FAQs2";
-import Eventcard from "./HomePage/Eventcard";
-import BMEcard from "./HomePage/BMEcard";
-import BMEcardnew from "./HomePage/BMEofficialCard";
+// import Eventcard from "./HomePage/Eventcard";
+// import BMEcard from "./HomePage/BMEcard";
+// import BMEcardnew from "./HomePage/BMEofficialCard";
 import Success2 from "./HomePage/Success2";
 import Landing from "./HomePage/Landing";
 // import Landing from "./HomePage/Landing2";
-import Success from "./HomePage/Success";
+// import Success from "./HomePage/Success";
 import News from "./HomePage/News";
 import Map from "./HomePage/Map";
 //import Process from "./HomePage/Process";
 import Process2 from "./HomePage/Process2";
 //import MoreAboutUs from "./HomePage/MoreAboutUs";
-import MoreAboutUs from "./HomePage/MoreAboutUs2";
-import Navbar from "./Navbar";
+// import MoreAboutUs from "./HomePage/MoreAboutUs2";
+// import Navbar from "./Navbar";
 import arrowRight from "../images/arrowRight.png";
 import OutreachEventCard from "./Community/OutreachEventCard";
 import {
-  formatDate,
   fetchEvents,
   fetchOfficialEvents,
 } from "./EventCardService";
-import HomePageUpcomingOutreach from "./HomePage/HomePageUpcomingOutreach";
-import HomePagePastOutreach from "./HomePage/HomePagePastOutreach";
-
+import { formatDate } from "./HelperFunction";
 import BMEcardimg1 from "../images/BMEofficialcardimg1.png";
 import BMEcardimg2 from "../images/BMEofficialcardimg2.png";
 import BMEcardimg3 from "../images/BMEofficialcardimg3.png";
@@ -39,7 +32,12 @@ import CustomButton from "../component/Buttons/CustomButton";
 import { NewsCardData } from "../NewsData";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 import PastOutreachEventCardSkeleton from "./Skeletons/PastOutreachEventCardSkeleton";
-import MoreAboutUs2 from "./HomePage/MoreAboutUs2";
+import ErrorMessage from "./ErrorMessage";
+// import MoreAboutUs2 from "./HomePage/MoreAboutUs2";
+import OutreachSignupModal from "./Community/OutreachSignupModal";
+import RSVPConfirmationModal from "./UserProfile/RSVPConfirmationModal";
+import PastOutreachEvents from "./PastOutreachEvents";
+import UpcomingOutreachEvents from "./UpcomingOutreachEvents";
 
 function HomePage() {
   const navigate = useNavigate();
@@ -49,7 +47,7 @@ function HomePage() {
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/auth.user
-      console.log(user);
+      // console.log(user);
       // ...
     } else {
       // User is signed out
@@ -138,15 +136,59 @@ function HomePage() {
     },
   ];
 
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState(null);
   const [offevents, setOffevents] = useState([]);
   const [newsevents, setnewsevents] = useState([]);
-  const [eventsDisplay, setEventsDisplay] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState({
+    events: false,
+    officialEvents: false,
+    news: false,
+  });
+  const [errorMsg, setErrorMsg] = useState({
+    events: false,
+    officialEvents: false,
+    news: false,
+  });
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [showSignUpModal, setShowSignUpModal] = useState(false);
+  const [showWithdrawnModal, setShowWithdrawnModal] = useState(false);
+  const [triggerEffect, setTriggerEffect] = useState(false);
+
+  const openModal = (event) => {
+    setSelectedEvent(event);
+  };
+
+  const closeModal = () => {
+    setSelectedEvent(null);
+  };
+
+  const onSignUp = () => {
+    setSelectedEvent(null);
+    setShowSignUpModal(true);
+    setIsLoading(true);
+  };
+
+  const closeSignUpModal = () => {
+    setShowSignUpModal(false);
+    setTriggerEffect(prev => !prev);
+  };
+
+  const onEventWithdraw = () => {
+    setSelectedEvent(null);
+    setShowWithdrawnModal(true);
+    setIsLoading(true);
+    setTriggerEffect(prev => !prev);
+  };
+
+  const closeWithdrawModal = () => {
+    setShowWithdrawnModal(false);
+  }
+
+  const fetchData = async () => {
+    try {
       const eventsData = await fetchEvents();
 
       // Sort events in place based on their date
@@ -157,68 +199,89 @@ function HomePage() {
       // Display 3 upcoming events in descending order
       eventsData.sort((a, b) => a.eventDate - b.eventDate);
       setEvents(eventsData);
-      // console.log('After fetching');
-    };
-    
-    const fetchOfficialData = async () => {
+    } catch (error) {
+      setIsError(prev => ({ ...prev, events: true }));
+      setEvents([]);
+      setErrorMsg(prev => ({
+        ...prev,
+        events: "Events could not be loaded. Please try again later.",
+      }));
+    }
+  };
+
+  const fetchOfficialData = async () => {
+    try {
       const eventsData = await fetchOfficialEvents();
-      // Sort events in place based on their date
-      // eventsData.sort((a, b) => a.eventDate - b.eventDate);
-      // setOffevents(eventsData);
-
-      // Display 3 upcoming events in descending order
-      eventsData.sort((a, b) => b.eventDate - a.eventDate);
-      let limitedData = eventsData.slice(0, 3);
+      eventsData.sort((a, b) => a.eventDate - b.eventDate);
+      const limitedData = eventsData.slice(0, 3);
       setOffevents(limitedData);
-    };
+    } catch (error) {
+      setIsError(prev => ({ ...prev, officialEvents: true }));
+      setOffevents([]);
+      setErrorMsg(prev => ({
+        ...prev,
+        officialEvents: "Official events could not be loaded. Please try again later.",
+      }));
+    }
+  };
 
-    const fetchnewsData = async () => {
-      // Display 3 news initially
-      let limitedData = NewsCardData.slice(0, 3);
+  const fetchnewsData = async () => {
+    try {
+      const limitedData = NewsCardData.slice(0, 3);
       setnewsevents(limitedData);
-    };
+    } catch (error) {
+      setIsError(prev => ({ ...prev, news: true }));
+      setnewsevents([]);
+      setErrorMsg(prev => ({
+        ...prev,
+        news: "News events could not be loaded. Please try again later.",
+      }));
+    }
+  };
 
+  const loadData = () => {
     fetchData();
     fetchOfficialData();
     fetchnewsData();
-  }, []);
+  };
 
   useEffect(() => {
-    setEventsDisplay(events);
-    // searchRef.current = "";
-  }, [events]);
+    loadData();
+  }, [triggerEffect]);
 
   useEffect(() => {
-    if (eventsDisplay.length > 0) {
+    if (events) {
       setIsLoading(false);
     }
-  }, [eventsDisplay]);
+  }, [events]);
 
-  const outreachRef = useRef(null);
+  const outreachRef = useRef();
 
   const handleOutreachRef = () => {
-    if(outreachRef.current) {
-      outreachRef.current.scrollIntoView({ behavior: "smooth" });
-    } else{
-      console.error("outreach.current is undefined");
-    }
+    outreachRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
   // Filter events to get only upcoming events
   const upcomingEvents = events
-    .filter((event) => {
-        const eventDate = new Date(event.eventDate?.seconds * 1000) || event.eventDate;
-      return eventDate >= new Date(); // Check if the event date is after the current date
-    })
-    .slice(0, 3);
+    ? events
+        .filter((event) => {
+          const eventDate =
+            new Date(event.eventDate?.seconds * 1000) || event.eventDate;
+          return eventDate >= new Date(); // Check if the event date is after the current date
+        })
+        .slice(0, 3)
+    : [];
 
   // Filter events to get only past events
   const pastEvents = events
-    .filter((event) => {
-        const eventDate = new Date(event.eventDate?.seconds * 1000) || event.eventDate;
-      return eventDate < new Date(); // Check if the event date is before the current date
-    })
-    .slice(0, 3);
+    ? events
+        .filter((event) => {
+          const eventDate =
+            new Date(event.eventDate?.seconds * 1000) || event.eventDate;
+          return eventDate < new Date(); // Check if the event date is before the current date
+        })
+        .slice(0, 3)
+    : [];
 
   useEffect(() => {
     document.title = "Home - Street Care";
@@ -231,131 +294,34 @@ function HomePage() {
         {" "}
         <Landing scorllFuntion={handleOutreachRef} />
       </div>
-       {/* <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
+      {/* <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
         <Success/>
       </div>*/}
       <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
         <Success2 />
       </div>
 
-      {/* Upcoming Outreaches Events */}
 
-      <div
-        id="outreach"
-        ref={outreachRef}
-        className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black"
-      >
-        <HomePageUpcomingOutreach />
-        {/* <div
-          className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] scroll-m-24"
-          ref={outreachRef}
-        >
-          <p className="flex flex-row font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] gap-4 cursor-pointer"
-          onClick={() => {
-            navigate("/allOutreachEvents");
-          }}>
-            {" "}
-            Upcoming Outreach Events
-            <img
-              src={arrowRight}
-              className="w-6 h-7 lg:w-10 lg:h-10 "
-            />
-          </p>
-          
-                        
+   
 
-          {isLoading ? (
-            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-              <EventCardSkeleton />
-              <EventCardSkeleton />
-              <EventCardSkeleton />
-            </div>
-          ) : (
-            <>
-              <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-                {upcomingEvents.map((eventData) => (
-                  <OutreachEventCard
-                    key={eventData.id}
-                    cardData={{
-                      ...eventData,
-                      eventDate: eventData.eventDate?.seconds ? formatDate(
-                        new Date(eventData.eventDate.seconds * 1000)
-                      ) : eventData.eventDate,
-                    }}
-                  />
-                ))}
-              </div>
-            </>
-          )}
-          <div className="mt-16">
-            <CustomButton
-              label="More Outreach Events"
-              name="buttondefault"
-              onClick={() => {
-                navigate("/allOutreachEvents");
-              }}
-            />
-          </div>
-        </div> */}
-      </div>
+      <UpcomingOutreachEvents 
+        events = {events}
+        isLoading={isLoading}
+        isError={isError}
+        openModal={openModal}
+      />
 
-      {/* DIV BLOCK FOR ALL PAST OUTREACH EVENTS*/}
-      <div
-        id="pastoutreach"
-        className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black"
-      >
-        <HomePagePastOutreach />
-        {/* Remove this section, we have a separate component for it. */}
 
-        {/* <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] scroll-m-16">
-          <p className="flex flex-row font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] gap-4 cursor-pointer"
-          onClick={() => {
-            navigate("/allPastOutreachEvents");
-          }}>
-            {" "}
-            Past Outreach Events  */}
-            {/* Changing this to Outreach Events from past outreach events. Combine upcoming outreaches and past outreaches in the future. */}
-            {/* <img
-              src={arrowRight}
-              className="w-6 h-7 lg:w-10 lg:h-10"
-            />
-          </p> */}
+      {/* Past Outreach Events */}
+      <PastOutreachEvents
+        events={events}
+        isLoading={isLoading}
+        isError={isError.events}
+      />
 
-          {/* {isLoading ? (
-            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-              <PastOutreachEventCardSkeleton />
-              <PastOutreachEventCardSkeleton />
-              <PastOutreachEventCardSkeleton />
-            </div>
-          ) : (
-            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-              {pastEvents.map((eventData) => (
-                <OutreachEventCard
-                  isPastEvent={true}
-                  key={eventData.id}
-                  cardData={{
-                    ...eventData,
-                    eventDate: eventData.eventDate?.seconds ? formatDate(
-                      new Date(eventData.eventDate.seconds * 1000)
-                    ) : eventData.eventDate,
-                  }}
-                />
-              ))}
-            </div>
-          )}
-          <div className="mt-16">
-            <CustomButton
-              label="More Outreach Events"
-              name="buttondefault"
-              onClick={() => {
-                navigate("/allPastOutreachEvents");
-              }}
-            />
-          </div>
-        </div> */}
-      </div>
-{/* Remove this section, we have a separate component for it. */}
+      
 
+      
       {/*Vedant*/} {/*BME OFFCIIAL GATHERING BLOCK START*/}
       {/* 
      <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
@@ -398,8 +364,7 @@ function HomePage() {
       {/* Aniket */}
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
         <Map />
-      </div> 
-    
+      </div>
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black h-full">
         {/*<News />*/}
 
@@ -408,9 +373,13 @@ function HomePage() {
             Past Events
           </p>
           <div className=" grid grid-cols-1 gap-x-8 gap-y-8 mt-6 sm:pt-4 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-            {newsevents.map((eventData) => (
-              <News key={eventData.id} NewsCardData={eventData} />
-            ))}
+            {isError.news ? (
+              <ErrorMessage displayName="News Events" />
+            ) : (
+              newsevents.map((eventData) => (
+                <News key={eventData.id} NewsCardData={eventData} />
+              ))
+            )}
             <div className="mt-16">
               <CustomButton
                 label="More News"
@@ -423,9 +392,19 @@ function HomePage() {
           </div>
         </div> */}
       </div>
+
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-16 rounded-2xl bg-white text-black ">
         <FAQs />
       </div>
+      <Modal open={!!selectedEvent}>
+        <OutreachSignupModal data={{...selectedEvent}} closeModal={closeModal} onSignUp={onSignUp} onEventWithdraw={onEventWithdraw}/>
+      </Modal>
+      <Modal open={showSignUpModal}>
+       <RSVPConfirmationModal closeModal={closeSignUpModal} type='edit'/>
+      </Modal>
+      <Modal open={showWithdrawnModal}>
+       <RSVPConfirmationModal closeModal={closeWithdrawModal} type='withdraw' />
+      </Modal>
     </div>
     // </div>
   );

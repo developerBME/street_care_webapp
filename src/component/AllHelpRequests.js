@@ -80,7 +80,7 @@ const AllHelpRequests = () => {
               </p>
             </div>
             <div className=" mt-6 lg:mt-0">
-              <label class="relative text-gray-400 focus-within:text-gray-600 ">
+              <label className="relative text-gray-400 focus-within:text-gray-600 ">
                 <input
                   type="text"
                   name="searchText"
@@ -96,7 +96,7 @@ const AllHelpRequests = () => {
                   viewBox="0 0 20 20"
                   strokeWidth="1.5"
                   stroke="currentColor"
-                  class="w-6 h-6 pointer-events-none absolute top-6 transform -translate-y-1/2 left-3"
+                  className="w-6 h-6 pointer-events-none absolute top-6 transform -translate-y-1/2 left-3"
                 >
                   <path
                     strokeLinecap="round"
@@ -108,36 +108,36 @@ const AllHelpRequests = () => {
             </div>
           </div>
 
-          {isLoading ? (
-            <div className="grid grid-cols-1 w-full h-fit">
-              <HelpRequestSkeleton />
-              <HelpRequestSkeleton />
-              <HelpRequestSkeleton />
-            </div>
-          ) : (
-            <>
-              <div className="sm:p-4 lg:px-2 lg:pt-10 lg:pb-6 flex flex-col bg-[#F7F7F7] gap-4 lg:gap-8 rounded-b-2xl">
-                {helpRequestsDisplay
-                  .slice(0, visibleItems)
-                  .map((item, index) => (
-                    <HelpRequestCard key={item.id} helpRequestCardData={item} />
-                  ))}
-              </div>
-              {visibleItems < helpRequests.length &&
-                helpRequestsDisplay.length !== 0 &&
-                helpRequestsDisplay.length > visibleItems && (
-                  <button
-                    className="w-fit rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 flex text-center text-[#1F0A58] hover:bg-[#1F0A58] hover:text-white text-[13px] font-medium font-dmsans leading-tight self-stretch px-6 py-2.5 mt-2"
-                    onClick={loadMore}
-                  >
-                    Load 5 More
-                  </button>
-                )}
-              {helpRequestsDisplay.length === 0 && (
-                <div>No help requests found with {searchRef.current.value}</div>
-              )}
-            </>
-          )}
+           {isLoading ? (
+  <div className="grid grid-cols-1 w-full h-fit">
+    <HelpRequestSkeleton />
+    <HelpRequestSkeleton />
+    <HelpRequestSkeleton />
+  </div>
+) : (
+  <>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8 p-4 lg:px-2 lg:pt-10 lg:pb-6 bg-[#F7F7F7] rounded-b-2xl">
+      {helpRequestsDisplay
+        .slice(0, visibleItems)
+        .map((item, index) => (
+          <HelpRequestCard key={item.id} helpRequestCardData={item} />
+        ))}
+    </div>
+    {visibleItems < helpRequests.length &&
+      helpRequestsDisplay.length !== 0 &&
+      helpRequestsDisplay.length > visibleItems && (
+        <button
+          className="w-fit rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 flex text-center text-[#1F0A58] hover:bg-[#1F0A58] hover:text-white text-[13px] font-medium font-dmsans leading-tight self-stretch px-6 py-2.5 mt-2"
+          onClick={loadMore}
+        >
+          Load 5 More
+        </button>
+      )}
+    {helpRequestsDisplay.length === 0 && (
+      <div>No help requests found with {searchRef.current.value}</div>
+    )}
+  </>
+)}
         </div>
       </div>
     </div>

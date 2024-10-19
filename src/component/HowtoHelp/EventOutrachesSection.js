@@ -5,117 +5,117 @@ import arrowDropDown from "../../images/arrowDropDown.png";
 import arrowRight from "../../images/arrowRight.png";
 import CustomButton from "../Buttons/CustomButton";
 import OutreachVisitLogCard from "../Community/OutreachVisitLogCard";
-import { fetchEvents, formatDate } from "../EventCardService";
+import { fetchEvents } from "../EventCardService";
 import { fetchVisitLogs } from "../VisitLogCardService";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
+import { formatDate } from "./../HelperFunction";
 
 const EventOutrachesSection = () => {
-  const [visibleItems, setVisibleItems] = useState(3);
-  const navigate = useNavigate();
-  const loadMore = () => {
-    setVisibleItems((prev) => prev + 3);
-  };
-  const cardData = [
-    {
-      userName: "William Smith",
-      title: "BK Fort Green Outreach",
-      eventDate: "Sept 9, 2023 SAT 5:00pm",
-      location: {
-        street: "200 Eastern Pkwy",
-        city: "Brooklyn",
-        state: "NY",
-        zipcode: "11238",
-      },
-      helpType: "Childcare Specialist needed",
-      totalSlots: 20,
-      interests: 5,
-    },
-    {
-      userName: "William Smith",
-      title: "BK Fort Green Outreach",
-      eventDate: "Sept 9, 2023 SAT 5:00pm",
-      location: {
-        street: "200 Eastern Pkwy",
-        city: "Brooklyn",
-        state: "NY",
-        zipcode: "11238",
-      },
-      helpType: "Childcare Specialist needed",
-      totalSlots: 20,
-      interests: 5,
-    },
-    {
-      userName: "William Smith",
-      title: "BK Fort Green Outreach",
-      eventDate: "Sept 9, 2023 SAT 5:00pm",
-      location: {
-        street: "200 Eastern Pkwy",
-        city: "Brooklyn",
-        state: "NY",
-        zipcode: "11238",
-      },
-      helpType: "Childcare Specialist needed",
-      totalSlots: 20,
-      interests: 5,
-    },
-  ];
+    const [visibleItems, setVisibleItems] = useState(3);
+    const navigate = useNavigate();
+    const loadMore = () => {
+        setVisibleItems((prev) => prev + 3);
+    };
+    const cardData = [
+        {
+            userName: "William Smith",
+            title: "BK Fort Green Outreach",
+            eventDate: "Sept 9, 2023 SAT 5:00pm",
+            location: {
+                street: "200 Eastern Pkwy",
+                city: "Brooklyn",
+                state: "NY",
+                zipcode: "11238",
+            },
+            helpType: "Childcare Specialist needed",
+            totalSlots: 20,
+            interests: 5,
+        },
+        {
+            userName: "William Smith",
+            title: "BK Fort Green Outreach",
+            eventDate: "Sept 9, 2023 SAT 5:00pm",
+            location: {
+                street: "200 Eastern Pkwy",
+                city: "Brooklyn",
+                state: "NY",
+                zipcode: "11238",
+            },
+            helpType: "Childcare Specialist needed",
+            totalSlots: 20,
+            interests: 5,
+        },
+        {
+            userName: "William Smith",
+            title: "BK Fort Green Outreach",
+            eventDate: "Sept 9, 2023 SAT 5:00pm",
+            location: {
+                street: "200 Eastern Pkwy",
+                city: "Brooklyn",
+                state: "NY",
+                zipcode: "11238",
+            },
+            helpType: "Childcare Specialist needed",
+            totalSlots: 20,
+            interests: 5,
+        },
+    ];
 
-  const [events, setEvents] = useState([]);
-  const [visitLogs, setVisitLogs] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [eventsDisplay, setEventsDisplay] = useState([]);
-  const [filteredEvents, setFilteredEvents] = useState([]);
-  const [states, setStates] = useState([]);
-  const [selectedState, setSelectedState] = useState("");
-  const [dropdownVisible, setDropdownVisible] = useState(false);
+    const [events, setEvents] = useState([]);
+    const [visitLogs, setVisitLogs] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [eventsDisplay, setEventsDisplay] = useState([]);
+    const [filteredEvents, setFilteredEvents] = useState([]);
+    const [states, setStates] = useState([]);
+    const [selectedState, setSelectedState] = useState("");
+    const [dropdownVisible, setDropdownVisible] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const eventsData = await fetchEvents();
-      const visitLogsData = await fetchVisitLogs();
-      setVisitLogs(visitLogsData);
-      // Filter events to get only past events
-      const upcomingEvents = eventsData.filter((event) => {
-        const eventDate = new Date(event.eventDate.seconds * 1000) || event.eventDate;
-        return eventDate >= new Date(); // Check if the event date is before the current date
-      });
-      // Sort events in place based on their date
-      upcomingEvents.sort((a, b) => a.eventDate - b.eventDate);
+    useEffect(() => {
+        const fetchData = async () => {
+            const eventsData = await fetchEvents();
+            const visitLogsData = await fetchVisitLogs();
+            setVisitLogs(visitLogsData);
+            // Filter events to get only upcoming events
+            const upcomingEvents = eventsData.filter((event) => {
+                const eventDate = new Date(event?.eventDate?.seconds * 1000);
+                return eventDate >= new Date(); // Check if the event date is after the current date
+            });
+            // Sort events in place based on their date
+            upcomingEvents.sort((a, b) => a.eventDate - b.eventDate);
 
-      setEvents(upcomingEvents);
-      // Extract states and remove duplicates
-      const extractedStates = [
-        ...new Set(upcomingEvents.map((event) => event.location.state)),
-      ];
-      setStates(extractedStates);
+            setEvents(upcomingEvents);
+            // Extract states and remove duplicates
+            const extractedStates = [
+                ...new Set(upcomingEvents.map((event) => event.location.state)),
+            ];
+            setStates(extractedStates);
+        };
+
+        fetchData();
+    }, []);
+    // Handle state selection from dropdown
+    const handleStateSelection = (state) => {
+        setSelectedState(state);
+        const filtered = events.filter((event) => event.location.state === state);
+        setFilteredEvents(filtered);
+        setDropdownVisible(false);
     };
 
-    fetchData();
-  }, []);
+    useEffect(() => {
+        setEventsDisplay(events);
+        // searchRef.current = "";
+    }, [events]);
 
-  // Handle state selection from dropdown
-//   const handleStateSelection = (state) => {
-//     setSelectedState(state);
-//     const filtered = events.filter((event) => event.location.state === state);
-//     setFilteredEvents(filtered);
-//     setDropdownVisible(false);
-//   };
-
-  useEffect(() => {
-    setEventsDisplay(events);
-    // searchRef.current = "";
-  }, [events]);
-
-  useEffect(() => {
-    if (eventsDisplay.length > 0) {
-      setIsLoading(false);
-    }
-  }, [eventsDisplay]);
+    useEffect(() => {
+        if (eventsDisplay.length > 0) {
+            setIsLoading(false);
+        }
+    }, [eventsDisplay]);
 
   const upcomingEvents = events
     .filter((event) => {
       const eventDate = new Date(event.eventDate.seconds * 1000);
-      return eventDate >= new Date(); // Check if the event date is before the current date
+      return eventDate >= new Date(); // Check if the event date is after the current date
     })
     .slice(0, 3);
 

@@ -8,10 +8,14 @@ import {
   updateDoc,
   or,
   Timestamp,
+  orderBy,
+  startAt,
+  limit
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import logEvent from "./FirebaseLogger";
+import { fetchUserName, getNumberOfPages} from "./HelperFunction";
 
 const HELP_REQ_COLLECTION = "helpRequests";
 const USERS_COLLECTION = "users";
@@ -80,28 +84,68 @@ export const fetchHelpReqById = async (helpReqId) => {
   }
 };
 
-export const fetchUserName = async (uid) => {
+export const fetchTopHelpRequests = async () => {
   try {
-    // Reference to the uid instead of the docid of the user.
-    const userQuery = query(
-      collection(db, USERS_COLLECTION),
-      where("uid", "==", uid)
+    const helpReqRef = collection(db, HELP_REQ_COLLECTION);
+      const allTopHelpRequestsByQuery = query(
+      helpReqRef,
+      orderBy('createdAt', 'desc'), // Order help requests by the 'createdAt' field in descending order to get the newest entries first
+      limit(6) // Limit to top 6 records
     );
-    const userDocRef = await getDocs(userQuery);
-    const userDocID = userDocRef.docs[0].id;
-    // reference for the userdoc
-    const userRef = doc(db, USERS_COLLECTION, userDocID);
-    const userDoc = await getDoc(userRef);
-    if (userDoc.exists()) {
-      return userDoc.data().username || "";
-    } else {
-      console.error("No user found with uid:", uid);
-      return "";
+    const helpRequestDocRef = await getDocs(allTopHelpRequestsByQuery);
+    let helpRequests = [];
+    for (const doc of helpRequestDocRef.docs) {
+      const helpRequestData = doc.data();
+      const id = doc.id;
+      const userName = await fetchUserName(helpRequestData.uid);
+      helpRequests.push({
+        ...helpRequestData,
+        userName: userName,
+        id: id,
+      });
     }
+    console.log(helpRequests)
+    return helpRequests;
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchUserName HelpRequestService.js- ${error.message}`
+      `error on fetchTopHelpRequests HelpRequestService.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
+export const fetchHelpRequestByUser = async () => {
+  try {
+    const fAuth = getAuth();
+    const uid = fAuth?.currentUser?.uid;
+    //Fetching Help Requests created by the loggedIn user
+    const helpReqRef = collection(db, HELP_REQ_COLLECTION);
+      const allhelpRequestsByUserQuery = query(
+      helpReqRef,
+      where('uid', '==', uid)
+    );
+
+    const helpRequestDocRef = await getDocs(allhelpRequestsByUserQuery);
+    //const userName = await fetchUserName(uid);
+    const userName = fAuth?.currentUser?.displayName
+
+    let helpRequests = [];
+    for (const doc of helpRequestDocRef.docs) {
+      const helpRequestData = doc.data();
+      const id = doc.id;
+      helpRequests.push({
+        ...helpRequestData,
+        userName: userName,
+        id: id,
+      });
+    }
+    console.log(helpRequests)
+    return helpRequests;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchHelpRequestsByUser HelpRequestService.js- ${error.message}`
     );
     throw error;
   }
@@ -167,40 +211,6 @@ export const fetchByCityAndDate = async (
     throw error;
   }
 };
-
-export function formatDate(dateObj) {
-  // Extract date parts manually for custom format
-  const monthNames = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-
-  const month = monthNames[dateObj.getMonth()];
-  const day = dateObj.getDate();
-  const year = dateObj.getFullYear();
-  const weekday = days[dateObj.getDay()];
-
-  // Extract hours, minutes, and the AM/PM part
-  const hours = dateObj.getHours();
-  const minutes = dateObj.getMinutes();
-  const ampm = hours >= 12 ? "PM" : "AM";
-  const formattedTime = `${hours % 12}:${minutes
-    .toString()
-    .padStart(2, "0")} ${ampm}`;
-
-  return `${month} ${day}, ${year} ${weekday} ${formattedTime}`;
-}
 
 export const handleHelpRecieved = async (e, id, refresh) => {
   try {
@@ -289,16 +299,20 @@ export async function fetchOutreaches(helpRequestId) {
   }
 }
 
+
 export async function calculateNumberOfPagesForHelpReq(helpReqPerPage) {
-  if (helpReqPerPage < 1 || helpReqPerPage > 10) {
-    throw new Error(
-      "The number of help requests per page must be between 1 and 10."
-    );
-  }
+  return getNumberOfPages(helpReqPerPage, HELP_REQ_COLLECTION);
+}
 
-  const helpRequestRef = collection(db, HELP_REQ_COLLECTION);
-  const snapshot = await getDocs(helpRequestRef);
-  const totalHelpRequests = snapshot.size;
 
-  return Math.ceil(totalHelpRequests / helpReqPerPage);
+export async function getHelpRequestsWithPageIndex(pageIndex = 0, numberOfEventsPerPage = 5){
+  const q = query(collection(db, HELP_REQ_COLLECTION), orderBy("createdAt","asc"));
+  const documentSnapshots = await getDocs(q);
+
+  const startIndex = pageIndex*numberOfEventsPerPage;
+  const startDoc = documentSnapshots.docs[startIndex];
+
+  let docsq = query(collection(db, HELP_REQ_COLLECTION), orderBy("createdAt","asc"), startAt(startDoc),limit(numberOfEventsPerPage));
+  const pageResults = await getDocs(docsq);
+  return pageResults;
 }

@@ -6,25 +6,27 @@ import {
   doc,
   updateDoc,
   query,
+  orderBy,
   where,
   limit,
-  orderBy,
+  startAfter,
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { fetchUserDetails, formatDate } from "./EventCardService";
+import { fetchUserDetails } from "./EventCardService";
+import { fetchUserName, formatDate, getNumberOfPages } from "./HelperFunction";
+
 import logEvent from "./FirebaseLogger";
 
-const VISIT_LOG_COLLECTION = "testLog";
-const OUTREACH_EVENTS_COLLECTION = "outreachEventsDev"; //Change this back to outreachEvents in dev branch
+// const VISIT_LOG_COLLECTION = "testLog";
+const OUTREACH_EVENTS_COLLECTION = "outreachEventsDev";
 const USERS_COLLECTION = "users";
-const PERSONAL_VISIT_LOG_COLLECTION = "personalVisitLog";
+// const PERSONAL_VISIT_LOG_COLLECTION = "personalVisitLog";
 const VISIT_LOG_COLLECTION_PROD = "visitLogWebProd";
+const PERSONAL_VISIT_LOG = "personalVisitLog";
 
 export const fetchVisitLogs = async () => {
   try {
-    // const visitLogsRef = collection(db, PERSONAL_VISIT_LOG_COLLECTION); Change back to this line in dev branch
     const visitLogsRef = collection(db, VISIT_LOG_COLLECTION_PROD);
-
     const visitLogSnapshot = await getDocs(visitLogsRef);
     let visitLogs = [];
     for (const doc of visitLogSnapshot.docs) {
@@ -107,38 +109,55 @@ const fetchOutreachEventData = async (eid) => {
   }
 };
 
+const visitLogHelperFunction = async (visitLogSnap) => {
+  try {
+    let visitLogs = [];
+    const docsArray = visitLogSnap.docs ? visitLogSnap.docs : [visitLogSnap];
+    for (const doc of docsArray) {
+      const visitLogData = doc.data();
+      //const outreachEventId = visitLogData.outreachEvent || "";
+      //const outreachEventData = await fetchOutreachEventData(outreachEventId);
+      const uid = visitLogData.uid;
+      const userDetails = await fetchUserDetails(uid);
+      visitLogs.push({
+        id: doc.id,
+        whatGiven: visitLogData.whatGiven,
+        itemQty: visitLogData?.itemQty || "",
+        numberPeopleHelped: visitLogData?.numberPeopleHelped || "",
+        description: visitLogData?.description || "",
+        helpType: visitLogData?.helpType || "",
+        location: {
+          street: visitLogData?.street || "",
+          city: visitLogData?.city || "",
+          state: visitLogData?.state || "",
+          stateAbbv: visitLogData?.stateAbbv || "",
+          zipcode: visitLogData?.zipcode || "",
+        },
+        eventDate: visitLogData?.dateTime?.seconds
+          ? formatDate(new Date(visitLogData.dateTime.seconds * 1000))
+          : "",
+        userName: userDetails.username,
+        photoUrl: userDetails.photoUrl,
+      });
+    }
+    return visitLogs;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on visitLogHelperFunction VisitLogCardService.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
 export const fetchVisitLogById = async (visitLogId) => {
   try {
     // Reference to the specific document in the visitlog collection
-    // const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId); //change back to this line in dev branch
     const visitLogRef = doc(db, VISIT_LOG_COLLECTION_PROD, visitLogId);
-
     const visitLogSnap = await getDoc(visitLogRef);
-    const visitLogData = visitLogSnap.data();
-    const outreachEventId = visitLogData.outreachEvent || "";
-    const outreachEventData = await fetchOutreachEventData(outreachEventId);
-    const uid = visitLogData.uid;
-    const userDetails = await fetchUserDetails(uid);
-    return {
-      id: doc.id,
-      whatGiven: visitLogData.whatGiven,
-      itemQty: visitLogData?.itemQty || "",
-      numberPeopleHelped: visitLogData?.numberPeopleHelped || "",
-      description: visitLogData?.description || "",
-      helpType: visitLogData?.helpType || "",
-      location: {
-        street: visitLogData?.street || "",
-        city: visitLogData?.city || "",
-        state: visitLogData?.state || "",
-        stateAbbv: visitLogData?.stateAbbv || "",
-        zipcode: visitLogData?.zipcode || "",
-      },
-      eventDate: visitLogData?.dateTime?.seconds
-        ? formatDate(new Date(visitLogData.dateTime.seconds * 1000))
-        : "",
-      userName: userDetails.username,
-      photoUrl: userDetails.photoUrl,
-    };
+    let visitLogs = await visitLogHelperFunction(visitLogSnap);
+
+    return visitLogs[0];
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
@@ -176,6 +195,40 @@ export const fetchVisitLogById = async (visitLogId) => {
 // );
 // const userDocRef = await getDocs(userQuery);
 
+export const fetchTopVisitLogs = async () => {
+  try {
+    const visitlogs = collection(db, VISIT_LOG_COLLECTION_PROD);
+    const visitlogsQuery = query(
+      visitlogs,
+      orderBy("dateTime", "desc"), // Order visit logs by the 'dateTime' field in descending order to get the newest entries first
+      limit(6) // Limit to top 6 records
+    );
+    const visitLogDocRef = await getDocs(visitlogsQuery);
+    let visitLogs = [];
+    for (const doc of visitLogDocRef.docs) {
+      const visitLogData = doc.data();
+      const id = doc.id;
+      const userName = await fetchUserName(visitLogData.uid);
+      visitLogs.push({
+        ...visitLogData,
+        userName: userName,
+        id: id,
+        eventDate: visitLogData?.dateTime?.seconds
+                  ? formatDate(new Date(visitLogData.dateTime.seconds * 1000))
+                  : "",
+      });
+    }
+    // console.log(visitLogs)
+    return visitLogs;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchTopVisitLogs EventCardService.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
 export const fetchPersonalVisitLogs = async (uid) => {
   try {
     const userQuery = query(
@@ -192,15 +245,10 @@ export const fetchPersonalVisitLogs = async (uid) => {
     const visitLogsData = [];
 
     for (let visitLogId of visitLogIds) {
-      // const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId); //change back to this line in dev branch
-      const visitLogRef = doc(db, VISIT_LOG_COLLECTION_PROD, visitLogId);
-      const visitLogDoc = await getDoc(visitLogRef);
-      if (visitLogDoc.exists()) {
-        const visitLogData = visitLogDoc.data();
-        visitLogsData.push({
-          ...visitLogData,
-          id: visitLogId,
-        });
+      // console.log(visitLogId);
+      const visitLog = await fetchPersonalVisitLogById(visitLogId)
+      if( visitLog !== undefined ){
+        visitLogsData.push(visitLog);
       }
     }
     return visitLogsData;
@@ -216,40 +264,11 @@ export const fetchPersonalVisitLogs = async (uid) => {
 export const fetchPublicVisitLogs = async () => {
   try {
     const visitLogsRef = query(
-      // collection(db, PERSONAL_VISIT_LOG_COLLECTION), Change back to this line in dev branch
       collection(db, VISIT_LOG_COLLECTION_PROD),
-      orderBy("dateTime", "desc"),
       where("public", "==", true)
     );
     const visitLogSnapshot = await getDocs(visitLogsRef);
-    let visitLogs = [];
-    for (const doc of visitLogSnapshot.docs) {
-      const visitLogData = doc.data();
-      const outreachEventId = visitLogData.outreachEvent || "";
-      const outreachEventData = await fetchOutreachEventData(outreachEventId);
-      const uid = visitLogData.uid;
-      const userDetails = await fetchUserDetails(uid);
-      visitLogs.push({
-        id: doc.id,
-        whatGiven: visitLogData.whatGiven,
-        itemQty: visitLogData?.itemQty || "",
-        numberPeopleHelped: visitLogData?.numberPeopleHelped || "",
-        description: visitLogData?.description || "",
-        helpType: visitLogData?.helpType || "",
-        location: {
-          street: visitLogData?.street || "",
-          city: visitLogData?.city || "",
-          state: visitLogData?.state || "",
-          stateAbbv: visitLogData?.stateAbbv || "",
-          zipcode: visitLogData?.zipcode || "",
-        },
-        eventDate: visitLogData?.dateTime?.seconds
-          ? formatDate(new Date(visitLogData.dateTime.seconds * 1000))
-          : "",
-        userName: userDetails.username,
-        photoUrl: userDetails.photoUrl,
-      });
-    }
+    let visitLogs = await visitLogHelperFunction(visitLogSnapshot);
     return visitLogs;
   } catch (error) {
     logEvent(
@@ -262,7 +281,6 @@ export const fetchPublicVisitLogs = async () => {
 
 export const fetchPersonalVisitLogById = async (visitLogId) => {
   try {
-    // const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId); //change to this line in dev branch
     const visitLogRef = doc(db, VISIT_LOG_COLLECTION_PROD, visitLogId);
     const visitLogDoc = await getDoc(visitLogRef);
     if (visitLogDoc.exists()) {
@@ -281,17 +299,108 @@ export const fetchPersonalVisitLogById = async (visitLogId) => {
   }
 };
 
-export async function calculateNumberOfPagesForVisitlog(visitlogPerPage) {
-  if (visitlogPerPage < 1 || visitlogPerPage > 10) {
-    throw new Error(
-      "The number of visitlogs per page must be between 1 and 10."
-    );
+
+export async function calculateNumberOfPagesForVisitlog(visitlogsPerPage) {
+  return getNumberOfPages(visitlogsPerPage, VISIT_LOG_COLLECTION_PROD);
   }
 
-  // const visitlogRef = collection(db, PERSONAL_VISIT_LOG_COLLECTION); //change to this line in dev branch
-  const visitlogRef = collection(db, VISIT_LOG_COLLECTION_PROD);
-  const snapshot = await getDocs(visitlogRef);
-  const totalVisitlogs = snapshot.size;
+export const fetchVisitLogsByCityOrState = async (
+  searchValue,
+  startDate,
+  endDate,
+  pageIndex = null,
+  recordsPerPage = 5
+) => {
+  try {
+    if (!searchValue || typeof searchValue !== "string") {
+      console.error("Invalid search value");
+      return;
+    }
 
-  return Math.ceil(totalVisitlogs / visitlogPerPage);
-}
+    if (!(startDate instanceof Date) || isNaN(startDate)) {
+      console.error("Invalid start date");
+      return;
+    }
+
+    if (!(endDate instanceof Date) || isNaN(endDate)) {
+      console.error("Invalid end date");
+      return;
+    }
+
+    const visitlogs = collection(db, PERSONAL_VISIT_LOG);
+
+    let pageQuery = null;
+    let visitlogsByLocationQuery = null;
+
+    if (pageIndex !== null) {
+      if (pageIndex === 0) {
+        pageQuery = query(
+          visitlogs,
+          where("city", "==", searchValue),
+          where("dateTime", ">=", startDate),
+          where("dateTime", "<=", endDate),
+          orderBy("dateTime", "asc"),
+          limit(recordsPerPage)
+        );
+      } else {
+        const prevPageQuery = query(
+          visitlogs,
+          where("city", "==", searchValue),
+          where("dateTime", ">=", startDate),
+          where("dateTime", "<=", endDate),
+          orderBy("dateTime", "asc"),
+          limit(pageIndex * recordsPerPage)
+        );
+
+        const documentSnapshots = await getDocs(prevPageQuery);
+        const lastVisible =
+          documentSnapshots.docs[documentSnapshots.docs.length - 1];
+        pageQuery = query(
+          visitlogs,
+          where("city", "==", searchValue),
+          where("dateTime", ">=", startDate),
+          where("dateTime", "<=", endDate),
+          orderBy("dateTime", "asc"),
+          limit(recordsPerPage),
+          startAfter(lastVisible)
+        );
+      }
+      visitlogsByLocationQuery = pageQuery;
+    } else {
+      visitlogsByLocationQuery = query(
+        visitlogs,
+        where("city", "==", searchValue),
+        where("dateTime", ">=", startDate),
+        where("dateTime", "<=", endDate),
+        orderBy("dateTime", "asc")
+      );
+    }
+
+    const visitLogDocRef = await getDocs(visitlogsByLocationQuery);
+
+    if (visitLogDocRef.docs.length === 0 && pageIndex !== null) {
+      throw new Error(
+        `Not enough documents to access page of index : ${pageIndex}`
+      );
+    }
+
+    let visitLogByCity = [];
+    for (const doc of visitLogDocRef.docs) {
+      const visitLogData = doc.data();
+      const id = doc.id;
+      const userName = await fetchUserName(visitLogData.uid);
+      visitLogByCity.push({
+        ...visitLogData,
+        userName: userName,
+        id: id,
+      });
+    }
+    return visitLogByCity;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchVisitLogByCityOrState VisitLogCardService.js- ${error.message}`
+    );
+    throw error;
+  }
+};

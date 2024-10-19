@@ -79,7 +79,7 @@ function Profile() {
         <div className=" w-[95%] md:w-[90%] lg:w-[80%] p-28 mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black mb-10">
           <div className="flex flex-col gap-14">
             <div className="inline-flex space-x-16">
-              <div class="text-neutral-800 text-5xl font-medium font-bricolage leading-[52px]">My Outreaches</div>
+              <div className="text-neutral-800 text-5xl font-medium font-bricolage leading-[52px]">My Outreaches</div>
               <div className="inline-flex px-8 py-4  bg-violet-600 rounded-full gap-2">
                 <img src={icon} className="w-4 h-4 mt-1"/>
                 <button className="rounded-full text-neutral-100 text-[14px]">Document my Outreach</button>

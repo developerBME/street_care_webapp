@@ -40,7 +40,7 @@ export default function FAQs() {
               What does Street Care do to help homeless individuals?
             </p>
           </AccordionSummary>
-          <hr class="h-px bg-gray-300 border-0 "></hr>
+          <hr className="h-px bg-gray-300 border-0 "></hr>
           <AccordionDetails>
             <div className="pt-4 font-dmsans font-normal text-sm text-[#2C3B3C]">
                 <p>
@@ -73,7 +73,7 @@ export default function FAQs() {
               Does Street Care offer emergency shelter for homeless individuals?
             </p>
           </AccordionSummary>
-          <hr class="h-px bg-gray-300 border-0 "></hr>
+          <hr className="h-px bg-gray-300 border-0 "></hr>
           <AccordionDetails>
             <p className="pt-4 font-dmsans font-normal text-sm text-[#2C3B3C]">
               No, Street Care primarily focuses on equipping volunteers with the
@@ -104,7 +104,7 @@ export default function FAQs() {
               Where is Street Care located, and which areas do you serve?
             </p>
           </AccordionSummary>
-          <hr class="h-px bg-gray-300 border-0 "></hr>
+          <hr className="h-px bg-gray-300 border-0 "></hr>
           <AccordionDetails>
             <p className="pt-4 font-dmsans font-normal text-sm text-[#2C3B3C]">
             Street Care is a web and mobile app that is not location-specific.
@@ -135,7 +135,7 @@ export default function FAQs() {
               Are volunteers needed, and how can I sign up to help?
             </p>
           </AccordionSummary>
-          <hr class="h-px bg-gray-300 border-0 "></hr>
+          <hr className="h-px bg-gray-300 border-0 "></hr>
           <AccordionDetails>
             <p className="pt-4 font-dmsans font-normal text-sm text-[#2C3B3C]">
               Yes, volunteers are always needed to make a difference in the
@@ -183,7 +183,7 @@ export default function FAQs() {
               How can I donate to Street Care?
             </p>
           </AccordionSummary>
-          <hr class="h-px bg-gray-300 border-0 "></hr>
+          <hr className="h-px bg-gray-300 border-0 "></hr>
           <AccordionDetails>
             <p className="font-dmsans font-normal text-base text-[#2C3B3C]">
               At Street Care, we truly believe in the extraordinary power of
@@ -223,7 +223,7 @@ export default function FAQs() {
               Can you share stories of individuals you've helped in the past?
             </p>
           </AccordionSummary>
-          <hr class="h-px bg-gray-300 border-0 "></hr>
+          <hr className="h-px bg-gray-300 border-0 "></hr>
           <AccordionDetails>
             <p className="pt-4 font-dmsans font-normal text-sm text-[#2C3B3C]">
               Street Care may feature inspirational stories of volunteers and

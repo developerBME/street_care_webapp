@@ -215,9 +215,9 @@ function Success2() {
         </div>
       </div>
 
-      {/* <div className=" mt-16 w-full  justify-start items-start">
+      { <div className=" mt-16 w-full  justify-start items-start">
         <HomePageVisitlog />
-      </div> */}
+      </div> }
     </div>
   );
 }
