@@ -37,6 +37,8 @@ import ErrorMessage from "./ErrorMessage";
 // import MoreAboutUs2 from "./HomePage/MoreAboutUs2";
 import OutreachSignupModal from "./Community/OutreachSignupModal";
 import RSVPConfirmationModal from "./UserProfile/RSVPConfirmationModal";
+import PastOutreachEvents from "./PastOutreachEvents";
+import UpcomingOutreachEvents from "./UpcomingOutreachEvents";
 
 function HomePage() {
   const navigate = useNavigate();
@@ -292,119 +294,28 @@ function HomePage() {
       <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
         <Success2 />
       </div>
-      <div
-        id="outreach"
-        className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black"
-      >
-        <div
-          className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] scroll-m-24"
-          ref={outreachRef}
-        >
-          <p
-            className="flex flex-row font-bricolage cursor-pointer font-medium text-2xl md:text-[45px] text-[#1F0A58] gap-4"
-            onClick={() => {
-              navigate("/allOutreachEvents");
-            }}
-          >
-            {" "}
-            Upcoming Outreach Events
-            <img alt="" src={arrowRight} className="w-6 h-7 lg:w-10 lg:h-10 " />
-          </p>
 
-          {isLoading ? (
-            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-              <EventCardSkeleton />
-              <EventCardSkeleton />
-              <EventCardSkeleton />
-            </div>
-          ) : isError.events ? (
-            <ErrorMessage displayName="Outreaches" />
-          ) : (
-            <>
-              <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-                {upcomingEvents.map((eventData) => (
-                  <OutreachEventCard
-                    key={eventData.id}
-                    cardData={{
-                      ...eventData,
-                      eventDate: eventData.eventDate?.seconds
-                        ? formatDate(new Date(eventData.eventDate.seconds * 1000))
-                        : eventData.eventDate,
-                    }}
-                    openModal={() => openModal({
-                      ...eventData,
-                      eventDate: eventData.eventDate?.seconds
-                        ? formatDate(new Date(eventData.eventDate.seconds * 1000))
-                        : eventData.eventDate,
-                    })}
-                  />
-                ))}
-              </div>
-            </>
-          )}
-          <div className="mt-16">
-            <CustomButton
-              label="More Upcoming Outreach Events"
-              name="buttondefault"
-              onClick={() => {
-                navigate("/allOutreachEvents");
-              }}
-            />
-          </div>
-        </div>
-      </div>
-      {/* DIV BLOCK FOR ALL PAST OUTREACH EVENTS*/}
-      <div
-        id="pastoutreach"
-        className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black"
-      >
-        <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] scroll-m-16">
-          <p
-            className="flex flex-row font-bricolage cursor-pointer font-medium text-2xl md:text-[45px] text-[#1F0A58] gap-4"
-            onClick={() => {
-              navigate("/allPastOutreachEvents");
-            }}
-          >
-            {" "}
-            Past Outreach Events
-            <img alt="" src={arrowRight} className="w-6 h-7 lg:w-10 lg:h-10 " />
-          </p>
 
-          {isLoading ? (
-            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-              <PastOutreachEventCardSkeleton />
-              <PastOutreachEventCardSkeleton />
-              <PastOutreachEventCardSkeleton />
-            </div>
-          ) : isError.events ? (
-            <ErrorMessage displayName="Outreaches" />
-          ) : (
-            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-              {pastEvents.map((eventData) => (
-                <OutreachEventCard
-                  isPastEvent={true}
-                  key={eventData.id}
-                  cardData={{
-                    ...eventData,
-                    eventDate: eventData.eventDate?.seconds
-                      ? formatDate(new Date(eventData.eventDate.seconds * 1000))
-                      : eventData.eventDate,
-                  }}
-                />
-              ))}
-            </div>
-          )}
-          <div className="mt-16">
-            <CustomButton
-              label="More Past Outreach Events"
-              name="buttondefault"
-              onClick={() => {
-                navigate("/allPastOutreachEvents");
-              }}
-            />
-          </div>
-        </div>
-      </div>
+   
+
+      <UpcomingOutreachEvents 
+        events = {events}
+        isLoading={isLoading}
+        isError={isError}
+        openModal={openModal}
+      />
+
+
+      {/* Past Outreach Events */}
+      <PastOutreachEvents
+        events={events}
+        isLoading={isLoading}
+        isError={isError.events}
+      />
+
+      
+
+      
       {/*Vedant*/} {/*BME OFFCIIAL GATHERING BLOCK START*/}
       {/* 
      <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
