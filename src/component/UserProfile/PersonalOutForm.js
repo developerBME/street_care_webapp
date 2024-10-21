@@ -25,6 +25,9 @@ import { fetchPersonalVisitLogById } from "../VisitLogCardService";
 import UpdateVisitLogConfirmationModal from "./UpdateVisitLogConfirmationModal";
 import DatePicker from "react-datepicker";
 import { Timestamp } from "firebase/firestore";
+import InfoIcon from '@mui/icons-material/Info';
+// import { IconButton } from "@mui/material";
+import {Tooltip, IconButton} from '@mui/material';
 
 const USERS_COLLECTION = "users";
 
@@ -67,7 +70,7 @@ function PersonalOutForm() {
   // const ratingChanged = (newRating) => {
   //   console.log(newRating);
   // };
-  const dateTimeRef = useRef("");
+  const dateTimeRef = useRef(null); //Changing from ("") to null
   const date = useRef("");
   const time = useRef("");
   const cityRef = useRef("");
@@ -93,6 +96,7 @@ function PersonalOutForm() {
   const [showOptionalQuestions, setShowOptionalQuestions] = useState(false);
   const optDesc = useRef("");
   const optLandmark = useRef("");
+  const today = new Date();
   //////STATES FOR OPTIONAL PART OF THE FORM
   // const furtherHelpDescription = useRef("");
   // const furtherHelpLocation = useRef("");
@@ -171,15 +175,9 @@ function PersonalOutForm() {
     }
   };
 
-  const handleDateTimeChange = (e) => {
+  const handleDateTimeChange = (date) => {
     updateErrorState("dateTimeError", "");
-  };
-
-  const handleDateChange = (e) => {
-    updateErrorState("dateError", "");
-  };
-  const handleTimeChange = (e) => {
-    updateErrorState("timeError", "");
+    console.log('Selected date:', date);
   };
 
   const handleCityChange = (e) => {
@@ -263,12 +261,12 @@ function PersonalOutForm() {
         }
 
         checkboxes.current.map((x) => {
-          const res = logResult.whatGiven.filter((a) => a == x.value);
-          if (res.length != 0) {
+          const res = logResult.whatGiven.filter((a) => a === x.value);
+          if (res.length !== 0) {
             x.checked = true;
             setItemArray(itemArray, x.value);
           }
-          if (x.value == "Other" && hasOtherValues.length > 0) {
+          if (x.value === "Other" && hasOtherValues.length > 0) {
             x.checked = true;
           }
         });
@@ -288,13 +286,13 @@ function PersonalOutForm() {
     };
 
     getStates();
-    if (id != undefined) {
+    if (id !== undefined) {
       getData();
     }
   }, []);
 
   async function getCities(e) {
-    const stateCode = stateList.filter((x) => x.name == e.target.value)[0]
+    const stateCode = stateList.filter((x) => x.name === e.target.value)[0]
       .postalAbreviation;
     const response = await fetch(
       "https://parseapi.back4app.com/classes/Usabystate_" +
@@ -496,8 +494,8 @@ function PersonalOutForm() {
 
     try {
       console.log("Sending email...");
-      // const logRef = collection(db, "personalVisitLog"); // change back to this line in dev branch
-      const logRef = collection(db, "visitLogWebProd");
+       const logRef = collection(db, "personalVisitLog");
+//      const logRef = collection(db, "visitLogWebProd"); //change back to this line in dev branch
       const docRef = await addDoc(logRef, obj);
       if (docRef.id) {
         console.log(docRef.id);
@@ -560,7 +558,7 @@ function PersonalOutForm() {
   const [stateName, setStateName] = useState("");
   const [stateAbbv, setStateAbbv] = useState("");
   const [postcode, setPostcode] = useState("");
-  const [dateTime, setDateTime] = useState();
+  const [dateTime, setDateTime] = useState(new Date());
 
   const handleScriptLoad = (updateQuery, autoCompleteRef) => {
     autoComplete = new window.google.maps.places.Autocomplete(
@@ -643,7 +641,7 @@ function PersonalOutForm() {
       (a) => !checkboxvalues.includes(a)
     );
     if (hasOtherValues.length > 0) {
-      whatGivenArr = whatGivenArr.filter((a) => a != hasOtherValues[0]);
+      whatGivenArr = whatGivenArr.filter((a) => a !== hasOtherValues[0]);
     }
 
     // Form Validation Start
@@ -808,6 +806,17 @@ function PersonalOutForm() {
       () => handleScriptLoad(setAddQuery, autoCompleteRef)
     );
   }, []);
+
+  const toolTipContent=(
+    <div>
+      Mention here the total quantity of items like 5, 12, 20..
+        <ul className="list-disc list-inside">
+          <li>Item: A single, standalone object. Count those individually (e.g., a book, a shirt, a toy, a food can). </li>
+          <li>Collection: Multiple similar items grouped together that cannot be counted. Count them as 1 item (e.g. 1 bag of toys, 1 bag of Legos, 1 box of pins). </li>
+          <li>Bulk Materials:  For materials like fabric, yarn, or crafting supplies,  note the number of pieces (e.g., 1 piece of 5 yards of fabric, 1 roll of wool). </li>
+        </ul>
+    </div>
+  );
 
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
@@ -1028,7 +1037,7 @@ function PersonalOutForm() {
                           for="social-option"
                           className="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300"
                         >
-                          <div class="w-full h-full mb-6  text-base font-semibold ">
+                          <div className="w-full h-full mb-6  text-base font-semibold ">
                             Social Worker /Psychiatrist
                           </div>
                         </label>
@@ -1378,20 +1387,17 @@ function PersonalOutForm() {
                                 setDateTime(date);
                                 handleDateTimeChange(date);
                               }}
-                              showTimeSelect
-                              timeFormat="HH:mm"
-                              timeIntervals={15}
-                              dateFormat="Pp"
+                              showTimeSelect={false} // Remove time selection
+                              dateFormat="dd/MM/yyyy" // Adjust format as needed
+                              maxDate={today} // Prevent selecting dates after today
                               wrapperClassName="w-full"
                               customInput={
                                 <CustomInput
-                                  id="date"
-                                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
-                                    error.dateTimeError !== ""
-                                      ? "ring-red-500"
-                                      : "ring-gray-300"
-                                  }`}
-                                  ref={dateTimeRef}
+                                id="date"
+                                className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                                  error.dateTimeError !== "" ? "ring-red-500" : "ring-gray-300"
+                                }`}
+                                ref={dateTimeRef}
                                 />
                               }
                             />
@@ -1456,6 +1462,11 @@ function PersonalOutForm() {
                     {/**/}
                     <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
                       Total number of participants*
+                      <Tooltip title={toolTipContent} placement="right" arrow>
+                        <IconButton>
+                          <InfoIcon/>
+                        </IconButton>
+                      </Tooltip>
                     </div>
                     <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
                       <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
@@ -1517,7 +1528,7 @@ function PersonalOutForm() {
                     will help us better assist people in need. If yes{" "}
                     <b>
                       <button
-                        className="hover:text-[#6840E0]"
+                        className="text-[#6840E0]"
                         onClick={handleOptionalButtonClick}
                       >
                         click here.
@@ -1770,7 +1781,7 @@ function PersonalOutForm() {
                               for="social-option"
                               className="inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer  peer-checked:border-[#5F36D6]  peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300"
                             >
-                              <div class="w-full h-full mb-6  text-base font-semibold ">
+                              <div className="w-full h-full mb-6  text-base font-semibold ">
                                 Social Worker /Psychiatrist
                               </div>
                             </label>
@@ -1839,12 +1850,34 @@ function PersonalOutForm() {
                       </div> */}
                         <div className="self-stretch h-fit  border-collapse">
                           <div className=" h-14  justify-center items-start ">
-                            <input
+                            {/* <input
                               id="furtherHelpFollowUp"
                               placeholder="2023-01-01"
                               className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
                               required=""
-                            ></input>
+                            ></input> */}
+                            <DatePicker
+                              selected={dateTime}
+                              onChange={(date) => {
+                                setDateTime(date);
+                                handleDateTimeChange(date);
+                              }}
+                              showTimeSelect
+                              timeFormat="HH:mm" // Adjust time format as needed
+                              dateFormat="dd/MM/yyyy HH:mm" // Adjust date format to include time
+                              minDate={new Date(new Date().getTime() + 24 * 60 * 60 * 1000)}
+                              wrapperClassName="w-full"
+                              customInput={
+                                <CustomInput
+                                  id="date"
+                                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                                    error.dateTimeError  
+                            !== "" ? "ring-red-500" : "ring-gray-300"
+                                  }`}
+                                  ref={dateTimeRef}
+                                />
+                              }
+                            />
                           </div>
                         </div>
                       </div>
@@ -1976,7 +2009,7 @@ function PersonalOutForm() {
                   </div>
                 </div>
                 {/*  */}
-                {success && id == undefined && (
+                {success && id === undefined && (
                   // <div className="justify-start items-start gap-4 inline-flex">
                   //   <div className="justify-start items-start gap-4 flex">
                   //     Success!
@@ -1984,7 +2017,7 @@ function PersonalOutForm() {
                   // </div>
                   <ConfirmationModal isOpen={true} />
                 )}
-                {success && id != undefined && (
+                {success && id !== undefined && (
                   <UpdateVisitLogConfirmationModal isOpen={true} />
                 )}
               </div>

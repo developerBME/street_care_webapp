@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import Chip from "../Community/Chip";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, Timestamp, query, where, getDocs, getDoc, updateDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
 import arrowBack from "../../images/arrowBack.png";
@@ -12,6 +12,7 @@ import HelpRequestConfirmationModal from "../Community/HelpRequestConfirmationMo
 let autoComplete;
 
 export const GOOGLE_PLACES_API_KEY = "AIzaSyBpaLVj2EjhjCeHbTUXfcBhBoaQLVathvE";
+const USERS_COLLECTION = "users";
 
 const loadScript = (url, callback) => {
   let script = document.createElement("script");
@@ -71,7 +72,7 @@ function HelpRequestForm() {
   });
   // Address Autocomplete functionality
   const autoCompleteRef = useRef(null);
-  const [query, setQuery] = useState(null);
+  const [addressQuery, setQuery] = useState(null);
   const [street, setStreet] = useState("");
   const [cityName, setCityName] = useState("");
   const [stateName, setStateName] = useState("");
@@ -293,7 +294,7 @@ function HelpRequestForm() {
         zipcode: postcode,
       },
       skills: helpType,
-      createdAt: Date(),
+      createdAt: Timestamp.fromDate(new Date()),
       status: "Need Help", // This is default for every new HR
     };
 
@@ -310,6 +311,25 @@ function HelpRequestForm() {
       const reqRef = collection(db, "helpRequests");
       const docRef = await addDoc(reqRef, obj);
       if (docRef.id) {
+        
+        //added outreach to user collection 
+        const userQuery = query(
+          collection(db, USERS_COLLECTION),
+          where("uid", "==", fAuth?.currentUser?.uid)
+        );
+        const userDocRef = await getDocs(userQuery);
+        const userDocID = userDocRef.docs[0].id;
+        console.log(userDocID);
+        // reference for the userdoc
+        const userRef = doc(db, USERS_COLLECTION, userDocID);
+        // outreach event collection
+        const docSnap = await getDoc(userRef);
+        let createdHelpRequests = docSnap.data().createdHelpRequests || [];
+        createdHelpRequests.push(docRef.id);
+        const updateRef = await updateDoc(userRef, {
+          createdHelpRequests: createdHelpRequests,
+        });
+
         setSuccess(true);
         emailConfirmation(
           fAuth.currentUser.email,
@@ -509,7 +529,7 @@ function HelpRequestForm() {
                         type="text"
                         ref={autoCompleteRef}
                         onChange={(event) => setQuery(event.target.value)}
-                        value={query}
+                        value={addressQuery}
                         placeholder="Enter Address"
                         className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
                           error.autoCompleteError !== ""

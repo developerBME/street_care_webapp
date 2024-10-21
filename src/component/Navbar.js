@@ -22,15 +22,17 @@ import { FaBars } from "react-icons/fa";
 const NavBar = (props) => {
   const [nav, setNav] = useState(false);
   const fAuth = getAuth();
+  const navigate = useNavigate();
   const fireBaseSignOut = async () => {
     signOut(fAuth)
       .then(() => {
         console.log("success");
+        // props.setUser(null);
         navigate("/login");
         props.setLoggedIn(false);
       })
       .catch((error) => {
-        console.log(error);
+        console.log("error", error);
         // An error happened.
       });
   };
@@ -93,8 +95,6 @@ const NavBar = (props) => {
     },
   ];
 
-  const navigate = useNavigate();
-
   const [open, setOpen] = useState(false);
 
   let menuRef = useRef();
@@ -137,25 +137,23 @@ const NavBar = (props) => {
           </NavLink>
         )}
 
-        <ul className="hidden items-center md:flex px-2    leading-6">
+        <ul className="hidden items-center md:flex px-2 leading-6">
           {links.map(({ id, link, label }) => (
             <li
               key={id}
-              className=" mx-6 my-3 text-lg  font-inter font-medium   
-        text-white hover:scale-105 hover:text-[#1FCFF0] duration-200"
+              className=" mx-6 my-3 text-lg  font-inter font-medium text-white hover:scale-105 hover:text-[#1FCFF0] duration-200"
             >
               <Link to={link}>{label}</Link>
             </li>
           ))}
           {/* <li>
-            <button class="bg-white hover:bg-yellow-300 text-black text-lg font-inter font-bold py-3 px-6 rounded-full">
+            <button className="bg-white hover:bg-yellow-300 text-black text-lg font-inter font-bold py-3 px-6 rounded-full">
               Donate
             </button>
           </li> */}
           {!props.loggedIn && (
             <li
-              className=" mx-6 my-3 text-lg font-inter font-medium cursor-pointer  
-        text-white hover:scale-105 hover:text-[#1FCFF0] duration-200"
+              className=" mx-6 my-3 text-lg font-inter font-medium cursor-pointer text-white hover:scale-105 hover:text-[#1FCFF0] duration-200"
               onClick={() => navigate("/login")}
             >
               Login
@@ -189,7 +187,10 @@ const NavBar = (props) => {
 
                       return (
                         <React.Fragment key={e.id}>
-                          <li className=" px-3 cursor-pointer hover:bg-slate-200">
+                          <li
+                            className=" px-3 cursor-pointer hover:bg-slate-200"
+                            onClick={() => setOpen(false)}
+                          >
                             <Link
                               to={e.link}
                               onClick={() => {
@@ -237,7 +238,7 @@ const NavBar = (props) => {
                 </li>
               ))}
               <li>
-                {/* <button class=" items-stretch bg-white hover:bg-yellow-300 text-black font-inter text-xl font-bold py-3 px-7 rounded-full">
+                {/* <button className=" items-stretch bg-white hover:bg-yellow-300 text-black font-inter text-xl font-bold py-3 px-7 rounded-full">
               Donate
             </button> */}
                 <div className="w-[328px] h-14 px-8 py-4 bg-white rounded-[100px] border border-white justify-center items-center gap-2.5 inline-flex">

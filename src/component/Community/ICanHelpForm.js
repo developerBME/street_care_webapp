@@ -6,11 +6,12 @@ import help_announcement from "../../images/help_announcement.png";
 import ConfirmationModal from "./ConfirmationModal";
 import {
   fetchHelpReqById,
-  fetchUserName,
   fetchOutreaches,
 } from "../HelpRequestService";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import ICanHelpConfirmationModal from "./ICanHelpConfirmationModal";
+import { Timestamp } from "@firebase/firestore";
+import { fetchUserName } from "./../HelperFunction";
 
 const ICanHelpForm = () => {
   const navigate = useNavigate();
@@ -77,6 +78,19 @@ const ICanHelpForm = () => {
     return <div>Error: {error}</div>;
   }
 
+  const formatTimestamp = (timestamp) => {
+    console.log('Received timestamp:', timestamp);
+  
+    if (!timestamp) return "";
+  
+    // Check if timestamp is a Firestore Timestamp
+    const date = (timestamp instanceof Timestamp) ? timestamp.toDate() :
+                 (timestamp instanceof Date) ? timestamp :
+                 new Date(timestamp);
+  
+    return date.toLocaleDateString(); // Format date to a readable string
+  };
+
   return (
     <div className="relative flex flex-col items-center ">
       <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-16 lg:mx-40 mt-48 rounded-2xl text-black ">
@@ -115,7 +129,7 @@ const ICanHelpForm = () => {
           </div>
           {data ? (
             <p className="text-[#616161 font-opensans">
-              Posted on : {data.createdAt}
+              Posted on : {formatTimestamp(data.createdAt)}
             </p>
           ) : (
             <p className="text-[#616161 font-opensans">Loading...</p>

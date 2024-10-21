@@ -1,11 +1,16 @@
 import React from "react";
 import CustomButton from "../Buttons/CustomButton";
 
+
 const DeleteModal = ({
   handleClose,
   handleDelete,
   modalMsg
 }) => {
+  const DeleteClick = (event) => {
+    event.stopPropagation();
+    handleDelete();
+  };
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div className="modal-overlay fixed inset-0 bg-black opacity-50"></div>
@@ -23,17 +28,11 @@ const DeleteModal = ({
         </h3>
         <div className="flex gap-x-2">
           <CustomButton
-            name="buttonlight"
+            name="deleteButton"
             label="Delete"
-            onClick={handleDelete}
-          >
-            <p className="text-center mx-auto">Yes</p>
-            {/* Yes */}
-          </CustomButton>
-          <CustomButton name="buttonlight" label="Cancel" onClick={handleClose}>
-            <p className="text-center mx-auto">No</p>
-            {/* No */}
-          </CustomButton>
+            onClick={DeleteClick}
+          />
+          <CustomButton name="buttonborder" label="Cancel" onClick={handleClose} />
         </div>
       </div>
     </div>

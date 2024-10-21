@@ -12,199 +12,6 @@ const HelpRequest = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [visibleItems, setVisibleItems] = useState(3);
 
-  const loadMore = () => {
-    setVisibleItems((prev) => prev + 5);
-  };
-  const helpRequestData = [
-    {
-      helpStatus: "Need Help",
-      helpTitle: "Childcare Support needed in Brooklyn Bridge.",
-      helpTags: ["Childcare", "Counseling and Support"],
-      helpLocation: "123 Plaza, New York",
-      helpHowToFind:
-        "She is around 5’3 tall, with blonde long hair and tattoos on her arm.",
-      helpDescription:
-        " Lucy is 26 years old with a 2 year old daughter seeking for childcare support and general counseling.",
-      helpPostingUser: "K",
-    },
-    {
-      helpStatus: "Help on the way",
-      helpTitle: "Childcare Support needed in Brooklyn Bridge.",
-      helpTags: ["Childcare", "Counseling and Support"],
-      helpLocation: "123 Plaza, New York",
-      helpHowToFind:
-        "She is around 5’3 tall, with blonde long hair and tattoos on her arm.",
-      helpDescription:
-        " Lucy is 26 years old with a 2 year old daughter seeking for childcare support and general counseling.",
-      helpPostingUser: "K",
-    },
-    {
-      helpStatus: "Help Received",
-      helpTitle: "Childcare Support needed in Brooklyn Bridge.",
-      helpTags: ["Childcare", "Counseling and Support"],
-      helpLocation: "123 Plaza, New York",
-      helpHowToFind:
-        "She is around 5’3 tall, with blonde long hair and tattoos on her arm.",
-      helpDescription:
-        " Lucy is 26 years old with a 2 year old daughter seeking for childcare support and general counseling.",
-      helpPostingUser: "K",
-    },
-    {
-      helpStatus: "Need Help",
-      helpTitle: "Childcare Support needed in Brooklyn Bridge.",
-      helpTags: ["Childcare", "Counseling and Support"],
-      helpLocation: "123 Plaza, New York",
-      helpHowToFind:
-        "She is around 5’3 tall, with blonde long hair and tattoos on her arm.",
-      helpDescription:
-        " Lucy is 26 years old with a 2 year old daughter seeking for childcare support and general counseling.",
-      helpPostingUser: "K",
-    },
-    {
-      helpStatus: "Need Help",
-      helpTitle: "Childcare Support needed in Brooklyn Bridge.",
-      helpTags: ["Childcare", "Counseling and Support"],
-      helpLocation: "123 Plaza, New York",
-      helpHowToFind:
-        "She is around 5’3 tall, with blonde long hair and tattoos on her arm.",
-      helpDescription:
-        " Lucy is 26 years old with a 2 year old daughter seeking for childcare support and general counseling.",
-      helpPostingUser: "K",
-    },
-    {
-      helpStatus: "Help on the way",
-      helpTitle: "Childcare Support needed in Brooklyn Bridge.",
-      helpTags: ["Childcare", "Counseling and Support"],
-      helpLocation: "123 Plaza, New York",
-      helpHowToFind:
-        "She is around 5’3 tall, with blonde long hair and tattoos on her arm.",
-      helpDescription:
-        " Lucy is 26 years old with a 2 year old daughter seeking for childcare support and general counseling.",
-      helpPostingUser: "K",
-    },
-    {
-      helpStatus: "Need Help",
-      helpTitle: "Childcare Support needed in Brooklyn Bridge.",
-      helpTags: ["Childcare", "Counseling and Support"],
-      helpLocation: "123 Plaza, New York",
-      helpHowToFind:
-        "She is around 5’3 tall, with blonde long hair and tattoos on her arm.",
-      helpDescription:
-        " Lucy is 26 years old with a 2 year old daughter seeking for childcare support and general counseling.",
-      helpPostingUser: "K",
-    },
-    {
-      helpStatus: "Help on the way",
-      helpTitle: "Childcare Support needed in Brooklyn Bridge.",
-      helpTags: ["Childcare", "Counseling and Support"],
-      helpLocation: "123 Plaza, New York",
-      helpHowToFind:
-        "She is around 5’3 tall, with blonde long hair and tattoos on her arm.",
-      helpDescription:
-        " Lucy is 26 years old with a 2 year old daughter seeking for childcare support and general counseling.",
-      helpPostingUser: "K",
-    },
-    {
-      helpStatus: "Help Received",
-      helpTitle: "Childcare Support needed in Brooklyn Bridge.",
-      helpTags: ["Childcare", "Counseling and Support"],
-      helpLocation: "123 Plaza, New York",
-      helpHowToFind:
-        "She is around 5’3 tall, with blonde long hair and tattoos on her arm.",
-      helpDescription:
-        " Lucy is 26 years old with a 2 year old daughter seeking for childcare support and general counseling.",
-      helpPostingUser: "K",
-    },
-    {
-      helpStatus: "Need Help",
-      helpTitle: "Childcare Support needed in Brooklyn Bridge.",
-      helpTags: ["Childcare", "Counseling and Support"],
-      helpLocation: "123 Plaza, New York",
-      helpHowToFind:
-        "She is around 5’3 tall, with blonde long hair and tattoos on her arm.",
-      helpDescription:
-        " Lucy is 26 years old with a 2 year old daughter seeking for childcare support and general counseling.",
-      helpPostingUser: "K",
-    },
-    {
-      helpStatus: "Need Help",
-      helpTitle: "Childcare Support needed in Brooklyn Bridge.",
-      helpTags: ["Childcare", "Counseling and Support"],
-      helpLocation: "123 Plaza, New York",
-      helpHowToFind:
-        "She is around 5’3 tall, with blonde long hair and tattoos on her arm.",
-      helpDescription:
-        " Lucy is 26 years old with a 2 year old daughter seeking for childcare support and general counseling.",
-      helpPostingUser: "K",
-    },
-    {
-      helpStatus: "Help on the way",
-      helpTitle: "Childcare Support needed in Brooklyn Bridge.",
-      helpTags: ["Childcare", "Counseling and Support"],
-      helpLocation: "123 Plaza, New York",
-      helpHowToFind:
-        "She is around 5’3 tall, with blonde long hair and tattoos on her arm.",
-      helpDescription:
-        " Lucy is 26 years old with a 2 year old daughter seeking for childcare support and general counseling.",
-      helpPostingUser: "K",
-    },
-    {
-      helpStatus: "Help on the way",
-      helpTitle: "Childcare Support needed in Brooklyn Bridge.",
-      helpTags: ["Childcare", "Counseling and Support"],
-      helpLocation: "123 Plaza, New York",
-      helpHowToFind:
-        "She is around 5’3 tall, with blonde long hair and tattoos on her arm.",
-      helpDescription:
-        " Lucy is 26 years old with a 2 year old daughter seeking for childcare support and general counseling.",
-      helpPostingUser: "K",
-    },
-    {
-      helpStatus: "Help Received",
-      helpTitle: "Childcare Support needed in Brooklyn Bridge.",
-      helpTags: ["Childcare", "Counseling and Support"],
-      helpLocation: "123 Plaza, New York",
-      helpHowToFind:
-        "She is around 5’3 tall, with blonde long hair and tattoos on her arm.",
-      helpDescription:
-        " Lucy is 26 years old with a 2 year old daughter seeking for childcare support and general counseling.",
-      helpPostingUser: "K",
-    },
-    {
-      helpStatus: "Need Help",
-      helpTitle: "Childcare Support needed in Brooklyn Bridge.",
-      helpTags: ["Childcare", "Counseling and Support"],
-      helpLocation: "123 Plaza, New York",
-      helpHowToFind:
-        "She is around 5’3 tall, with blonde long hair and tattoos on her arm.",
-      helpDescription:
-        " Lucy is 26 years old with a 2 year old daughter seeking for childcare support and general counseling.",
-      helpPostingUser: "K",
-    },
-    {
-      helpStatus: "Need Help",
-      helpTitle: "Childcare Support needed in Brooklyn Bridge.",
-      helpTags: ["Childcare", "Counseling and Support"],
-      helpLocation: "123 Plaza, New York",
-      helpHowToFind:
-        "She is around 5’3 tall, with blonde long hair and tattoos on her arm.",
-      helpDescription:
-        " Lucy is 26 years old with a 2 year old daughter seeking for childcare support and general counseling.",
-      helpPostingUser: "K",
-    },
-    {
-      helpStatus: "Help on the way",
-      helpTitle: "Childcare Support needed in Brooklyn Bridge.",
-      helpTags: ["Childcare", "Counseling and Support"],
-      helpLocation: "123 Plaza, New York",
-      helpHowToFind:
-        "She is around 5’3 tall, with blonde long hair and tattoos on her arm.",
-      helpDescription:
-        " Lucy is 26 years old with a 2 year old daughter seeking for childcare support and general counseling.",
-      helpPostingUser: "K",
-    },
-  ];
-
   const fetchData = async () => {
     const helpRequestData = await fetchHelpRequests();
 
@@ -217,61 +24,14 @@ const HelpRequest = () => {
   const [helpRequests, setHelpRequests] = useState([]);
 
   useEffect(() => {
-    // const fetchData = async () => {
-    //   const helpRequestData = await fetchHelpRequests();
-
-    //   // Sort helpRequests in place based on their date
-    //   helpRequestData.sort((a, b) => a.createdAt - b.createdAt);
-
-    //   setHelpRequests(helpRequestData);
-    // };
 
     fetchData();
   }, []);
 
-  // // Simulate an API call or data loading
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setIsLoading(false);
-  //   }, 3000); // Simulate a 3-second loading time (adjust as needed)
-
-  //   return () => clearTimeout(timer);
-  // }, []);
-
   return (
     <div>
       <div className="sm:p-4 lg:px-10 lg:py-10 bg-gradient-to-br from-[#C0F4FF] to-[#DDD] rounded-t-2xl px-2 py-6 flex-col justify-start items-start gap-4 inline-flex w-full">
-        {/* <div className="text-2xl font-medium font-dmsans"> */}
-        {/* <div className="flex gap-x-4 items-center"> */}
-
-        {/* <div>
-            <img
-              className="w-12 h-12 lg:w-16 lg:h-16"
-              src={wavingHand}
-              alt="..."
-            ></img>
-          </div> */}
-        {/* <div className="text-[#212121] text-2xl lg:text-4xl font-medium font-dmsans lg:leading-[44px]">
-            Help Requests
-          </div>
-        </div>
-        <div className="text-md font-normal font-dmsans pt-2">
-          What are help requests and how can they help you? If you are ready to
-          help people now, kindly sign up to outreaches
-        </div> */}
-
-        {/* <div className="flex-col">
-          <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-medium font-dmsans leading-tight self-stretch">
-            <CustomButton
-              label="Add New Request"
-              name="buttondefault"
-              onClick={() => {
-                navigate("/helpRequestForm");
-              }}
-            />
-          </div>
-        </div> */}
-
+        
         <div className="flex flex-col md:flex md:flex-row justify-between gap-4 md:gap-10">
           <div className="">
             <div className="flex flex-row gap-4">
@@ -318,8 +78,6 @@ const HelpRequest = () => {
         </div>
       </div>
 
-      {/* <div className="p-4 lg:px-10 lg:py-12 bg-gradient-to-br from-[#D3C3FF] to-[#DEDCE4] rounded-t-2xl flex-col justify-start items-start gap-4 inline-flex w-full"> */}
-
       {isLoading ? (
         <>
           <HelpRequestSkeleton />
@@ -328,24 +86,26 @@ const HelpRequest = () => {
         </>
       ) : (
         <div className="sm:p-4 lg:px-10 lg:py-10 flex flex-col bg-[#F7F7F7] gap-4 lg:gap-8 rounded-b-2xl">
-          <div>
-            {helpRequests.slice(0, visibleItems).map((item, index) => (
-              <HelpRequestCard
-                key={item.id}
-                helpRequestCardData={item}
-                refresh={fetchData}
-              />
-            ))}
-          </div>
-          {/* {visibleItems < helpRequests.length && (
-            <button
-              className="w-fit rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 flex text-center text-[#1F0A58] hover:bg-[#1F0A58] hover:text-white text-[13px] font-medium font-dmsans leading-tight self-stretch px-6 py-2.5"
-              onClick={loadMore}
-            >
-              Load 5 More
-            </button>
-          )} */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {helpRequests.slice(0, visibleItems).map((item) => (
+            <HelpRequestCard
+              key={item.id}
+              helpRequestCardData={item}
+              refresh={fetchData}
+            />
+          ))}
         </div>
+      
+       {/* {visibleItems < helpRequests.length && (
+          <button
+            className="w-fit rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 flex text-center text-[#1F0A58] hover:bg-[#1F0A58] hover:text-white text-[13px] font-medium font-dmsans leading-tight self-stretch px-6 py-2.5"
+            onClick={loadMore}
+          >
+            Load 5 More
+          </button>
+        )}*/}
+      </div>
+      
       )}
     </div>
   );

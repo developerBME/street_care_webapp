@@ -3,75 +3,33 @@ import { useNavigate } from "react-router-dom";
 import arrowRight from "../../images/arrowRight.png";
 import OutreachVisitLogCard from "./OutreachVisitLogCard";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
-import { fetchEvents, formatDate } from "../EventCardService";
-import { fetchVisitLogs, fetchPublicVisitLogs } from "../VisitLogCardService";
+import { fetchPublicVisitLogs } from "../VisitLogCardService"; // Use this function
 import CustomButton from "../Buttons/CustomButton";
+import ErrorMessage from "../ErrorMessage";
 
 const CommunityVisitLog = () => {
   const navigate = useNavigate();
-
-  const cardData = [
-    {
-      userName: "William Smith",
-      title: "BK Fort Green Outreach",
-      eventDate: "Sept 9, 2023 SAT 5:00pm",
-      location: {
-        street: "200 Eastern Pkwy",
-        city: "Brooklyn",
-        state: "NY",
-        zipcode: "11238",
-      },
-      helpType: "Childcare Specialist needed",
-      totalSlots: 20,
-      interests: 5,
-    },
-    {
-      userName: "William Smith",
-      title: "BK Fort Green Outreach",
-      eventDate: "Sept 9, 2023 SAT 5:00pm",
-      location: {
-        street: "200 Eastern Pkwy",
-        city: "Brooklyn",
-        state: "NY",
-        zipcode: "11238",
-      },
-      helpType: "Childcare Specialist needed",
-      totalSlots: 20,
-      interests: 5,
-    },
-    {
-      userName: "William Smith",
-      title: "BK Fort Green Outreach",
-      eventDate: "Sept 9, 2023 SAT 5:00pm",
-      location: {
-        street: "200 Eastern Pkwy",
-        city: "Brooklyn",
-        state: "NY",
-        zipcode: "11238",
-      },
-      helpType: "Childcare Specialist needed",
-      totalSlots: 20,
-      interests: 5,
-    },
-  ];
-
-  const [visitLogs, setVisitLogs] = useState(null);
+  const [visitLogs, setVisitLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
-      const visitLogsData = await fetchPublicVisitLogs();
-      setVisitLogs(visitLogsData);
+      try {
+        // Fetch all visit logs
+        const visitLogsData = await fetchPublicVisitLogs();
+        setVisitLogs(visitLogsData);
+        setIsLoading(false);
+      } catch (error) {
+        setIsError(true);
+        setErrorMsg("Visit logs could not be loaded. Please try again later.");
+        setIsLoading(false);
+      }
     };
 
     fetchData();
   }, []);
-
-  useEffect(() => {
-    if (Array.isArray(visitLogs)) {
-      setIsLoading(false);
-    }
-  }, [visitLogs]);
 
   return (
     <div>
@@ -80,19 +38,17 @@ const CommunityVisitLog = () => {
           <div className="">
             <div className="flex flex-row gap-4">
               <div className="text-[45px] font-medium font-dmsans">
-                Visit Log
+                Visit Logs ({visitLogs?.length || 0})
               </div>
               <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-medium font-dmsans leading-tight self-stretch">
                 <CustomButton
                   label="Create a Visit Log"
                   name="buttondefault"
                   onClick={() => {
-                    navigate("/profile/visitlogform");
+                    navigate("/profile/personaloutform");
                   }}
                 />
               </div>
-
-              {/* </div> */}
             </div>
             <div className="text-md font-medium font-dmsans text-[#181818] mt-2">
               What are help requests and how can they help you? If you are ready
@@ -115,16 +71,15 @@ const CommunityVisitLog = () => {
       </div>
 
       <div className="px-4 py-8 pb-4 lg:px-10 lg:pb-10">
-        <div className="flex items-center justify-between"></div>
         {isLoading ? (
-          // <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
           <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
             <EventCardSkeleton />
             <EventCardSkeleton />
             <EventCardSkeleton />
           </div>
+        ) : isError ? (
+          <ErrorMessage displayName="Visit Logs" />
         ) : visitLogs.length > 0 ? (
-          // <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
           <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
             {visitLogs.slice(0, 3).map((visitLogData, index) => (
               <OutreachVisitLogCard
@@ -135,7 +90,7 @@ const CommunityVisitLog = () => {
             ))}
           </div>
         ) : (
-          <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-5">
+          <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             No visit logs found.
           </div>
         )}

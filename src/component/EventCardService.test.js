@@ -1,7 +1,8 @@
 const {
-  calculateNumberOfPages,
+  calculateNumberOfPagesForOutreach,
   formatDate,
   fetchByCityOrState,
+  fetchVisitLogsByCityOrState
 } = require("./EventCardService");
 const { collection, getDocs, query, where } = require("firebase/firestore");
 const { db } = require("./firebase");
@@ -10,7 +11,7 @@ const assert = require("assert");
 // Mock Firebase Firestore
 jest.mock("firebase/firestore");
 
-describe("calculateNumberOfPages function", () => {
+describe("calculateNumberOfPagesForOutreach function", () => {
   test("calculates the number of pages correctly", async () => {
     const mockOutreachSnapshot = {
       size: 25, // Mocking the total count of outreaches
@@ -21,7 +22,7 @@ describe("calculateNumberOfPages function", () => {
     const outreachesPerPage = 5;
     const expectedNumberOfPages = 5; // 25 / 5 = 5
 
-    const result = await calculateNumberOfPages(outreachesPerPage);
+    const result = await calculateNumberOfPagesForOutreach(outreachesPerPage);
 
     assert.strictEqual(
       result,
@@ -36,7 +37,7 @@ describe("calculateNumberOfPages function", () => {
 
     await assert.rejects(
       async () => {
-        await calculateNumberOfPages(outreachesPerPage);
+        await calculateNumberOfPagesForOutreach(outreachesPerPage);
       },
       { message: "The number of outreaches per page must be between 1 and 10." }
     );
@@ -47,7 +48,7 @@ describe("calculateNumberOfPages function", () => {
 
     await assert.rejects(
       async () => {
-        await calculateNumberOfPages(outreachesPerPage);
+        await calculateNumberOfPagesForOutreach(outreachesPerPage);
       },
       { message: "The number of outreaches per page must be between 1 and 10." }
     );
@@ -234,5 +235,82 @@ describe("formatDate function", () => {
       expected,
       `Expected ${expected}, but got ${result}`
     );
+  });
+});
+
+describe('fetchVisitLogsByCityOrState function', () => {
+
+  const validSearchCityValue = 'Dutch Harbor';
+  const validStartDate = new Date('2023-12-07T00:00:00');
+  const validEndDate = new Date('2024-07-07T00:00:00');
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    consoleErrorSpy.mockRestore();
+  });
+
+  // Test for invalid search value
+  test('should log an error and return if no search value is passed', async () => {
+    const result = await fetchVisitLogsByCityOrState(undefined, validStartDate, validEndDate);
+    expect(console.error).toHaveBeenCalledWith('Invalid search value');
+    expect(result).toBeUndefined();
+  });
+
+  test('logs error and returns if searchCityValue is an object instead of a string', async () => {
+    const result = await fetchVisitLogsByCityOrState({}, validStartDate, validEndDate);
+    expect(console.error).toHaveBeenCalledWith('Invalid search value');
+    expect(result).toBeUndefined();
+  });  
+
+  test('logs error and returns if searchCityValue is an empty string', async () => {
+    const result = await fetchVisitLogsByCityOrState('', validStartDate, validEndDate);
+    expect(console.error).toHaveBeenCalledWith('Invalid search value');
+    expect(result).toBeUndefined();
+  });
+
+  // Test for invalid start Date
+  test('logs error and returns if startDate is not a valid date', async () => {
+    const result = await fetchVisitLogsByCityOrState(validSearchCityValue, 'invalid-date', validEndDate);
+    expect(console.error).toHaveBeenCalledWith('Invalid start date');
+    expect(result).toBeUndefined();
+  });
+
+  test('logs error and returns if startDate is not a Date object', async () => {
+    const result = await fetchVisitLogsByCityOrState(validSearchCityValue, {}, validEndDate);
+    expect(console.error).toHaveBeenCalledWith('Invalid start date');
+    expect(result).toBeUndefined();
+  });
+
+  // Test for invalid end Date
+  test('logs error and returns if endDate is not a valid date', async () => {
+    const result = await fetchVisitLogsByCityOrState(validSearchCityValue, validStartDate, 'invalid-date');
+    expect(console.error).toHaveBeenCalledWith('Invalid end date');
+    expect(result).toBeUndefined();
+  });
+
+  test('logs error and returns if endDate is not a Date object', async () => {
+    const result = await fetchVisitLogsByCityOrState(validSearchCityValue, validStartDate, {});
+    expect(console.error).toHaveBeenCalledWith('Invalid end date');
+    expect(result).toBeUndefined();
+  });
+
+  test("returns empty array if no documents found", async () => {
+    const mockSnapshot = {
+      empty: true,
+      docs: [],
+    };
+    getDocs.mockResolvedValue(mockSnapshot);
+    const visitlogs = await fetchVisitLogsByCityOrState(validSearchCityValue,validStartDate,validEndDate);//promise...write
+    console.log("Results - no documents found:", visitlogs);
+    expect(getDocs).toHaveBeenCalledWith(query(collection(db, "personalVisitLog"), 
+      where("city", '==', validSearchCityValue),
+      where("dateTime", '>=', validStartDate),
+      where('dateTime', '<=', validEndDate)
+    ));
+    expect(visitlogs).toEqual([]);
   });
 });

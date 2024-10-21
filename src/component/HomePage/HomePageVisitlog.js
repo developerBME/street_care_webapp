@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import arrowRight from "../../images/arrowRight.png";
 import OutreachVisitLogCard from "../Community/OutreachVisitLogCard";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
-// import { fetchEvents, formatDate } from "../EventCardService";
-import { fetchVisitLogs, fetchPublicVisitLogs } from "../VisitLogCardService";
+import { fetchTopVisitLogs } from "../VisitLogCardService";
+import ErrorMessage from "../ErrorMessage";
 import CustomButton from "../Buttons/CustomButton";
 
 const HomePageVisitlog = () => {
@@ -57,18 +57,17 @@ const HomePageVisitlog = () => {
 
   const [visitLogs, setVisitLogs] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      const visitLogsData = await fetchPublicVisitLogs();
-      // const latestVisitLogs = visitLogsData.filter((event) => {
-      //   const eventDate = event?.eventDate?.seconds
-      //   ? new Date(event.eventDate.seconds * 1000)
-      //   : event.eventDate;
-      //   return eventDate <= new Date();
-      // });
-      // latestVisitLogs.sort((a, b) => b.eventDate - a.eventDate);
-      setVisitLogs(visitLogsData);
+      try {
+        const visitLogsData = await fetchTopVisitLogs();
+        setVisitLogs(visitLogsData);
+      } catch (error) {
+        setIsError(true);
+        setVisitLogs([]);
+      }
     };
 
     fetchData();
@@ -110,6 +109,8 @@ const HomePageVisitlog = () => {
               <EventCardSkeleton />
               <EventCardSkeleton />
             </div>
+          ) : isError ? (
+            <ErrorMessage displayName="Visit Logs" />
           ) : visitLogs.length > 0 ? (
             // <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
             <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-5">

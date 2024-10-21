@@ -10,12 +10,17 @@ import RSVPConfirmationModal from "../UserProfile/RSVPConfirmationModal";
 import userSlots from "../../images/userSlots.png";
 import date from "../../images/date.png";
 import locate from "../../images/location.png";
+import { useLocation } from "react-router-dom";
+import EditModal from "./EditModal";
 
 const OutreachSignup = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [label2, setLabel2] = useState("RSVP");
   const [success, setSuccess] = useState(false);
+
+  const location = useLocation();
+  const { label } = location.state || {};
 
   const eventDetails = [
     {
@@ -39,7 +44,21 @@ const OutreachSignup = () => {
     };
 
     getData(); // Invoke the async function
+
+    if(label === 'EDIT') {
+      setLabel2('EDIT');
+    }
   }, []);
+
+  const [showModal, setShowModal] = useState(false);
+
+  const handleEditClick = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
 
   return (
     <div className="relative flex flex-col items-center ">
@@ -167,8 +186,8 @@ const OutreachSignup = () => {
 
                 {data ? (
                   <div className="inline-flex items-center gap-2 flex-wrap">
-                    {data.skills.map((item, index) => (
-                      <div className="py-1 px-3 border border-[#C8C8C8] w-fit rounded-xl text-[12px] text-[#444746]">
+                    {data.skills.map((item) => (
+                      <div key={item} className="py-1 px-3 border border-[#C8C8C8] w-fit rounded-xl text-[12px] text-[#444746]">
                         {item}
                       </div>
                     ))}
@@ -207,22 +226,47 @@ const OutreachSignup = () => {
 
             <div className="justify-start items-start gap-[15px] inline-flex">
               <div className="h-10 bg-[#6840E0] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex">
-                <CustomButton
-                  label="Interested?"
-                  name="buttondefault"
-                  onClick={(e) => {
-                    handleRsvp(
-                      e,
-                      id,
-                      "RSVP",
-                      navigate,
-                      "RSVP",
-                      setLabel2,
-                      false
-                    );
-                    setSuccess(true);
-                  }}
-                />
+                {label === "EDIT" ? (
+                  <>
+                    <CustomButton
+                      label="Withdraw"
+                      name="buttondefault"
+                      onClick={handleEditClick}
+                    />
+                    {showModal && (
+                      <EditModal
+                        handleClose={handleCloseModal}
+                        id={id}
+                        label={label}
+                        navigate={navigate}
+                        label2={label2}
+                        setLabel2={setLabel2}
+                        // refresh={refresh}
+                        title={data.title}
+                        eventDate={data.eventDate}
+                        location={data.location}
+                      />
+                      // <div>Modal open</div>
+                    )}
+                  </>
+                ) : (
+                  <CustomButton
+                    label="Sign Up"
+                    name="buttondefault"
+                    onClick={(e) => {
+                      handleRsvp(
+                        e,
+                        id,
+                        "RSVP",
+                        navigate,
+                        "RSVP",
+                        setLabel2,
+                        false
+                      );
+                      setSuccess(true);
+                    }}
+                  />
+                )}
               </div>
 
               <div

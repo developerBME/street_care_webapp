@@ -10,8 +10,7 @@ import {
   GoogleAuthProvider,
 } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
-import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
-import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
@@ -208,9 +207,9 @@ const DeleteAccount = (props) => {
     //                   className="absolute inset-y-0 right-0 flex items-center px-2 text-gray-500"
     //                 >
     //                   {showPassword ? (
-    //                     <VisibilityOffOutlinedIcon />
+    //                     <FaEye />
     //                   ) : (
-    //                     <VisibilityOutlinedIcon />
+    //                     <FaEyeSlash />
     //                   )}
     //                 </button>
     //                 {errormsg.PassError && (
@@ -301,7 +300,7 @@ const DeleteAccount = (props) => {
         <div className="w-[95%] lg:max-w-[850px] xl:max-w-[1120px] mx-2 lg:mx-40 mt-32 mb-16 bg-[#f7f7f7] text-black flex flex-col rounded-2xl">
           <div className="flex flex-col w-full md:flex-row h-full items-start bg-white rounded-2xl">
             {/* <div className="px-[20px] w-fit md:w-1/2 bg-gray flex flex-col items-start justify-normal md:my-20 md:mx-8"> */}
-            <div className="flex flex-col gap-1 w-full md:w-1/2 font-dmsans px-4 py-6 md:py-12 md:px-8 lg:px-12 lg:py-16 xl:pl-16 bg-gray-100 rounded-t-2xl md:rounded-t-none md:rounded-l-2xl">
+            <div className="flex flex-col gap-1 w-full md:w-1/2 font-dmsans px-4 py-6 md:py-12 md:px-8 lg:px-12 lg:py-16 xl:pl-16 bg-gray-100 rounded-t-2xl md:rounded-tr-none md:rounded-l-2xl">
               {/* <div>
                 <h2 className="text-2xl font-bold">Delete Your Account</h2>
               </div> */}
@@ -372,12 +371,12 @@ const DeleteAccount = (props) => {
                     <button
                       type="button"
                       onClick={handleTogglePassword}
-                      className="absolute top-2 right-0 flex items-center px-2 mt-[-2] text-gray-500"
+                      className="absolute inset-y-0 right-3 flex items-center px-2 text-gray-500"
                     >
                       {showPassword ? (
-                        <VisibilityOffOutlinedIcon />
+                        <FaEye />
                       ) : (
-                        <VisibilityOutlinedIcon />
+                        <FaEyeSlash />
                       )}
                     </button>
                     {errormsg.PassError && (

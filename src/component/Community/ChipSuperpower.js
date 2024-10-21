@@ -49,7 +49,7 @@ const ChipSuperpower = (props) => {
           type="checkbox"
           id={props.val}
           value=""
-          class="hidden"
+          className="hidden"
           required=""
           checked={isActive}
         ></input>
