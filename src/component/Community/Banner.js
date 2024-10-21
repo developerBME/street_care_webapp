@@ -1,13 +1,58 @@
-import React from "react";
 import "../../App.css";
-
+import React, { useState, useEffect } from "react";
 import banner from "../../images/community_banner.png";
 import one from "../../images/community_bg1.png";
 import two from "../../images/community_bg3.png";
+import { fetchHelpRequests } from "../HelpRequestService";
+
+function Spinner() {
+  return (
+    <div className="spinner"></div>
+  );
+}
 
 function Metrics() {
+  const [helpRequests, setHelpRequests] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const helpRequestData = await fetchHelpRequests();
+        setHelpRequests(helpRequestData);
+      } catch (error) {
+        console.error("Error fetching help requests:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const numberOfHelpRequests = helpRequests.length;
+
   return (
     <div className="bg-white rounded-3xl lg:text-[18px] md:text-[18px] text-[12px] relative z-[9] md:mx-24 -bottom-16">
+      <style>
+        {`
+          .spinner {
+            margin: 0 auto;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top-color: #3498db;
+            animation: spin 1s infinite linear;
+          }
+
+          @keyframes spin {
+            to {
+              transform: rotate(360deg);
+            }
+          }
+        `}
+      </style>
       <div className="flex flex-wrap h-fit">
         {/* Column 1 */}
         <div className="w-1/4 sm:w-1/4 md:w-1/4 lg:w-1/4 lg:px-[28px] lg:p-[20px] md:p-[18px] p-[18px] lg:text-left md:text-center sm:text-center text-center">
@@ -15,9 +60,9 @@ function Metrics() {
           <p className="font-bold text-violet-800 lg:mb-[24px] md:mb-[10px] sm:mb-[15px] text-center">
             We Helped
           </p>
-          <p className=" text-center">
+          <p className="text-center">
             <span className="text-xl font-bold lg:text-[38px] md:text-[28px] sm:text-[38px] lg:inline-block md:block block sm:mb-[10px]">
-              1031
+              1000+
             </span>{" "}
           </p>
           <p className="text-[#1F0A58] text-center">homeless people</p>
@@ -31,19 +76,19 @@ function Metrics() {
           </p>
           <p className="text-center">
             <span className="text-xl font-bold lg:text-[38px] md:text-[28px] sm:text-[38px] lg:inline-block md:block block sm:mb-[10px]">
-              264
+              400+
             </span>{" "}
           </p>
           <p className="text-[#1F0A58] text-center">volunteers</p>
         </div>
 
         {/* Column 3 */}
-        <div className="w-1/4 sm:w-1/4 md:w-1/4 lg:w-1/4 lg:px-[28px] lg:py-[20px] md:p-[18px] p-[18px] relative border-[#F2F2F2] lg:text-left md:text-center sm:text-center text-center after:content-[''] after:absolute after:border-[1px] after:border-[#F2F2F2] after:border-solid after:top-[30%] after:right-0 lg:after:h-[60px] md:after:h-[60px] after:h-[40px]">
+        <div className="w-1/4 sm:w-1/4 md:w-1/4 lg:w-1/4 lg:px-[28px] lg:py-[20px] md:p-[18px] p-[18px] relative border-[#F2F2F2] lg:text-left md:text-center sm:text-center text-center after:content-[''] after:absolute after:border-[#F2F2F2] after:border-solid after:top-[30%] after:right-0 lg:after:h-[60px] md:after:h-[60px] after:h-[40px]">
           {/* Column content */}
           <p className="font-bold text-violet-800 lg:mb-[24px] md:mb-[10px] sm:mb-[15px] text-center">
             Donated
           </p>
-          <p className=" text-center">
+          <p className="text-center">
             <span className="text-xl mt-auto font-bold lg:text-[38px] md:text-[28px] sm:text-[38px] lg:inline-block md:block block sm:mb-[10px]">
               11,752
             </span>{" "}
@@ -51,6 +96,7 @@ function Metrics() {
           <p className="text-[#1F0A58] text-center">items</p>
         </div>
 
+        
         {/* Column 4 */}
         <div className=" h-full w-1/4 sm:w-1/4 md:w-1/4 lg:w-1/4 lg:px-[28px] lg:py-[20px] md:p-[18px] p-[18px] lg:text-left md:text-center sm:text-center text-center">
           {/* Column content */}
@@ -59,8 +105,7 @@ function Metrics() {
           </p>
           <p className=" text-center">
             <span className="text-xl mt-auto font-bold lg:text-[38px] md:text-[28px] sm:text-[38px] lg:inline-block md:block block sm:mb-[10px]">
-              14
-            </span>{" "}
+            {isLoading ? <Spinner /> : numberOfHelpRequests}</span>{" "}
           </p>
           <p className="text-[#1F0A58] text-center">available</p>
         </div>
@@ -100,7 +145,7 @@ function Banner() {
           </div>
         </div>
       </div>
-      <Metrics />
+      <Metrics  />
     </div>
   );
 }

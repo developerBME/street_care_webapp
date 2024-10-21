@@ -5,9 +5,10 @@ import arrowDropDown from "../../images/arrowDropDown.png";
 import arrowRight from "../../images/arrowRight.png";
 import CustomButton from "../Buttons/CustomButton";
 import OutreachVisitLogCard from "../Community/OutreachVisitLogCard";
-import { fetchEvents, formatDate } from "../EventCardService";
+import { fetchEvents } from "../EventCardService";
 import { fetchVisitLogs } from "../VisitLogCardService";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
+import { formatDate } from "./../HelperFunction";
 
 const EventOutrachesSection = () => {
     const [visibleItems, setVisibleItems] = useState(3);
@@ -76,7 +77,7 @@ const EventOutrachesSection = () => {
             setVisitLogs(visitLogsData);
             // Filter events to get only past events
             const upcomingEvents = eventsData.filter((event) => {
-                const eventDate = new Date(event.eventDate.seconds * 1000);
+                const eventDate = new Date(event?.eventDate?.seconds * 1000);
                 return eventDate <= new Date(); // Check if the event date is before the current date
             });
             // Sort events in place based on their date

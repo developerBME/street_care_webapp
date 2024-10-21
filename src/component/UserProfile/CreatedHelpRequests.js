@@ -3,11 +3,12 @@ import CustomButton from "../Buttons/CustomButton";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import OutreachEventCard from "../Community/OutreachEventCard";
 import NoDisplayData from "./NoDisplayData";
-import { formatDate, fetchUserOutreaches } from "../EventCardService";
+import {fetchUserOutreaches } from "../EventCardService";
 import { auth } from "../firebase";
 import ErrorMessage from "../ErrorMessage";
 import icon from "../../images/icon.png";
 import { useNavigate } from "react-router-dom";
+import { formatDate } from "./../HelperFunction";
 
 const CreatedHelpRequests = () => {
   const [createdEvents, setCreatedEvents] = useState([]);
