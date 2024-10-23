@@ -212,6 +212,15 @@ const AllHelpRequests = () => {
             </div>
           </div>
 
+          {/* Pagination Section */}
+          <div className="flex justify-between items-center mt-8 w-full">
+            <p className="text-gray-600">
+              Showing {currentHelpRequests.length} of{" "}
+              {helpRequestsDisplay.length} help requests
+            </p>
+            <div className="flex justify-end">{renderPaginationButtons()}</div>
+          </div>
+
           {isLoading ? (
             <div className="grid grid-cols-1 w-full h-fit">
               <HelpRequestSkeleton />
