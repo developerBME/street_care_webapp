@@ -628,7 +628,21 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else {
+  } else if(name=="close"){
+    return (
+      <button
+        onClick={onClick}
+        className={`bg-[#000]] border border-[#C8C8C8] text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 inline-flex ${
+          disable !== "true"
+            ? "text-[#1F0A58] border border-[#6840E0] hover:bg-[#c4b6e7]"
+            : " text-[#1F0A58] border border-[#6840E0] cursor-not-allowed"
+        }`}
+      >
+        {icon && (<img src={icon} className="w-5 h-5 " />)}
+        {label}
+      </button>
+    );
+  }else {
     return (
       <button
         onClick={onClick}
