@@ -1,7 +1,7 @@
 import React from "react";
 
 function CustomButton({ label, name, onClick, icon, disable, type, textColor }) {
-  if (name == "buttonborder") {
+  if (name === "buttonborder") {
     return (
       <button
         onClick={onClick}
@@ -14,7 +14,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonbordericon") {
+  } else if (name === "buttonbordericon") {
     return (
       <button
         onClick={onClick}
@@ -28,7 +28,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonicon4") {
+  } else if (name === "buttonicon4") {
     return (
       <button
         onClick={onClick}
@@ -41,7 +41,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         <img src={icon} className="w-5 h-5 " />
       </button>
     );
-  } else if (name == "buttondefault") {
+  } else if (name === "buttondefault") {
     return (
       <button
         onClick={onClick}
@@ -54,7 +54,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttondefaultlong") {
+  } else if (name === "buttondefaultlong") {
     return (
       <button
         onClick={onClick}
@@ -67,7 +67,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttondefaulticon") {
+  } else if (name === "buttondefaulticon") {
     return (
       <button
         onClick={onClick}
@@ -81,7 +81,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonicon1") {
+  } else if (name === "buttonicon1") {
     return (
       <button
         onClick={onClick}
@@ -94,7 +94,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         <img src={icon} className="w-5 h-5 " />
       </button>
     );
-  } else if (name == "buttonlight") {
+  } else if (name === "buttonlight") {
     return (
       <button
         onClick={onClick}
@@ -107,7 +107,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonlighticon") {
+  } else if (name === "buttonlighticon") {
     return (
       <button
         onClick={onClick}
@@ -121,7 +121,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonicon2") {
+  } else if (name === "buttonicon2") {
     return (
       <button
         onClick={onClick}
@@ -134,7 +134,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         <img src={icon} className="w-5 h-5 " />
       </button>
     );
-  } else if (name == "buttonblue") {
+  } else if (name === "buttonblue") {
     return (
       <button
         onClick={onClick}
@@ -147,7 +147,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonblueicon") {
+  } else if (name === "buttonblueicon") {
     return (
       <button
         onClick={onClick}
@@ -161,7 +161,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonicon3") {
+  } else if (name === "buttonicon3") {
     return (
       <button
         onClick={onClick}
@@ -174,7 +174,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         <img src={icon} className="w-5 h-5 " />
       </button>
     );
-  } else if (name == "buttonsmall") {
+  } else if (name === "buttonsmall") {
     return (
       <button
         onClick={onClick}
@@ -187,7 +187,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonsmallicon") {
+  } else if (name === "buttonsmallicon") {
     return (
       <button
         onClick={onClick}
@@ -201,7 +201,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonicon5") {
+  } else if (name === "buttonicon5") {
     return (
       <button
         onClick={onClick}
@@ -214,7 +214,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         <img src={icon} className="w-5 h-5 " />
       </button>
     );
-  } else if (name == "buttonsmallight") {
+  } else if (name === "buttonsmallight") {
     return (
       <button
         onClick={onClick}
@@ -227,7 +227,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonsmallighticon") {
+  } else if (name === "buttonsmallighticon") {
     return (
       <button
         onClick={onClick}
@@ -241,7 +241,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonicon6") {
+  } else if (name === "buttonicon6") {
     return (
       <button
         onClick={onClick}
@@ -254,7 +254,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         <img src={icon} className="w-5 h-5 " />
       </button>
     );
-  } else if (name == "buttonsmallblue") {
+  } else if (name === "buttonsmallblue") {
     return (
       <button
         onClick={onClick}
@@ -267,7 +267,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonsmallblue2") {
+  } else if (name === "buttonsmallblue2") {
     return (
       <button
         onClick={onClick}
@@ -280,7 +280,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonsmallblueicon") {
+  } else if (name === "buttonsmallblueicon") {
     return (
       <button
         onClick={onClick}
@@ -294,7 +294,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonicon7") {
+  } else if (name === "buttonicon7") {
     return (
       <button
         onClick={onClick}
@@ -307,7 +307,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         <img src={icon} className="w-5 h-5 " />
       </button>
     );
-  } else if (name == "buttonmediumlight") {
+  } else if (name === "buttonmediumlight") {
     return (
       <button
         onClick={onClick}
@@ -320,7 +320,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonsmallborder") {
+  } else if (name === "buttonsmallborder") {
     return (
       <button
         onClick={onClick}
@@ -333,7 +333,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonsmallbordericon") {
+  } else if (name === "buttonsmallbordericon") {
     return (
       <button
         onClick={onClick}
@@ -347,7 +347,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonicon8") {
+  } else if (name === "buttonicon8") {
     return (
       <button
         onClick={onClick}
@@ -360,7 +360,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         <img src={icon} className="w-5 h-5 " />
       </button>
     );
-  } else if (name == "buttonicon8small") {
+  } else if (name === "buttonicon8small") {
     return (
       <button
         onClick={onClick}
@@ -373,7 +373,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         <img src={icon} className="w-4 h-4 text-[#7f56f1]" />
       </button>
     );
-  } else if (name == "buttonlightsmall") {
+  } else if (name === "buttonlightsmall") {
     return (
       <button
         onClick={onClick}
@@ -386,7 +386,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonsmallborder2") {
+  } else if (name === "buttonsmallborder2") {
     return (
       <button
         onClick={onClick}
@@ -399,7 +399,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonlg") {
+  } else if (name === "buttonlg") {
     return (
       <button
         onClick={onClick}
@@ -412,7 +412,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonlgicon") {
+  } else if (name === "buttonlgicon") {
     return (
       <button
         onClick={onClick}
@@ -426,7 +426,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonicon9") {
+  } else if (name === "buttonicon9") {
     return (
       <button
         onClick={onClick}
@@ -439,7 +439,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         <img src={icon} className="w-5 h-5 " />
       </button>
     );
-  } else if (name == "buttonlgblue") {
+  } else if (name === "buttonlgblue") {
     return (
       <button
         onClick={onClick}
@@ -452,7 +452,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonlgblueicon") {
+  } else if (name === "buttonlgblueicon") {
     return (
       <button
         onClick={onClick}
@@ -466,7 +466,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonicon10") {
+  } else if (name === "buttonicon10") {
     return (
       <button
         onClick={onClick}
@@ -479,7 +479,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         <img src={icon} className="w-5 h-5 " />
       </button>
     );
-  } else if (name == "buttonlglight") {
+  } else if (name === "buttonlglight") {
     return (
       <button
         onClick={onClick}
@@ -492,7 +492,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonlglighticon") {
+  } else if (name === "buttonlglighticon") {
     return (
       <button
         onClick={onClick}
@@ -506,7 +506,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonicon11") {
+  } else if (name === "buttonicon11") {
     return (
       <button
         onClick={onClick}
@@ -519,7 +519,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         <img src={icon} className="w-5 h-5 " />
       </button>
     );
-  } else if (name == "buttonlgborder") {
+  } else if (name === "buttonlgborder") {
     return (
       <button
         onClick={onClick}
@@ -532,7 +532,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonbordericon") {
+  } else if (name === "buttonbordericon") {
     return (
       <button
         onClick={onClick}
@@ -546,7 +546,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonicon12") {
+  } else if (name === "buttonicon12") {
     return (
       <button
         onClick={onClick}
@@ -559,7 +559,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         <img src={icon} className="w-5 h-5 " />
       </button>
     );
-  } else if (name == "buttondefaultwide") {
+  } else if (name === "buttondefaultwide") {
     return (
       <button
         onClick={onClick}
@@ -573,7 +573,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttondInprogressWide") {
+  } else if (name === "buttondInprogressWide") {
     return (
       <button
         onClick={onClick}
@@ -587,7 +587,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "buttonClosedWide") {
+  } else if (name === "buttonClosedWide") {
     return (
       <button
         onClick={onClick}
@@ -601,7 +601,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "deleteButton") {
+  } else if (name === "deleteButton") {
     return (
       <button
         onClick={onClick}
@@ -614,7 +614,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if (name == "editButton") {
+  } else if (name === "editButton") {
     return (
       <button
         onClick={onClick}
@@ -628,7 +628,7 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         {label}
       </button>
     );
-  } else if(name=="close"){
+  } else if(name==="close"){
     return (
       <button
         onClick={onClick}
