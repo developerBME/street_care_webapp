@@ -1,179 +1,189 @@
-import React, { useState } from 'react';
-import defaultImage from '../../images/default_avatar.svg';
-import verifiedImg from '../../images/verified_purple.png';
-import CustomButton from '../Buttons/CustomButton';
-import { useNavigate } from 'react-router-dom';
-import EditModal from './EditModal';
-import userSlots from '../../images/userSlots.png';
-import date from '../../images/date.png';
-import locate from '../../images/location.png';
-import { formatDate } from '../helper';
-import CardTags from './CardTags';
+import React, { useState } from "react";
+import clsx from "clsx";
+import defaultImage from "../../images/default_avatar.svg";
+import verifiedImg from "../../images/verified_purple.png";
+import CustomButton from "../Buttons/CustomButton";
+import { useNavigate } from "react-router-dom";
+import EditModal from "./EditModal";
+import userSlots from "../../images/userSlots.png";
+import date from "../../images/date.png";
+import locate from "../../images/location.png";
+import { formatDate } from "../helper";
+import CardTags from "./CardTags";
+import HelpRequestCard from "./HelpRequestCard";
 
 const OutreachEventCard = ({
-	cardData,
-	isProfilePage,
-	refresh,
-	isPastEvent,
-	openModal,
+  cardData,
+  isProfilePage,
+  refresh,
+  isPastEvent,
+  openModal,
+  isHelpRequestCard,
 }) => {
-	const {
-		id,
-		label,
-		userName,
-		title,
-		eventDate,
-		location,
-		totalSlots,
-		nop,
-		photoUrl,
-		description,
-		skills,
-	} = cardData;
-	const navigate = useNavigate();
-	const [label2, setLabel2] = useState(label);
-	console.log(label2);
+  const {
+    id,
+    label,
+    userName,
+    title,
+    eventDate,
+    location,
+    totalSlots,
+    nop,
+    photoUrl,
+    description,
+    skills,
+  } = cardData;
+  const navigate = useNavigate();
+  const [label2, setLabel2] = useState(label);
+  console.log(label2);
 
-	const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
-	const handleEditClick = () => {
-		setShowModal(true);
-	};
+  const handleEditClick = () => {
+    setShowModal(true);
+  };
 
-	const handleCloseModal = () => {
-		setShowModal(false);
-	};
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
 
-	const detailOutreach = () =>{
-		navigate(`/outreachsignup/${id}`, {
-			state: { label: 'EDIT' },
-		});
-	};
+  const detailOutreach = () => {
+    navigate(`/outreachsignup/${id}`, {
+      state: { label: "EDIT" },
+    });
+  };
 
-	return (
-		<div
-			className="bg-[#F5EEFE] min-w-full max-w-[320px] lg:w-full rounded-[30px] mb-4 flex flex-col justify-between p-6 cursor-pointer"
-			onClick={openModal}
-		>
-			{!isProfilePage && !isPastEvent ? (
-				<div className="inline-flex items-center space-x-2 ">
-					<img
-						alt=""
-						src={photoUrl || defaultImage}
-						className="w-8 h-8 rounded-full"
-					/>
-					<div className="font-normal font-inter text-[13px] ">
-						{userName}
-					</div>
-					<img alt="" src={verifiedImg} className="w-5 h-5" />
-				</div>
-			) : (
-				<div className="mt-3"></div>
-			)}
+  return (
+    <div
+      className={clsx(
+        "min-w-full max-w-[320px] lg:w-full rounded-[30px] mb-4 flex flex-col justify-between cursor-pointer",
+        { "bg-[#F5EEFE] p-6": !isHelpRequestCard }
+      )}
+      onClick={openModal}
+    >
+      {!isProfilePage && !isPastEvent ? (
+        <div className="inline-flex items-center space-x-2 ">
+          <img
+            alt=""
+            src={photoUrl || defaultImage}
+            className="w-8 h-8 rounded-full"
+          />
+          <div className="font-normal font-inter text-[13px] ">{userName}</div>
+          <img alt="" src={verifiedImg} className="w-5 h-5" />
+        </div>
+      ) : (
+        <div className="mt-3"></div>
+      )}
 
-			{isProfilePage ? (
-				<div className="my-3 space-y-3 w-full h-full flex flex-col" onClick={detailOutreach}>
-					<div className="flex flex-col justify-between space-y-3">
-						<div className="flex flex-row justify-normal space-x-2">
-							<img
-								alt=""
-								className="w-[13px] h-[15px] my-[3px]"
-								src={date}
-							/>
-							<div className="font-medium font-dmsans text-[14px] text-[#37168B]">
-								{formatDate(eventDate)}
-							</div>
-						</div>
-						<div className="flex flex-row justify-normal space-x-2">
-							<img
-								alt=""
-								className="w-[12px] h-[15px] my-[3px]"
-								src={locate}
-							/>
-							<div className="font-medium font-dmsans text-[14px] text-[#37168B]">
-								{location.city}, {location.state}
-							</div>
-						</div>
-					</div>
+      {isProfilePage ? (
+        isHelpRequestCard ? (
+          <HelpRequestCard
+            onClick={detailOutreach}
+            helpRequestCardData={{
+              ...cardData,
+              ...(cardData?.status ? {} : { status: "Need Help" }),
+            }}
+            isProfileHelpCard={true}
+          ></HelpRequestCard>
+        ) : (
+          <div
+            className="my-3 space-y-3 w-full h-full flex flex-col"
+            onClick={detailOutreach}
+          >
+            <div className="flex flex-col justify-between space-y-3">
+              <div className="flex flex-row justify-normal space-x-2">
+                <img alt="" className="w-[13px] h-[15px] my-[3px]" src={date} />
+                <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
+                  {formatDate(eventDate)}
+                </div>
+              </div>
+              <div className="flex flex-row justify-normal space-x-2">
+                <img
+                  alt=""
+                  className="w-[12px] h-[15px] my-[3px]"
+                  src={locate}
+                />
+                <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
+                  {location.city}, {location.state}
+                </div>
+              </div>
+            </div>
 
-					<h1 className="font-medium font-dmsans text-[24px] line-clamp-1">
-						{title}
-					</h1>
+            <h1 className="font-medium font-dmsans text-[24px] line-clamp-1">
+              {title}
+            </h1>
 
-					<div className="font-medium text-[14px] font-dmsans text-[#444746] line-clamp-2 h-10">
-						{description}
-					</div>
+            <div className="font-medium text-[14px] font-dmsans text-[#444746] line-clamp-2 h-10">
+              {description}
+            </div>
 
-					<CardTags tags={skills} />
-				</div>
-			) : (
-				<div className="my-3 space-y-3 w-full h-full flex flex-col" onClick={detailOutreach}>
-					{isPastEvent ? (
-						<div className="flex flex-row justify-between">
-							<div className="flex flex-row justify-normal space-x-2">
-								<img
-									alt=""
-									className="w-[13px] h-[15px] my-[2px]"
-									src={date}
-								/>
-								<div className="font-medium font-dmsans text-[12px] text-[#37168B]">
-									{formatDate(eventDate)}
-								</div>
-							</div>
-							<div className="flex flex-row justify-normal space-x-2">
-								<img
-									alt=""
-									className="w-[12px] h-[15px] my-[2px]"
-									src={locate}
-								/>
-								<div className="font-medium font-dmsans text-[12px] text-[#37168B]">
-									{location.city},{' '}
-									{location.stateAbbv || location.state}
-								</div>
-							</div>
-						</div>
-					) : (
-						<div className="flex flex-row justify-between" onClick={detailOutreach}>
-							<div className="flex flex-row justify-normal space-x-2">
-								<img
-									alt=""
-									className="w-[13px] h-[15px] my-[3px]"
-									src={date}
-								/>
-								<div className="font-medium font-dmsans text-[14px] text-[#37168B]">
-									{formatDate(eventDate)}
-								</div>
-							</div>
-							<div className="flex flex-row justify-normal space-x-2">
-								<img
-									alt=""
-									className="w-[12px] h-[15px] my-[3px]"
-									src={locate}
-								/>
-								<div className="font-medium font-dmsans text-[14px] text-[#37168B]">
-									{location.city},{' '}
-									{location.stateAbbv || location.state}
-								</div>
-							</div>
-						</div>
-					)}
-					<h1 className="font-medium font-dmsans text-[24px] line-clamp-1">
-						{title}
-					</h1>
+            <CardTags tags={skills} />
+          </div>
+        )
+      ) : (
+        <div
+          className="my-3 space-y-3 w-full h-full flex flex-col"
+          onClick={detailOutreach}
+        >
+          {isPastEvent ? (
+            <div className="flex flex-row justify-between">
+              <div className="flex flex-row justify-normal space-x-2">
+                <img alt="" className="w-[13px] h-[15px] my-[2px]" src={date} />
+                <div className="font-medium font-dmsans text-[12px] text-[#37168B]">
+                  {formatDate(eventDate)}
+                </div>
+              </div>
+              <div className="flex flex-row justify-normal space-x-2">
+                <img
+                  alt=""
+                  className="w-[12px] h-[15px] my-[2px]"
+                  src={locate}
+                />
+                <div className="font-medium font-dmsans text-[12px] text-[#37168B]">
+                  {location.city}, {location.stateAbbv || location.state}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div
+              className="flex flex-row justify-between"
+              onClick={detailOutreach}
+            >
+              <div className="flex flex-row justify-normal space-x-2">
+                <img alt="" className="w-[13px] h-[15px] my-[3px]" src={date} />
+                <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
+                  {formatDate(eventDate)}
+                </div>
+              </div>
+              <div className="flex flex-row justify-normal space-x-2">
+                <img
+                  alt=""
+                  className="w-[12px] h-[15px] my-[3px]"
+                  src={locate}
+                />
+                <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
+                  {location.city}, {location.stateAbbv || location.state}
+                </div>
+              </div>
+            </div>
+          )}
+          <h1 className="font-medium font-dmsans text-[24px] line-clamp-1">
+            {title}
+          </h1>
 
-					<div className="font-medium text-[14px] font-dmsans text-[#444746] line-clamp-2 h-10">
-						{description}
-					</div>
+          <div className="font-medium text-[14px] font-dmsans text-[#444746] line-clamp-2 h-10">
+            {description}
+          </div>
 
-					<CardTags tags={skills} />
-				</div>
-			)}
-			{!isPastEvent ? (
-				<div className=" flex flex-col justify-end">
-					<div className="flex items-center justify-between gap-16 my-1">
-						{isProfilePage || label2 === 'EDIT' ? (
-							<div className="group relative">
-								{/* <CustomButton
+          <CardTags tags={skills} />
+        </div>
+      )}
+      {!isPastEvent ? (
+        <div className=" flex flex-col justify-end">
+          <div className="flex items-center justify-between gap-16 my-1">
+            {isProfilePage || label2 === "EDIT" ? (
+              <div className="group relative">
+                {/* <CustomButton
 									label="View"
 									name="buttonlight"
 									onClick={() => {
@@ -183,7 +193,7 @@ const OutreachEventCard = ({
 									}}
 								></CustomButton> */}
 
-								{/* <CustomButton
+                {/* <CustomButton
                   label="Edit"
                   name="buttonlight"
                   onClick={handleEditClick}
@@ -203,10 +213,10 @@ const OutreachEventCard = ({
                     location={location}
                   />
                 )} */}
-							</div>
-						) : (
-							<div className="flex flex-row">
-								{/* <div className="group relative mr-2">
+              </div>
+            ) : (
+              <div className="flex flex-row">
+                {/* <div className="group relative mr-2">
                   <CustomButton
                     label={label2}
                     name="buttonlight"
@@ -215,11 +225,11 @@ const OutreachEventCard = ({
                     }}
                   />
                 </div> */}
-							</div>
-						)}
+              </div>
+            )}
 
-						{/* This code is for adding number of volunteer ppl value to show up. */}
-						{/* {!isProfilePage ? (
+            {/* This code is for adding number of volunteer ppl value to show up. */}
+            {/* {!isProfilePage ? (
               <div className="flex flex-row space-x-2">
                 <img
                   alt=""
@@ -233,13 +243,13 @@ const OutreachEventCard = ({
             ) : (
               <div></div>
             )} */}
-					</div>
-				</div>
-			) : (
-				<div className="mt-5 "></div>
-			)}
-		</div>
-	);
+          </div>
+        </div>
+      ) : (
+        <div className="mt-5 "></div>
+      )}
+    </div>
+  );
 };
 
 export default OutreachEventCard;

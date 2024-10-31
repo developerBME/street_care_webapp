@@ -6,7 +6,11 @@ import CustomButton from "../Buttons/CustomButton";
 import help_pending from "../../images/help_pending.png";
 import help_received from "../../images/help_received.png";
 
-const HelpRequestCard = ({ helpRequestCardData }) => {
+const HelpRequestCard = ({
+  helpRequestCardData,
+  onClick = () => {},
+  isProfileHelpCard = false,
+}) => {
   const [showDetails, setShowDetails] = useState(false);
 
   const {
@@ -29,15 +33,15 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
   switch (helpStatus) {
     case "Need Help":
       buttonText = "Offer Help";
-      buttonStyleClass = "buttondefaultwide";//"bg-purple-600 text-white hover:bg-purple-500";
+      buttonStyleClass = "buttondefaultwide"; //"bg-purple-600 text-white hover:bg-purple-500";
       break;
     case "Help on the way":
       buttonText = "Mark Received";
-      buttonStyleClass = "buttondInprogressWide";//"bg-yellow-500 text-white hover:bg-yellow-400";
+      buttonStyleClass = "buttondInprogressWide"; //"bg-yellow-500 text-white hover:bg-yellow-400";
       break;
     case "Help Received":
       buttonText = "Reopen Request";
-      buttonStyleClass = "buttonClosedWide";//"border border-gray-400 text-gray-700 hover:bg-gray-100";
+      buttonStyleClass = "buttonClosedWide"; //"border border-gray-400 text-gray-700 hover:bg-gray-100";
       break;
     default:
       buttonText = "Take Action";
@@ -45,12 +49,19 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-xs mx-auto flex flex-col justify-between">
+    <div
+      className="bg-white rounded-xl shadow-lg p-6 w-full max-w-xs mx-auto flex flex-col justify-between"
+      onClick={onClick}
+    >
       {/* Status Badge */}
       <div className="mb-4">
         {helpStatus === "Need Help" && (
           <div className="bg-red-100 text-red-600 rounded-xl px-4 py-2 text-xs inline-flex items-center mb-2">
-            <img className="w-5 h-5 mr-2" src={help_announcement} alt="Status" />
+            <img
+              className="w-5 h-5 mr-2"
+              src={help_announcement}
+              alt="Status"
+            />
             <span className="font-semibold">Needs Help</span>
           </div>
         )}
@@ -81,7 +92,8 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
       <div className="flex items-center text-sm text-indigo-600 mb-4">
         <IoLocationSharp className="w-5 h-5 mr-1" />
         <span>
-          {helpLocation.street}, {helpLocation.city}, {helpLocation.state} {helpLocation.zipcode}
+          {helpLocation.street}, {helpLocation.city}, {helpLocation.state}{" "}
+          {helpLocation.zipcode}
         </span>
       </div>
 
@@ -118,10 +130,10 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
       </p>
 
       {/* Button */}
-      <CustomButton
-          label={buttonText}
-          name= {buttonStyleClass}
-       />
+      {!isProfileHelpCard && (
+        <CustomButton label={buttonText} name={buttonStyleClass} />
+      )}
+
       {/* <button
         //className={`mt-4 w-full py-2 rounded-full text-sm font-medium ${buttonStyleClass}`}
       >
