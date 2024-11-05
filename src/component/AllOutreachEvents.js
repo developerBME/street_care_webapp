@@ -124,7 +124,7 @@ const AllOutreachEvents = () => {
     setSelectedEvent(event);
   };
 
-  const closeModal = () => {
+const closeModal = () => {
     setSelectedEvent(null);
   };
 
