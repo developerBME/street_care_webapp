@@ -10,23 +10,21 @@ import {
   limit,
   startAt,
   or,
-  arrayRemove,
   deleteDoc,
- } from "firebase/firestore";
- import { db } from "./firebase";
- import { getAuth, onAuthStateChanged } from "firebase/auth";
- import logEvent from "./FirebaseLogger";
- import { Timestamp } from 'firebase/firestore';
- import { fetchUserName, formatDate, getNumberOfPages } from "./HelperFunction";
- 
- const OFFICIAL_EVENTS_COLLECTION = "officialEvents";
- const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
- const PAST_OUTREACH_EVENTS_COLLECTION = "pastOutreachEvents";
- const USERS_COLLECTION = "users";
- const PERSONAL_VISIT_LOG = "personalVisitLog";
- 
- 
- export const fetchEvents = async () => {
+  arrayRemove,
+} from "firebase/firestore";
+import { db } from "./firebase";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import logEvent from "./FirebaseLogger";
+import { Timestamp } from "firebase/firestore";
+
+const OFFICIAL_EVENTS_COLLECTION = "officialEvents";
+const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
+const PAST_OUTREACH_EVENTS_COLLECTION = "pastOutreachEvents";
+const USERS_COLLECTION = "users";
+const PERSONAL_VISIT_LOG = "personalVisitLog";
+
+export const fetchEvents = async () => {
   try {
     const oureachEventsRef = collection(db, OUTREACH_EVENTS_COLLECTION);
     const eventSnapshot = await getDocs(oureachEventsRef);
@@ -941,11 +939,10 @@ export const fetchTopOutreaches = async () => {
     );
     throw error;
   }
- };
- 
- 
- //  const testlatestfunc = await fetchTopOutreaches();
- //  console.log(testlatestfunc);
+};
+
+//  const testlatestfunc = await fetchTopOutreaches();
+//  console.log(testlatestfunc);
  
 
  export const delUserOutreach = async (eventID) => {
