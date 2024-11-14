@@ -17,6 +17,26 @@
     {
       "source": "functions/decodeToken",
       "codebase": "decode-token"
+    },
+    {
+      "source": "functions/send2FACodeForEmailUpdate",
+      "codebase": "send-update-email-code"
+    },
+    {
+      "source": "functions/send2FA",
+      "codebase": "send-code"
+    },
+    {
+      "source": "functions/sendConfirmationLink",
+      "codebase": "send-confirmation-link"
+    },
+    {
+      "source": "functions/verifyUpdateEmail2FA",
+      "codebase": "verify-update-email"
+    },
+    {
+      "source": "functions/customUpdateUserEmail",
+      "codebase": "custom-update-user-email"
     }
   ]
 }
