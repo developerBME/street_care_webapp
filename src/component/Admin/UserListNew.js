@@ -42,6 +42,7 @@ export default function UserListNew() {
 
   const [filter, setFilter] = useState("all");
   const [open, setOpen] = useState(false);
+  const [adminUsers, setAdminUsers] = useState({});
 
   const handleChange = (event) => {
     setFilter(event.target.value);
@@ -55,10 +56,12 @@ export default function UserListNew() {
       try {
         const usersQuery = query(collection(db, "users"));
         const bannedQuery = query(collection(db, "bannedUser"));
+        const adminQuery = query(collection(db, "adminUsers"));
 
-        const [userSnapshot, bannedSnapshot] = await Promise.all([
+        const [userSnapshot, bannedSnapshot, adminUserSnapshot] = await Promise.all([
           getDocs(usersQuery),
           getDocs(bannedQuery),
+          getDocs(adminQuery)
         ]);
 
         const userList = userSnapshot.docs.map((doc) => ({
@@ -71,8 +74,15 @@ export default function UserListNew() {
           bannedUserMap[doc.data().email] = doc.id; // Store the document ID as the value for quick access
         });
 
+        const adminUserMap = {};
+        adminUserSnapshot.docs.forEach(doc => {
+          adminUserMap[doc.data().email] = doc.id; 
+        });
+        
         setUsers(userList);
-        setBannedUsers(bannedUserMap);
+        setBannedUsers(bannedUserMap); 
+        setAdminUsers(adminUserMap);
+        
       } catch (error) {
         console.error("Error fetching data:", error);
         setError("Failed to fetch data.");
@@ -177,6 +187,29 @@ export default function UserListNew() {
         error
       );
       alert(`Failed to ${isBanned ? "unblock" : "block"} user.`);
+    }
+  };
+
+  const toggleUserAsAdmin = async (email) => {
+    const isAdmin = adminUsers[email];
+    try {
+      if (!isAdmin) {
+        const docRef = await addDoc(collection(db, "adminUsers"), { email });
+        setAdminUsers(prev => ({ ...prev, [email]: docRef.id }));
+        alert(`User with email ${email} was made admin.`);
+      } else {
+        await deleteDoc(doc(db, "adminUsers", isAdmin));
+        setAdminUsers(prev => {
+          const newState = { ...prev };
+          delete newState[email];
+          return newState;
+        });
+        alert(`User with email ${email} was removed from being an admin.`);
+      }
+      
+    } catch (error) {
+      console.error(`Error ${isAdmin ? 'removing user as admin' : 'making user admin'}`, error);
+      alert(`Failed ${isAdmin ? 'removing user as admin' : 'making user admin'}`);
     }
   };
 
