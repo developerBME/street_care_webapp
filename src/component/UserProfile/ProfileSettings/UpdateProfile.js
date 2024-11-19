@@ -314,9 +314,7 @@ const handleSubmitProfileUpdate = async (e) => {
     }));
   };
 
-  return (
-    <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
-      <div className="relative flex flex-col items-center gap-8 ">
+  return ( items-center gap-8 ">
         <div className="w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 lg:mx-40 mt-32 mb-16 rounded-2xl bg-[#f7f7f7] text-black flex flex-row">
           <div className="w-full h-full px-4 py-6 md:p-12 lg:p-16 flex-col justify-start items-start gap-6 inline-flex">
             <div className="flex flex-col gap-2">
@@ -329,6 +327,8 @@ const handleSubmitProfileUpdate = async (e) => {
                     </div>
                   </Link>
                 </div>
+    <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
+      <div className="relative flex flex-col
               )}
               <div className="font-dmsans text-base">
                 <Breadcrumbs
