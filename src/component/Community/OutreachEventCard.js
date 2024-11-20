@@ -44,6 +44,12 @@ const OutreachEventCard = ({
 		setShowModal(false);
 	};
 
+	const detailOutreach = () =>{
+		navigate(`/outreachsignup/${id}`, {
+			state: { label: 'EDIT' },
+		});
+	};
+
 	return (
 		<div
 			className="bg-[#F5EEFE] min-w-full max-w-[320px] lg:w-full rounded-[30px] mb-4 flex flex-col justify-between p-6 cursor-pointer"
@@ -66,7 +72,7 @@ const OutreachEventCard = ({
 			)}
 
 			{isProfilePage ? (
-				<div className="my-3 space-y-3 w-full h-full flex flex-col">
+				<div className="my-3 space-y-3 w-full h-full flex flex-col" onClick={detailOutreach}>
 					<div className="flex flex-col justify-between space-y-3">
 						<div className="flex flex-row justify-normal space-x-2">
 							<img
@@ -101,7 +107,7 @@ const OutreachEventCard = ({
 					<CardTags tags={skills} />
 				</div>
 			) : (
-				<div className="my-3 space-y-3 w-full h-full flex flex-col">
+				<div className="my-3 space-y-3 w-full h-full flex flex-col" onClick={detailOutreach}>
 					{isPastEvent ? (
 						<div className="flex flex-row justify-between">
 							<div className="flex flex-row justify-normal space-x-2">
@@ -127,7 +133,7 @@ const OutreachEventCard = ({
 							</div>
 						</div>
 					) : (
-						<div className="flex flex-row justify-between">
+						<div className="flex flex-row justify-between" onClick={detailOutreach}>
 							<div className="flex flex-row justify-normal space-x-2">
 								<img
 									alt=""
@@ -167,7 +173,7 @@ const OutreachEventCard = ({
 					<div className="flex items-center justify-between gap-16 my-1">
 						{isProfilePage || label2 === 'EDIT' ? (
 							<div className="group relative">
-								<CustomButton
+								{/* <CustomButton
 									label="View"
 									name="buttonlight"
 									onClick={() => {
@@ -175,7 +181,7 @@ const OutreachEventCard = ({
 											state: { label: 'EDIT' },
 										});
 									}}
-								></CustomButton>
+								></CustomButton> */}
 
 								{/* <CustomButton
                   label="Edit"

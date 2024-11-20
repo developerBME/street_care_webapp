@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import OutreachVisitLogCard from "./Community/OutreachVisitLogCard";
 import { useNavigate } from "react-router-dom";
-import { IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowBack, IoIosArrowForward} from "react-icons/io";
 import { fetchPublicVisitLogs } from "./VisitLogCardService";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 import { parse } from "date-fns";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Pagination from "./Pagination";
 
 const AllOutreachVisitLog = () => {
   const navigate = useNavigate();
@@ -17,10 +18,90 @@ const AllOutreachVisitLog = () => {
   const [startDate, setStartDate] = useState(new Date("2024-01-02"));
   const [endDate, setEndDate] = useState(new Date());
   const searchRef = useRef("");
+  const searchCity = useRef(""); // Reference for the search city input
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const logsPerPage = 6; // Adjust the number of logs per page
+
+
+  const renderPaginationButtons = () => {
+    const buttons = [];
+    const pageRange = 1;
+
+    if (currentPage > 1) {
+      buttons.push(
+        <button
+          key="prev"
+          onClick={() => paginate(currentPage - 1)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          <IoIosArrowBack/>
+        </button>
+      );
+    }
+
+    if (currentPage > pageRange + 1) {
+      buttons.push(
+        <button
+          key="first"
+          onClick={() => paginate(1)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          1
+        </button>
+      );
+      buttons.push(<span key="ellipsis-start" className="mx-1">...</span>);
+    }
+
+    for (let i = Math.max(1, currentPage - pageRange); i <= Math.min(totalPages, currentPage + pageRange); i++) {
+      buttons.push(
+        <button
+          key={i}
+          onClick={() => paginate(i)}
+          className={`mx-1 px-3 py-1 rounded-full ${
+            currentPage === i ? "bg-[#1F0A58] text-white" : "bg-gray-200 text-gray-600"
+          }`}
+        >
+          {i}
+        </button>
+      );
+    }
+
+    if (currentPage < totalPages - pageRange) {
+      buttons.push(<span key="ellipsis-end" className="mx-1">...</span>);
+      buttons.push(
+        <button
+          key="last"
+          onClick={() => paginate(totalPages)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          {totalPages}
+        </button>
+      );
+    }
+
+    if (currentPage < totalPages) {
+      buttons.push(
+        <button
+          key="next"
+          onClick={() => paginate(currentPage + 1)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          <IoIosArrowForward/>
+        </button>
+      );
+    }
+
+    return buttons;
+  };
+  const indexOfLastVisitLog = currentPage * logsPerPage;
+  const indexOfFirstVisitLog = indexOfLastVisitLog - logsPerPage;
+  const currentVisitLogs = visitLogs.slice(
+    indexOfFirstVisitLog,
+    indexOfLastVisitLog
+  );
+  const totalPages = Math.ceil(filteredVisitLogs.length / logsPerPage);
 
   useEffect(() => {
     const getVisitLogs = async () => {
@@ -36,22 +117,30 @@ const AllOutreachVisitLog = () => {
     const searchValue = searchRef.current.value.toLowerCase();
     setFilteredVisitLogs(
       visitLogs.filter(
-        (log) =>
-          log.location.city.toLowerCase().includes(searchValue) ||
-          log.description.toLowerCase().includes(searchValue)
+        (x) =>
+          x.title.toLowerCase().includes(searchValue) ||
+          x.userName.toLowerCase().includes(searchValue) ||
+          x.location.city.toLowerCase().includes(searchValue) ||
+          x.description.toLowerCase().includes(searchValue)
       )
     );
   };
 
   const handleSortChange = (e) => {
+    setFilteredVisitLogs(filteredVisitLogs);
     const sortBy = e.target.value;
     setSortOption(sortBy);
-    if (sortBy === "city") {
-      const sortedLogs = [...filteredVisitLogs].sort((a, b) =>
-        a.location.city.localeCompare(b.location.city)
-      );
-      setFilteredVisitLogs(sortedLogs);
-    }
+    setFilteredVisitLogs(visitLogs);
+  };
+
+  // Handle search city input change
+  const searchCityChange = () => {
+    const searchValue = searchCity.current.value.toLowerCase();
+    setFilteredVisitLogs(
+      visitLogs.filter((x) =>
+        x.location.city.toLowerCase().includes(searchValue)
+      )
+    );
   };
 
   const filterByDate = () => {
@@ -68,10 +157,10 @@ const AllOutreachVisitLog = () => {
   };
 
   useEffect(() => {
-    if (sortOption === "startDate" || sortOption === "endDate") {
+    if (sortOption === "datePeriod") {
       filterByDate();
     }
-  }, [filterByDate, startDate, endDate, sortOption]);
+  }, [startDate, endDate, sortOption]);
 
   // Get current logs based on pagination
   const indexOfLastLog = currentPage * logsPerPage;
@@ -144,14 +233,29 @@ const AllOutreachVisitLog = () => {
                   className="form-select w-fit md:w-[8rem] py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block rounded-2xl"
                   style={{ borderRadius: "0px" }}
                 >
-                  <option value="startDate">Start Date</option>
-                  <option value="endDate">End Date</option>
+                  <option value="">None</option>
+
                   <option value="city">City</option>
+                  <option value="datePeriod">Date Period</option>
                 </select>
               </div>
 
+              {/* Conditional rendering of City search */}
+              {sortOption === "city" && (
+                <input
+                  type="text"
+                  name="searchCity"
+                  id="searchCity"
+                  placeholder="Search City"
+                  ref={searchCity}
+                  onChange={searchCityChange}
+                  className="form-input w-fit md:w-[12rem] lg:w-[8rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-2 rounded-2xl"
+                  style={{ borderRadius: "0px" }}
+                />
+              )}
+
               {/* Conditional rendering of DatePickers */}
-              {sortOption === "startDate" && (
+              {sortOption === "datePeriod" && (
                 <DatePicker
                   selected={startDate}
                   onChange={(date) => setStartDate(date)}
@@ -159,10 +263,10 @@ const AllOutreachVisitLog = () => {
                   startDate={startDate}
                   endDate={endDate}
                   placeholderText="Select Start Date"
-                  className="form-input w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block rounded-2xl"
+                  className="form-input w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
                 />
               )}
-              {sortOption === "endDate" && (
+              {sortOption === "datePeriod" && (
                 <DatePicker
                   selected={endDate}
                   onChange={(date) => setEndDate(date)}
@@ -170,9 +274,18 @@ const AllOutreachVisitLog = () => {
                   startDate={startDate}
                   endDate={endDate}
                   placeholderText="Select End Date"
-                  className="form-input w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block rounded-2xl"
+                  className="form-input w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
                 />
               )}
+            </div>
+          </div>
+          <div className="flex justify-between items-center mt-8 w-full mb-11">
+            <p className="text-gray-600">
+              Showing {currentVisitLogs.length} of {filteredVisitLogs.length} events
+            </p>
+
+            <div className="flex justify-end">
+              {renderPaginationButtons()}
             </div>
           </div>
           {isLoading ? (
@@ -197,25 +310,14 @@ const AllOutreachVisitLog = () => {
                   </p>
                 )}
               </div>
-              {/* Pagination */}
-              <div className="flex justify-center mt-8">
-                {[
-                  ...Array(
-                    Math.ceil(filteredVisitLogs.length / logsPerPage)
-                  ).keys(),
-                ].map((i) => (
-                  <button
-                    key={i + 1}
-                    className={`mx-2 px-4 py-2 border rounded-full ${
-                      currentPage === i + 1
-                        ? "bg-[#E0D7EC] text-black border-[#1F0A58]"
-                        : "bg-white text-black border-[#9B82CF]"
-                    }`}
-                    onClick={() => paginate(i + 1)}
-                  >
-                    {i + 1}
-                  </button>
-                ))}
+              <div className="flex justify-between items-center mt-8 w-full mb-11">
+                <p className="text-gray-600">
+                  Showing {currentVisitLogs.length} of {filteredVisitLogs.length} events
+                </p>
+
+                <div className="flex justify-end">
+                  {renderPaginationButtons()}
+                </div>
               </div>
             </>
           )}

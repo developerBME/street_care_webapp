@@ -18,10 +18,11 @@ import {
  import { fetchUserName, formatDate, getNumberOfPages } from "./HelperFunction";
  
  const OFFICIAL_EVENTS_COLLECTION = "officialEvents";
- const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
- const PAST_OUTREACH_EVENTS_COLLECTION = "pastOutreachEvents";
+ const OUTREACH_EVENTS_COLLECTION = "outreachEventsDev";
+ const PAST_OUTREACH_EVENTS_COLLECTION = "outreachEventsDev";
+// const PAST_OUTREACH_EVENTS_COLLECTION = "pastOutreachEvents";
  const USERS_COLLECTION = "users";
- const PERSONAL_VISIT_LOG = "personalVisitLog";
+ // const PERSONAL_VISIT_LOG = "personalVisitLog";
  
  
  export const fetchEvents = async () => {
@@ -77,8 +78,8 @@ import {
   const userDetails = {};
   // Firestore limits 'in' queries to 10 items
   const chunks = splitArrayIntoChunksOfLen(userIds, 10);
- 
- 
+
+
   for (const chunk of chunks) {
     const userQuery = query(
       collection(db, USERS_COLLECTION),
@@ -95,8 +96,8 @@ import {
   }
   return userDetails;
  }
- 
- 
+
+
  // Helper function to split an array into chunks of a specified length
  function splitArrayIntoChunksOfLen(arr, len) {
   var chunks = [],
@@ -107,8 +108,8 @@ import {
   }
   return chunks;
  }
- 
- 
+
+
  export const fetchPastOutreachEvents = async () => {
   try {
     const pastOureachEventsRef = collection(
@@ -116,16 +117,16 @@ import {
       PAST_OUTREACH_EVENTS_COLLECTION
     );
     const eventSnapshot = await getDocs(pastOureachEventsRef);
- 
- 
+
+
     const userIds = new Set();
     eventSnapshot.docs.forEach((doc) => userIds.add(doc.data().uid));
- 
- 
+
+
     // Fetch user details in batch
     const userDetails = await fetchUserDetailsBatch(Array.from(userIds));
- 
- 
+
+
     // Process events
     let outreachEvents = eventSnapshot.docs.map((doc) => {
       const eventData = doc.data();
@@ -137,8 +138,8 @@ import {
         nop: eventData.participants?.length || 0,
       };
     });
- 
- 
+
+
     return outreachEvents;
   } catch (error) {
     logEvent(
@@ -148,8 +149,8 @@ import {
     throw error;
   }
  };
- 
- 
+
+
  export const fetchOfficialEvents = async () => {
   try {
     const officialEventsRef = collection(db, OFFICIAL_EVENTS_COLLECTION);
@@ -186,10 +187,10 @@ import {
     throw error;
   }
  };
- 
- 
- 
- 
+
+
+
+
  export const fetchUserDetails = async (uid) => {
   try {
     // Reference to the uid instead of the docid of the user.
@@ -232,27 +233,27 @@ import {
     throw error;
   }
  };
- 
- 
+
+
  export const fetchEventById = async (eventId) => {
   try {
     // Reference to the specific document in the outreach events collection
     const eventRef = doc(db, OUTREACH_EVENTS_COLLECTION, eventId);
- 
- 
+
+
     const eventSnap = await getDoc(eventRef);
- 
- 
+
+
     // Check if the document exists
     if (!eventSnap.exists()) {
       console.error("Event not found with id:", eventId);
       return null;
     }
- 
- 
+
+
     const eventData = eventSnap.data();
- 
- 
+
+
     const result = eventData.uid
       ? await fetchUserDetails(eventData.uid)
       : "Unknown User";
@@ -262,8 +263,8 @@ import {
     const formattedDate = eventData.eventDate
       ? formatDate(new Date(eventData.eventDate.seconds * 1000))
       : "No Date";
- 
- 
+
+
     return {
       ...eventData,
       userName,
@@ -280,26 +281,26 @@ import {
     throw error;
   }
  };
- 
- 
+
+
  export const fetchUserSignedUpOutreaches = async (uid) => {
   try {
     const fAuth = getAuth();
     const outreachQuery = query(collection(db, OUTREACH_EVENTS_COLLECTION));
     const snapshot = await getDocs(outreachQuery);
- 
- 
+
+
     let userSignedUpOutreaches = [];
- 
- 
+
+
     for (const doc of snapshot.docs) {
       const eventData = doc.data();
       if (eventData.participants && eventData.participants.includes(uid)) {
         const result = await fetchUserDetails(eventData.uid);
         const userName = result.username;
         const photoUrl = result.photoUrl;
- 
- 
+
+
         let currentParticipants = eventData.participants || [];
         userSignedUpOutreaches.push({
           ...eventData,
@@ -315,7 +316,7 @@ import {
         });
       }
     }
- 
+
     return userSignedUpOutreaches;
   } catch (error) {
     logEvent(
@@ -325,8 +326,8 @@ import {
     throw error;
   }
  };
- 
- 
+
+
  export const handleRsvp = async (
   e,
   id,
@@ -341,8 +342,8 @@ import {
   if (label2 === "RSVP") {
     e.preventDefault();
     const fAuth = getAuth();
- 
- 
+
+
     // if user exists, check user.outreachevents, else navigate to login page.
     onAuthStateChanged(fAuth, async (user) => {
       if (user) {
@@ -364,16 +365,16 @@ import {
           const docSnap = await getDoc(eventRef);
           // current participants in the eventdoc
           let currentParticipants = docSnap.data().participants || [];
- 
- 
+
+
           // current events in userdoc
           const userSnap = await getDoc(userRef);
           let currentEvents =
             (isBMEFlow
               ? userSnap.data().officialEvents
               : userSnap.data().outreachEvents) || [];
- 
- 
+
+
           // check if user exists in current participants and add if not
           if (currentParticipants.includes(fAuth.currentUser.uid)) {
           } else {
@@ -390,8 +391,8 @@ import {
             });
             console.log("successfully added to user to outreach collection");
           }
- 
- 
+
+
           // check if event exists in current user and add if not
           if (currentEvents.includes(id)) {
             console.log("Event exists for this user");
@@ -407,14 +408,14 @@ import {
                 outreachEvents: newEvents,
               });
             }
- 
- 
+
+
             logEvent(
               "STREET_CARE_INFO_OUTREACH",
               "RSVP added for user" + fAuth.currentUser.uid
             );
- 
- 
+
+
             console.log("successfully added outreach to users collection");
           }
           setLabel2("EDIT");
@@ -452,16 +453,16 @@ import {
           const docSnap = await getDoc(eventRef);
           // current participants in the eventdoc
           let currentParticipants = docSnap.data().participants || [];
- 
- 
+
+
           // current events in userdoc
           const userSnap = await getDoc(userRef);
           let currentEvents =
             (isBMEFlow
               ? userSnap.data().officialEvents
               : userSnap.data().outreachEvents) || [];
- 
- 
+
+
           // check if user exists in current participants and remove if exists
           if (currentParticipants.includes(fAuth.currentUser.uid)) {
             console.log("removing from event");
@@ -478,8 +479,8 @@ import {
           } else {
             console.log("User not found in the event");
           }
- 
- 
+
+
           // check if event exists in current user and remove if exists
           if (currentEvents.includes(id)) {
             console.log("removing from user");
@@ -520,52 +521,52 @@ import {
     });
   }
  };
- 
- 
+
+
  export const fetchByCityOrState = async (searchValue, startDate, endDate) => {
   try {
     if (!searchValue || typeof searchValue !== "string") {
       console.error("Invalid search value");
       return;
     }
- 
- 
+
+
     if (!(startDate instanceof Date) || isNaN(startDate)) {
       console.error("Invalid start date");
       return;
     }
- 
- 
+
+
     if (!(endDate instanceof Date) || isNaN(endDate)) {
       console.error("Invalid end date");
       return;
     }
- 
- 
+
+
     const pastOutreachRef = collection(db, PAST_OUTREACH_EVENTS_COLLECTION);
     // Full text search - Search filtering by City/State fields matching exact value
- 
- 
+
+
     const outreachByLocationQuery = query(
       pastOutreachRef,
       where("location.city", "==", searchValue),
       where("eventDate", ">=", startDate),
       where("eventDate", "<=", endDate)
     );
- 
- 
+
+
     const outreachDocRef = await getDocs(outreachByLocationQuery);
- 
- 
+
+
     console.log(outreachDocRef);
- 
- 
+
+
     let outreachByLoc = [];
     for (const doc of outreachDocRef.docs) {
       const pastOutreachData = doc.data();
       const id = doc.id;
- 
- 
+
+
       outreachByLoc.push({
         ...pastOutreachData,
         id: id,
@@ -739,9 +740,9 @@ export const fetchByCityOrStates = async (
 		throw error;
 	}
 };
-/* 
-const cityToSearch = ""; 
-const startDateTime = new Date("2020-07-01"); 
+/*
+const cityToSearch = "";
+const startDateTime = new Date("2020-07-01");
 const endDateTime = new Date("2023-07-01");
 const curr_page=0;
 const outreachPerPages = 5;
@@ -768,30 +769,30 @@ export const fetchUserOutreaches = async () => {
   try {
     const auth = getAuth();
     const user = auth.currentUser;
- 
- 
+
+
     if (!user) {
       throw new Error("User is not logged in.");
     }
- 
- 
+
+
     const userQuery = query(
       collection(db, OUTREACH_EVENTS_COLLECTION),
       where("uid", "==", user.uid)
     );
- 
- 
+
+
     const eventSnapshot = await getDocs(userQuery);
     let userOutreaches = [];
- 
- 
+
+
     for (const doc of eventSnapshot.docs) {
       const eventData = doc.data();
       const result = await fetchUserDetails(eventData.uid);
       const userName = result.username;
       const photoUrl = result.photoUrl;
- 
- 
+
+
       let currentParticipants = eventData.participants || [];
       userOutreaches.push({
         ...eventData,
@@ -802,7 +803,7 @@ export const fetchUserOutreaches = async () => {
         photoUrl: photoUrl,
       });
     }
-    
+
     return userOutreaches;
   } catch (error) {
     logEvent(
@@ -812,8 +813,8 @@ export const fetchUserOutreaches = async () => {
     throw error;
   }
  };
- 
-  
+
+
 //  export async function calculateNumberOfPagesForOutreach(outreachPerPage, currentPage=0){
 //   const testoutreachRef = query(collection(db, PAST_OUTREACH_EVENTS_COLLECTION), orderBy("createdAt", "asc"));
 //   const snapshot = await getDocs(testoutreachRef);
@@ -821,17 +822,17 @@ export const fetchUserOutreaches = async () => {
 //   const startIndex = outreachPerPage*currentPage;
 //   const startDoc = snapshot.docs[startIndex];
 //   // console.log('starting is: '+ startDoc);
- 
- 
+
+
 //   // const firstdoc=snapshot.docs(startAt);
 //   // console.log('starting is: '+ firstdoc);
- 
- 
- 
- 
+
+
+
+
 //   const outreachRef = query(collection(db, PAST_OUTREACH_EVENTS_COLLECTION),  orderBy("createdAt", "asc"), startAt(startDoc), limit(outreachPerPage))
- 
- 
+
+
 //   const outres = await getDocs(outreachRef);
 //   // console.log('outres '+ outres.docs);
 //   outres.forEach((doc)=>{
@@ -839,30 +840,30 @@ export const fetchUserOutreaches = async () => {
 //   //   console.log(doc.id); //printing the pagination ids
 //   });
 //   return outres;
- 
- 
+
+
 //  }
- 
- 
+
+
 //  const test = await calculateNumberOfPagesForOutreach(5,0)
- 
- 
+
+
  export const fetchTopOutreaches = async () => {
   try {
     const outreachRef = collection(db, OUTREACH_EVENTS_COLLECTION);
- 
- 
+
+
     // // Create query to fetch the latest 6 records based on creation date
     const latestRecordsQuery = query(
       outreachRef,
       orderBy("eventDate", "desc"),
       limit(6)
     );
- 
- 
+
+
     const snapshots = await getDocs(latestRecordsQuery);
- 
- 
+
+
     let outreaches = [];
     for (const doc of snapshots.docs) {
       const outreachData = doc.data();
@@ -884,8 +885,7 @@ export const fetchUserOutreaches = async () => {
     throw error;
   }
  };
- 
- 
+
+
  //  const testlatestfunc = await fetchTopOutreaches();
  //  console.log(testlatestfunc);
- 
