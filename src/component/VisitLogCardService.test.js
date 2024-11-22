@@ -17,9 +17,7 @@ describe("calculateNumberOfPagesForVisitlog function", () => {
 
     const result = await calculateNumberOfPagesForVisitlog(visitlogsPerPage);
 
-    // expect(getDocs).toHaveBeenCalledWith(collection(db, "personalVisitLog")); // change back to this in dev branch
-    expect(getDocs).toHaveBeenCalledWith(collection(db, "visitLogWebProd"));
-
+    expect(getDocs).toHaveBeenCalledWith(collection(db, "personalVisitLog"));
     expect(result).toBe(expectedNumberOfPages);
   });
 

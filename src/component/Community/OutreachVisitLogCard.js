@@ -29,7 +29,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
           <div className="font-normal font-inter text-[13px] ">{visitLogCardData.userName}</div>
           <img alt="" src={verifiedImg} className="w-5 h-5" />
         </div>
-
+      
       <div className="flex justify-between items-center mt-2">
         <div className="flex items-center">
           <img className="w-4 h-4" src={dateIcon} alt="Date" />
@@ -40,17 +40,17 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
           <span className="ml-2 text-sm">{`${visitLogCardData?.location?.city || visitLogCardData?.city}, ${visitLogCardData?.location?.stateAbbv || visitLogCardData?.stateAbbv || visitLogCardData?.location?.state}`}</span>
         </div>
       </div>
-
+      
       <div className="flex justify-between items-center mt-4">
         <div className="text-sm font-bold">People Helped</div>
         <div className="text-xl font-bold">{visitLogCardData?.numberPeopleHelped}</div>
       </div>
-
+      
       <div className="flex justify-between items-center mt-2">
         <div className="text-sm font-bold">Items Donated</div>
         <div className="text-xl font-bold">{visitLogCardData?.itemQty}</div>
       </div>
-
+      
       <div className="mt-3">  {/* Adjusted gap from 12px here */}
         <CardTags tags={visitLogCardData?.whatGiven || []} />
       </div>
