@@ -126,15 +126,16 @@ const renderStepContent = (selectedStep) => {
           <div className="space-y-10 md:pr-18 md:w-2/3">
             <div className="space-y-2">
               <div className="text-[22px] font-dmsans font-bold leading-7">
-                Create or Sign Up for existing outreaches
+                Create or Signup to existing outreaches
               </div>
               <div className="text-[16px] font-dmsans text-[#181818] leading-6">
-                With StreetCare, you can sign up for existing outreaches or
-                create an outreach for any help request where you can provide assistance.
+                With StreetCare, you can sign up to existing outreaches or
+                create an outreach for any help request for which you could
+                offer help.
                 <br />
                 <br />
-                Outreaches are created by users who are willing to help for a
-                particular cause where they can make a difference.
+                Outreaches are created by users that are willing to help for a
+                particular cause for which they could provide help.
               </div>
             </div>
             <div className="space-y-2 pb-32">
@@ -142,9 +143,9 @@ const renderStepContent = (selectedStep) => {
                 Help Requests
               </div>
               <div className="text-[16px] font-dmsans text-[#181818] leading-6">
-                If you come across someone in need and unsure how to assist,
+                If you come across people in need and not sure how to help them,
                 create a help request for others to view and contribute if they
-                can.
+                could.
               </div>
             </div>
           </div>
@@ -177,7 +178,7 @@ const renderStepContent = (selectedStep) => {
             </div>
             <div className="flex w-full justify-end">
               <div>
-                {/* <img alt="" src={howtohelp} /> */}
+                <img alt="" src={howtohelp} />
               </div>
             </div>
           </div>
@@ -221,7 +222,7 @@ const renderStepContent = (selectedStep) => {
             </div>
             <div className="flex  w-full justify-end">
               <div className="flex ">
-                {/* <img alt="" src={howtohelp} /> */}
+                <img alt="" src={howtohelp} />
               </div>
             </div>
           </div>
@@ -371,7 +372,7 @@ function HowToHelp() {
                 </div>
               </div>
               <div className="w-full">
-                {/* <img alt="" src={howtohelp} className="w-full" /> */}
+                <img alt="" src={howtohelp} className="w-full" />
               </div>
             </div>
           </div>
@@ -381,12 +382,13 @@ function HowToHelp() {
             <div className="flex-col justify-start items-start gap-10 inline-flex">
               <div>
                 <div className="font-bricolage text-[57px]">
-                  How to help with Street Care
+                  How to help with StreetCare
                 </div>
                 <div className="font-dmsans text-1 text-grey-300 font-normal">
-                We’ve created a simple guide on how you can contribute to the help homeless.
-                 Join our team of 700+ members and contribute in your own way. 
-                 Over 35% of our volunteers are first-time volunteers.
+                  We’ve made a simple guide on how you can contribute to the
+                  homeless. Join our team of 700+ members and contribute in your
+                  own way. More than 35% of our volunteers are first-time
+                  volunteers.
                 </div>
               </div>
               {/* Desktop screen */}
@@ -459,10 +461,10 @@ function HowToHelp() {
         </div>
 
         <div className=" w-[95%] md:w-[90%] lg:w-[79%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
-          
-          {/* <div className="items-center justify-center p-8 lg:p-16 h-full w-full rounded-2xl bg-[#F7F7F7] "> */}
-            {/* <div className="flex-col justify-start items-start gap-10 inline-flex"> */}
-              {/* <div className="space-y-12">
+          {/*  */}
+          <div className="items-center justify-center p-8 lg:p-16 h-full w-full rounded-2xl bg-[#F7F7F7] ">
+            <div className="flex-col justify-start items-start gap-10 inline-flex">
+              <div className="space-y-12">
                 <div className="font-bricolage text-[57px] text-[#273164] font-medium">
                   What else can I do to help?
                 </div>
@@ -512,13 +514,13 @@ function HowToHelp() {
                     </div>
                   </div>
                 </div>
-              </div> */}
-            {/* </div> */}
-          {/* </div> */}
+              </div>
+            </div>
+          </div>
         </div>
-        {/* <div className="  w-[95%] md:w-[90%] lg:w-[75%] mx-2 lg:mx-40 mt-8 mb-20 rounded-2xl bg-white text-black ">
-          section 2
-           <div className="items-center justify-center p-8 lg:py-24 lg:px-36 h-full w-full rounded-2xl bg-[#F7F7F7] ">
+        <div className="  w-[95%] md:w-[90%] lg:w-[75%] mx-2 lg:mx-40 mt-8 mb-20 rounded-2xl bg-white text-black ">
+          {/* section 2 */}
+          {/* <div className="items-center justify-center p-8 lg:py-24 lg:px-36 h-full w-full rounded-2xl bg-[#F7F7F7] ">
             <div className="text-neutral-800 text-2xl font-medium font-bricolage leading-loose">
               Next...
             </div>
@@ -529,8 +531,8 @@ function HowToHelp() {
               label="Send the guide to a friend"
               name="buttondefault"
             />
-          </div>
-        </div> */}
+          </div> */}
+        </div>
       </div>
     </div>
   );

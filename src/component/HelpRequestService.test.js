@@ -24,8 +24,7 @@ describe("fetchOutreaches function", () => {
 
     expect(getDocs).toHaveBeenCalledWith(
       query(
-        // collection(db, "outreachEvents"), // change back to this line in dev branch
-        collection(db, "outreachEventsDev"),
+        collection(db, "outreachEvents"),
         where("HelpRequest.id", "==", helpRequestId)
       )
     );
@@ -50,8 +49,7 @@ describe("fetchOutreaches function", () => {
 
     expect(getDocs).toHaveBeenCalledWith(
       query(
-        // collection(db, "outreachEvents"), change back to this line in dev branch
-        collection(db, "outreachEventsDev"),
+        collection(db, "outreachEvents"),
         where("HelpRequest.id", "==", helpRequestId)
       )
     );

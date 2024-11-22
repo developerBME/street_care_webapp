@@ -70,7 +70,7 @@ function PersonalOutForm() {
   // const ratingChanged = (newRating) => {
   //   console.log(newRating);
   // };
-  const dateTimeRef = useRef(null); //Changing from ("") to null
+  const dateTimeRef = useRef(null);
   const date = useRef("");
   const time = useRef("");
   const cityRef = useRef("");
@@ -494,8 +494,7 @@ function PersonalOutForm() {
 
     try {
       console.log("Sending email...");
-       const logRef = collection(db, "personalVisitLog");
-//      const logRef = collection(db, "visitLogWebProd"); //change back to this line in dev branch
+      const logRef = collection(db, "personalVisitLog");
       const docRef = await addDoc(logRef, obj);
       if (docRef.id) {
         console.log(docRef.id);
@@ -565,7 +564,7 @@ function PersonalOutForm() {
       autoCompleteRef.current,
       {
         types: ["address"],
-        componentRestrictions: { country: ["us","ca"] },
+        componentRestrictions: { country: ["us"] },
       }
     );
 
@@ -1461,7 +1460,7 @@ function PersonalOutForm() {
                     </div>
                     {/**/}
                     <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
-                      Total number of participants*
+                      Total number of items donated by you?*
                       <Tooltip title={toolTipContent} placement="right" arrow>
                         <IconButton>
                           <InfoIcon/>
@@ -1471,15 +1470,14 @@ function PersonalOutForm() {
                     <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
                       <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
                         <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
-                          Number of Participants
+                          Number of Items
                         </div>
                       </div>
                       <div className="self-stretch h-fit  border-collapse">
                         <div className=" h-14  justify-center items-start ">
-                          {/* Chaning no. of items donated to no. of participants, this is temporary */}
                           <input
                             id="itemsNumber"
-                            placeholder="Number of Participants"
+                            placeholder="Number of Items"
                             className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
                               error.itemQtyError !== ""
                                 ? "ring-red-500"
@@ -1871,7 +1869,7 @@ function PersonalOutForm() {
                                 <CustomInput
                                   id="date"
                                   className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
-                                    error.dateTimeError  
+                                    error.dateTimeError   
                             !== "" ? "ring-red-500" : "ring-gray-300"
                                   }`}
                                   ref={dateTimeRef}

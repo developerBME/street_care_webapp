@@ -29,8 +29,7 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
   // Function to delete visit log
   const deleteVisitLog = async () => {
     try {
-      // const visitLogDoc = doc(db, "personalVisitLog", visitLogCardData.id); //change back to personalVisitLog in dev branch
-      const visitLogDoc = doc(db, "visitLogWebProd", visitLogCardData.id);
+      const visitLogDoc = doc(db, "personalVisitLog", visitLogCardData.id);
 
       const userQuery = query(
         collection(db, USERS_COLLECTION),
@@ -196,8 +195,7 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
           </div>
           <div className="flex justify-between mt-2 mb-2 px-1">
             <div className="text-neutral-900 text-[14px] font-bold font-bricolage leading-tight text-left">
-              Participants 
-              {/* Changed from Items Donated on frontend */}
+              Items Donated
             </div>
             <div className="text-neutral-900 text-[18px] mt-[-5px] font-bold font-bricolage leading-tight text-right">
               {visitLogCardData.itemQty || ""}

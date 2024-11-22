@@ -17,11 +17,11 @@ exports.delUserActivity = functions.firestore
     console.log(`User ID: ${userId} deleted`);
 
     // Delete outreach documents
-    const outreachesRef = admin.firestore().collection('outreachEventsDev');
+    const outreachesRef = admin.firestore().collection('outreachEvents');
     const outreachQuery = outreachesRef.where('uid', '==', userId);
 
     // Delete visit logs
-    const visitLogsRef = admin.firestore().collection('visitLogWebProd');
+    const visitLogsRef = admin.firestore().collection('personalVisitLog');
     const visitLogsQuery = visitLogsRef.where('uid', '==', userId);
 
     // Delete helpRequest documents

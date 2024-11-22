@@ -17,8 +17,7 @@ function Success2() {
   useEffect(() => {
     const getValues = async () => {
       try {
-        // const logOfUserRef = query(collection(db, "personalVisitLog")); //change back to this line in dev branch.
-        const logOfUserRef = query(collection(db, "visitLogWebProd"));
+        const logOfUserRef = query(collection(db, "personalVisitLog"));
         const data = await getDocs(logOfUserRef);
         let totalDonations = 0;
         let totalHelpedPeople = 0;
@@ -61,7 +60,7 @@ function Success2() {
         Highlights of our success
       </p>
 
-      {/* <div className="w-fit h-fit my-8 p-7 bg-white rounded-[30px] justify-start items-start lg:gap-5 lg:inline-flex">
+      <div className="w-fit h-fit my-8 p-7 bg-white rounded-[30px] justify-start items-start lg:gap-5 lg:inline-flex">
         <div className="w-20 h-20 p-4 bg-gradient-to-br from-yellow-100 to-neutral-200 rounded-3xl justify-start items-start gap-2.5 flex">
           <div className="w-12 h-12 relative">
             <img src={Campaign} className=""></img>
@@ -99,8 +98,8 @@ function Success2() {
               </a>
             </p>
           </div>
-        </div> 
-      </div> */}
+        </div>
+      </div>
       {/* Grid */}
 
       <div className=" mt-10 w-full h-fit justify-start items-start">
@@ -179,13 +178,13 @@ function Success2() {
 
           <div className="grow shrink items-start h-full lg:items-center xl:items-start flex-col basis-0 px-8 py-4 bg-gradient-to-br from-yellow-300 to-zinc-200 justify-start  gap-6 flex">
             <div className="text-violet-950 text-2xl lg:text-xl font-medium leading-loose">
-              Total Outreach
+              Total Outreaches
             </div>
             <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
               <div className=" px-5 xl:px-8 w-fit py-2 bg-white rounded-[100px]">
-                <div className="text-violet-950  font-bricolage text-[28px] font-normal leading-[64px] whitespace-nowrap">
+                <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px] whitespace-nowrap">
                   {/* {donations} */}
-                   50 Million+ People
+                  67 Million
                 </div>
               </div>
               {/* <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
@@ -196,15 +195,13 @@ function Success2() {
 
           <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-b-2xl lg:rounded-tr-none lg:rounded-bl-none shrink basis-0 px-8 py-4 bg-gradient-to-br from-orange-300 to-neutral-200 justify-start  gap-6 flex">
             <div className="text-violet-950 text-2xl lg:text-xl font-medium leading-loose">
-              {/* App User Rating */}
-              Chapter Members
+              App User Rating
             </div>
             <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
               <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
                 <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
                   {/* {donations} */}
-                  {/* 4.9/5 */}
-                  1000+
+                  4.9/5
                 </div>
               </div>
               {/* <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
@@ -215,9 +212,9 @@ function Success2() {
         </div>
       </div>
 
-      { <div className=" mt-16 w-full  justify-start items-start">
+      <div className=" mt-16 w-full  justify-start items-start">
         <HomePageVisitlog />
-      </div> }
+      </div>
     </div>
   );
 }
