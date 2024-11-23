@@ -203,106 +203,104 @@ const UpdateProfile = () => {
       setAvatarLoading(false);
     }
   };
-//code starts
 
-const handleSubmitProfileUpdate = async (e) => {
-  e.preventDefault();
-  let hasError = true; // Track whether any updates were made
+  const handleSubmitProfileUpdate = async (e) => {
+    e.preventDefault();
+    let hasError = true; // Track whether any updates were made
+    
+    // Validate username
+    if (username.current.value !== "") {
+      setUsernameError("");
+      const userQuery = query(
+        collection(db, USERS_COLLECTION),
+        where("uid", "==", fAuth.currentUser.uid)
+      );
+      const userDocRef = await getDocs(userQuery);
+      const userDocID = userDocRef.docs[0].id;
+      const userRef = doc(db, USERS_COLLECTION, userDocID);
+      await updateDoc(userRef, {
+        username: username.current.value,
+      });
+      setSuccess((prev) => `${prev} Successfully updated display name. `);
+      hasError = false;
+    }
   
-  // Validate username
-  if (username.current.value !== "") {
-    setUsernameError("");
-    const userQuery = query(
-      collection(db, USERS_COLLECTION),
-      where("uid", "==", fAuth.currentUser.uid)
-    );
-    const userDocRef = await getDocs(userQuery);
-    const userDocID = userDocRef.docs[0].id;
-    const userRef = doc(db, USERS_COLLECTION, userDocID);
-    await updateDoc(userRef, {
-      username: username.current.value,
-    });
-    setSuccess((prev) => `${prev} Successfully updated display name. `);
-    hasError = false;
-  }
+    // Validate profile image
+    if (imgRef.current.value !== "") {
+      setUserimageError("");
+      uploadProfileImage(
+        newProfileImage,
+        fAuth.currentUser,
+        setLoading,
+        setSuccess,
+        setAvatarLoading
+      );
+      setSuccess((prev) => `${prev} Successfully updated profile image. `);
+      imgRef.current.value = "";
+      setNewProfileImage(null);
+      hasError = false;
+    }
+  
+    // Validate city
+    if (city.current.value !== "") {
+      setCityError("");
+      const userQuery = query(
+        collection(db, USERS_COLLECTION),
+        where("uid", "==", fAuth.currentUser.uid)
+      );
+      const userDocRef = await getDocs(userQuery);
+      const userDocID = userDocRef.docs[0].id;
+      const userRef = doc(db, USERS_COLLECTION, userDocID);
+      await updateDoc(userRef, {
+        city: city.current.value,
+      });
+      setSuccess((prev) => `${prev} Successfully updated city. `);
+      hasError = false;
+    }
+  
+    // Validate state
+    if (state.current.value !== "") {
+      setStateError("");
+      const userQuery = query(
+        collection(db, USERS_COLLECTION),
+        where("uid", "==", fAuth.currentUser.uid)
+      );
+      const userDocRef = await getDocs(userQuery);
+      const userDocID = userDocRef.docs[0].id;
+      const userRef = doc(db, USERS_COLLECTION, userDocID);
+      await updateDoc(userRef, {
+        state: state.current.value,
+      });
+      setSuccess((prev) => `${prev} Successfully updated state. `);
+      hasError = false;
+    }
+  
+    // Validate country
+    if (country.current.value !== "") {
+      setCountryError("");
+      const userQuery = query(
+        collection(db, USERS_COLLECTION),
+        where("uid", "==", fAuth.currentUser.uid)
+      );
+      const userDocRef = await getDocs(userQuery);
+      const userDocID = userDocRef.docs[0].id;
+      const userRef = doc(db, USERS_COLLECTION, userDocID);
+      await updateDoc(userRef, {
+        country: country.current.value,
+      });
+      setSuccess((prev) => `${prev} Successfully updated country. `);
+      hasError = false;
+    }
+  
+    // Handle error if no updates
+    if (hasError) {
+      setError("Please provide a display name or profile image or location details to update.");
+      setSuccess("");
+    } else {
+      setError("");
+    }
+  };
 
-  // Validate profile image
-  if (imgRef.current.value !== "") {
-    setUserimageError("");
-    uploadProfileImage(
-      newProfileImage,
-      fAuth.currentUser,
-      setLoading,
-      setSuccess,
-      setAvatarLoading
-    );
-    setSuccess((prev) => `${prev} Successfully updated profile image. `);
-    imgRef.current.value = "";
-    setNewProfileImage(null);
-    hasError = false;
-  }
-
-  // Validate city
-  if (city.current.value !== "") {
-    setCityError("");
-    const userQuery = query(
-      collection(db, USERS_COLLECTION),
-      where("uid", "==", fAuth.currentUser.uid)
-    );
-    const userDocRef = await getDocs(userQuery);
-    const userDocID = userDocRef.docs[0].id;
-    const userRef = doc(db, USERS_COLLECTION, userDocID);
-    await updateDoc(userRef, {
-      city: city.current.value,
-    });
-    setSuccess((prev) => `${prev} Successfully updated city. `);
-    hasError = false;
-  }
-
-  // Validate state
-  if (state.current.value !== "") {
-    setStateError("");
-    const userQuery = query(
-      collection(db, USERS_COLLECTION),
-      where("uid", "==", fAuth.currentUser.uid)
-    );
-    const userDocRef = await getDocs(userQuery);
-    const userDocID = userDocRef.docs[0].id;
-    const userRef = doc(db, USERS_COLLECTION, userDocID);
-    await updateDoc(userRef, {
-      state: state.current.value,
-    });
-    setSuccess((prev) => `${prev} Successfully updated state. `);
-    hasError = false;
-  }
-
-  // Validate country
-  if (country.current.value !== "") {
-    setCountryError("");
-    const userQuery = query(
-      collection(db, USERS_COLLECTION),
-      where("uid", "==", fAuth.currentUser.uid)
-    );
-    const userDocRef = await getDocs(userQuery);
-    const userDocID = userDocRef.docs[0].id;
-    const userRef = doc(db, USERS_COLLECTION, userDocID);
-    await updateDoc(userRef, {
-      country: country.current.value,
-    });
-    setSuccess((prev) => `${prev} Successfully updated country. `);
-    hasError = false;
-  }
-
-  // Handle error if no updates
-  if (hasError) {
-    setError("Please provide a display name or profile image or location details to update.");
-    setSuccess("");
-  } else {
-    setError("");
-  }
-};
-
-  //code ends
   const handleEditClick = () => {
     imgRef.current.click();
   };
@@ -314,7 +312,9 @@ const handleSubmitProfileUpdate = async (e) => {
     }));
   };
 
-  return ( items-center gap-8 ">
+  return (
+    <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
+      <div className="relative flex flex-col items-center gap-8 ">
         <div className="w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 lg:mx-40 mt-32 mb-16 rounded-2xl bg-[#f7f7f7] text-black flex flex-row">
           <div className="w-full h-full px-4 py-6 md:p-12 lg:p-16 flex-col justify-start items-start gap-6 inline-flex">
             <div className="flex flex-col gap-2">
@@ -327,8 +327,6 @@ const handleSubmitProfileUpdate = async (e) => {
                     </div>
                   </Link>
                 </div>
-    <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
-      <div className="relative flex flex-col
               )}
               <div className="font-dmsans text-base">
                 <Breadcrumbs
