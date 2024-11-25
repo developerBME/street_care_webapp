@@ -139,7 +139,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/howtohelp" element={<HowToHelp />} />
-          <Route path="/community" element={<Community />} />
+          <Route path="/community" element={<Community loggedIn={loggedIn}/>} />
           {/* <Route path="/community" element={<CommunityComingSoon />} /> */}
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />

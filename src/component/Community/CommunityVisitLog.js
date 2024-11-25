@@ -7,7 +7,7 @@ import { fetchPublicVisitLogs } from "../VisitLogCardService"; // Use this funct
 import CustomButton from "../Buttons/CustomButton";
 import ErrorMessage from "../ErrorMessage";
 
-const CommunityVisitLog = () => {
+const CommunityVisitLog = ({ loggedIn}) => {
   const navigate = useNavigate();
   const [visitLogs, setVisitLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -31,6 +31,11 @@ const CommunityVisitLog = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    console.log("Is user logged in? ", loggedIn); // Correctly logs true/false
+    // Fetch events logic
+  }, [loggedIn]);
+
   return (
     <div>
       <div className="p-4 lg:px-10 lg:py-12 bg-gradient-to-br from-[#D3C3FF] to-[#DEDCE4] rounded-t-2xl flex-col justify-start items-start gap-4 inline-flex w-full">
@@ -40,6 +45,7 @@ const CommunityVisitLog = () => {
               <div className="text-[45px] font-medium font-dmsans">
                 Visit Logs ({visitLogs?.length || 0})
               </div>
+              {loggedIn && (
               <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-medium font-dmsans leading-tight self-stretch">
                 <CustomButton
                   label="Create a Visit Log"
@@ -49,6 +55,7 @@ const CommunityVisitLog = () => {
                   }}
                 />
               </div>
+              )}
             </div>
             <div className="text-md font-medium font-dmsans text-[#181818] mt-2">
               What are help requests and how can they help you? If you are ready
