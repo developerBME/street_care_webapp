@@ -27,6 +27,7 @@ import UpcomingOutreachEvents from "./UpcomingOutreachEvents";
 function HomePage() {
   const navigate = useNavigate();
   const fAuth = getAuth();
+  const [loggedIn, setLoggedIn] = useState(false);
 
   onAuthStateChanged(fAuth, (user) => {
     if (user) {
@@ -39,6 +40,18 @@ function HomePage() {
       // ...
     }
   });
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(fAuth, (user) => {
+      if (user) {
+        setLoggedIn(true); // User is logged in
+      } else {
+        setLoggedIn(false); // User is logged out
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup the subscription
+  }, [fAuth]);
 
   const cardData = [
     {
@@ -281,6 +294,7 @@ function HomePage() {
         isLoading={isLoading}
         isError={isError}
         openModal={openModal}
+        loggedIn={loggedIn}
       />
 
       {/* Past Outreach Events */}

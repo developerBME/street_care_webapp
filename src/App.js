@@ -229,7 +229,7 @@ function App() {
           {/* <Route path="/icanhelp" element={<ComingSoon />} /> */}
           {/* <Route path="/donateForm" element={<DonateForm />} /> */}
           <Route path="/donateForm" element={<ComingSoon />} />
-          <Route path="/allOutreachEvents" element={<AllOutreachEvents />} />
+          <Route path="/allOutreachEvents" element={<AllOutreachEvents loggedIn={loggedIn}/>} />
           {/* <Route path="/createBME" element={<CreateBME />} /> */}
           <Route
             path="/allPastOutreachEvents"
