@@ -477,6 +477,7 @@ function PersonalOutForm() {
       street: street,
       dateTime: Timestamp.fromDate(dateTime),
       public: isPublic,
+      approved: false
     };
     console.log(obj);
 
