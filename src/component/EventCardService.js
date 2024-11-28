@@ -1004,3 +1004,48 @@ export const fetchTopOutreaches = async () => {
     throw error;
   }
 };
+export async function fetchUnapprovedOutreaches() {
+  const colRef = collection(db, OUTREACH_EVENTS_COLLECTION);
+
+  const q = query(colRef, where('approved', '==', false));
+
+  const snapshot = await getDocs(q);
+
+  if (snapshot.empty) {
+    console.log(`No unapproved documents found in '${OUTREACH_EVENTS_COLLECTION}'`);
+    return [];
+  }
+
+  const unapprovedDocs = [];
+  snapshot.forEach((doc) => {
+    unapprovedDocs.push({ id: doc.id, ...doc.data() });
+  });
+
+  console.log(`Unapproved documents from '${OUTREACH_EVENTS_COLLECTION}':`, unapprovedDocs);
+  return unapprovedDocs;
+}
+
+// fetchUnapprovedOutreaches();
+
+export async function fetchUnapprovedPastOutreaches() {
+  const colRef = collection(db, PAST_OUTREACH_EVENTS_COLLECTION);
+
+  const q = query(colRef, where('approved', '==', "Unapproved"));
+
+  const snapshot = await getDocs(q);
+
+  if (snapshot.empty) {
+    console.log(`No unapproved documents found in '${PAST_OUTREACH_EVENTS_COLLECTION}'`);
+    return [];
+  }
+
+  const unapprovedDocs = [];
+  snapshot.forEach((doc) => {
+    unapprovedDocs.push({ id: doc.id, ...doc.data() });
+  });
+
+  console.log(`Unapproved documents from '${PAST_OUTREACH_EVENTS_COLLECTION}':`, unapprovedDocs);
+  return unapprovedDocs;
+}
+
+// fetchUnapprovedPastOutreaches();

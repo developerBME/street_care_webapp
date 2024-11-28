@@ -401,3 +401,45 @@ export const fetchVisitLogsByCityOrState = async (
     throw error;
   }
 };
+
+
+// async function addApprovedField() {
+//   const colRef = collection(db, PERSONAL_VISIT_LOG);
+//   const snapshot = await getDocs(colRef);
+
+//   for (const document of snapshot.docs) {
+//     const docRef = doc(db, PERSONAL_VISIT_LOG, document.id);
+//     try {
+//       await updateDoc(docRef, { approved: false });
+//       console.log(`Updated document: ${document.id} in '${PERSONAL_VISIT_LOG}'`);
+//     } catch (error) {
+//       console.error(`Failed to update document: ${document.id}:`, error);
+//     }
+//   }
+// }
+
+// addApprovedField();
+
+
+export async function fetchUnapprovedVisitLogs() {
+  const colRef = collection(db, PERSONAL_VISIT_LOG);
+
+  const q = query(colRef, where('approved', '==', false));
+
+  const snapshot = await getDocs(q);
+
+  if (snapshot.empty) {
+    console.log(`No unapproved documents found in '${PERSONAL_VISIT_LOG}'`);
+    return [];
+  }
+
+  const unapprovedDocs = [];
+  snapshot.forEach((doc) => {
+    unapprovedDocs.push({ id: doc.id, ...doc.data() });
+  });
+
+  console.log(`Unapproved documents from '${PERSONAL_VISIT_LOG}':`, unapprovedDocs);
+  return unapprovedDocs;
+}
+
+// fetchUnapprovedVisitLogs();
