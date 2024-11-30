@@ -4,6 +4,7 @@ import { db } from "../firebase";
 import ApprovalCard from "./ApprovalCard";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import ErrorMessage from "../ErrorMessage";
+import { fetchPublicVisitLogs } from "../VisitLogCardService";
 
 const PostApprovals = () => {
   const [pendingPosts, setPendingPosts] = useState({
@@ -39,10 +40,11 @@ const PostApprovals = () => {
           where("approved", "==", false)
         );
         const visitLogSnapshot = await getDocs(visitLogQuery);
-        const visitLogs = visitLogSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+        // const visitLogs = visitLogSnapshot.docs.map((doc) => ({
+        //   id: doc.id,
+        //   ...doc.data(),
+        // }));
+        const visitLogs = await fetchPublicVisitLogs();
 
         setPendingPosts({ outreaches, visitLogs });
         setIsError(false);
@@ -258,6 +260,7 @@ const PostApprovals = () => {
                     postData={post}
                     onToggleSelect={toggleSelect}
                     isSelected={selectedItems.includes(post.id)}
+                    isVisitLogs={activeTab === "visitLogs"}
                   />
                 ))}
               </div>
