@@ -35,7 +35,7 @@ const PostApprovals = () => {
 
         // Fetch visit logs
         const visitLogQuery = query(
-          collection(db, "visitLogs"),
+          collection(db, "personalVisitLog"),
           where("approved", "==", false)
         );
         const visitLogSnapshot = await getDocs(visitLogQuery);
