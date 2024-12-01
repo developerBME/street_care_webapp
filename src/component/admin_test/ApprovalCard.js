@@ -3,10 +3,35 @@ import calendarIcon from "../../images/calendar_month.svg";
 import locationIcon from "../../images/location_on.svg";
 import { formatDate } from "../HelperFunction";
 
-const ApprovalCard = ({ postData, onToggleSelect, isSelected }) => {
+const getTags = (postData, isVisitLogs) => {
+  const tags = [];
+  if (isVisitLogs) {
+    tags.push([...postData?.whatGiven]);
+  } else {
+    tags.push([...postData?.skills]);
+  }
+
+  return tags.map((tag, index) => (
+    <span
+      key={index}
+      className="px-3 py-1 text-xs border border-gray-300 rounded-full text-[#444746]"
+    >
+      {tag}
+    </span>
+  ));
+};
+
+const ApprovalCard = ({
+  postData,
+  onToggleSelect,
+  isSelected,
+  isVisitLogs,
+}) => {
   // Safely handle date formatting
-  const formattedDate = postData?.dateTime?.seconds
-    ? formatDate(new Date(postData.dateTime.seconds * 1000))
+  const formattedDate = isVisitLogs
+    ? postData?.eventDate
+    : postData?.eventDate?.seconds
+    ? formatDate(new Date(postData.eventDate.seconds * 1000))
     : "Unknown Date";
 
   return (
@@ -26,7 +51,8 @@ const ApprovalCard = ({ postData, onToggleSelect, isSelected }) => {
           <div className="flex items-center space-x-2">
             <img alt="location" src={locationIcon} className="w-4 h-4" />
             <span className="text-sm text-[#37168B] font-medium">
-              {postData?.city || "Unknown City"}, {postData?.stateAbbv || postData?.state || ""}
+              {postData?.location?.city || "Unknown City"},{" "}
+              {postData?.location?.stateAbbv || postData?.location?.state || ""}
             </span>
           </div>
         </div>
@@ -57,14 +83,7 @@ const ApprovalCard = ({ postData, onToggleSelect, isSelected }) => {
 
       {/* Tags Section */}
       <div className="mt-4 flex flex-wrap gap-2">
-        {postData?.whatGiven?.map((tag, index) => (
-          <span
-            key={index}
-            className="px-3 py-1 text-xs border border-gray-300 rounded-full text-[#444746]"
-          >
-            {tag}
-          </span>
-        ))}
+        {getTags(postData, isVisitLogs)}
       </div>
     </div>
   );
