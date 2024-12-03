@@ -5,6 +5,7 @@ import ApprovalCard from "./ApprovalCard";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import ErrorMessage from "../ErrorMessage";
 import { fetchPublicVisitLogs } from "../VisitLogCardService";
+import infoIcon from "../../images/info_icon.png";
 
 const PostApprovals = () => {
   const [pendingPosts, setPendingPosts] = useState({
@@ -184,36 +185,46 @@ const PostApprovals = () => {
           </p>
 
           {/* Top Buttons */}
-          <div className="flex justify-between items-center mt-4">
-            <div>
-              <p className="text-gray-600">
-                {selectedItems.length} item(s) selected.
-              </p>
-            </div>
-            <div className="flex space-x-4">
-              <button
-                onClick={handleApproveSelected}
-                disabled={selectedItems.length === 0}
-                className="bg-green-600 text-white px-4 py-2 rounded-lg"
-              >
-                Approve Selected
-              </button>
-              <button
-                onClick={handleRejectSelected}
-                disabled={selectedItems.length === 0}
-                className="bg-red-600 text-white px-4 py-2 rounded-lg"
-              >
-                Reject Selected
-              </button>
-              <button
-                onClick={handleCancelSelection}
-                disabled={selectedItems.length === 0}
-                className="bg-gray-400 text-white px-4 py-2 rounded-lg"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
+          <div className="relative flex justify-between items-center mt-4 bg-[#E4EEEA] p-4 rounded-lg shadow">
+  <div>
+    <p className="text-gray-600">{selectedItems.length} item(s) selected.</p>
+  </div>
+  {selectedItems.length > 0 && (
+    <div className="flex space-x-4 items-center">
+      {/* Info Button */}
+      <div className="relative group">
+        <img
+          src={infoIcon}
+          alt="Info Icon"
+          className="w-6 h-6 cursor-pointer"
+        />
+        <div className="absolute left-0 top-full mt-2 hidden group-hover:block bg-white text-gray-700 text-xs px-2 py-1 rounded shadow-lg">
+          Action cannot be changed later
+        </div>
+      </div>
+      <button
+        onClick={handleApproveSelected}
+        className="bg-green-600 text-white px-4 py-2 rounded-[2px] hover:bg-green-700 transition"
+      >
+        Approve Selected
+      </button>
+      <button
+        onClick={handleRejectSelected}
+        className="bg-red-600 text-white px-4 py-2 rounded-[25px] hover:bg-red-700 transition"
+      >
+        Reject Selected
+      </button>
+      <button
+        onClick={handleCancelSelection}
+        className="bg-gray-400 text-white px-4 py-2 rounded-[25px] hover:bg-gray-500 transition"
+      >
+        Cancel
+      </button>
+    </div>
+  )}
+</div>
+
+
 
           {/* Tabs */}
           <div className="pt-4 pb-3">
