@@ -416,7 +416,8 @@ export default function UserListNew() {
                       </p>
                     </div>
                   </th>
-                  <th className="rounded-tr-2xl py-3 px-4">Blocked</th>
+                  <th className="border-r py-3 px-2">Blocked</th>
+                  <th className="rounded-tr-2xl py-3 px-4">Admin</th>
                 </tr>
               </thead>
               <tbody className="text-sm bg-white">
@@ -465,6 +466,35 @@ export default function UserListNew() {
                             <div
                               className={`dot absolute left-1 top-1 w-4 h-4 rounded-full transition transform ${
                                 bannedUsers[user.email]
+                                  ? "translate-x-6 bg-white"
+                                  : "bg-white"
+                              }`}
+                            ></div>
+                          </div>
+                        </label>
+                      </td>
+                      <td className="border-l border-b border-[#C8C8C8] whitespace-nowrap py-2">
+                        <label className="flex items-center justify-center">
+                          <div className="relative">
+                            <input
+                              type="checkbox"
+                              className="sr-only"
+                              checked={adminUsers[user.email]}
+                              onChange={(e) => {
+                                e.stopPropagation();
+                                toggleUserAsAdmin(user.email);
+                              }}
+                            />
+                            <div
+                              className={`block w-12 h-6 rounded-full ${
+                                adminUsers[user.email]
+                                  ? "bg-red-600"
+                                  : "bg-gray-300"
+                              }`}
+                            ></div>
+                            <div
+                              className={`dot absolute left-1 top-1 w-4 h-4 rounded-full transition transform ${
+                                adminUsers[user.email]
                                   ? "translate-x-6 bg-white"
                                   : "bg-white"
                               }`}

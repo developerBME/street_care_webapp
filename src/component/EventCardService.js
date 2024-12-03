@@ -941,3 +941,69 @@ export const fetchTopOutreaches = async () => {
 
 //  const testlatestfunc = await fetchTopOutreaches();
 //  console.log(testlatestfunc);
+
+export async function fetchUnapprovedOutreaches() {
+  const colRef = collection(db, OUTREACH_EVENTS_COLLECTION);
+
+  const q = query(colRef, where('approved', '==', false));
+
+  const snapshot = await getDocs(q);
+
+  if (snapshot.empty) {
+    console.log(`No unapproved documents found in '${OUTREACH_EVENTS_COLLECTION}'`);
+    return [];
+  }
+
+  const unapprovedDocs = [];
+  snapshot.forEach((doc) => {
+    unapprovedDocs.push({ id: doc.id, ...doc.data() });
+  });
+
+  console.log(`Unapproved documents from '${OUTREACH_EVENTS_COLLECTION}':`, unapprovedDocs);
+  return unapprovedDocs;
+}
+
+// fetchUnapprovedOutreaches();
+
+export async function fetchUnapprovedPastOutreaches() {
+  const colRef = collection(db, PAST_OUTREACH_EVENTS_COLLECTION);
+
+  const q = query(colRef, where('approved', '==', "Unapproved"));
+
+  const snapshot = await getDocs(q);
+
+  if (snapshot.empty) {
+    console.log(`No unapproved documents found in '${PAST_OUTREACH_EVENTS_COLLECTION}'`);
+    return [];
+  }
+
+  const unapprovedDocs = [];
+  snapshot.forEach((doc) => {
+    unapprovedDocs.push({ id: doc.id, ...doc.data() });
+  });
+
+  console.log(`Unapproved documents from '${PAST_OUTREACH_EVENTS_COLLECTION}':`, unapprovedDocs);
+  return unapprovedDocs;
+}
+
+// fetchUnapprovedPastOutreaches();
+
+export const ToggleApproveStatus = async function (documentId) {
+  try {
+    const docRef = doc(db, OUTREACH_EVENTS_COLLECTION, documentId);
+    const docSnap =  await getDoc(docRef);
+
+    if (!docSnap.exists()) {
+      console.log("Document not found");
+      return;
+    }
+    const data = docSnap.data();
+    let newApprovalStatus = data.approved === true ? false : true;
+    await updateDoc(docRef, { approved: newApprovalStatus });
+    console.log(
+      `Document with ID ${documentId} successfully updated. 'approved' field is now ${newApprovalStatus}.`
+    );
+  } catch (error) {
+    console.error("Error updating document:", error.message);
+  }
+};
