@@ -21,11 +21,15 @@ const getTags = (postData, isVisitLogs) => {
   ));
 };
 
+
+
 const ApprovalCard = ({
   postData,
   onToggleSelect,
   isSelected,
   isVisitLogs,
+  onClick,
+  selectedButton 
 }) => {
   // Safely handle date formatting
   const formattedDate = isVisitLogs
@@ -35,7 +39,8 @@ const ApprovalCard = ({
     : "Unknown Date";
 
   return (
-    <div className="bg-[#F5EEFE] rounded-[20px] flex flex-col h-full w-full max-w-[320px] p-4 shadow-md cursor-pointer">
+    <div onClick={onClick}
+    className="bg-[#F5EEFE] rounded-[20px] flex flex-col h-full w-full max-w-[320px] p-4 shadow-md cursor-pointer">
       {/* Top Section: Date and Location */}
       <div className="flex justify-between items-start">
         <div className="flex flex-col space-y-2">
@@ -58,14 +63,14 @@ const ApprovalCard = ({
         </div>
 
         {/* Checkbox Section */}
-        <label className="inline-flex items-center">
+        {selectedButton && (<label className="inline-flex items-center">
           <input
             type="checkbox"
             className="form-checkbox h-4 w-4 text-violet-900"
             checked={isSelected}
             onChange={() => onToggleSelect(postData.id)}
           />
-        </label>
+        </label>)}
       </div>
 
       {/* Middle Section: Title and Description */}

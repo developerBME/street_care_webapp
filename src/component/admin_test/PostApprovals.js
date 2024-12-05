@@ -6,6 +6,8 @@ import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import ErrorMessage from "../ErrorMessage";
 import { fetchPublicVisitLogs } from "../VisitLogCardService";
 import infoIcon from "../../images/info_icon.png";
+import arrowBack  from "../../images/arrowBack.png"; // Replace with your back arrow icon path
+import CustomButton from "../Buttons/CustomButton"
 
 const PostApprovals = () => {
   const [pendingPosts, setPendingPosts] = useState({
@@ -60,6 +62,84 @@ const PostApprovals = () => {
     fetchPendingPosts();
   }, []);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
+
+  const handleCardClick = (post) => {
+    setSelectedPost(post);
+    setIsModalOpen(true);
+  };
+
+
+
+
+  const Modal = ({ post, onClose, onAccept, onReject, isVisitLogs }) => {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-md">
+        {/* Modal Container */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-lg flex flex-col items-center">
+          {/* Back Button */}
+          <div className="flex items-center w-full mb-4">
+            <img
+              src={arrowBack}
+              alt="Back"
+              className="w-6 h-6 cursor-pointer"
+              onClick={onClose} // Clicking on the image closes the modal
+            />
+            <button
+              onClick={onClose}
+              className="ml-2 text-sm text-gray-700 font-medium hover:underline"
+            >
+              Go Back
+            </button>
+          </div>
+  
+          {/* Approval Card */}
+          <ApprovalCard
+            postData={post}
+            onToggleSelect={() => {}} // No toggle functionality in modal
+            isSelected={false} // Checkbox not needed in modal
+            isVisitLogs={isVisitLogs}
+            selectedButton={false}
+            onClick={() => {}} // No onClick functionality in modal
+          />
+  
+          {/* Buttons Section */}
+          <div className="flex justify-between items-center w-full px-4 pt-4">
+            <button
+              onClick={onReject}
+              className="flex justify-center items-center p-0 gap-2 text-red-600 border border-red-600 rounded-full hover:bg-red-100 transition w-[104px] h-[40px]"
+              /*
+              flex flex-col justify-center items-center p-0 gap-2 mx-auto w-[90px] h-[40px] bg-white border border-gray-300 rounded-full flex-none order-0 grow-0 text-red-500*/
+            >
+              Reject
+            </button>
+            <button
+              onClick={onAccept}
+              className="flex justify-center items-center px-6 py-2.5 text-white bg-green-600 rounded-full hover:bg-green-700 transition w-[104px] h-[40px]"
+              /**flex flex-row justify-center items-center px-6 py-2 gap-2 w-[104px] h-[40px] bg-green-600 text-white rounded-lg hover:bg-green-700 transition flex-none order-0 self-stretch grow */
+            >
+              Accept
+            </button>
+          </div>
+
+        </div>
+      </div>
+    );
+  };
+
+
+
+  
+  
+  
+
+    const handleCloseModal = () => {
+      setSelectedPost(null);
+      setIsModalOpen(false);
+    };
+
+
   // Approve selected posts
   const handleApproveSelected = async () => {
     try {
@@ -101,6 +181,43 @@ const PostApprovals = () => {
       console.error("Error rejecting posts:", error);
     }
   };
+
+  const handleAccept = async () => {
+    try {
+      const collectionName = activeTab === "outreaches" ? "outreachEvents" : "visitLogs";
+      await updateDoc(doc(db, collectionName, selectedPost.id), { approved: true });
+  
+      // Update state to remove the accepted post
+      setPendingPosts((prev) => ({
+        ...prev,
+        [activeTab]: prev[activeTab].filter((post) => post.id !== selectedPost.id),
+      }));
+  
+      setSelectedPost(null);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Error accepting post:", error);
+    }
+  };
+  
+  const handleReject = async () => {
+    try {
+      const collectionName = activeTab === "outreaches" ? "outreachEvents" : "visitLogs";
+      await updateDoc(doc(db, collectionName, selectedPost.id), { approved: false });
+  
+      // Update state to remove the rejected post
+      setPendingPosts((prev) => ({
+        ...prev,
+        [activeTab]: prev[activeTab].filter((post) => post.id !== selectedPost.id),
+      }));
+  
+      setSelectedPost(null);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Error rejecting post:", error);
+    }
+  };
+  
 
   // Cancel selection
   const handleCancelSelection = () => {
@@ -186,43 +303,43 @@ const PostApprovals = () => {
 
           {/* Top Buttons */}
           <div className="relative flex justify-between items-center mt-4 bg-[#E4EEEA] p-4 rounded-lg shadow">
-  <div>
-    <p className="text-gray-600">{selectedItems.length} item(s) selected.</p>
-  </div>
-  {selectedItems.length > 0 && (
-    <div className="flex space-x-4 items-center">
-      {/* Info Button */}
-      <div className="relative group">
-        <img
-          src={infoIcon}
-          alt="Info Icon"
-          className="w-6 h-6 cursor-pointer"
-        />
-        <div className="absolute left-0 top-full mt-2 hidden group-hover:block bg-white text-gray-700 text-xs px-2 py-1 rounded shadow-lg">
-          Action cannot be changed later
+          <div>
+            <p className="text-gray-600">{selectedItems.length} item(s) selected.</p>
+          </div>
+          {selectedItems.length > 0 && (
+            <div className="flex space-x-4 items-center">
+              {/* Info Button */}
+              <div className="relative group">
+                <img
+                  src={infoIcon}
+                  alt="Info Icon"
+                  className="w-6 h-6 cursor-pointer"
+                />
+                <div className="absolute left-0 top-full mt-2 hidden group-hover:block bg-white text-gray-700 text-xs px-2 py-1 rounded shadow-lg">
+                  Action cannot be changed later
+                </div>
+              </div>
+              <button
+                onClick={handleApproveSelected}
+                className="bg-green-600 text-white px-4 py-2 rounded-[25px] hover:bg-green-700 transition"
+              >
+                Approve Selected
+              </button>
+              <button
+                onClick={handleRejectSelected}
+                className="bg-red-600 text-white px-4 py-2 rounded-[25px] hover:bg-red-700 transition"
+              >
+                Reject Selected
+              </button>
+              <button
+                onClick={handleCancelSelection}
+                className="bg-gray-400 text-white px-4 py-2 rounded-[25px] hover:bg-gray-500 transition"
+              >
+                Cancel
+              </button>
+            </div>
+          )}
         </div>
-      </div>
-      <button
-        onClick={handleApproveSelected}
-        className="bg-green-600 text-white px-4 py-2 rounded-[2px] hover:bg-green-700 transition"
-      >
-        Approve Selected
-      </button>
-      <button
-        onClick={handleRejectSelected}
-        className="bg-red-600 text-white px-4 py-2 rounded-[25px] hover:bg-red-700 transition"
-      >
-        Reject Selected
-      </button>
-      <button
-        onClick={handleCancelSelection}
-        className="bg-gray-400 text-white px-4 py-2 rounded-[25px] hover:bg-gray-500 transition"
-      >
-        Cancel
-      </button>
-    </div>
-  )}
-</div>
 
 
 
@@ -267,12 +384,15 @@ const PostApprovals = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-[20px] gap-y-[30px] mt-[20px]">
                 {currentPosts.map((post) => (
                   <ApprovalCard
-                    key={post.id}
-                    postData={post}
-                    onToggleSelect={toggleSelect}
-                    isSelected={selectedItems.includes(post.id)}
-                    isVisitLogs={activeTab === "visitLogs"}
-                  />
+                  key={post.id}
+                  postData={post}
+                  onToggleSelect={toggleSelect}
+                  isSelected={selectedItems.includes(post.id)}
+                  isVisitLogs={activeTab === "visitLogs"}
+                  selectedButton={true}
+                  onClick={() => handleCardClick(post)}
+                />
+                
                 ))}
               </div>
 
@@ -288,6 +408,16 @@ const PostApprovals = () => {
           )}
         </div>
       </div>
+      {/* Render Modal */}
+      {isModalOpen && (
+        <Modal
+          post={selectedPost}
+          onClose={handleCloseModal}
+          onAccept={handleAccept}
+          onReject={handleReject}
+        />
+      )}
+
     </div>
   );
 };
