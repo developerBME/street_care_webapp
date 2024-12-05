@@ -987,3 +987,23 @@ export async function fetchUnapprovedPastOutreaches() {
 }
 
 // fetchUnapprovedPastOutreaches();
+
+export const ToggleApproveStatus = async function (documentId) {
+  try {
+    const docRef = doc(db, OUTREACH_EVENTS_COLLECTION, documentId);
+    const docSnap =  await getDoc(docRef);
+
+    if (!docSnap.exists()) {
+      console.log("Document not found");
+      return;
+    }
+    const data = docSnap.data();
+    let newApprovalStatus = data.approved === true ? false : true;
+    await updateDoc(docRef, { approved: newApprovalStatus });
+    console.log(
+      `Document with ID ${documentId} successfully updated. 'approved' field is now ${newApprovalStatus}.`
+    );
+  } catch (error) {
+    console.error("Error updating document:", error.message);
+  }
+};
