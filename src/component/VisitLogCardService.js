@@ -262,7 +262,8 @@ export const fetchPublicVisitLogs = async () => {
   try {
     const visitLogsRef = query(
       collection(db, PERSONAL_VISIT_LOG_COLLECTION),
-      where("public", "==", true)
+      where("public", "==", true),
+      where("status", "==", "approved")
     );
     const visitLogSnapshot = await getDocs(visitLogsRef);
     let visitLogs = await visitLogHelperFunction(visitLogSnapshot);
@@ -443,3 +444,20 @@ export async function fetchUnapprovedVisitLogs() {
 }
 
 // fetchUnapprovedVisitLogs();
+
+// async function addTypeField() {
+//   const colRef = collection(db, USERS_COLLECTION);
+//   const snapshot = await getDocs(colRef);
+
+//   for (const document of snapshot.docs) {
+//     const docRef = doc(db, USERS_COLLECTION, document.id);
+//     try {
+//       await updateDoc(docRef, { Type: "" });
+//       console.log(`Updated document: ${document.id} in '${USERS_COLLECTION}'`);
+//     } catch (error) {
+//       console.error(`Failed to update document: ${document.id}:`, error);
+//     }
+//   }
+// }
+
+// addTypeField();
