@@ -9,8 +9,9 @@ import verifiedImg from "../../images/verified_purple.png";
 import { formatDate } from "../helper";
 import CardTags from "./CardTags";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
+import { CiFlag1 } from "react-icons/ci";
 
-const VisitLogDetails = () => {
+const VisitLogDetails = ({user}) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
@@ -53,13 +54,21 @@ const VisitLogDetails = () => {
             </div>
             {data ? (
               <div className="bg-[#F5EEFE] min-w-full max-w-[320px] lg:w-full rounded-[30px] mb-4 flex flex-col justify-between p-6">
-                <div className="inline-flex items-center space-x-2 ">
-                  <img
-                    src={data?.photoUrl || defaultImage}
-                    className="w-8 h-8 rounded-full"
-                  />
-                  <div>{data?.userName || "not defined"}</div>
-                  <img src={verifiedImg} className="w-5 h-5" />
+                <div className="inline-flex items-center justify-between w-full space-x-2 ">
+                  <div className="inline-flex items-center space-x-2 ">
+                    <img
+                      src={data?.photoUrl || defaultImage}
+                      className="w-8 h-8 rounded-full"
+                    />
+                    <div>{data?.userName || "not defined"}</div>
+                    <img src={verifiedImg} className="w-5 h-5" />
+                  </div>
+                  {(user?.type == "chapter leader" && user?.type == "internal member")?(
+                    <button className="ml-auto p-2 hover:bg-gray-100 rounded"
+                      onClick={() => console.log('Flag icon clicked!')}>
+                    <CiFlag1 className="text-xl"/>
+                  </button>
+                  ):(null)}
                 </div>
                 <div className="my-3 space-y-3 w-full h-full flex flex-col">
                   <div className="flex flex-row justify-between">

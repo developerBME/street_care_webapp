@@ -217,8 +217,8 @@ function App() {
           />
           <Route path="/profile/select-outreach" element={<Documenting />} />
           {/* <Route path="/profile/commoutform" element={<ComingSoon />} /> */}
-          <Route path="/outreachsignup" element={<OutreachSignup />} />
-          <Route path="/outreachsignup/:id" element={<OutreachSignup />} />
+          <Route path="/outreachsignup" element={<OutreachSignup user={firebaseUser}/>} />
+          <Route path="/outreachsignup/:id" element={<OutreachSignup user={firebaseUser}/>} />
           <Route
             path="/helpRequestEventWindow"
             element={<HelpRequestEventWindow />}
@@ -251,8 +251,8 @@ function App() {
           <Route path="/admin" element={<AdminHomePage />} />
 
           <Route path="/sample_form" element={<SampleForm />} />
-          <Route path="visitLogDetails" element={<VisitLogDetails />} />
-          <Route path="visitLogDetails/:id" element={<VisitLogDetails />} />
+          <Route path="visitLogDetails" element={<VisitLogDetails user={firebaseUser}/>} />
+          <Route path="visitLogDetails/:id" element={<VisitLogDetails user={firebaseUser}/>} />
           <Route
             path="personalVisitLogDetails"
             element={<PersonalVisitLogDetails />}

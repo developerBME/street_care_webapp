@@ -12,8 +12,9 @@ import date from "../../images/date.png";
 import locate from "../../images/location.png";
 import { useLocation } from "react-router-dom";
 import EditModal from "./EditModal";
+import { CiFlag1 } from "react-icons/ci";
 
-const OutreachSignup = () => {
+const OutreachSignup = ({user}) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [label2, setLabel2] = useState("RSVP");
@@ -70,6 +71,7 @@ const OutreachSignup = () => {
             </div>
             <div className="self-stretch h-fit bg-[#F5EDFA] rounded-[30px] flex-col justify-start items-start flex">
               <div className="self-stretch h-fit px-6 pt-9 pb-3 flex-col justify-start items-start gap-2.5 flex">
+              <div className="inline-flex items-center justify-between w-full space-x-2 ">
                 <div className="justify-start items-center gap-2 inline-flex">
                   <img
                     className="w-9 h-9 rounded-full"
@@ -87,6 +89,13 @@ const OutreachSignup = () => {
                     )}
                     <img src={verifiedImg} className="w-6 h-6" />
                   </div>
+                </div>
+                {(user?.type == "chapter leader" && user?.type == "internal member")?
+                (<button className="ml-auto p-2 hover:bg-gray-100 rounded"
+                    onClick={() => console.log('Flag icon clicked!')}>
+                    <CiFlag1 className="text-xl"/>
+                  </button>):
+                  (null)}
                 </div>
               </div>
               <div className="self-stretch h-fit px-6 py-2 flex-col justify-start items-start gap-2 flex">
