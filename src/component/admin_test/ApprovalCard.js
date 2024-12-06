@@ -4,13 +4,9 @@ import locationIcon from "../../images/location_on.svg";
 import { formatDate } from "../HelperFunction";
 
 const getTags = (postData, isVisitLogs) => {
-  const tags = [];
-  if (isVisitLogs) {
-    tags.push([...postData?.whatGiven]);
-  } else {
-    tags.push([...postData?.skills]);
-  }
-
+  console.log("ApprovalCard postData:", postData);
+  const tags = isVisitLogs ? postData?.whatGiven || [] : postData?.skills || [];
+  
   return tags.map((tag, index) => (
     <span
       key={index}
@@ -42,7 +38,7 @@ const ApprovalCard = ({
   onClick,
   selectedButton,
 }) => {
-  // Safely handle date formatting
+  // Format date safely
   const formattedDate = isVisitLogs
     ? postData?.eventDate
     : postData?.eventDate?.seconds
@@ -51,19 +47,20 @@ const ApprovalCard = ({
 
   return (
     <div
-      onClick={onClick}
+      onClick={() => onClick?.(postData.id)}
       className="bg-[#F5EEFE] rounded-[20px] flex flex-col h-full w-full max-w-[320px] p-4 shadow-md cursor-pointer"
     >
       {/* Status */}
-        <div className="mt-2 text-right mb-2">
-          <span
-            className={`px-3 py-1 text-sm font-medium rounded-full ${getStatusStyle(
-              postData.status
-            )}`}
-          >
-            {postData.status || "No Status"}
-          </span>
-        </div>
+      <div className="mt-2 text-right mb-2">
+        <span
+          className={`px-3 py-1 text-sm font-medium rounded-full ${getStatusStyle(
+            postData.status
+          )}`}
+        >
+          {postData.status || "No Status"}
+        </span>
+      </div>
+
       {/* Top Section: Date and Location */}
       <div className="flex justify-between items-start">
         <div className="flex flex-col space-y-2">
@@ -92,8 +89,8 @@ const ApprovalCard = ({
               type="checkbox"
               className="form-checkbox h-4 w-4 text-violet-900"
               checked={isSelected}
-              onClick={(e) => e.stopPropagation()} // Prevent parent onClick
-              onChange={(e) => onToggleSelect(postData.id)}
+              onClick={(e) => e.stopPropagation()} // Prevent card onClick
+              onChange={() => onToggleSelect?.(postData.id)}
             />
           </label>
         )}
@@ -101,17 +98,12 @@ const ApprovalCard = ({
 
       {/* Middle Section: Title, Description, and Status */}
       <div className="mt-4">
-        {/* Title */}
         <h1 className="text-lg font-medium text-[#1F0A58] line-clamp-1">
           {postData.title || "Event Title"}
         </h1>
-
-        {/* Description */}
         <p className="text-sm text-[#444746] mt-2 line-clamp-2">
           {postData.description || "No description available."}
         </p>
-
-        
       </div>
 
       {/* Tags Section */}
