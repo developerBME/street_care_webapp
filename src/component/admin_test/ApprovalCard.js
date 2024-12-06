@@ -6,9 +6,9 @@ import { formatDate } from "../HelperFunction";
 const getTags = (postData, isVisitLogs) => {
   const tags = [];
   if (isVisitLogs) {
-    tags.push([...postData?.whatGiven]);
+    tags.push(...postData?.whatGiven);
   } else {
-    tags.push([...postData?.skills]);
+    tags.push(...postData?.skills);
   }
 
   return tags.map((tag, index) => (
@@ -55,15 +55,15 @@ const ApprovalCard = ({
       className="bg-[#F5EEFE] rounded-[20px] flex flex-col h-full w-full max-w-[320px] p-4 shadow-md cursor-pointer"
     >
       {/* Status */}
-        <div className="mt-2 text-right mb-2">
-          <span
-            className={`px-3 py-1 text-sm font-medium rounded-full ${getStatusStyle(
-              postData.status
-            )}`}
-          >
-            {postData.status || "No Status"}
-          </span>
-        </div>
+      <div className="mt-2 text-right mb-2">
+        <span
+          className={`px-3 py-1 text-sm font-medium rounded-full ${getStatusStyle(
+            postData.status
+          )}`}
+        >
+          {postData.status || "No Status"}
+        </span>
+      </div>
       {/* Top Section: Date and Location */}
       <div className="flex justify-between items-start">
         <div className="flex flex-col space-y-2">
@@ -110,8 +110,6 @@ const ApprovalCard = ({
         <p className="text-sm text-[#444746] mt-2 line-clamp-2">
           {postData.description || "No description available."}
         </p>
-
-        
       </div>
 
       {/* Tags Section */}
