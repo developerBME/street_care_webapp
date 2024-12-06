@@ -25,7 +25,12 @@ const PERSONAL_VISIT_LOG = "personalVisitLog";
 export const fetchEvents = async () => {
   try {
     const oureachEventsRef = collection(db, OUTREACH_EVENTS_COLLECTION);
-    const eventSnapshot = await getDocs(oureachEventsRef);
+    const approvedEventsQuery = query(
+      oureachEventsRef,
+      where('status', '==', 'approved')
+    );
+    const eventSnapshot = await getDocs(approvedEventsQuery);
+
     let outreachEvents = [];
     const fAuth = getAuth();
     onAuthStateChanged(fAuth, (user) => {

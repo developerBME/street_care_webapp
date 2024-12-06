@@ -262,7 +262,8 @@ export const fetchPublicVisitLogs = async () => {
   try {
     const visitLogsRef = query(
       collection(db, PERSONAL_VISIT_LOG_COLLECTION),
-      where("public", "==", true)
+      where("public", "==", true),
+      where("status", "==", "approved")
     );
     const visitLogSnapshot = await getDocs(visitLogsRef);
     let visitLogs = await visitLogHelperFunction(visitLogSnapshot);
