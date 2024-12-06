@@ -15,6 +15,7 @@ import CreateOutreachModal from "./CreateOutreachModal";
 import { fetchHelpReqById } from "../HelpRequestService";
 import { emailConfirmation } from "../EmailService";
 import { Link } from "react-router-dom";
+import { fetchUserTypeDetails } from "../EventCardService";
 
 const chipList = [
   "Childcare",
@@ -197,6 +198,11 @@ const Form = (hrid) => {
         // true if redirected from help request and false for organic outreach event.
         const isHelpReqFlow = !(typeof hrid.hrid == "undefined");
         try {
+          const userDetails = await fetchUserTypeDetails(fAuth.currentUser.uid);
+          let statusValue = 'pending'
+          if(userDetails.type == 'Chapter Leader') {
+            statusValue = 'approved'
+          }
           let obj = {
             uid: fAuth.currentUser.uid,
             title: nameRef.current.value,
@@ -217,7 +223,7 @@ const Form = (hrid) => {
             createdAt: Timestamp.fromDate(new Date()),
             interests: 0,
             participants: [],
-            approved: false,
+            status: statusValue,
             helpRequest: isHelpReqFlow ? [hrid.hrid] : [],
           };
 
