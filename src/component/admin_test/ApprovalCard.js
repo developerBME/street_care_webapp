@@ -21,7 +21,18 @@ const getTags = (postData, isVisitLogs) => {
   ));
 };
 
-
+const getStatusStyle = (status) => {
+  switch (status) {
+    case "approved":
+      return "bg-green-100 text-green-600 border border-green-600";
+    case "pending":
+      return "bg-yellow-100 text-yellow-600 border border-yellow-600";
+    case "rejected":
+      return "bg-red-100 text-red-600 border border-red-600";
+    default:
+      return "bg-gray-100 text-gray-600 border border-gray-600";
+  }
+};
 
 const ApprovalCard = ({
   postData,
@@ -29,7 +40,7 @@ const ApprovalCard = ({
   isSelected,
   isVisitLogs,
   onClick,
-  selectedButton 
+  selectedButton,
 }) => {
   // Safely handle date formatting
   const formattedDate = isVisitLogs
@@ -39,8 +50,20 @@ const ApprovalCard = ({
     : "Unknown Date";
 
   return (
-    <div onClick={onClick}
-    className="bg-[#F5EEFE] rounded-[20px] flex flex-col h-full w-full max-w-[320px] p-4 shadow-md cursor-pointer">
+    <div
+      onClick={onClick}
+      className="bg-[#F5EEFE] rounded-[20px] flex flex-col h-full w-full max-w-[320px] p-4 shadow-md cursor-pointer"
+    >
+      {/* Status */}
+        <div className="mt-2 text-right mb-2">
+          <span
+            className={`px-3 py-1 text-sm font-medium rounded-full ${getStatusStyle(
+              postData.status
+            )}`}
+          >
+            {postData.status || "No Status"}
+          </span>
+        </div>
       {/* Top Section: Date and Location */}
       <div className="flex justify-between items-start">
         <div className="flex flex-col space-y-2">
@@ -63,17 +86,20 @@ const ApprovalCard = ({
         </div>
 
         {/* Checkbox Section */}
-        {selectedButton && (<label className="inline-flex items-center">
-          <input
-            type="checkbox"
-            className="form-checkbox h-4 w-4 text-violet-900"
-            checked={isSelected}
-            onChange={() => onToggleSelect(postData.id)}
-          />
-        </label>)}
+        {selectedButton && (
+          <label className="inline-flex items-center">
+            <input
+              type="checkbox"
+              className="form-checkbox h-4 w-4 text-violet-900"
+              checked={isSelected}
+              onClick={(e) => e.stopPropagation()} // Prevent parent onClick
+              onChange={(e) => onToggleSelect(postData.id)}
+            />
+          </label>
+        )}
       </div>
 
-      {/* Middle Section: Title and Description */}
+      {/* Middle Section: Title, Description, and Status */}
       <div className="mt-4">
         {/* Title */}
         <h1 className="text-lg font-medium text-[#1F0A58] line-clamp-1">
@@ -84,6 +110,8 @@ const ApprovalCard = ({
         <p className="text-sm text-[#444746] mt-2 line-clamp-2">
           {postData.description || "No description available."}
         </p>
+
+        
       </div>
 
       {/* Tags Section */}

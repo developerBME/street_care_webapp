@@ -65,7 +65,7 @@ const PostApprovals = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
 
-  const handleCardClick = (post) => {
+  const handleCardClick = (post,event) => {
     setSelectedPost(post);
     setIsModalOpen(true);
   };
@@ -185,7 +185,7 @@ const PostApprovals = () => {
   const handleAccept = async () => {
     try {
       const collectionName = activeTab === "outreaches" ? "outreachEvents" : "visitLogs";
-      await updateDoc(doc(db, collectionName, selectedPost.id), { approved: true });
+      await updateDoc(doc(db, collectionName, selectedPost.id), { status:"approved" });
   
       // Update state to remove the accepted post
       setPendingPosts((prev) => ({
@@ -203,7 +203,7 @@ const PostApprovals = () => {
   const handleReject = async () => {
     try {
       const collectionName = activeTab === "outreaches" ? "outreachEvents" : "visitLogs";
-      await updateDoc(doc(db, collectionName, selectedPost.id), { approved: false });
+      await updateDoc(doc(db, collectionName, selectedPost.id), { status:"rejected" });
   
       // Update state to remove the rejected post
       setPendingPosts((prev) => ({
@@ -390,7 +390,7 @@ const PostApprovals = () => {
                   isSelected={selectedItems.includes(post.id)}
                   isVisitLogs={activeTab === "visitLogs"}
                   selectedButton={true}
-                  onClick={() => handleCardClick(post)}
+                  onClick={() => handleCardClick(post,)}
                 />
                 
                 ))}
