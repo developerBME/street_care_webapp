@@ -25,7 +25,12 @@ const PERSONAL_VISIT_LOG = "personalVisitLog";
 export const fetchEvents = async () => {
   try {
     const oureachEventsRef = collection(db, OUTREACH_EVENTS_COLLECTION);
-    const eventSnapshot = await getDocs(oureachEventsRef);
+    const approvedEventsQuery = query(
+      oureachEventsRef,
+      where('status', '==', 'approved')
+    );
+    const eventSnapshot = await getDocs(approvedEventsQuery);
+
     let outreachEvents = [];
     const fAuth = getAuth();
     onAuthStateChanged(fAuth, (user) => {
@@ -181,6 +186,37 @@ export const fetchOfficialEvents = async () => {
     logEvent(
       "STREET_CARE_ERROR",
       `error on fetchOfficialEvents EventCardService.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
+
+export const fetchUserTypeDetails = async (uid) => {
+  try {
+  // Check if uid is valid
+  if (!uid) {
+    console.warn("Invalid User Id", uid);
+    return {
+      username: "",
+      type: "",
+    };
+  }
+  const userQuery = query(
+      collection(db, USERS_COLLECTION),
+      where("uid", "==", uid)
+  );
+  const userDocRef = await getDocs(userQuery);
+  // const userDocID = userDocRef.docs[0].id;
+  const userData = userDocRef.docs[0]?.data();
+  return {
+      username: userData?.username || "",
+      type: userData?.Type || "",
+  };
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchUserTypeDetails EventCardService.js- ${error.message}`
     );
     throw error;
   }
