@@ -16,6 +16,7 @@ const OutreachEventCard = ({
 	refresh,
 	isPastEvent,
 	openModal,
+	loggedIn,
 }) => {
 	const {
 		id,
@@ -45,15 +46,20 @@ const OutreachEventCard = ({
 	};
 
 	const detailOutreach = () =>{
+		if (loggedIn) {
 		navigate(`/outreachsignup/${id}`, {
 			state: { label: 'EDIT' },
-		});
+		});}
+		
 	};
 
 	return (
 		<div
-			className="bg-[#F5EEFE] min-w-full max-w-[320px] lg:w-full rounded-[30px] mb-4 flex flex-col justify-between p-6 cursor-pointer"
-			onClick={openModal}
+		className={`bg-[#F5EEFE] min-w-full max-w-[320px] lg:w-full rounded-[30px] mb-4 flex flex-col justify-between p-6 ${
+			loggedIn ? 'cursor-pointer' : 'cursor-not-allowed'
+		}`}
+		onClick={loggedIn ? openModal : null}
+			
 		>
 			{!isProfilePage && !isPastEvent ? (
 				<div className="inline-flex items-center space-x-2 ">
@@ -107,7 +113,7 @@ const OutreachEventCard = ({
 					<CardTags tags={skills} />
 				</div>
 			) : (
-				<div className="my-3 space-y-3 w-full h-full flex flex-col" onClick={detailOutreach}>
+				<div className="my-3 space-y-3 w-full h-full flex flex-col" onClick={loggedIn ? detailOutreach : null}>
 					{isPastEvent ? (
 						<div className="flex flex-row justify-between">
 							<div className="flex flex-row justify-normal space-x-2">
