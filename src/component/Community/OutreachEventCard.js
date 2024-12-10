@@ -23,6 +23,7 @@ const OutreachEventCard = ({
 		label,
 		userName,
 		title,
+		status,
 		eventDate,
 		location,
 		totalSlots,
@@ -34,6 +35,7 @@ const OutreachEventCard = ({
 	const navigate = useNavigate();
 	const [label2, setLabel2] = useState(label);
 	console.log(label2);
+	console.log('Status:'+status);
 
 	const [showModal, setShowModal] = useState(false);
 
@@ -61,6 +63,8 @@ const OutreachEventCard = ({
 		onClick={loggedIn ? openModal : null}
 			
 		>
+			
+		
 			{!isProfilePage && !isPastEvent ? (
 				<div className="inline-flex items-center space-x-2 ">
 					<img
@@ -80,7 +84,20 @@ const OutreachEventCard = ({
 			{isProfilePage ? (
 				<div className="my-3 space-y-3 w-full h-full flex flex-col" onClick={detailOutreach}>
 					<div className="flex flex-col justify-between space-y-3">
+					<div className="relative">
+	
+					<div className="absolute top-2 right-4 bg-[#37168B] text-white font-medium font-dmsans text-[12px] px-3 py-1 rounded-full shadow-md">
+							{status}
+					</div>
+
+
+					</div>
+		
+			
 						<div className="flex flex-row justify-normal space-x-2">
+						
+
+						
 							<img
 								alt=""
 								className="w-[13px] h-[15px] my-[3px]"
