@@ -464,7 +464,7 @@ function PersonalOutForm() {
 
     const userDetails = await fetchUserTypeDetails(fAuth.currentUser.uid);
     let statusValue = 'pending'
-    if(userDetails.type == 'Chapter Leader') {
+    if(userDetails.type == 'Chapter Leader' || userDetails.type == 'Internal Member') {
       statusValue = 'approved'
     }
 
