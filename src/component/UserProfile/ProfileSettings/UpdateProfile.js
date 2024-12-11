@@ -69,6 +69,12 @@ const UpdateProfile = () => {
   const [currentStep, setCurrentStep] = useState("EDIT_PROFILE");
   const [newUsername, setNewUsername] = useState("");
   const [usernameError, setUsernameError] = useState("");
+  const [newCity, setNewCity] = useState("");
+  const [cityError, setCityError] = useState("");
+  const [newState, setNewState] = useState("");
+  const [stateError, setStateError] = useState("");
+  const [newCountry, setNewCountry] = useState("");
+  const [countryError, setCountryError] = useState("");
   const [userimageError, setUserimageError] = useState("");
   const [newProfileImage, setNewProfileImage] = useState(null);
   const [avatarLoading, setAvatarLoading] = useState(false);
@@ -77,6 +83,9 @@ const UpdateProfile = () => {
   const [loading, setLoading] = useState("");
 
   const username = useRef("");
+  const city = useRef("");
+  const state = useRef("");
+  const country = useRef("");
   const imgRef = useRef();
   const fAuth = getAuth();
 
@@ -86,6 +95,11 @@ const UpdateProfile = () => {
 
   const [errormsg, setErrors] = useState({
     ProfileNameError: "",
+    CityError:"",
+    StateError:"",
+    CountryError:""
+
+    
   });
 
   const handleEditProfile = () => {
@@ -138,6 +152,22 @@ const UpdateProfile = () => {
     setSuccess("");
   };
 
+  const handleCityChange = (e) => {
+    setNewCity(e.target.value);
+    setError("");
+    setSuccess("");
+  };
+  const handleStateChange = (e) => {
+    setNewState(e.target.value);
+    setError("");
+    setSuccess("");
+  };
+  const handleCountryChange = (e) => {
+    setNewCountry(e.target.value);
+    setError("");
+    setSuccess("");
+  };
+
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -176,35 +206,77 @@ const UpdateProfile = () => {
 
   const handleSubmitProfileUpdate = async (e) => {
     e.preventDefault();
-    if (!username.current.value && !imgRef.current.value) {
-      setError("Please provide a display name or profile image to update");
+    if (!username.current.value ||!city.current.value || !state.current.value || !country.current.value) {
+      setError("Please provide a display name and profile image and  location details to update");
       setSuccess("");
-    } else if (username.current.value !== "") {
-      setUsernameError("");
-      const userQuery = query(
-        collection(db, USERS_COLLECTION),
-        where("uid", "==", fAuth.currentUser.uid)
-      );
-      const userDocRef = await getDocs(userQuery);
-      const userDocID = userDocRef.docs[0].id;
-      const userRef = doc(db, USERS_COLLECTION, userDocID);
-      await updateDoc(userRef, {
-        username: username.current.value,
-      });
-      setSuccess("Successfully updated display name"); 
-    } else if (imgRef.current.value !== "") {
-      setUserimageError("");
-      uploadProfileImage(
-        newProfileImage,
-        fAuth.currentUser,
-        setLoading,
-        setSuccess,
-        setAvatarLoading
-      );
-      setSuccess("Successfully updated profile image");
-      imgRef.current.value = "";
-      setNewProfileImage(null);
+    } else {
+      if (username.current.value !== "") {
+        setUsernameError("");
+        const userQuery = query(
+          collection(db, USERS_COLLECTION),
+          where("uid", "==", fAuth.currentUser.uid)
+        );
+        const userDocRef = await getDocs(userQuery);
+        const userDocID = userDocRef.docs[0].id;
+        const userRef = doc(db, USERS_COLLECTION, userDocID);
+        await updateDoc(userRef, {
+          username: username.current.value,
+        });
+      } 
+      if (imgRef.current.value !== "") {
+        setUserimageError("");
+        uploadProfileImage(
+          newProfileImage,
+          fAuth.currentUser,
+          setLoading,
+          setSuccess,
+          setAvatarLoading
+        );
+        imgRef.current.value = "";
+        setNewProfileImage(null);
+      }
+      if (city.current.value !== "") {
+        setCityError("");
+        const userQuery = query(
+          collection(db, USERS_COLLECTION),
+          where("uid", "==", fAuth.currentUser.uid)
+        );
+        const userDocRef = await getDocs(userQuery);
+        const userDocID = userDocRef.docs[0].id;
+        const userRef = doc(db, USERS_COLLECTION, userDocID);
+        await updateDoc(userRef, {
+          city: city.current.value,
+        });
+      }
+      if (state.current.value !== "") {
+        setStateError("");
+        const userQuery = query(
+          collection(db, USERS_COLLECTION),
+          where("uid", "==", fAuth.currentUser.uid)
+        );
+        const userDocRef = await getDocs(userQuery);
+        const userDocID = userDocRef.docs[0].id;
+        const userRef = doc(db, USERS_COLLECTION, userDocID);
+        await updateDoc(userRef, {
+          state: state.current.value,
+        });
+      }
+      if (country.current.value !== "") {
+        setCountryError("");
+        const userQuery = query(
+          collection(db, USERS_COLLECTION),
+          where("uid", "==", fAuth.currentUser.uid)
+        );
+        const userDocRef = await getDocs(userQuery);
+        const userDocID = userDocRef.docs[0].id;
+        const userRef = doc(db, USERS_COLLECTION, userDocID);
+        await updateDoc(userRef, {
+          country: country.current.value,
+        });
+      }
+      setSuccess("Successfully updated the data"); 
     }
+    
   };
 
   const handleEditClick = () => {
@@ -330,6 +402,73 @@ const UpdateProfile = () => {
                                   onChange={handleUsernameChange}
                                 ></input>
                               </div>
+                              
+                            </div>
+                            <div className="self-stretch text-zinc-700 text-[15px] font-medium font-inter leading-tight">
+                              City
+                            </div>
+                            <div className="self-stretch border-stone-300 justify-start items-center gap-2 inline-flex">
+                              <div className="grow shrink basis-0 h-10 flex-col rounded-md border-0 justify-center items-start inline-flex">
+                                <input
+                                  type="text"
+                                  id="city"
+                                  value={newCity}
+                                  ref={city}
+                                  placeholder="Eg. Indianapolis"
+                                  maxLength="20"
+                                  className={`text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
+                                    errormsg.CityError !== ""
+                                      ? "ring-red-500"
+                                      : "ring-gray-300"
+                                  }`}
+                                  onChange={handleCityChange}
+                                ></input>
+                              </div>
+                              
+                            </div>
+                            <div className="self-stretch text-zinc-700 text-[15px] font-medium font-inter leading-tight">
+                              State
+                            </div>
+                            <div className="self-stretch border-stone-300 justify-start items-center gap-2 inline-flex">
+                              <div className="grow shrink basis-0 h-10 flex-col rounded-md border-0 justify-center items-start inline-flex">
+                                <input
+                                  type="text"
+                                  id="state"
+                                  value={newState}
+                                  ref={state}
+                                  placeholder="Eg. Indiana"
+                                  maxLength="20"
+                                  className={`text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
+                                    errormsg.StateError !== ""
+                                      ? "ring-red-500"
+                                      : "ring-gray-300"
+                                  }`}
+                                  onChange={handleStateChange}
+                                ></input>
+                              </div>
+                              
+                            </div>
+                            <div className="self-stretch text-zinc-700 text-[15px] font-medium font-inter leading-tight">
+                              Country
+                            </div>
+                            <div className="self-stretch border-stone-300 justify-start items-center gap-2 inline-flex">
+                              <div className="grow shrink basis-0 h-10 flex-col rounded-md border-0 justify-center items-start inline-flex">
+                                <input
+                                  type="text"
+                                  id="country"
+                                  value={newCountry}
+                                  ref={country}
+                                  placeholder="Eg. United States"
+                                  maxLength="20"
+                                  className={`text-zinc-700 w-full h-full px-4 rounded-md border-0 text-[15px] font-normal font-inter leading-snug tracking-wide ring-1 ring-inset ${
+                                    errormsg.CountryError !== ""
+                                      ? "ring-red-500"
+                                      : "ring-gray-300"
+                                  }`}
+                                  onChange={handleCountryChange}
+                                ></input>
+                              </div>
+                              
                             </div>
                             {errormsg.ProfileNameError && (
                               <div className="inline-flex items-center gap-1.5">
@@ -340,6 +479,42 @@ const UpdateProfile = () => {
                                 />
                                 <div className="text-red-700 font-dmsans">
                                   {errormsg.ProfileNameError}
+                                </div>
+                              </div>
+                            )}
+                            {errormsg.CityError && (
+                              <div className="inline-flex items-center gap-1.5">
+                                <img
+                                  alt=""
+                                  src={errorImg}
+                                  className="w-3 h-3"
+                                />
+                                <div className="text-red-700 font-dmsans">
+                                  {errormsg.CityError}
+                                </div>
+                              </div>
+                            )}
+                            {errormsg.StateError && (
+                              <div className="inline-flex items-center gap-1.5">
+                                <img
+                                  alt=""
+                                  src={errorImg}
+                                  className="w-3 h-3"
+                                />
+                                <div className="text-red-700 font-dmsans">
+                                  {errormsg.StateError}
+                                </div>
+                              </div>
+                            )}
+                            {errormsg.CountryError && (
+                              <div className="inline-flex items-center gap-1.5">
+                                <img
+                                  alt=""
+                                  src={errorImg}
+                                  className="w-3 h-3"
+                                />
+                                <div className="text-red-700 font-dmsans">
+                                  {errormsg.CountryError}
                                 </div>
                               </div>
                             )}

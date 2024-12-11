@@ -11,13 +11,13 @@
   "engines": {
     "node": "18"
   },
-  "main": "sendOutreachEmail.js",
+  "main": "sendOutreachEmail/index.js",
   "dependencies": {
     "firebase-admin": "^11.11.1",
     "firebase-functions": "^4.9.0",
     "functions": "file:",
     "googleapis": "^129.0.0",
-    "nodemailer": "^6.9.7"
+    "nodemailer": "^6.9.15"
   },
   "devDependencies": {
     "firebase-functions-test": "^3.1.0"

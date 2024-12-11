@@ -1,0 +1,17 @@
+{
+  "name": "customUpdateUserEmail",
+  "description": "Cloud Function to update email using firebase SDK",
+  "main": "index.js",
+  "dependencies": {
+    "customUpdateUserEmail": "file:",
+    "firebase-admin": "^11.11.1",
+    "firebase-functions": "^4.9.0"
+  },
+  "devDependencies": {
+    "firebase-functions-test": "^3.1.0"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "private": true
+}

@@ -278,6 +278,7 @@ function Signup2() {
         username: userName,
         uid: currentUser.uid,
         photoUrl: "",
+        Type: ""
       };
 
       // await firestore.collection('users').doc(currentUser.uid).set(userData);

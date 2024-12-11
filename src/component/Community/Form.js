@@ -9,12 +9,14 @@ import errorImg from "../../images/error.png";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import { Timestamp,where,getDocs } from "firebase/firestore";
-import { checkString, checkNumber } from "../helper/validator";
+import { checkString, checkNumber, checkPhoneNumber } from "../helper/validator";
 import { UpdateDisabledRounded } from "@mui/icons-material";
 import CreateOutreachModal from "./CreateOutreachModal";
 import { fetchHelpReqById } from "../HelpRequestService";
 import { emailConfirmation } from "../EmailService";
 import { Link } from "react-router-dom";
+import { fetchUserTypeDetails } from "../EventCardService";
+
 
 const chipList = [
   "Childcare",
@@ -76,6 +78,7 @@ const Form = (hrid) => {
   // console.log(hrid.hrid);
   const [success, setSuccess] = useState(false);
   const nameRef = useRef("");
+  const contactRef = useRef("");
   const descRef = useRef("");
   const maxCapRef = useRef("");
   const streetRef = useRef("");
@@ -98,6 +101,7 @@ const Form = (hrid) => {
 
   const [error, setError] = useState({
     nameError: "",
+    contactError: "",
     streetError: "",
     cityError: "",
     stateError: "",
@@ -128,6 +132,7 @@ const Form = (hrid) => {
     setEndDate(null);
     stateRef.current.value = "";
     nameRef.current.value = "";
+    contactRef.current.value = "";
     descRef.current.value = "";
     maxCapRef.current.value = "";
     streetRef.current.value = "";
@@ -169,6 +174,9 @@ const Form = (hrid) => {
     if (helpDetails.title) {
       nameRef.current.value = helpDetails.title;
     }
+    if(helpDetails.contactNumber){
+      contactRef.current.value = helpDetails.contactNumber;
+    }
     if (helpDetails?.location?.street) {
       streetRef.current.value = helpDetails?.location?.street;
     }
@@ -198,10 +206,16 @@ const Form = (hrid) => {
         // is this help request flow?
         // true if redirected from help request and false for organic outreach event.
         const isHelpReqFlow = !(typeof hrid.hrid == "undefined");
+        const userDetails = await fetchUserTypeDetails(fAuth.currentUser.uid);
+        let statusValue = 'pending'
+        if(userDetails.type == 'Chapter Leader' || userDetails.type == 'Internal Member') {
+          statusValue = 'approved'
+        }
         try {
           let obj = {
             uid: fAuth.currentUser.uid,
             title: nameRef.current.value,
+            contactNumber: contactRef.current.value,
             description: descRef.current.value,
             eventDate: Timestamp.fromDate(startDate),
             eventEndTime: Timestamp.fromDate(endDate),
@@ -219,7 +233,7 @@ const Form = (hrid) => {
             createdAt: Timestamp.fromDate(new Date()),
             interests: 0,
             participants: [],
-            approved: false,
+            status: statusValue,
             helpRequest: isHelpReqFlow ? [hrid.hrid] : [],
           };
 
@@ -265,6 +279,7 @@ const Form = (hrid) => {
           const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px"><h1>Thank you for creating the outreach</h1><p>Your outreach <b>${nameRef.current.value}</b> has been successfully created and you can view it in your profile.</p>
           <p>Here are some of the details:</p>
           <ul>
+          <li>Contact Number: ${contactRef.current.value}</li>
           <li>Description: ${descRef.current.value}</li>
           <li>Location: ${streetRef.current.value}, ${cityRef.current.value}, ${stateRef.current.value}, ${zipcodeRef.current.value}</li>
           <li>Help Type: ${helpRef.current.value}</li>
@@ -348,6 +363,9 @@ const Form = (hrid) => {
   const handleNameChange = (e) => {
     updateErrorState("nameError", "");
   };
+  const contactNumberChange = (e) => {
+    updateErrorState("contactError", "");
+  };
   const handleStreetChange = (e) => {
     setStreet(e.target.value);
     updateErrorState("streetError", "");
@@ -404,6 +422,20 @@ const Form = (hrid) => {
       } catch (e) {
         updateErrorState(
           "nameError",
+          "Description should consist only characters"
+        );
+      }
+    }
+
+    if (!contactRef.current.value) {
+      updateErrorState("contactError", "Contact number is required");
+    } else {
+      try {
+        checkPhoneNumber(contactRef.current.value);
+        updateErrorState("contactError", "");
+      } catch (e) {
+        updateErrorState(
+          "contactError",
           "Description should consist only characters"
         );
       }
@@ -637,6 +669,31 @@ const Form = (hrid) => {
                 </div>
               )}
             </div>
+
+            <div className="space-y-1.5">
+              <p className="font-semibold font-['Inter'] text-[15px]">
+                Contact Number*
+              </p>
+              <input
+                type="text"
+                className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset  ${
+                  error.contactError !== "" ? "ring-red-500" : "ring-gray-300"
+                }`}
+                placeholder="Use Location by default for group meetup"
+                id="event-contact"
+                disabled={helpBool}
+                ref={contactRef}
+                onChange={contactNumberChange}
+              />
+              {error.contactError && (
+                <div className="inline-flex items-center">
+                  <img alt="" src={errorImg} className="w-3 h-3" />
+                  <p className="text-red-600 text-xs mx-1">{error.contactError}</p>
+                </div>
+              )}
+            </div>
+
+
             <div className="space-y-1.5">
               <p className="font-semibold font-['Inter'] text-[15px]">
                 Event Description*

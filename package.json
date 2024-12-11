@@ -20,7 +20,7 @@
     "firebase-functions": "^5.0.1",
     "gh-pages": "^6.0.0",
     "googleapis": "^137.1.0",
-    "nodemailer": "^6.9.7",
+    "nodemailer": "^6.9.15",
     "react": "^18.2.0",
     "react-datepicker": "^4.21.0",
     "react-dom": "^18.2.0",
