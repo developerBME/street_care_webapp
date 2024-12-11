@@ -64,14 +64,6 @@ const HelpRequestCard = ({
       buttonStyleClass = "bg-gray-600 text-white hover:bg-gray-500";
   }
 
-  const handleOpenModal = () => {
-    setOpenModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
-
   return (
     <div
       className="bg-white rounded-xl shadow-lg p-6 w-full max-w-xs mx-auto flex flex-col justify-between"
@@ -113,16 +105,6 @@ const HelpRequestCard = ({
       <h3 className="text-xl font-bold text-gray-900 mb-2">{helpTitle}</h3>
 
       {/* Location */}
-      <div className="flex items-center text-sm text-indigo-600 mb-4">
-        <IoLocationSharp className="w-5 h-5 mr-1" />
-        <span>
-          {helpLocation.street}, {helpLocation.city}, {helpLocation.state}{" "}
-          {helpLocation.zipcode}
-        </span>
-      </div>
-
-      <h3 className="text-xl font-bold text-gray-900 mb-2">{helpTitle}</h3>
-
       <div className="flex items-center text-sm text-indigo-600 mb-4">
         <IoLocationSharp className="w-5 h-5 mr-1" />
         <span>
