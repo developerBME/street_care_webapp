@@ -6,7 +6,8 @@
   import ErrorMessage from "../ErrorMessage";
   import { fetchPublicVisitLogs } from "../VisitLogCardService";
   import infoIcon from "../../images/info_icon.png";
-  import arrowBack  from "../../images/arrowBack.png"; // Replace with your back arrow icon path
+  import arrowBack  from "../../images/arrowBack.png"; // Replace with your back arrow icon path src/images/search-icon-PostApproval.png
+  import searchIcon  from "../../images/search-icon-PostApproval.png"; 
   import CustomButton from "../Buttons/CustomButton"
 
   const PostApprovals = () => {
@@ -292,14 +293,65 @@
       );
     };
 
+    const totalPosts = pendingPosts.outreaches.length + pendingPosts.visitLogs.length;
+
     return (
       <div className="relative flex flex-col items-center">
         <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-16 lg:mx-40 mt-16 rounded-2xl bg-white text-black">
           <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
+            {/* Headline Section */}
             {/* Page Title */}
-            <p className="font-bricolage font-medium text-xl md:text-[32px] text-[#1F0A58]">
-              Post Approvals
-            </p>
+            <div className="flex justify-between items-center gap-4 w-full max-w-[1324px] mb-6">
+                {/* <!-- Post Approvals Title --> */}
+                <p className="font-bricolage font-medium text-xl md:text-[32px] text-[#1F0A58]">
+                  Post Approvals
+                </p>
+
+                {/* <!-- Search and Sort by section --> */}
+                <div className="flex justify-end items-center gap-[49px] w-[492px] h-[40px]">
+                  {/* <!-- Search Input --> */}
+                  <div className="flex items-center gap-[5px] w-[253px] h-[40px] border border-gray-300 rounded px-2">
+                    <input
+                      type="text"
+                      placeholder="Search here..."
+                      className="w-full h-full text-sm outline-none"
+                    />
+                    <button className="flex items-center justify-center w-[24px] h-[24px] text-gray-500">
+                      <img
+                        src={searchIcon}
+                        alt="Search Icon"
+                        className="w-6 h-6"
+                      />
+                    </button>
+                  </div>
+
+                  {/* <!-- Sort By Dropdown --> */}
+                  <div className="flex items-center gap-[5px] w-[190px] h-[40px]">
+                    <label
+                      htmlFor="sort"
+                      className="flex items-center text-sm font-medium text-[#181818]"
+                    >
+                      Sort by:
+                    </label>
+                    <select
+                      id="sort"
+                      className="w-[134px] h-[40px] border border-gray-300 rounded bg-white px-3 text-sm"
+                    >
+                      <option>Most Recent</option>
+                      <option>Oldest First</option>
+                      <option>Alphabetical</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+
+
+            <div className="mt-[48px] flex items-center gap-[48px] w-full max-w-[1324px] h-[32px]">
+              <p className="font-dm-sans text-[24px] font-medium leading-[32px] tracking-[-0.01em] text-black text-right">
+                <span className="text-indigo-600">({totalPosts})</span> Posts are pending to be published on the live website
+              </p>
+            </div>
 
             {/* Top Buttons */}
             {selectedItems.length > 0 && (
@@ -347,29 +399,38 @@
 
             {/* Tabs */}
             <div className="pt-4 pb-3">
-              <div className="w-full flex gap-4 justify-start">
-                <button
-                  className={`px-4 py-2 rounded-full font-medium ${
-                    activeTab === "outreaches"
-                      ? "bg-[#E0D7EC] text-[#1F0A58]"
-                      : "bg-white text-black border border-[#9B82CF]"
-                  }`}
-                  onClick={() => setActiveTab("outreaches")}
-                >
-                  Outreaches ({pendingPosts.outreaches.length})
-                </button>
-                <button
-                  className={`px-4 py-2 rounded-full font-medium ${
-                    activeTab === "visitLogs"
-                      ? "bg-[#E0D7EC] text-[#1F0A58]"
-                      : "bg-white text-black border border-[#9B82CF]"
-                  }`}
-                  onClick={() => setActiveTab("visitLogs")}
-                >
-                  Visit Logs ({pendingPosts.visitLogs.length})
-                </button>
+              <div className="w-full flex justify-between items-center gap-[48px]">
+                {/* Tabs Container */}
+                <div className="flex items-start bg-[#EEEEEE] rounded-[16px] w-[373px] h-[48px]">
+                  <button
+                    className={`flex justify-center items-center px-[16px] py-[12px] w-[186.5px] h-[48px] rounded-[16px] font-medium ${
+                      activeTab === "outreaches"
+                        ? "bg-[#6840E0] text-white" // Active Tab Style
+                        : "bg-transparent text-black" // Inactive Tab Style
+                    }`}
+                    onClick={() => setActiveTab("outreaches")}
+                  >
+                    Outreaches ({pendingPosts.outreaches.length})
+                  </button>
+                  <button
+                    className={`flex justify-center items-center px-[16px] py-[12px] w-[186.5px] h-[48px] rounded-[16px] font-medium ${
+                      activeTab === "visitLogs"
+                        ? "bg-[#6840E0] text-white" // Active Tab Style
+                        : "bg-transparent text-black" // Inactive Tab Style
+                    }`}
+                    onClick={() => setActiveTab("visitLogs")}
+                  >
+                    Visit Logs ({pendingPosts.visitLogs.length})
+                  </button>
+                </div>
+
+                {/* Select Items Text */}
+                <div className="w-[95px] h-[24px] flex items-center justify-center font-dm-sans text-[16px] font-bold text-[#6840E0]">
+                  Select Items
+                </div>
               </div>
             </div>
+            <div className="w-full border-t border-[#C8C8C8]"></div>
 
             {/* Card Grid */}
             {isLoading ? (
