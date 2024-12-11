@@ -380,7 +380,7 @@
                 </button>
                 <button
                   onClick={handleRejectSelected}
-                  className="bg-white-600 text-red-700 border border-red-500 px-4 py-2 rounded-[25px]  hover:bg-red-700 transition"
+                  className="bg-white-600 text-red-500 border border-red-500 px-4 py-2 rounded-[25px]  hover:text-red-700 transition"
                 >
                   Reject Selected
                 </button>
