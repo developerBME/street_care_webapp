@@ -6,9 +6,8 @@
   import ErrorMessage from "../ErrorMessage";
   import { fetchPublicVisitLogs } from "../VisitLogCardService";
   import infoIcon from "../../images/info_icon.png";
-  import arrowBack  from "../../images/arrowBack.png"; // Replace with your back arrow icon path src/images/search-icon-PostApproval.png
+  import arrowBack  from "../../images/arrowBack.png"; 
   import searchIcon  from "../../images/search-icon-PostApproval.png"; 
-  import CustomButton from "../Buttons/CustomButton"
 
   const PostApprovals = () => {
     const [pendingPosts, setPendingPosts] = useState({
