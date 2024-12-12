@@ -70,7 +70,7 @@
       setIsModalOpen(true);
     };
 
-
+    
 
 
     const Modal = ({ post, onClose, onAccept, onReject, isVisitLogs }) => {
