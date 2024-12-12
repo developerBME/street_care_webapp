@@ -1,16 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import OutreachEventCard from "./Community/OutreachEventCard";
 import {
-  formatDate,
   fetchEvents,
-  fetchPastOutreachEvents,
   fetchByCityOrStates,
-  fetchPastOutreaches,
 } from "./EventCardService";
 import { useNavigate } from "react-router-dom";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { IoIosArrowBack, IoIosArrowForward, IoIosArrowDown } from "react-icons/io";
 import search_icon from "../images/search_icon.png";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
+import { formatDate } from "./HelperFunction";
 
 const AllPastOutreachEvents = () => {
   const [events, setEvents] = useState([]);
@@ -21,6 +19,8 @@ const AllPastOutreachEvents = () => {
   const searchRef = useRef("");
   const [eventsDisplay, setEventsDisplay] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
+  const [cityToSearch, setCityToSearch] = useState("");
+  const [filterType, setFilterType] = useState("date");
 
   const [isLoading, setIsLoading] = useState(false);
   const [visibleCards, setVisibleCards] = useState(12);
@@ -42,7 +42,7 @@ const AllPastOutreachEvents = () => {
 
   useEffect(() => {
     fetchCity();
-  }, [currentPage, startDateTime, endDateTime]);
+  }, [currentPage, cityToSearch, startDateTime, endDateTime]);
 
   useEffect(() => {
     setEventsDisplay(events);
@@ -61,14 +61,7 @@ const AllPastOutreachEvents = () => {
       setIsLoading(true);
       setErrorMessage("");
 
-      const cityToSearch = "";
-      const { tot, outreachByLoc } = await fetchByCityOrStates(
-        cityToSearch,
-        startDateTime,
-        endDateTime,
-        currentPage,
-        outreachPerPages
-      );
+      const { tot, outreachByLoc } = await fetchByCityOrStates(cityToSearch, startDateTime, endDateTime, currentPage, outreachPerPages);
 
       if (outreachByLoc.length > 0) {
         const pastEvents = outreachByLoc.filter((event) => {
@@ -82,13 +75,11 @@ const AllPastOutreachEvents = () => {
         console.log("total", Math.ceil(tot / outreachPerPages) - 1);
         setTotalPages(Math.ceil(tot / outreachPerPages) - 1);
       } else {
-        throw new Error(
-          "No past outreach events found for the selected date range."
-        );
+        throw new Error("No past outreach events found for the selected date range.");
       }
     } catch (error) {
       setErrorMessage(error.message);
-      setEvents([]);
+      setEvents([])
       setTotalPages(0);
     } finally {
       setIsLoading(false);
@@ -110,24 +101,28 @@ const AllPastOutreachEvents = () => {
   //   //setTotalPages(cityCountTotal);
   // };
 
+
   const searchChange = () => {
-    console.log(events);
+    console.log(searchRef.current.value);
     setEventsDisplay(
       events.filter(
         (x) =>
           x.title.toLowerCase().search(searchRef.current.value.toLowerCase()) >
-          -1
+            -1 ||
+          x.userName
+            .toLowerCase()
+            .search(searchRef.current.value.toLowerCase()) > -1
       )
     );
   };
 
   const handleClickPrev = () => {
-    console.log(eventsDisplay);
+    console.log(eventsDisplay)
     setCurrentPage(currentPage - 1);
   };
 
   const handleClickNext = () => {
-    console.log("after next", eventsDisplay);
+    console.log("after next",eventsDisplay)
     setCurrentPage(currentPage + 1);
   };
 
@@ -145,73 +140,69 @@ const AllPastOutreachEvents = () => {
     const buttons = [];
     const pageRange = 1;
 
-    if (currentPage > 0) {
-      buttons.push(
-        <button
-          key="prev"
-          onClick={() => handleClickPrev()}
-          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
-        >
-          <IoIosArrowBack />
-        </button>
-      );
-    }
+      if (currentPage > 0) {
+        buttons.push(
+          <button
+            key="prev"
+            onClick={() => handleClickPrev()}
+            className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+          >
+            <IoIosArrowBack/>
+          </button>
+        );
+      }
 
-    if (currentPage > 0) {
-      buttons.push(
-        <button
-          key="first"
-          onClick={() => setCurrentPage(0)}
-          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
-        >
-          0
-        </button>
-      );
-    }
+      if (currentPage > pageRange + 1) {
+        buttons.push(
+          <button
+            key="first"
+            onClick={() => setCurrentPage(0)}
+            className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+          >
+            1
+          </button>
+        );
+        buttons.push(<span key="ellipsis-start" className="mx-1">...</span>);
+      }
 
-    for (
-      let i = Math.max(1, currentPage - pageRange);
-      i <= Math.min(totalPages, currentPage + pageRange);
-      i++
-    ) {
-      buttons.push(
-        <button
-          key={i}
-          onClick={() => setCurrentPage(i)}
-          className={`mx-1 px-3 py-1 rounded-full ${
-            currentPage === i
-              ? "bg-[#1F0A58] text-white"
-              : "bg-gray-200 text-gray-600"
-          }`}
-        >
-          {i}
-        </button>
-      );
-    }
+      for (let i = Math.max(0, currentPage - pageRange); i <= Math.min(totalPages - 1, currentPage + pageRange); i++) {
+        buttons.push(
+          <button
+            key={i}
+            onClick={() => setCurrentPage(i)}
+            className={`mx-1 px-3 py-1 rounded-full ${
+              currentPage === i ? "bg-[#1F0A58] text-white" : "bg-gray-200 text-gray-600"
+            }`}
+          >
+            {i + 1}
+          </button>
+        );
+      }
 
-    if (currentPage < totalPages - 1) {
-      buttons.push(
-        <button
-          key="last"
-          onClick={() => setCurrentPage(totalPages)}
-          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
-        >
-          {totalPages}
-        </button>
-      );
-    }
+      if (currentPage < totalPages - pageRange - 2) {
+        buttons.push(<span key="ellipsis-end" className="mx-1">...</span>);
+        buttons.push(
+          <button
+            key="last"
+            onClick={() => setCurrentPage(totalPages - 1)}
+            className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+          >
+            {totalPages}
+          </button>
+        );
+      }
 
-    if (currentPage < totalPages - 1) {
-      buttons.push(
-        <button
-          key="next"
-          onClick={() => handleClickNext()}
-          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
-        >
-          <IoIosArrowForward />
-        </button>
-      );
-    }
+      if (currentPage < totalPages - 1) {
+        buttons.push(
+          <button
+            key="next"
+            onClick={() => handleClickNext()}
+            className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+          >
+            <IoIosArrowForward/>
+          </button>
+        );
+      }
 
     return buttons;
   };
@@ -233,16 +224,16 @@ const AllPastOutreachEvents = () => {
         </div>
         {/*  */}
 
-        <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
-          <div className=" lg:flex justify-between">
-            <div className="">
-              <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] lg:mt-2">
-                {" "}
-                Past outreach events
+        <div className="items-center justify-center px-4 py-8 lg:px-24 lg:py-16 h-full w-full rounded-2xl bg-[#F7F7F7]">
+          <div className="lg:flex justify-between items-center space-y-4 lg:space-y-0">
+            <div className="lg:w-1/3">
+            <p className=" font-bricolage font-medium text-xl md:text-[35px] text-[#1F0A58] lg:mt-2">
+                Past Outreach Events
               </p>
             </div>
-            <div className=" mt-6 lg:mt-0">
-              <label className="relative text-gray-400 focus-within:text-gray-600 ">
+
+            <div className="flex flex-col lg:flex-row lg:items-center lg:w-2/3 space-y-2 lg:space-y-0 lg:space-x-2">
+              <div className="relative w-full lg:w-auto lg:flex-grow">
                 <input
                   type="text"
                   name="searchText"
@@ -250,7 +241,7 @@ const AllPastOutreachEvents = () => {
                   placeholder="Search Outreach Events"
                   ref={searchRef}
                   onChange={searchChange}
-                  className="form-input w-fit md:w-[27rem] lg:w-[25rem] py-3 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-12 rounded-2xl"
+                  className="form-input w-full py-1 px-3 border border-[#CACACA] placeholder-gray-400 text-xs md:text-sm lg:text-base text-gray-500 appearance-none block pl-10 rounded-lg focus:ring-1 focus:ring-[#1F0A58]"
                 />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -258,7 +249,7 @@ const AllPastOutreachEvents = () => {
                   viewBox="0 0 20 20"
                   strokeWidth="1.5"
                   stroke="currentColor"
-                  className="w-6 h-6 pointer-events-none absolute top-6 transform -translate-y-1/2 left-3"
+                  className="w-4 sm:w-5 h-4 sm:h-5 pointer-events-none absolute top-2 left-2 text-gray-500"
                 >
                   <path
                     strokeLinecap="round"
@@ -266,10 +257,58 @@ const AllPastOutreachEvents = () => {
                     d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
                   />
                 </svg>
-              </label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="flex items-center">
+                  <span className="text-gray-700 text-xs md:text-sm">Filter:</span>
+                  <div className="relative ml-1">
+                    <button
+                      onClick={() => setFilterType(filterType === "date" ? "city" : "date")}
+                      className="flex items-center bg-white border border-gray-300 px-3 py-1 rounded-lg text-s text-gray-700 whitespace-nowrap"
+                      >
+                      {filterType === "date" ? "Date Period" : "City"}
+                      <IoIosArrowDown className="ml-1" />
+                    </button>
+                  </div>
+                </div>
+
+                {filterType === "date" && (
+                  <>
+                    <div>
+                      <input
+                        type="date"
+                        value={startDateTime.toISOString().split("T")[0]}
+                        onChange={handleStartDateChange}
+                        className="form-input py-1 px-2 border border-gray-300 rounded-lg text-xs md:text-sm"
+                        />
+                    </div>
+                    <span>|</span>
+                    <div>
+                      <input
+                        type="date"
+                        value={endDateTime.toISOString().split("T")[0]}
+                        onChange={handleEndDateChange}
+                        className="form-input py-1 px-2 border border-gray-300 rounded-lg text-xs md:text-sm"
+                        />
+                    </div>
+                  </>
+                )}
+
+                {filterType === "city" && (
+                  <div>
+                    <input
+                      type="text"
+                      value={cityToSearch}
+                      onChange={(e) => setCityToSearch(e.target.value)}
+                      placeholder="Select City"
+                      className="form-input py-1 px-2 border border-gray-300 rounded-lg text-xs md:text-sm"
+                      />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-
+{/*
           <div className="mt-6 lg:mt-0">
             <div className="flex items-center space-x-4">
               <div>
@@ -291,8 +330,21 @@ const AllPastOutreachEvents = () => {
                 />
               </div>
             </div>
+          </div> */}
+
+          <div className="flex justify-between items-center mt-8 w-full">
+            <p className="text-gray-600">
+              Showing {eventsDisplay.length} of {totalPages * outreachPerPages} events
+            </p>
+
+            <div className="flex justify-end">
+              {renderPaginationButtons()}
+            </div>
           </div>
 
+          {errorMessage && (
+            <p className="text-red-500 text-center mt-4">{errorMessage}</p>
+          )}
           {isLoading ? (
             <div className="flex justify-between items-center w-full h-fit">
               <EventCardSkeleton />
@@ -300,35 +352,32 @@ const AllPastOutreachEvents = () => {
               <EventCardSkeleton />
             </div>
           ) : (
-            <div
-              className={`w-full ${
-                eventsDisplay.length > 0
-                  ? "flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-x-4 gap-y-1"
-                  : "flex justify-center items-center"
-              }`}
-            >
-              {eventsDisplay.length > 0 ? (
-                eventsDisplay.map((eventData) => (
-                  <OutreachEventCard
-                    isPastEvent={true}
-                    key={eventData.id}
-                    cardData={{
-                      ...eventData,
-                      eventDate: eventData?.eventDate?.seconds
-                        ? formatDate(
-                            new Date(eventData.eventDate.seconds * 1000)
-                          )
-                        : eventData.eventDate,
-                    }}
-                  />
-                ))
-              ) : (
-                <p className="text-4xl text-center">No events available.</p>
-              )}
+            <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+            {eventsDisplay.length > 0 &&
+              eventsDisplay.map((eventData) => (
+                <OutreachEventCard
+                  isPastEvent={true}
+                  key={eventData.id}
+                  cardData={{
+                    ...eventData,
+                    eventDate: eventData?.eventDate?.seconds
+                      ? formatDate(
+                          new Date(eventData.eventDate.seconds * 1000)
+                        )
+                      : eventData.eventDate,
+                  }}
+                />
+              ))}
             </div>
           )}
-          <div className="flex justify-end mt-8">
-            {renderPaginationButtons()}
+          <div className="flex justify-between items-center mt-8 w-full">
+            <p className="text-gray-600">
+              Showing {eventsDisplay.length} of {totalPages * outreachPerPages} events
+            </p>
+
+            <div className="flex justify-end">
+              {renderPaginationButtons()}
+            </div>
           </div>
           {/* {visibleCards < eventsDisplay.length && (
             <button
