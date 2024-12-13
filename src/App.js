@@ -70,6 +70,7 @@ import CreateOutreach from "./component/Community/CreateOutreach";
 import AllSignedUpOutreaches from "./component/UserProfile/AllSignedUpOutreaches";
 import AllCreatedOutreaches from "./component/UserProfile/AllCreatedOutreaches.js";
 import OutreachEvents from "./component/Admin/OutreachEvents";
+import PostApprovals from "./component/admin_test/PostApprovals.js";
 
 
 function App() {
@@ -170,6 +171,7 @@ function App() {
             <Route path="/testAdmin" element={<TestAdmin />} />
             <Route path="/admin-panel/userlist" element={<UserList />} />
             <Route path="/admin" element={<AdminHomePage />} />
+            <Route path="/admin/postApprovals" element={<PostApprovals />} />
             <Route path="/admin/userManagement" element={<UserListNew/>}/>
             <Route path="/admin/outreach-events" element={<OutreachEvents />} />
           </Route>
@@ -229,7 +231,7 @@ function App() {
           {/* <Route path="/icanhelp" element={<ComingSoon />} /> */}
           {/* <Route path="/donateForm" element={<DonateForm />} /> */}
           <Route path="/donateForm" element={<ComingSoon />} />
-          <Route path="/allOutreachEvents" element={<AllOutreachEvents />} />
+          <Route path="/allOutreachEvents" element={<AllOutreachEvents loggedIn={loggedIn}/>} />
           {/* <Route path="/createBME" element={<CreateBME />} /> */}
           <Route
             path="/allPastOutreachEvents"

@@ -14,7 +14,7 @@ import { formatDate } from "./HelperFunction";
 import Pagination from "./Pagination";
 
 // Main component for displaying all outreach events
-const AllOutreachEvents = () => {
+const AllOutreachEvents = ({loggedIn}) => {
 
   const renderPaginationButtons = () => {
     const buttons = [];
@@ -121,10 +121,11 @@ const AllOutreachEvents = () => {
   };
 
   const openModal = (event) => {
-    setSelectedEvent(event);
+    if (loggedIn) {
+      setSelectedEvent(event);
+    }
   };
-
-const closeModal = () => {
+  const closeModal = () => {
     setSelectedEvent(null);
   };
 
@@ -177,6 +178,11 @@ const closeModal = () => {
   useEffect(() => {
     setEventsDisplay(events);
   }, [events]);
+  
+  useEffect(() => {
+    console.log("Is user logged in? ", loggedIn); // Correctly logs true/false
+    // Fetch events logic
+  }, [loggedIn]);
 
   // Handle search input change
   const searchChange = () => {
@@ -395,6 +401,7 @@ const closeModal = () => {
                           : eventData.eventDate,
                       })
                     }
+                    loggedIn={loggedIn}
                   />
                 ))
               ) : (

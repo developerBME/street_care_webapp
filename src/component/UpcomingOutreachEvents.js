@@ -12,6 +12,7 @@ const UpcomingOutreachEvents = ({
     isLoading,
     isError,
     openModal,
+    loggedIn,
   }) =>  {
 
     const outreachRef = useRef();
@@ -75,6 +76,7 @@ const UpcomingOutreachEvents = ({
                         ? formatDate(new Date(eventData.eventDate.seconds * 1000))
                         : eventData.eventDate,
                     })}
+                    loggedIn={loggedIn}
                 />
                 ))}
             </div>

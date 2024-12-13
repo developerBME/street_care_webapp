@@ -68,7 +68,7 @@ const OutreachVisitLogProfile = () => {
           name="buttondefaulticon"
           icon={icon}
           onClick={() => {
-            navigate("/profile/personaloutform");
+            navigate("/profile/visitlogform");
           }}
         />
       </div>
