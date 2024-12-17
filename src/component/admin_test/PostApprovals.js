@@ -151,12 +151,16 @@ const PostApprovals = () => {
   // Approve selected posts
   const handleApproveSelected = async () => {
     try {
+      const collectionName =
+        activeTab === "outreaches" ? "outreachEvents" : "personalVisitLog";
+  
       for (const itemId of selectedItems) {
-        const collectionName =
-          activeTab === "outreaches" ? "outreachEvents" : "visitLogs";
-        await updateDoc(doc(db, collectionName, itemId), { approved: true });
+        await updateDoc(doc(db, collectionName, itemId), {
+          approved: true,
+          status: "approved",
+        });
       }
-
+  
       // Update state after approval
       const updatedPosts = { ...pendingPosts };
       updatedPosts[activeTab] = pendingPosts[activeTab].filter(
@@ -168,16 +172,21 @@ const PostApprovals = () => {
       console.error("Error approving posts:", error);
     }
   };
+  
 
   // Reject selected posts
   const handleRejectSelected = async () => {
     try {
+      const collectionName =
+        activeTab === "outreaches" ? "outreachEvents" : "personalVisitLog";
+  
       for (const itemId of selectedItems) {
-        const collectionName =
-          activeTab === "outreaches" ? "outreachEvents" : "visitLogs";
-        await updateDoc(doc(db, collectionName, itemId), { approved: false });
+        await updateDoc(doc(db, collectionName, itemId), {
+          approved: false,
+          status: "rejected",
+        });
       }
-
+  
       // Update state after rejection
       const updatedPosts = { ...pendingPosts };
       updatedPosts[activeTab] = pendingPosts[activeTab].filter(
@@ -189,11 +198,12 @@ const PostApprovals = () => {
       console.error("Error rejecting posts:", error);
     }
   };
+  
 
   const handleAccept = async () => {
     try {
       const collectionName =
-        activeTab === "outreaches" ? "outreachEvents" : "visitLogs";
+        activeTab === "outreaches" ? "outreachEvents" : "personalVisitLog";
       await updateDoc(doc(db, collectionName, selectedPost.id), {
         status: "approved",
       });
@@ -216,7 +226,7 @@ const PostApprovals = () => {
   const handleReject = async () => {
     try {
       const collectionName =
-        activeTab === "outreaches" ? "outreachEvents" : "visitLogs";
+        activeTab === "outreaches" ? "outreachEvents" : "personalVisitLog";
       await updateDoc(doc(db, collectionName, selectedPost.id), {
         status: "rejected",
       });
@@ -248,7 +258,6 @@ const PostApprovals = () => {
     );
   };
 
-  // Pagination calculations
   // Pagination calculations
 
   const indexOfLastPost = currentPage * postsPerPage;
@@ -545,166 +554,3 @@ const PostApprovals = () => {
 };
 
 export default PostApprovals;
-
-// -----------------------------------------------------------------------------------------------------------------------
-
-// import React, { useState, useEffect } from "react";
-// import { collection, query, where, getDocs, updateDoc, doc } from "firebase/firestore";
-// import { db } from "../firebase";
-// import ApprovalCardOutreachEvents from "./ApprovalCardOutreachEvents";
-// import ApprovalCardVisitlogs from "./ApprovalCardVisitlogs";
-// import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
-// import ErrorMessage from "../ErrorMessage";
-// import infoIcon from "../../images/info_icon.png";
-// import arrowBack from "../../images/arrowBack.png";
-// import searchIcon from "../../images/search-icon-PostApproval.png";
-
-// const PostApprovals = () => {
-//   const [pendingPosts, setPendingPosts] = useState({ outreaches: [], visitLogs: [] });
-//   const [activeTab, setActiveTab] = useState("outreaches");
-//   const [selectedItems, setSelectedItems] = useState([]);
-//   const [isLoading, setIsLoading] = useState(true);
-//   const [isError, setIsError] = useState(false);
-//   const [currentPage, setCurrentPage] = useState(1);
-//   const [isModalOpen, setIsModalOpen] = useState(false);
-//   const [selectedPost, setSelectedPost] = useState(null);
-
-//   const postsPerPage = 6;
-
-//   useEffect(() => {
-//     const fetchPendingPosts = async () => {
-//       try {
-//         setIsLoading(true);
-
-//         // Fetch outreach events
-//         const outreachQuery = query(collection(db, "outreachEvents"), where("status", "==", "pending"));
-//         const outreachSnapshot = await getDocs(outreachQuery);
-//         const outreaches = outreachSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-
-//         // Fetch visit logs
-//         const visitLogQuery = query(collection(db, "personalVisitLog"), where("status", "==", "pending"));
-//         const visitLogSnapshot = await getDocs(visitLogQuery);
-//         const visitLogs = visitLogSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-
-//         setPendingPosts({ outreaches, visitLogs });
-//         setIsError(false);
-//       } catch (error) {
-//         console.error("Error fetching pending posts:", error);
-//         setIsError(true);
-//       } finally {
-//         setIsLoading(false);
-//       }
-//     };
-
-//     fetchPendingPosts();
-//   }, []);
-
-//   const handleCardClick = (post) => {
-//     setSelectedPost(post);
-//     setIsModalOpen(true);
-//   };
-
-//   const handleCloseModal = () => {
-//     setSelectedPost(null);
-//     setIsModalOpen(false);
-//   };
-
-//   // Conditional approval/rejection for both schemas
-//   const handleAction = async (status) => {
-//     try {
-//       const collectionName = activeTab === "outreaches" ? "outreachEvents" : "personalVisitLog";
-//       await updateDoc(doc(db, collectionName, selectedPost.id), { status });
-
-//       setPendingPosts((prev) => ({
-//         ...prev,
-//         [activeTab]: prev[activeTab].filter((post) => post.id !== selectedPost.id),
-//       }));
-
-//       handleCloseModal();
-//     } catch (error) {
-//       console.error(`Error ${status} post:`, error);
-//     }
-//   };
-
-//   const indexOfLastPost = currentPage * postsPerPage;
-//   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-//   const currentPosts = pendingPosts[activeTab]?.slice(indexOfFirstPost, indexOfLastPost);
-
-//   const renderCard = (post) => {
-//     if (activeTab === "outreaches") {
-//       return (
-//         <ApprovalCardOutreachEvents
-//           key={post.id}
-//           postData={post}
-//           onToggleSelect={() => toggleSelect(post.id)}
-//           isSelected={selectedItems.includes(post.id)}
-//           onClick={() => handleCardClick(post)}
-//         />
-//       );
-//     } else {
-//       return (
-//         <ApprovalCardVisitlogs
-//           key={post.id}
-//           postData={post}
-//           onToggleSelect={() => toggleSelect(post.id)}
-//           isSelected={selectedItems.includes(post.id)}
-//           onClick={() => handleCardClick(post)}
-//         />
-//       );
-//     }
-//   };
-
-//   const toggleSelect = (id) => {
-//     setSelectedItems((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
-//   };
-
-//   return (
-//     <div className="relative flex flex-col items-center">
-//       {/* Header */}
-//       <div className="w-[90%] mx-4 mb-16 mt-16 rounded-2xl bg-white text-black">
-//         <div className="py-8 px-4">
-//           <p className="text-xl font-medium text-[#1F0A58]">Post Approvals</p>
-//           <div className="flex mt-4">
-//             <button
-//               className={`tab-button ${activeTab === "outreaches" ? "active" : ""}`}
-//               onClick={() => setActiveTab("outreaches")}
-//             >
-//               Outreaches ({pendingPosts.outreaches.length})
-//             </button>
-//             <button
-//               className={`tab-button ${activeTab === "visitLogs" ? "active" : ""}`}
-//               onClick={() => setActiveTab("visitLogs")}
-//             >
-//               Visit Logs ({pendingPosts.visitLogs.length})
-//             </button>
-//           </div>
-//           <div className="grid grid-cols-3 gap-4 mt-8">
-//             {isLoading ? (
-//               <EventCardSkeleton />
-//             ) : isError ? (
-//               <ErrorMessage message="Error loading posts." />
-//             ) : (
-//               currentPosts.map((post) => renderCard(post))
-//             )}
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Modal */}
-//       {isModalOpen && (
-//         <div className="modal">
-//           <div className="modal-content">
-//             <h2>{selectedPost.description}</h2>
-//             <button onClick={() => handleAction("approved")}>Approve</button>
-//             <button onClick={() => handleAction("rejected")}>Reject</button>
-//             <button onClick={handleCloseModal}>Close</button>
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default PostApprovals;
-
-// -----------------------------------------------------------------------------------------------------------------------
