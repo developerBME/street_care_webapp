@@ -8,14 +8,14 @@ import {
   doc,
 } from "firebase/firestore";
 import { db } from "../firebase";
-import ApprovalCard from "./ApprovalCard";
+import ApprovalCardOutreachEvents from "./ApprovalCardOutreachEvents";
+import ApprovalCardVisitlogs from "./ApprovalCardVisitlogs";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import ErrorMessage from "../ErrorMessage";
 import { fetchPublicVisitLogs } from "../VisitLogCardService";
 import infoIcon from "../../images/info_icon.png";
 import arrowBack from "../../images/arrowBack.png";
 import searchIcon from "../../images/search-icon-PostApproval.png";
-import { fetchUserDetails, fetchUserTypeDetails } from "../EventCardService";
 
 const PostApprovals = () => {
   const [pendingPosts, setPendingPosts] = useState({
@@ -37,43 +37,26 @@ const PostApprovals = () => {
         // Fetch outreaches
         const outreachQuery = query(
           collection(db, "outreachEvents"),
-          where("approved", "==", false)
+          where("status", "==", "pending")
         );
         const outreachSnapshot = await getDocs(outreachQuery);
-        const outreaches = await Promise.all(
-          outreachSnapshot.docs.map(async (doc) => {
-            const post = { id: doc.id, ...doc.data() };
-
-            // Fetch userName using uid
-            const userDetails = await fetchUserTypeDetails(post.uid);
-            return {
-              ...post,
-              userName: userDetails?.username || "Unknown User",
-              userType: userDetails?.type || "",
-            };
-          })
-        );
+        const outreaches = outreachSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
 
         // Fetch visit logs
         const visitLogQuery = query(
           collection(db, "personalVisitLog"),
-          where("approved", "==", false)
+          where("status", "==", "pending")
         );
         const visitLogSnapshot = await getDocs(visitLogQuery);
-        const visitLogs = await Promise.all(
-          visitLogSnapshot.docs.map(async (doc) => {
-            const post = { id: doc.id, ...doc.data() };
+        const visitLogs = visitLogSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        // const visitLogs = await fetchPublicVisitLogs();
 
-            // Fetch userName using uid
-            const userDetails = await fetchUserDetails(post.uid);
-            return {
-              ...post,
-              userName: userDetails?.username || "Unknown User",
-            };
-          })
-        );
-
-        // Update state
         setPendingPosts({ outreaches, visitLogs });
         setIsError(false);
       } catch (error) {
@@ -117,16 +100,25 @@ const PostApprovals = () => {
           </div>
 
           {/* Approval Card */}
-          <ApprovalCard
-            key={post.id}
-            postData={post}
-            userName={post.userName || "Unknown User"} // Pass userName explicitly
-            onToggleSelect={toggleSelect}
-            isSelected={selectedItems.includes(post.id)}
-            isVisitLogs={activeTab === "visitLogs"}
-            selectedButton={true}
-            onClick={() => handleCardClick(post)}
-          />
+          {activeTab === "outreaches" ? (
+            <ApprovalCardOutreachEvents
+              postData={post}
+              onToggleSelect={() => {}}
+              isSelected={false}
+              isVisitLogs={false}
+              selectedButton={false}
+              onClick={() => {}}
+            />
+          ) : (
+            <ApprovalCardVisitlogs
+              postData={post}
+              onToggleSelect={() => {}}
+              isSelected={false}
+              isVisitLogs={true}
+              selectedButton={false}
+              onClick={() => {}}
+            />
+          )}
 
           {/* Buttons Section */}
           <div className="flex justify-between items-center w-full px-4 pt-4">
@@ -134,7 +126,7 @@ const PostApprovals = () => {
               onClick={onReject}
               className="flex justify-center items-center p-0 gap-2 text-red-600 border border-red-600 rounded-full hover:bg-red-100 transition w-[104px] h-[40px]"
               /*
-                flex flex-col justify-center items-center p-0 gap-2 mx-auto w-[90px] h-[40px] bg-white border border-gray-300 rounded-full flex-none order-0 grow-0 text-red-500*/
+              flex flex-col justify-center items-center p-0 gap-2 mx-auto w-[90px] h-[40px] bg-white border border-gray-300 rounded-full flex-none order-0 grow-0 text-red-500*/
             >
               Reject
             </button>
@@ -257,6 +249,8 @@ const PostApprovals = () => {
   };
 
   // Pagination calculations
+  // Pagination calculations
+
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = pendingPosts[activeTab].slice(
@@ -264,17 +258,30 @@ const PostApprovals = () => {
     indexOfLastPost
   );
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab]);
+
+  // Tab switching logic
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+  };
+
   // Render pagination buttons with ellipsis style
   const renderPaginationButtons = () => {
     const totalPages = Math.ceil(pendingPosts[activeTab].length / postsPerPage);
     const pages = [];
 
+    // Generate pagination buttons
     if (totalPages <= 5) {
-      for (let i = 1; i <= totalPages; i++) pages.push(i);
-    } else if (currentPage <= 3) pages.push(1, 2, 3, "...", totalPages);
-    else if (currentPage >= totalPages - 2)
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else if (currentPage <= 3) {
+      pages.push(1, 2, 3, "...", totalPages);
+    } else if (currentPage >= totalPages - 2) {
       pages.push(1, "...", totalPages - 2, totalPages - 1, totalPages);
-    else
+    } else {
       pages.push(
         1,
         "...",
@@ -284,9 +291,16 @@ const PostApprovals = () => {
         "...",
         totalPages
       );
+    }
+
+    const handleTabChange = (tab) => {
+      setActiveTab(tab);
+      setCurrentPage(1);
+    };
 
     return (
       <div className="flex items-center space-x-1 text-sm">
+        {/* Previous Button */}
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}
@@ -295,17 +309,18 @@ const PostApprovals = () => {
           &lt;
         </button>
 
+        {/* Page Buttons */}
         {pages.map((page, index) =>
           page === "..." ? (
             <span
-              key={index}
+              key={`ellipsis-${index}`}
               className="w-8 h-8 flex items-center justify-center"
             >
               ...
             </span>
           ) : (
             <button
-              key={page}
+              key={`page-${page}`}
               onClick={() => setCurrentPage(page)}
               className={`w-8 h-8 flex items-center justify-center rounded-full ${
                 currentPage === page
@@ -318,6 +333,7 @@ const PostApprovals = () => {
           )
         )}
 
+        {/* Next Button */}
         <button
           onClick={() =>
             setCurrentPage((prev) => Math.min(prev + 1, totalPages))
@@ -441,7 +457,7 @@ const PostApprovals = () => {
                       ? "bg-[#6840E0] text-white" // Active Tab Style
                       : "bg-transparent text-black" // Inactive Tab Style
                   }`}
-                  onClick={() => setActiveTab("outreaches")}
+                  onClick={() => handleTabChange("outreaches")}
                 >
                   Outreaches ({pendingPosts.outreaches.length})
                 </button>
@@ -451,7 +467,7 @@ const PostApprovals = () => {
                       ? "bg-[#6840E0] text-white" // Active Tab Style
                       : "bg-transparent text-black" // Inactive Tab Style
                   }`}
-                  onClick={() => setActiveTab("visitLogs")}
+                  onClick={() => handleTabChange("visitLogs")}
                 >
                   Visit Logs ({pendingPosts.visitLogs.length})
                 </button>
@@ -478,18 +494,29 @@ const PostApprovals = () => {
             <>
               {/* Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-[20px] gap-y-[30px] mt-[20px]">
-                {currentPosts.map((post) => (
-                  <ApprovalCard
-                    userName={post.userName}
-                    key={post.id}
-                    postData={post}
-                    onToggleSelect={toggleSelect}
-                    isSelected={selectedItems.includes(post.id)}
-                    isVisitLogs={activeTab === "visitLogs"}
-                    selectedButton={true}
-                    onClick={() => handleCardClick(post)}
-                  />
-                ))}
+                {currentPosts.map((post) =>
+                  activeTab === "outreaches" ? (
+                    <ApprovalCardOutreachEvents
+                      key={post.id}
+                      postData={post}
+                      onToggleSelect={toggleSelect}
+                      isSelected={selectedItems.includes(post.id)}
+                      isVisitLogs={false}
+                      selectedButton={true}
+                      onClick={() => handleCardClick(post)}
+                    />
+                  ) : (
+                    <ApprovalCardVisitlogs
+                      key={post.id}
+                      postData={post}
+                      onToggleSelect={toggleSelect}
+                      isSelected={selectedItems.includes(post.id)}
+                      isVisitLogs={true}
+                      selectedButton={true}
+                      onClick={() => handleCardClick(post)}
+                    />
+                  )
+                )}
               </div>
 
               {/* Pagination */}
@@ -518,3 +545,166 @@ const PostApprovals = () => {
 };
 
 export default PostApprovals;
+
+// -----------------------------------------------------------------------------------------------------------------------
+
+// import React, { useState, useEffect } from "react";
+// import { collection, query, where, getDocs, updateDoc, doc } from "firebase/firestore";
+// import { db } from "../firebase";
+// import ApprovalCardOutreachEvents from "./ApprovalCardOutreachEvents";
+// import ApprovalCardVisitlogs from "./ApprovalCardVisitlogs";
+// import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
+// import ErrorMessage from "../ErrorMessage";
+// import infoIcon from "../../images/info_icon.png";
+// import arrowBack from "../../images/arrowBack.png";
+// import searchIcon from "../../images/search-icon-PostApproval.png";
+
+// const PostApprovals = () => {
+//   const [pendingPosts, setPendingPosts] = useState({ outreaches: [], visitLogs: [] });
+//   const [activeTab, setActiveTab] = useState("outreaches");
+//   const [selectedItems, setSelectedItems] = useState([]);
+//   const [isLoading, setIsLoading] = useState(true);
+//   const [isError, setIsError] = useState(false);
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const [isModalOpen, setIsModalOpen] = useState(false);
+//   const [selectedPost, setSelectedPost] = useState(null);
+
+//   const postsPerPage = 6;
+
+//   useEffect(() => {
+//     const fetchPendingPosts = async () => {
+//       try {
+//         setIsLoading(true);
+
+//         // Fetch outreach events
+//         const outreachQuery = query(collection(db, "outreachEvents"), where("status", "==", "pending"));
+//         const outreachSnapshot = await getDocs(outreachQuery);
+//         const outreaches = outreachSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
+//         // Fetch visit logs
+//         const visitLogQuery = query(collection(db, "personalVisitLog"), where("status", "==", "pending"));
+//         const visitLogSnapshot = await getDocs(visitLogQuery);
+//         const visitLogs = visitLogSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
+//         setPendingPosts({ outreaches, visitLogs });
+//         setIsError(false);
+//       } catch (error) {
+//         console.error("Error fetching pending posts:", error);
+//         setIsError(true);
+//       } finally {
+//         setIsLoading(false);
+//       }
+//     };
+
+//     fetchPendingPosts();
+//   }, []);
+
+//   const handleCardClick = (post) => {
+//     setSelectedPost(post);
+//     setIsModalOpen(true);
+//   };
+
+//   const handleCloseModal = () => {
+//     setSelectedPost(null);
+//     setIsModalOpen(false);
+//   };
+
+//   // Conditional approval/rejection for both schemas
+//   const handleAction = async (status) => {
+//     try {
+//       const collectionName = activeTab === "outreaches" ? "outreachEvents" : "personalVisitLog";
+//       await updateDoc(doc(db, collectionName, selectedPost.id), { status });
+
+//       setPendingPosts((prev) => ({
+//         ...prev,
+//         [activeTab]: prev[activeTab].filter((post) => post.id !== selectedPost.id),
+//       }));
+
+//       handleCloseModal();
+//     } catch (error) {
+//       console.error(`Error ${status} post:`, error);
+//     }
+//   };
+
+//   const indexOfLastPost = currentPage * postsPerPage;
+//   const indexOfFirstPost = indexOfLastPost - postsPerPage;
+//   const currentPosts = pendingPosts[activeTab]?.slice(indexOfFirstPost, indexOfLastPost);
+
+//   const renderCard = (post) => {
+//     if (activeTab === "outreaches") {
+//       return (
+//         <ApprovalCardOutreachEvents
+//           key={post.id}
+//           postData={post}
+//           onToggleSelect={() => toggleSelect(post.id)}
+//           isSelected={selectedItems.includes(post.id)}
+//           onClick={() => handleCardClick(post)}
+//         />
+//       );
+//     } else {
+//       return (
+//         <ApprovalCardVisitlogs
+//           key={post.id}
+//           postData={post}
+//           onToggleSelect={() => toggleSelect(post.id)}
+//           isSelected={selectedItems.includes(post.id)}
+//           onClick={() => handleCardClick(post)}
+//         />
+//       );
+//     }
+//   };
+
+//   const toggleSelect = (id) => {
+//     setSelectedItems((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
+//   };
+
+//   return (
+//     <div className="relative flex flex-col items-center">
+//       {/* Header */}
+//       <div className="w-[90%] mx-4 mb-16 mt-16 rounded-2xl bg-white text-black">
+//         <div className="py-8 px-4">
+//           <p className="text-xl font-medium text-[#1F0A58]">Post Approvals</p>
+//           <div className="flex mt-4">
+//             <button
+//               className={`tab-button ${activeTab === "outreaches" ? "active" : ""}`}
+//               onClick={() => setActiveTab("outreaches")}
+//             >
+//               Outreaches ({pendingPosts.outreaches.length})
+//             </button>
+//             <button
+//               className={`tab-button ${activeTab === "visitLogs" ? "active" : ""}`}
+//               onClick={() => setActiveTab("visitLogs")}
+//             >
+//               Visit Logs ({pendingPosts.visitLogs.length})
+//             </button>
+//           </div>
+//           <div className="grid grid-cols-3 gap-4 mt-8">
+//             {isLoading ? (
+//               <EventCardSkeleton />
+//             ) : isError ? (
+//               <ErrorMessage message="Error loading posts." />
+//             ) : (
+//               currentPosts.map((post) => renderCard(post))
+//             )}
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Modal */}
+//       {isModalOpen && (
+//         <div className="modal">
+//           <div className="modal-content">
+//             <h2>{selectedPost.description}</h2>
+//             <button onClick={() => handleAction("approved")}>Approve</button>
+//             <button onClick={() => handleAction("rejected")}>Reject</button>
+//             <button onClick={handleCloseModal}>Close</button>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default PostApprovals;
+
+// -----------------------------------------------------------------------------------------------------------------------

@@ -1,10 +1,6 @@
 import React from "react";
 import calendarIcon from "../../images/calendar_month.svg";
 import locationIcon from "../../images/location_on.svg";
-import { formatDate } from "../HelperFunction";
-import verifiedPurple from "../../images/verified_purple.png";
-import verifiedGreen from "../../images/verified.png";
-import verifiedBlue from "../../images/verified_blue.png";
 
 const getTags = (postData, isVisitLogs) => {
   console.log("ApprovalCard postData:", postData);
@@ -33,7 +29,7 @@ const getStatusStyle = (status) => {
   }
 };
 
-const ApprovalCard = ({
+const ApprovalCardVisitlogs = ({
   postData,
   onToggleSelect,
   isSelected,
@@ -41,27 +37,17 @@ const ApprovalCard = ({
   onClick,
   selectedButton,
 }) => {
-  // Format date safely
-  const formattedDate = isVisitLogs
-    ? postData?.eventDate
-    : postData?.eventDate?.seconds
-    ? formatDate(new Date(postData.eventDate.seconds * 1000))
-    : "Unknown Date";
-
-  let userImage = null;
-  switch (postData.userType) {
-    case "Chapter Leader":
-      userImage = verifiedGreen;
-      break;
-    case "Chapter Member":
-      userImage = verifiedPurple;
-      break;
-    case "Internal Member":
-      userImage = verifiedBlue;
-      break;
-    default:
-      break;
-  }
+  // Inline date formatting to handle Firebase Timestamp
+  const formattedDate =
+    postData?.dateTime?.seconds
+      ? new Date(postData.dateTime.seconds * 1000).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      : "Unknown Date";
 
   return (
     <div
@@ -77,14 +63,6 @@ const ApprovalCard = ({
         >
           {postData.status || "No Status"}
         </span>
-      </div>
-
-      {/* UserName Section */}
-      <div className="flex items-center space-x-2 mb-3">
-        <span className="text-sm text-[#37168B] font-medium">
-          {postData?.userName || "Unknown User"}
-        </span>
-        {userImage && <img alt="" src={userImage} className="w-5 h-5" />}
       </div>
 
       {/* Top Section: Date and Location */}
@@ -103,11 +81,7 @@ const ApprovalCard = ({
             <img alt="location" src={locationIcon} className="w-4 h-4" />
             <span className="text-sm text-[#37168B] font-medium">
               {postData?.location?.city || postData?.city || "Unknown City"},{" "}
-              {postData?.location?.stateAbbv ||
-                postData?.location?.state ||
-                postData?.stateAbbv ||
-                postData?.state ||
-                ""}
+              {postData?.stateAbbv || ""}
             </span>
           </div>
         </div>
@@ -129,7 +103,7 @@ const ApprovalCard = ({
       {/* Middle Section: Title, Description, and Status */}
       <div className="mt-4">
         <h1 className="text-lg font-medium text-[#1F0A58] line-clamp-1">
-          {postData.title || "Event Title"}
+          {postData.description || "Event Title"}
         </h1>
         <p className="text-sm text-[#444746] mt-2 line-clamp-2">
           {postData.description || "No description available."}
@@ -144,4 +118,4 @@ const ApprovalCard = ({
   );
 };
 
-export default ApprovalCard;
+export default ApprovalCardVisitlogs;
