@@ -37,7 +37,7 @@ const ApprovalCardVisitlogs = ({
   onClick,
   selectedButton,
 }) => {
-  // Inline date formatting to handle Firebase Timestamp
+  // Inline date  formatting to handle Firebase Timestamp
   const formattedDate =
     postData?.dateTime?.seconds
       ? new Date(postData.dateTime.seconds * 1000).toLocaleDateString("en-US", {
