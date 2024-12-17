@@ -43,11 +43,11 @@
             where("approved", "==", false)
           );
           const visitLogSnapshot = await getDocs(visitLogQuery);
-          // const visitLogs = visitLogSnapshot.docs.map((doc) => ({
-          //   id: doc.id,
-          //   ...doc.data(),
-          // }));
-          const visitLogs = await fetchPublicVisitLogs();
+          const visitLogs = visitLogSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          // const visitLogs = await fetchPublicVisitLogs();
 
           setPendingPosts({ outreaches, visitLogs });
           setIsError(false);
@@ -232,65 +232,91 @@
     };
 
     // Pagination calculations
-    const indexOfLastPost = currentPage * postsPerPage;
-    const indexOfFirstPost = indexOfLastPost - postsPerPage;
-    const currentPosts = pendingPosts[activeTab].slice(
-      indexOfFirstPost,
-      indexOfLastPost
-    );
+    // Pagination calculations
+    
+const indexOfLastPost = currentPage * postsPerPage;
+const indexOfFirstPost = indexOfLastPost - postsPerPage;
+const currentPosts = pendingPosts[activeTab].slice(
+  indexOfFirstPost,
+  indexOfLastPost
+);
 
-    // Render pagination buttons with ellipsis style
-    const renderPaginationButtons = () => {
-      const totalPages = Math.ceil(pendingPosts[activeTab].length / postsPerPage);
-      const pages = [];
+useEffect(() => {
+  setCurrentPage(1);
+}, [activeTab]);
 
-      if (totalPages <= 5) {
-        for (let i = 1; i <= totalPages; i++) pages.push(i);
-      } else if (currentPage <= 3) pages.push(1, 2, 3, "...", totalPages);
-      else if (currentPage >= totalPages - 2)
-        pages.push(1, "...", totalPages - 2, totalPages - 1, totalPages);
-      else pages.push(1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages);
+// Tab switching logic
+const handleTabChange = (tab) => {
+  setActiveTab(tab);
+};
 
-      return (
-        <div className="flex items-center space-x-1 text-sm">
+// Render pagination buttons with ellipsis style
+const renderPaginationButtons = () => {
+  const totalPages = Math.ceil(pendingPosts[activeTab].length / postsPerPage);
+  const pages = [];
+
+  // Generate pagination buttons
+  if (totalPages <= 5) {
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(i);
+    }
+  } else if (currentPage <= 3) {
+    pages.push(1, 2, 3, "...", totalPages);
+  } else if (currentPage >= totalPages - 2) {
+    pages.push(1, "...", totalPages - 2, totalPages - 1, totalPages);
+  } else {
+    pages.push(1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages);
+  }
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setCurrentPage(1);
+  };
+
+  return (
+    <div className="flex items-center space-x-1 text-sm">
+      {/* Previous Button */}
+      <button
+        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+        disabled={currentPage === 1}
+        className="w-8 h-8 flex items-center justify-center rounded-full bg-white border border-[#9B82CF] disabled:opacity-50"
+      >
+        &lt;
+      </button>
+
+      {/* Page Buttons */}
+      {pages.map((page, index) =>
+        page === "..." ? (
+          <span key={`ellipsis-${index}`} className="w-8 h-8 flex items-center justify-center">
+            ...
+          </span>
+        ) : (
           <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className="w-8 h-8 flex items-center justify-center rounded-full bg-white border border-[#9B82CF] disabled:opacity-50"
+            key={`page-${page}`}
+            onClick={() => setCurrentPage(page)}
+            className={`w-8 h-8 flex items-center justify-center rounded-full ${
+              currentPage === page
+                ? "bg-[#1F0A58] text-white"
+                : "bg-white text-black border border-[#9B82CF]"
+            }`}
           >
-            &lt;
+            {page}
           </button>
+        )
+      )}
 
-          {pages.map((page, index) =>
-            page === "..." ? (
-              <span key={index} className="w-8 h-8 flex items-center justify-center">
-                ...
-              </span>
-            ) : (
-              <button
-                key={page}
-                onClick={() => setCurrentPage(page)}
-                className={`w-8 h-8 flex items-center justify-center rounded-full ${
-                  currentPage === page
-                    ? "bg-[#1F0A58] text-white"
-                    : "bg-white text-black border border-[#9B82CF]"
-                }`}
-              >
-                {page}
-              </button>
-            )
-          )}
+      {/* Next Button */}
+      <button
+        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+        disabled={currentPage === totalPages}
+        className="w-8 h-8 flex items-center justify-center rounded-full bg-white border border-[#9B82CF] disabled:opacity-50"
+      >
+        &gt;
+      </button>
+    </div>
+  );
+};
 
-          <button
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-            disabled={currentPage === totalPages}
-            className="w-8 h-8 flex items-center justify-center rounded-full bg-white border border-[#9B82CF] disabled:opacity-50"
-          >
-            &gt;
-          </button>
-        </div>
-      );
-    };
 
     const totalPosts = pendingPosts.outreaches.length + pendingPosts.visitLogs.length;
 
@@ -407,7 +433,7 @@
                         ? "bg-[#6840E0] text-white" // Active Tab Style
                         : "bg-transparent text-black" // Inactive Tab Style
                     }`}
-                    onClick={() => setActiveTab("outreaches")}
+                    onClick={() => handleTabChange("outreaches")}
                   >
                     Outreaches ({pendingPosts.outreaches.length})
                   </button>
@@ -417,7 +443,7 @@
                         ? "bg-[#6840E0] text-white" // Active Tab Style
                         : "bg-transparent text-black" // Inactive Tab Style
                     }`}
-                    onClick={() => setActiveTab("visitLogs")}
+                    onClick={() => handleTabChange("visitLogs")}
                   >
                     Visit Logs ({pendingPosts.visitLogs.length})
                   </button>
