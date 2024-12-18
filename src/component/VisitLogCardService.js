@@ -17,16 +17,16 @@ import { fetchUserName, formatDate, getNumberOfPages } from "./HelperFunction";
 
 import logEvent from "./FirebaseLogger";
 
-const VISIT_LOG_COLLECTION = "testLog";
-const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
+// const VISIT_LOG_COLLECTION = "testLog";
+const OUTREACH_EVENTS_COLLECTION = "outreachEventsDev";
 const USERS_COLLECTION = "users";
-const PERSONAL_VISIT_LOG_COLLECTION = "personalVisitLog";
+// const PERSONAL_VISIT_LOG_COLLECTION = "personalVisitLog";
 const VISIT_LOG_COLLECTION_PROD = "visitLogWebProd";
 const PERSONAL_VISIT_LOG = "personalVisitLog";
 
 export const fetchVisitLogs = async () => {
   try {
-    const visitLogsRef = collection(db, PERSONAL_VISIT_LOG_COLLECTION);
+    const visitLogsRef = collection(db, VISIT_LOG_COLLECTION_PROD);
     const visitLogSnapshot = await getDocs(visitLogsRef);
     let visitLogs = [];
     for (const doc of visitLogSnapshot.docs) {
@@ -153,7 +153,7 @@ const visitLogHelperFunction = async (visitLogSnap) => {
 export const fetchVisitLogById = async (visitLogId) => {
   try {
     // Reference to the specific document in the visitlog collection
-    const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
+    const visitLogRef = doc(db, VISIT_LOG_COLLECTION_PROD, visitLogId);
     const visitLogSnap = await getDoc(visitLogRef);
     let visitLogs = await visitLogHelperFunction(visitLogSnap);
 
@@ -197,7 +197,7 @@ export const fetchVisitLogById = async (visitLogId) => {
 
 export const fetchTopVisitLogs = async () => {
   try {
-    const visitlogs = collection(db, PERSONAL_VISIT_LOG_COLLECTION);
+    const visitlogs = collection(db, VISIT_LOG_COLLECTION_PROD);
     const visitlogsQuery = query(
       visitlogs,
       orderBy("dateTime", "desc"), // Order visit logs by the 'dateTime' field in descending order to get the newest entries first
@@ -213,6 +213,9 @@ export const fetchTopVisitLogs = async () => {
         ...visitLogData,
         userName: userName,
         id: id,
+        eventDate: visitLogData?.dateTime?.seconds
+                  ? formatDate(new Date(visitLogData.dateTime.seconds * 1000))
+                  : "",
       });
     }
     // console.log(visitLogs)
@@ -236,7 +239,7 @@ export const fetchPersonalVisitLogs = async (uid) => {
     if (userDocRef.docs.length === 0) {
       console.error("User document not found for uid:", uid);
       return [];
-    }    
+    }
     const userData = userDocRef.docs[0].data();
     const visitLogIds = userData.personalVisitLogs || [];
     const visitLogsData = [];
@@ -244,7 +247,7 @@ export const fetchPersonalVisitLogs = async (uid) => {
     for (let visitLogId of visitLogIds) {
       // console.log(visitLogId);
       const visitLog = await fetchPersonalVisitLogById(visitLogId)
-      if( visitLog != undefined ){
+      if( visitLog !== undefined ){
         visitLogsData.push(visitLog);
       }
     }
@@ -261,7 +264,7 @@ export const fetchPersonalVisitLogs = async (uid) => {
 export const fetchPublicVisitLogs = async () => {
   try {
     const visitLogsRef = query(
-      collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+      collection(db, VISIT_LOG_COLLECTION_PROD),
       where("public", "==", true)
     );
     const visitLogSnapshot = await getDocs(visitLogsRef);
@@ -278,7 +281,7 @@ export const fetchPublicVisitLogs = async () => {
 
 export const fetchPersonalVisitLogById = async (visitLogId) => {
   try {
-    const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
+    const visitLogRef = doc(db, VISIT_LOG_COLLECTION_PROD, visitLogId);
     const visitLogDoc = await getDoc(visitLogRef);
     if (visitLogDoc.exists()) {
       const visitLogData = visitLogDoc.data();
@@ -298,7 +301,7 @@ export const fetchPersonalVisitLogById = async (visitLogId) => {
 
 
 export async function calculateNumberOfPagesForVisitlog(visitlogsPerPage) {
-  return getNumberOfPages(visitlogsPerPage, PERSONAL_VISIT_LOG_COLLECTION);
+  return getNumberOfPages(visitlogsPerPage, VISIT_LOG_COLLECTION_PROD);
   }
 
 export const fetchVisitLogsByCityOrState = async (

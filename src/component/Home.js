@@ -8,7 +8,6 @@ import FAQs from "./HomePage/FAQs2";
 // import BMEcard from "./HomePage/BMEcard";
 // import BMEcardnew from "./HomePage/BMEofficialCard";
 import Success2 from "./HomePage/Success2";
-//import Success from "./HomePage/Success"
 import Landing from "./HomePage/Landing";
 // import Landing from "./HomePage/Landing2";
 // import Success from "./HomePage/Success";
@@ -171,12 +170,12 @@ function HomePage() {
     setShowSignUpModal(true);
     setIsLoading(true);
   };
-  
+
   const closeSignUpModal = () => {
     setShowSignUpModal(false);
     setTriggerEffect(prev => !prev);
   };
-  
+
   const onEventWithdraw = () => {
     setSelectedEvent(null);
     setShowWithdrawnModal(true);
@@ -191,6 +190,13 @@ function HomePage() {
   const fetchData = async () => {
     try {
       const eventsData = await fetchEvents();
+
+      // Sort events in place based on their date
+      // eventsData.sort((a, b) => a.eventDate - b.eventDate);
+
+      // setEvents(eventsData);
+
+      // Display 3 upcoming events in descending order
       eventsData.sort((a, b) => a.eventDate - b.eventDate);
       setEvents(eventsData);
     } catch (error) {
@@ -255,13 +261,13 @@ function HomePage() {
     outreachRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Filter events to get only past events
+  // Filter events to get only upcoming events
   const upcomingEvents = events
     ? events
         .filter((event) => {
           const eventDate =
             new Date(event.eventDate?.seconds * 1000) || event.eventDate;
-          return eventDate >= new Date(); // Check if the event date is before the current date
+          return eventDate >= new Date(); // Check if the event date is after the current date
         })
         .slice(0, 3)
     : [];
@@ -280,7 +286,7 @@ function HomePage() {
   useEffect(() => {
     document.title = "Home - Street Care";
   }, []);
- 
+
   return (
     // <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
     <div className="relative flex flex-col items-center ">
@@ -362,7 +368,7 @@ function HomePage() {
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black h-full">
         {/*<News />*/}
 
-        <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
+        {/* <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
           <p className=" text-[25px] lg:text-[45px] font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
             Past Events
           </p>
@@ -384,8 +390,9 @@ function HomePage() {
               />
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
+
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-16 rounded-2xl bg-white text-black ">
         <FAQs />
       </div>

@@ -125,7 +125,8 @@ const UserInfo = () => {
     const getDeedValues = async () => {
       try {
         const logOfUserRef = query(
-          collection(db, "personalVisitLog"),
+          // collection(db, "personalVisitLog"), // change back to this in dev branch
+          collection(db, "visitLogWebProd"),
           where("uid", "==", fAuth?.currentUser?.uid)
         );
         const data = await getDocs(logOfUserRef);
@@ -154,7 +155,8 @@ const UserInfo = () => {
     const getCreatedOutreaches = async () => {
       try {
         const logOfUserRef = query(
-          collection(db, "outreachEvents"),
+          // collection(db, "outreachEvents"), // change back to this in dev branch
+          collection(db, "outreachEventsDev"),
           where("uid", "==", fAuth?.currentUser?.uid)
         );
         const data = await getDocs(logOfUserRef);
