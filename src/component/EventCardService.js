@@ -32,42 +32,34 @@ export const fetchEvents = async () => {
     );
     const eventSnapshot = await getDocs(approvedEventsQuery);
 
-    let outreachEvents = [];
-    const fAuth = getAuth();
-    onAuthStateChanged(fAuth, (user) => {
-      if (user) {
-        console.log("Found user");
-      } else {
-        console.log("USER NOT FOUND!");
-      }
-    });
-    for (const doc of eventSnapshot.docs) {
-      const eventData = doc.data();
-      const result = await fetchUserDetails(eventData.uid);
-      const userName = result.username;
-      const photoUrl = result.photoUrl;
+    // Collecting all unique user IDs
+    const userIds = new Set();
+    eventSnapshot.docs.forEach((doc) => userIds.add(doc.data().uid));
 
-      let currentParticipants = eventData.participants || [];
-      outreachEvents.push({
+    // Batch fetch user details
+    const userDetails = await fetchUserDetailsBatch(Array.from(userIds));
+
+    const fAuth = getAuth();
+    const outreachEvents = eventSnapshot.docs.map((doc) => {
+      const eventData = doc.data();
+      const currentParticipants = eventData.participants || [];
+      
+      return {
         ...eventData,
-        userName: userName,
+        userName: userDetails[eventData.uid]?.username || "",
+        photoUrl: userDetails[eventData.uid]?.photoUrl || "",
         id: doc.id,
-        label:
-          fAuth.currentUser &&
-          currentParticipants.includes(fAuth?.currentUser?.uid)
-            ? "EDIT"
-            : "RSVP",
+        label: fAuth.currentUser && currentParticipants.includes(fAuth?.currentUser?.uid)
+          ? "EDIT"
+          : "RSVP",
         nop: currentParticipants.length,
-        photoUrl: photoUrl,
-      });
-    }
+      };
+    });
+
     return outreachEvents;
   } catch (error) {
-    logEvent(
-      "STREET_CARE_ERROR",
-      `error on fetchEvents in EventCardService.js- ${error.message}`
-    );
-    throw error;
+    logEvent("STREET_CARE_ERROR", `error on fetchEvents in EventCardService.js- ${error.message}`);
+      throw error;
   }
 };
 
@@ -77,7 +69,6 @@ export async function calculateNumberOfPagesForOutreach(outreachesPerPage) {
 
 async function fetchUserDetailsBatch(userIds) {
   const userDetails = {};
-  // Firestore limits 'in' queries to 10 items
   const chunks = splitArrayIntoChunksOfLen(userIds, 10);
 
   for (const chunk of chunks) {
