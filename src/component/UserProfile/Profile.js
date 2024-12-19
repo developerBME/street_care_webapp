@@ -168,7 +168,6 @@ function Profile() {
                           new Date(eventData.eventDate.seconds * 1000)
                         ),
                       }}
-                      
                       isProfilePage={true}
                       refresh={fetchData}
                       openModal={() =>
