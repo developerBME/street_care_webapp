@@ -348,8 +348,8 @@ const AdminOutreachEvents = () => {
                   style={{ borderRadius: "0px" }}
                 >
                   <option value="all">All</option>
-                  <option value="past">Past Events</option>
-                  <option value="upcoming">Upcoming Events</option>
+                  <option value="past">Past events</option>
+                  <option value="upcoming">Upcoming events</option>
                 </select>
               </div>
                 
