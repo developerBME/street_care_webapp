@@ -23,6 +23,7 @@ const OutreachEventCard = ({
 		label,
 		userName,
 		title,
+		status,
 		eventDate,
 		location,
 		totalSlots,
@@ -80,6 +81,14 @@ const OutreachEventCard = ({
 			{isProfilePage ? (
 				<div className="my-3 space-y-3 w-full h-full flex flex-col" onClick={detailOutreach}>
 					<div className="flex flex-col justify-between space-y-3">
+					<div className="relative">
+	
+						<div className="absolute top-2 right-4 bg-[#37168B] text-white font-medium font-dmsans text-[12px] px-3 py-1 rounded-full shadow-md">
+							{status}
+						</div>
+
+
+					</div>
 						<div className="flex flex-row justify-normal space-x-2">
 							<img
 								alt=""
