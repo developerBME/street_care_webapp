@@ -70,7 +70,7 @@ import CreateOutreach from "./component/Community/CreateOutreach";
 import AllSignedUpOutreaches from "./component/UserProfile/AllSignedUpOutreaches";
 import AllCreatedOutreaches from "./component/UserProfile/AllCreatedOutreaches.js";
 import OutreachEvents from "./component/Admin/OutreachEvents";
-
+import AdminOutreachEvents from "./component/Admin/AdminOutreachEvents.js";
 
 
 function App() {
@@ -250,7 +250,7 @@ function App() {
           />
 
           <Route path="/admin" element={<AdminHomePage />} />
-          
+          <Route path="/admin/adminOutreachEvents" element={<AdminOutreachEvents />} />
 
 
           <Route path="/sample_form" element={<SampleForm />} />
