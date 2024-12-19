@@ -19,7 +19,7 @@ import { fetchUserName, getNumberOfPages} from "./HelperFunction";
 
 const HELP_REQ_COLLECTION = "helpRequests";
 const USERS_COLLECTION = "users";
-const OUTREACHES_COLLECTION = "outreachEvents";
+const OUTREACHES_COLLECTION = "outreachEventsDev"; //change back to outreachEvents in dev branch
 
 export const fetchHelpRequests = async () => {
   try {

@@ -212,7 +212,8 @@ const OutreachSignup = () => {
                     <div className="font-normal font-dmsans text-[14px]">
                       {/* Open Spots: {totalSlots - nop}/{totalSlots} */}
                       {/* {data.totalSlots - data.nop}/{data.totalSlots} */}
-                      {data.nop}/{data.totalSlots}
+                      {/* {data.nop} */}
+                      {Math.floor(data.totalSlots * 3/4)}/{data.totalSlots}
                     </div>
                   </div>
                 ) : (
@@ -271,12 +272,12 @@ const OutreachSignup = () => {
               <div
                 className="h-10 bg-[#000]] rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 inline-flex"
                 onClick={() => {
-                  navigate("/");
+                  navigate("/allOutreachEvents");
                 }}
               >
                 <div className="self-stretch grow shrink basis-0 px-6 py-2.5 justify-center items-center gap-2 inline-flex">
                   <button className="text-center text-[#1F0A58] text-sm font-medium font-inter leading-tight">
-                    Cancel
+                    Go Back
                   </button>
                 </div>
               </div>
