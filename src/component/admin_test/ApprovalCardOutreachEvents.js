@@ -2,11 +2,15 @@ import React from "react";
 import calendarIcon from "../../images/calendar_month.svg";
 import locationIcon from "../../images/location_on.svg";
 import { formatDate } from "../HelperFunction";
+import verifiedPurple from "../../images/verified_purple.png";
+import verifiedGreen from "../../images/verified.png";
+import verifiedBlue from "../../images/verified_blue.png";
+import verifiedYellow from "../../images/verified_yellow.png"
 
 const getTags = (postData, isVisitLogs) => {
   console.log("ApprovalCard postData:", postData);
   const tags = isVisitLogs ? postData?.whatGiven || [] : postData?.skills || [];
-  
+
   return tags.map((tag, index) => (
     <span
       key={index}
@@ -44,6 +48,23 @@ const ApprovalCardOutreachEvents = ({
     : postData?.eventDate?.seconds
     ? formatDate(new Date(postData.eventDate.seconds * 1000))
     : "Unknown Date";
+    
+  let userImage = null;
+
+  switch (postData.userType) {
+    case "Chapter Leader":
+      userImage = verifiedGreen;
+      break;
+    case "Chapter Member":
+      userImage = verifiedPurple;
+      break;
+    case "Internal Member":
+      userImage = verifiedBlue;
+      break;
+    default:
+      userImage = verifiedYellow;
+      break;
+  }
 
   return (
     <div
@@ -59,6 +80,14 @@ const ApprovalCardOutreachEvents = ({
         >
           {postData.status || "No Status"}
         </span>
+      </div>
+
+      {/* UserName Section */}
+      <div className="flex items-center space-x-2 mb-3">
+        <span className="text-sm text-[#37168B] font-medium">
+          {postData?.userName || "Unknown User"}
+        </span>
+        {userImage && <img alt="" src={userImage} className="w-5 h-5" />}
       </div>
 
       {/* Top Section: Date and Location */}
