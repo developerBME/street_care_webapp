@@ -2,11 +2,15 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import dateIcon from "../../images/date.png";
 import locationIcon from "../../images/location.png";
-
-import verifiedImg from "../../images/verified_purple.png";
+//import verifiedImg from "../../images/verified_purple.png";
 import defaultImage from "../../images/default_avatar.svg";
 import { formatDate } from "../helper";
 import CardTags from "./CardTags";
+import verifiedPurple from "../../images/verified_purple.png";
+import verifiedGreen from "../../images/verified.png";
+import verifiedBlue from "../../images/verified_blue.png";
+import verifiedYellow from "../../images/verified_yellow.png"
+
 
 const OutreachVisitLogCard = ({ visitLogCardData }) => {
   const navigate = useNavigate();
@@ -14,6 +18,22 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
   const handleViewDetails = () => {
     navigate(`/VisitLogDetails/${visitLogCardData.id}`);
   };
+
+  let verifiedImg;
+  switch (visitLogCardData?.userType) {
+    case "Chapter Leader":
+      verifiedImg = verifiedGreen;
+      break;
+    case "Chapter Member":
+      verifiedImg = verifiedPurple;
+      break;
+    case "Internal Member":
+      verifiedImg = verifiedBlue;
+      break;
+    default:
+      verifiedImg = verifiedYellow; 
+      break;
+  }
 
   return (
     <div
