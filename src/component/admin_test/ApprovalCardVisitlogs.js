@@ -1,6 +1,10 @@
 import React from "react";
 import calendarIcon from "../../images/calendar_month.svg";
 import locationIcon from "../../images/location_on.svg";
+import verifiedPurple from "../../images/verified_purple.png";
+import verifiedGreen from "../../images/verified.png";
+import verifiedBlue from "../../images/verified_blue.png";
+import verifiedYellow from "../../images/verified_yellow.png"
 
 const getTags = (postData, isVisitLogs) => {
   console.log("ApprovalCard postData:", postData);
@@ -49,6 +53,25 @@ const ApprovalCardVisitlogs = ({
         })
       : "Unknown Date";
 
+  
+      let userImage = null;
+
+      switch (postData.userType) {
+        case "Chapter Leader":
+          userImage = verifiedGreen;
+          break;
+        case "Chapter Member":
+          userImage = verifiedPurple;
+          break;
+        case "Internal Member":
+          userImage = verifiedBlue;
+          break;
+        default:
+          userImage = verifiedYellow;
+          break;
+      }
+    
+
   return (
     <div
       onClick={() => onClick?.(postData.id)}
@@ -63,6 +86,14 @@ const ApprovalCardVisitlogs = ({
         >
           {postData.status || "No Status"}
         </span>
+      </div>
+
+      {/* UserName Section */}
+      <div className="flex items-center space-x-2 mb-3">
+        <span className="text-sm text-[#37168B] font-medium">
+          {postData?.userName || "Unknown User"}
+        </span>
+        {userImage && <img alt="" src={userImage} className="w-5 h-5" />}
       </div>
 
       {/* Top Section: Date and Location */}

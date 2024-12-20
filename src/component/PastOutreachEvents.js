@@ -13,20 +13,23 @@ const PastOutreachEvents = ({
   isLoading,
   isError,
 }) => {
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
-
+  // Ensure unique events
+  const uniqueEvents = events
+    ? Array.from(new Set(events.map((event) => event.id))).map((id) =>
+        events.find((event) => event.id === id)
+      )
+    : [];
 
   // Filter events to get only past events
-  const pastEvents = events
-    ? events
-        .filter((event) => {
-          const eventDate =
-            new Date(event.eventDate?.seconds * 1000) || event.eventDate;
-          return eventDate < new Date(); // Check if the event date is before the current date
-        })
-        .slice(0, 3)
-    : [];
+  const pastEvents = uniqueEvents
+    .filter((event) => {
+      const eventDate =
+        new Date(event.eventDate?.seconds * 1000) || event.eventDate;
+      return eventDate < new Date(); // Check if the event date is before the current date
+    })
+    .slice(0, 3);
 
   return (
     <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
@@ -40,7 +43,6 @@ const PastOutreachEvents = ({
           Past Outreach Events
           <img alt="" src={arrowRight} className="w-6 h-7 lg:w-10 lg:h-10 " />
         </p>
-        
 
         {isLoading ? (
           <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
@@ -58,6 +60,8 @@ const PastOutreachEvents = ({
                 key={eventData.id}
                 cardData={{
                   ...eventData,
+                  userName: eventData.userName || "Unknown",
+                  userType: eventData.userType || "Default",
                   eventDate: eventData.eventDate?.seconds
                     ? formatDate(new Date(eventData.eventDate.seconds * 1000))
                     : eventData.eventDate,
@@ -67,14 +71,14 @@ const PastOutreachEvents = ({
           </div>
         )}
         <div className="mt-16">
-            <CustomButton
-              label="More Past Outreach Events"
-              name="buttondefault"
-              onClick={() => {
-                navigate("/allPastOutreachEvents");
-              }}
-            />
-          </div>
+          <CustomButton
+            label="More Past Outreach Events"
+            name="buttondefault"
+            onClick={() => {
+              navigate("/allPastOutreachEvents");
+            }}
+          />
+        </div>
       </div>
     </div>
   );

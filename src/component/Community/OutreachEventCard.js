@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 import defaultImage from "../../images/default_avatar.svg";
-import verifiedImg from "../../images/verified_purple.png";
+//import verifiedImg from "../../images/verified_purple.png";
 import CustomButton from "../Buttons/CustomButton";
 import { useNavigate } from "react-router-dom";
 import EditModal from "./EditModal";
@@ -11,48 +11,54 @@ import locate from "../../images/location.png";
 import { formatDate } from "../helper";
 import CardTags from "./CardTags";
 import HelpRequestCard from "./HelpRequestCard";
+import verifiedPurple from "../../images/verified_purple.png";
+import verifiedGreen from "../../images/verified.png";
+import verifiedBlue from "../../images/verified_blue.png";
+import verifiedYellow from "../../images/verified_yellow.png"
 
 const OutreachEventCard = ({
   cardData,
   isProfilePage,
-  refresh,
-  isPastEvent,
-  openModal,
   isHelpRequestCard,
 }) => {
   const {
     id,
-    label,
     userName,
     title,
     status,
     eventDate,
     location,
-    totalSlots,
-    nop,
     photoUrl,
     description,
     skills,
+    userType,
   } = cardData;
+
   const navigate = useNavigate();
-  const [label2, setLabel2] = useState(label);
-  console.log(label2);
 
-  const [showModal, setShowModal] = useState(false);
-
-  const handleEditClick = () => {
-    setShowModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
-
+  // Navigate to the outreach details page
   const detailOutreach = () => {
     navigate(`/outreachsignup/${id}`, {
       state: { label: "EDIT" },
     });
   };
+
+  // Assign verified image based on userType
+  let verifiedImg;
+  switch (userType) {
+    case "Chapter Leader":
+      verifiedImg = verifiedGreen;
+      break;
+    case "Chapter Member":
+      verifiedImg = verifiedPurple;
+      break;
+    case "Internal Member":
+      verifiedImg = verifiedBlue;
+      break;
+    default:
+      verifiedImg = verifiedYellow;
+      break;
+  }
 
   return (
     <div
@@ -60,203 +66,45 @@ const OutreachEventCard = ({
         "min-w-full max-w-[320px] lg:w-full rounded-[30px] mb-4 flex flex-col justify-between cursor-pointer",
         { "bg-[#F5EEFE] p-6": !isHelpRequestCard }
       )}
-      onClick={openModal}
+      onClick={detailOutreach} // Always navigate to details page
     >
-      {!isProfilePage && !isPastEvent ? (
-        <div className="inline-flex items-center space-x-2 ">
-          <img
-            alt=""
-            src={photoUrl || defaultImage}
-            className="w-8 h-8 rounded-full"
-          />
-          <div className="font-normal font-inter text-[13px] ">{userName}</div>
-          <img alt="" src={verifiedImg} className="w-5 h-5" />
-        </div>
-      ) : (
-        <div className="mt-3"></div>
-      )}
+      {/* User Information */}
+      <div className="inline-flex items-center space-x-2 ">
+        <img
+          alt=""
+          src={photoUrl || defaultImage}
+          className="w-8 h-8 rounded-full"
+        />
+        <div className="font-normal font-inter text-[13px]">{userName}</div>
+        <img alt="Verified" src={verifiedImg} className="w-5 h-5" />
+      </div>
 
-      {isProfilePage ? (
-        isHelpRequestCard ? (
-          <HelpRequestCard
-            onClick={detailOutreach}
-            helpRequestCardData={{
-              ...cardData,
-              ...(cardData?.status ? {} : { status: "Need Help" }),
-            }}
-            isProfileHelpCard={true}
-          ></HelpRequestCard>
-        ) : (
-          <div
-            className="my-3 space-y-3 w-full h-full flex flex-col"
-            onClick={detailOutreach}
-          >
-            <div className="flex flex-col justify-between space-y-3">
-            <div className="relative">
-	
-              <div className="absolute top-2 right-4 bg-[#37168B] text-white font-medium font-dmsans text-[12px] px-3 py-1 rounded-full shadow-md">
-                {status}
-              </div>
-
-
+      {/* Event Details */}
+      <div className="my-3 space-y-3 w-full h-full flex flex-col">
+        <div className="flex flex-row justify-between">
+          <div className="flex flex-row justify-normal space-x-2">
+            <img alt="" className="w-[13px] h-[15px] my-[3px]" src={date} />
+            <div className="font-medium text-[14px] text-[#37168B]">
+              {formatDate(eventDate)}
             </div>
-              <div className="flex flex-row justify-normal space-x-2">
-                <img alt="" className="w-[13px] h-[15px] my-[3px]" src={date} />
-                <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
-                  {formatDate(eventDate)}
-                </div>
-              </div>
-              <div className="flex flex-row justify-normal space-x-2">
-                <img
-                  alt=""
-                  className="w-[12px] h-[15px] my-[3px]"
-                  src={locate}
-                />
-                <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
-                  {location.city}, {location.state}
-                </div>
-              </div>
-            </div>
-
-            <h1 className="font-medium font-dmsans text-[24px] line-clamp-1">
-              {title}
-            </h1>
-
-            <div className="font-medium text-[14px] font-dmsans text-[#444746] line-clamp-2 h-10">
-              {description}
-            </div>
-
-            <CardTags tags={skills} />
           </div>
-        )
-      ) : (
-        <div
-          className="my-3 space-y-3 w-full h-full flex flex-col"
-          onClick={detailOutreach}
-        >
-          {isPastEvent ? (
-            <div className="flex flex-row justify-between">
-              <div className="flex flex-row justify-normal space-x-2">
-                <img alt="" className="w-[13px] h-[15px] my-[2px]" src={date} />
-                <div className="font-medium font-dmsans text-[12px] text-[#37168B]">
-                  {formatDate(eventDate)}
-                </div>
-              </div>
-              <div className="flex flex-row justify-normal space-x-2">
-                <img
-                  alt=""
-                  className="w-[12px] h-[15px] my-[2px]"
-                  src={locate}
-                />
-                <div className="font-medium font-dmsans text-[12px] text-[#37168B]">
-                  {location.city}, {location.stateAbbv || location.state}
-                </div>
-              </div>
+          <div className="flex flex-row justify-normal space-x-2">
+            <img alt="" className="w-[12px] h-[15px] my-[3px]" src={locate} />
+            <div className="font-medium text-[14px] text-[#37168B]">
+              {location.city}, {location.stateAbbv || location.state}
             </div>
-          ) : (
-            <div
-              className="flex flex-row justify-between"
-              onClick={detailOutreach}
-            >
-              <div className="flex flex-row justify-normal space-x-2">
-                <img alt="" className="w-[13px] h-[15px] my-[3px]" src={date} />
-                <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
-                  {formatDate(eventDate)}
-                </div>
-              </div>
-              <div className="flex flex-row justify-normal space-x-2">
-                <img
-                  alt=""
-                  className="w-[12px] h-[15px] my-[3px]"
-                  src={locate}
-                />
-                <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
-                  {location.city}, {location.stateAbbv || location.state}
-                </div>
-              </div>
-            </div>
-          )}
-          <h1 className="font-medium font-dmsans text-[24px] line-clamp-1">
-            {title}
-          </h1>
-
-          <div className="font-medium text-[14px] font-dmsans text-[#444746] line-clamp-2 h-10">
-            {description}
-          </div>
-
-          <CardTags tags={skills} />
-        </div>
-      )}
-      {!isPastEvent ? (
-        <div className=" flex flex-col justify-end">
-          <div className="flex items-center justify-between gap-16 my-1">
-            {isProfilePage || label2 === "EDIT" ? (
-              <div className="group relative">
-                {/* <CustomButton
-									label="View"
-									name="buttonlight"
-									onClick={() => {
-										navigate(`/outreachsignup/${id}`, {
-											state: { label: 'EDIT' },
-										});
-									}}
-								></CustomButton> */}
-
-                {/* <CustomButton
-                  label="Edit"
-                  name="buttonlight"
-                  onClick={handleEditClick}
-                ></CustomButton>
-
-                {showModal && (
-                  <EditModal
-                    handleClose={handleModalClose}
-                    id={id}
-                    label={label}
-                    navigate={navigate}
-                    label2={label2}
-                    setLabel2={setLabel2}
-                    refresh={refresh}
-                    title={title}
-                    eventDate={eventDate}
-                    location={location}
-                  />
-                )} */}
-              </div>
-            ) : (
-              <div className="flex flex-row">
-                {/* <div className="group relative mr-2">
-                  <CustomButton
-                    label={label2}
-                    name="buttonlight"
-                    onClick={() => {
-                      navigate(`/outreachsignup/${id}`);
-                    }}
-                  />
-                </div> */}
-              </div>
-            )}
-
-            {/* This code is for adding number of volunteer ppl value to show up. */}
-            {/* {!isProfilePage ? (
-              <div className="flex flex-row space-x-2">
-                <img
-                  alt=""
-                  className="w-[20px] h-[14px] my-1"
-                  src={userSlots}
-                ></img>
-                <div className="font-normal font-dmsans text-[14px]">
-                  {nop}/{totalSlots}
-                </div>
-              </div>
-            ) : (
-              <div></div>
-            )} */}
           </div>
         </div>
-      ) : (
-        <div className="mt-5 "></div>
-      )}
+
+        {/* Title and Description */}
+        <h1 className="font-medium text-[24px] line-clamp-1">{title}</h1>
+        <div className="font-medium text-[14px] text-[#444746] line-clamp-2 h-10">
+          {description}
+        </div>
+
+        {/* Tags */}
+        <CardTags tags={skills} />
+      </div>
     </div>
   );
 };

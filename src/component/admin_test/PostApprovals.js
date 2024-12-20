@@ -16,6 +16,7 @@ import { fetchPublicVisitLogs } from "../VisitLogCardService";
 import infoIcon from "../../images/info_icon.png";
 import arrowBack from "../../images/arrowBack.png";
 import searchIcon from "../../images/search-icon-PostApproval.png";
+import { fetchUserDetails, fetchUserTypeDetails } from "../EventCardService";
 
 const PostApprovals = () => {
   const [pendingPosts, setPendingPosts] = useState({
@@ -37,24 +38,41 @@ const PostApprovals = () => {
         // Fetch outreaches
         const outreachQuery = query(
           collection(db, "outreachEvents"),
-          where("status", "==", "pending")
+          where("approved", "==", false)
         );
         const outreachSnapshot = await getDocs(outreachQuery);
-        const outreaches = outreachSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+        const outreaches = await Promise.all(
+          outreachSnapshot.docs.map(async (doc) => {
+            const post = { id: doc.id, ...doc.data() };
+
+            // Fetch userName using uid
+            const userDetails = await fetchUserTypeDetails(post.uid);
+            return {
+              ...post,
+              userName: userDetails?.username || "Unknown User",
+              userType: userDetails?.type || "",
+            };
+          })
+        );
 
         // Fetch visit logs
         const visitLogQuery = query(
           collection(db, "personalVisitLog"),
-          where("status", "==", "pending")
+          where("approved", "==", false)
         );
         const visitLogSnapshot = await getDocs(visitLogQuery);
-        const visitLogs = visitLogSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+        const visitLogs = await Promise.all(
+          visitLogSnapshot.docs.map(async (doc) => {
+            const post = { id: doc.id, ...doc.data() };
+
+            // Fetch userName using uid
+            const userDetails = await fetchUserDetails(post.uid);
+            return {
+              ...post,
+              userName: userDetails?.username || "Unknown User",
+            };
+          })
+        );
         // const visitLogs = await fetchPublicVisitLogs();
 
         setPendingPosts({ outreaches, visitLogs });
@@ -103,6 +121,7 @@ const PostApprovals = () => {
           {activeTab === "outreaches" ? (
             <ApprovalCardOutreachEvents
               postData={post}
+              userName={post.userName || "Unknown User"}
               onToggleSelect={() => {}}
               isSelected={false}
               isVisitLogs={false}
@@ -112,6 +131,7 @@ const PostApprovals = () => {
           ) : (
             <ApprovalCardVisitlogs
               postData={post}
+              userName={post.userName || "Unknown User"}
               onToggleSelect={() => {}}
               isSelected={false}
               isVisitLogs={true}
@@ -153,14 +173,14 @@ const PostApprovals = () => {
     try {
       const collectionName =
         activeTab === "outreaches" ? "outreachEvents" : "personalVisitLog";
-  
+
       for (const itemId of selectedItems) {
         await updateDoc(doc(db, collectionName, itemId), {
           approved: true,
           status: "approved",
         });
       }
-  
+
       // Update state after approval
       const updatedPosts = { ...pendingPosts };
       updatedPosts[activeTab] = pendingPosts[activeTab].filter(
@@ -172,21 +192,20 @@ const PostApprovals = () => {
       console.error("Error approving posts:", error);
     }
   };
-  
 
   // Reject selected posts
   const handleRejectSelected = async () => {
     try {
       const collectionName =
         activeTab === "outreaches" ? "outreachEvents" : "personalVisitLog";
-  
+
       for (const itemId of selectedItems) {
         await updateDoc(doc(db, collectionName, itemId), {
           approved: false,
           status: "rejected",
         });
       }
-  
+
       // Update state after rejection
       const updatedPosts = { ...pendingPosts };
       updatedPosts[activeTab] = pendingPosts[activeTab].filter(
@@ -198,7 +217,6 @@ const PostApprovals = () => {
       console.error("Error rejecting posts:", error);
     }
   };
-  
 
   const handleAccept = async () => {
     try {

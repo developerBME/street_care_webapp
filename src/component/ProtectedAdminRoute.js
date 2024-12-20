@@ -28,15 +28,25 @@ export const ProtectedAdminRoute = ({ user, loading }) => {
     fetchUserVerification();
   }, [user]); // Only refetch when `user` changes
 
-  // 1. If loading user data or still verifying admin status, show a loading state or null
-  if (loading || !fetchComplete) return null;
+  // While the verification is loading, show a loading spinner or placeholder
+  if (loading || !fetchComplete) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p>Loading...</p> {/* Replace with a spinner if desired */}
+      </div>
+    );
+  }
 
-  // 2. Redirect to login if user is not authenticated
-  if (!user || !Object.keys(user).length) return <Navigate to="/login" />;
+  // If the user is not logged in, redirect to the login page
+  if (!user || !Object.keys(user).length) {
+    return <Navigate to="/login" />;
+  }
 
-  // 3. If the user is authenticated but not an admin, show the AdminOnlyError
-  if (!isUserVerified) return <AdminOnlyError />;
+  // If the user is not an admin, show the restricted access error
+  if (!isUserVerified) {
+    return <AdminOnlyError />;
+  }
 
-  // 4. If user is authenticated and verified as admin, render the child components
+  // If all checks pass, render the protected admin route
   return <Outlet />;
 };
