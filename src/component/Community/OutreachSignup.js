@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import verifiedImg from "../../images/verified_purple.png";
+//import verifiedImg from "../../images/verified_purple.png";
 import wavingHand from "../../images/waving_hand.png";
 import CustomButton from "../Buttons/CustomButton";
 import { fetchEventById, handleRsvp } from "../EventCardService";
@@ -12,6 +12,10 @@ import date from "../../images/date.png";
 import locate from "../../images/location.png";
 import { useLocation } from "react-router-dom";
 import EditModal from "./EditModal";
+import verifiedPurple from "../../images/verified_purple.png";
+import verifiedGreen from "../../images/verified.png";
+import verifiedBlue from "../../images/verified_blue.png";
+import verifiedYellow from "../../images/verified_yellow.png";
 
 const OutreachSignup = () => {
   const navigate = useNavigate();
@@ -59,6 +63,24 @@ const OutreachSignup = () => {
   const handleCloseModal = () => {
     setShowModal(false);
   };
+
+  let verifiedImg;
+  if (data) {
+    switch (data.userType) {
+      case "Chapter Leader":
+        verifiedImg = verifiedGreen;
+        break;
+      case "Chapter Member":
+        verifiedImg = verifiedPurple;
+        break;
+      case "Internal Member":
+        verifiedImg = verifiedBlue;
+        break;
+      default:
+        verifiedImg = verifiedYellow;
+        break;
+    }
+  }
 
   return (
     <div className="relative flex flex-col items-center ">
