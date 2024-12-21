@@ -5,9 +5,9 @@ import { useNavigate } from "react-router-dom";
 function AdminOnlyError() {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    document.title = "Access Restricted - Street Care";
-  }, []);
+  // useEffect(() => {
+  //   document.title = "Access Restricted - Street Care";
+  // }, []);
 
   return (
     <div className="relative flex flex-col items-center ">
