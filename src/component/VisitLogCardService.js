@@ -200,6 +200,7 @@ export const fetchTopVisitLogs = async () => {
     const visitlogs = collection(db, PERSONAL_VISIT_LOG_COLLECTION);
     const visitlogsQuery = query(
       visitlogs,
+      where("status", "==", "approved"), // Add condition to include only approved logs
       orderBy("dateTime", "desc"), // Order visit logs by the 'dateTime' field in descending order to get the newest entries first
       limit(6) // Limit to top 6 records
     );
