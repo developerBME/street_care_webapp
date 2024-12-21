@@ -16,12 +16,28 @@ import verifiedPurple from "../../images/verified_purple.png";
 import verifiedGreen from "../../images/verified.png";
 import verifiedBlue from "../../images/verified_blue.png";
 import verifiedYellow from "../../images/verified_yellow.png";
+import DeleteModal from "./DeleteModal";
+import {
+  doc,
+  deleteDoc,
+  query,
+  collection,
+  where,
+  getDocs,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
+import { db } from "../firebase";
+import { getAuth } from "firebase/auth";
+const USERS_COLLECTION = "users";
 
 const OutreachSignup = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [label2, setLabel2] = useState("RSVP");
   const [success, setSuccess] = useState(false);
+  const fAuth = getAuth();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const location = useLocation();
   const { label } = location.state || {};
@@ -81,6 +97,35 @@ const OutreachSignup = () => {
         break;
     }
   }
+
+  const deleteVisitLog = async () => {
+    try {
+      const visitLogDoc = doc(db, "outreachEvents", id);
+
+      const userQuery = query(
+        collection(db, USERS_COLLECTION),
+        where("uid", "==", fAuth?.currentUser?.uid)
+      );
+      const userDocRef = await getDocs(userQuery);
+
+      const userDocID = userDocRef.docs[0].id;
+      // reference for the userdoc
+      const userRef = doc(db, USERS_COLLECTION, userDocID);
+      // outreach event collection
+      const docSnap = await getDoc(userRef);
+      let personalVisitLogs = docSnap.data().personalVisitLogs || [];
+      personalVisitLogs = personalVisitLogs.filter((x) => x !== id);
+
+      await deleteDoc(visitLogDoc);
+      await updateDoc(userRef, {
+        personalVisitLogs: personalVisitLogs,
+      });
+      alert("Log deleted successfully");
+      navigate("/profile");
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="relative flex flex-col items-center ">
@@ -250,24 +295,16 @@ const OutreachSignup = () => {
                 {label === "EDIT" ? (
                   <>
                     <CustomButton
-                      label="Withdraw"
-                      name="buttondefault"
-                      onClick={handleEditClick}
+                      label="Delete"
+                      name="deleteButton"
+                      onClick={() => setShowDeleteModal(true)}
                     />
-                    {showModal && (
-                      <EditModal
-                        handleClose={handleCloseModal}
-                        id={id}
-                        label={label}
-                        navigate={navigate}
-                        label2={label2}
-                        setLabel2={setLabel2}
-                        // refresh={refresh}
-                        title={data.title}
-                        eventDate={data.eventDate}
-                        location={data.location}
+                    {showDeleteModal && (
+                      <DeleteModal
+                        handleClose={() => setShowDeleteModal(false)}
+                        handleDelete={deleteVisitLog}
+                        modalMsg={`Are you sure you want to delete this visit log?`}
                       />
-                      // <div>Modal open</div>
                     )}
                   </>
                 ) : (
