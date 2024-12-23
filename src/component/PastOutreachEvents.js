@@ -61,7 +61,7 @@ const PastOutreachEvents = ({
                 cardData={{
                   ...eventData,
                   userName: eventData.userName || "Unknown",
-                  userType: eventData.userType || "Default",
+                  userType: eventData.userType,
                   eventDate: eventData.eventDate?.seconds
                     ? formatDate(new Date(eventData.eventDate.seconds * 1000))
                     : eventData.eventDate,

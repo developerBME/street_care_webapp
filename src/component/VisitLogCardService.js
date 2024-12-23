@@ -138,6 +138,7 @@ const visitLogHelperFunction = async (visitLogSnap) => {
           : "",
         userName: userDetails.username,
         photoUrl: userDetails.photoUrl,
+        userType: userDetails.userType,
       });
     }
     return visitLogs;
