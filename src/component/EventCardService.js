@@ -53,6 +53,7 @@ export const fetchEvents = async () => {
           ? "EDIT"
           : "RSVP",
         nop: currentParticipants.length,
+        userType: userDetails[eventData.uid]?.userType || "",
       };
     });
 
@@ -83,6 +84,7 @@ async function fetchUserDetailsBatch(userIds) {
       userDetails[data.uid] = {
         username: data.username || "",
         photoUrl: data.photoUrl || "",
+        userType: data.Type || "",
       };
     });
   }
@@ -224,6 +226,7 @@ export const fetchUserDetails = async (uid) => {
     return {
       username: userData?.username || "",
       photoUrl: userData?.photoUrl || "",
+      userType: userData?.Type || "",
     };
     // reference for the userdoc
     // const userRef = doc(db, USERS_COLLECTION, userDocID);
@@ -278,6 +281,7 @@ export const fetchEventById = async (eventId) => {
       id: eventSnap.id,
       photoUrl,
       nop: currentParticipants.length,
+      userType: result.userType,
     };
   } catch (error) {
     logEvent(
@@ -774,6 +778,7 @@ export const fetchUserOutreaches = async () => {
         label: user && currentParticipants.includes(user.uid) ? "EDIT" : "RSVP",
         nop: currentParticipants.length,
         photoUrl: photoUrl,
+        userType: result.userType,
       });
     }
 
