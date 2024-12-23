@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import {
   collection,
   query,
@@ -28,7 +28,13 @@ const PostApprovals = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [filteredPosts, setFilteredPosts] = useState({
+    outreaches: [],
+    visitLogs: [],
+  });
+  const [sortOption, setSortOption] = useState('Most Recent');
   const postsPerPage = 6;
+  const searchRef = useRef("");
 
   useEffect(() => {
     const fetchPendingPosts = async () => {
@@ -38,7 +44,7 @@ const PostApprovals = () => {
         // Fetch outreaches
         const outreachQuery = query(
           collection(db, "outreachEvents"),
-          where("status", "==", "pending")
+          where("approved", "==", false)
         );
         const outreachSnapshot = await getDocs(outreachQuery);
         const outreaches = await Promise.all(
@@ -58,7 +64,7 @@ const PostApprovals = () => {
         // Fetch visit logs
         const visitLogQuery = query(
           collection(db, "personalVisitLog"),
-          where("status", "==", "pending")
+          where("approved", "==", false)
         );
         const visitLogSnapshot = await getDocs(visitLogQuery);
         const visitLogs = await Promise.all(
@@ -217,6 +223,68 @@ const PostApprovals = () => {
       console.error("Error rejecting posts:", error);
     }
   };
+  useEffect(() => {
+    // Initialize filteredPosts with fetched data
+    setFilteredPosts(pendingPosts);
+  }, [pendingPosts]);
+
+
+  //search
+  const searchChange = () => {
+    const searchValue = searchRef.current.value.toLowerCase();
+    const filtered = {
+      ...filteredPosts,
+      [activeTab]: pendingPosts[activeTab].filter(
+        (x) =>
+          x.title?.toLowerCase().includes(searchValue) ||
+          (x.userName && x.userName.toLowerCase().includes(searchValue)) ||
+          (x.location && x.location.city.toLowerCase().includes(searchValue)) ||
+          x.description?.toLowerCase().includes(searchValue)
+      ),
+    };
+  
+    setFilteredPosts(filtered);
+    setCurrentPage(1); // Reset to the first page after search
+  };
+
+ 
+
+  const handleSortChange = (event) => {
+    const selectedOption = event.target.value;
+    setSortOption(selectedOption);
+  
+    let sortedData = [...filteredPosts[activeTab]];
+  
+    console.log(selectedOption); // Log the selected sort option
+  
+    if (selectedOption === 'Most Recent') {
+      sortedData.sort((a, b) => {
+        const dateA = new Date(a.date).getTime();
+        const dateB = new Date(b.date).getTime();
+        console.log(dateA, dateB); // Log the date values
+        return dateB - dateA;
+      });
+    } else if (selectedOption === 'Oldest First') {
+      sortedData.sort((a, b) => {
+        const dateA = new Date(a.date).getTime();
+        const dateB = new Date(b.date).getTime();
+        console.log(dateA, dateB); // Log the date values
+        return dateA - dateB;
+      });
+    } else if (selectedOption === 'Alphabetical') {
+      sortedData.sort((a, b) => a.title.localeCompare(b.title));
+    }
+  
+    setFilteredPosts((prevState) => ({
+      ...prevState,
+      [activeTab]: sortedData,
+    }));
+  };
+  
+  
+  
+
+
 
   const handleAccept = async () => {
     try {
@@ -280,7 +348,7 @@ const PostApprovals = () => {
 
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = pendingPosts[activeTab].slice(
+  const currentPosts = filteredPosts[activeTab].slice(
     indexOfFirstPost,
     indexOfLastPost
   );
@@ -396,6 +464,10 @@ const PostApprovals = () => {
                 <input
                   type="text"
                   placeholder="Search here..."
+                  name="searchText"
+                  id="searchText"
+                  onChange={searchChange}
+                  ref={searchRef}
                   className="w-full h-full text-sm outline-none"
                 />
                 <button className="flex items-center justify-center w-[24px] h-[24px] text-gray-500">
@@ -414,6 +486,8 @@ const PostApprovals = () => {
                 <select
                   id="sort"
                   className="w-[134px] h-[40px] border border-gray-300 rounded bg-white px-3 text-sm"
+                  value={sortOption}
+                  onChange={handleSortChange}
                 >
                   <option>Most Recent</option>
                   <option>Oldest First</option>
