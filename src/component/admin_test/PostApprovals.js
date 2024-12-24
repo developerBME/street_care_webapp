@@ -247,32 +247,35 @@ const PostApprovals = () => {
     setCurrentPage(1); // Reset to the first page after search
   };
 
- 
-
+// Sort By Function
   const handleSortChange = (event) => {
     const selectedOption = event.target.value;
     setSortOption(selectedOption);
   
     let sortedData = [...filteredPosts[activeTab]];
   
-    console.log(selectedOption); // Log the selected sort option
+    // Determine the correct date field based on the active tab
+    const dateField = activeTab === "outreaches" ? "eventDate" : "dateTime";
+    const alphaSortedField = activeTab === "outreaches" ? "title" : "description";
   
-    if (selectedOption === 'Most Recent') {
+    if (selectedOption === "Most Recent") {
       sortedData.sort((a, b) => {
-        const dateA = new Date(a.date).getTime();
-        const dateB = new Date(b.date).getTime();
-        console.log(dateA, dateB); // Log the date values
+        const dateA = a[dateField]?.seconds ? new Date(a[dateField].seconds * 1000).getTime() : 0;
+        const dateB = b[dateField]?.seconds ? new Date(b[dateField].seconds * 1000).getTime() : 0;
         return dateB - dateA;
       });
-    } else if (selectedOption === 'Oldest First') {
+    } else if (selectedOption === "Oldest First") {
       sortedData.sort((a, b) => {
-        const dateA = new Date(a.date).getTime();
-        const dateB = new Date(b.date).getTime();
-        console.log(dateA, dateB); // Log the date values
+        const dateA = a[dateField]?.seconds ? new Date(a[dateField].seconds * 1000).getTime() : 0;
+        const dateB = b[dateField]?.seconds ? new Date(b[dateField].seconds * 1000).getTime() : 0;
         return dateA - dateB;
       });
-    } else if (selectedOption === 'Alphabetical') {
-      sortedData.sort((a, b) => a.title.localeCompare(b.title));
+    } else if (selectedOption === "Alphabetical") {
+      sortedData.sort((a, b) => {
+        const valueA = a[alphaSortedField] || ""; // Fallback to an empty string if null/undefined
+        const valueB = b[alphaSortedField] || ""; // Fallback to an empty string if null/undefined
+        return valueA.localeCompare(valueB);
+      });
     }
   
     setFilteredPosts((prevState) => ({
@@ -281,10 +284,6 @@ const PostApprovals = () => {
     }));
   };
   
-  
-  
-
-
 
   const handleAccept = async () => {
     try {
