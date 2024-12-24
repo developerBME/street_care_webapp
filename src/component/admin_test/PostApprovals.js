@@ -229,7 +229,7 @@ const PostApprovals = () => {
   }, [pendingPosts]);
 
 
-  //search
+  //Search Function
   const searchChange = () => {
     const searchValue = searchRef.current.value.toLowerCase();
     const filtered = {
