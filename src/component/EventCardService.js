@@ -32,42 +32,39 @@ export const fetchEvents = async () => {
     );
     const eventSnapshot = await getDocs(approvedEventsQuery);
 
-    let outreachEvents = [];
-    const fAuth = getAuth();
-    onAuthStateChanged(fAuth, (user) => {
-      if (user) {
-        console.log("Found user");
-      } else {
-        console.log("USER NOT FOUND!");
-      }
-    });
-    for (const doc of eventSnapshot.docs) {
-      const eventData = doc.data();
-      const result = await fetchUserDetails(eventData.uid);
-      const userName = result.username;
-      const photoUrl = result.photoUrl;
 
-      let currentParticipants = eventData.participants || [];
-      outreachEvents.push({
+    let outreachEvents = [];
+
+    // Collecting all unique user IDs
+    const userIds = new Set();
+    eventSnapshot.docs.forEach((doc) => userIds.add(doc.data().uid));
+
+    // Batch fetch user details
+    const userDetails = await fetchUserDetailsBatch(Array.from(userIds));
+
+
+    const fAuth = getAuth();
+    const outreachEvents = eventSnapshot.docs.map((doc) => {
+      const eventData = doc.data();
+      const currentParticipants = eventData.participants || [];
+      
+      return {
         ...eventData,
-        userName: userName,
+        userName: userDetails[eventData.uid]?.username || "",
+        photoUrl: userDetails[eventData.uid]?.photoUrl || "",
         id: doc.id,
-        label:
-          fAuth.currentUser &&
-          currentParticipants.includes(fAuth?.currentUser?.uid)
-            ? "EDIT"
-            : "RSVP",
+        label: fAuth.currentUser && currentParticipants.includes(fAuth?.currentUser?.uid)
+          ? "EDIT"
+          : "RSVP",
         nop: currentParticipants.length,
-        photoUrl: photoUrl,
-      });
-    }
+        userType: userDetails[eventData.uid]?.userType || "",
+      };
+    });
+
     return outreachEvents;
   } catch (error) {
-    logEvent(
-      "STREET_CARE_ERROR",
-      `error on fetchEvents in EventCardService.js- ${error.message}`
-    );
-    throw error;
+    logEvent("STREET_CARE_ERROR", `error on fetchEvents in EventCardService.js- ${error.message}`);
+      throw error;
   }
 };
 
@@ -91,6 +88,7 @@ async function fetchUserDetailsBatch(userIds) {
       userDetails[data.uid] = {
         username: data.username || "",
         photoUrl: data.photoUrl || "",
+        userType: data.Type || "",
       };
     });
   }
@@ -232,6 +230,7 @@ export const fetchUserDetails = async (uid) => {
     return {
       username: userData?.username || "",
       photoUrl: userData?.photoUrl || "",
+      userType: userData?.Type || "",
     };
     // reference for the userdoc
     // const userRef = doc(db, USERS_COLLECTION, userDocID);
@@ -286,6 +285,7 @@ export const fetchEventById = async (eventId) => {
       id: eventSnap.id,
       photoUrl,
       nop: currentParticipants.length,
+      userType: result.userType,
     };
   } catch (error) {
     logEvent(
@@ -782,6 +782,7 @@ export const fetchUserOutreaches = async () => {
         label: user && currentParticipants.includes(user.uid) ? "EDIT" : "RSVP",
         nop: currentParticipants.length,
         photoUrl: photoUrl,
+        userType: result.userType,
       });
     }
 
@@ -816,7 +817,9 @@ export const fetchUserOutreaches = async () => {
 //   });
 //   return outres;
 
+
 //  }
+
 
 //  const test = await calculateNumberOfPagesForOutreach(5,0)
 
@@ -932,4 +935,6 @@ export const ToggleApproveStatus = async function (documentId) {
   } catch (error) {
     console.error("Error updating document:", error.message);
   }
+
 };
+

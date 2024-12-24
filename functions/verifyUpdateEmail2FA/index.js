@@ -1,12 +1,11 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const crypto = require('crypto');
-const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
-const { Timestamp } = require('@firebase/firestore');
+//const { Timestamp } = require('@firebase/firestore');
 const cors = require('cors')({ origin: true });
 admin.initializeApp();
-const db = admin.firestore();
+//const db = admin.firestore();
 
 const CLIENT_ID = '223295299587-dinnroh9j2lb858kphbgb96f8t6j0eq2.apps.googleusercontent.com';
 const CLIENT_SECRET = 'anpX22WnN_boI0nx64wDSGZX';

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { fetchHelpRequests } from "./HelpRequestService";
 import HelpRequestCard from "./Community/HelpRequestCard";
 import HelpRequestSkeleton from "./Skeletons/HelpRequestSkeleton";
@@ -8,16 +8,28 @@ import HelpRequestSkeleton from "./Skeletons/HelpRequestSkeleton";
 const AllHelpRequests = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
-  const [visibleItems, setVisibleItems] = useState(5);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [helpRequestsPerPage] = useState(6);
 
   const searchRef = useRef("");
 
   const [helpRequests, setHelpRequests] = useState([]);
   const [helpRequestsDisplay, setHelpRequestsDisplay] = useState([]);
 
-  const loadMore = () => {
-    setVisibleItems((prev) => prev + 5);
-  };
+  // Pagination: Calculate total pages
+  const totalPages = Math.ceil(
+    helpRequestsDisplay.length / helpRequestsPerPage
+  );
+
+  // Calculate the indices for slicing help requests for the current page
+  const indexOfLastRequest = currentPage * helpRequestsPerPage;
+  const indexOfFirstRequest = indexOfLastRequest - helpRequestsPerPage;
+  const currentHelpRequests = helpRequestsDisplay.slice(
+    indexOfFirstRequest,
+    indexOfLastRequest
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,6 +65,98 @@ const AllHelpRequests = () => {
             .search(searchRef.current.value.toLowerCase()) > -1
       )
     );
+    setCurrentPage(1); // Reset to the first page when searching
+  };
+
+  // Pagination handler
+  const onPageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  // Render pagination buttons
+  const renderPaginationButtons = () => {
+    const buttons = [];
+    const pageRange = 1; // Range of pages to show around the current page
+
+    if (currentPage > 1) {
+      buttons.push(
+        <button
+          key="prev"
+          onClick={() => onPageChange(currentPage - 1)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          <IoIosArrowBack />
+        </button>
+      );
+    }
+
+    if (currentPage > pageRange + 1) {
+      buttons.push(
+        <button
+          key="first"
+          onClick={() => onPageChange(1)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          1
+        </button>
+      );
+      buttons.push(
+        <span key="ellipsis-start" className="mx-1">
+          ...
+        </span>
+      );
+    }
+
+    for (
+      let i = Math.max(1, currentPage - pageRange);
+      i <= Math.min(totalPages, currentPage + pageRange);
+      i++
+    ) {
+      buttons.push(
+        <button
+          key={i}
+          onClick={() => onPageChange(i)}
+          className={`mx-1 px-3 py-1 rounded-full ${
+            currentPage === i
+              ? "bg-[#1F0A58] text-white"
+              : "bg-gray-200 text-gray-600"
+          }`}
+        >
+          {i}
+        </button>
+      );
+    }
+
+    if (currentPage < totalPages - pageRange) {
+      buttons.push(
+        <span key="ellipsis-end" className="mx-1">
+          ...
+        </span>
+      );
+      buttons.push(
+        <button
+          key="last"
+          onClick={() => onPageChange(totalPages)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          {totalPages}
+        </button>
+      );
+    }
+
+    if (currentPage < totalPages) {
+      buttons.push(
+        <button
+          key="next"
+          onClick={() => onPageChange(currentPage + 1)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          <IoIosArrowForward />
+        </button>
+      );
+    }
+
+    return buttons;
   };
 
   return (
@@ -108,36 +212,45 @@ const AllHelpRequests = () => {
             </div>
           </div>
 
-           {isLoading ? (
-  <div className="grid grid-cols-1 w-full h-fit">
-    <HelpRequestSkeleton />
-    <HelpRequestSkeleton />
-    <HelpRequestSkeleton />
-  </div>
-) : (
-  <>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8 p-4 lg:px-2 lg:pt-10 lg:pb-6 bg-[#F7F7F7] rounded-b-2xl">
-      {helpRequestsDisplay
-        .slice(0, visibleItems)
-        .map((item, index) => (
-          <HelpRequestCard key={item.id} helpRequestCardData={item} />
-        ))}
-    </div>
-    {visibleItems < helpRequests.length &&
-      helpRequestsDisplay.length !== 0 &&
-      helpRequestsDisplay.length > visibleItems && (
-        <button
-          className="w-fit rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 flex text-center text-[#1F0A58] hover:bg-[#1F0A58] hover:text-white text-[13px] font-medium font-dmsans leading-tight self-stretch px-6 py-2.5 mt-2"
-          onClick={loadMore}
-        >
-          Load 5 More
-        </button>
-      )}
-    {helpRequestsDisplay.length === 0 && (
-      <div>No help requests found with {searchRef.current.value}</div>
-    )}
-  </>
-)}
+          {/* Pagination Section */}
+          <div className="flex justify-between items-center mt-8 w-full">
+            <p className="text-gray-600">
+              Showing {currentHelpRequests.length} of{" "}
+              {helpRequestsDisplay.length} help requests
+            </p>
+            <div className="flex justify-end">{renderPaginationButtons()}</div>
+          </div>
+
+          {isLoading ? (
+            <div className="grid grid-cols-1 w-full h-fit">
+              <HelpRequestSkeleton />
+              <HelpRequestSkeleton />
+              <HelpRequestSkeleton />
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8 p-4 lg:px-2 lg:pt-10 lg:pb-6 bg-[#F7F7F7] rounded-b-2xl">
+                {currentHelpRequests.length > 0 ? (
+                  currentHelpRequests.map((item, index) => (
+                    <HelpRequestCard key={item.id} helpRequestCardData={item} />
+                  ))
+                ) : (
+                  <p>No help requests found</p>
+                )}
+              </div>
+
+              {/* Pagination Section */}
+              <div className="flex justify-between items-center mt-8 w-full">
+                <p className="text-gray-600">
+                  Showing {currentHelpRequests.length} of{" "}
+                  {helpRequestsDisplay.length} help requests
+                </p>
+                <div className="flex justify-end">
+                  {renderPaginationButtons()}
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

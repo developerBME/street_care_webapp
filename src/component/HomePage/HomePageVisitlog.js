@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import arrowRight from "../../images/arrowRight.png";
 import OutreachVisitLogCard from "../Community/OutreachVisitLogCard";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
-import { fetchTopVisitLogs } from "../VisitLogCardService";
+import { fetchTopVisitLogs, fetchPublicVisitLogs } from "../VisitLogCardService";
 import ErrorMessage from "../ErrorMessage";
 import CustomButton from "../Buttons/CustomButton";
 
@@ -61,18 +61,22 @@ const HomePageVisitlog = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
+      setIsError(false);
       try {
-        const visitLogsData = await fetchTopVisitLogs();
+        const visitLogsData = await fetchPublicVisitLogs();
         setVisitLogs(visitLogsData);
       } catch (error) {
+        console.error("Error fetching visit logs:", error);
         setIsError(true);
-        setVisitLogs([]);
+      } finally {
+        setIsLoading(false);
       }
     };
-
+  
     fetchData();
   }, []);
-
+  
   useEffect(() => {
     if (Array.isArray(visitLogs)) {
       setIsLoading(false);

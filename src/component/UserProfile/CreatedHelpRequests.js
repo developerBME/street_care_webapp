@@ -3,12 +3,13 @@ import CustomButton from "../Buttons/CustomButton";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import OutreachEventCard from "../Community/OutreachEventCard";
 import NoDisplayData from "./NoDisplayData";
-import {fetchUserOutreaches } from "../EventCardService";
+import { fetchUserOutreaches } from "../EventCardService";
 import { auth } from "../firebase";
 import ErrorMessage from "../ErrorMessage";
 import icon from "../../images/icon.png";
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "./../HelperFunction";
+import HelpRequestCard from "../Community/HelpRequestCard";
 
 const CreatedHelpRequests = () => {
   const [createdEvents, setCreatedEvents] = useState([]);
@@ -45,7 +46,6 @@ const CreatedHelpRequests = () => {
 
   return (
     <>
-   
       <div className="inline-flex flex-col sm:flex-row sm:space-x-16 justify-between gap-2">
         <div className="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage text-left leading-[52px]">
           My Help Requests
@@ -67,7 +67,7 @@ const CreatedHelpRequests = () => {
           </div>
         </div>
       </div>
-      
+
       <div className="block overflow-x-auto overflow-y-hidden">
         {isLoading ? (
           <div className="flex justify-between items-center w-full h-fit gap-2">
@@ -76,10 +76,7 @@ const CreatedHelpRequests = () => {
             <EventCardSkeleton />
           </div>
         ) : createdEvents.length === 0 ? (
-          <NoDisplayData
-            name="helprequest"
-            label="No Help Requests created"
-          />
+          <NoDisplayData name="helprequest" label="No Help Requests created" />
         ) : (
           <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 mb-6">
             {createdEvents.map((eventData) => (
@@ -92,14 +89,14 @@ const CreatedHelpRequests = () => {
                   ),
                 }}
                 isProfilePage={true}
+                isHelpRequestCard={true}
                 refresh={fetchData}
               />
             ))}
           </div>
         )}
       </div>
-    
-  </>
+    </>
   );
 };
 

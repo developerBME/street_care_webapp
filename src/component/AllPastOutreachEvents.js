@@ -62,6 +62,7 @@ const AllPastOutreachEvents = () => {
       setErrorMessage("");
 
       const { tot, outreachByLoc } = await fetchByCityOrStates(cityToSearch, startDateTime, endDateTime, currentPage, outreachPerPages);
+  
 
       if (outreachByLoc.length > 0) {
         const pastEvents = outreachByLoc.filter((event) => {
@@ -70,7 +71,7 @@ const AllPastOutreachEvents = () => {
             : event.eventDate;
           return eventDate < new Date();
         });
-
+  
         setEvents(pastEvents);
         console.log("total", Math.ceil(tot / outreachPerPages) - 1);
         setTotalPages(Math.ceil(tot / outreachPerPages) - 1);
@@ -90,7 +91,7 @@ const AllPastOutreachEvents = () => {
   //   setIsLoading(true);
   //   const cityToSearch = "";
   //   const outreachByLoc = await fetchByCityOrStates(cityToSearch, startDateTime, endDateTime, currentPage, outreachPerPages);
-
+      
   //   const pastEvents = outreachByLoc.filter((event) => {
   //     const eventDate = event?.eventDate?.seconds
   //       ? new Date(event.eventDate.seconds * 1000)
@@ -135,7 +136,7 @@ const AllPastOutreachEvents = () => {
     const newDate = new Date(e.target.value);
     setEndDateTime(newDate);
   };
-
+  
   const renderPaginationButtons = () => {
     const buttons = [];
     const pageRange = 1;
@@ -151,6 +152,7 @@ const AllPastOutreachEvents = () => {
           </button>
         );
       }
+
 
       if (currentPage > pageRange + 1) {
         buttons.push(
@@ -175,9 +177,11 @@ const AllPastOutreachEvents = () => {
             }`}
           >
             {i + 1}
+
           </button>
         );
       }
+
 
       if (currentPage < totalPages - pageRange - 2) {
         buttons.push(<span key="ellipsis-end" className="mx-1">...</span>);
@@ -188,6 +192,7 @@ const AllPastOutreachEvents = () => {
             className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
           >
             {totalPages}
+
           </button>
         );
       }
@@ -203,7 +208,7 @@ const AllPastOutreachEvents = () => {
           </button>
         );
       }
-
+  
     return buttons;
   };
 
@@ -227,8 +232,10 @@ const AllPastOutreachEvents = () => {
         <div className="items-center justify-center px-4 py-8 lg:px-24 lg:py-16 h-full w-full rounded-2xl bg-[#F7F7F7]">
           <div className="lg:flex justify-between items-center space-y-4 lg:space-y-0">
             <div className="lg:w-1/3">
-            <p className=" font-bricolage font-medium text-xl md:text-[35px] text-[#1F0A58] lg:mt-2">
-                Past Outreach Events
+
+            <p className=" font-bricolage font-medium text-xl md:text-[35px] text-[#1F0A58] lg:mt-2">  
+                Past outreach events
+
               </p>
             </div>
 
@@ -308,7 +315,9 @@ const AllPastOutreachEvents = () => {
               </div>
             </div>
           </div>
-{/*
+
+{/* 
+
           <div className="mt-6 lg:mt-0">
             <div className="flex items-center space-x-4">
               <div>
@@ -337,10 +346,12 @@ const AllPastOutreachEvents = () => {
               Showing {eventsDisplay.length} of {totalPages * outreachPerPages} events
             </p>
 
+
             <div className="flex justify-end">
               {renderPaginationButtons()}
             </div>
           </div>
+          
 
           {errorMessage && (
             <p className="text-red-500 text-center mt-4">{errorMessage}</p>

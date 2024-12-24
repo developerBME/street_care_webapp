@@ -206,73 +206,75 @@ const UpdateProfile = () => {
 
   const handleSubmitProfileUpdate = async (e) => {
     e.preventDefault();
-    if (!username.current.value && !imgRef.current.value && !city.current.value && !state.current.value && !country.current.value) {
-      setError("Please provide a display name or profile image or location details to update");
+    if (!username.current.value ||!city.current.value || !state.current.value || !country.current.value) {
+      setError("Please provide a display name and profile image and  location details to update");
       setSuccess("");
-    } else if (username.current.value !== "") {
-      setUsernameError("");
-      const userQuery = query(
-        collection(db, USERS_COLLECTION),
-        where("uid", "==", fAuth.currentUser.uid)
-      );
-      const userDocRef = await getDocs(userQuery);
-      const userDocID = userDocRef.docs[0].id;
-      const userRef = doc(db, USERS_COLLECTION, userDocID);
-      await updateDoc(userRef, {
-        username: username.current.value,
-      });
-      setSuccess("Successfully updated display name"); 
-    } else if (imgRef.current.value !== "") {
-      setUserimageError("");
-      uploadProfileImage(
-        newProfileImage,
-        fAuth.currentUser,
-        setLoading,
-        setSuccess,
-        setAvatarLoading
-      );
-      setSuccess("Successfully updated profile image");
-      imgRef.current.value = "";
-      setNewProfileImage(null);
-    } else if (city.current.value !== "") {
-      setCityError("");
-      const userQuery = query(
-        collection(db, USERS_COLLECTION),
-        where("uid", "==", fAuth.currentUser.uid)
-      );
-      const userDocRef = await getDocs(userQuery);
-      const userDocID = userDocRef.docs[0].id;
-      const userRef = doc(db, USERS_COLLECTION, userDocID);
-      await updateDoc(userRef, {
-        city: city.current.value,
-      });
-      setSuccess("Successfully updated city"); 
-    }else if (state.current.value !== "") {
-      setStateError("");
-      const userQuery = query(
-        collection(db, USERS_COLLECTION),
-        where("uid", "==", fAuth.currentUser.uid)
-      );
-      const userDocRef = await getDocs(userQuery);
-      const userDocID = userDocRef.docs[0].id;
-      const userRef = doc(db, USERS_COLLECTION, userDocID);
-      await updateDoc(userRef, {
-        state: state.current.value,
-      });
-      setSuccess("Successfully updated state"); 
-    }else if (country.current.value !== "") {
-      setCountryError("");
-      const userQuery = query(
-        collection(db, USERS_COLLECTION),
-        where("uid", "==", fAuth.currentUser.uid)
-      );
-      const userDocRef = await getDocs(userQuery);
-      const userDocID = userDocRef.docs[0].id;
-      const userRef = doc(db, USERS_COLLECTION, userDocID);
-      await updateDoc(userRef, {
-        country: country.current.value,
-      });
-      setSuccess("Successfully updated country"); 
+    } else {
+      if (username.current.value !== "") {
+        setUsernameError("");
+        const userQuery = query(
+          collection(db, USERS_COLLECTION),
+          where("uid", "==", fAuth.currentUser.uid)
+        );
+        const userDocRef = await getDocs(userQuery);
+        const userDocID = userDocRef.docs[0].id;
+        const userRef = doc(db, USERS_COLLECTION, userDocID);
+        await updateDoc(userRef, {
+          username: username.current.value,
+        });
+      } 
+      if (imgRef.current.value !== "") {
+        setUserimageError("");
+        uploadProfileImage(
+          newProfileImage,
+          fAuth.currentUser,
+          setLoading,
+          setSuccess,
+          setAvatarLoading
+        );
+        imgRef.current.value = "";
+        setNewProfileImage(null);
+      }
+      if (city.current.value !== "") {
+        setCityError("");
+        const userQuery = query(
+          collection(db, USERS_COLLECTION),
+          where("uid", "==", fAuth.currentUser.uid)
+        );
+        const userDocRef = await getDocs(userQuery);
+        const userDocID = userDocRef.docs[0].id;
+        const userRef = doc(db, USERS_COLLECTION, userDocID);
+        await updateDoc(userRef, {
+          city: city.current.value,
+        });
+      }
+      if (state.current.value !== "") {
+        setStateError("");
+        const userQuery = query(
+          collection(db, USERS_COLLECTION),
+          where("uid", "==", fAuth.currentUser.uid)
+        );
+        const userDocRef = await getDocs(userQuery);
+        const userDocID = userDocRef.docs[0].id;
+        const userRef = doc(db, USERS_COLLECTION, userDocID);
+        await updateDoc(userRef, {
+          state: state.current.value,
+        });
+      }
+      if (country.current.value !== "") {
+        setCountryError("");
+        const userQuery = query(
+          collection(db, USERS_COLLECTION),
+          where("uid", "==", fAuth.currentUser.uid)
+        );
+        const userDocRef = await getDocs(userQuery);
+        const userDocID = userDocRef.docs[0].id;
+        const userRef = doc(db, USERS_COLLECTION, userDocID);
+        await updateDoc(userRef, {
+          country: country.current.value,
+        });
+      }
+      setSuccess("Successfully updated the data"); 
     }
     
   };
