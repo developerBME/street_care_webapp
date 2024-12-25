@@ -6,6 +6,10 @@ import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import { fetchTopVisitLogs, fetchPublicVisitLogs } from "../VisitLogCardService";
 import ErrorMessage from "../ErrorMessage";
 import CustomButton from "../Buttons/CustomButton";
+import verifiedPurple from "../../images/verified_purple.png";
+import verifiedGreen from "../../images/verified.png";
+import verifiedBlue from "../../images/verified_blue.png";
+import verifiedYellow from "../../images/verified_yellow.png"
 
 const HomePageVisitlog = () => {
   const navigate = useNavigate();
@@ -73,10 +77,10 @@ const HomePageVisitlog = () => {
         setIsLoading(false);
       }
     };
-  
+
     fetchData();
   }, []);
-  
+
   useEffect(() => {
     if (Array.isArray(visitLogs)) {
       setIsLoading(false);
@@ -102,6 +106,50 @@ const HomePageVisitlog = () => {
                 <img src={arrowRight} className="w-6 h-6 lg:w-10 lg:h-10 " />
               </div>
             </div>
+            <div className="flex items-center justify-start space-x-4 mt-4">
+                {/* Chapter Leader */}
+                <div className="flex items-center space-x-2">
+                  <img
+                    src={verifiedGreen}
+                    alt="Chapter Leader"
+                    className="w-6 h-6"
+                  />
+                  <span className="text-sm font-medium text-gray-700">
+                    Chapter Leader
+                  </span>
+                </div>
+                {/* Chapter Member */}
+                <div className="flex items-center space-x-2">
+                  <img
+                    src={verifiedPurple}
+                    alt="Chapter Member"
+                    className="w-6 h-6"
+                  />
+                  <span className="text-sm font-medium text-gray-700">
+                    Chapter Member
+                  </span>
+                </div>
+                {/* Internal Member */}
+                <div className="flex items-center space-x-2">
+                  <img
+                    src={verifiedBlue}
+                    alt="Internal Member"
+                    className="w-6 h-6"
+                  />
+                  <span className="text-sm font-medium text-gray-700">
+                    Internal Member
+                  </span>
+                </div>
+                {/* Other */}
+                <div className="flex items-center space-x-2">
+                  <img
+                    src={verifiedYellow}
+                    alt="Other"
+                    className="w-6 h-6"
+                  />
+                  <span className="text-sm font-medium text-gray-700">Other</span>
+                </div>
+              </div>
           </div>
         </div>
 
