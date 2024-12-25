@@ -7,6 +7,10 @@ import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 import { parse } from "date-fns";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import verifiedPurple from "../images/verified_purple.png";
+import verifiedGreen from "../images/verified.png";
+import verifiedBlue from "../images/verified_blue.png";
+import verifiedYellow from "../images/verified_yellow.png"
 
 const AllOutreachVisitLog = () => {
   const navigate = useNavigate();
@@ -199,6 +203,50 @@ const AllOutreachVisitLog = () => {
               )}
             </div>
           </div>
+          <div className="flex items-center justify-start space-x-4 mt-4">
+              {/* Chapter Leader */}
+              <div className="flex items-center space-x-2">
+                <img
+                  src={verifiedGreen}
+                  alt="Chapter Leader"
+                  className="w-6 h-6"
+                />
+                <span className="text-sm font-medium text-gray-700">
+                  Chapter Leader
+                </span>
+              </div>
+              {/* Chapter Member */}
+              <div className="flex items-center space-x-2">
+                <img
+                  src={verifiedPurple}
+                  alt="Chapter Member"
+                  className="w-6 h-6"
+                />
+                <span className="text-sm font-medium text-gray-700">
+                  Chapter Member
+                </span>
+              </div>
+              {/* Internal Member */}
+              <div className="flex items-center space-x-2">
+                <img
+                  src={verifiedBlue}
+                  alt="Internal Member"
+                  className="w-6 h-6"
+                />
+                <span className="text-sm font-medium text-gray-700">
+                  Internal Member
+                </span>
+              </div>
+              {/* Other */}
+              <div className="flex items-center space-x-2">
+                <img
+                  src={verifiedYellow}
+                  alt="Other"
+                  className="w-6 h-6"
+                />
+                <span className="text-sm font-medium text-gray-700">Other</span>
+              </div>
+            </div>
           {isLoading ? (
             <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
               <EventCardSkeleton />
@@ -230,11 +278,10 @@ const AllOutreachVisitLog = () => {
                 ].map((i) => (
                   <button
                     key={i + 1}
-                    className={`mx-2 px-4 py-2 border rounded-full ${
-                      currentPage === i + 1
+                    className={`mx-2 px-4 py-2 border rounded-full ${currentPage === i + 1
                         ? "bg-[#E0D7EC] text-black border-[#1F0A58]"
                         : "bg-white text-black border-[#9B82CF]"
-                    }`}
+                      }`}
                     onClick={() => paginate(i + 1)}
                   >
                     {i + 1}

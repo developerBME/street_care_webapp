@@ -7,6 +7,10 @@ import PastOutreachEventCardSkeleton from "./Skeletons/PastOutreachEventCardSkel
 import { useNavigate } from "react-router-dom";
 import arrowRight from "../images/arrowRight.png";
 import CustomButton from "./Buttons/CustomButton";
+import verifiedPurple from "../images/verified_purple.png";
+import verifiedGreen from "../images/verified.png";
+import verifiedBlue from "../images/verified_blue.png";
+import verifiedYellow from "../images/verified_yellow.png"
 
 const PastOutreachEvents = ({
   events,
@@ -18,8 +22,8 @@ const PastOutreachEvents = ({
   // Ensure unique events
   const uniqueEvents = events
     ? Array.from(new Set(events.map((event) => event.id))).map((id) =>
-        events.find((event) => event.id === id)
-      )
+      events.find((event) => event.id === id)
+    )
     : [];
 
   // Filter events to get only past events
@@ -43,6 +47,51 @@ const PastOutreachEvents = ({
           Past Outreach Events
           <img alt="" src={arrowRight} className="w-6 h-7 lg:w-10 lg:h-10 " />
         </p>
+
+        <div className="flex items-center justify-start space-x-4 mt-4">
+          {/* Chapter Leader */}
+          <div className="flex items-center space-x-2">
+            <img
+              src={verifiedGreen}
+              alt="Chapter Leader"
+              className="w-6 h-6"
+            />
+            <span className="text-sm font-medium text-gray-700">
+              Chapter Leader
+            </span>
+          </div>
+          {/* Chapter Member */}
+          <div className="flex items-center space-x-2">
+            <img
+              src={verifiedPurple}
+              alt="Chapter Member"
+              className="w-6 h-6"
+            />
+            <span className="text-sm font-medium text-gray-700">
+              Chapter Member
+            </span>
+          </div>
+          {/* Internal Member */}
+          <div className="flex items-center space-x-2">
+            <img
+              src={verifiedBlue}
+              alt="Internal Member"
+              className="w-6 h-6"
+            />
+            <span className="text-sm font-medium text-gray-700">
+              Internal Member
+            </span>
+          </div>
+          {/* Other */}
+          <div className="flex items-center space-x-2">
+            <img
+              src={verifiedYellow}
+              alt="Other"
+              className="w-6 h-6"
+            />
+            <span className="text-sm font-medium text-gray-700">Other</span>
+          </div>
+        </div>
 
         {isLoading ? (
           <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
