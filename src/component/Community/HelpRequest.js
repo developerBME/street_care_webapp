@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import HelpRequestSkeleton from "../Skeletons/HelpRequestSkeleton";
 import arrowRight from "../../images/arrowRight.png";
 
-const HelpRequest = () => {
+const HelpRequest = ({ loggedIn}) => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [visibleItems, setVisibleItems] = useState(3);
@@ -40,6 +40,7 @@ const HelpRequest = () => {
             need */}
                 Help Requests ({helpRequests.length})
               </div>
+              {loggedIn && (
               <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-medium font-dmsans leading-tight self-stretch">
                 <CustomButton
                   label="Add New Request"
@@ -49,7 +50,7 @@ const HelpRequest = () => {
                   }}
                 />
               </div>
-
+              )}
               {/* </div> */}
             </div>
             <div className="text-md font-medium font-dmsans text-[#181818] mt-2">

@@ -12,9 +12,13 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { formatDate } from "./HelperFunction";
 import Pagination from "./Pagination";
+import verifiedPurple from "../images/verified_purple.png";
+import verifiedGreen from "../images/verified.png";
+import verifiedBlue from "../images/verified_blue.png";
+import verifiedYellow from "../images/verified_yellow.png"
 
 // Main component for displaying all outreach events
-const AllOutreachEvents = () => {
+const AllOutreachEvents = ({ loggedIn }) => {
 
   const renderPaginationButtons = () => {
     const buttons = [];
@@ -27,7 +31,7 @@ const AllOutreachEvents = () => {
           onClick={() => onPageChange(currentPage - 1)}
           className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
         >
-          <IoIosArrowBack/>
+          <IoIosArrowBack />
         </button>
       );
     }
@@ -50,9 +54,8 @@ const AllOutreachEvents = () => {
         <button
           key={i}
           onClick={() => onPageChange(i)}
-          className={`mx-1 px-3 py-1 rounded-full ${
-            currentPage === i ? "bg-[#1F0A58] text-white" : "bg-gray-200 text-gray-600"
-          }`}
+          className={`mx-1 px-3 py-1 rounded-full ${currentPage === i ? "bg-[#1F0A58] text-white" : "bg-gray-200 text-gray-600"
+            }`}
         >
           {i}
         </button>
@@ -79,7 +82,7 @@ const AllOutreachEvents = () => {
           onClick={() => onPageChange(currentPage + 1)}
           className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
         >
-          <IoIosArrowForward/>
+          <IoIosArrowForward />
         </button>
       );
     }
@@ -121,9 +124,10 @@ const AllOutreachEvents = () => {
   };
 
   const openModal = (event) => {
-    setSelectedEvent(event);
+    if (loggedIn) {
+      setSelectedEvent(event);
+    }
   };
-
   const closeModal = () => {
     setSelectedEvent(null);
   };
@@ -177,6 +181,11 @@ const AllOutreachEvents = () => {
   useEffect(() => {
     setEventsDisplay(events);
   }, [events]);
+
+  useEffect(() => {
+    console.log("Is user logged in? ", loggedIn); // Correctly logs true/false
+    // Fetch events logic
+  }, [loggedIn]);
 
   // Handle search input change
   const searchChange = () => {
@@ -354,6 +363,51 @@ const AllOutreachEvents = () => {
             </div>
           </div>
 
+          <div className="flex items-center justify-start space-x-4 mt-4">
+            {/* Chapter Leader */}
+            <div className="flex items-center space-x-2">
+              <img
+                src={verifiedGreen}
+                alt="Chapter Leader"
+                className="w-6 h-6"
+              />
+              <span className="text-sm font-medium text-gray-700">
+                Chapter Leader
+              </span>
+            </div>
+            {/* Chapter Member */}
+            <div className="flex items-center space-x-2">
+              <img
+                src={verifiedPurple}
+                alt="Chapter Member"
+                className="w-6 h-6"
+              />
+              <span className="text-sm font-medium text-gray-700">
+                Chapter Member
+              </span>
+            </div>
+            {/* Internal Member */}
+            <div className="flex items-center space-x-2">
+              <img
+                src={verifiedBlue}
+                alt="Internal Member"
+                className="w-6 h-6"
+              />
+              <span className="text-sm font-medium text-gray-700">
+                Internal Member
+              </span>
+            </div>
+            {/* Other */}
+            <div className="flex items-center space-x-2">
+              <img
+                src={verifiedYellow}
+                alt="Other"
+                className="w-6 h-6"
+              />
+              <span className="text-sm font-medium text-gray-700">Other</span>
+            </div>
+          </div>
+
           {/* Pagination buttons */}
           {/* Add event count and pagination at the bottom */}
           <div className="flex justify-between items-center mt-8 w-full mb-11">
@@ -390,11 +444,12 @@ const AllOutreachEvents = () => {
                         ...eventData,
                         eventDate: eventData.eventDate?.seconds
                           ? formatDate(
-                              new Date(eventData.eventDate.seconds * 1000)
-                            )
+                            new Date(eventData.eventDate.seconds * 1000)
+                          )
                           : eventData.eventDate,
                       })
                     }
+                    loggedIn={loggedIn}
                   />
                 ))
               ) : (

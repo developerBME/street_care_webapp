@@ -138,6 +138,7 @@ const visitLogHelperFunction = async (visitLogSnap) => {
           : "",
         userName: userDetails.username,
         photoUrl: userDetails.photoUrl,
+        userType: userDetails.userType,
       });
     }
     return visitLogs;
@@ -200,6 +201,7 @@ export const fetchTopVisitLogs = async () => {
     const visitlogs = collection(db, VISIT_LOG_COLLECTION_PROD);
     const visitlogsQuery = query(
       visitlogs,
+      where("status", "==", "approved"), // Add condition to include only approved logs
       orderBy("dateTime", "desc"), // Order visit logs by the 'dateTime' field in descending order to get the newest entries first
       limit(6) // Limit to top 6 records
     );
@@ -265,7 +267,8 @@ export const fetchPublicVisitLogs = async () => {
   try {
     const visitLogsRef = query(
       collection(db, VISIT_LOG_COLLECTION_PROD),
-      where("public", "==", true)
+      where("public", "==", true),
+      where("status", "==", "approved")
     );
     const visitLogSnapshot = await getDocs(visitLogsRef);
     let visitLogs = await visitLogHelperFunction(visitLogSnapshot);
@@ -404,3 +407,84 @@ export const fetchVisitLogsByCityOrState = async (
     throw error;
   }
 };
+
+
+// async function addApprovedField() {
+//   const colRef = collection(db, PERSONAL_VISIT_LOG);
+//   const snapshot = await getDocs(colRef);
+
+//   for (const document of snapshot.docs) {
+//     const docRef = doc(db, PERSONAL_VISIT_LOG, document.id);
+//     try {
+//       await updateDoc(docRef, { approved: false });
+//       console.log(`Updated document: ${document.id} in '${PERSONAL_VISIT_LOG}'`);
+//     } catch (error) {
+//       console.error(`Failed to update document: ${document.id}:`, error);
+//     }
+//   }
+// }
+
+// addApprovedField();
+
+
+export async function fetchUnapprovedVisitLogs() {
+  const colRef = collection(db, PERSONAL_VISIT_LOG);
+
+  const q = query(colRef, where('approved', '==', false));
+
+  const snapshot = await getDocs(q);
+
+  if (snapshot.empty) {
+    console.log(`No unapproved documents found in '${PERSONAL_VISIT_LOG}'`);
+    return [];
+  }
+
+  const unapprovedDocs = [];
+  snapshot.forEach((doc) => {
+    unapprovedDocs.push({ id: doc.id, ...doc.data() });
+  });
+
+  console.log(`Unapproved documents from '${PERSONAL_VISIT_LOG}':`, unapprovedDocs);
+  return unapprovedDocs;
+}
+
+// fetchUnapprovedVisitLogs();
+
+// async function addTypeField() {
+//   const colRef = collection(db, USERS_COLLECTION);
+//   const snapshot = await getDocs(colRef);
+
+//   for (const document of snapshot.docs) {
+//     const docRef = doc(db, USERS_COLLECTION, document.id);
+//     try {
+//       await updateDoc(docRef, { Type: "" });
+//       console.log(`Updated document: ${document.id} in '${USERS_COLLECTION}'`);
+//     } catch (error) {
+//       console.error(`Failed to update document: ${document.id}:`, error);
+//     }
+//   }
+// }
+
+// addTypeField();
+
+
+export const ToggleApproveStatus = async function (documentId) {
+  try {
+    const docRef = doc(db, "personalVisitLog", documentId);
+    const docSnap =  await getDoc(docRef);
+
+    if (!docSnap.exists()) {
+      console.log("Document not found");
+      return;
+    }
+    const data = docSnap.data();
+    let newApprovalStatus = data.approved === true ? false : true;
+    await updateDoc(docRef, { approved: newApprovalStatus });
+    console.log(
+      `Document with ID ${documentId} successfully updated. 'approved' field is now ${newApprovalStatus}.`
+    );
+  } catch (error) {
+    console.error("Error updating document:", error.message);
+  }
+};
+

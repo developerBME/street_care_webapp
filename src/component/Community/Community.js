@@ -6,7 +6,7 @@ import CommunityVisitLog from "./CommunityVisitLog";
 import CommunityOutreachEventsPast from "./CommunityOutreachEventsPast";
 
 
-function Community() {
+function Community({ loggedIn, setLoggedIn }) {
   const [activeTab, setActiveTab] = useState("outreach");
   const [helpRequests, setHelpRequests] = useState([]);
 
@@ -27,16 +27,12 @@ function Community() {
         </div>
 
         <div className="w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black">
-          <CommunityOutreachEvent />
+        <CommunityOutreachEvent loggedIn={loggedIn} />
         </div>
 
-        {/* <div className="w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black">
-          <CommunityOutreachEventsPast />
-        </div> */}
-
-        { <div className="w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black">
-          <CommunityVisitLog />
-        </div> }
+        <div className="w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black">
+          <CommunityVisitLog loggedIn={loggedIn}/>
+        </div>
 
         {/* <div className="w-[95%] md:w-[90%] lg:w-[100%] lg:max-w-[864px] xl:max-w-[1120px] mx-2 mb-8 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
           <HelpRequest updateHelpRequests={updateHelpRequests} />
