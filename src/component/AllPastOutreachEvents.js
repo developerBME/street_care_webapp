@@ -9,6 +9,10 @@ import { IoIosArrowBack, IoIosArrowForward, IoIosArrowDown } from "react-icons/i
 import search_icon from "../images/search_icon.png";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 import { formatDate } from "./HelperFunction";
+import verifiedPurple from "../images/verified_purple.png";
+import verifiedGreen from "../images/verified.png";
+import verifiedBlue from "../images/verified_blue.png";
+import verifiedYellow from "../images/verified_yellow.png"
 
 const AllPastOutreachEvents = () => {
   const [events, setEvents] = useState([]);
@@ -61,7 +65,9 @@ const AllPastOutreachEvents = () => {
       setIsLoading(true);
       setErrorMessage("");
 
+
       const { tot, outreachByLoc } = await fetchByCityOrStates(cityToSearch, startDateTime, endDateTime, currentPage, outreachPerPages);
+
 
       if (outreachByLoc.length > 0) {
         const pastEvents = outreachByLoc.filter((event) => {
@@ -70,6 +76,7 @@ const AllPastOutreachEvents = () => {
             : event.eventDate;
           return eventDate < new Date();
         });
+
 
         setEvents(pastEvents);
         console.log("total", Math.ceil(tot / outreachPerPages) - 1);
@@ -91,6 +98,7 @@ const AllPastOutreachEvents = () => {
   //   const cityToSearch = "";
   //   const outreachByLoc = await fetchByCityOrStates(cityToSearch, startDateTime, endDateTime, currentPage, outreachPerPages);
 
+
   //   const pastEvents = outreachByLoc.filter((event) => {
   //     const eventDate = event?.eventDate?.seconds
   //       ? new Date(event.eventDate.seconds * 1000)
@@ -108,7 +116,7 @@ const AllPastOutreachEvents = () => {
       events.filter(
         (x) =>
           x.title.toLowerCase().search(searchRef.current.value.toLowerCase()) >
-            -1 ||
+          -1 ||
           x.userName
             .toLowerCase()
             .search(searchRef.current.value.toLowerCase()) > -1
@@ -122,7 +130,7 @@ const AllPastOutreachEvents = () => {
   };
 
   const handleClickNext = () => {
-    console.log("after next",eventsDisplay)
+    console.log("after next", eventsDisplay)
     setCurrentPage(currentPage + 1);
   };
 
@@ -136,61 +144,61 @@ const AllPastOutreachEvents = () => {
     setEndDateTime(newDate);
   };
 
+
   const renderPaginationButtons = () => {
     const buttons = [];
     const pageRange = 1;
 
-      if (currentPage > 0) {
-        buttons.push(
-          <button
-            key="prev"
-            onClick={() => handleClickPrev()}
-            className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
-          >
-            <IoIosArrowBack/>
-          </button>
-        );
-      }
+    if (currentPage > 0) {
+      buttons.push(
+        <button
+          key="prev"
+          onClick={() => handleClickPrev()}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          <IoIosArrowBack />
+        </button>
+      );
+    }
 
-      if (currentPage > pageRange + 1) {
-        buttons.push(
-          <button
-            key="first"
-            onClick={() => setCurrentPage(0)}
-            className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
-          >
-            1
-          </button>
-        );
-        buttons.push(<span key="ellipsis-start" className="mx-1">...</span>);
-      }
+    if (currentPage > pageRange + 1) {
+      buttons.push(
+        <button
+          key="first"
+          onClick={() => setCurrentPage(0)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          1
+        </button>
+      );
+      buttons.push(<span key="ellipsis-start" className="mx-1">...</span>);
+    }
 
-      for (let i = Math.max(0, currentPage - pageRange); i <= Math.min(totalPages - 1, currentPage + pageRange); i++) {
-        buttons.push(
-          <button
-            key={i}
-            onClick={() => setCurrentPage(i)}
-            className={`mx-1 px-3 py-1 rounded-full ${
-              currentPage === i ? "bg-[#1F0A58] text-white" : "bg-gray-200 text-gray-600"
+    for (let i = Math.max(0, currentPage - pageRange); i <= Math.min(totalPages - 1, currentPage + pageRange); i++) {
+      buttons.push(
+        <button
+          key={i}
+          onClick={() => setCurrentPage(i)}
+          className={`mx-1 px-3 py-1 rounded-full ${currentPage === i ? "bg-[#1F0A58] text-white" : "bg-gray-200 text-gray-600"
             }`}
-          >
-            {i + 1}
-          </button>
-        );
-      }
+        >
+          {i + 1}
+        </button>
+      );
+    }
 
-      if (currentPage < totalPages - pageRange - 2) {
-        buttons.push(<span key="ellipsis-end" className="mx-1">...</span>);
-        buttons.push(
-          <button
-            key="last"
-            onClick={() => setCurrentPage(totalPages - 1)}
-            className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
-          >
-            {totalPages}
-          </button>
-        );
-      }
+    if (currentPage < totalPages - pageRange - 2) {
+      buttons.push(<span key="ellipsis-end" className="mx-1">...</span>);
+      buttons.push(
+        <button
+          key="last"
+          onClick={() => setCurrentPage(totalPages - 1)}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          {totalPages}
+        </button>
+      );
+    }
 
       if (currentPage < totalPages - 1) {
         buttons.push(
@@ -265,7 +273,7 @@ const AllPastOutreachEvents = () => {
                     <button
                       onClick={() => setFilterType(filterType === "date" ? "city" : "date")}
                       className="flex items-center bg-white border border-gray-300 px-3 py-1 rounded-lg text-s text-gray-700 whitespace-nowrap"
-                      >
+                    >
                       {filterType === "date" ? "Date Period" : "City"}
                       <IoIosArrowDown className="ml-1" />
                     </button>
@@ -280,7 +288,7 @@ const AllPastOutreachEvents = () => {
                         value={startDateTime.toISOString().split("T")[0]}
                         onChange={handleStartDateChange}
                         className="form-input py-1 px-2 border border-gray-300 rounded-lg text-xs md:text-sm"
-                        />
+                      />
                     </div>
                     <span>|</span>
                     <div>
@@ -289,7 +297,7 @@ const AllPastOutreachEvents = () => {
                         value={endDateTime.toISOString().split("T")[0]}
                         onChange={handleEndDateChange}
                         className="form-input py-1 px-2 border border-gray-300 rounded-lg text-xs md:text-sm"
-                        />
+                      />
                     </div>
                   </>
                 )}
@@ -302,13 +310,57 @@ const AllPastOutreachEvents = () => {
                       onChange={(e) => setCityToSearch(e.target.value)}
                       placeholder="Select City"
                       className="form-input py-1 px-2 border border-gray-300 rounded-lg text-xs md:text-sm"
-                      />
+                    />
                   </div>
                 )}
               </div>
             </div>
           </div>
-{/*
+          <div className="flex items-center justify-start space-x-4 mt-4">
+            {/* Chapter Leader */}
+            <div className="flex items-center space-x-2">
+              <img
+                src={verifiedGreen}
+                alt="Chapter Leader"
+                className="w-6 h-6"
+              />
+              <span className="text-sm font-medium text-gray-700">
+                Chapter Leader
+              </span>
+            </div>
+            {/* Chapter Member */}
+            <div className="flex items-center space-x-2">
+              <img
+                src={verifiedPurple}
+                alt="Chapter Member"
+                className="w-6 h-6"
+              />
+              <span className="text-sm font-medium text-gray-700">
+                Chapter Member
+              </span>
+            </div>
+            {/* Internal Member */}
+            <div className="flex items-center space-x-2">
+              <img
+                src={verifiedBlue}
+                alt="Internal Member"
+                className="w-6 h-6"
+              />
+              <span className="text-sm font-medium text-gray-700">
+                Internal Member
+              </span>
+            </div>
+            {/* Other */}
+            <div className="flex items-center space-x-2">
+              <img
+                src={verifiedYellow}
+                alt="Other"
+                className="w-6 h-6"
+              />
+              <span className="text-sm font-medium text-gray-700">Other</span>
+            </div>
+          </div>
+          {/* 
           <div className="mt-6 lg:mt-0">
             <div className="flex items-center space-x-4">
               <div>
@@ -342,6 +394,7 @@ const AllPastOutreachEvents = () => {
             </div>
           </div>
 
+
           {errorMessage && (
             <p className="text-red-500 text-center mt-4">{errorMessage}</p>
           )}
@@ -353,21 +406,21 @@ const AllPastOutreachEvents = () => {
             </div>
           ) : (
             <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-            {eventsDisplay.length > 0 &&
-              eventsDisplay.map((eventData) => (
-                <OutreachEventCard
-                  isPastEvent={true}
-                  key={eventData.id}
-                  cardData={{
-                    ...eventData,
-                    eventDate: eventData?.eventDate?.seconds
-                      ? formatDate(
+              {eventsDisplay.length > 0 &&
+                eventsDisplay.map((eventData) => (
+                  <OutreachEventCard
+                    isPastEvent={true}
+                    key={eventData.id}
+                    cardData={{
+                      ...eventData,
+                      eventDate: eventData?.eventDate?.seconds
+                        ? formatDate(
                           new Date(eventData.eventDate.seconds * 1000)
                         )
-                      : eventData.eventDate,
-                  }}
-                />
-              ))}
+                        : eventData.eventDate,
+                    }}
+                  />
+                ))}
             </div>
           )}
           <div className="flex justify-between items-center mt-8 w-full">

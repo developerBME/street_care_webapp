@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import { Timestamp } from "@firebase/firestore";
-import { IoLocationSharp } from "react-icons/io5"; // For location icon
+import { IoLocationSharp } from "react-icons/io5";
 import help_announcement from "../../images/help_announcement.png";
-import CustomButton from "../Buttons/CustomButton";
 import help_pending from "../../images/help_pending.png";
 import help_received from "../../images/help_received.png";
+import CustomButton from "../Buttons/CustomButton";
+import { Modal } from "@mui/material";
 
-const HelpRequestCard = ({ helpRequestCardData }) => {
+const HelpRequestCard = ({
+  helpRequestCardData,
+  onClick = () => {},
+  isProfileHelpCard = false,
+}) => {
   const [showDetails, setShowDetails] = useState(false);
 
   const {
@@ -22,6 +27,21 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
   const createdAtDate =
     createdAt instanceof Timestamp ? createdAt.toDate() : new Date(createdAt);
 
+  const timeSincePosted = () => {
+    const now = new Date();
+    const diffInMinutes = Math.floor((now - createdAtDate) / 60000);
+
+    if (diffInMinutes < 60) {
+      return `${diffInMinutes} mins ago`;
+    } else if (diffInMinutes < 1440) {
+      const diffInHours = Math.floor(diffInMinutes / 60);
+      return `${diffInHours} hrs ago`;
+    } else {
+      const diffInDays = Math.floor(diffInMinutes / 1440);
+      return `${diffInDays} days ago`;
+    }
+  };
+
   // Button text and style based on status
   let buttonText;
   let buttonStyleClass;
@@ -29,15 +49,15 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
   switch (helpStatus) {
     case "Need Help":
       buttonText = "Offer Help";
-      buttonStyleClass = "buttondefaultwide";//"bg-purple-600 text-white hover:bg-purple-500";
+      buttonStyleClass = "buttondefaultwide";
       break;
     case "Help on the way":
       buttonText = "Mark Received";
-      buttonStyleClass = "buttondInprogressWide";//"bg-yellow-500 text-white hover:bg-yellow-400";
+      buttonStyleClass = "buttondInprogressWide";
       break;
     case "Help Received":
       buttonText = "Reopen Request";
-      buttonStyleClass = "buttonClosedWide";//"border border-gray-400 text-gray-700 hover:bg-gray-100";
+      buttonStyleClass = "buttonClosedWide";
       break;
     default:
       buttonText = "Take Action";
@@ -45,12 +65,19 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-xs mx-auto flex flex-col justify-between">
+    <div
+      className="bg-white rounded-xl shadow-lg p-6 w-full max-w-xs mx-auto flex flex-col justify-between"
+      onClick={onClick}
+    >
       {/* Status Badge */}
       <div className="mb-4">
         {helpStatus === "Need Help" && (
           <div className="bg-red-100 text-red-600 rounded-xl px-4 py-2 text-xs inline-flex items-center mb-2">
-            <img className="w-5 h-5 mr-2" src={help_announcement} alt="Status" />
+            <img
+              className="w-5 h-5 mr-2"
+              src={help_announcement}
+              alt="Status"
+            />
             <span className="font-semibold">Needs Help</span>
           </div>
         )}
@@ -81,11 +108,11 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
       <div className="flex items-center text-sm text-indigo-600 mb-4">
         <IoLocationSharp className="w-5 h-5 mr-1" />
         <span>
-          {helpLocation.street}, {helpLocation.city}, {helpLocation.state} {helpLocation.zipcode}
+          {helpLocation.street}, {helpLocation.city}, {helpLocation.state}{" "}
+          {helpLocation.zipcode}
         </span>
       </div>
 
-      {/* Tags */}
       <div className="flex flex-wrap gap-2 mb-4">
         {helpTags.map((tag, index) => (
           <span
@@ -97,31 +124,21 @@ const HelpRequestCard = ({ helpRequestCardData }) => {
         ))}
       </div>
 
-      {/* Description */}
       <div className="text-sm text-gray-600 mb-4">
-        {showDetails || helpDescription.length < 100
+        {helpDescription.length < 100
           ? helpDescription
           : `${helpDescription.substring(0, 100)}...`}
-        {helpDescription.length > 100 && (
-          <button
-            onClick={() => setShowDetails(!showDetails)}
-            className="text-indigo-500 ml-1"
-          >
-            {showDetails ? "Show less" : "Show more"}
-          </button>
-        )}
       </div>
 
-      {/* Outreaches */}
       <p className="text-sm text-gray-700 font-medium">
         Outreaches: <span className="font-normal">No outreaches created</span>
       </p>
 
       {/* Button */}
-      <CustomButton
-          label={buttonText}
-          name= {buttonStyleClass}
-       />
+      {!isProfileHelpCard && (
+        <CustomButton label={buttonText} name={buttonStyleClass} />
+      )}
+
       {/* <button
         //className={`mt-4 w-full py-2 rounded-full text-sm font-medium ${buttonStyleClass}`}
       >

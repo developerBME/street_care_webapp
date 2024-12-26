@@ -4,7 +4,6 @@ const send2FA = async (userEmail, uid, timestamp) => {
       uid,
       timestamp
     };
-  
     try {
       const response = await fetch('https://us-central1-streetcare-d0f33.cloudfunctions.net/send2FACodeForEmailUpdate', {
 
