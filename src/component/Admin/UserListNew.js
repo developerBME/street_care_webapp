@@ -4,9 +4,11 @@ import {
   getDocs,
   query,
   addDoc,
-  deleteDoc, where,
+  deleteDoc,
   doc,
-  orderBy, limit
+  orderBy,
+  limit,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { debounce } from "lodash";
@@ -15,7 +17,12 @@ import { useNavigate } from "react-router-dom";
 import { RxCaretSort } from "react-icons/rx";
 import { FormControl, MenuItem, Select, useMediaQuery } from "@mui/material";
 import { CiFilter } from "react-icons/ci";
-import { IoChevronBackCircle, IoChevronBackCircleOutline, IoChevronForwardCircle, IoChevronForwardCircleOutline } from "react-icons/io5";
+import {
+  IoChevronBackCircle,
+  IoChevronBackCircleOutline,
+  IoChevronForwardCircle,
+  IoChevronForwardCircleOutline,
+} from "react-icons/io5";
 
 const initialSorted = {
   username: 0,
@@ -42,6 +49,9 @@ export default function UserListNew() {
 
   const [filter, setFilter] = useState("all");
   const [open, setOpen] = useState(false);
+  const [adminUsers, setAdminUsers] = useState({});
+
+  const [chapterLeaders, setChapterLeaders] = useState({});
 
   const handleChange = (event) => {
     setFilter(event.target.value);
@@ -55,11 +65,14 @@ export default function UserListNew() {
       try {
         const usersQuery = query(collection(db, "users"));
         const bannedQuery = query(collection(db, "bannedUser"));
+        const adminQuery = query(collection(db, "adminUsers"));
 
-        const [userSnapshot, bannedSnapshot] = await Promise.all([
-          getDocs(usersQuery),
-          getDocs(bannedQuery),
-        ]);
+        const [userSnapshot, bannedSnapshot, adminUserSnapshot] =
+          await Promise.all([
+            getDocs(usersQuery),
+            getDocs(bannedQuery),
+            getDocs(adminQuery),
+          ]);
 
         const userList = userSnapshot.docs.map((doc) => ({
           docId: doc.id,
@@ -71,8 +84,22 @@ export default function UserListNew() {
           bannedUserMap[doc.data().email] = doc.id; // Store the document ID as the value for quick access
         });
 
+        const adminUserMap = {};
+        adminUserSnapshot.docs.forEach((doc) => {
+          adminUserMap[doc.data().email] = doc.id;
+        });
+
+        const chapterLeaderMap = {};
+        userList.forEach((user) => {
+          if (user.Type === "Chapter Leader") {
+            chapterLeaderMap[user.email] = true;
+          }
+        });
+
         setUsers(userList);
         setBannedUsers(bannedUserMap);
+        setAdminUsers(adminUserMap);
+        setChapterLeaders(chapterLeaderMap);
       } catch (error) {
         console.error("Error fetching data:", error);
         setError("Failed to fetch data.");
@@ -81,78 +108,7 @@ export default function UserListNew() {
       }
     };
 
-    const fetchOutreachData = async () => {
-      // Fetch users who have deviceType "Web"
-      const usersQuery = query(collection(db, "users"));//, where("deviceType", "==", "Android"));
-      const userSnapshot = await getDocs(usersQuery);
-      
-      const userList = userSnapshot.docs.map(doc => ({
-        docId: doc.id,
-        ...doc.data()
-      }));
-    
-      const androidOutreachCollectionName = "outreachEventsAndroid";
-      const outreachCollectionName = "outreachEvents";
-    
-      const androidOutreachQuery = query(collection(db, androidOutreachCollectionName));
-      const outreachQuery = query(collection(db, outreachCollectionName));
-    
-      const [androidOutreachSnapshot, outreachSnapshot] = await Promise.all([
-        getDocs(androidOutreachQuery),
-        getDocs(outreachQuery)
-      ]);
-  
-      // Map the documents into arrays
-      const androidOutreachData = androidOutreachSnapshot.docs.map(doc => ({
-        docId: doc.id,
-        ...doc.data()
-      }));
-    
-      const allOutreachData = outreachSnapshot.docs.map(doc => ({
-        docId: doc.id,
-        ...doc.data()
-      }));
-  
-      const outreachDataList = [];
-  
-      userList.forEach(user => {
-        if(user.deviceType=="Android"){
-          const androidUserOutreachData = androidOutreachData
-          .filter(outreach => outreach.uid === user.docId) 
-          .sort((a, b) => b.createdAt - a.createdAt); 
-
-          if (androidUserOutreachData.length > 0) {
-            outreachDataList.push({
-              userId: user.docId,
-              userData: user,
-              outreachData: androidUserOutreachData[0], // Get the latest outreach
-              totalOutreaches: androidUserOutreachData.length // Total outreach count
-            });
-          }
-        }
-        else{
-          const userOutreachData = allOutreachData
-          .filter(outreach => outreach.uid === user.docId) // Filter by uid
-          .sort((a, b) => b.createdAt - a.createdAt); // Sort by createdAt in descending order
-    
-          // Check if userOutreachData has values before pushing
-          if (userOutreachData.length > 0) {
-            outreachDataList.push({
-              userId: user.docId,
-              userData: user,
-              outreachData: userOutreachData[0], // Get the latest outreach
-              totalOutreaches: userOutreachData.length // Total outreach count
-            });
-          }
-        }
-      });
-      console.log(outreachDataList);
-    
-      return outreachDataList;
-    };
-
     fetchUsersAndBannedStatus();
-    fetchOutreachData();
   }, []);
 
   const toggleBanUser = async (email) => {
@@ -180,6 +136,55 @@ export default function UserListNew() {
     }
   };
 
+  const toggleUserAsAdmin = async (email) => {
+    const isAdmin = adminUsers[email];
+    try {
+      if (!isAdmin) {
+        const docRef = await addDoc(collection(db, "adminUsers"), { email });
+        setAdminUsers((prev) => ({ ...prev, [email]: docRef.id }));
+        alert(`User with email ${email} was made admin.`);
+      } else {
+        await deleteDoc(doc(db, "adminUsers", isAdmin));
+        setAdminUsers((prev) => {
+          const newState = { ...prev };
+          delete newState[email];
+          return newState;
+        });
+        alert(`User with email ${email} was removed from being an admin.`);
+      }
+    } catch (error) {
+      console.error(
+        `Error ${isAdmin ? "removing user as admin" : "making user admin"}`,
+        error
+      );
+      alert(
+        `Failed ${isAdmin ? "removing user as admin" : "making user admin"}`
+      );
+    }
+  };
+
+  const toggleChapterLeader = async (email, docId) => {
+    const isChapterLeader = chapterLeaders[email];
+    try {
+      const userDocRef = doc(db, "users", docId);
+      if (!isChapterLeader) {
+        await updateDoc(userDocRef, { Type: "Chapter Leader" });
+        setChapterLeaders((prev) => ({ ...prev, [email]: true }));
+        alert(`User with email ${email} is now a Chapter Leader.`);
+      } else {
+        await updateDoc(userDocRef, { Type: "" });
+        setChapterLeaders((prev) => {
+          const newState = { ...prev };
+          delete newState[email];
+          return newState;
+        });
+        alert(`User with email ${email} is no longer a Chapter Leader.`);
+      }
+    } catch (error) {
+      console.error(`Error updating Chapter Leader status for user:`, error);
+      alert(`Failed to update Chapter Leader status.`);
+    }
+  };
   const debouncedSearchChange = useMemo(
     () =>
       debounce((value) => {
@@ -253,7 +258,9 @@ export default function UserListNew() {
             key={i}
             onClick={() => paginate(i)}
             className={`mx-1 border rounded-full h-8 w-8 hover:bg-gray-200 flex items-center justify-center ${
-              currentPage === i ? "border-[#1F0A58] bg-[#E8DFFD]" : "border-[#C8C8C8] bg-[#FFFFFF]"
+              currentPage === i
+                ? "border-[#1F0A58] bg-[#E8DFFD]"
+                : "border-[#C8C8C8] bg-[#FFFFFF]"
             }`}
           >
             {i}
@@ -290,7 +297,11 @@ export default function UserListNew() {
           </p>
         </div>
         <div className="px-4 py-8 lg:px-12 h-full w-full rounded-2xl bg-[#F7F7F7] overflow-x-scroll md:overflow-x-auto">
-          <div className={`flex justify-between mb-5 ${isMobile ? "flex-col" : "items-center"}`}>
+          <div
+            className={`flex justify-between mb-5 ${
+              isMobile ? "flex-col" : "items-center"
+            }`}
+          >
             <h2 className="font-dm-sans font-medium text-4xl text-gray-800 my-2">
               User Management
             </h2>
@@ -383,7 +394,9 @@ export default function UserListNew() {
                       </p>
                     </div>
                   </th>
-                  <th className="rounded-tr-2xl py-3 px-4">Blocked</th>
+                  <th className="border-r py-3 px-2">Blocked</th>
+                  <th className="border-r py-3 px-2">Admin</th>
+                  <th className="rounded-tr-2xl py-3 px-4">Chapter Leader</th>
                 </tr>
               </thead>
               <tbody className="text-sm bg-white">
@@ -439,6 +452,64 @@ export default function UserListNew() {
                           </div>
                         </label>
                       </td>
+                      <td className="border-l border-b border-[#C8C8C8] whitespace-nowrap py-2">
+                        <label className="flex items-center justify-center">
+                          <div className="relative">
+                            <input
+                              type="checkbox"
+                              className="sr-only"
+                              checked={adminUsers[user.email]}
+                              onChange={(e) => {
+                                e.stopPropagation();
+                                toggleUserAsAdmin(user.email);
+                              }}
+                            />
+                            <div
+                              className={`block w-12 h-6 rounded-full ${
+                                adminUsers[user.email]
+                                  ? "bg-red-600"
+                                  : "bg-gray-300"
+                              }`}
+                            ></div>
+                            <div
+                              className={`dot absolute left-1 top-1 w-4 h-4 rounded-full transition transform ${
+                                adminUsers[user.email]
+                                  ? "translate-x-6 bg-white"
+                                  : "bg-white"
+                              }`}
+                            ></div>
+                          </div>
+                        </label>
+                      </td>
+                      <td className="border-l border-b border-[#C8C8C8] whitespace-nowrap py-2">
+                        <label className="flex items-center justify-center">
+                          <div className="relative">
+                            <input
+                              type="checkbox"
+                              className="sr-only"
+                              checked={chapterLeaders[user.email]}
+                              onChange={(e) => {
+                                e.stopPropagation();
+                                toggleChapterLeader(user.email, user.docId);
+                              }}
+                            />
+                            <div
+                              className={`block w-12 h-6 rounded-full ${
+                                chapterLeaders[user.email]
+                                  ? "bg-red-600"
+                                  : "bg-gray-300"
+                              }`}
+                            ></div>
+                            <div
+                              className={`dot absolute left-1 top-1 w-4 h-4 rounded-full transition transform ${
+                                chapterLeaders[user.email]
+                                  ? "translate-x-6 bg-white"
+                                  : "bg-white"
+                              }`}
+                            ></div>
+                          </div>
+                        </label>
+                      </td>
                     </tr>
                   ))
                 ) : (
@@ -450,8 +521,14 @@ export default function UserListNew() {
                 )}
               </tbody>
             </table>
-            <div className={`flex justify-between p-4 ${isMobile ? "flex-col items-start" : "items-center"}`}>
-              <div>Showing {usersPerPage} of {filteredUsers.length} users</div>
+            <div
+              className={`flex justify-between p-4 ${
+                isMobile ? "flex-col items-start" : "items-center"
+              }`}
+            >
+              <div>
+                Showing {usersPerPage} of {filteredUsers.length} users
+              </div>
               <div className="flex justify-between md:justify-end mt-6 items-center">
                 {currentPage === 1 ? (
                   <IoChevronBackCircle className="w-8 h-8 text-[#565656]" />

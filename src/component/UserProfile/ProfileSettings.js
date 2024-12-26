@@ -15,13 +15,12 @@ const settingOptions = [
     href: "/profile/profilesettings/updateprofile",
     key: "updateProfile",
   },
-  // Commenting until the issue is resolved
-  // {
-  //   title: "Update your email address",
-  //   logo: <MdAlternateEmail />,
-  //   href: "/profile/profilesettings/updateemailaddress",
-  //   key: "updateEmail",
-  // },
+  {
+    title: "Update your email address",
+    logo: <MdAlternateEmail />,
+    href: "/profile/profilesettings/updateemailaddress",
+    key: "updateEmail",
+  },
   {
     title: "Delete your account",
     logo: <MdLockOutline />,

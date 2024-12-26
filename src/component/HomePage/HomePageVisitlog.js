@@ -3,9 +3,13 @@ import { useNavigate } from "react-router-dom";
 import arrowRight from "../../images/arrowRight.png";
 import OutreachVisitLogCard from "../Community/OutreachVisitLogCard";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
-import { fetchTopVisitLogs } from "../VisitLogCardService";
+import { fetchTopVisitLogs, fetchPublicVisitLogs } from "../VisitLogCardService";
 import ErrorMessage from "../ErrorMessage";
 import CustomButton from "../Buttons/CustomButton";
+import verifiedPurple from "../../images/verified_purple.png";
+import verifiedGreen from "../../images/verified.png";
+import verifiedBlue from "../../images/verified_blue.png";
+import verifiedYellow from "../../images/verified_yellow.png"
 
 const HomePageVisitlog = () => {
   const navigate = useNavigate();
@@ -61,12 +65,16 @@ const HomePageVisitlog = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
+      setIsError(false);
       try {
-        const visitLogsData = await fetchTopVisitLogs();
+        const visitLogsData = await fetchPublicVisitLogs();
         setVisitLogs(visitLogsData);
       } catch (error) {
+        console.error("Error fetching visit logs:", error);
         setIsError(true);
-        setVisitLogs([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -98,6 +106,50 @@ const HomePageVisitlog = () => {
                 <img src={arrowRight} className="w-6 h-6 lg:w-10 lg:h-10 " />
               </div>
             </div>
+            <div className="flex items-center justify-start space-x-4 mt-4">
+                {/* Chapter Leader */}
+                <div className="flex items-center space-x-2">
+                  <img
+                    src={verifiedGreen}
+                    alt="Chapter Leader"
+                    className="w-6 h-6"
+                  />
+                  <span className="text-sm font-medium text-gray-700">
+                    Chapter Leader
+                  </span>
+                </div>
+                {/* Chapter Member */}
+                <div className="flex items-center space-x-2">
+                  <img
+                    src={verifiedPurple}
+                    alt="Chapter Member"
+                    className="w-6 h-6"
+                  />
+                  <span className="text-sm font-medium text-gray-700">
+                    Chapter Member
+                  </span>
+                </div>
+                {/* Internal Member */}
+                <div className="flex items-center space-x-2">
+                  <img
+                    src={verifiedBlue}
+                    alt="Internal Member"
+                    className="w-6 h-6"
+                  />
+                  <span className="text-sm font-medium text-gray-700">
+                    Internal Member
+                  </span>
+                </div>
+                {/* Other */}
+                <div className="flex items-center space-x-2">
+                  <img
+                    src={verifiedYellow}
+                    alt="Other"
+                    className="w-6 h-6"
+                  />
+                  <span className="text-sm font-medium text-gray-700">Other</span>
+                </div>
+              </div>
           </div>
         </div>
 

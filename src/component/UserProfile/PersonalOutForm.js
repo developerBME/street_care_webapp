@@ -28,6 +28,7 @@ import { Timestamp } from "firebase/firestore";
 import InfoIcon from '@mui/icons-material/Info';
 // import { IconButton } from "@mui/material";
 import {Tooltip, IconButton} from '@mui/material';
+import { fetchUserTypeDetails } from "../EventCardService";
 
 const USERS_COLLECTION = "users";
 
@@ -461,6 +462,12 @@ function PersonalOutForm() {
       return;
     }
 
+    const userDetails = await fetchUserTypeDetails(fAuth.currentUser.uid);
+    let statusValue = 'pending'
+    if(userDetails.type == 'Chapter Leader' || userDetails.type == 'Internal Member') {
+      statusValue = 'approved'
+    }
+
     let obj = {
       uid: fAuth.currentUser.uid,
       description: descriptionHelped,
@@ -477,6 +484,7 @@ function PersonalOutForm() {
       street: street,
       dateTime: Timestamp.fromDate(dateTime),
       public: isPublic,
+      status: statusValue
     };
     console.log(obj);
 
@@ -494,8 +502,8 @@ function PersonalOutForm() {
 
     try {
       console.log("Sending email...");
-       const logRef = collection(db, "personalVisitLog");
-//      const logRef = collection(db, "visitLogWebProd"); //change back to this line in dev branch
+//       const logRef = collection(db, "personalVisitLog");
+      const logRef = collection(db, "visitLogWebProd"); //change back to this line in dev branch
       const docRef = await addDoc(logRef, obj);
       if (docRef.id) {
         console.log(docRef.id);

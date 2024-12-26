@@ -2,24 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { Modal } from "@mui/material";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-// import FAQs from "./HomePage/FAQs";
 import FAQs from "./HomePage/FAQs2";
-// import Eventcard from "./HomePage/Eventcard";
-// import BMEcard from "./HomePage/BMEcard";
-// import BMEcardnew from "./HomePage/BMEofficialCard";
 import Success2 from "./HomePage/Success2";
 import Landing from "./HomePage/Landing";
-// import Landing from "./HomePage/Landing2";
-// import Success from "./HomePage/Success";
 import News from "./HomePage/News";
 import Map from "./HomePage/Map";
-//import Process from "./HomePage/Process";
 import Process2 from "./HomePage/Process2";
-//import MoreAboutUs from "./HomePage/MoreAboutUs";
-// import MoreAboutUs from "./HomePage/MoreAboutUs2";
-// import Navbar from "./Navbar";
-import arrowRight from "../images/arrowRight.png";
-import OutreachEventCard from "./Community/OutreachEventCard";
 import {
   fetchEvents,
   fetchOfficialEvents,
@@ -30,10 +18,7 @@ import BMEcardimg2 from "../images/BMEofficialcardimg2.png";
 import BMEcardimg3 from "../images/BMEofficialcardimg3.png";
 import CustomButton from "../component/Buttons/CustomButton";
 import { NewsCardData } from "../NewsData";
-import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
-import PastOutreachEventCardSkeleton from "./Skeletons/PastOutreachEventCardSkeleton";
 import ErrorMessage from "./ErrorMessage";
-// import MoreAboutUs2 from "./HomePage/MoreAboutUs2";
 import OutreachSignupModal from "./Community/OutreachSignupModal";
 import RSVPConfirmationModal from "./UserProfile/RSVPConfirmationModal";
 import PastOutreachEvents from "./PastOutreachEvents";
@@ -42,6 +27,7 @@ import UpcomingOutreachEvents from "./UpcomingOutreachEvents";
 function HomePage() {
   const navigate = useNavigate();
   const fAuth = getAuth();
+  const [loggedIn, setLoggedIn] = useState(false);
 
   onAuthStateChanged(fAuth, (user) => {
     if (user) {
@@ -54,6 +40,18 @@ function HomePage() {
       // ...
     }
   });
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(fAuth, (user) => {
+      if (user) {
+        setLoggedIn(true); // User is logged in
+      } else {
+        setLoggedIn(false); // User is logged out
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup the subscription
+  }, [fAuth]);
 
   const cardData = [
     {
@@ -288,29 +286,23 @@ function HomePage() {
   }, []);
 
   return (
-    // <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
     <div className="relative flex flex-col items-center ">
       <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-32 rounded-2xl text-black ">
         {" "}
         <Landing scorllFuntion={handleOutreachRef} />
       </div>
-      {/* <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
-        <Success/>
-      </div>*/}
+      
       <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
         <Success2 />
       </div>
-
-
-   
 
       <UpcomingOutreachEvents 
         events = {events}
         isLoading={isLoading}
         isError={isError}
         openModal={openModal}
+        loggedIn={loggedIn}
       />
-
 
       {/* Past Outreach Events */}
       <PastOutreachEvents
@@ -321,52 +313,14 @@ function HomePage() {
 
       
 
-      
-      {/*Vedant*/} {/*BME OFFCIIAL GATHERING BLOCK START*/}
-      {/* 
-     <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
-        <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
-          <p className=" font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
-            {" "}
-            BME Official Gathering
-          </p>
-          <div className=" w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-          
-            {offevents.map((eventData) => (
-              <BMEcardnew
-                key={eventData.id}
-                BMEcardData={{
-                  ...eventData,
-                  eventDate: formatDate(
-                    new Date(eventData.eventDate.seconds * 1000)
-                  ),
-                }}
-              />
-            ))}
-          </div>
-        </div>
-      </div> 
-
-      */}
-      {/* Aniket */}
-      {/*<div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8  rounded-2xl bg-white text-black ">
-        <Process />
-      </div>*/}
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8  rounded-2xl bg-white text-black ">
         <Process2 />
       </div>
-      {/*<div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black">
-        <MoreAboutUs />
-      </div>
-      <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 mb-8 rounded-2xl bg-white text-black">
-        <MoreAboutUs2 />
-      </div>
-      {/* Aniket */}
+     
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
         <Map />
       </div>
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black h-full">
-        {/*<News />*/}
 
         {/* <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
           <p className=" text-[25px] lg:text-[45px] font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
@@ -406,7 +360,7 @@ function HomePage() {
        <RSVPConfirmationModal closeModal={closeWithdrawModal} type='withdraw' />
       </Modal>
     </div>
-    // </div>
+    
   );
 }
 
