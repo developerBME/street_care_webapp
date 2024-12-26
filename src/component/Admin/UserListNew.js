@@ -45,6 +45,9 @@ export default function UserListNew() {
   const [usersPerPage] = useState(10);
   const [sorted, setSorted] = useState(initialSorted);
 
+  //new
+  // const [internalMember,setInternalMember]=useState(false);
+
   const isMobile = useMediaQuery("(max-width:767px)");
 
   const [filter, setFilter] = useState("all");
@@ -185,6 +188,34 @@ export default function UserListNew() {
       alert(`Failed to update Chapter Leader status.`);
     }
   };
+
+
+  //Test.
+  const toggleInternalMember = async (email, docId) => {
+    const isInternalMember = false;  
+    try {
+      const userDocRef = doc(db, "users", docId);
+      const userDoc = await getDoc(userDocRef);
+  
+      if (!userDoc.exists()) {
+        console.error(`No user found with docId ${docId}`);
+        return;
+      }
+  
+      const userData = userDoc.data();
+      if (!isInternalMember || userData.Type !== "Internal Member") {
+        await updateDoc(userDocRef, { Type: "Internal Member" });
+        console.log(`User with email ${email} is now an Internal Member.`);
+      } else {
+        await updateDoc(userDocRef, { Type: "" });
+        console.log(`User with email ${email} is no longer an Internal Member.`);
+      }
+    } catch (error) {
+      console.error(`Error updating Internal Member status for user with docId ${docId}:`, error);
+    }
+  };
+  
+
   const debouncedSearchChange = useMemo(
     () =>
       debounce((value) => {
@@ -510,6 +541,12 @@ export default function UserListNew() {
                           </div>
                         </label>
                       </td>
+
+
+
+
+                     
+                      
                     </tr>
                   ))
                 ) : (
