@@ -37,7 +37,7 @@ const PostApprovals = () => {
 
         // Fetch outreaches
         const outreachQuery = query(
-          collection(db, "outreachEvents"),
+          collection(db, "outreachEventsDev"),
           where("status", "==", "pending")
         );
         const outreachSnapshot = await getDocs(outreachQuery);
@@ -57,7 +57,7 @@ const PostApprovals = () => {
 
         // Fetch visit logs
         const visitLogQuery = query(
-          collection(db, "personalVisitLog"),
+          collection(db, "visitLogWebProd"),
           where("status", "==", "pending")
         );
         const visitLogSnapshot = await getDocs(visitLogQuery);
@@ -66,10 +66,11 @@ const PostApprovals = () => {
             const post = { id: doc.id, ...doc.data() };
 
             // Fetch userName using uid
-            const userDetails = await fetchUserDetails(post.uid);
+            const userDetails = await fetchUserTypeDetails(post.uid);
             return {
               ...post,
               userName: userDetails?.username || "Unknown User",
+              userType: userDetails?.type || "",
             };
           })
         );
@@ -172,7 +173,7 @@ const PostApprovals = () => {
   const handleApproveSelected = async () => {
     try {
       const collectionName =
-        activeTab === "outreaches" ? "outreachEvents" : "personalVisitLog";
+        activeTab === "outreaches" ? "outreachEventsDev" : "visitLogWebProd";
 
       for (const itemId of selectedItems) {
         await updateDoc(doc(db, collectionName, itemId), {
@@ -197,7 +198,7 @@ const PostApprovals = () => {
   const handleRejectSelected = async () => {
     try {
       const collectionName =
-        activeTab === "outreaches" ? "outreachEvents" : "personalVisitLog";
+        activeTab === "outreaches" ? "outreachEventsDev" : "visitLogWebProd";
 
       for (const itemId of selectedItems) {
         await updateDoc(doc(db, collectionName, itemId), {
@@ -221,7 +222,7 @@ const PostApprovals = () => {
   const handleAccept = async () => {
     try {
       const collectionName =
-        activeTab === "outreaches" ? "outreachEvents" : "personalVisitLog";
+        activeTab === "outreaches" ? "outreachEventsDev" : "visitLogWebProd";
       await updateDoc(doc(db, collectionName, selectedPost.id), {
         status: "approved",
       });
@@ -244,7 +245,7 @@ const PostApprovals = () => {
   const handleReject = async () => {
     try {
       const collectionName =
-        activeTab === "outreaches" ? "outreachEvents" : "personalVisitLog";
+        activeTab === "outreaches" ? "outreachEventsDev" : "visitLogWebProd";
       await updateDoc(doc(db, collectionName, selectedPost.id), {
         status: "rejected",
       });

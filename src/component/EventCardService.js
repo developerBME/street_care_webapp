@@ -36,8 +36,14 @@ import {
 
     // Collecting all unique user IDs
     const userIds = new Set();
-    eventSnapshot.docs.forEach((doc) => userIds.add(doc.data().uid));
-
+    eventSnapshot.docs.forEach((doc) => {
+      const uid = doc.data().uid;
+      if (uid) {
+        userIds.add(uid);
+      } else {
+        console.log('Document missing uid:', doc.id);
+      }
+    });
     // Batch fetch user details
     const userDetails = await fetchUserDetailsBatch(Array.from(userIds));
 
@@ -674,6 +680,18 @@ export const fetchByCityOrStates = async (
           limit(outreachPerPages)
         );
 
+        const userIds = new Set();
+        snapshots.docs.forEach((doc) => {
+          const uid = doc.data().uid;
+          if (uid) {
+            userIds.add(uid);
+          } else {
+            console.log('Document missing uid:', doc.id);
+          }
+        });
+        // Batch fetch user details
+        const userDetails = await fetchUserDetailsBatch(Array.from(userIds));
+
         while (outreachPerPages < totaloutreaches) {
           const outreachDocRef = await getDocs(outreachByLocationQuery);
           console.log("Test7:");
@@ -685,6 +703,7 @@ export const fetchByCityOrStates = async (
             // console.log('id wrt loc: '+id);
             outreachByLoc.push({
               ...pastOutreachData,
+              userName: userDetails[pastOutreachData.uid]?.username || "",
               id: id,
             });
           }
@@ -729,6 +748,18 @@ export const fetchByCityOrStates = async (
         limit(outreachPerPages)
       );
 
+      const userIds = new Set();
+      snapshots.docs.forEach((doc) => {
+        const uid = doc.data().uid;
+        if (uid) {
+          userIds.add(uid);
+        } else {
+          console.log('Document missing uid:', doc.id);
+        }
+      });
+      // Batch fetch user details
+      const userDetails = await fetchUserDetailsBatch(Array.from(userIds));
+
       while (outreachPerPages < totaloutreaches) {
         const outreachDocRef = await getDocs(outreachByLocationQuery);
         console.log("Test2:");
@@ -740,6 +771,7 @@ export const fetchByCityOrStates = async (
           // console.log('id wrt loc: '+id);
           outreachByLoc.push({
             ...pastOutreachData,
+            userName: userDetails[pastOutreachData.uid]?.username || "",
             id: id,
           });
         }

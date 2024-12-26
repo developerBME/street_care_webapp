@@ -502,8 +502,8 @@ function PersonalOutForm() {
 
     try {
       console.log("Sending email...");
-       const logRef = collection(db, "personalVisitLog");
-//      const logRef = collection(db, "visitLogWebProd"); //change back to this line in dev branch
+//       const logRef = collection(db, "personalVisitLog");
+      const logRef = collection(db, "visitLogWebProd"); //change back to this line in dev branch
       const docRef = await addDoc(logRef, obj);
       if (docRef.id) {
         console.log(docRef.id);
