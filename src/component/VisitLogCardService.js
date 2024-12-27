@@ -14,6 +14,7 @@ import {
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { fetchUserDetails } from "./EventCardService";
 import { fetchUserName, formatDate, getNumberOfPages } from "./HelperFunction";
+import {fetchUserDetailsBatch} from "./EventCardService";
 
 import logEvent from "./FirebaseLogger";
 
@@ -113,12 +114,18 @@ const visitLogHelperFunction = async (visitLogSnap) => {
   try {
     let visitLogs = [];
     const docsArray = visitLogSnap.docs ? visitLogSnap.docs : [visitLogSnap];
+
+    // Gather all unique user IDs
+    const userIds = [...new Set(docsArray.map((doc) => doc.data().uid))];
+
+    // Fetch user details in batch
+    const userCache = await fetchUserDetailsBatch(userIds);
+
     for (const doc of docsArray) {
       const visitLogData = doc.data();
-      //const outreachEventId = visitLogData.outreachEvent || "";
-      //const outreachEventData = await fetchOutreachEventData(outreachEventId);
       const uid = visitLogData.uid;
-      const userDetails = await fetchUserDetails(uid);
+      const userDetails = userCache[uid] || {};
+
       visitLogs.push({
         id: doc.id,
         whatGiven: visitLogData.whatGiven,
@@ -136,9 +143,9 @@ const visitLogHelperFunction = async (visitLogSnap) => {
         eventDate: visitLogData?.dateTime?.seconds
           ? formatDate(new Date(visitLogData.dateTime.seconds * 1000))
           : "",
-        userName: userDetails.username,
-        photoUrl: userDetails.photoUrl,
-        userType: userDetails.userType,
+        userName: userDetails.username || "",
+        photoUrl: userDetails.photoUrl || "",
+        userType: userDetails.userType || "",
       });
     }
     return visitLogs;
