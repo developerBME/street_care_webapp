@@ -68,7 +68,7 @@ export async function calculateNumberOfPagesForOutreach(outreachesPerPage) {
   return getNumberOfPages(outreachesPerPage, OUTREACH_EVENTS_COLLECTION);
 }
 
-async function fetchUserDetailsBatch(userIds) {
+export async function fetchUserDetailsBatch(userIds) {
   const userDetails = {};
   // Firestore limits 'in' queries to 10 items
   const chunks = splitArrayIntoChunksOfLen(userIds, 10);
