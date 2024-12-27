@@ -704,6 +704,7 @@ export const fetchByCityOrStates = async (
             outreachByLoc.push({
               ...pastOutreachData,
               userName: userDetails[pastOutreachData.uid]?.username || "",
+              userType: userDetails[pastOutreachData.uid]?.userType || "",
               id: id,
             });
           }
@@ -772,6 +773,7 @@ export const fetchByCityOrStates = async (
           outreachByLoc.push({
             ...pastOutreachData,
             userName: userDetails[pastOutreachData.uid]?.username || "",
+            userType: userDetails[pastOutreachData.uid]?.userType || "",
             id: id,
           });
         }
