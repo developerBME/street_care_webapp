@@ -85,7 +85,7 @@ const UpcomingOutreachEvents = ({
                             className="w-6 h-6"
                         />
                         <span className="text-sm font-medium text-gray-700">
-                            Street Care Leader
+                            Internal Member
                         </span>
                     </div>
                     {/* Other */}
