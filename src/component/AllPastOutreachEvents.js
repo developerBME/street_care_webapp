@@ -40,7 +40,7 @@ const AllPastOutreachEvents = () => {
 
   const [startDateTime, setStartDateTime] = useState(() => {
     const today = new Date();
-    today.setDate(today.getDate() - 70);
+    today.setDate(today.getDate() - 1600);
     return today;
   });
 
@@ -347,7 +347,7 @@ const AllPastOutreachEvents = () => {
                 className="w-6 h-6"
               />
               <span className="text-sm font-medium text-gray-700">
-                Internal Member
+                Street Care Leader
               </span>
             </div>
             {/* Other */}
@@ -359,11 +359,6 @@ const AllPastOutreachEvents = () => {
               />
               <span className="text-sm font-medium text-gray-700">Other</span>
             </div>
-          </div>
-          <div className="flex justify-between items-center mt-8 w-full">
-            <p className="text-gray-600">
-              From {endDateTime.toISOString().split("T")[0]} to {startDateTime.toISOString().split("T")[0]}, over {totalPages * outreachPerPages} events total.
-            </p>
           </div>
           {/* 
           <div className="mt-6 lg:mt-0">
