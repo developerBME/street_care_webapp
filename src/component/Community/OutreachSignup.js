@@ -29,6 +29,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
+import { isPast } from "date-fns";
 const USERS_COLLECTION = "users";
 
 const OutreachSignup = () => {
@@ -37,10 +38,12 @@ const OutreachSignup = () => {
   const [label2, setLabel2] = useState("RSVP");
   const [success, setSuccess] = useState(false);
   const fAuth = getAuth();
+ 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const location = useLocation();
   const { label } = location.state || {};
+  const isProfilePage = location?.state?.isProfilePage || false;
 
   const eventDetails = [
     {
@@ -62,6 +65,7 @@ const OutreachSignup = () => {
         console.error(error.message);
       }
     };
+   console.log('ProfilePage status'+isProfilePage);
 
     getData(); // Invoke the async function
 
@@ -106,6 +110,7 @@ const OutreachSignup = () => {
         collection(db, USERS_COLLECTION),
         where("uid", "==", fAuth?.currentUser?.uid)
       );
+      
       const userDocRef = await getDocs(userQuery);
 
       const userDocID = userDocRef.docs[0].id;
@@ -294,18 +299,21 @@ const OutreachSignup = () => {
               <div className="h-10 bg-[#6840E0] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex">
                 {label === "EDIT" ? (
                   <>
-                    <CustomButton
+                   {isProfilePage  &&( <CustomButton
                       label="Delete"
                       name="deleteButton"
                       onClick={() => setShowDeleteModal(true)}
                     />
+                  )}
                     {showDeleteModal && (
                       <DeleteModal
                         handleClose={() => setShowDeleteModal(false)}
                         handleDelete={deleteVisitLog}
+                        
                         modalMsg={`Are you sure you want to delete this visit log?`}
                       />
                     )}
+
                   </>
                 ) : (
                   <CustomButton
@@ -335,7 +343,7 @@ const OutreachSignup = () => {
               >
                 <div className="self-stretch grow shrink basis-0 px-6 py-2.5 justify-center items-center gap-2 inline-flex">
                   <button className="text-center text-[#1F0A58] text-sm font-medium font-inter leading-tight">
-                    Cancel
+                    Go Back
                   </button>
                 </div>
               </div>
