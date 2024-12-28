@@ -214,7 +214,8 @@ export default function UserListNew() {
       console.error(`Error updating Internal Member status for user with docId ${docId}:`, error);
     }
   };
-  
+
+  toggleInternalMember("milongwalling7@gmail.com","VXfFhOAobaOmMC7dUHgJasqeVWK2");
 
   const debouncedSearchChange = useMemo(
     () =>
@@ -541,12 +542,6 @@ export default function UserListNew() {
                           </div>
                         </label>
                       </td>
-
-
-
-
-                     
-                      
                     </tr>
                   ))
                 ) : (
