@@ -31,6 +31,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
+import { isPast } from "date-fns";
 const USERS_COLLECTION = "users";
 
 const OutreachSignup = () => {
@@ -39,6 +40,7 @@ const OutreachSignup = () => {
   const [label2, setLabel2] = useState("RSVP");
   const [success, setSuccess] = useState(false);
   const fAuth = getAuth();
+ 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const location = useLocation();
@@ -109,6 +111,7 @@ const OutreachSignup = () => {
         collection(db, USERS_COLLECTION),
         where("uid", "==", fAuth?.currentUser?.uid)
       );
+      
       const userDocRef = await getDocs(userQuery);
 
       const userDocID = userDocRef.docs[0].id;
@@ -298,19 +301,21 @@ const OutreachSignup = () => {
               <div className="h-10 bg-[#6840E0] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex">
                 {label === "EDIT" ? (
                   <>
-                    {isProfilePage &&(<CustomButton
+                   {isProfilePage  &&( <CustomButton
                       label="Delete"
                       name="deleteButton"
                       onClick={() => setShowDeleteModal(true)}
                     />
-                    )}
+                  )}
                     {showDeleteModal && (
                       <DeleteModal
                         handleClose={() => setShowDeleteModal(false)}
                         handleDelete={deleteVisitLog}
+                        
                         modalMsg={`Are you sure you want to delete this visit log?`}
                       />
                     )}
+
                   </>
                 ) : (
                   <CustomButton

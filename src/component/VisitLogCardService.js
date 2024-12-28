@@ -14,7 +14,7 @@ import {
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { fetchUserDetails } from "./EventCardService";
 import { fetchUserName, formatDate, getNumberOfPages } from "./HelperFunction";
-import {fetchUserDetailsBatch} from "./EventCardService";
+import { fetchUserDetailsBatch } from "./EventCardService";
 
 import logEvent from "./FirebaseLogger";
 
