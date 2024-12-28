@@ -40,7 +40,7 @@ const AllPastOutreachEvents = () => {
 
   const [startDateTime, setStartDateTime] = useState(() => {
     const today = new Date();
-    today.setDate(today.getDate() - 70);
+    today.setDate(today.getDate() - 1600);
     return today;
   });
 
@@ -200,17 +200,17 @@ const AllPastOutreachEvents = () => {
       );
     }
 
-      if (currentPage < totalPages - 1) {
-        buttons.push(
-          <button
-            key="next"
-            onClick={() => handleClickNext()}
-            className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
-          >
-            <IoIosArrowForward/>
-          </button>
-        );
-      }
+    if (currentPage < totalPages - 1) {
+      buttons.push(
+        <button
+          key="next"
+          onClick={() => handleClickNext()}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          <IoIosArrowForward />
+        </button>
+      );
+    }
 
     return buttons;
   };
@@ -235,7 +235,7 @@ const AllPastOutreachEvents = () => {
         <div className="items-center justify-center px-4 py-8 lg:px-24 lg:py-16 h-full w-full rounded-2xl bg-[#F7F7F7]">
           <div className="lg:flex justify-between items-center space-y-4 lg:space-y-0">
             <div className="lg:w-1/3">
-            <p className=" font-bricolage font-medium text-xl md:text-[35px] text-[#1F0A58] lg:mt-2">
+              <p className=" font-bricolage font-medium text-xl md:text-[35px] text-[#1F0A58] lg:mt-2">
                 Past Outreach Events
               </p>
             </div>
