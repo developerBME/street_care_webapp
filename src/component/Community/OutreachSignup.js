@@ -17,7 +17,6 @@ import verifiedGreen from "../../images/verified.png";
 import verifiedBlue from "../../images/verified_blue.png";
 import verifiedYellow from "../../images/verified_yellow.png";
 import DeleteModal from "./DeleteModal";
-import { isPast } from "date-fns";
 
 import {
   doc,
