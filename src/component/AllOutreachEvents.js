@@ -110,7 +110,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
   const [filterOption, setfilterOption] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(
-    new Date().setDate(new Date().getDate() + 7)
+    new Date().setDate(new Date().getDate() + 70)
   );
 
   const handleFilterChange = (e) => {

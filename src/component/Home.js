@@ -262,23 +262,23 @@ function HomePage() {
   // Filter events to get only upcoming events
   const upcomingEvents = events
     ? events
-        .filter((event) => {
-          const eventDate =
-            new Date(event.eventDate?.seconds * 1000) || event.eventDate;
-          return eventDate >= new Date(); // Check if the event date is after the current date
-        })
-        .slice(0, 3)
+      .filter((event) => {
+        const eventDate =
+          new Date(event.eventDate?.seconds * 1000) || event.eventDate;
+        return eventDate >= new Date(); // Check if the event date is after the current date
+      })
+      .slice(0, 3)
     : [];
 
   // Filter events to get only past events
   const pastEvents = events
     ? events
-        .filter((event) => {
-          const eventDate =
-            new Date(event.eventDate?.seconds * 1000) || event.eventDate;
-          return eventDate < new Date(); // Check if the event date is before the current date
-        })
-        .slice(0, 3)
+      .filter((event) => {
+        const eventDate =
+          new Date(event.eventDate?.seconds * 1000) || event.eventDate;
+        return eventDate < new Date(); // Check if the event date is before the current date
+      })
+      .slice(0, 3)
     : [];
 
   useEffect(() => {
@@ -291,18 +291,20 @@ function HomePage() {
         {" "}
         <Landing scorllFuntion={handleOutreachRef} />
       </div>
-      
+
       <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
         <Success2 />
       </div>
 
-      <UpcomingOutreachEvents 
-        events = {events}
-        isLoading={isLoading}
-        isError={isError}
-        openModal={openModal}
-        loggedIn={loggedIn}
-      />
+      <div ref={outreachRef}>
+        <UpcomingOutreachEvents
+          events={events}
+          isLoading={isLoading}
+          isError={isError}
+          openModal={openModal}
+          loggedIn={loggedIn}
+        />
+      </div>
 
       {/* Past Outreach Events */}
       <PastOutreachEvents
@@ -311,12 +313,12 @@ function HomePage() {
         isError={isError.events}
       />
 
-      
+
 
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8  rounded-2xl bg-white text-black ">
         <Process2 />
       </div>
-     
+
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
         <Map />
       </div>
@@ -351,16 +353,16 @@ function HomePage() {
         <FAQs />
       </div>
       <Modal open={!!selectedEvent}>
-        <OutreachSignupModal data={{...selectedEvent}} closeModal={closeModal} onSignUp={onSignUp} onEventWithdraw={onEventWithdraw}/>
+        <OutreachSignupModal data={{ ...selectedEvent }} closeModal={closeModal} onSignUp={onSignUp} onEventWithdraw={onEventWithdraw} />
       </Modal>
       <Modal open={showSignUpModal}>
-       <RSVPConfirmationModal closeModal={closeSignUpModal} type='edit'/>
+        <RSVPConfirmationModal closeModal={closeSignUpModal} type='edit' />
       </Modal>
       <Modal open={showWithdrawnModal}>
-       <RSVPConfirmationModal closeModal={closeWithdrawModal} type='withdraw' />
+        <RSVPConfirmationModal closeModal={closeWithdrawModal} type='withdraw' />
       </Modal>
     </div>
-    
+
   );
 }
 

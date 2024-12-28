@@ -39,7 +39,7 @@ const OutreachEventCard = ({
   // Navigate to the outreach details page
   const detailOutreach = () => {
     navigate(`/outreachsignup/${id}`, {
-      state: { label: "EDIT" },
+      state: { label: "EDIT", isProfilePage },
     });
   };
 

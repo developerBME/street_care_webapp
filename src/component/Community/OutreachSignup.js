@@ -17,6 +17,8 @@ import verifiedGreen from "../../images/verified.png";
 import verifiedBlue from "../../images/verified_blue.png";
 import verifiedYellow from "../../images/verified_yellow.png";
 import DeleteModal from "./DeleteModal";
+import { isPast } from "date-fns";
+
 import {
   doc,
   deleteDoc,
@@ -41,6 +43,7 @@ const OutreachSignup = () => {
 
   const location = useLocation();
   const { label } = location.state || {};
+  const isProfilePage = location?.state?.isProfilePage || false;
 
   const eventDetails = [
     {
@@ -62,7 +65,7 @@ const OutreachSignup = () => {
         console.error(error.message);
       }
     };
-
+    console.log('ProfilePage status'+isProfilePage);
     getData(); // Invoke the async function
 
     if(label === 'EDIT') {
@@ -100,7 +103,7 @@ const OutreachSignup = () => {
 
   const deleteVisitLog = async () => {
     try {
-      const visitLogDoc = doc(db, "outreachEvents", id);
+      const visitLogDoc = doc(db, "outreachEventsDev", id);
 
       const userQuery = query(
         collection(db, USERS_COLLECTION),
@@ -295,11 +298,12 @@ const OutreachSignup = () => {
               <div className="h-10 bg-[#6840E0] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex">
                 {label === "EDIT" ? (
                   <>
-                    <CustomButton
+                    {isProfilePage &&(<CustomButton
                       label="Delete"
                       name="deleteButton"
                       onClick={() => setShowDeleteModal(true)}
                     />
+                    )}
                     {showDeleteModal && (
                       <DeleteModal
                         handleClose={() => setShowDeleteModal(false)}
