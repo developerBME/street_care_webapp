@@ -392,11 +392,13 @@ export const handleRsvp = async (
               participants: newParticipants,
             });
             console.log("successfully added to user to outreach collection");
+            // alert('Signed up for event')
           }
 
           // check if event exists in current user and add if not
           if (currentEvents.includes(id)) {
             console.log("Event exists for this user");
+            // alert("Event exists for this user");
           } else {
             const newEvents = [...currentEvents, id];
             const userDocUpdate = doc(db, USERS_COLLECTION, userDocID);
@@ -418,6 +420,7 @@ export const handleRsvp = async (
             console.log("successfully added outreach to users collection");
           }
           setLabel2("EDIT");
+          
         } catch (error) {
           console.log(error);
           logEvent("STREET_CARE_ERROR", `error on rsvp- ${error.message}`);
@@ -480,7 +483,8 @@ export const handleRsvp = async (
           // check if event exists in current user and remove if exists
           if (currentEvents.includes(id)) {
             console.log("removing from user");
-            navigate("/profile");
+            navigate(`/outreachsignup/${id}`);
+            // alert('Withdrew from event');
             const userDocUpdate = doc(db, USERS_COLLECTION, userDocID);
             const i = currentEvents.indexOf(id);
             if (i > -1) {
@@ -503,6 +507,7 @@ export const handleRsvp = async (
             console.log("event not found in the user");
           }
           setLabel2("RSVP");
+          
           if (typeof refresh == "function") {
             refresh();
           }

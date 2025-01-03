@@ -3,7 +3,7 @@ import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
 import CustomButton from "../Buttons/CustomButton";
 import arrowBack from "../../images/arrowBack.png";
 
-const RSVPConfirmationModal = ({closeModal, type='edit'}) => {
+const RSVPConfirmationModal = ({closeModal, type/*='edit'*/}) => {
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-opacity-50 bg-gray-800 z-50">
@@ -17,7 +17,7 @@ const RSVPConfirmationModal = ({closeModal, type='edit'}) => {
                 <DoneOutlinedIcon sx={{ fontSize: 85 }} style={{ color: '#fff' }}/>
               </div>
             </div>
-            {type === "edit" ? (
+            {type === "EDIT" ? (
               <div className="justify-self-end items-start gap-20 sm:gap-6 w-full flex justify-center items-center flex-col">
                 <div className="w-fit text-[#212121] text-4xl font-medium font-bricolage leading-[44px]">
                   You have successfully signed up for the event!
