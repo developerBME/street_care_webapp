@@ -3,7 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 //import verifiedImg from "../../images/verified_purple.png";
 import wavingHand from "../../images/waving_hand.png";
 import CustomButton from "../Buttons/CustomButton";
-import { fetchEventById, handleRsvp } from "../EventCardService";
+import { fetchEventById, handleRsvp, fetchUserSignedUpOutreaches } from "../EventCardService";
+import { fetchUserName } from "../HelperFunction";
 import { Co2Sharp } from "@mui/icons-material";
 import defaultImage from "../../images/default_avatar.svg";
 import RSVPConfirmationModal from "../UserProfile/RSVPConfirmationModal";
@@ -35,7 +36,8 @@ const USERS_COLLECTION = "users";
 const OutreachSignup = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [label2, setLabel2] = useState("RSVP");
+  const [label2, setLabel2] = useState("");
+  const [modalLabel, setModalLabel] = useState("");
   const [success, setSuccess] = useState(false);
   const fAuth = getAuth();
  
@@ -53,36 +55,76 @@ const OutreachSignup = () => {
   ];
 
   const [data, setData] = useState(null);
+  const [userSignedUpOutreaches, setUserSignedUpOutreaches] = useState(null);
+
+  const handleRefresh = () => {
+    window.location.reload();
+  };
 
   useEffect(() => {
     const getData = async () => {
       try {
         const result = await fetchEventById(id);
         setData(result);
-        console.log(result);
-        console.log(result.eventDate);
+        
+        // console.log(result);
+        // console.log(result.eventDate);
+        // console.log(result.location);
       } catch (error) {
         console.error(error.message);
       }
     };
    console.log('ProfilePage status'+isProfilePage);
 
-    getData(); // Invoke the async function
+    
 
-    if(label === 'EDIT') {
-      setLabel2('EDIT');
-    }
-  }, []);
+    getData(); // Invoke the async function
+    
+
+    // if(label2 === 'EDIT') {
+    //   setLabel2('EDIT');
+    // } else if (label2 === 'RSVP'){
+    //   setLabel2('RSVP');
+    // }
+  }, [data]);
 
   const [showModal, setShowModal] = useState(false);
 
-  const handleEditClick = () => {
+  const handleShowModal = () => {
     setShowModal(true);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
   };
+
+  useEffect(()=>{
+    const getUserSignedUpOutreaches = async () => {
+      try {
+        const result = await fetchUserSignedUpOutreaches(fAuth?.currentUser?.uid);
+        setUserSignedUpOutreaches(result);
+        // console.log(result);
+        // console.log(result.eventDate);
+        // console.log(result.location);
+      } catch (error) {
+        console.error(error.message);
+      }
+    }   
+    getUserSignedUpOutreaches();
+      // console.log(fAuth.currentUser.uid);
+      const eventIds = userSignedUpOutreaches?.map(event => event.id);
+      // console.log(eventIds);   
+      
+
+      const isSignedUp = eventIds?.includes(id);
+      // console.log(isSignedUp);
+      if(isSignedUp){
+        setLabel2('EDIT')
+      }else{
+        setLabel2('RSVP')
+      }
+
+  }, [data])
 
   let verifiedImg;
   if (data) {
@@ -138,7 +180,7 @@ const OutreachSignup = () => {
         <div className="items-center justify-center px-12 py-8 lg:px-32 lg:py-24 h-full w-full rounded-3xl bg-[#F8F9F0] grid grid-cols-1">
           <div className="w-fit h-fit flex-col justify-start items-start gap-16 inline-flex">
             <div className="w-fit text-[#212121] text-[45px] font-medium font-inter leading-[52px]">
-              Sign Up For Community Outreach
+              Sign Up For Community Outreach 
             </div>
             <div className="self-stretch h-fit bg-[#F5EDFA] rounded-[30px] flex-col justify-start items-start flex">
               <div className="self-stretch h-fit px-6 pt-9 pb-3 flex-col justify-start items-start gap-2.5 flex">
@@ -212,7 +254,7 @@ const OutreachSignup = () => {
                     <img className="w-[12px] h-[15px] my-[3px]" src={locate} />
                     {data ? (
                       <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
-                        {data.location.city}, {data.location.state}
+                        {data.location.street},{data.location.city}, {data.location.stateAbbv}, {data.location.zipcode}
                       </div>
                     ) : (
                       <div className="self-stretch text-[#444746] text-sm font-normal font-inter leading-snug">
@@ -295,60 +337,89 @@ const OutreachSignup = () => {
               </div>
             </div>
 
-            <div className="justify-start items-start gap-[15px] inline-flex">
-              <div className="h-10 bg-[#6840E0] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex">
-                {label === "EDIT" ? (
-                  <>
-                   {isProfilePage  &&( <CustomButton
-                      label="Delete"
-                      name="deleteButton"
-                      onClick={() => setShowDeleteModal(true)}
-                    />
-                  )}
-                    {showDeleteModal && (
-                      <DeleteModal
-                        handleClose={() => setShowDeleteModal(false)}
-                        handleDelete={deleteVisitLog}
-                        
-                        modalMsg={`Are you sure you want to delete this visit log?`}
+            {data ? (
+                  <div className="justify-start items-start gap-[15px] inline-flex">
+                  <div className="h-10 bg-[#6840E0] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex">
+                    {label2 === "EDIT" ? (
+                      <>
+                      <CustomButton
+                        label="Withdraw"
+                        name="buttondefault"
+                        onClick={(e) => {
+                          handleRsvp(
+                            e,
+                            id,
+                            "EDIT",
+                            navigate,
+                            "EDIT",
+                            setLabel2,
+                            false
+                          );
+                          // setSuccess(true);
+                          setModalLabel("RSVP");
+                          handleShowModal();                      
+                      }}
+                      />
+                      
+                        {/* <CustomButton
+                          label="Delete"
+                          name="deleteButton"
+                          onClick={() => setShowDeleteModal(true)}
+                        />
+                        {showDeleteModal && (
+                          <DeleteModal
+                            handleClose={() => setShowDeleteModal(false)}
+                            handleDelete={deleteVisitLog}
+                            modalMsg={`Are you sure you want to delete this visit log?`}
+                          />
+                        )} */}
+                      </>
+                    ) : (
+                      <CustomButton
+                        label="Sign Up"
+                        name="buttondefault"
+                        onClick={(e) => {
+                          handleRsvp(
+                            e,
+                            id,
+                            "RSVP",
+                            navigate,
+                            "RSVP",
+                            setLabel2,
+                            false,                            
+                          );
+                          // console.log(data);
+                          // setSuccess(true);
+                          setModalLabel("EDIT");   
+                          handleShowModal();
+                                                 
+                        }}
                       />
                     )}
-
-                  </>
-                ) : (
-                  <CustomButton
-                    label="Sign Up"
-                    name="buttondefault"
-                    onClick={(e) => {
-                      handleRsvp(
-                        e,
-                        id,
-                        "RSVP",
-                        navigate,
-                        "RSVP",
-                        setLabel2,
-                        false
-                      );
-                      setSuccess(true);
+                  </div>
+    
+                  <div
+                    className="h-10 bg-[#000]] rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 inline-flex"
+                    onClick={() => {
+                      navigate("/");
                     }}
-                  />
-                )}
-              </div>
+                  >
+                    <div className="self-stretch grow shrink basis-0 px-6 py-2.5 justify-center items-center gap-2 inline-flex">
+                      <button className="text-center text-[#1F0A58] text-sm font-medium font-inter leading-tight">
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                  {showModal && <RSVPConfirmationModal closeModal={handleCloseModal} type={modalLabel}/>}
 
-              <div
-                className="h-10 bg-[#000]] rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 inline-flex"
-                onClick={() => {
-                  navigate("/");
-                }}
-              >
-                <div className="self-stretch grow shrink basis-0 px-6 py-2.5 justify-center items-center gap-2 inline-flex">
-                  <button className="text-center text-[#1F0A58] text-sm font-medium font-inter leading-tight">
-                    Go Back
-                  </button>
+          
                 </div>
-              </div>
-              {success && <RSVPConfirmationModal />}
-            </div>
+                ) : (
+                  <div className="self-stretch text-[#212121] text-2xl font-medium font-inter leading-loose">
+                    Loading...
+                  </div>
+                )}
+            
           </div>
         </div>
       </div>
