@@ -30,6 +30,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
+import { isPast } from "date-fns";
 const USERS_COLLECTION = "users";
 
 const OutreachSignup = () => {
@@ -39,10 +40,12 @@ const OutreachSignup = () => {
   const [modalLabel, setModalLabel] = useState("");
   const [success, setSuccess] = useState(false);
   const fAuth = getAuth();
+ 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const location = useLocation();
   const { label } = location.state || {};
+  const isProfilePage = location?.state?.isProfilePage || false;
 
   const eventDetails = [
     {
@@ -71,6 +74,7 @@ const OutreachSignup = () => {
         console.error(error.message);
       }
     };
+   console.log('ProfilePage status'+isProfilePage);
 
     
 
@@ -148,6 +152,7 @@ const OutreachSignup = () => {
         collection(db, USERS_COLLECTION),
         where("uid", "==", fAuth?.currentUser?.uid)
       );
+      
       const userDocRef = await getDocs(userQuery);
 
       const userDocID = userDocRef.docs[0].id;
@@ -406,6 +411,8 @@ const OutreachSignup = () => {
                     </div>
                   </div>
                   {showModal && <RSVPConfirmationModal closeModal={handleCloseModal} type={modalLabel}/>}
+
+          
                 </div>
                 ) : (
                   <div className="self-stretch text-[#212121] text-2xl font-medium font-inter leading-loose">

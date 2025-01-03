@@ -9,6 +9,7 @@ import {
   orderBy,
   limit,
   updateDoc,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { debounce } from "lodash";
@@ -185,6 +186,32 @@ export default function UserListNew() {
       alert(`Failed to update Chapter Leader status.`);
     }
   };
+
+  //test
+  const toggleInternalMember = async (email, docId) => {
+    const isInternalMember = false;  
+    try {
+      const userDocRef = doc(db, "users", docId);
+      const userDoc = await getDoc(userDocRef);
+      if (!userDoc.exists()) {
+        console.error(`No user found with docId ${docId}`);
+        return;
+      }
+  
+      const userData = userDoc.data();
+      if (!isInternalMember || userData.Type !== "Internal Member") {
+        await updateDoc(userDocRef, { Type: "Internal Member" });
+        console.log(`User with email ${email} is now an Internal Member.`);
+      } else {
+        await updateDoc(userDocRef, { Type: "" });
+        console.log(`User with email ${email} is no longer an Internal Member.`);
+      }
+    } catch (error) {
+      console.error(`Error updating Internal Member status for user with docId ${docId}:`, error);
+    }
+  };
+
+
   const debouncedSearchChange = useMemo(
     () =>
       debounce((value) => {
