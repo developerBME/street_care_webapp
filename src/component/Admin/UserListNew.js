@@ -209,6 +209,48 @@ export default function UserListNew() {
     }
   };
 
+
+//UserType Status change
+const changeUserType = async (email, docId, Type) => {
+  try {
+    if (!email || !docId || !Type) {
+      throw new Error("Invalid input: All parameters (email, docId, Type) are required.");
+    }
+
+    // Validate the userType
+    const validUserTypes = ["Chapter Leader", "Internal Member", "Chapter Member"];
+    if (!validUserTypes.includes(Type)) {
+      throw new Error(`Invalid Type: "${Type}" is not a recognized user type.`);
+    }
+
+    // Get a reference to the user's document
+    const userDocRef = doc(db, "users", docId);
+
+    // Check if the document exists
+    const userDocSnapshot = await getDoc(userDocRef);
+    if (!userDocSnapshot.exists()) {
+      throw new Error(`User document with ID "${docId}" does not exist.`);
+    }
+
+    // Validate if the email matches the document
+    const userData = userDocSnapshot.data();
+    if (userData.email !== email) {
+      throw new Error(
+        `Email mismatch: Provided email "${email}" does not match the email in Firestore ("${userData.email}").`
+      );
+    }
+
+    // Update the user type in the document
+    await updateDoc(userDocRef, { Type });
+
+    console.log(`User type updated successfully to "${Type}" for email: ${email}`);
+  } catch (error) {
+      console.error("Error updating user type:", error.message || error);
+      alert(`Error: ${error.message}`); 
+  }
+};
+
+
   //test
   const toggleInternalMember = async (email, docId) => {
     const isInternalMember = false;
