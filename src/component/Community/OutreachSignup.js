@@ -42,6 +42,8 @@ const OutreachSignup = () => {
   const fAuth = getAuth();
  
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [hasCreated, setHasCreated] = useState(false);
+
 
   const location = useLocation();
   const { label } = location.state || {};
@@ -123,6 +125,13 @@ const OutreachSignup = () => {
       }else{
         setLabel2('RSVP')
       }
+
+      if (data?.uid === fAuth?.currentUser?.uid){
+        setHasCreated(true)
+      }else{
+        setHasCreated(false)
+      }
+
 
   }, [data])
 
@@ -410,6 +419,18 @@ const OutreachSignup = () => {
                       </button>
                     </div>
                   </div>
+                  {hasCreated && <CustomButton
+                          label="Delete"
+                          name="deleteButton"
+                          onClick={() => setShowDeleteModal(true)}
+                        />}
+                  {showDeleteModal && (
+                          <DeleteModal
+                            handleClose={() => setShowDeleteModal(false)}
+                            handleDelete={deleteVisitLog}
+                            modalMsg={`Are you sure you want to delete this visit log?`}
+                          />
+                        )}
                   {showModal && <RSVPConfirmationModal closeModal={handleCloseModal} type={modalLabel}/>}
 
           
