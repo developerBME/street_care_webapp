@@ -30,6 +30,7 @@ export const fetchVisitLogs = async () => {
     const visitLogSnapshot = await getDocs(visitLogsRef);
     let visitLogs = [];
     for (const doc of visitLogSnapshot.docs) {
+      
       const visitLogData = doc.data();
       const outreachEventId = visitLogData.outreachEvent || "";
       const outreachEventData = await fetchOutreachEventData(outreachEventId);
@@ -50,6 +51,7 @@ export const fetchVisitLogs = async () => {
         photoUrl: userDetails.photoUrl,
         totalSlots: outreachEventData?.totalSlots || "",
         filledSlots: outreachEventData?.filledSlots || "",
+        status: visitLogData.status || "",
       });
     }
     return visitLogs;
@@ -156,7 +158,6 @@ export const fetchVisitLogById = async (visitLogId) => {
     const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
     const visitLogSnap = await getDoc(visitLogRef);
     let visitLogs = await visitLogHelperFunction(visitLogSnap);
-
     return visitLogs[0];
   } catch (error) {
     logEvent(
@@ -263,7 +264,8 @@ export const fetchPublicVisitLogs = async () => {
     const visitLogsRef = query(
       collection(db, PERSONAL_VISIT_LOG_COLLECTION),
       where("public", "==", true),
-      where("status", "==", "approved")
+      // where("status", "==", "approved"),
+      where("status", "in", ["approved", "flagged","unflagged"]),
     );
     const visitLogSnapshot = await getDocs(visitLogsRef);
     let visitLogs = await visitLogHelperFunction(visitLogSnapshot);

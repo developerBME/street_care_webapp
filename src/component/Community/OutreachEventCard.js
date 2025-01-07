@@ -50,12 +50,28 @@ const OutreachEventCard = ({
 		});
 	};
 	
+	const [isFlagged, setIsFlagged] = useState(false);
+	const handleFlag = (e) => {
+    e.stopPropagation();
+    setIsFlagged(!isFlagged);
+  };
+
+  const flagIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAA6ElEQVR4nO2UQQrCMBBFc6QeoVfoEbzHdOtGEOpSUHDhQrEX8B5V8QieoFYtaDeCG0GYQgptTJNJU3DhgyEs8v7LZCYJgr8BKANt4ARcgRswA6rG/DowBO7AHtgBOWADPIEWX1IGNvz2ZQ8UjLWkT5I8IueaIeeaIefKXSrxk8g5Lc9zsRYVoEiUpYX4IK7mXeAAbCPPRig+VYDzwFzMRd7JM1O8B4wj5xkwAfpC9bGIrqZOkgMwFvNRvCdVx+IzoCFDYCF+Ulyy3FTdWqKVuHicgUH8k4oNgZY4kC5KP9AAykHw63wAhiiFfJYHnzoAAAAASUVORK5CYII="
+
 
 	return (
 		<div
 			className="bg-[#F5EEFE] min-w-full max-w-[320px] lg:w-full rounded-[30px] mb-4 flex flex-col justify-between p-6 cursor-pointer"
 			onClick={openModal}
 		>
+			<img 
+        onClick={handleFlag}
+        src={flagIcon} 
+        alt="flag"
+        className={`absolute top-4 right-4 w-5 h-5 cursor-pointer ${
+          isFlagged ? 'filter-none' : 'opacity-50'
+        }`}
+      />
 			{!isProfilePage && !isPastEvent ? (
 				<div className="inline-flex items-center space-x-2 ">
 					<img

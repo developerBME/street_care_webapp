@@ -245,11 +245,10 @@ useEffect(() => {
   setCurrentPage(1);
 }, [activeTab]);
 
-// Tab switching logic
 const handleTabChange = (tab) => {
   setActiveTab(tab);
+  setCurrentPage(1);
 };
-
 // Render pagination buttons with ellipsis style
 const renderPaginationButtons = () => {
   const totalPages = Math.ceil(pendingPosts[activeTab].length / postsPerPage);
@@ -268,10 +267,6 @@ const renderPaginationButtons = () => {
     pages.push(1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages);
   }
 
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
-    setCurrentPage(1);
-  };
 
   return (
     <div className="flex items-center space-x-1 text-sm">
