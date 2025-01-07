@@ -1,37 +1,31 @@
 import React, { useState, useEffect, useRef } from "react";
-import OutreachEventCard from "./Community/OutreachEventCard";
-import { fetchEvents } from "./EventCardService";
+import OutreachEventCard from "../Community/OutreachEventCard";
+import { fetchEvents } from "../EventCardService"; 
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
+import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import { Modal } from "@mui/material";
-import OutreachSignupModal from "./Community/OutreachSignupModal";
-import RSVPConfirmationModal from "./UserProfile/RSVPConfirmationModal";
+import OutreachSignupModal from "../Community/OutreachSignupModal";
+import RSVPConfirmationModal from "../UserProfile/RSVPConfirmationModal";
 import { parse } from "date-fns";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { formatDate } from "./HelperFunction";
-import Pagination from "./Pagination";
-import verifiedPurple from "../images/verified_purple.png";
-import verifiedGreen from "../images/verified.png";
-import verifiedBlue from "../images/verified_blue.png";
-import verifiedYellow from "../images/verified_yellow.png"
-
-// Main component for displaying all outreach events
-const AllOutreachEvents = ({ loggedIn }) => {
+import { formatDate } from "../HelperFunction"; 
+import Pagination from "../Pagination";
+const AdminOutreachEvents = () => {
 
   const renderPaginationButtons = () => {
     const buttons = [];
     const pageRange = 1;
 
-    if (currentPage > 1) {
+    if (currentPage > 1) { 
       buttons.push(
         <button
           key="prev"
           onClick={() => onPageChange(currentPage - 1)}
           className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
         >
-          <IoIosArrowBack />
+          <IoIosArrowBack/>
         </button>
       );
     }
@@ -54,8 +48,9 @@ const AllOutreachEvents = ({ loggedIn }) => {
         <button
           key={i}
           onClick={() => onPageChange(i)}
-          className={`mx-1 px-3 py-1 rounded-full ${currentPage === i ? "bg-[#1F0A58] text-white" : "bg-gray-200 text-gray-600"
-            }`}
+          className={`mx-1 px-3 py-1 rounded-full ${
+            currentPage === i ? "bg-[#1F0A58] text-white" : "bg-gray-200 text-gray-600"
+          }`}
         >
           {i}
         </button>
@@ -82,7 +77,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
           onClick={() => onPageChange(currentPage + 1)}
           className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
         >
-          <IoIosArrowForward />
+          <IoIosArrowForward/>
         </button>
       );
     }
@@ -91,6 +86,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
   };
 
   // State variables
+  const [allEvents, setAllEvents] = useState([]); //Stores all the events when first loaded from database
   const [events, setEvents] = useState([]); // Stores all events
   const [eventsDisplay, setEventsDisplay] = useState([]); // Stores events to be displayed based on search and pagination
   const [isLoading, setIsLoading] = useState(true); // Loading state for fetching events
@@ -108,6 +104,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
   const [triggerEffect, setTriggerEffect] = useState(false);
 
   const [filterOption, setfilterOption] = useState("");
+  const [timeframeOption, setTimeframeOption] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(
     new Date().setDate(new Date().getDate() + 7)
@@ -119,15 +116,84 @@ const AllOutreachEvents = ({ loggedIn }) => {
     setfilterOption(filterBy);
   };
 
+  const handleTimeframeChange = (e) => {
+
+    const timeframe = e.target.value;
+    setTimeframeOption(timeframe)
+    if (timeframe === 'all'){
+            // setEvents(events)
+            setEventsDisplay(allEvents)
+        }
+        else if (timeframe === 'past'){
+            const pastEvents = allEvents.filter((event) => {
+                const eventDate = event?.eventDate?.seconds
+                  ? new Date(event.eventDate.seconds * 1000)
+                  : event.eventDate;
+                return eventDate < new Date();
+              });
+              setEvents(pastEvents)
+            setEventsDisplay(pastEvents)
+        }
+        else if (timeframe === 'upcoming'){
+            const upcomingEvents = allEvents.filter((event) => {
+                const eventDate = event?.eventDate?.seconds
+                  ? new Date(event.eventDate.seconds * 1000)
+                  : event.eventDate;
+                return eventDate >= new Date();
+              });
+              setEvents(upcomingEvents)
+            setEventsDisplay(upcomingEvents)
+        }
+    
+    
+
+    // setEventsDisplay(events);
+    // const timeframe = e.target.value;
+    // setTimeframeOption(timeframe)
+
+    // const pastEvents = events.filter((event) => {
+    //             const eventDate = event?.eventDate?.seconds
+    //               ? new Date(event.eventDate.seconds * 1000)
+    //               : event.eventDate;
+    //             return eventDate < new Date();
+    //           });
+    // setEventsDisplay(pastEvents)
+
+    // const timeframe = e.target.value;
+    // setTimeframeOption(timeframe);
+    // if (timeframe === 'All'){
+    //     setEventsDisplay(events)
+    // }
+    // else if (timeframe === 'Past Events'){
+    //     const pastEvents = events.filter((event) => {
+    //         const eventDate = event?.eventDate?.seconds
+    //           ? new Date(event.eventDate.seconds * 1000)
+    //           : event.eventDate;
+    //         return eventDate < new Date();
+    //       });
+    //     setEventsDisplay(pastEvents)
+    // }
+    // else if (timeframe === 'Future Events'){
+    //     const futureEvents = events.filter((event) => {
+    //         const eventDate = event?.eventDate?.seconds
+    //           ? new Date(event.eventDate.seconds * 1000)
+    //           : event.eventDate;
+    //         return eventDate >= new Date();
+    //       });
+    //     setEventsDisplay(futureEvents)
+    // }
+  };
+
+  
+
   const loadMore = () => {
     setVisibleCards((prev) => prev + 12);
   };
 
   const openModal = (event) => {
-    if (loggedIn) {
-      setSelectedEvent(event);
-    }
+    setSelectedEvent(event);
   };
+
   const closeModal = () => {
     setSelectedEvent(null);
   };
@@ -156,16 +222,17 @@ const AllOutreachEvents = ({ loggedIn }) => {
 
   const fetchData = async () => {
     const eventsData = await fetchEvents();
-    const upcomingEvents = eventsData.filter((event) => {
+    const allEvents = eventsData.filter((event) => {
       if (!event.eventDate || !event.eventDate.seconds) {
         return false; // Skip events with undefined eventDate or seconds
       }
-      const eventDate = new Date(event.eventDate.seconds * 1000);
-      return eventDate >= new Date(); // Filter only upcoming events
+    //   const eventDate = new Date(event.eventDate.seconds * 1000);
+      return event  // Filter only upcoming events >= new Date();
     });
     // Sort events by date
-    upcomingEvents.sort((a, b) => a.eventDate - b.eventDate);
-    setEvents(upcomingEvents);
+    allEvents.sort((a, b) => a.eventDate - b.eventDate);
+    setAllEvents(allEvents);
+    setEvents(allEvents);
     setIsLoading(false); // Set loading to false after fetching data
   };
 
@@ -181,11 +248,6 @@ const AllOutreachEvents = ({ loggedIn }) => {
   useEffect(() => {
     setEventsDisplay(events);
   }, [events]);
-
-  useEffect(() => {
-    console.log("Is user logged in? ", loggedIn); // Correctly logs true/false
-    // Fetch events logic
-  }, [loggedIn]);
 
   // Handle search input change
   const searchChange = () => {
@@ -259,12 +321,12 @@ const AllOutreachEvents = ({ loggedIn }) => {
         <div
           className="absolute flex mt-[-50px] items-center cursor-pointer"
           onClick={() => {
-            navigate("/");
+            navigate("/admin");
           }}
         >
           <IoIosArrowBack className="w-6 h-6" />
           <p className="font-bricolage text-xl font-bold leading-7">
-            Return to Home
+            Return to Admin
           </p>
         </div>
 
@@ -273,10 +335,25 @@ const AllOutreachEvents = ({ loggedIn }) => {
           <div className="lg:flex gap-1 justify-between mb-12">
             <div className="">
               <p className="font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] lg:mt-2">
-                Upcoming outreach events
+                All Outreach Events
               </p>
             </div>
             <div className="flex items-center gap-4 mt-6 lg:mt-0">
+            {/* All/Past/Upcoming Outreach Events */}
+            <div className="flex items-center mt-6 lg:mt-0">                
+                <select
+                  value={timeframeOption}
+                  onChange={handleTimeframeChange}
+                  className="form-select w-fit md:w-9rem] py-2 px-2 border border-[#CACACA] text-gray-500 bg-white appearance-none block rounded-2xl"
+                  style={{ borderRadius: "0px" }}
+                >
+                  <option value="all">All</option>
+                  <option value="past">Past Events</option>
+                  <option value="upcoming">Upcoming Events</option>
+                </select>
+              </div>
+                
+
               {/* Search input */}
               <label className="relative text-gray-400 focus-within:text-gray-600">
                 <input
@@ -318,7 +395,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
                 >
                   <option value="">None</option>
                   <option value="datePeriod">Date Period</option>
-                  <option value="city">City</option>
+                  <option value="city">City</option>                  
                 </select>
               </div>
 
@@ -360,51 +437,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
                   />
                 </div>
               )}
-            </div>
-          </div>
-
-          <div className="flex items-center justify-start space-x-4 mt-4">
-            {/* Chapter Leader */}
-            <div className="flex items-center space-x-2">
-              <img
-                src={verifiedGreen}
-                alt="Chapter Leader"
-                className="w-6 h-6"
-              />
-              <span className="text-sm font-medium text-gray-700">
-                Chapter Leader
-              </span>
-            </div>
-            {/* Chapter Member */}
-            <div className="flex items-center space-x-2">
-              <img
-                src={verifiedPurple}
-                alt="Chapter Member"
-                className="w-6 h-6"
-              />
-              <span className="text-sm font-medium text-gray-700">
-                Chapter Member
-              </span>
-            </div>
-            {/* Internal Member */}
-            <div className="flex items-center space-x-2">
-              <img
-                src={verifiedBlue}
-                alt="Internal Member"
-                className="w-6 h-6"
-              />
-              <span className="text-sm font-medium text-gray-700">
-                Internal Member
-              </span>
-            </div>
-            {/* Other */}
-            <div className="flex items-center space-x-2">
-              <img
-                src={verifiedYellow}
-                alt="Other"
-                className="w-6 h-6"
-              />
-              <span className="text-sm font-medium text-gray-700">Other</span>
+              
             </div>
           </div>
 
@@ -444,12 +477,11 @@ const AllOutreachEvents = ({ loggedIn }) => {
                         ...eventData,
                         eventDate: eventData.eventDate?.seconds
                           ? formatDate(
-                            new Date(eventData.eventDate.seconds * 1000)
-                          )
+                              new Date(eventData.eventDate.seconds * 1000)
+                            )
                           : eventData.eventDate,
                       })
                     }
-                    loggedIn={loggedIn}
                   />
                 ))
               ) : (
@@ -493,4 +525,4 @@ const AllOutreachEvents = ({ loggedIn }) => {
   );
 };
 
-export default AllOutreachEvents;
+export default AdminOutreachEvents;

@@ -5,10 +5,14 @@ import defaultImage from "../../images/default_avatar.svg";
 import { fetchVisitLogById } from "../VisitLogCardService";
 import date from "../../images/date.png";
 import locate from "../../images/location.png";
-import verifiedImg from "../../images/verified_purple.png";
+//import verifiedImg from "../../images/verified_purple.png";
 import { formatDate } from "../helper";
 import CardTags from "./CardTags";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
+import verifiedPurple from "../../images/verified_purple.png";
+import verifiedGreen from "../../images/verified.png";
+import verifiedBlue from "../../images/verified_blue.png";
+import verifiedYellow from "../../images/verified_yellow.png";
 
 const VisitLogDetails = () => {
   const navigate = useNavigate();
@@ -31,6 +35,24 @@ const VisitLogDetails = () => {
 
     getData(); // Invoke the async function
   }, [id]);
+
+  let verifiedImg;
+  if (data) {
+    switch (data.userType) {
+      case "Chapter Leader":
+        verifiedImg = verifiedGreen;
+        break;
+      case "Chapter Member":
+        verifiedImg = verifiedPurple;
+        break;
+      case "Internal Member":
+        verifiedImg = verifiedBlue;
+        break;
+      default:
+        verifiedImg = verifiedYellow;
+        break;
+    }
+  }
 
   return (
     <div className="relative flex flex-col items-center ">

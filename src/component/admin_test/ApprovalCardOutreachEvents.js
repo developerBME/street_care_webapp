@@ -2,11 +2,15 @@ import React from "react";
 import calendarIcon from "../../images/calendar_month.svg";
 import locationIcon from "../../images/location_on.svg";
 import { formatDate } from "../HelperFunction";
+import verifiedPurple from "../../images/verified_purple.png";
+import verifiedGreen from "../../images/verified.png";
+import verifiedBlue from "../../images/verified_blue.png";
+import verifiedYellow from "../../images/verified_yellow.png"
 
 const getTags = (postData, isVisitLogs) => {
   console.log("ApprovalCard postData:", postData);
   const tags = isVisitLogs ? postData?.whatGiven || [] : postData?.skills || [];
-  
+
   return tags.map((tag, index) => (
     <span
       key={index}
@@ -30,7 +34,7 @@ const getStatusStyle = (status) => {
   }
 };
 
-const ApprovalCard = ({
+const ApprovalCardOutreachEvents = ({
   postData,
   onToggleSelect,
   isSelected,
@@ -44,6 +48,23 @@ const ApprovalCard = ({
     : postData?.eventDate?.seconds
     ? formatDate(new Date(postData.eventDate.seconds * 1000))
     : "Unknown Date";
+    
+  let userImage = null;
+
+  switch (postData.userType) {
+    case "Chapter Leader":
+      userImage = verifiedGreen;
+      break;
+    case "Chapter Member":
+      userImage = verifiedPurple;
+      break;
+    case "Internal Member":
+      userImage = verifiedBlue;
+      break;
+    default:
+      userImage = verifiedYellow;
+      break;
+  }
 
   return (
     <div
@@ -61,6 +82,14 @@ const ApprovalCard = ({
         </span>
       </div>
 
+      {/* UserName Section */}
+      <div className="flex items-center space-x-2 mb-3">
+        <span className="text-sm text-[#37168B] font-medium">
+          {postData?.userName || "Unknown User"}
+        </span>
+        {userImage && <img alt="" src={userImage} className="w-5 h-5" />}
+      </div>
+
       {/* Top Section: Date and Location */}
       <div className="flex justify-between items-start">
         <div className="flex flex-col space-y-2">
@@ -76,8 +105,8 @@ const ApprovalCard = ({
           <div className="flex items-center space-x-2">
             <img alt="location" src={locationIcon} className="w-4 h-4" />
             <span className="text-sm text-[#37168B] font-medium">
-              {postData?.location?.city || "Unknown City"},{" "}
-              {postData?.location?.stateAbbv || postData?.location?.state || ""}
+              {postData?.location?.city || postData?.city || "Unknown City"},{" "}
+              {postData?.location?.stateAbbv || postData?.stateAbbv || ""}
             </span>
           </div>
         </div>
@@ -99,7 +128,7 @@ const ApprovalCard = ({
       {/* Middle Section: Title, Description, and Status */}
       <div className="mt-4">
         <h1 className="text-lg font-medium text-[#1F0A58] line-clamp-1">
-          {postData.title || "Event Title"}
+          {postData.title || postData.description || "Event Title"}
         </h1>
         <p className="text-sm text-[#444746] mt-2 line-clamp-2">
           {postData.description || "No description available."}
@@ -114,4 +143,4 @@ const ApprovalCard = ({
   );
 };
 
-export default ApprovalCard;
+export default ApprovalCardOutreachEvents;

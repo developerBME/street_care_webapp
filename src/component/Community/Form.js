@@ -208,8 +208,8 @@ const Form = (hrid) => {
         const isHelpReqFlow = !(typeof hrid.hrid == "undefined");
         const userDetails = await fetchUserTypeDetails(fAuth.currentUser.uid);
         let statusValue = 'pending'
-        if(userDetails.type == 'Chapter Leader') {
-            statusValue = 'approved'
+        if(userDetails.type == 'Chapter Leader' || userDetails.type == 'Internal Member') {
+          statusValue = 'approved'
         }
         try {
           let obj = {

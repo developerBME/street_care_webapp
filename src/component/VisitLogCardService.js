@@ -14,6 +14,7 @@ import {
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { fetchUserDetails } from "./EventCardService";
 import { fetchUserName, formatDate, getNumberOfPages } from "./HelperFunction";
+import { fetchUserDetailsBatch } from "./EventCardService";
 
 import logEvent from "./FirebaseLogger";
 
@@ -115,12 +116,18 @@ const visitLogHelperFunction = async (visitLogSnap) => {
   try {
     let visitLogs = [];
     const docsArray = visitLogSnap.docs ? visitLogSnap.docs : [visitLogSnap];
+
+    // Gather all unique user IDs
+    const userIds = [...new Set(docsArray.map((doc) => doc.data().uid))];
+
+    // Fetch user details in batch
+    const userCache = await fetchUserDetailsBatch(userIds);
+
     for (const doc of docsArray) {
       const visitLogData = doc.data();
-      //const outreachEventId = visitLogData.outreachEvent || "";
-      //const outreachEventData = await fetchOutreachEventData(outreachEventId);
       const uid = visitLogData.uid;
-      const userDetails = await fetchUserDetails(uid);
+      const userDetails = userCache[uid] || {};
+
       visitLogs.push({
         id: doc.id,
         whatGiven: visitLogData.whatGiven,
@@ -138,8 +145,9 @@ const visitLogHelperFunction = async (visitLogSnap) => {
         eventDate: visitLogData?.dateTime?.seconds
           ? formatDate(new Date(visitLogData.dateTime.seconds * 1000))
           : "",
-        userName: userDetails.username,
-        photoUrl: userDetails.photoUrl,
+        userName: userDetails.username || "",
+        photoUrl: userDetails.photoUrl || "",
+        userType: userDetails.userType || "",
       });
     }
     return visitLogs;
@@ -201,6 +209,7 @@ export const fetchTopVisitLogs = async () => {
     const visitlogs = collection(db, PERSONAL_VISIT_LOG_COLLECTION);
     const visitlogsQuery = query(
       visitlogs,
+      where("status", "==", "approved"), // Add condition to include only approved logs
       orderBy("dateTime", "desc"), // Order visit logs by the 'dateTime' field in descending order to get the newest entries first
       limit(6) // Limit to top 6 records
     );
@@ -463,3 +472,25 @@ export async function fetchUnapprovedVisitLogs() {
 // }
 
 // addTypeField();
+
+
+export const ToggleApproveStatus = async function (documentId) {
+  try {
+    const docRef = doc(db, "personalVisitLog", documentId);
+    const docSnap =  await getDoc(docRef);
+
+    if (!docSnap.exists()) {
+      console.log("Document not found");
+      return;
+    }
+    const data = docSnap.data();
+    let newApprovalStatus = data.approved === true ? false : true;
+    await updateDoc(docRef, { approved: newApprovalStatus });
+    console.log(
+      `Document with ID ${documentId} successfully updated. 'approved' field is now ${newApprovalStatus}.`
+    );
+  } catch (error) {
+    console.error("Error updating document:", error.message);
+  }
+};
+
