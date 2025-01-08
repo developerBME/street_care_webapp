@@ -43,15 +43,17 @@ export const fetchEvents = async () => {
     const outreachEvents = eventSnapshot.docs.map((doc) => {
       const eventData = doc.data();
       const currentParticipants = eventData.participants || [];
-      
+
       return {
         ...eventData,
         userName: userDetails[eventData.uid]?.username || "",
         photoUrl: userDetails[eventData.uid]?.photoUrl || "",
         id: doc.id,
-        label: fAuth.currentUser && currentParticipants.includes(fAuth?.currentUser?.uid)
-          ? "EDIT"
-          : "RSVP",
+        label:
+          fAuth.currentUser &&
+          currentParticipants.includes(fAuth?.currentUser?.uid)
+            ? "EDIT"
+            : "RSVP",
         nop: currentParticipants.length,
         userType: userDetails[eventData.uid]?.userType || "",
       };
@@ -59,8 +61,11 @@ export const fetchEvents = async () => {
 
     return outreachEvents;
   } catch (error) {
-    logEvent("STREET_CARE_ERROR", `error on fetchEvents in EventCardService.js- ${error.message}`);
-      throw error;
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchEvents in EventCardService.js- ${error.message}`
+    );
+    throw error;
   }
 };
 
@@ -319,6 +324,7 @@ export const fetchUserSignedUpOutreaches = async (uid) => {
               : "RSVP",
           nop: currentParticipants.length,
           photoUrl: photoUrl,
+          userType: result.userType,
         });
       }
     }
@@ -420,7 +426,6 @@ export const handleRsvp = async (
             console.log("successfully added outreach to users collection");
           }
           setLabel2("EDIT");
-          
         } catch (error) {
           console.log(error);
           logEvent("STREET_CARE_ERROR", `error on rsvp- ${error.message}`);
@@ -507,7 +512,7 @@ export const handleRsvp = async (
             console.log("event not found in the user");
           }
           setLabel2("RSVP");
-          
+
           if (typeof refresh == "function") {
             refresh();
           }
