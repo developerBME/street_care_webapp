@@ -89,7 +89,7 @@ function AdminFooter() {
               </li>
               <li class="mb-4">
                 <p class=" font-inter text-xs">
-                  (c) Bright Mind Enrichment and Schooling 2023 Street Care is a
+                  (c) Bright Mind Enrichment and Schooling {new Date().getFullYear()} Street Care is a
                   community wellness initiative of Bright Mind, a 501(c)(3)
                   nonprofit organization recipient of GuideStar's Gold, Silver
                   and Bronze Seals of Transparency, plus recognized by Vanguard
