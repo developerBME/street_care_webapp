@@ -41,15 +41,19 @@ const AllOutreachVisitLog = () => {
   const searchChange = () => {
     const searchValue = searchRef.current.value.toLowerCase();
     setFilteredVisitLogs(
-      visitLogs.filter(
-        (x) =>
-          x.title.toLowerCase().includes(searchValue) ||
-          x.userName.toLowerCase().includes(searchValue) ||
-          x.location.city.toLowerCase().includes(searchValue) ||
-          x.description.toLowerCase().includes(searchValue)
-      )
+      visitLogs.filter((x) => {
+        return (
+          (x.title && x.title.toLowerCase().includes(searchValue)) ||
+          (x.userName && x.userName.toLowerCase().includes(searchValue)) ||
+          (x.location?.city &&
+            x.location.city.toLowerCase().includes(searchValue)) ||
+          (x.description &&
+            x.description.toLowerCase().includes(searchValue))
+        );
+      })
     );
   };
+  
 
   const handleSortChange = (e) => {
     setFilteredVisitLogs(filteredVisitLogs);

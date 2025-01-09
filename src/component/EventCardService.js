@@ -51,15 +51,17 @@ import {
     const outreachEvents = eventSnapshot.docs.map((doc) => {
       const eventData = doc.data();
       const currentParticipants = eventData.participants || [];
-      
+
       return {
         ...eventData,
         userName: userDetails[eventData.uid]?.username || "",
         photoUrl: userDetails[eventData.uid]?.photoUrl || "",
         id: doc.id,
-        label: fAuth.currentUser && currentParticipants.includes(fAuth?.currentUser?.uid)
-          ? "EDIT"
-          : "RSVP",
+        label:
+          fAuth.currentUser &&
+          currentParticipants.includes(fAuth?.currentUser?.uid)
+            ? "EDIT"
+            : "RSVP",
         nop: currentParticipants.length,
         userType: userDetails[eventData.uid]?.userType || "",
       };
@@ -67,8 +69,11 @@ import {
 
     return outreachEvents;
   } catch (error) {
-    logEvent("STREET_CARE_ERROR", `error on fetchEvents in EventCardService.js- ${error.message}`);
-      throw error;
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchEvents in EventCardService.js- ${error.message}`
+    );
+    throw error;
   }
 };
 
@@ -345,6 +350,7 @@ export const fetchUserDetails = async (uid) => {
               : "RSVP",
           nop: currentParticipants.length,
           photoUrl: photoUrl,
+          userType: result.userType,
         });
       }
     }
@@ -422,12 +428,14 @@ export const fetchUserDetails = async (uid) => {
               participants: newParticipants,
             });
             console.log("successfully added to user to outreach collection");
+            // alert('Signed up for event')
           }
 
 
           // check if event exists in current user and add if not
           if (currentEvents.includes(id)) {
             console.log("Event exists for this user");
+            // alert("Event exists for this user");
           } else {
             const newEvents = [...currentEvents, id];
             const userDocUpdate = doc(db, USERS_COLLECTION, userDocID);
@@ -516,7 +524,8 @@ export const fetchUserDetails = async (uid) => {
           // check if event exists in current user and remove if exists
           if (currentEvents.includes(id)) {
             console.log("removing from user");
-            navigate("/profile");
+            navigate(`/outreachsignup/${id}`);
+            // alert('Withdrew from event');
             const userDocUpdate = doc(db, USERS_COLLECTION, userDocID);
             const i = currentEvents.indexOf(id);
             if (i > -1) {
@@ -539,6 +548,7 @@ export const fetchUserDetails = async (uid) => {
             console.log("event not found in the user");
           }
           setLabel2("RSVP");
+
           if (typeof refresh == "function") {
             refresh();
           }
