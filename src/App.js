@@ -7,6 +7,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { getDocs, collection, query, where } from "firebase/firestore";
 import { db } from "./component/firebase";
+import { UserProvider } from "./context/Usercontext.js";
 
 import Home from "./component/Home";
 import UserList from "./component/admin_test/UserList.js";
@@ -129,6 +130,7 @@ function App() {
   }, []);
 
   return (
+    <UserProvider>
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
       <Router>
         <ScrollToTop />
@@ -291,6 +293,7 @@ function App() {
         <Footer />
       </Router>
     </div>
+    </UserProvider>
   );
 }
 

@@ -1,31 +1,36 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 import defaultImage from "../../images/default_avatar.svg";
-//import verifiedImg from "../../images/verified_purple.png";
-import CustomButton from "../Buttons/CustomButton";
 import { useNavigate } from "react-router-dom";
-import EditModal from "./EditModal";
-import userSlots from "../../images/userSlots.png";
+import { doc, updateDoc, getDoc } from "firebase/firestore"; // Firestore functions
+import { db } from "../firebase"; // Firestore instance
+import flagSvg from "../../images/flag.svg"; // Flag icon
 import date from "../../images/date.png";
 import locate from "../../images/location.png";
 import { formatDate } from "../helper";
 import CardTags from "./CardTags";
-import HelpRequestCard from "./HelpRequestCard";
 import verifiedPurple from "../../images/verified_purple.png";
 import verifiedGreen from "../../images/verified.png";
 import verifiedBlue from "../../images/verified_blue.png";
-import verifiedYellow from "../../images/verified_yellow.png"
+import verifiedYellow from "../../images/verified_yellow.png";
+import { useUserContext } from "../../context/Usercontext.js";
+
+
+const PERSONAL_OUTREACH_COLLECTION = "outreachEvents"; // Collection name
+
+
+
 
 const OutreachEventCard = ({
   cardData,
   isProfilePage,
   isHelpRequestCard,
 }) => {
+  const { user } = useUserContext();
   const {
     id,
     userName,
     title,
-    status,
     eventDate,
     location,
     photoUrl,
@@ -36,10 +41,57 @@ const OutreachEventCard = ({
 
   const navigate = useNavigate();
 
+
+
+
+  // Initialize the isFlagged state
+  const [isFlagged, setIsFlagged] = useState(cardData?.isFlagged === "flagged");
+
+  const handleFlag = async (e) => {
+    e.stopPropagation(); // Prevent triggering parent click events
+    if (!user) {
+      console.error("User is not logged in.");
+      return;
+    }
+
+    console.log("User ID:", user.uid); 
+    try {
+      if (!id) {
+        console.error("Invalid cardData.id:", id);
+        return;
+      }
+
+      // Reference the document in Firestore
+      const docRef = doc(db, PERSONAL_OUTREACH_COLLECTION, id);
+
+      // Fetch current document data
+      const currentDoc = await getDoc(docRef);
+      if (!currentDoc.exists()) {
+        console.error("Document does not exist:", id);
+        return;
+      }
+
+      const currentStatus = currentDoc.data().isFlagged;
+
+      // Toggle the flag status
+      const newStatus = currentStatus === "flagged" ? "unflagged" : "flagged";
+
+      // Update the status in Firestore
+      await updateDoc(docRef, { isFlagged: newStatus });
+
+      console.log(`Document ${id} updated to ${newStatus}`);
+
+      // Update the local state
+      setIsFlagged(newStatus === "flagged");
+    } catch (error) {
+      console.error("Error toggling document flag status:", error);
+    }
+  };
+
   // Navigate to the outreach details page
   const detailOutreach = () => {
-    navigate(`/outreachsignup/${id}`,{
-      state: { label: "EDIT",isProfilePage },
+    navigate(`/outreachsignup/${id}`, {
+      state: { label: "EDIT", isProfilePage },
     });
   };
 
@@ -68,8 +120,19 @@ const OutreachEventCard = ({
       )}
       onClick={detailOutreach} // Always navigate to details page
     >
+      <div className="relative">
+        <img
+          onClick={handleFlag}
+          src={flagSvg}
+          alt="flag"
+          className={`absolute right-4 w-8 h-8 cursor-pointer rounded-full p-1 ${
+            isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
+          }`}
+        />
+      </div>
+
       {/* User Information */}
-      <div className="inline-flex items-center space-x-2 ">
+      <div className="inline-flex items-center space-x-2">
         <img
           alt=""
           src={photoUrl || defaultImage}
