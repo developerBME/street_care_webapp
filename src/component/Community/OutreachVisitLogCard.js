@@ -1,34 +1,56 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { doc, updateDoc, getDoc } from "firebase/firestore"; // Firestore functions
+import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
-import { fetchUserTypeDetails } from "../EventCardService"; // Import fetchUserTypeDetails
 import dateIcon from "../../images/date.png";
 import flagIcon from "../../images/flag.png";
+import infoIcon from "../../images/info_icon.png"; // Add an info icon image
 import locationIcon from "../../images/location.png";
-
-import verifiedImg from "../../images/verified_purple.png";
 import defaultImage from "../../images/default_avatar.svg";
 import { formatDate } from "../helper";
 import CardTags from "./CardTags";
 
-const PERSONAL_VISIT_LOG_COLLECTION = "personalVisitLog"; // Collection name
 import verifiedPurple from "../../images/verified_purple.png";
 import verifiedGreen from "../../images/verified.png";
 import verifiedBlue from "../../images/verified_blue.png";
-import verifiedYellow from "../../images/verified_yellow.png"
+import verifiedYellow from "../../images/verified_yellow.png";
 
+const PERSONAL_VISIT_LOG_COLLECTION = "personalVisitLog";
 
 const OutreachVisitLogCard = ({ visitLogCardData }) => {
   const navigate = useNavigate();
-  const [isFlagged, setIsFlagged] = useState(visitLogCardData?.status === "flagged");
+  const [isFlagged, setIsFlagged] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const currentUserType = visitLogCardData?.userType;
+
+  // Fetch flag info when component mounts
+  useEffect(() => {
+    const fetchFlagStatus = async () => {
+      try {
+        if (visitLogCardData?.id) {
+          const docRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogCardData.id);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            setIsFlagged(docSnap.data().isFlagged);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching flag status:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchFlagStatus();
+  }, [visitLogCardData?.id]);
 
   const handleViewDetails = () => {
     navigate(`/VisitLogDetails/${visitLogCardData.id}`);
   };
 
   let verifiedImg;
-  switch (visitLogCardData?.userType) {
+  switch (currentUserType) {
     case "Chapter Leader":
       verifiedImg = verifiedGreen;
       break;
@@ -39,46 +61,53 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
       verifiedImg = verifiedBlue;
       break;
     default:
-      verifiedImg = verifiedYellow; 
+      verifiedImg = verifiedYellow;
       break;
   }
 
   const handleFlag = async (e) => {
     e.stopPropagation(); // Prevent triggering parent click events
-
     try {
-      // Validate visitLogCardData.id
       if (!visitLogCardData?.id) {
-        console.error("Invalid visitLogCardData.id:", visitLogCardData?.id);
+        console.error("Invalid visitLogCardData.id");
         return;
       }
 
-      // Create a proper document reference for the visit log
       const docRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogCardData.id);
+      const docSnap = await getDoc(docRef);
 
-      // Fetch the current document data to check its status
-      const currentDoc = await getDoc(docRef);
-      if (!currentDoc.exists()) {
+      if (!docSnap.exists()) {
         console.error("Document does not exist:", visitLogCardData.id);
         return;
       }
 
-      const currentStatus = currentDoc.data().isFlagged;
+      const currentIsFlagged = docSnap.data().isFlagged;
 
-      // Toggle the status between "flagged" and "unflagged"
-      const newStatus = currentStatus === "flagged" ? "unflagged" : "flagged";
+      // Restrict unflagging to specific user types
+      if (currentIsFlagged && !(currentUserType === "Chapter Leader" || currentUserType === "Internal Member")) {
+        console.error("Only Chapter Leader or Internal Member can unflag this post.");
+        return;
+      }
 
-      // Update the status field in Firestore
-      await updateDoc(docRef, { isFlagged: newStatus });
+      // Toggle flag status
+      const newIsFlagged = !currentIsFlagged;
+      await updateDoc(docRef, { isFlagged: newIsFlagged });
 
-      console.log(`Document ${visitLogCardData.id} updated to ${newStatus}`);
-
-      // Update local state to reflect the change
-      setIsFlagged(newStatus === "flagged");
+      console.log(`Document ${visitLogCardData.id} updated to isFlagged: ${newIsFlagged}`);
+      setIsFlagged(newIsFlagged);
     } catch (error) {
-      console.error("Error toggling document flag status:", error);
+      console.error("Error toggling flag status:", error);
     }
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>; // Placeholder while loading flag status
+  }
+
+  // Restrict visibility of flagged logs
+  if (isFlagged && !(currentUserType === "Chapter Leader" || currentUserType === "Internal Member")) {
+    return null; // Do not render the card for unauthorized users
+  }
 
   return (
     <div
@@ -86,6 +115,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
       onClick={handleViewDetails}
     >
       <div className="relative">
+        {/* Flag Button */}
         <img
           onClick={handleFlag}
           src={flagIcon}
@@ -94,7 +124,21 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
             isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
           }`}
         />
-      </div>
+        
+        {/* Info Icon with Tooltip */}
+        <div className="absolute right-16 w-8 h-8 cursor-pointer rounded-full p-1 bg-gray-200 hover:bg-gray-300 group">
+          <img src={infoIcon} alt="info" />
+          {/* Tooltip */}
+          <div 
+    className="absolute -top-14 right-0 bg-black text-white text-xs rounded-md px-3 py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-30 whitespace-normal"
+    style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
+  >
+    If you feel this log is a spam, click on the flag.
+  </div>
+        </div>
+        </div>
+      
+      {/* Rest of the Component */}
       <div className="inline-flex items-center space-x-2">
         <img
           alt=""
@@ -106,15 +150,15 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
         </div>
         <img alt="" src={verifiedImg} className="w-5 h-5" />
       </div>
+      
       <div className="flex justify-between items-center mt-2">
         <div className="flex items-center">
           <img className="w-4 h-4" src={dateIcon} alt="Date" />
           <span className="ml-2 text-sm">
-            {visitLogCardData && visitLogCardData.eventDate
-              ? formatDate(visitLogCardData.eventDate)
-              : null}
+            {visitLogCardData?.eventDate ? formatDate(visitLogCardData.eventDate) : null}
           </span>
         </div>
+        
         <div className="flex items-center">
           <img className="w-3 h-4" src={locationIcon} alt="Location" />
           <span className="ml-2 text-sm">
@@ -126,19 +170,23 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
           </span>
         </div>
       </div>
+      
       <div className="flex justify-between items-center mt-4">
         <div className="text-sm font-bold">People Helped</div>
         <div className="text-xl font-bold">
           {visitLogCardData?.numberPeopleHelped}
         </div>
       </div>
+      
       <div className="flex justify-between items-center mt-2">
         <div className="text-sm font-bold">Items Donated</div>
         <div className="text-xl font-bold">{visitLogCardData?.itemQty}</div>
       </div>
+      
       <div className="mt-3">
         <CardTags tags={visitLogCardData?.whatGiven || []} />
       </div>
+      
       <p className="text-sm mt-2 line-clamp-2">
         {visitLogCardData?.description || ""}
       </p>
