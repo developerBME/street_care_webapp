@@ -42,6 +42,9 @@ const OutreachSignup = () => {
   const fAuth = getAuth();
  
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [hasCreated, setHasCreated] = useState(false);
+  const [isPastEvent, setIsPastEvent] = useState(false);
+
 
   const location = useLocation();
   const { label } = location.state || {};
@@ -67,25 +70,16 @@ const OutreachSignup = () => {
         const result = await fetchEventById(id);
         setData(result);
         
-        // console.log(result);
-        // console.log(result.eventDate);
-        // console.log(result.location);
       } catch (error) {
         console.error(error.message);
       }
     };
-   console.log('ProfilePage status'+isProfilePage);
+  //  console.log('ProfilePage status'+isProfilePage);
 
     
 
     getData(); // Invoke the async function
     
-
-    // if(label2 === 'EDIT') {
-    //   setLabel2('EDIT');
-    // } else if (label2 === 'RSVP'){
-    //   setLabel2('RSVP');
-    // }
   }, [data]);
 
   const [showModal, setShowModal] = useState(false);
@@ -103,9 +97,7 @@ const OutreachSignup = () => {
       try {
         const result = await fetchUserSignedUpOutreaches(fAuth?.currentUser?.uid);
         setUserSignedUpOutreaches(result);
-        // console.log(result);
-        // console.log(result.eventDate);
-        // console.log(result.location);
+        
       } catch (error) {
         console.error(error.message);
       }
@@ -124,7 +116,24 @@ const OutreachSignup = () => {
         setLabel2('RSVP')
       }
 
+      if (data?.uid === fAuth?.currentUser?.uid){
+        setHasCreated(true)
+      }else{
+        setHasCreated(false)
+      }
+
+      const timestamp = data?.eventStartTime.seconds *1000 + data?.eventStartTime.nanoseconds/1000000      
+      if(timestamp < Date.now()){
+        setIsPastEvent(true)
+      }
+      else{
+        setIsPastEvent(false)
+      }
+
+
   }, [data])
+
+  // console.log(isPastEvent)
 
   let verifiedImg;
   if (data) {
@@ -337,7 +346,7 @@ const OutreachSignup = () => {
               </div>
             </div>
 
-            {data ? (
+            {data && !(isPastEvent) ? (
                   <div className="justify-start items-start gap-[15px] inline-flex">
                   <div className="h-10 bg-[#6840E0] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex">
                     {label2 === "EDIT" ? (
@@ -401,7 +410,7 @@ const OutreachSignup = () => {
                   <div
                     className="h-10 bg-[#000]] rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 inline-flex"
                     onClick={() => {
-                      navigate("/");
+                      navigate(-1);
                     }}
                   >
                     <div className="self-stretch grow shrink basis-0 px-6 py-2.5 justify-center items-center gap-2 inline-flex">
@@ -410,13 +419,36 @@ const OutreachSignup = () => {
                       </button>
                     </div>
                   </div>
+                  {hasCreated && <CustomButton
+                          label="Delete"
+                          name="deleteButton"
+                          onClick={() => setShowDeleteModal(true)}
+                        />}
+                  {showDeleteModal && (
+                          <DeleteModal
+                            handleClose={() => setShowDeleteModal(false)}
+                            handleDelete={deleteVisitLog}
+                            modalMsg={`Are you sure you want to delete this visit log?`}
+                          />
+                        )}
                   {showModal && <RSVPConfirmationModal closeModal={handleCloseModal} type={modalLabel}/>}
 
           
                 </div>
                 ) : (
                   <div className="self-stretch text-[#212121] text-2xl font-medium font-inter leading-loose">
-                    Loading...
+                    <div
+                    className="h-10 bg-[#000]] rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 inline-flex"
+                    onClick={() => {
+                      navigate(-1);
+                    }}
+                  >
+                    <div className="self-stretch grow shrink basis-0 px-6 py-2.5 justify-center items-center gap-2 inline-flex">
+                      <button className="text-center text-[#1F0A58] text-sm font-medium font-inter leading-tight">
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
                   </div>
                 )}
             
