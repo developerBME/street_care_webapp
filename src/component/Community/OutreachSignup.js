@@ -141,7 +141,7 @@ const OutreachSignup = () => {
       case "Chapter Leader":
         verifiedImg = verifiedGreen;
         break;
-      case "Chapter Member":
+      case "Streetcare Hub Leader":
         verifiedImg = verifiedPurple;
         break;
       case "Internal Member":
@@ -263,7 +263,9 @@ const OutreachSignup = () => {
                     <img className="w-[12px] h-[15px] my-[3px]" src={locate} />
                     {data ? (
                       <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
-                        {data.location.street},{data.location.city}, {data.location.stateAbbv}, {data.location.zipcode}
+                        {/* for showing complete address of outreach event */}
+                        {/* {data.location.street},{data.location.city}, {data.location.stateAbbv}, {data.location.zipcode} */}
+                        {data.location.city}, {data.location.stateAbbv}
                       </div>
                     ) : (
                       <div className="self-stretch text-[#444746] text-sm font-normal font-inter leading-snug">
