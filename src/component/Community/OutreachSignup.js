@@ -80,7 +80,7 @@ const OutreachSignup = () => {
 
     getData(); // Invoke the async function
     
-  }, [data]);
+  }, [label2]);
 
   const [showModal, setShowModal] = useState(false);
 
