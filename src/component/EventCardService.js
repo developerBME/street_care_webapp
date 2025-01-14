@@ -353,178 +353,185 @@ export const handleRsvp = async (
   if (label2 === "RSVP") {
     e.preventDefault();
     const fAuth = getAuth();
+    const currentUser = fAuth.currentUser;
 
+    if (!currentUser) {
+      navigate("/login");
+      return;
+    }
     // if user exists, check user.outreachevents, else navigate to login page.
-    onAuthStateChanged(fAuth, async (user) => {
-      if (user) {
-        try {
-          // reference for the event clicked on
-          const eventRef = isBMEFlow
+    if (currentUser) {
+      try {
+        // reference for the event clicked on
+        const eventRef = isBMEFlow
+          ? doc(db, OFFICIAL_EVENTS_COLLECTION, id)
+          : doc(db, OUTREACH_EVENTS_COLLECTION, id);
+        // find the userdoc with uid of the current user
+        const userQuery = query(
+          collection(db, USERS_COLLECTION),
+          where("uid", "==", fAuth?.currentUser?.uid)
+        );
+        const userDocRef = await getDocs(userQuery);
+        const userDocID = userDocRef.docs[0].id;
+        // reference for the userdoc
+        const userRef = doc(db, USERS_COLLECTION, userDocID);
+        // outreach event collection
+        const docSnap = await getDoc(eventRef);
+        // current participants in the eventdoc
+        let currentParticipants = docSnap.data().participants || [];
+
+        // current events in userdoc
+        const userSnap = await getDoc(userRef);
+        let currentEvents =
+          (isBMEFlow
+            ? userSnap.data().officialEvents
+            : userSnap.data().outreachEvents) || [];
+
+        // check if user exists in current participants and add if not
+        if (currentParticipants.includes(fAuth.currentUser.uid)) {
+        } else {
+          const newParticipants = [
+            ...currentParticipants,
+            fAuth.currentUser.uid,
+          ];
+          console.log(newParticipants);
+          const eventDocUpdate = isBMEFlow
             ? doc(db, OFFICIAL_EVENTS_COLLECTION, id)
             : doc(db, OUTREACH_EVENTS_COLLECTION, id);
-          // find the userdoc with uid of the current user
-          const userQuery = query(
-            collection(db, USERS_COLLECTION),
-            where("uid", "==", fAuth?.currentUser?.uid)
-          );
-          const userDocRef = await getDocs(userQuery);
-          const userDocID = userDocRef.docs[0].id;
-          // reference for the userdoc
-          const userRef = doc(db, USERS_COLLECTION, userDocID);
-          // outreach event collection
-          const docSnap = await getDoc(eventRef);
-          // current participants in the eventdoc
-          let currentParticipants = docSnap.data().participants || [];
-
-          // current events in userdoc
-          const userSnap = await getDoc(userRef);
-          let currentEvents =
-            (isBMEFlow
-              ? userSnap.data().officialEvents
-              : userSnap.data().outreachEvents) || [];
-
-          // check if user exists in current participants and add if not
-          if (currentParticipants.includes(fAuth.currentUser.uid)) {
-          } else {
-            const newParticipants = [
-              ...currentParticipants,
-              fAuth.currentUser.uid,
-            ];
-            console.log(newParticipants);
-            const eventDocUpdate = isBMEFlow
-              ? doc(db, OFFICIAL_EVENTS_COLLECTION, id)
-              : doc(db, OUTREACH_EVENTS_COLLECTION, id);
-            const updateRef = await updateDoc(eventDocUpdate, {
-              participants: newParticipants,
-            });
-            console.log("successfully added to user to outreach collection");
-            // alert('Signed up for event')
-          }
-
-          // check if event exists in current user and add if not
-          if (currentEvents.includes(id)) {
-            console.log("Event exists for this user");
-            // alert("Event exists for this user");
-          } else {
-            const newEvents = [...currentEvents, id];
-            const userDocUpdate = doc(db, USERS_COLLECTION, userDocID);
-            if (isBMEFlow) {
-              const userUpdateRef = await updateDoc(userDocUpdate, {
-                officialEvents: newEvents,
-              });
-            } else {
-              const userUpdateRef = await updateDoc(userDocUpdate, {
-                outreachEvents: newEvents,
-              });
-            }
-
-            logEvent(
-              "STREET_CARE_INFO_OUTREACH",
-              "RSVP added for user" + fAuth.currentUser.uid
-            );
-
-            console.log("successfully added outreach to users collection");
-          }
-          setLabel2("EDIT");
-        } catch (error) {
-          console.log(error);
-          logEvent("STREET_CARE_ERROR", `error on rsvp- ${error.message}`);
-          throw error;
+          const updateRef = await updateDoc(eventDocUpdate, {
+            participants: newParticipants,
+          });
+          console.log("successfully added to user to outreach collection");
+          // alert('Signed up for event')
         }
-      } else {
-        console.log("USER NOT FOUND!");
-        navigate("/login");
+
+        // check if event exists in current user and add if not
+        if (currentEvents.includes(id)) {
+          console.log("Event exists for this user");
+          // alert("Event exists for this user");
+        } else {
+          const newEvents = [...currentEvents, id];
+          const userDocUpdate = doc(db, USERS_COLLECTION, userDocID);
+          if (isBMEFlow) {
+            const userUpdateRef = await updateDoc(userDocUpdate, {
+              officialEvents: newEvents,
+            });
+          } else {
+            const userUpdateRef = await updateDoc(userDocUpdate, {
+              outreachEvents: newEvents,
+            });
+          }
+
+          logEvent(
+            "STREET_CARE_INFO_OUTREACH",
+            "RSVP added for user" + fAuth.currentUser.uid
+          );
+
+          console.log("successfully added outreach to users collection");
+        }
+        setLabel2("EDIT");
+      } catch (error) {
+        console.log(error);
+        logEvent("STREET_CARE_ERROR", `error on rsvp- ${error.message}`);
+        throw error;
       }
-    });
+    } else {
+      console.log("USER NOT FOUND!");
+      navigate("/login");
+    }
   } else {
     console.log("EDIT BUTTON");
     const fAuth = getAuth();
-    onAuthStateChanged(fAuth, async (user) => {
-      if (user) {
-        console.log("Found user");
-        try {
-          // reference for the event clicked on
-          const eventRef = isBMEFlow
+    const currentUser = fAuth.currentUser;
+
+    if (!currentUser) {
+      navigate("/login");
+      return;
+    }
+    if (currentUser) {
+      console.log("Found user");
+      try {
+        // reference for the event clicked on
+        const eventRef = isBMEFlow
+          ? doc(db, OFFICIAL_EVENTS_COLLECTION, id)
+          : doc(db, OUTREACH_EVENTS_COLLECTION, id);
+        // find the userdoc with uid of the current user
+        const userQuery = query(
+          collection(db, USERS_COLLECTION),
+          where("uid", "==", fAuth?.currentUser?.uid)
+        );
+        const userDocRef = await getDocs(userQuery);
+        const userDocID = userDocRef.docs[0].id;
+        // reference for the userdoc
+        const userRef = doc(db, USERS_COLLECTION, userDocID);
+        // outreach event collection
+        const docSnap = await getDoc(eventRef);
+        // current participants in the eventdoc
+        let currentParticipants = docSnap.data().participants || [];
+
+        // current events in userdoc
+        const userSnap = await getDoc(userRef);
+        let currentEvents =
+          (isBMEFlow
+            ? userSnap.data().officialEvents
+            : userSnap.data().outreachEvents) || [];
+
+        // check if user exists in current participants and remove if exists
+        if (currentParticipants.includes(fAuth.currentUser.uid)) {
+          console.log("removing from event");
+          const eventDocUpdate = isBMEFlow
             ? doc(db, OFFICIAL_EVENTS_COLLECTION, id)
             : doc(db, OUTREACH_EVENTS_COLLECTION, id);
-          // find the userdoc with uid of the current user
-          const userQuery = query(
-            collection(db, USERS_COLLECTION),
-            where("uid", "==", fAuth?.currentUser?.uid)
-          );
-          const userDocRef = await getDocs(userQuery);
-          const userDocID = userDocRef.docs[0].id;
-          // reference for the userdoc
-          const userRef = doc(db, USERS_COLLECTION, userDocID);
-          // outreach event collection
-          const docSnap = await getDoc(eventRef);
-          // current participants in the eventdoc
-          let currentParticipants = docSnap.data().participants || [];
+          const i = currentParticipants.indexOf(fAuth.currentUser.uid);
+          if (i > -1) {
+            currentParticipants.splice(i, 1);
+            const updateRef = await updateDoc(eventDocUpdate, {
+              participants: currentParticipants,
+            });
+          }
+        } else {
+          console.log("User not found in the event");
+        }
 
-          // current events in userdoc
-          const userSnap = await getDoc(userRef);
-          let currentEvents =
-            (isBMEFlow
-              ? userSnap.data().officialEvents
-              : userSnap.data().outreachEvents) || [];
-
-          // check if user exists in current participants and remove if exists
-          if (currentParticipants.includes(fAuth.currentUser.uid)) {
-            console.log("removing from event");
-            const eventDocUpdate = isBMEFlow
-              ? doc(db, OFFICIAL_EVENTS_COLLECTION, id)
-              : doc(db, OUTREACH_EVENTS_COLLECTION, id);
-            const i = currentParticipants.indexOf(fAuth.currentUser.uid);
-            if (i > -1) {
-              currentParticipants.splice(i, 1);
-              const updateRef = await updateDoc(eventDocUpdate, {
-                participants: currentParticipants,
+        // check if event exists in current user and remove if exists
+        if (currentEvents.includes(id)) {
+          console.log("removing from user");
+          navigate(`/outreachsignup/${id}`);
+          // alert('Withdrew from event');
+          const userDocUpdate = doc(db, USERS_COLLECTION, userDocID);
+          const i = currentEvents.indexOf(id);
+          if (i > -1) {
+            currentEvents.splice(i, 1);
+            if (isBMEFlow) {
+              const userUpdateRef = await updateDoc(userDocUpdate, {
+                officialEvents: currentEvents,
+              });
+            } else {
+              const userUpdateRef = await updateDoc(userDocUpdate, {
+                outreachEvents: currentEvents,
               });
             }
-          } else {
-            console.log("User not found in the event");
+            logEvent(
+              "STREET_CARE_INFO_OUTREACH",
+              "RSVP edited for user" + userDocID
+            );
           }
-
-          // check if event exists in current user and remove if exists
-          if (currentEvents.includes(id)) {
-            console.log("removing from user");
-            navigate(`/outreachsignup/${id}`);
-            // alert('Withdrew from event');
-            const userDocUpdate = doc(db, USERS_COLLECTION, userDocID);
-            const i = currentEvents.indexOf(id);
-            if (i > -1) {
-              currentEvents.splice(i, 1);
-              if (isBMEFlow) {
-                const userUpdateRef = await updateDoc(userDocUpdate, {
-                  officialEvents: currentEvents,
-                });
-              } else {
-                const userUpdateRef = await updateDoc(userDocUpdate, {
-                  outreachEvents: currentEvents,
-                });
-              }
-              logEvent(
-                "STREET_CARE_INFO_OUTREACH",
-                "RSVP edited for user" + userDocID
-              );
-            }
-          } else {
-            console.log("event not found in the user");
-          }
-          setLabel2("RSVP");
-
-          if (typeof refresh == "function") {
-            refresh();
-          }
-        } catch (error) {
-          console.log(error);
-          logEvent("STREET_CARE_ERROR", `error on rsvp edit- ${error.message}`);
-          throw error;
+        } else {
+          console.log("event not found in the user");
         }
-      } else {
-        navigate("/login", { replace: true });
+        setLabel2("RSVP");
+
+        if (typeof refresh == "function") {
+          refresh();
+        }
+      } catch (error) {
+        console.log(error);
+        logEvent("STREET_CARE_ERROR", `error on rsvp edit- ${error.message}`);
+        throw error;
       }
-    });
+    } else {
+      navigate("/login", { replace: true });
+    }
   }
 };
 
