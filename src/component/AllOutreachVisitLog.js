@@ -41,15 +41,19 @@ const AllOutreachVisitLog = () => {
   const searchChange = () => {
     const searchValue = searchRef.current.value.toLowerCase();
     setFilteredVisitLogs(
-      visitLogs.filter(
-        (x) =>
-          x.title.toLowerCase().includes(searchValue) ||
-          x.userName.toLowerCase().includes(searchValue) ||
-          x.location.city.toLowerCase().includes(searchValue) ||
-          x.description.toLowerCase().includes(searchValue)
-      )
+      visitLogs.filter((x) => {
+        return (
+          (x.title && x.title.toLowerCase().includes(searchValue)) ||
+          (x.userName && x.userName.toLowerCase().includes(searchValue)) ||
+          (x.location?.city &&
+            x.location.city.toLowerCase().includes(searchValue)) ||
+          (x.description &&
+            x.description.toLowerCase().includes(searchValue))
+        );
+      })
     );
   };
+  
 
   const handleSortChange = (e) => {
     setFilteredVisitLogs(filteredVisitLogs);
@@ -293,15 +297,15 @@ const AllOutreachVisitLog = () => {
                   Chapter Leader
                 </span>
               </div>
-              {/* Chapter Member */}
+              {/* Streetcare Hub Leader */}
               <div className="flex items-center space-x-2">
                 <img
                   src={verifiedPurple}
-                  alt="Chapter Member"
+                  alt="Streetcare Hub Leader"
                   className="w-6 h-6"
                 />
                 <span className="text-sm font-medium text-gray-700">
-                  Chapter Member
+                  Streetcare Hub Leader
                 </span>
               </div>
               {/* Internal Member */}
@@ -315,14 +319,14 @@ const AllOutreachVisitLog = () => {
                   Internal Member
                 </span>
               </div>
-              {/* Other */}
+              {/* Account holder */}
               <div className="flex items-center space-x-2">
                 <img
                   src={verifiedYellow}
-                  alt="Other"
+                  alt="Account holder"
                   className="w-6 h-6"
                 />
-                <span className="text-sm font-medium text-gray-700">Other</span>
+                <span className="text-sm font-medium text-gray-700">Account holder</span>
               </div>
             </div>
 

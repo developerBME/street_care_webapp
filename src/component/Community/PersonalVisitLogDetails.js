@@ -43,7 +43,7 @@ const PersonalVisitLogDetails = () => {
 
   const deleteVisitLog = async () => {
     try {
-      const visitLogDoc = doc(db, "personalVisitLog", id);
+      const visitLogDoc = doc(db, "visitLogWebProd", id);
 
       const userQuery = query(
         collection(db, USERS_COLLECTION),
