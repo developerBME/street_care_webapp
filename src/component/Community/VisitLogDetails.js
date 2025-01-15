@@ -42,7 +42,7 @@ const VisitLogDetails = () => {
       case "Chapter Leader":
         verifiedImg = verifiedGreen;
         break;
-      case "Chapter Member":
+      case "Streetcare Hub Leader":
         verifiedImg = verifiedPurple;
         break;
       case "Internal Member":

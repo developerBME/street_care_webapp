@@ -23,7 +23,7 @@ const OUTREACH_EVENTS_COLLECTION = "outreachEventsDev";
 const USERS_COLLECTION = "users";
 // const PERSONAL_VISIT_LOG_COLLECTION = "personalVisitLog";
 const VISIT_LOG_COLLECTION_PROD = "visitLogWebProd";
-const PERSONAL_VISIT_LOG = "personalVisitLog";
+const PERSONAL_VISIT_LOG = "visitLogWebProd";
 
 export const fetchVisitLogs = async () => {
   try {
@@ -477,7 +477,7 @@ export async function fetchUnapprovedVisitLogs() {
 
 export const ToggleApproveStatus = async function (documentId) {
   try {
-    const docRef = doc(db, "personalVisitLog", documentId);
+    const docRef = doc(db, "visitLogWebProd", documentId);
     const docSnap =  await getDoc(docRef);
 
     if (!docSnap.exists()) {

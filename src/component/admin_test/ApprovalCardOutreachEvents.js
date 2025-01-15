@@ -55,7 +55,7 @@ const ApprovalCardOutreachEvents = ({
     case "Chapter Leader":
       userImage = verifiedGreen;
       break;
-    case "Chapter Member":
+    case "Streetcare Hub Leader":
       userImage = verifiedPurple;
       break;
     case "Internal Member":

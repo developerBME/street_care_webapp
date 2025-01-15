@@ -799,7 +799,7 @@ function PersonalOutForm() {
     };
 
     try {
-      const logRef = doc(db, "personalVisitLog", id);
+      const logRef = doc(db, "visitLogWebProd", id);
       await updateDoc(logRef, obj);
       setSuccess(true);
       clearFields();

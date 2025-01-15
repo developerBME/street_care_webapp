@@ -80,7 +80,7 @@ const OutreachSignup = () => {
 
     getData(); // Invoke the async function
     
-  }, [data]);
+  }, [label2]);
 
   const [showModal, setShowModal] = useState(false);
 
@@ -141,7 +141,7 @@ const OutreachSignup = () => {
       case "Chapter Leader":
         verifiedImg = verifiedGreen;
         break;
-      case "Chapter Member":
+      case "Streetcare Hub Leader":
         verifiedImg = verifiedPurple;
         break;
       case "Internal Member":
@@ -155,7 +155,7 @@ const OutreachSignup = () => {
 
   const deleteVisitLog = async () => {
     try {
-      const visitLogDoc = doc(db, "outreachEvents", id);
+      const visitLogDoc = doc(db, "outreachEventsDev", id);
 
       const userQuery = query(
         collection(db, USERS_COLLECTION),
