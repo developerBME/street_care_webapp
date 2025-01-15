@@ -263,7 +263,7 @@ const OutreachSignup = () => {
                     <img className="w-[12px] h-[15px] my-[3px]" src={locate} />
                     {data ? (
                       <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
-                        {data.location.street},{data.location.city}, {data.location.stateAbbv}, {data.location.zipcode}
+                        {data.location.city}, {data.location.stateAbbv}
                       </div>
                     ) : (
                       <div className="self-stretch text-[#444746] text-sm font-normal font-inter leading-snug">
@@ -336,7 +336,7 @@ const OutreachSignup = () => {
                       {/* Open Spots: {totalSlots - nop}/{totalSlots} */}
                       {/* {data.totalSlots - data.nop}/{data.totalSlots} */}
                       {/* {data.nop} */}
-                      {Math.floor(data.totalSlots * 3/4)}/{data.totalSlots}
+                      {data.nop}/{data.totalSlots}
                     </div>
                   </div>
                 ) : (

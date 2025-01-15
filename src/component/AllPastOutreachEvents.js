@@ -40,7 +40,7 @@ const AllPastOutreachEvents = () => {
 
   const [startDateTime, setStartDateTime] = useState(() => {
     const today = new Date();
-    today.setDate(today.getDate() - 70);
+    today.setDate(today.getDate() - 700);
     return today;
   });
 
