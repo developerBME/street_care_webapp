@@ -14,13 +14,9 @@ import HelpRequestCard from "./HelpRequestCard";
 import verifiedPurple from "../../images/verified_purple.png";
 import verifiedGreen from "../../images/verified.png";
 import verifiedBlue from "../../images/verified_blue.png";
-import verifiedYellow from "../../images/verified_yellow.png"
+import verifiedYellow from "../../images/verified_yellow.png";
 
-const OutreachEventCard = ({
-  cardData,
-  isProfilePage,
-  isHelpRequestCard,
-}) => {
+const OutreachEventCard = ({ cardData, isProfilePage, isHelpRequestCard }) => {
   const {
     id,
     userName,
@@ -38,8 +34,8 @@ const OutreachEventCard = ({
 
   // Navigate to the outreach details page
   const detailOutreach = () => {
-    navigate(`/outreachsignup/${id}`,{
-      state: { label: "EDIT",isProfilePage },
+    navigate(`/outreachsignup/${id}`, {
+      state: { label: "EDIT", isProfilePage },
     });
   };
 
@@ -49,10 +45,10 @@ const OutreachEventCard = ({
     case "Chapter Leader":
       verifiedImg = verifiedGreen;
       break;
-    case "Streetcare Hub Leader":
+    case "Streetcare Member":
       verifiedImg = verifiedPurple;
       break;
-    case "Internal Member":
+    case "Streetcare Hub Leader":
       verifiedImg = verifiedBlue;
       break;
     default:

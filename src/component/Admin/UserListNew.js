@@ -211,7 +211,7 @@ export default function UserListNew() {
 
   //test
   const toggleInternalMember = async (email, docId) => {
-    const isInternalMember = false;  
+    const isInternalMember = false;
     try {
       const userDocRef = doc(db, "users", docId);
       const userDoc = await getDoc(userDocRef);
@@ -219,20 +219,26 @@ export default function UserListNew() {
         console.error(`No user found with docId ${docId}`);
         return;
       }
-  
+
       const userData = userDoc.data();
-      if (!isInternalMember || userData.Type !== "Internal Member") {
-        await updateDoc(userDocRef, { Type: "Internal Member" });
-        console.log(`User with email ${email} is now an Internal Member.`);
+      if (!isInternalMember || userData.Type !== "Streetcare Hub Leader") {
+        await updateDoc(userDocRef, { Type: "Streetcare Hub Leader" });
+        console.log(
+          `User with email ${email} is now an Streetcare Hub Leader.`
+        );
       } else {
         await updateDoc(userDocRef, { Type: "" });
-        console.log(`User with email ${email} is no longer an Internal Member.`);
+        console.log(
+          `User with email ${email} is no longer an Streetcare Hub Leader.`
+        );
       }
     } catch (error) {
-      console.error(`Error updating Internal Member status for user with docId ${docId}:`, error);
+      console.error(
+        `Error updating Streetcare Hub Leader status for user with docId ${docId}:`,
+        error
+      );
     }
   };
-
 
   const debouncedSearchChange = useMemo(
     () =>
