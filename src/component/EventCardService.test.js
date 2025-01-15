@@ -306,7 +306,7 @@ describe('fetchVisitLogsByCityOrState function', () => {
     getDocs.mockResolvedValue(mockSnapshot);
     const visitlogs = await fetchVisitLogsByCityOrState(validSearchCityValue,validStartDate,validEndDate);//promise...write
     console.log("Results - no documents found:", visitlogs);
-    expect(getDocs).toHaveBeenCalledWith(query(collection(db, "personalVisitLog"), 
+    expect(getDocs).toHaveBeenCalledWith(query(collection(db, "visitLogWebProd"), 
       where("city", '==', validSearchCityValue),
       where("dateTime", '>=', validStartDate),
       where('dateTime', '<=', validEndDate)

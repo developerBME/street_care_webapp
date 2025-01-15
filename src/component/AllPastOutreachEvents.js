@@ -328,15 +328,15 @@ const AllPastOutreachEvents = () => {
                 Chapter Leader
               </span>
             </div>
-            {/* Chapter Member */}
+            {/* Streetcare Hub Leader */}
             <div className="flex items-center space-x-2">
               <img
                 src={verifiedPurple}
-                alt="Chapter Member"
+                alt="Streetcare Hub Leader"
                 className="w-6 h-6"
               />
               <span className="text-sm font-medium text-gray-700">
-                Chapter Member
+                Streetcare Hub Leader
               </span>
             </div>
             {/* Internal Member */}
@@ -350,14 +350,14 @@ const AllPastOutreachEvents = () => {
                 Internal Member
               </span>
             </div>
-            {/* Other */}
+            {/* Account holder */}
             <div className="flex items-center space-x-2">
               <img
                 src={verifiedYellow}
-                alt="Other"
+                alt="Account holder"
                 className="w-6 h-6"
               />
-              <span className="text-sm font-medium text-gray-700">Other</span>
+              <span className="text-sm font-medium text-gray-700">Account holder</span>
             </div>
           </div>
           {/* 
