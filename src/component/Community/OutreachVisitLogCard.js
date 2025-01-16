@@ -9,8 +9,7 @@ import CardTags from "./CardTags";
 import verifiedPurple from "../../images/verified_purple.png";
 import verifiedGreen from "../../images/verified.png";
 import verifiedBlue from "../../images/verified_blue.png";
-import verifiedYellow from "../../images/verified_yellow.png"
-
+import verifiedYellow from "../../images/verified_yellow.png";
 
 const OutreachVisitLogCard = ({ visitLogCardData }) => {
   const navigate = useNavigate();
@@ -24,14 +23,14 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
     case "Chapter Leader":
       verifiedImg = verifiedGreen;
       break;
-    case "Streetcare Hub Leader":
+    case "Streetcare Member":
       verifiedImg = verifiedPurple;
       break;
-    case "Internal Member":
+    case "Streetcare Hub Leader":
       verifiedImg = verifiedBlue;
       break;
     default:
-      verifiedImg = verifiedYellow; 
+      verifiedImg = verifiedYellow;
       break;
   }
 
@@ -41,29 +40,43 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
       onClick={handleViewDetails}
     >
       <div className="inline-flex items-center space-x-2 ">
-          <img
-            alt=""
-            src={visitLogCardData.defaultImage || defaultImage}
-            className="w-8 h-8 rounded-full"
-          />
-          <div className="font-normal font-inter text-[13px] ">{visitLogCardData.userName}</div>
-          <img alt="" src={verifiedImg} className="w-5 h-5" />
+        <img
+          alt=""
+          src={visitLogCardData.defaultImage || defaultImage}
+          className="w-8 h-8 rounded-full"
+        />
+        <div className="font-normal font-inter text-[13px] ">
+          {visitLogCardData.userName}
         </div>
+        <img alt="" src={verifiedImg} className="w-5 h-5" />
+      </div>
 
       <div className="flex justify-between items-center mt-2">
         <div className="flex items-center">
           <img className="w-4 h-4" src={dateIcon} alt="Date" />
-          <span className="ml-2 text-sm">{visitLogCardData && visitLogCardData.eventDate ? formatDate(visitLogCardData.eventDate) : null}</span>
+          <span className="ml-2 text-sm">
+            {visitLogCardData && visitLogCardData.eventDate
+              ? formatDate(visitLogCardData.eventDate)
+              : null}
+          </span>
         </div>
         <div className="flex items-center">
           <img className="w-3 h-4" src={locationIcon} alt="Location" />
-          <span className="ml-2 text-sm">{`${visitLogCardData?.location?.city || visitLogCardData?.city}, ${visitLogCardData?.location?.stateAbbv || visitLogCardData?.stateAbbv || visitLogCardData?.location?.state}`}</span>
+          <span className="ml-2 text-sm">{`${
+            visitLogCardData?.location?.city || visitLogCardData?.city
+          }, ${
+            visitLogCardData?.location?.stateAbbv ||
+            visitLogCardData?.stateAbbv ||
+            visitLogCardData?.location?.state
+          }`}</span>
         </div>
       </div>
 
       <div className="flex justify-between items-center mt-4">
         <div className="text-sm font-bold">People Helped</div>
-        <div className="text-xl font-bold">{visitLogCardData?.numberPeopleHelped}</div>
+        <div className="text-xl font-bold">
+          {visitLogCardData?.numberPeopleHelped}
+        </div>
       </div>
 
       <div className="flex justify-between items-center mt-2">
@@ -71,7 +84,9 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
         <div className="text-xl font-bold">{visitLogCardData?.itemQty}</div>
       </div>
 
-      <div className="mt-3">  {/* Adjusted gap from 12px here */}
+      <div className="mt-3">
+        {" "}
+        {/* Adjusted gap from 12px here */}
         <CardTags tags={visitLogCardData?.whatGiven || []} />
       </div>
 
