@@ -218,7 +218,7 @@ const changeUserType = async (email, docId, Type) => {
     }
 
     // Validate the userType
-    const validUserTypes = ["Chapter Leader", "Internal Member", "Chapter Member"];
+    const validUserTypes = ["Chapter Leader", "Chapter Member", "Streetcare Hub Leader", "Account Holder"];
     if (!validUserTypes.includes(Type)) {
       throw new Error(`Invalid Type: "${Type}" is not a recognized user type.`);
     }
