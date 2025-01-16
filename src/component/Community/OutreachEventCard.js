@@ -45,7 +45,7 @@ const OutreachEventCard = ({ cardData, isProfilePage, isHelpRequestCard }) => {
     case "Chapter Leader":
       verifiedImg = verifiedGreen;
       break;
-    case "Streetcare Member":
+    case "Chapter Member":
       verifiedImg = verifiedPurple;
       break;
     case "Streetcare Hub Leader":
