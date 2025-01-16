@@ -2,21 +2,31 @@ import React, { useRef, useState, useEffect } from "react";
 
 import Chip from "../Community/Chip";
 import arrowDown from "../../images/arrowDown.png";
-import { doc, updateDoc, addDoc, collection, getDoc, query } from "firebase/firestore";
+import {
+  doc,
+  updateDoc,
+  addDoc,
+  collection,
+  getDoc,
+  query,
+} from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import errorImg from "../../images/error.png";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
-import { Timestamp,where,getDocs } from "firebase/firestore";
-import { checkString, checkNumber, checkPhoneNumber } from "../helper/validator";
+import { Timestamp, where, getDocs } from "firebase/firestore";
+import {
+  checkString,
+  checkNumber,
+  checkPhoneNumber,
+} from "../helper/validator";
 import { UpdateDisabledRounded } from "@mui/icons-material";
 import CreateOutreachModal from "./CreateOutreachModal";
 import { fetchHelpReqById } from "../HelpRequestService";
 import { emailConfirmation } from "../EmailService";
 import { Link } from "react-router-dom";
 import { fetchUserTypeDetails } from "../EventCardService";
-
 
 const chipList = [
   "Childcare",
@@ -174,7 +184,7 @@ const Form = (hrid) => {
     if (helpDetails.title) {
       nameRef.current.value = helpDetails.title;
     }
-    if(helpDetails.contactNumber){
+    if (helpDetails.contactNumber) {
       contactRef.current.value = helpDetails.contactNumber;
     }
     if (helpDetails?.location?.street) {
@@ -207,9 +217,12 @@ const Form = (hrid) => {
         // true if redirected from help request and false for organic outreach event.
         const isHelpReqFlow = !(typeof hrid.hrid == "undefined");
         const userDetails = await fetchUserTypeDetails(fAuth.currentUser.uid);
-        let statusValue = 'pending'
-        if(userDetails.type == 'Chapter Leader' || userDetails.type == 'Internal Member') {
-          statusValue = 'approved'
+        let statusValue = "pending";
+        if (
+          userDetails.type == "Chapter Leader" ||
+          userDetails.type == "Streetcare Hub Leader"
+        ) {
+          statusValue = "approved";
         }
         try {
           let obj = {
@@ -241,14 +254,13 @@ const Form = (hrid) => {
           // const eventRef = collection(db, "outreachEvents"); //change back to this line in dev branch
           const eventRef = collection(db, "outreachEventsDev");
 
-
           async function postDoc(ref, obj) {
             const docRef = await addDoc(ref, obj);
             return docRef.id;
           }
           const ack = await postDoc(eventRef, obj);
 
-          //added outreach to user collection 
+          //added outreach to user collection
           const userQuery = query(
             collection(db, USERS_COLLECTION),
             where("uid", "==", fAuth?.currentUser?.uid)
@@ -567,7 +579,7 @@ const Form = (hrid) => {
       autoCompleteRef.current,
       {
         types: ["address"],
-        componentRestrictions: { country: ["us","ca"] },
+        componentRestrictions: { country: ["us", "ca"] },
       }
     );
 
@@ -690,11 +702,12 @@ const Form = (hrid) => {
               {error.contactError && (
                 <div className="inline-flex items-center">
                   <img alt="" src={errorImg} className="w-3 h-3" />
-                  <p className="text-red-600 text-xs mx-1">{error.contactError}</p>
+                  <p className="text-red-600 text-xs mx-1">
+                    {error.contactError}
+                  </p>
                 </div>
               )}
             </div>
-
 
             <div className="space-y-1.5">
               <p className="font-semibold font-['Inter'] text-[15px]">
@@ -724,8 +737,8 @@ const Form = (hrid) => {
               </p>
               <input
                 type="number"
-                min='0'
-                step='1'
+                min="0"
+                step="1"
                 className="h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 "
                 id="max-cap"
                 ref={maxCapRef}
