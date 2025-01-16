@@ -1,18 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import OutreachEventCard from "./Community/OutreachEventCard";
-import {
-  fetchEvents,
-  fetchByCityOrStates,
-} from "./EventCardService";
+import { fetchEvents, fetchByCityOrStates } from "./EventCardService";
 import { useNavigate } from "react-router-dom";
-import { IoIosArrowBack, IoIosArrowForward, IoIosArrowDown } from "react-icons/io";
+import {
+  IoIosArrowBack,
+  IoIosArrowForward,
+  IoIosArrowDown,
+} from "react-icons/io";
 import search_icon from "../images/search_icon.png";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 import { formatDate } from "./HelperFunction";
 import verifiedPurple from "../images/verified_purple.png";
 import verifiedGreen from "../images/verified.png";
 import verifiedBlue from "../images/verified_blue.png";
-import verifiedYellow from "../images/verified_yellow.png"
+import verifiedYellow from "../images/verified_yellow.png";
 
 const AllPastOutreachEvents = () => {
   const [events, setEvents] = useState([]);
@@ -65,9 +66,13 @@ const AllPastOutreachEvents = () => {
       setIsLoading(true);
       setErrorMessage("");
 
-
-      const { tot, outreachByLoc } = await fetchByCityOrStates(cityToSearch, startDateTime, endDateTime, currentPage, outreachPerPages);
-
+      const { tot, outreachByLoc } = await fetchByCityOrStates(
+        cityToSearch,
+        startDateTime,
+        endDateTime,
+        currentPage,
+        outreachPerPages
+      );
 
       if (outreachByLoc.length > 0) {
         const pastEvents = outreachByLoc.filter((event) => {
@@ -77,16 +82,17 @@ const AllPastOutreachEvents = () => {
           return eventDate < new Date();
         });
 
-
         setEvents(pastEvents);
         console.log("total", Math.ceil(tot / outreachPerPages) - 1);
         setTotalPages(Math.ceil(tot / outreachPerPages) - 1);
       } else {
-        throw new Error("No past outreach events found for the selected date range.");
+        throw new Error(
+          "No past outreach events found for the selected date range."
+        );
       }
     } catch (error) {
       setErrorMessage(error.message);
-      setEvents([])
+      setEvents([]);
       setTotalPages(0);
     } finally {
       setIsLoading(false);
@@ -98,7 +104,6 @@ const AllPastOutreachEvents = () => {
   //   const cityToSearch = "";
   //   const outreachByLoc = await fetchByCityOrStates(cityToSearch, startDateTime, endDateTime, currentPage, outreachPerPages);
 
-
   //   const pastEvents = outreachByLoc.filter((event) => {
   //     const eventDate = event?.eventDate?.seconds
   //       ? new Date(event.eventDate.seconds * 1000)
@@ -109,14 +114,13 @@ const AllPastOutreachEvents = () => {
   //   //setTotalPages(cityCountTotal);
   // };
 
-
   const searchChange = () => {
     console.log(searchRef.current.value);
     setEventsDisplay(
       events.filter(
         (x) =>
           x.title.toLowerCase().search(searchRef.current.value.toLowerCase()) >
-          -1 ||
+            -1 ||
           x.userName
             .toLowerCase()
             .search(searchRef.current.value.toLowerCase()) > -1
@@ -125,12 +129,12 @@ const AllPastOutreachEvents = () => {
   };
 
   const handleClickPrev = () => {
-    console.log(eventsDisplay)
+    console.log(eventsDisplay);
     setCurrentPage(currentPage - 1);
   };
 
   const handleClickNext = () => {
-    console.log("after next", eventsDisplay)
+    console.log("after next", eventsDisplay);
     setCurrentPage(currentPage + 1);
   };
 
@@ -143,7 +147,6 @@ const AllPastOutreachEvents = () => {
     const newDate = new Date(e.target.value);
     setEndDateTime(newDate);
   };
-
 
   const renderPaginationButtons = () => {
     const buttons = [];
@@ -171,16 +174,27 @@ const AllPastOutreachEvents = () => {
           1
         </button>
       );
-      buttons.push(<span key="ellipsis-start" className="mx-1">...</span>);
+      buttons.push(
+        <span key="ellipsis-start" className="mx-1">
+          ...
+        </span>
+      );
     }
 
-    for (let i = Math.max(0, currentPage - pageRange); i <= Math.min(totalPages - 1, currentPage + pageRange); i++) {
+    for (
+      let i = Math.max(0, currentPage - pageRange);
+      i <= Math.min(totalPages - 1, currentPage + pageRange);
+      i++
+    ) {
       buttons.push(
         <button
           key={i}
           onClick={() => setCurrentPage(i)}
-          className={`mx-1 px-3 py-1 rounded-full ${currentPage === i ? "bg-[#1F0A58] text-white" : "bg-gray-200 text-gray-600"
-            }`}
+          className={`mx-1 px-3 py-1 rounded-full ${
+            currentPage === i
+              ? "bg-[#1F0A58] text-white"
+              : "bg-gray-200 text-gray-600"
+          }`}
         >
           {i + 1}
         </button>
@@ -188,7 +202,11 @@ const AllPastOutreachEvents = () => {
     }
 
     if (currentPage < totalPages - pageRange - 2) {
-      buttons.push(<span key="ellipsis-end" className="mx-1">...</span>);
+      buttons.push(
+        <span key="ellipsis-end" className="mx-1">
+          ...
+        </span>
+      );
       buttons.push(
         <button
           key="last"
@@ -268,10 +286,14 @@ const AllPastOutreachEvents = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <div className="flex items-center">
-                  <span className="text-gray-700 text-xs md:text-sm">Filter:</span>
+                  <span className="text-gray-700 text-xs md:text-sm">
+                    Filter:
+                  </span>
                   <div className="relative ml-1">
                     <button
-                      onClick={() => setFilterType(filterType === "date" ? "city" : "date")}
+                      onClick={() =>
+                        setFilterType(filterType === "date" ? "city" : "date")
+                      }
                       className="flex items-center bg-white border border-gray-300 px-3 py-1 rounded-lg text-s text-gray-700 whitespace-nowrap"
                     >
                       {filterType === "date" ? "Date Period" : "City"}
@@ -328,26 +350,26 @@ const AllPastOutreachEvents = () => {
                 Chapter Leader
               </span>
             </div>
-            {/* Streetcare Hub Leader */}
+            {/* Chapter Member */}
             <div className="flex items-center space-x-2">
               <img
                 src={verifiedPurple}
+                alt="Chapter Member"
+                className="w-6 h-6"
+              />
+              <span className="text-sm font-medium text-gray-700">
+                Chapter Member
+              </span>
+            </div>
+            {/* Streetcare Hub Leader */}
+            <div className="flex items-center space-x-2">
+              <img
+                src={verifiedBlue}
                 alt="Streetcare Hub Leader"
                 className="w-6 h-6"
               />
               <span className="text-sm font-medium text-gray-700">
                 Streetcare Hub Leader
-              </span>
-            </div>
-            {/* Internal Member */}
-            <div className="flex items-center space-x-2">
-              <img
-                src={verifiedBlue}
-                alt="Internal Member"
-                className="w-6 h-6"
-              />
-              <span className="text-sm font-medium text-gray-700">
-                Internal Member
               </span>
             </div>
             {/* Account holder */}
@@ -357,7 +379,9 @@ const AllPastOutreachEvents = () => {
                 alt="Account holder"
                 className="w-6 h-6"
               />
-              <span className="text-sm font-medium text-gray-700">Account holder</span>
+              <span className="text-sm font-medium text-gray-700">
+                Account holder
+              </span>
             </div>
           </div>
           {/* 
@@ -386,14 +410,12 @@ const AllPastOutreachEvents = () => {
 
           <div className="flex justify-between items-center mt-8 w-full">
             <p className="text-gray-600">
-              Showing {eventsDisplay.length} of {totalPages * outreachPerPages} events
+              Showing {eventsDisplay.length} of {totalPages * outreachPerPages}{" "}
+              events
             </p>
 
-            <div className="flex justify-end">
-              {renderPaginationButtons()}
-            </div>
+            <div className="flex justify-end">{renderPaginationButtons()}</div>
           </div>
-
 
           {errorMessage && (
             <p className="text-red-500 text-center mt-4">{errorMessage}</p>
@@ -415,8 +437,8 @@ const AllPastOutreachEvents = () => {
                       ...eventData,
                       eventDate: eventData?.eventDate?.seconds
                         ? formatDate(
-                          new Date(eventData.eventDate.seconds * 1000)
-                        )
+                            new Date(eventData.eventDate.seconds * 1000)
+                          )
                         : eventData.eventDate,
                     }}
                   />
@@ -425,12 +447,11 @@ const AllPastOutreachEvents = () => {
           )}
           <div className="flex justify-between items-center mt-8 w-full">
             <p className="text-gray-600">
-              Showing {eventsDisplay.length} of {totalPages * outreachPerPages} events
+              Showing {eventsDisplay.length} of {totalPages * outreachPerPages}{" "}
+              events
             </p>
 
-            <div className="flex justify-end">
-              {renderPaginationButtons()}
-            </div>
+            <div className="flex justify-end">{renderPaginationButtons()}</div>
           </div>
           {/* {visibleCards < eventsDisplay.length && (
             <button
