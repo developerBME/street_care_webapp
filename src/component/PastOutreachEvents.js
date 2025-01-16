@@ -52,15 +52,15 @@ const PastOutreachEvents = ({ events, isLoading, isError }) => {
               Chapter Leader
             </span>
           </div>
-          {/* Streetcare Member */}
+          {/* Chapter Member */}
           <div className="flex items-center space-x-2">
             <img
               src={verifiedPurple}
-              alt="Streetcare Member"
+              alt="Chapter Member"
               className="w-6 h-6"
             />
             <span className="text-sm font-medium text-gray-700">
-              Streetcare Member
+              Chapter Member
             </span>
           </div>
           {/* Streetcare Hub Leader */}
