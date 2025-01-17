@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import dateIcon from "../../images/date.png";
-import flagIcon from "../../images/flag.png";
-import infoIcon from "../../images/info_icon.png"; // Add an info icon image
+import flagIcon from "../../images/flag.svg";
 import locationIcon from "../../images/location.png";
 import defaultImage from "../../images/default_avatar.svg";
 import { formatDate } from "../helper";
@@ -14,11 +13,13 @@ import verifiedPurple from "../../images/verified_purple.png";
 import verifiedGreen from "../../images/verified.png";
 import verifiedBlue from "../../images/verified_blue.png";
 import verifiedYellow from "../../images/verified_yellow.png";
+import { useUserContext } from "../../context/Usercontext.js";
 
 const PERSONAL_VISIT_LOG_COLLECTION = "personalVisitLog";
 
 const OutreachVisitLogCard = ({ visitLogCardData }) => {
   const navigate = useNavigate();
+  const { user } = useUserContext(); // Access user context
   const [isFlagged, setIsFlagged] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -67,6 +68,12 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
 
   const handleFlag = async (e) => {
     e.stopPropagation(); // Prevent triggering parent click events
+    console.log("user:"+user.currentUserType);
+    if (!user) {
+      console.error("User not authenticated");
+      return;
+    }
+
     try {
       if (!visitLogCardData?.id) {
         console.error("Invalid visitLogCardData.id");
@@ -82,7 +89,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
       }
 
       const currentIsFlagged = docSnap.data().isFlagged;
-
+      console.log("currentUserType:"+currentUserType);
       // Restrict unflagging to specific user types
       if (currentIsFlagged && !(currentUserType === "Chapter Leader" || currentUserType === "Internal Member")) {
         console.error("Only Chapter Leader or Internal Member can unflag this post.");
@@ -116,6 +123,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
     >
       <div className="relative">
         {/* Flag Button */}
+        <div className="absolute right-0 w-8 h-8 cursor-pointer rounded-full p-1 group">
         <img
           onClick={handleFlag}
           src={flagIcon}
@@ -123,22 +131,18 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
           className={`absolute right-4 w-8 h-8 cursor-pointer rounded-full p-1 ${
             isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
           }`}
-        />
-        
-        {/* Info Icon with Tooltip */}
-        <div className="absolute right-16 w-8 h-8 cursor-pointer rounded-full p-1 bg-gray-200 hover:bg-gray-300 group">
-          <img src={infoIcon} alt="info" />
+          />
           {/* Tooltip */}
           <div 
-    className="absolute -top-14 right-0 bg-black text-white text-xs rounded-md px-3 py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-30 whitespace-normal"
-    style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
-  >
-    If you feel this log is a spam, click on the flag.
-  </div>
+            className="absolute -top-14 right-0 bg-black text-white text-xs rounded-md px-3 py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-30 whitespace-normal"
+            style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
+          >
+            If you feel this log is a spam, click on the flag.
+          </div>
         </div>
         </div>
-      
-      {/* Rest of the Component */}
+
+      {/* User Information */}
       <div className="inline-flex items-center space-x-2">
         <img
           alt=""
@@ -150,7 +154,8 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
         </div>
         <img alt="" src={verifiedImg} className="w-5 h-5" />
       </div>
-      
+
+      {/* Event Details */}
       <div className="flex justify-between items-center mt-2">
         <div className="flex items-center">
           <img className="w-4 h-4" src={dateIcon} alt="Date" />
@@ -158,7 +163,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
             {visitLogCardData?.eventDate ? formatDate(visitLogCardData.eventDate) : null}
           </span>
         </div>
-        
+
         <div className="flex items-center">
           <img className="w-3 h-4" src={locationIcon} alt="Location" />
           <span className="ml-2 text-sm">
@@ -170,26 +175,23 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
           </span>
         </div>
       </div>
-      
+
+      {/* Additional Details */}
       <div className="flex justify-between items-center mt-4">
         <div className="text-sm font-bold">People Helped</div>
-        <div className="text-xl font-bold">
-          {visitLogCardData?.numberPeopleHelped}
-        </div>
+        <div className="text-xl font-bold">{visitLogCardData?.numberPeopleHelped}</div>
       </div>
-      
+
       <div className="flex justify-between items-center mt-2">
         <div className="text-sm font-bold">Items Donated</div>
         <div className="text-xl font-bold">{visitLogCardData?.itemQty}</div>
       </div>
-      
+
       <div className="mt-3">
         <CardTags tags={visitLogCardData?.whatGiven || []} />
       </div>
-      
-      <p className="text-sm mt-2 line-clamp-2">
-        {visitLogCardData?.description || ""}
-      </p>
+
+      <p className="text-sm mt-2 line-clamp-2">{visitLogCardData?.description || ""}</p>
     </div>
   );
 };
