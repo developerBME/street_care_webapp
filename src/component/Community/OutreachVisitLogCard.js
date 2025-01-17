@@ -14,11 +14,14 @@ import verifiedPurple from "../../images/verified_purple.png";
 import verifiedGreen from "../../images/verified.png";
 import verifiedBlue from "../../images/verified_blue.png";
 import verifiedYellow from "../../images/verified_yellow.png";
+import { useUserContext } from "../../context/Usercontext";
 
 const PERSONAL_VISIT_LOG_COLLECTION = "personalVisitLog";
+const USERS_COLLECTION = "users"; // User collection
 
 const OutreachVisitLogCard = ({ visitLogCardData }) => {
   const navigate = useNavigate();
+  const { user } = useUserContext();
   const [isFlagged, setIsFlagged] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -67,12 +70,25 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
 
   const handleFlag = async (e) => {
     e.stopPropagation(); // Prevent triggering parent click events
+    if (!user) {
+      console.error("User is not logged in.");
+      return;
+    }
     try {
+      const userRef = doc(db, USERS_COLLECTION, user.uid);
+      
       if (!visitLogCardData?.id) {
         console.error("Invalid visitLogCardData.id");
         return;
       }
 
+      const userDoc = await getDoc(userRef);
+
+      if (!userDoc.exists()) {
+        console.error("User document does not exist:", user.uid);
+        return;
+      }
+      const { Type: userType } = userDoc.data();
       const docRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogCardData.id);
       const docSnap = await getDoc(docRef);
 
@@ -82,9 +98,13 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
       }
 
       const currentIsFlagged = docSnap.data().isFlagged;
+      const { isFlagged: currentStatus, flaggedByUser } = docSnap.data();
+      const canUnflag =
+        flaggedByUser === user.uid || userType === "Chapter Leader";
 
+        
       // Restrict unflagging to specific user types
-      if (currentIsFlagged && !(currentUserType === "Chapter Leader" || currentUserType === "Internal Member")) {
+      if (currentIsFlagged && !(canUnflag)) {
         console.error("Only Chapter Leader or Internal Member can unflag this post.");
         return;
       }
@@ -95,6 +115,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
 
       console.log(`Document ${visitLogCardData.id} updated to isFlagged: ${newIsFlagged}`);
       setIsFlagged(newIsFlagged);
+      
     } catch (error) {
       console.error("Error toggling flag status:", error);
     }
