@@ -14,39 +14,41 @@ import verifiedPurple from "../../images/verified_purple.png";
 import verifiedGreen from "../../images/verified.png";
 import verifiedBlue from "../../images/verified_blue.png";
 import verifiedYellow from "../../images/verified_yellow.png";
-import { useUserContext } from "../../context/Usercontext";
+import { useUserContext } from "../../context/Usercontext.js";
+
 
 const PERSONAL_VISIT_LOG_COLLECTION = "personalVisitLog";
 const USERS_COLLECTION = "users"; // User collection
 
 const OutreachVisitLogCard = ({ visitLogCardData }) => {
   const navigate = useNavigate();
-  const { user } = useUserContext();
+
+  // Fetch flag info when component mounts
   const [isFlagged, setIsFlagged] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const currentUserType = visitLogCardData?.userType;
-
-  // Fetch flag info when component mounts
+  const { user } = useUserContext();
   useEffect(() => {
-    const fetchFlagStatus = async () => {
-      try {
-        if (visitLogCardData?.id) {
-          const docRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogCardData.id);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            setIsFlagged(docSnap.data().isFlagged);
-          }
+  const fetchFlagStatus = async () => {
+    try {
+      
+      if (visitLogCardData?.id) {
+        const docRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogCardData.id);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setIsFlagged(docSnap.data().isFlagged || false);
         }
-      } catch (error) {
-        console.error("Error fetching flag status:", error);
-      } finally {
-        setIsLoading(false);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching flag status:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    fetchFlagStatus();
-  }, [visitLogCardData?.id]);
+  fetchFlagStatus();
+}, [visitLogCardData?.id]);
 
   const handleViewDetails = () => {
     navigate(`/VisitLogDetails/${visitLogCardData.id}`);
@@ -60,7 +62,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
     case "Chapter Member":
       verifiedImg = verifiedPurple;
       break;
-    case "Streetcare Hub Leader":
+    case "Internal Member":
       verifiedImg = verifiedBlue;
       break;
     default:
@@ -75,51 +77,58 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
       return;
     }
     try {
-      const userRef = doc(db, USERS_COLLECTION, user.uid);
-      
       if (!visitLogCardData?.id) {
         console.error("Invalid visitLogCardData.id");
         return;
       }
-
+      
+      const userRef = doc(db, USERS_COLLECTION, user.uid);
       const userDoc = await getDoc(userRef);
-
+      
       if (!userDoc.exists()) {
         console.error("User document does not exist:", user.uid);
         return;
       }
-      const { Type: userType } = userDoc.data();
-      const docRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogCardData.id);
-      const docSnap = await getDoc(docRef);
 
+      const { Type: userType } = userDoc.data();
+      const docRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogCardData?.id);
+      const docSnap = await getDoc(docRef);
+  
       if (!docSnap.exists()) {
-        console.error("Document does not exist:", visitLogCardData.id);
+        console.error("Document does not exist:", user.uid);
         return;
       }
-
-      const currentIsFlagged = docSnap.data().isFlagged;
+      console.log("user:",userType);
       const { isFlagged: currentStatus, flaggedByUser } = docSnap.data();
       const canUnflag =
         flaggedByUser === user.uid || userType === "Chapter Leader";
-
-        
+      const currentIsFlagged = docSnap.data().isFlagged;
+  
       // Restrict unflagging to specific user types
-      if (currentIsFlagged && !(canUnflag)) {
-        console.error("Only Chapter Leader or Internal Member can unflag this post.");
+      if (currentIsFlagged && !(currentUserType === "Chapter Leader" || currentUserType === "Internal Member")) {
+        console.log("Only Chapter Leader or Internal Member can unflag this post.");
         return;
       }
-
-      // Toggle flag status
-      const newIsFlagged = !currentIsFlagged;
-      await updateDoc(docRef, { isFlagged: newIsFlagged });
-
-      console.log(`Document ${visitLogCardData.id} updated to isFlagged: ${newIsFlagged}`);
-      setIsFlagged(newIsFlagged);
+  
+      if (currentStatus) {
+              if (!canUnflag) {
+                console.error(
+                  "Only the user who flagged this event or a Chapter Leader can unflag it."
+                );
+                return;
+              }
       
+              await updateDoc(docRef, { isFlagged: false, flaggedByUser: null });
+              setIsFlagged(false);
+            } else {
+              await updateDoc(docRef, { isFlagged: true, flaggedByUser: user.uid });
+              setIsFlagged(true);
+            }
     } catch (error) {
       console.error("Error toggling flag status:", error);
     }
   };
+  
 
   if (isLoading) {
     return <div>Loading...</div>; // Placeholder while loading flag status
@@ -134,30 +143,24 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
     <div
       className="bg-[#F5EEFE] w-[320px] rounded-[30px] mb-4 flex flex-col p-[24px] h-auto cursor-pointer border-b-[1px] border-gray-200"
       onClick={handleViewDetails}
+    >
+      <div className="relative group">
+        {/* Flag Button */}
+        <img
+          onClick={handleFlag}
+          src={flagIcon}
+          alt="flag"
+          className={`absolute right-4 w-8 h-8 cursor-pointer rounded-full p-1 ${
+            isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
+          }`}
+        />
+        <div 
+            className="absolute -top-14 right-0 bg-black text-white text-xs rounded-md px-3 py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-30 whitespace-normal"
+            style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
           >
-            <div className="relative">
-              {/* Flag Button */}
-              <div className="relative group">
-                <img
-                  onClick={handleFlag}
-                  src={flagIcon}
-                  alt="flag"
-                  className={`absolute right-4 w-8 h-8 cursor-pointer rounded-full p-1 ${
-                    isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
-                  }`}
-                />
-
-                {/* Tooltip on Hover */}
-                <div 
-                  className="absolute -top-14 right-0 bg-black text-white text-xs rounded-md px-3 py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-normal"
-                  style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
-                >
-                  If you feel this log is a spam, click on the flag.
-                </div>
-              </div>
-            </div>
-
-
+            If you feel this log is a spam, click on the flag.
+        </div>
+      </div>
       
       {/* Rest of the Component */}
       <div className="inline-flex items-center space-x-2">
@@ -176,39 +179,35 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
         <div className="flex items-center">
           <img className="w-4 h-4" src={dateIcon} alt="Date" />
           <span className="ml-2 text-sm">
-            {visitLogCardData && visitLogCardData.eventDate
-              ? formatDate(visitLogCardData.eventDate)
-              : null}
+            {visitLogCardData?.eventDate ? formatDate(visitLogCardData.eventDate) : null}
           </span>
         </div>
         
         <div className="flex items-center">
           <img className="w-3 h-4" src={locationIcon} alt="Location" />
-          <span className="ml-2 text-sm">{`${
-            visitLogCardData?.location?.city || visitLogCardData?.city
-          }, ${
-            visitLogCardData?.location?.stateAbbv ||
-            visitLogCardData?.stateAbbv ||
-            visitLogCardData?.location?.state
-          }`}</span>
+          <span className="ml-2 text-sm">
+            {`${visitLogCardData?.location?.city || visitLogCardData?.city}, ${
+              visitLogCardData?.location?.stateAbbv ||
+              visitLogCardData?.stateAbbv ||
+              visitLogCardData?.location?.state
+            }`}
+          </span>
         </div>
       </div>
-
+      
       <div className="flex justify-between items-center mt-4">
         <div className="text-sm font-bold">People Helped</div>
         <div className="text-xl font-bold">
           {visitLogCardData?.numberPeopleHelped}
         </div>
       </div>
-
+      
       <div className="flex justify-between items-center mt-2">
         <div className="text-sm font-bold">Items Donated</div>
         <div className="text-xl font-bold">{visitLogCardData?.itemQty}</div>
       </div>
-
+      
       <div className="mt-3">
-        {" "}
-        {/* Adjusted gap from 12px here */}
         <CardTags tags={visitLogCardData?.whatGiven || []} />
       </div>
       
