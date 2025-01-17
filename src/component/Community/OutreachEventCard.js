@@ -104,7 +104,7 @@ const OutreachEventCard = ({
     case "Chapter Member":
       verifiedImg = verifiedPurple;
       break;
-    case "Internal Member":
+    case "Streetcare Hub Leader":
       verifiedImg = verifiedBlue;
       break;
     default:

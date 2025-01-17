@@ -4,7 +4,7 @@ import locationIcon from "../../images/location_on.svg";
 import verifiedPurple from "../../images/verified_purple.png";
 import verifiedGreen from "../../images/verified.png";
 import verifiedBlue from "../../images/verified_blue.png";
-import verifiedYellow from "../../images/verified_yellow.png"
+import verifiedYellow from "../../images/verified_yellow.png";
 
 const getTags = (postData, isVisitLogs) => {
   console.log("ApprovalCard postData:", postData);
@@ -42,35 +42,32 @@ const ApprovalCardVisitlogs = ({
   selectedButton,
 }) => {
   // Inline date  formatting to handle Firebase Timestamp
-  const formattedDate =
-    postData?.dateTime?.seconds
-      ? new Date(postData.dateTime.seconds * 1000).toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        })
-      : "Unknown Date";
+  const formattedDate = postData?.dateTime?.seconds
+    ? new Date(postData.dateTime.seconds * 1000).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "Unknown Date";
 
-  
-      let userImage = null;
+  let userImage = null;
 
-      switch (postData.userType) {
-        case "Chapter Leader":
-          userImage = verifiedGreen;
-          break;
-        case "Chapter Member":
-          userImage = verifiedPurple;
-          break;
-        case "Internal Member":
-          userImage = verifiedBlue;
-          break;
-        default:
-          userImage = verifiedYellow;
-          break;
-      }
-    
+  switch (postData.userType) {
+    case "Chapter Leader":
+      userImage = verifiedGreen;
+      break;
+    case "Chapter Member":
+      userImage = verifiedPurple;
+      break;
+    case "Streetcare Hub Leader":
+      userImage = verifiedBlue;
+      break;
+    default:
+      userImage = verifiedYellow;
+      break;
+  }
 
   return (
     <div

@@ -3,7 +3,11 @@ import { useNavigate, useParams } from "react-router-dom";
 //import verifiedImg from "../../images/verified_purple.png";
 import wavingHand from "../../images/waving_hand.png";
 import CustomButton from "../Buttons/CustomButton";
-import { fetchEventById, handleRsvp, fetchUserSignedUpOutreaches } from "../EventCardService";
+import {
+  fetchEventById,
+  handleRsvp,
+  fetchUserSignedUpOutreaches,
+} from "../EventCardService";
 import { fetchUserName } from "../HelperFunction";
 import { Co2Sharp } from "@mui/icons-material";
 import defaultImage from "../../images/default_avatar.svg";
@@ -40,11 +44,10 @@ const OutreachSignup = () => {
   const [modalLabel, setModalLabel] = useState("");
   const [success, setSuccess] = useState(false);
   const fAuth = getAuth();
- 
+
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [hasCreated, setHasCreated] = useState(false);
   const [isPastEvent, setIsPastEvent] = useState(false);
-
 
   const location = useLocation();
   const { label } = location.state || {};
@@ -69,18 +72,14 @@ const OutreachSignup = () => {
       try {
         const result = await fetchEventById(id);
         setData(result);
-        
       } catch (error) {
         console.error(error.message);
       }
     };
-  //  console.log('ProfilePage status'+isProfilePage);
-
-    
+    //  console.log('ProfilePage status'+isProfilePage);
 
     getData(); // Invoke the async function
-    
-  }, [data]);
+  }, [label2]);
 
   const [showModal, setShowModal] = useState(false);
 
@@ -92,46 +91,45 @@ const OutreachSignup = () => {
     setShowModal(false);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     const getUserSignedUpOutreaches = async () => {
       try {
-        const result = await fetchUserSignedUpOutreaches(fAuth?.currentUser?.uid);
+        const result = await fetchUserSignedUpOutreaches(
+          fAuth?.currentUser?.uid
+        );
         setUserSignedUpOutreaches(result);
-        
       } catch (error) {
         console.error(error.message);
       }
-    }   
+    };
     getUserSignedUpOutreaches();
-      // console.log(fAuth.currentUser.uid);
-      const eventIds = userSignedUpOutreaches?.map(event => event.id);
-      // console.log(eventIds);   
-      
+    // console.log(fAuth.currentUser.uid);
+    const eventIds = userSignedUpOutreaches?.map((event) => event.id);
+    // console.log(eventIds);
 
-      const isSignedUp = eventIds?.includes(id);
-      // console.log(isSignedUp);
-      if(isSignedUp){
-        setLabel2('EDIT')
-      }else{
-        setLabel2('RSVP')
-      }
+    const isSignedUp = eventIds?.includes(id);
+    // console.log(isSignedUp);
+    if (isSignedUp) {
+      setLabel2("EDIT");
+    } else {
+      setLabel2("RSVP");
+    }
 
-      if (data?.uid === fAuth?.currentUser?.uid){
-        setHasCreated(true)
-      }else{
-        setHasCreated(false)
-      }
+    if (data?.uid === fAuth?.currentUser?.uid) {
+      setHasCreated(true);
+    } else {
+      setHasCreated(false);
+    }
 
-      const timestamp = data?.eventStartTime.seconds *1000 + data?.eventStartTime.nanoseconds/1000000      
-      if(timestamp < Date.now()){
-        setIsPastEvent(true)
-      }
-      else{
-        setIsPastEvent(false)
-      }
-
-
-  }, [data])
+    const timestamp =
+      data?.eventStartTime.seconds * 1000 +
+      data?.eventStartTime.nanoseconds / 1000000;
+    if (timestamp < Date.now()) {
+      setIsPastEvent(true);
+    } else {
+      setIsPastEvent(false);
+    }
+  }, [data]);
 
   // console.log(isPastEvent)
 
@@ -144,7 +142,7 @@ const OutreachSignup = () => {
       case "Chapter Member":
         verifiedImg = verifiedPurple;
         break;
-      case "Internal Member":
+      case "Streetcare Hub Leader":
         verifiedImg = verifiedBlue;
         break;
       default:
@@ -161,7 +159,7 @@ const OutreachSignup = () => {
         collection(db, USERS_COLLECTION),
         where("uid", "==", fAuth?.currentUser?.uid)
       );
-      
+
       const userDocRef = await getDocs(userQuery);
 
       const userDocID = userDocRef.docs[0].id;
@@ -189,7 +187,7 @@ const OutreachSignup = () => {
         <div className="items-center justify-center px-12 py-8 lg:px-32 lg:py-24 h-full w-full rounded-3xl bg-[#F8F9F0] grid grid-cols-1">
           <div className="w-fit h-fit flex-col justify-start items-start gap-16 inline-flex">
             <div className="w-fit text-[#212121] text-[45px] font-medium font-inter leading-[52px]">
-              Sign Up For Community Outreach 
+              Sign Up For Community Outreach
             </div>
             <div className="self-stretch h-fit bg-[#F5EDFA] rounded-[30px] flex-col justify-start items-start flex">
               <div className="self-stretch h-fit px-6 pt-9 pb-3 flex-col justify-start items-start gap-2.5 flex">
@@ -263,7 +261,9 @@ const OutreachSignup = () => {
                     <img className="w-[12px] h-[15px] my-[3px]" src={locate} />
                     {data ? (
                       <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
-                        {data.location.street},{data.location.city}, {data.location.stateAbbv}, {data.location.zipcode}
+                        {/* for showing complete address of outreach event */}
+                        {/* {data.location.street},{data.location.city}, {data.location.stateAbbv}, {data.location.zipcode} */}
+                        {data.location.city}, {data.location.stateAbbv}
                       </div>
                     ) : (
                       <div className="self-stretch text-[#444746] text-sm font-normal font-inter leading-snug">
@@ -310,7 +310,10 @@ const OutreachSignup = () => {
                 {data ? (
                   <div className="inline-flex items-center gap-2 flex-wrap">
                     {data.skills.map((item) => (
-                      <div key={item} className="py-1 px-3 border border-[#C8C8C8] w-fit rounded-xl text-[12px] text-[#444746]">
+                      <div
+                        key={item}
+                        className="py-1 px-3 border border-[#C8C8C8] w-fit rounded-xl text-[12px] text-[#444746]"
+                      >
                         {item}
                       </div>
                     ))}
@@ -346,11 +349,11 @@ const OutreachSignup = () => {
               </div>
             </div>
 
-            {data && !(isPastEvent) ? (
-                  <div className="justify-start items-start gap-[15px] inline-flex">
-                  <div className="h-10 bg-[#6840E0] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex">
-                    {label2 === "EDIT" ? (
-                      <>
+            {data && !isPastEvent ? (
+              <div className="justify-start items-start gap-[15px] inline-flex">
+                <div className="h-10 bg-[#6840E0] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex">
+                  {label2 === "EDIT" ? (
+                    <>
                       <CustomButton
                         label="Withdraw"
                         name="buttondefault"
@@ -366,11 +369,11 @@ const OutreachSignup = () => {
                           );
                           // setSuccess(true);
                           setModalLabel("RSVP");
-                          handleShowModal();                      
-                      }}
+                          handleShowModal();
+                        }}
                       />
-                      
-                        {/* <CustomButton
+
+                      {/* <CustomButton
                           label="Delete"
                           name="deleteButton"
                           onClick={() => setShowDeleteModal(true)}
@@ -382,76 +385,79 @@ const OutreachSignup = () => {
                             modalMsg={`Are you sure you want to delete this visit log?`}
                           />
                         )} */}
-                      </>
-                    ) : (
-                      <CustomButton
-                        label="Sign Up"
-                        name="buttondefault"
-                        onClick={(e) => {
-                          handleRsvp(
-                            e,
-                            id,
-                            "RSVP",
-                            navigate,
-                            "RSVP",
-                            setLabel2,
-                            false,                            
-                          );
-                          // console.log(data);
-                          // setSuccess(true);
-                          setModalLabel("EDIT");   
-                          handleShowModal();
-                                                 
-                        }}
-                      />
-                    )}
-                  </div>
-    
-                  <div
-                    className="h-10 bg-[#000]] rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 inline-flex"
-                    onClick={() => {
-                      navigate(-1);
-                    }}
-                  >
-                    <div className="self-stretch grow shrink basis-0 px-6 py-2.5 justify-center items-center gap-2 inline-flex">
-                      <button className="text-center text-[#1F0A58] text-sm font-medium font-inter leading-tight">
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                  {hasCreated && <CustomButton
-                          label="Delete"
-                          name="deleteButton"
-                          onClick={() => setShowDeleteModal(true)}
-                        />}
-                  {showDeleteModal && (
-                          <DeleteModal
-                            handleClose={() => setShowDeleteModal(false)}
-                            handleDelete={deleteVisitLog}
-                            modalMsg={`Are you sure you want to delete this visit log?`}
-                          />
-                        )}
-                  {showModal && <RSVPConfirmationModal closeModal={handleCloseModal} type={modalLabel}/>}
-
-          
+                    </>
+                  ) : (
+                    <CustomButton
+                      label="Sign Up"
+                      name="buttondefault"
+                      onClick={(e) => {
+                        handleRsvp(
+                          e,
+                          id,
+                          "RSVP",
+                          navigate,
+                          "RSVP",
+                          setLabel2,
+                          false
+                        );
+                        // console.log(data);
+                        // setSuccess(true);
+                        setModalLabel("EDIT");
+                        handleShowModal();
+                      }}
+                    />
+                  )}
                 </div>
-                ) : (
-                  <div className="self-stretch text-[#212121] text-2xl font-medium font-inter leading-loose">
-                    <div
-                    className="h-10 bg-[#000]] rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 inline-flex"
-                    onClick={() => {
-                      navigate(-1);
-                    }}
-                  >
-                    <div className="self-stretch grow shrink basis-0 px-6 py-2.5 justify-center items-center gap-2 inline-flex">
-                      <button className="text-center text-[#1F0A58] text-sm font-medium font-inter leading-tight">
-                        Cancel
-                      </button>
-                    </div>
+
+                <div
+                  className="h-10 bg-[#000]] rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 inline-flex"
+                  onClick={() => {
+                    navigate(-1);
+                  }}
+                >
+                  <div className="self-stretch grow shrink basis-0 px-6 py-2.5 justify-center items-center gap-2 inline-flex">
+                    <button className="text-center text-[#1F0A58] text-sm font-medium font-inter leading-tight">
+                      Cancel
+                    </button>
                   </div>
-                  </div>
+                </div>
+                {hasCreated && (
+                  <CustomButton
+                    label="Delete"
+                    name="deleteButton"
+                    onClick={() => setShowDeleteModal(true)}
+                  />
                 )}
-            
+                {showDeleteModal && (
+                  <DeleteModal
+                    handleClose={() => setShowDeleteModal(false)}
+                    handleDelete={deleteVisitLog}
+                    modalMsg={`Are you sure you want to delete this visit log?`}
+                  />
+                )}
+                {showModal && (
+                  <RSVPConfirmationModal
+                    closeModal={handleCloseModal}
+                    type={modalLabel}
+                  />
+                )}
+              </div>
+            ) : (
+              <div className="self-stretch text-[#212121] text-2xl font-medium font-inter leading-loose">
+                <div
+                  className="h-10 bg-[#000]] rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 inline-flex"
+                  onClick={() => {
+                    navigate(-1);
+                  }}
+                >
+                  <div className="self-stretch grow shrink basis-0 px-6 py-2.5 justify-center items-center gap-2 inline-flex">
+                    <button className="text-center text-[#1F0A58] text-sm font-medium font-inter leading-tight">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

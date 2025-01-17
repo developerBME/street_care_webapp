@@ -5,7 +5,7 @@ import { formatDate } from "../HelperFunction";
 import verifiedPurple from "../../images/verified_purple.png";
 import verifiedGreen from "../../images/verified.png";
 import verifiedBlue from "../../images/verified_blue.png";
-import verifiedYellow from "../../images/verified_yellow.png"
+import verifiedYellow from "../../images/verified_yellow.png";
 
 const getTags = (postData, isVisitLogs) => {
   console.log("ApprovalCard postData:", postData);
@@ -48,7 +48,7 @@ const ApprovalCardOutreachEvents = ({
     : postData?.eventDate?.seconds
     ? formatDate(new Date(postData.eventDate.seconds * 1000))
     : "Unknown Date";
-    
+
   let userImage = null;
 
   switch (postData.userType) {
@@ -58,7 +58,7 @@ const ApprovalCardOutreachEvents = ({
     case "Chapter Member":
       userImage = verifiedPurple;
       break;
-    case "Internal Member":
+    case "Streetcare Hub Leader":
       userImage = verifiedBlue;
       break;
     default:

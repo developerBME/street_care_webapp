@@ -20,8 +20,8 @@ const VisitLogDetails = () => {
   const { id } = useParams();
   const [data, setData] = useState(null);
 
-  const returnTarget = "/allOutreachVisitLog"; 
-  const returnText = "Return to Visit Logs"; 
+  const returnTarget = "/allOutreachVisitLog";
+  const returnText = "Return to Visit Logs";
 
   useEffect(() => {
     const getData = async () => {
@@ -45,7 +45,7 @@ const VisitLogDetails = () => {
       case "Chapter Member":
         verifiedImg = verifiedPurple;
         break;
-      case "Internal Member":
+      case "Streetcare Hub Leader":
         verifiedImg = verifiedBlue;
         break;
       default:
@@ -128,7 +128,10 @@ const VisitLogDetails = () => {
                     </div>
                   </div>
 
-                  <CardTags tags={data?.whatGiven || []} maxShown={data?.whatGiven.length || 0} />
+                  <CardTags
+                    tags={data?.whatGiven || []}
+                    maxShown={data?.whatGiven.length || 0}
+                  />
                 </div>
               </div>
             ) : (

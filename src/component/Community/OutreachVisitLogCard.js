@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import dateIcon from "../../images/date.png";
-import flagIcon from "../../images/flag.png";
+import flagIcon from "../../images/flag.svg";
 import infoIcon from "../../images/info_icon.png"; // Add an info icon image
 import locationIcon from "../../images/location.png";
 import defaultImage from "../../images/default_avatar.svg";
@@ -57,7 +57,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
     case "Chapter Member":
       verifiedImg = verifiedPurple;
       break;
-    case "Internal Member":
+    case "Streetcare Hub Leader":
       verifiedImg = verifiedBlue;
       break;
     default:
@@ -113,30 +113,30 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
     <div
       className="bg-[#F5EEFE] w-[320px] rounded-[30px] mb-4 flex flex-col p-[24px] h-auto cursor-pointer border-b-[1px] border-gray-200"
       onClick={handleViewDetails}
-    >
-      <div className="relative">
-        {/* Flag Button */}
-        <img
-          onClick={handleFlag}
-          src={flagIcon}
-          alt="flag"
-          className={`absolute right-4 w-8 h-8 cursor-pointer rounded-full p-1 ${
-            isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
-          }`}
-        />
-        
-        {/* Info Icon with Tooltip */}
-        <div className="absolute right-16 w-8 h-8 cursor-pointer rounded-full p-1 bg-gray-200 hover:bg-gray-300 group">
-          <img src={infoIcon} alt="info" />
-          {/* Tooltip */}
-          <div 
-    className="absolute -top-14 right-0 bg-black text-white text-xs rounded-md px-3 py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-30 whitespace-normal"
-    style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
-  >
-    If you feel this log is a spam, click on the flag.
-  </div>
-        </div>
-        </div>
+          >
+            <div className="relative">
+              {/* Flag Button */}
+              <div className="relative group">
+                <img
+                  onClick={handleFlag}
+                  src={flagIcon}
+                  alt="flag"
+                  className={`absolute right-4 w-8 h-8 cursor-pointer rounded-full p-1 ${
+                    isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
+                  }`}
+                />
+
+                {/* Tooltip on Hover */}
+                <div 
+                  className="absolute -top-14 right-0 bg-black text-white text-xs rounded-md px-3 py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-normal"
+                  style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
+                >
+                  If you feel this log is a spam, click on the flag.
+                </div>
+              </div>
+            </div>
+
+
       
       {/* Rest of the Component */}
       <div className="inline-flex items-center space-x-2">
@@ -155,35 +155,39 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
         <div className="flex items-center">
           <img className="w-4 h-4" src={dateIcon} alt="Date" />
           <span className="ml-2 text-sm">
-            {visitLogCardData?.eventDate ? formatDate(visitLogCardData.eventDate) : null}
+            {visitLogCardData && visitLogCardData.eventDate
+              ? formatDate(visitLogCardData.eventDate)
+              : null}
           </span>
         </div>
         
         <div className="flex items-center">
           <img className="w-3 h-4" src={locationIcon} alt="Location" />
-          <span className="ml-2 text-sm">
-            {`${visitLogCardData?.location?.city || visitLogCardData?.city}, ${
-              visitLogCardData?.location?.stateAbbv ||
-              visitLogCardData?.stateAbbv ||
-              visitLogCardData?.location?.state
-            }`}
-          </span>
+          <span className="ml-2 text-sm">{`${
+            visitLogCardData?.location?.city || visitLogCardData?.city
+          }, ${
+            visitLogCardData?.location?.stateAbbv ||
+            visitLogCardData?.stateAbbv ||
+            visitLogCardData?.location?.state
+          }`}</span>
         </div>
       </div>
-      
+
       <div className="flex justify-between items-center mt-4">
         <div className="text-sm font-bold">People Helped</div>
         <div className="text-xl font-bold">
           {visitLogCardData?.numberPeopleHelped}
         </div>
       </div>
-      
+
       <div className="flex justify-between items-center mt-2">
         <div className="text-sm font-bold">Items Donated</div>
         <div className="text-xl font-bold">{visitLogCardData?.itemQty}</div>
       </div>
-      
+
       <div className="mt-3">
+        {" "}
+        {/* Adjusted gap from 12px here */}
         <CardTags tags={visitLogCardData?.whatGiven || []} />
       </div>
       
