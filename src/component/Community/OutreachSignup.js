@@ -142,7 +142,7 @@ const OutreachSignup = () => {
       case "Chapter Member":
         verifiedImg = verifiedPurple;
         break;
-      case "Streetcare Hub Leader":
+      case "Street Care Hub Leader":
         verifiedImg = verifiedBlue;
         break;
       default:
