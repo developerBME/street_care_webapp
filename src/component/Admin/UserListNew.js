@@ -199,20 +199,20 @@ export default function UserListNew() {
       }
 
       const userData = userDoc.data();
-      if (!isInternalMember || userData.Type !== "Streetcare Hub Leader") {
-        await updateDoc(userDocRef, { Type: "Streetcare Hub Leader" });
+      if (!isInternalMember || userData.Type !== "Street Care Hub Leader") {
+        await updateDoc(userDocRef, { Type: "Street Care Hub Leader" });
         console.log(
-          `User with email ${email} is now an Streetcare Hub Leader.`
+          `User with email ${email} is now an Street Care Hub Leader.`
         );
       } else {
         await updateDoc(userDocRef, { Type: "" });
         console.log(
-          `User with email ${email} is no longer an Streetcare Hub Leader.`
+          `User with email ${email} is no longer an Street Care Hub Leader.`
         );
       }
     } catch (error) {
       console.error(
-        `Error updating Streetcare Hub Leader status for user with docId ${docId}:`,
+        `Error updating Street Care Hub Leader status for user with docId ${docId}:`,
         error
       );
     }
