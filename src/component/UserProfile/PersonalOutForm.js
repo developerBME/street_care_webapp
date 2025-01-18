@@ -466,7 +466,7 @@ function PersonalOutForm() {
     let statusValue = "pending";
     if (
       userDetails.type == "Chapter Leader" ||
-      userDetails.type == "Streetcare Hub Leader"
+      userDetails.type == "Street Care Hub Leader"
     ) {
       statusValue = "approved";
     }
