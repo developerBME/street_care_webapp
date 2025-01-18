@@ -320,15 +320,15 @@ const AllOutreachVisitLog = () => {
                 Chapter Member
               </span>
             </div>
-            {/* Streetcare Hub Leader */}
+            {/* Street Care Hub Leader */}
             <div className="flex items-center space-x-2">
               <img
                 src={verifiedBlue}
-                alt="Streetcare Hub Leader"
+                alt="Street Care Hub Leader"
                 className="w-6 h-6"
               />
               <span className="text-sm font-medium text-gray-700">
-                Streetcare Hub Leader
+                Street Care Hub Leader
               </span>
             </div>
             {/* Account holder */}
