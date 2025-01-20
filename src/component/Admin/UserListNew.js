@@ -588,8 +588,8 @@ const changeUserType = async (email, docId, Type) => {
                           value={chapterLeaders[user.email] || "Account Holder"} // Default to "Account Holder"
                         >
                         <option value="Chapter Leader">Chapter Leader</option>
-                        <option value="Streetcare Member">Streetcare Member</option>
-                        <option value="Streetcare Hub Leader">Streetcare Hub Leader</option>
+                        <option value="Chapter Member">Chapter Member</option>
+                        <option value="Street Care Hub Leader">Street Care Hub Leader</option>
                         <option value="Account Holder">Account Holder</option>
                         </select>
                       </td>
