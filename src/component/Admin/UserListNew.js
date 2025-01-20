@@ -45,6 +45,8 @@ export default function UserListNew() {
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage] = useState(10);
   const [sorted, setSorted] = useState(initialSorted);
+  const [chapterRoles, setChapterRoles] = useState({});
+
 
   const isMobile = useMediaQuery("(max-width:767px)");
 
@@ -163,6 +165,26 @@ export default function UserListNew() {
       );
     }
   };
+  const updateChapterRole = async (email, docId, newRole) => {
+    try {
+      const userDocRef = doc(db, "users", docId);
+      await updateDoc(userDocRef, { Type: newRole }); // Update the role in Firestore
+  
+      // Update the local state for roles
+      setChapterLeaders((prev) => ({
+        ...prev,
+        [email]: newRole,
+      }));
+  
+      alert(
+        `User with email ${email} is now assigned the role: ${newRole}.`
+      );
+    } catch (error) {
+      console.error(`Error updating role for user ${email}:`, error);
+      alert(`Failed to update role for user.`);
+    }
+  };
+  
 
   const toggleChapterLeader = async (email, docId) => {
     const isChapterLeader = chapterLeaders[email];
@@ -471,7 +493,7 @@ const changeUserType = async (email, docId, Type) => {
                   </th>
                   <th className="border-r py-3 px-2">Blocked</th>
                   <th className="border-r py-3 px-2">Admin</th>
-                  <th className="rounded-tr-2xl py-3 px-4">Chapter Leader</th>
+                  <th className="rounded-tr-2xl py-3 px-4">User Type</th>
                 </tr>
               </thead>
               <tbody className="text-sm bg-white">
@@ -556,35 +578,22 @@ const changeUserType = async (email, docId, Type) => {
                           </div>
                         </label>
                       </td>
-                      <td className="border-l border-b border-[#C8C8C8] whitespace-nowrap py-2">
-                        <label className="flex items-center justify-center">
-                          <div className="relative">
-                            <input
-                              type="checkbox"
-                              className="sr-only"
-                              checked={chapterLeaders[user.email]}
-                              onChange={(e) => {
-                                e.stopPropagation();
-                                toggleChapterLeader(user.email, user.docId);
-                              }}
-                            />
-                            <div
-                              className={`block w-12 h-6 rounded-full ${
-                                chapterLeaders[user.email]
-                                  ? "bg-red-600"
-                                  : "bg-gray-300"
-                              }`}
-                            ></div>
-                            <div
-                              className={`dot absolute left-1 top-1 w-4 h-4 rounded-full transition transform ${
-                                chapterLeaders[user.email]
-                                  ? "translate-x-6 bg-white"
-                                  : "bg-white"
-                              }`}
-                            ></div>
-                          </div>
-                        </label>
+                      <td className="border-l border-b border-[#C8C8C8] whitespace-nowrap py-2 px-4">
+                        <select
+                          className="p-2 border rounded bg-white"
+                          onChange={(e) => {
+                          e.stopPropagation();
+                          updateChapterRole(user.email, user.docId, e.target.value);
+                          }}
+                          value={chapterLeaders[user.email] || "Account Holder"} // Default to "Account Holder"
+                        >
+                        <option value="Chapter Leader">Chapter Leader</option>
+                        <option value="Streetcare Member">Streetcare Member</option>
+                        <option value="Streetcare Hub Leader">Streetcare Hub Leader</option>
+                        <option value="Account Holder">Account Holder</option>
+                        </select>
                       </td>
+
                     </tr>
                   ))
                 ) : (
