@@ -15,11 +15,10 @@ import Pagination from "./Pagination";
 import verifiedPurple from "../images/verified_purple.png";
 import verifiedGreen from "../images/verified.png";
 import verifiedBlue from "../images/verified_blue.png";
-import verifiedYellow from "../images/verified_yellow.png"
+import verifiedYellow from "../images/verified_yellow.png";
 
 // Main component for displaying all outreach events
 const AllOutreachEvents = ({ loggedIn }) => {
-
   const renderPaginationButtons = () => {
     const buttons = [];
     const pageRange = 1;
@@ -46,16 +45,27 @@ const AllOutreachEvents = ({ loggedIn }) => {
           1
         </button>
       );
-      buttons.push(<span key="ellipsis-start" className="mx-1">...</span>);
+      buttons.push(
+        <span key="ellipsis-start" className="mx-1">
+          ...
+        </span>
+      );
     }
 
-    for (let i = Math.max(1, currentPage - pageRange); i <= Math.min(totalPages, currentPage + pageRange); i++) {
+    for (
+      let i = Math.max(1, currentPage - pageRange);
+      i <= Math.min(totalPages, currentPage + pageRange);
+      i++
+    ) {
       buttons.push(
         <button
           key={i}
           onClick={() => onPageChange(i)}
-          className={`mx-1 px-3 py-1 rounded-full ${currentPage === i ? "bg-[#1F0A58] text-white" : "bg-gray-200 text-gray-600"
-            }`}
+          className={`mx-1 px-3 py-1 rounded-full ${
+            currentPage === i
+              ? "bg-[#1F0A58] text-white"
+              : "bg-gray-200 text-gray-600"
+          }`}
         >
           {i}
         </button>
@@ -63,7 +73,11 @@ const AllOutreachEvents = ({ loggedIn }) => {
     }
 
     if (currentPage < totalPages - pageRange) {
-      buttons.push(<span key="ellipsis-end" className="mx-1">...</span>);
+      buttons.push(
+        <span key="ellipsis-end" className="mx-1">
+          ...
+        </span>
+      );
       buttons.push(
         <button
           key="last"
@@ -386,25 +400,27 @@ const AllOutreachEvents = ({ loggedIn }) => {
                 Chapter Member
               </span>
             </div>
-            {/* Internal Member */}
+            {/* Street Care Hub Leader */}
             <div className="flex items-center space-x-2">
               <img
                 src={verifiedBlue}
-                alt="Internal Member"
+                alt="Street Care Hub Leader"
                 className="w-6 h-6"
               />
               <span className="text-sm font-medium text-gray-700">
-                Internal Member
+                Street Care Hub Leader
               </span>
             </div>
-            {/* Other */}
+            {/* Account holder */}
             <div className="flex items-center space-x-2">
               <img
                 src={verifiedYellow}
-                alt="Other"
+                alt="Account holder"
                 className="w-6 h-6"
               />
-              <span className="text-sm font-medium text-gray-700">Other</span>
+              <span className="text-sm font-medium text-gray-700">
+                Account holder
+              </span>
             </div>
           </div>
 
@@ -415,9 +431,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
               Showing {currentEvents.length} of {eventsDisplay.length} events
             </p>
 
-            <div className="flex justify-end">
-              {renderPaginationButtons()}
-            </div>
+            <div className="flex justify-end">{renderPaginationButtons()}</div>
           </div>
 
           {/* Display loading skeletons or events */}
@@ -444,8 +458,8 @@ const AllOutreachEvents = ({ loggedIn }) => {
                         ...eventData,
                         eventDate: eventData.eventDate?.seconds
                           ? formatDate(
-                            new Date(eventData.eventDate.seconds * 1000)
-                          )
+                              new Date(eventData.eventDate.seconds * 1000)
+                            )
                           : eventData.eventDate,
                       })
                     }
@@ -465,11 +479,8 @@ const AllOutreachEvents = ({ loggedIn }) => {
               Showing {currentEvents.length} of {eventsDisplay.length} events
             </p>
 
-            <div className="flex justify-end">
-              {renderPaginationButtons()}
-            </div>
+            <div className="flex justify-end">{renderPaginationButtons()}</div>
           </div>
-
         </div>
       </div>
       <Modal open={!!selectedEvent}>

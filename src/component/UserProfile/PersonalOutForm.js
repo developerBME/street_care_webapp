@@ -25,9 +25,9 @@ import { fetchPersonalVisitLogById } from "../VisitLogCardService";
 import UpdateVisitLogConfirmationModal from "./UpdateVisitLogConfirmationModal";
 import DatePicker from "react-datepicker";
 import { Timestamp } from "firebase/firestore";
-import InfoIcon from '@mui/icons-material/Info';
+import InfoIcon from "@mui/icons-material/Info";
 // import { IconButton } from "@mui/material";
-import {Tooltip, IconButton} from '@mui/material';
+import { Tooltip, IconButton } from "@mui/material";
 import { fetchUserTypeDetails } from "../EventCardService";
 
 const USERS_COLLECTION = "users";
@@ -178,7 +178,7 @@ function PersonalOutForm() {
 
   const handleDateTimeChange = (date) => {
     updateErrorState("dateTimeError", "");
-    console.log('Selected date:', date);
+    console.log("Selected date:", date);
   };
 
   const handleCityChange = (e) => {
@@ -463,9 +463,12 @@ function PersonalOutForm() {
     }
 
     const userDetails = await fetchUserTypeDetails(fAuth.currentUser.uid);
-    let statusValue = 'pending'
-    if(userDetails.type == 'Chapter Leader' || userDetails.type == 'Internal Member') {
-      statusValue = 'approved'
+    let statusValue = "pending";
+    if (
+      userDetails.type == "Chapter Leader" ||
+      userDetails.type == "Street Care Hub Leader"
+    ) {
+      statusValue = "approved";
     }
 
     let obj = {
@@ -484,7 +487,7 @@ function PersonalOutForm() {
       street: street,
       dateTime: Timestamp.fromDate(dateTime),
       public: isPublic,
-      status: statusValue
+      status: statusValue,
     };
     console.log(obj);
 
@@ -814,14 +817,25 @@ function PersonalOutForm() {
     );
   }, []);
 
-  const toolTipContent=(
+  const toolTipContent = (
     <div>
       Mention here the total quantity of items like 5, 12, 20..
-        <ul className="list-disc list-inside">
-          <li>Item: A single, standalone object. Count those individually (e.g., a book, a shirt, a toy, a food can). </li>
-          <li>Collection: Multiple similar items grouped together that cannot be counted. Count them as 1 item (e.g. 1 bag of toys, 1 bag of Legos, 1 box of pins). </li>
-          <li>Bulk Materials:  For materials like fabric, yarn, or crafting supplies,  note the number of pieces (e.g., 1 piece of 5 yards of fabric, 1 roll of wool). </li>
-        </ul>
+      <ul className="list-disc list-inside">
+        <li>
+          Item: A single, standalone object. Count those individually (e.g., a
+          book, a shirt, a toy, a food can).{" "}
+        </li>
+        <li>
+          Collection: Multiple similar items grouped together that cannot be
+          counted. Count them as 1 item (e.g. 1 bag of toys, 1 bag of Legos, 1
+          box of pins).{" "}
+        </li>
+        <li>
+          Bulk Materials: For materials like fabric, yarn, or crafting supplies,
+          note the number of pieces (e.g., 1 piece of 5 yards of fabric, 1 roll
+          of wool).{" "}
+        </li>
+      </ul>
     </div>
   );
 
@@ -1400,11 +1414,13 @@ function PersonalOutForm() {
                               wrapperClassName="w-full"
                               customInput={
                                 <CustomInput
-                                id="date"
-                                className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
-                                  error.dateTimeError !== "" ? "ring-red-500" : "ring-gray-300"
-                                }`}
-                                ref={dateTimeRef}
+                                  id="date"
+                                  className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                                    error.dateTimeError !== ""
+                                      ? "ring-red-500"
+                                      : "ring-gray-300"
+                                  }`}
+                                  ref={dateTimeRef}
                                 />
                               }
                             />
@@ -1471,7 +1487,7 @@ function PersonalOutForm() {
                       Total number of items donated by you?*
                       <Tooltip title={toolTipContent} placement="right" arrow>
                         <IconButton>
-                          <InfoIcon/>
+                          <InfoIcon />
                         </IconButton>
                       </Tooltip>
                     </div>
@@ -1871,14 +1887,19 @@ function PersonalOutForm() {
                               showTimeSelect
                               timeFormat="HH:mm" // Adjust time format as needed
                               dateFormat="dd/MM/yyyy HH:mm" // Adjust date format to include time
-                              minDate={new Date(new Date().getTime() + 24 * 60 * 60 * 1000)}
+                              minDate={
+                                new Date(
+                                  new Date().getTime() + 24 * 60 * 60 * 1000
+                                )
+                              }
                               wrapperClassName="w-full"
                               customInput={
                                 <CustomInput
                                   id="date"
                                   className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
-                                    error.dateTimeError   
-                            !== "" ? "ring-red-500" : "ring-gray-300"
+                                    error.dateTimeError !== ""
+                                      ? "ring-red-500"
+                                      : "ring-gray-300"
                                   }`}
                                   ref={dateTimeRef}
                                 />
