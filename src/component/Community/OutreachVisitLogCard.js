@@ -62,7 +62,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
     case "Chapter Member":
       verifiedImg = verifiedPurple;
       break;
-    case "Internal Member":
+    case "Street Care Hub Leader":
       verifiedImg = verifiedBlue;
       break;
     default:

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import defaultImage from "../../images/default_avatar.svg";
 import { useNavigate } from "react-router-dom";
@@ -15,11 +15,8 @@ import verifiedBlue from "../../images/verified_blue.png";
 import verifiedYellow from "../../images/verified_yellow.png";
 import { useUserContext } from "../../context/Usercontext.js";
 
-
 const PERSONAL_OUTREACH_COLLECTION = "outreachEvents"; // Collection name
-
-
-
+const USERS_COLLECTION = "users"; // User collection
 
 const OutreachEventCard = ({
   cardData,
@@ -41,11 +38,37 @@ const OutreachEventCard = ({
 
   const navigate = useNavigate();
 
+  // State for flag status
+  const [isFlagged, setIsFlagged] = useState(false);
 
+  // State for hover
+  const [isHovered, setIsHovered] = useState(false);
 
+  // Fetch flag status when component mounts
+  useEffect(() => {
+    const fetchFlagStatus = async () => {
+      try {
+        if (!id) {
+          console.error("Invalid cardData.id:", id);
+          return;
+        }
 
-  // Initialize the isFlagged state
-  const [isFlagged, setIsFlagged] = useState(cardData?.isFlagged === "flagged");
+        const docRef = doc(db, PERSONAL_OUTREACH_COLLECTION, id);
+        const currentDoc = await getDoc(docRef);
+
+        if (currentDoc.exists()) {
+          const { isFlagged } = currentDoc.data();
+          setIsFlagged(isFlagged || false);
+        } else {
+          console.error("Document does not exist:", id);
+        }
+      } catch (error) {
+        console.error("Error fetching flag status:", error);
+      }
+    };
+
+    fetchFlagStatus();
+  }, [id]);
 
   const handleFlag = async (e) => {
     e.stopPropagation(); // Prevent triggering parent click events
@@ -54,48 +77,59 @@ const OutreachEventCard = ({
       return;
     }
 
-    console.log("User ID:", user.uid); 
     try {
       if (!id) {
         console.error("Invalid cardData.id:", id);
         return;
       }
 
-      // Reference the document in Firestore
-      const docRef = doc(db, PERSONAL_OUTREACH_COLLECTION, id);
+      const userRef = doc(db, USERS_COLLECTION, user.uid);
+      const userDoc = await getDoc(userRef);
 
-      // Fetch current document data
-      const currentDoc = await getDoc(docRef);
-      if (!currentDoc.exists()) {
-        console.error("Document does not exist:", id);
+      if (!userDoc.exists()) {
+        console.error("User document does not exist:", user.uid);
         return;
       }
 
-      const currentStatus = currentDoc.data().isFlagged;
+      const { Type: userType } = userDoc.data();
+      const docRef = doc(db, PERSONAL_OUTREACH_COLLECTION, id);
+      const currentDoc = await getDoc(docRef);
 
-      // Toggle the flag status
-      const newStatus = currentStatus === "flagged" ? "unflagged" : "flagged";
+      if (!currentDoc.exists()) {
+        console.error("Outreach document does not exist:", id);
+        return;
+      }
 
-      // Update the status in Firestore
-      await updateDoc(docRef, { isFlagged: newStatus });
+      const { isFlagged: currentStatus, flaggedByUser } = currentDoc.data();
 
-      console.log(`Document ${id} updated to ${newStatus}`);
+      const canUnflag =
+        flaggedByUser === user.uid || userType === "Chapter Leader";
 
-      // Update the local state
-      setIsFlagged(newStatus === "flagged");
+      if (currentStatus) {
+        if (!canUnflag) {
+          console.error(
+            "Only the user who flagged this event or a Chapter Leader can unflag it."
+          );
+          return;
+        }
+
+        await updateDoc(docRef, { isFlagged: false, flaggedByUser: null });
+        setIsFlagged(false);
+      } else {
+        await updateDoc(docRef, { isFlagged: true, flaggedByUser: user.uid });
+        setIsFlagged(true);
+      }
     } catch (error) {
       console.error("Error toggling document flag status:", error);
     }
   };
 
-  // Navigate to the outreach details page
   const detailOutreach = () => {
     navigate(`/outreachsignup/${id}`, {
       state: { label: "EDIT", isProfilePage },
     });
   };
 
-  // Assign verified image based on userType
   let verifiedImg;
   switch (userType) {
     case "Chapter Leader":
@@ -104,7 +138,7 @@ const OutreachEventCard = ({
     case "Chapter Member":
       verifiedImg = verifiedPurple;
       break;
-    case "Streetcare Hub Leader":
+    case "Street Care Hub Leader":
       verifiedImg = verifiedBlue;
       break;
     default:
@@ -118,17 +152,25 @@ const OutreachEventCard = ({
         "min-w-full max-w-[320px] lg:w-full rounded-[30px] mb-4 flex flex-col justify-between cursor-pointer",
         { "bg-[#F5EEFE] p-6": !isHelpRequestCard }
       )}
-      onClick={detailOutreach} // Always navigate to details page
+      onClick={detailOutreach}
     >
       <div className="relative">
+        {/* Flag Icon with Hover */}
         <img
           onClick={handleFlag}
           src={flagSvg}
           alt="flag"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
           className={`absolute right-4 w-8 h-8 cursor-pointer rounded-full p-1 ${
             isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
           }`}
         />
+        {isHovered && (
+          <div className="absolute right-16 top-0 bg-gray-800 text-white text-sm rounded-md px-2 py-1">
+            Flag the Outreach Event?
+          </div>
+        )}
       </div>
 
       {/* User Information */}
@@ -159,13 +201,10 @@ const OutreachEventCard = ({
           </div>
         </div>
 
-        {/* Title and Description */}
         <h1 className="font-medium text-[24px] line-clamp-1">{title}</h1>
         <div className="font-medium text-[14px] text-[#444746] line-clamp-2 h-10">
           {description}
         </div>
-
-        {/* Tags */}
         <CardTags tags={skills} />
       </div>
     </div>
