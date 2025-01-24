@@ -7,10 +7,7 @@ import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 import { parse } from "date-fns";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import verifiedPurple from "../images/verified_purple.png";
-import verifiedGreen from "../images/verified.png";
-import verifiedBlue from "../images/verified_blue.png";
-import verifiedYellow from "../images/verified_yellow.png";
+import UserTypeInfo from "./UserTypeInfo";
 
 const AllOutreachVisitLog = () => {
   const navigate = useNavigate();
@@ -297,52 +294,7 @@ const AllOutreachVisitLog = () => {
               )}
             </div>
           </div>
-          <div className="flex items-center justify-start space-x-4 mt-4">
-            {/* Chapter Leader */}
-            <div className="flex items-center space-x-2">
-              <img
-                src={verifiedGreen}
-                alt="Chapter Leader"
-                className="w-6 h-6"
-              />
-              <span className="text-sm font-medium text-gray-700">
-                Chapter Leader
-              </span>
-            </div>
-            {/* Chapter Member */}
-            <div className="flex items-center space-x-2">
-              <img
-                src={verifiedPurple}
-                alt="Chapter Member"
-                className="w-6 h-6"
-              />
-              <span className="text-sm font-medium text-gray-700">
-                Chapter Member
-              </span>
-            </div>
-            {/* Street Care Hub Leader */}
-            <div className="flex items-center space-x-2">
-              <img
-                src={verifiedBlue}
-                alt="Street Care Hub Leader"
-                className="w-6 h-6"
-              />
-              <span className="text-sm font-medium text-gray-700">
-                Street Care Hub Leader
-              </span>
-            </div>
-            {/* Account holder */}
-            <div className="flex items-center space-x-2">
-              <img
-                src={verifiedYellow}
-                alt="Account holder"
-                className="w-6 h-6"
-              />
-              <span className="text-sm font-medium text-gray-700">
-                Account holder
-              </span>
-            </div>
-          </div>
+          <UserTypeInfo />
           {isLoading ? (
             <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
               <EventCardSkeleton />
