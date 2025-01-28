@@ -158,7 +158,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
             className="absolute right-16 top-0 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-30 whitespace-normal"
             style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
           >
-            Flag the Visit Log?
+            {!isFlagged ? 'Flag the Visit Log?' : 'Unflag the Visit Log?'}
         </div>
       </div>
       
