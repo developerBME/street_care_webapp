@@ -168,7 +168,8 @@ const OutreachEventCard = ({
         />
         {isHovered && (
           <div className="absolute right-16 top-0 bg-gray-800 text-white text-sm rounded-md px-2 py-1">
-            Flag the Outreach Event?
+            {!isFlagged ? 'Flag the Outreach Event?' : 'Unflag the Outreach Event?'}
+            
           </div>
         )}
       </div>
