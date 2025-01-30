@@ -44,7 +44,7 @@ const PostApprovals = () => {
         // Fetch outreaches
         const outreachQuery = query(
           collection(db, "outreachEvents"),
-          where("approved", "==", false)
+          where("status", "==", "pending")
         );
         const outreachSnapshot = await getDocs(outreachQuery);
         const outreaches = await Promise.all(
@@ -64,7 +64,7 @@ const PostApprovals = () => {
         // Fetch visit logs
         const visitLogQuery = query(
           collection(db, "personalVisitLog"),
-          where("approved", "==", false)
+          where("status", "==", "pending")
         );
         const visitLogSnapshot = await getDocs(visitLogQuery);
         const visitLogs = await Promise.all(
@@ -72,10 +72,11 @@ const PostApprovals = () => {
             const post = { id: doc.id, ...doc.data() };
 
             // Fetch userName using uid
-            const userDetails = await fetchUserDetails(post.uid);
+            const userDetails = await fetchUserTypeDetails(post.uid);
             return {
               ...post,
               userName: userDetails?.username || "Unknown User",
+              userType: userDetails?.type || "",
             };
           })
         );
