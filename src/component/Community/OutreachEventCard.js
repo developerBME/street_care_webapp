@@ -103,12 +103,12 @@ const OutreachEventCard = ({
       const { isFlagged: currentStatus, flaggedByUser } = currentDoc.data();
 
       const canUnflag =
-        flaggedByUser === user.uid || userType === "Chapter Leader";
+        flaggedByUser === user.uid || userType === "Street Care Hub Leader";
 
       if (currentStatus) {
         if (!canUnflag) {
           console.error(
-            "Only the user who flagged this event or a Chapter Leader can unflag it."
+            "Only the user who flagged this event or a Street Care Hub Leader can unflag it."
           );
           return;
         }

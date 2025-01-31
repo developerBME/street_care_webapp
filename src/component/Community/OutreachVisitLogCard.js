@@ -101,12 +101,12 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
       console.log("user:",userType);
       const { isFlagged: currentStatus, flaggedByUser } = docSnap.data();
       const canUnflag =
-        flaggedByUser === user.uid || userType === "Chapter Leader";
+        flaggedByUser === user.uid || userType === "Street Care Hub Leader";
       const currentIsFlagged = docSnap.data().isFlagged;
   
       // Restrict unflagging to specific user types
       if (currentIsFlagged && !(currentUserType === "Chapter Leader" || currentUserType === "Internal Member")) {
-        console.log("Only Chapter Leader or Internal Member can unflag this post.");
+        console.log("Only Street Care Hub Leader or Internal Member can unflag this post.");
         return;
       }
   
