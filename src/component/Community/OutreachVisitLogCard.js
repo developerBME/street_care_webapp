@@ -134,10 +134,10 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
     return <div>Loading...</div>; // Placeholder while loading flag status
   }
 
-  // Restrict visibility of flagged logs
-  if (isFlagged && !(currentUserType === "Chapter Leader" || currentUserType === "Internal Member")) {
-    return null; // Do not render the card for unauthorized users
-  }
+  // // Restrict visibility of flagged logs
+  // if (isFlagged && !(currentUserType === "Chapter Leader" || currentUserType === "Internal Member")) {
+  //   return null; // Do not render the card for unauthorized users
+  // }
 
   return (
     <div
