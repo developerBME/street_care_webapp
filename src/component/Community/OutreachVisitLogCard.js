@@ -73,6 +73,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
   const handleFlag = async (e) => {
     e.stopPropagation(); // Prevent triggering parent click events
     if (!user) {
+      alert("Please log in to flag or unflag the visit log.");
       console.error("User is not logged in.");
       return;
     }
