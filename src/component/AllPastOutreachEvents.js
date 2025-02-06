@@ -10,10 +10,7 @@ import {
 import search_icon from "../images/search_icon.png";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 import { formatDate } from "./HelperFunction";
-import verifiedPurple from "../images/verified_purple.png";
-import verifiedGreen from "../images/verified.png";
-import verifiedBlue from "../images/verified_blue.png";
-import verifiedYellow from "../images/verified_yellow.png";
+import UserTypeInfo from "./UserTypeInfo";
 
 const AllPastOutreachEvents = () => {
   const [events, setEvents] = useState([]);
@@ -338,52 +335,7 @@ const AllPastOutreachEvents = () => {
               </div>
             </div>
           </div>
-          <div className="flex items-center justify-start space-x-4 mt-4">
-            {/* Chapter Leader */}
-            <div className="flex items-center space-x-2">
-              <img
-                src={verifiedGreen}
-                alt="Chapter Leader"
-                className="w-6 h-6"
-              />
-              <span className="text-sm font-medium text-gray-700">
-                Chapter Leader
-              </span>
-            </div>
-            {/* Chapter Member */}
-            <div className="flex items-center space-x-2">
-              <img
-                src={verifiedPurple}
-                alt="Chapter Member"
-                className="w-6 h-6"
-              />
-              <span className="text-sm font-medium text-gray-700">
-                Chapter Member
-              </span>
-            </div>
-            {/* Street Care Hub Leader */}
-            <div className="flex items-center space-x-2">
-              <img
-                src={verifiedBlue}
-                alt="Street Care Hub Leader"
-                className="w-6 h-6"
-              />
-              <span className="text-sm font-medium text-gray-700">
-                Street Care Hub Leader
-              </span>
-            </div>
-            {/* Account holder */}
-            <div className="flex items-center space-x-2">
-              <img
-                src={verifiedYellow}
-                alt="Account holder"
-                className="w-6 h-6"
-              />
-              <span className="text-sm font-medium text-gray-700">
-                Account holder
-              </span>
-            </div>
-          </div>
+          <UserTypeInfo />
           {/* 
           <div className="mt-6 lg:mt-0">
             <div className="flex items-center space-x-4">
