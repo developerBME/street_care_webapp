@@ -73,7 +73,6 @@ const PostApprovals = () => {
 
             // Fetch userName using uid
             const userDetails = await fetchUserTypeDetails(post.uid);
-            const userDetails = await fetchUserTypeDetails(post.uid);
             return {
               ...post,
               userName: userDetails?.username || "Unknown User",
