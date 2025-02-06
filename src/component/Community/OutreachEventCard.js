@@ -73,6 +73,7 @@ const OutreachEventCard = ({
   const handleFlag = async (e) => {
     e.stopPropagation(); // Prevent triggering parent click events
     if (!user) {
+      alert("Please log in to flag or unflag the Outreach Events.");
       console.error("User is not logged in.");
       return;
     }
@@ -107,6 +108,7 @@ const OutreachEventCard = ({
 
       if (currentStatus) {
         if (!canUnflag) {
+          alert("Only the user who flagged this event or a Street Care Hub Leader can unflag it.")
           console.error(
             "Only the user who flagged this event or a Street Care Hub Leader can unflag it."
           );
