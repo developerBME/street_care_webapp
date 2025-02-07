@@ -106,7 +106,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
       const currentIsFlagged = docSnap.data().isFlagged;
   
       // Restrict unflagging to specific user types
-      if (currentIsFlagged && !(currentUserType === "Chapter Leader" || currentUserType === "Internal Member")) {
+      if (currentIsFlagged && !(userType === "Chapter Leader" || userType === "Internal Member")) {
         console.log("Only Street Care Hub Leader or Internal Member can unflag this post.");
         return;
       }
