@@ -129,7 +129,6 @@ const [isFlagged, setIsFlagged] = useState(false);
         return;
       }
       const { Type: userType } = userDoc.data();
-      console.log("User:",userType);
       const docRef = doc(db, "outreachEvents", id);
       const currentDoc = await getDoc(docRef);
       if (!currentDoc.exists()) {
@@ -142,8 +141,8 @@ const [isFlagged, setIsFlagged] = useState(false);
         userType === "Street Care Hub Leader";
       if (currentStatus) {
         if (!canUnflag) {
-          // alert("Only the user who flagged this event or a Street Care Hub Leader can unflag it.");
-          console.error("Only the user who flagged this event or a Street Care Hub Leader can unflag it.");
+          alert("Only the user who flagged this event or a Street Care Hub Leader can unflag it.");
+          // console.error("Only the user who flagged this event or a Street Care Hub Leader can unflag it.");
           return;
         }
         await updateDoc(docRef, { isFlagged: false, flaggedByUser: null });

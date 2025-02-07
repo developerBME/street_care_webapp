@@ -76,13 +76,13 @@ const handleFlag = async (e) => {
     const canUnflag = flaggedByUser === user.uid || userType === "Street Care Hub Leader";
     // (Optional) Restrict unflagging if needed:
     if (currentStatus && !(userType === "Street Care Hub Leader")) {
-      console.log("Only Street Care Hub Leader or User who flagged it can unflag this post.");
+      alert("Only Street Care Hub Leader or User who flagged it can unflag this post.");
       return;
     }
     
     if (currentStatus) {
       if (!canUnflag) {
-        console.error("Only authorized users can unflag this post.");
+        alert("Only authorized users can unflag this post.");
         return;
       }
       await updateDoc(docRef, { isFlagged: false, flaggedByUser: null });
