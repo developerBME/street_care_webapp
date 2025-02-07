@@ -74,7 +74,7 @@ const MoreVisitLogs = () => {
 
   const updateFlagStatusInFirebase = async (id, flagged) => {
     try {
-      const logRef = doc(db, "visitLogs", id); // Correct Firestore reference
+      const logRef = doc(db, "personalvisitlog", id); // Correct Firestore reference
       await updateDoc(logRef, { flagged });
       console.log(`Flag status updated for log ID: ${id}, flagged: ${flagged}`);
     } catch (error) {
