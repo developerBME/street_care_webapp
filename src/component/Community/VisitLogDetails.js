@@ -75,23 +75,20 @@ const handleFlag = async (e) => {
     const { isFlagged: currentStatus, flaggedByUser } = docSnap.data();
     const canUnflag = flaggedByUser === user.uid || userType === "Street Care Hub Leader";
     // (Optional) Restrict unflagging if needed:
-    if (currentStatus && !(userType === "Street Care Hub Leader")) {
+    if (currentStatus && !canUnflag) {
       alert("Only Street Care Hub Leader or User who flagged it can unflag this post.");
       return;
     }
     
     if (currentStatus) {
-      if (!canUnflag) {
-        alert("Only authorized users can unflag this post.");
-        return;
-      }
       await updateDoc(docRef, { isFlagged: false, flaggedByUser: null });
       setIsFlagged(false);
     } else {
       await updateDoc(docRef, { isFlagged: true, flaggedByUser: user.uid });
       setIsFlagged(true);
     }
-  } catch (error) {
+  } 
+  catch (error) {
     console.error("Error toggling flag status:", error);
   }
 };
