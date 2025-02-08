@@ -108,8 +108,8 @@ const HelpRequestCard = ({
       <div className="flex items-center text-sm text-indigo-600 mb-4">
         <IoLocationSharp className="w-5 h-5 mr-1" />
         <span>
-          {helpLocation.street}, {helpLocation.city}, {helpLocation.state}{" "}
-          {helpLocation.zipcode}
+          {helpLocation?.street ?? ""}, {helpLocation?.city ?? ""}, {helpLocation?.state ?? ""}{" "}
+          {helpLocation?.zipcode ?? ""}
         </span>
       </div>
 
