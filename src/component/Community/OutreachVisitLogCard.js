@@ -73,6 +73,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
   const handleFlag = async (e) => {
     e.stopPropagation(); // Prevent triggering parent click events
     if (!user) {
+      alert("Please log in to flag or unflag the visit log.");
       console.error("User is not logged in.");
       return;
     }
@@ -105,15 +106,15 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
       const currentIsFlagged = docSnap.data().isFlagged;
   
       // Restrict unflagging to specific user types
-      if (currentIsFlagged && !(currentUserType === "Chapter Leader" || currentUserType === "Internal Member")) {
-        console.log("Only Street Care Hub Leader or Internal Member can unflag this post.");
-        return;
+      if (currentIsFlagged && !(canUnflag)) {
+        alert("Only Street Care Hub Leader or User who flagged it can unflag this post.");
+        return; 
       }
   
       if (currentStatus) {
               if (!canUnflag) {
                 console.error(
-                  "Only the user who flagged this event or a Chapter Leader can unflag it."
+                  "Only the user who flagged this event or a Street Care Hub Leader can unflag it."
                 );
                 return;
               }
@@ -133,11 +134,6 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
   if (isLoading) {
     return <div>Loading...</div>; // Placeholder while loading flag status
   }
-
-  // // Restrict visibility of flagged logs
-  // if (isFlagged && !(currentUserType === "Chapter Leader" || currentUserType === "Internal Member")) {
-  //   return null; // Do not render the card for unauthorized users
-  // }
 
   return (
     <div
