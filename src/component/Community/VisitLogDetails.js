@@ -18,7 +18,6 @@ import { db } from "../firebase";
 import flagIcon from "../../images/flag.svg";
 import { useUserContext } from "../../context/Usercontext.js";
 
-
 const VisitLogDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,76 +25,74 @@ const VisitLogDetails = () => {
   const [data, setData] = useState(null);
 
   const PERSONAL_VISIT_LOG_COLLECTION = "visitLogWebProd";
-const USERS_COLLECTION = "users";
+  const USERS_COLLECTION = "users";
 
-const { user } = useUserContext();
-const [isFlagged, setIsFlagged] = useState(false);
+  const { user } = useUserContext();
+  const [isFlagged, setIsFlagged] = useState(false);
 
-useEffect(() => {
-  if (id) {
-    const fetchFlagStatus = async () => {
-      try {
-        const docRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, id);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setIsFlagged(docSnap.data().isFlagged || false);
+  useEffect(() => {
+    if (id) {
+      const fetchFlagStatus = async () => {
+        try {
+          const docRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, id);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            setIsFlagged(docSnap.data().isFlagged || false);
+          }
+        } catch (error) {
+          console.error("Error fetching flag status:", error);
         }
-      } catch (error) {
-        console.error("Error fetching flag status:", error);
-      }
-    };
-    fetchFlagStatus();
-  }
-}, [id]);
+      };
+      fetchFlagStatus();
+    }
+  }, [id]);
 
-const handleFlag = async (e) => {
-  e.stopPropagation(); // Prevent any parent click events
-  if (!user) {
-    alert("Please log in to flag or unflag the visit log.");
-    return;
-  }
-  try {
-    // Get the user document to check the user type
-    const userRef = doc(db, USERS_COLLECTION, user.uid);
-    const userDoc = await getDoc(userRef);
-    if (!userDoc.exists()) {
-      console.error("User document does not exist");
+  const handleFlag = async (e) => {
+    e.stopPropagation(); // Prevent any parent click events
+    if (!user) {
+      alert("Please log in to flag or unflag the visit log.");
       return;
     }
-    const { Type: userType } = userDoc.data();
-    
-    // Get the visit log document
-    const docRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, id);
-    const docSnap = await getDoc(docRef);
-    if (!docSnap.exists()) {
-      console.error("Document does not exist");
-      return;
-    }
-    
-    const { isFlagged: currentStatus, flaggedByUser } = docSnap.data();
-    const canUnflag = flaggedByUser === user.uid || userType === "Street Care Hub Leader";
-    // (Optional) Restrict unflagging if needed:
-    if (currentStatus && !(userType === "Street Care Hub Leader")) {
-      alert("Only Street Care Hub Leader or User who flagged it can unflag this post.");
-      return;
-    }
-    
-    if (currentStatus) {
-      if (!canUnflag) {
-        alert("Only authorized users can unflag this post.");
+    try {
+      // Get the user document to check the user type
+      const userRef = doc(db, USERS_COLLECTION, user.uid);
+      const userDoc = await getDoc(userRef);
+      if (!userDoc.exists()) {
+        console.error("User document does not exist");
         return;
       }
-      await updateDoc(docRef, { isFlagged: false, flaggedByUser: null });
-      setIsFlagged(false);
-    } else {
-      await updateDoc(docRef, { isFlagged: true, flaggedByUser: user.uid });
-      setIsFlagged(true);
-    }
-  } catch (error) {
-    console.error("Error toggling flag status:", error);
-  }
-};
+      const { Type: userType } = userDoc.data();
 
+      // Get the visit log document
+      const docRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, id);
+      const docSnap = await getDoc(docRef);
+      if (!docSnap.exists()) {
+        console.error("Document does not exist");
+        return;
+      }
+
+      const { isFlagged: currentStatus, flaggedByUser } = docSnap.data();
+      const canUnflag =
+        flaggedByUser === user.uid || userType === "Street Care Hub Leader";
+      // (Optional) Restrict unflagging if needed:
+      if (currentStatus && !(userType === "Street Care Hub Leader")) {
+        alert(
+          "Only Street Care Hub Leader or User who flagged it can unflag this post."
+        );
+        return;
+      }
+
+      if (currentStatus) {
+        await updateDoc(docRef, { isFlagged: false, flaggedByUser: null });
+        setIsFlagged(false);
+      } else {
+        await updateDoc(docRef, { isFlagged: true, flaggedByUser: user.uid });
+        setIsFlagged(true);
+      }
+    } catch (error) {
+      console.error("Error toggling flag status:", error);
+    }
+  };
 
   const returnTarget = "/allOutreachVisitLog";
   const returnText = "Return to Visit Logs";
@@ -152,41 +149,46 @@ const handleFlag = async (e) => {
             </div>
             {data ? (
               <div className="bg-[#F5EEFE] min-w-full max-w-[320px] lg:w-full rounded-[30px] mb-4 flex flex-col justify-between p-6">
-                
-                    <div className="flex items-center justify-between">
-  {/* Left side: User info */}
-  <div className="flex items-center space-x-2">
-    <img
-      src={data?.photoUrl || defaultImage}
-      alt="User"
-      className="w-8 h-8 rounded-full"
-    />
-    <span className="text-[13px] font-normal font-inter">
-      {data?.userName || "Not defined"}
-    </span>
-    <img src={verifiedImg} alt="Verified" className="w-5 h-5" />
-  </div>
+                <div className="flex items-center justify-between">
+                  {/* Left side: User info */}
+                  <div className="flex items-center space-x-2">
+                    <img
+                      src={data?.photoUrl || defaultImage}
+                      alt="User"
+                      className="w-8 h-8 rounded-full"
+                    />
+                    <span className="text-[13px] font-normal font-inter">
+                      {data?.userName || "Not defined"}
+                    </span>
+                    <img src={verifiedImg} alt="Verified" className="w-5 h-5" />
+                  </div>
 
-  {/* Right side: Flag icon */}
-  <div className="relative flex items-center group">
-  <img
-    onClick={handleFlag}
-    src={flagIcon}
-    alt="flag"
-    className={`w-8 h-8 cursor-pointer rounded-full p-1 ${
-      isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
-    }`}
-  />
-   <div 
-            className="absolute right-10 top-0 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-30 whitespace-normal"
-            style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
-          >
-            {!isFlagged ? 'Flag the Visit Log?' : 'Unflag the Visit Log?'}
-        </div>
-</div>
-
-</div>
-
+                  {/* Right side: Flag icon */}
+                  <div className="relative flex items-center group">
+                    <img
+                      onClick={handleFlag}
+                      src={flagIcon}
+                      alt="flag"
+                      className={`w-8 h-8 cursor-pointer rounded-full p-1 ${
+                        isFlagged
+                          ? "bg-red-500"
+                          : "bg-transparent hover:bg-gray-200"
+                      }`}
+                    />
+                    <div
+                      className="absolute right-10 top-0 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-30 whitespace-normal"
+                      style={{
+                        minWidth: "150px",
+                        maxWidth: "200px",
+                        textAlign: "center",
+                      }}
+                    >
+                      {!isFlagged
+                        ? "Flag the Visit Log?"
+                        : "Unflag the Visit Log?"}
+                    </div>
+                  </div>
+                </div>
 
                 <div className="my-3 space-y-3 w-full h-full flex flex-col">
                   <div className="flex flex-row justify-between">
