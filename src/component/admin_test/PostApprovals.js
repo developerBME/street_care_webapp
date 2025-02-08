@@ -77,6 +77,7 @@ const PostApprovals = () => {
               ...post,
               userName: userDetails?.username || "Unknown User",
               userType: userDetails?.type || "",
+              userType: userDetails?.type || "",
             };
           })
         );

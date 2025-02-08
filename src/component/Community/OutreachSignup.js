@@ -262,6 +262,8 @@ const OutreachSignup = () => {
                     <img className="w-[12px] h-[15px] my-[3px]" src={locate} />
                     {data ? (
                       <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
+                        {/* for showing complete address of outreach event */}
+                        {/* {data.location.street},{data.location.city}, {data.location.stateAbbv}, {data.location.zipcode} */}
                         {data.location.city}, {data.location.stateAbbv}
                       </div>
                     ) : (
