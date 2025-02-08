@@ -95,7 +95,7 @@ const [isFlagged, setIsFlagged] = useState(false);
           console.error("Invalid id:", id);
           return;
         }
-        const docRef = doc(db, "outreachEvents", id);
+        const docRef = doc(db, "outreachEventsDev", id);
         const currentDoc = await getDoc(docRef);
         if (currentDoc.exists()) {
           const { isFlagged } = currentDoc.data();
@@ -129,7 +129,7 @@ const [isFlagged, setIsFlagged] = useState(false);
         return;
       }
       const { Type: userType } = userDoc.data();
-      const docRef = doc(db, "outreachEvents", id);
+      const docRef = doc(db, "outreachEventsDev", id);
       const currentDoc = await getDoc(docRef);
       if (!currentDoc.exists()) {
         console.error("Outreach document does not exist:", id);

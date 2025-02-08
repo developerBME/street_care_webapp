@@ -25,7 +25,7 @@ const VisitLogDetails = () => {
   const { id } = useParams();
   const [data, setData] = useState(null);
 
-  const PERSONAL_VISIT_LOG_COLLECTION = "personalVisitLog";
+  const PERSONAL_VISIT_LOG_COLLECTION = "visitLogWebProd";
 const USERS_COLLECTION = "users";
 
 const { user } = useUserContext();
