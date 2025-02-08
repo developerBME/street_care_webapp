@@ -75,7 +75,7 @@ const VisitLogDetails = () => {
       const canUnflag =
         flaggedByUser === user.uid || userType === "Street Care Hub Leader";
       // (Optional) Restrict unflagging if needed:
-      if (currentStatus && !(userType === "Street Care Hub Leader")) {
+      if (currentStatus && !canUnflag) {
         alert(
           "Only Street Care Hub Leader or User who flagged it can unflag this post."
         );
