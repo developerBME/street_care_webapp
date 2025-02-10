@@ -1,57 +1,58 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 import Campaign from "../../images/campaign.svg";
-import { getDocs, collection, query } from "firebase/firestore";
-import { db } from "../firebase";
-import { useNavigate } from "react-router-dom";
-import { fetchVisitLogs } from "../VisitLogCardService";
+// import { getDocs, collection, query } from "firebase/firestore";
+// import { db } from "../firebase";
+// import { useNavigate } from "react-router-dom";
+// import { fetchVisitLogs } from "../VisitLogCardService";
 import HomePageVisitlog from "../HomePage/HomePageVisitlog";
 
 function Success2() {
-  const [donations, setDonations] = useState("");
-  const [helpedBy, setHelpedBy] = useState("");
-  const [helpedPeople, setHelpedPeople] = useState("");
-  const [visitLogs, setVisitLogs] = useState([]);
+  // Commenting to reduce unnecessary database calls
+  // const [donations, setDonations] = useState("");
+  // const [helpedBy, setHelpedBy] = useState("");
+  // const [helpedPeople, setHelpedPeople] = useState("");
+  // const [visitLogs, setVisitLogs] = useState([]);
 
-  const navigate = useNavigate();
-  useEffect(() => {
-    const getValues = async () => {
-      try {
-        const logOfUserRef = query(collection(db, "personalVisitLog"));
-        const data = await getDocs(logOfUserRef);
-        let totalDonations = 0;
-        let totalHelpedPeople = 0;
-        let uniqueID = new Set();
-        data.docs.map((doc) => {
-          uniqueID.add(doc.data().uid);
-          totalDonations =
-            isNaN(doc.data().itemQty) ||
-            typeof doc.data().itemQty === "undefined" ||
-            doc.data().itemQty === ""
-              ? totalDonations
-              : totalDonations + parseInt(doc.data().itemQty);
-          totalHelpedPeople =
-            isNaN(doc.data().numberPeopleHelped) ||
-            typeof doc.data().numberPeopleHelped === "undefined" ||
-            doc.data().numberPeopleHelped === ""
-              ? totalHelpedPeople
-              : totalHelpedPeople + parseInt(doc.data().numberPeopleHelped);
+  // const navigate = useNavigate();
+  // useEffect(() => {
+  //   const getValues = async () => {
+  //     try {
+  //       const logOfUserRef = query(collection(db, "personalVisitLog"));
+  //       const data = await getDocs(logOfUserRef);
+  //       let totalDonations = 0;
+  //       let totalHelpedPeople = 0;
+  //       let uniqueID = new Set();
+  //       data.docs.map((doc) => {
+  //         uniqueID.add(doc.data().uid);
+  //         totalDonations =
+  //           isNaN(doc.data().itemQty) ||
+  //           typeof doc.data().itemQty === "undefined" ||
+  //           doc.data().itemQty === ""
+  //             ? totalDonations
+  //             : totalDonations + parseInt(doc.data().itemQty);
+  //         totalHelpedPeople =
+  //           isNaN(doc.data().numberPeopleHelped) ||
+  //           typeof doc.data().numberPeopleHelped === "undefined" ||
+  //           doc.data().numberPeopleHelped === ""
+  //             ? totalHelpedPeople
+  //             : totalHelpedPeople + parseInt(doc.data().numberPeopleHelped);
 
-          return null;
-        });
-        setDonations(
-          isNaN(parseInt(totalDonations)) ? 0 : parseInt(totalDonations)
-        );
-        setHelpedBy(uniqueID.size);
-        setHelpedPeople(totalHelpedPeople);
-        const visitLogsData = await fetchVisitLogs();
-        setVisitLogs(visitLogsData);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getValues();
-  }, []);
+  //         return null;
+  //       });
+  //       setDonations(
+  //         isNaN(parseInt(totalDonations)) ? 0 : parseInt(totalDonations)
+  //       );
+  //       setHelpedBy(uniqueID.size);
+  //       setHelpedPeople(totalHelpedPeople);
+  //       const visitLogsData = await fetchVisitLogs();
+  //       setVisitLogs(visitLogsData);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   getValues();
+  // }, []);
 
   return (
     <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">

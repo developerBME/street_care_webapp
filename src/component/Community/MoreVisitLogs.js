@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { BsFlag, BsFlagFill } from "react-icons/bs"; // Flag icons
 import OutreachVisitLogProfileCard from "./OutreachVisitLogProfileCard";
 import { useNavigate } from "react-router-dom";
 import { fetchPersonalVisitLogs } from "../VisitLogCardService";
@@ -7,6 +8,21 @@ import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import NoDisplayData from "../UserProfile/NoDisplayData";
 import ErrorMessage from "../ErrorMessage";
 import { auth } from "../firebase";
+
+
+import {
+  doc,
+  deleteDoc,
+  query,
+  collection,
+  where,
+  getDocs,
+  getDoc,
+  updateDoc,
+  status
+} from "firebase/firestore";
+import { db } from "../firebase";
+import { getAuth } from "firebase/auth";
 
 const MoreVisitLogs = () => {
   const [visitLogs, setVisitLogs] = useState([]);
@@ -16,7 +32,7 @@ const MoreVisitLogs = () => {
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
-  const logsPerPage = 6; // Updated to match AllOutreachVisitLog
+  const logsPerPage = 6;
 
   const navigate = useNavigate();
 
@@ -26,7 +42,12 @@ const MoreVisitLogs = () => {
     if (user) {
       try {
         const logs = await fetchPersonalVisitLogs(user.uid);
-        setVisitLogs(logs);
+        // Add a 'flagged' property to each log
+        const logsWithFlags = logs.map((log) => ({
+          ...log,
+          flagged: false,
+        }));
+        setVisitLogs(logsWithFlags);
         setIsError(false);
       } catch (error) {
         setIsError(true);
@@ -51,6 +72,34 @@ const MoreVisitLogs = () => {
     }
   }, [visitLogs]);
 
+  const updateFlagStatusInFirebase = async (id, flagged) => {
+    try {
+      const logRef = doc(db, "personalvisitlog", id); // Correct Firestore reference
+      await updateDoc(logRef, { flagged });
+      console.log(`Flag status updated for log ID: ${id}, flagged: ${flagged}`);
+    } catch (error) {
+      console.error("Error updating flag status in Firebase:", error);
+    }
+  };
+  
+  const toggleFlag = (id) => {
+    const logToUpdate = visitLogs.find((log) => log.id === id);
+    if (!logToUpdate) {
+      console.error("Log not found:", id);
+      return;
+    }
+    const newFlaggedStatus = !logToUpdate.flagged;
+  
+    setVisitLogs((prevLogs) =>
+      prevLogs.map((log) =>
+        log.id === id ? { ...log, flagged: newFlaggedStatus } : log
+      )
+    );
+  
+    updateFlagStatusInFirebase(id, newFlaggedStatus);
+  };
+  
+
   // Get current logs based on pagination
   const indexOfLastLog = currentPage * logsPerPage;
   const indexOfFirstLog = indexOfLastLog - logsPerPage;
@@ -59,7 +108,7 @@ const MoreVisitLogs = () => {
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // Color variables for pagination (similar to AllOutreachVisitLog)
+  // Color variables for pagination
   const inactiveBgColor = "bg-white";
   const inactiveTextColor = "text-black";
   const inactiveBorderColor = "border-[#9B82CF]";
@@ -106,11 +155,17 @@ const MoreVisitLogs = () => {
                     key={visitLogData.id}
                     className="bg-[#F5EEFE] w-full rounded-[30px] mb-4 flex flex-col justify-between p-6"
                   >
-                    <div className="flex w-full">
+                    <div className="flex w-full justify-between items-center">
                       <OutreachVisitLogProfileCard
                         visitLogCardData={visitLogData}
                         onRefresh={fetchData}
                       />
+                      <button
+                        className="text-xl text-gray-500"
+                        onClick={() => toggleFlag(visitLogData.id)}
+                      >
+                        {visitLogData.flagged ? <BsFlagFill className="text-red-500" /> : <BsFlag />}
+                      </button>
                     </div>
                   </div>
                 ))}

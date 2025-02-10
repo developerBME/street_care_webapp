@@ -12,10 +12,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { formatDate } from "./HelperFunction";
 import Pagination from "./Pagination";
-import verifiedPurple from "../images/verified_purple.png";
-import verifiedGreen from "../images/verified.png";
-import verifiedBlue from "../images/verified_blue.png";
-import verifiedYellow from "../images/verified_yellow.png";
+import UserTypeInfo from "./UserTypeInfo";
 
 // Main component for displaying all outreach events
 const AllOutreachEvents = ({ loggedIn }) => {
@@ -377,52 +374,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
             </div>
           </div>
 
-          <div className="flex items-center justify-start space-x-4 mt-4">
-            {/* Chapter Leader */}
-            <div className="flex items-center space-x-2">
-              <img
-                src={verifiedGreen}
-                alt="Chapter Leader"
-                className="w-6 h-6"
-              />
-              <span className="text-sm font-medium text-gray-700">
-                Chapter Leader
-              </span>
-            </div>
-            {/* Chapter Member */}
-            <div className="flex items-center space-x-2">
-              <img
-                src={verifiedPurple}
-                alt="Chapter Member"
-                className="w-6 h-6"
-              />
-              <span className="text-sm font-medium text-gray-700">
-                Chapter Member
-              </span>
-            </div>
-            {/* Streetcare Hub Leader */}
-            <div className="flex items-center space-x-2">
-              <img
-                src={verifiedBlue}
-                alt="Streetcare Hub Leader"
-                className="w-6 h-6"
-              />
-              <span className="text-sm font-medium text-gray-700">
-                Streetcare Hub Leader
-              </span>
-            </div>
-            {/* Account holder */}
-            <div className="flex items-center space-x-2">
-              <img
-                src={verifiedYellow}
-                alt="Account holder"
-                className="w-6 h-6"
-              />
-              <span className="text-sm font-medium text-gray-700">
-                Account holder
-              </span>
-            </div>
-          </div>
+          <UserTypeInfo />
 
           {/* Pagination buttons */}
           {/* Add event count and pagination at the bottom */}

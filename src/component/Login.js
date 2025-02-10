@@ -79,6 +79,12 @@ function Login() {
     }
   });
 
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSubmit(e);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -241,6 +247,7 @@ function Login() {
                               : "ring-gray-300"
                           }`}
                           onChange={(e) => setEmail(e.target.value)}
+                          onKeyDown={ handleKeyPress}
                         ></input>
                       </div>
                     </div>
@@ -289,6 +296,7 @@ function Login() {
                             : "ring-gray-300"
                         }`}
                         onChange={(e) => setPassword(e.target.value)}
+                        onKeyDown={ handleKeyPress}
                       />
                       <div
                         className="absolute right-4 top-2/4 transform -translate-y-2/4 cursor-pointer"
