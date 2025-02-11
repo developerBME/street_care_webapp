@@ -114,7 +114,7 @@ const HelpRequestCard = ({
       </div>
 
       <div className="flex flex-wrap gap-2 mb-4">
-        {helpTags.map((tag, index) => (
+        {helpTags?.map((tag, index) => (
           <span
             key={index}
             className="bg-gray-100 text-sm px-3 py-1 rounded-full text-gray-700"
@@ -125,9 +125,9 @@ const HelpRequestCard = ({
       </div>
 
       <div className="text-sm text-gray-600 mb-4">
-        {helpDescription.length < 100
+        {helpDescription?.length < 100
           ? helpDescription
-          : `${helpDescription.substring(0, 100)}...`}
+          : `${helpDescription ? helpDescription.substring(0, 100)+"..." : ""}`}
       </div>
 
       <p className="text-sm text-gray-700 font-medium">
