@@ -49,6 +49,59 @@ const chipList = [
   "Pet Care",
 ];
 
+const stateAbbreviations = {
+  "alabama": "AL",
+  "alaska": "AK",
+  "arizona": "AZ",
+  "arkansas": "AR",
+  "california": "CA",
+  "colorado": "CO",
+  "connecticut": "CT",
+  "delaware": "DE",
+  "florida": "FL",
+  "georgia": "GA",
+  "hawaii": "HI",
+  "idaho": "ID",
+  "illinois": "IL",
+  "indiana": "IN",
+  "iowa": "IA",
+  "kansas": "KS",
+  "kentucky": "KY",
+  "louisiana": "LA",
+  "maine": "ME",
+  "maryland": "MD",
+  "massachusetts": "MA",
+  "michigan": "MI",
+  "minnesota": "MN",
+  "mississippi": "MS",
+  "missouri": "MO",
+  "montana": "MT",
+  "nebraska": "NE",
+  "nevada": "NV",
+  "new hampshire": "NH",
+  "new jersey": "NJ",
+  "new mexico": "NM",
+  "new york": "NY",
+  "north carolina": "NC",
+  "north dakota": "ND",
+  "ohio": "OH",
+  "oklahoma": "OK",
+  "oregon": "OR",
+  "pennsylvania": "PA",
+  "rhode island": "RI",
+  "south carolina": "SC",
+  "south dakota": "SD",
+  "tennessee": "TN",
+  "texas": "TX",
+  "utah": "UT",
+  "vermont": "VT",
+  "virginia": "VA",
+  "washington": "WA",
+  "west virginia": "WV",
+  "wisconsin": "WI",
+  "wyoming": "WY",
+};
+
 const USERS_COLLECTION = "users";
 
 const CustomInput = ({ value, onClick, onChange, id, className }) => (
@@ -99,6 +152,7 @@ const Form = (hrid) => {
   const startTimeRef = useRef("");
   const endTimeRef = useRef("");
   const [helpType, setHelpType] = useState([]);
+  const [consentStatus, setconsentStatus] = useState(false);
   const [clear, setClear] = useState(false);
   const [stateList, setStateList] = useState({});
   const [stateNames, setStateNames] = useState([]);
@@ -228,18 +282,18 @@ const Form = (hrid) => {
           let obj = {
             uid: fAuth.currentUser.uid,
             title: nameRef.current.value,
-            contactNumber: contactRef.current.value,
+            contactNumber: contactRef.current.value || "N/A",
             description: descRef.current.value,
             eventDate: Timestamp.fromDate(startDate),
             eventEndTime: Timestamp.fromDate(endDate),
             eventStartTime: Timestamp.fromDate(startDate),
             totalSlots: Math.round(Number(maxCapRef.current.value)),
             location: {
-              street: streetRef.current.value,
+              street: streetRef.current.value || "N/A",
               city: cityRef.current.value,
               state: stateRef.current.value,
               stateAbbv: stateAbbv,
-              zipcode: zipcodeRef.current.value,
+              zipcode: zipcodeRef.current.value || "N/A",
             },
             helpType: helpRef.current.value,
             skills: helpType,
@@ -248,6 +302,8 @@ const Form = (hrid) => {
             participants: [],
             status: statusValue,
             helpRequest: isHelpReqFlow ? [hrid.hrid] : [],
+            consentStatus: consentStatus,
+
           };
 
           // Insert doc in outreach event
@@ -393,9 +449,29 @@ const Form = (hrid) => {
   const handleCapChange = (e) => {
     updateErrorState("maxCapError", "");
   };
+
+  const handleCheckboxChange = () => {
+    setconsentStatus(!consentStatus);
+  };
+
   const handleStateChange = (e) => {
+    let inputValue = e.target.value
+    setStateName(inputValue);
+    
+    let abbreviation = stateAbbreviations[inputValue.toLocaleLowerCase().trim()];
+
+  if (abbreviation) {
+    setStateAbbv(abbreviation); // Update the state abbreviation
+    // You can also directly update the ref field if it's displayed
+    if (stateRef.current) {
+      stateRef.current.value = e.target.value; // Ensure the full state name remains
+    }
+  } else {
+    setStateAbbv(""); // Clear the abbreviation if no match
+  }
     updateErrorState("stateError", "");
   };
+
   const handleZipChange = (e) => {
     setPostCode(e.target.value);
     updateErrorState("zipError", "");
@@ -440,19 +516,63 @@ const Form = (hrid) => {
       }
     }
 
-    if (!contactRef.current.value) {
-      updateErrorState("contactError", "Contact number is required");
-    } else {
-      try {
-        checkPhoneNumber(contactRef.current.value);
-        updateErrorState("contactError", "");
-      } catch (e) {
-        updateErrorState(
-          "contactError",
-          "Description should consist only characters"
-        );
+    if (consentStatus) {
+      if (!contactRef.current.value) {
+        updateErrorState("contactError", "Contact number is required");
+      } else {
+        try {
+          checkPhoneNumber(contactRef.current.value);
+          updateErrorState("contactError", "");
+        } catch (e) {
+          updateErrorState("contactError", "Invalid phone number format");
+        }
       }
+  
+      if (!streetRef.current.value) {
+        updateErrorState("streetError", "Street is required");
+      } else {
+        updateErrorState("streetError", "");
+      }
+  
+      if (!cityRef.current.value) {
+        updateErrorState("cityError", "City is required");
+      } else {
+        updateErrorState("cityError", "");
+      }
+  
+      if (!stateRef.current.value) {
+        updateErrorState("stateError", "State is required");
+      } else {
+        updateErrorState("stateError", "");
+      }
+  
+      if (!zipcodeRef.current.value) {
+        updateErrorState("zipError", "Zipcode is required");
+      } else {
+        updateErrorState("zipError", "");
+      }
+    } else {
+      // If checkbox is unchecked, clear errors
+      updateErrorState("contactError", "");
+      updateErrorState("streetError", "");
+      updateErrorState("cityError", "");
+      updateErrorState("stateError", "");
+      updateErrorState("zipError", "");
     }
+
+    if(contactRef.current.value){
+      try {
+            checkPhoneNumber(contactRef.current.value);
+            updateErrorState("contactError", "");
+          } catch (e) {
+            updateErrorState(
+              "contactError",
+              "Contact number should contain numbers"
+            );
+          }
+    }
+
+    // updateErrorState("contactError", "");
 
     if (!descRef.current.value) {
       updateErrorState("descError", "Description is required");
@@ -472,18 +592,30 @@ const Form = (hrid) => {
       updateErrorState("maxCapError", "Should consist only Numbers");
     }
 
-    if (!streetRef.current.value) {
-      updateErrorState("streetError", "Street is required");
-    } else {
+    // if (!streetRef.current.value) {
+    //   updateErrorState("streetError", "Street is required");
+    // } else {
+    //   try {
+    //     checkString(streetRef.current.value, "Event Name");
+    //     updateErrorState("streetError", "");
+    //   } catch (e) {
+    //     updateErrorState(
+    //       "streetError",
+    //       "Street should consist only characters"
+    //     );
+    //   }
+    // }
+
+    if(streetRef.current.value){
       try {
-        checkString(streetRef.current.value, "Event Name");
-        updateErrorState("streetError", "");
-      } catch (e) {
-        updateErrorState(
-          "streetError",
-          "Street should consist only characters"
-        );
-      }
+            checkString(streetRef.current.value, "Event Name");
+            updateErrorState("streetError", "");
+          } catch (e) {
+            updateErrorState(
+              "streetError",
+              "Street should consist only characters"
+            );
+          }
     }
 
     if (!cityRef.current.value) {
@@ -506,6 +638,7 @@ const Form = (hrid) => {
       try {
         checkString(stateRef.current.value, "Event Name");
         updateErrorState("stateError", "");
+        
       } catch (e) {
         updateErrorState(
           "stateError",
@@ -514,15 +647,24 @@ const Form = (hrid) => {
       }
     }
 
-    if (!zipcodeRef.current.value) {
-      updateErrorState("zipError", "Zipcode is required");
-    } else {
+    // if (!zipcodeRef.current.value) {
+    //   updateErrorState("zipError", "Zipcode is required");
+    // } else {
+    //   try {
+    //     checkNumber(zipcodeRef.current.value, "Event Name");
+    //     updateErrorState("zipError", "");
+    //   } catch (e) {
+    //     updateErrorState("zipError", "Should consist only Numbers");
+    //   }
+    // }
+
+    if(zipcodeRef.current.value){
       try {
-        checkNumber(zipcodeRef.current.value, "Event Name");
-        updateErrorState("zipError", "");
-      } catch (e) {
-        updateErrorState("zipError", "Should consist only Numbers");
-      }
+            checkNumber(zipcodeRef.current.value, "Event Name");
+            updateErrorState("zipError", "");
+          } catch (e) {
+            updateErrorState("zipError", "Should consist only Numbers");
+          }
     }
 
     if (startDate && endDate && startDate >= endDate) {
@@ -587,6 +729,19 @@ const Form = (hrid) => {
     });
   };
 
+  // const handleScriptLoadForCity = (updateCity, cityRef) => {
+  //   autoComplete = new window.google.maps.places.Autocomplete(
+  //     cityRef.current, 
+  //     {
+  //       types: ["(cities)"], 
+  //       componentRestrictions: { country: ["us"] },
+  //   });
+  
+  //   autoComplete.addListener("place_changed", () => {
+  //     handleCityPlaceSelect(updateCity);
+  //   });
+  // };
+
   const handlePlaceSelect = async (updateQuery) => {
     const addressObject = await autoComplete.getPlace();
     console.log("addressObject: ", addressObject);
@@ -642,12 +797,50 @@ const Form = (hrid) => {
     setPostCode(postcode);
   };
 
+  
+
+  // const handleCityPlaceSelect = async (updateCity) => {
+  //   const place = await autoComplete.getPlace();
+  //   let city = "";
+  //   let state = "";
+  //   let state_abbv = "";
+  
+  //   // Extract city and state information from place details
+  //   for (const component of place.address_components) {
+  //     const componentType = component.types[0];
+  
+  //     if (componentType === "locality") {
+  //       city = component.long_name;
+  //     }
+  //     if (componentType === "administrative_area_level_1") {
+  //       state = component.long_name;
+  //       state_abbv = component.short_name; // Use short name for state (e.g., "CA" for California)
+  //     }
+  //   }
+  
+  //   // Update the city and state fields
+  //   updateCity(city);
+  //   setStateName(state);
+  //   setStateAbbv(state_abbv);
+  //   stateRef.current.value = state;
+  // };
+
   useEffect(() => {
     loadScript(
       `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_PLACES_API_KEY}&libraries=places`,
       () => handleScriptLoad(setQuery, autoCompleteRef)
     );
   }, []);
+
+  // useEffect(() => {
+  //   loadScript(
+  //     `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_PLACES_API_KEY}&libraries=places`,
+  //     () => {
+  //       handleScriptLoad(setQuery, autoCompleteRef)
+  //       handleScriptLoadForCity(setCityName, cityRef)
+  //     }
+  //   );
+  // }, []);
 
   return (
     <div>
@@ -685,7 +878,7 @@ const Form = (hrid) => {
 
             <div className="space-y-1.5">
               <p className="font-semibold font-['Inter'] text-[15px]">
-                Contact Number*
+                Contact Number
               </p>
               <input
                 type="text"
@@ -760,7 +953,7 @@ const Form = (hrid) => {
             </div>
             <div className="space-y-1.5">
               <div className="font-semibold font-['Inter'] text-[15px]">
-                Enter Address*
+                Enter Address
               </div>
               <input
                 type="text"
@@ -782,7 +975,7 @@ const Form = (hrid) => {
             <div className="grid grid-cols-2 space-x-4 ">
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
-                  Street*
+                  Street
                 </p>
                 <input
                   className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
@@ -855,7 +1048,7 @@ const Form = (hrid) => {
               </div>
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
-                  Zipcode*
+                  Zipcode
                 </p>
                 <input
                   type="text"
@@ -1195,6 +1388,20 @@ const Form = (hrid) => {
             ))}
           </div>
         </div>
+        <div className="flex items-center mt-4">
+          <input
+            type="checkbox"
+            id="displayContactInfo"
+            checked={consentStatus}
+            onChange={handleCheckboxChange}
+            className="mr-2"
+          />
+          <label htmlFor="displayContactInfo" className="text-gray-700">
+            Display my contact information and full address on outreach cards.
+          </label>
+        </div>
+
+        
         <div className="space-y-16 space-x-[15px] md:px-12 md:pb-12 lg:px-0 lg:pb-0">
           <Link to="/profile">
             <button
