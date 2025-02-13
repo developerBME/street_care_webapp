@@ -15,6 +15,7 @@ import RSVPConfirmationModal from "../UserProfile/RSVPConfirmationModal";
 import userSlots from "../../images/userSlots.png";
 import date from "../../images/date.png";
 import locate from "../../images/location.png";
+import phone from "../../images/phone.png";
 import { useLocation } from "react-router-dom";
 import EditModal from "./EditModal";
 import verifiedPurple from "../../images/verified_purple.png";
@@ -80,6 +81,7 @@ const [isFlagged, setIsFlagged] = useState(false);
       try {
         const result = await fetchEventById(id);
         setData(result);
+        console.log(result)
       } catch (error) {
         console.error(error.message);
       }
@@ -358,13 +360,23 @@ const [isFlagged, setIsFlagged] = useState(false);
                       </div>
                     )}
                   </div>
+                  {data && data.consentStatus && (
+                     <div className="flex flex-row justify-normal space-x-2">
+                      <img className="w-[12px] h-[15px] my-[3px]" src={phone} alt="Phone Icon" />
+                        <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
+                           {data.contactNumber}
+                        </div>
+                     </div>
+                  )}
                   <div className="flex flex-row justify-normal space-x-2">
                     <img className="w-[12px] h-[15px] my-[3px]" src={locate} />
                     {data ? (
                       <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
                         {/* for showing complete address of outreach event */}
                         {/* {data.location.street},{data.location.city}, {data.location.stateAbbv}, {data.location.zipcode} */}
-                        {data.location.city}, {data.location.stateAbbv}
+                        {/* {data.location.city}, {data.location.stateAbbv} */}
+                        {data.consentStatus ? `${data.location.street}, ${data.location.city}, ${data.location.stateAbbv}, ${data.location.zipcode}`
+                                   : `${data.location.city}, ${data.location.stateAbbv}`}
                       </div>
                     ) : (
                       <div className="self-stretch text-[#444746] text-sm font-normal font-inter leading-snug">
