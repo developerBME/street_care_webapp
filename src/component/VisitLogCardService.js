@@ -288,6 +288,66 @@ export const fetchPublicVisitLogs = async () => {
   }
 };
 
+
+
+// New function for paginated public visit logs
+export const fetchPaginatedPublicVisitLogs = async (lastVisible = null, pageSize = 6) => {
+  try {
+    let visitLogsRef = query(
+      collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+      where("status", "==", "approved"),
+      limit(pageSize)
+    );
+
+    // Add cursor to continue pagination if lastVisible exists
+    if (lastVisible) {
+      visitLogsRef = query(visitLogsRef, startAfter(lastVisible));
+    }
+
+    const visitLogSnapshot = await getDocs(visitLogsRef);
+    const visitLogs = await visitLogHelperFunction(visitLogSnapshot);
+
+    // Get the last document from the snapshot to use as a cursor
+    const lastDoc = visitLogSnapshot.docs[visitLogSnapshot.docs.length - 1];
+
+    // Extract unique user IDs from the current page's visit logs
+    const userIds = [...new Set(visitLogSnapshot.docs.map((doc) => doc.data().uid))];
+
+    // Fetch user details only for these IDs (users on this page)
+    const userCache = await fetchUserDetailsBatch(userIds);
+
+    // Enrich visit logs with user details
+    const enrichedVisitLogs = visitLogs.map((log) => {
+      const userDetails = userCache[log.uid];
+      return {
+        ...log,
+        userName: userDetails ? userDetails.username : '',
+        photoUrl: userDetails ? userDetails.photoUrl : '',
+        userType: userDetails ? userDetails.userType : ''
+      };
+    });
+
+    return { visitLogs: enrichedVisitLogs, lastVisible: lastDoc };
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchVisitLogs VisitLogCardService.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
+//FRONTEND (PAGINATION) INSTRUCTIONS
+
+// Initial fetch (first page)
+   //const { visitLogs, lastVisible } = await fetchPaginatedPublicVisitLogs();
+
+// Fetch next page using the last visible document as the cursor 
+   //const { visitLogs: nextVisitLogs, lastVisible: nextLastVisible } = await fetchPaginatedPublicVisitLogs(lastVisible, 10);
+//Basically, Associate The fetchPaginatedPublicVisitLogs(lastVisible, 10) function with the 'Next page' button
+
+
+
 export const fetchPersonalVisitLogById = async (visitLogId) => {
   try {
     const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
