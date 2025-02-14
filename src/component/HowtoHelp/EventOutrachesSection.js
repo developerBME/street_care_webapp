@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from "react";
 import OutreachEventCard from "../Community/OutreachEventCard";
 import { useNavigate } from "react-router-dom";
-import arrowDropDown from "../../images/arrowDropDown.png";
 import arrowRight from "../../images/arrowRight.png";
-import CustomButton from "../Buttons/CustomButton";
-import OutreachVisitLogCard from "../Community/OutreachVisitLogCard";
 import { fetchEvents } from "../EventCardService";
-import { fetchVisitLogs } from "../VisitLogCardService";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import { formatDate } from "./../HelperFunction";
 
@@ -62,19 +58,19 @@ const EventOutrachesSection = () => {
     ];
 
     const [events, setEvents] = useState([]);
-    const [visitLogs, setVisitLogs] = useState([]);
+    // const [visitLogs, setVisitLogs] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [eventsDisplay, setEventsDisplay] = useState([]);
     const [filteredEvents, setFilteredEvents] = useState([]);
-    const [states, setStates] = useState([]);
+    // const [states, setStates] = useState([]);
     const [selectedState, setSelectedState] = useState("");
-    const [dropdownVisible, setDropdownVisible] = useState(false);
+    // const [dropdownVisible, setDropdownVisible] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
             const eventsData = await fetchEvents();
-            const visitLogsData = await fetchVisitLogs();
-            setVisitLogs(visitLogsData);
+            // const visitLogsData = await fetchVisitLogs();
+            // setVisitLogs(visitLogsData);
             // Filter events to get only past events
             const upcomingEvents = eventsData.filter((event) => {
                 const eventDate = new Date(event?.eventDate?.seconds * 1000);
@@ -85,21 +81,21 @@ const EventOutrachesSection = () => {
 
             setEvents(upcomingEvents);
             // Extract states and remove duplicates
-            const extractedStates = [
-                ...new Set(upcomingEvents.map((event) => event.location.state)),
-            ];
-            setStates(extractedStates);
+            // const extractedStates = [
+            //     ...new Set(upcomingEvents.map((event) => event.location.state)),
+            // ];
+            // setStates(extractedStates);
         };
 
         fetchData();
     }, []);
     // Handle state selection from dropdown
-    const handleStateSelection = (state) => {
-        setSelectedState(state);
-        const filtered = events.filter((event) => event.location.state === state);
-        setFilteredEvents(filtered);
-        setDropdownVisible(false);
-    };
+    // const handleStateSelection = (state) => {
+    //     setSelectedState(state);
+    //     const filtered = events.filter((event) => event.location.state === state);
+    //     setFilteredEvents(filtered);
+    //     // setDropdownVisible(false);
+    // };
 
     useEffect(() => {
         setEventsDisplay(events);
