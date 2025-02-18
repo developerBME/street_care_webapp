@@ -113,10 +113,11 @@ const fetchOutreachEventData = async (eid) => {
   }
 };
 
-const visitLogHelperFunction = async (visitLogSnap) => {
+const visitLogHelperFunction = async (visitLogDocs) => {
   try {
     let visitLogs = [];
-    const docsArray = visitLogSnap.docs ? visitLogSnap.docs : [visitLogSnap];
+    // Ensure visitLogDocs is always an array of DocumentSnapshots
+    const docsArray = Array.isArray(visitLogDocs) ? visitLogDocs : visitLogDocs.docs;
 
     // Gather all unique user IDs
     const userIds = [...new Set(docsArray.map((doc) => doc.data().uid))];
@@ -306,24 +307,13 @@ export const fetchOffsetPaginatedPublicVisitLogs = async (offset = 1, pageSize =
     collection(db, PERSONAL_VISIT_LOG_COLLECTION),
     where("status", "==", "approved") // Apply filters if needed
   );
-
   const snapshot = await getCountFromServer(visitLogsRefCount);
   let totalCount=snapshot.data().count; // Returns the total count of documents  
 
   const visitLogSnapshot = await getDocs(visitLogsRef);
-  const allVisitLogs = await visitLogHelperFunction(visitLogSnapshot);
-
-    // Slice the results to simulate offset-based pagination
-    let visitLogs;
-    if(offset!=1){
-       visitLogs = allVisitLogs.slice((offset*pageSize)-6, offset * pageSize);
-    }else{
-      visitLogs=allVisitLogs;
-    }
-    
-    console.log(totalCount)
-
-    return { visitLogs, totalCount: totalCount };
+  const slicedDocs = visitLogSnapshot.docs.slice((offset*pageSize)-6, offset * pageSize);
+  const visitLogs = await visitLogHelperFunction(slicedDocs);
+  return { visitLogs, totalCount: totalCount };
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
