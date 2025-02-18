@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import OutreachVisitLogCard from "./Community/OutreachVisitLogCard";
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { fetchPaginatedPublicVisitLogs, fetchPublicVisitLogs } from "./VisitLogCardService";
+import { 
+  fetchOffsetPaginatedPublicVisitLogs, fetchPublicVisitLogs } from "./VisitLogCardService";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 import { parse } from "date-fns";
 import DatePicker from "react-datepicker";
@@ -27,6 +28,9 @@ const AllOutreachVisitLog = () => {
   useEffect(() => {
     const getVisitLogs = async () => {
       const visitLogsData = await fetchPublicVisitLogs();
+      let data1= await fetchOffsetPaginatedPublicVisitLogs();
+      console.log("data")
+      console.log(data1)
       setVisitLogs(visitLogsData);
       setFilteredVisitLogs(visitLogsData);
       setIsLoading(false);

@@ -10,6 +10,7 @@ import {
   where,
   limit,
   startAfter,
+  getCountFromServer
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { fetchUserDetails } from "./EventCardService";
@@ -290,44 +291,39 @@ export const fetchPublicVisitLogs = async () => {
 
 
 
-// New function for paginated public visit logs
-export const fetchPaginatedPublicVisitLogs = async (lastVisible = null, pageSize = 6) => {
+export const fetchOffsetPaginatedPublicVisitLogs = async (offset = 1, pageSize = 6) => {
   try {
-    let visitLogsRef = query(
+    // Fetch more records than needed to simulate offset
+    const fetchSize = offset * pageSize;
+    const visitLogsRef = query(
       collection(db, PERSONAL_VISIT_LOG_COLLECTION),
       where("status", "==", "approved"),
-      limit(pageSize)
+      limit(fetchSize)
     );
 
-    // Add cursor to continue pagination if lastVisible exists
-    if (lastVisible) {
-      visitLogsRef = query(visitLogsRef, startAfter(lastVisible));
+   //Get total count
+   const visitLogsRefCount = query(
+    collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+    where("status", "==", "approved") // Apply filters if needed
+  );
+
+  const snapshot = await getCountFromServer(visitLogsRefCount);
+  let totalCount=snapshot.data().count; // Returns the total count of documents  
+
+  const visitLogSnapshot = await getDocs(visitLogsRef);
+  const allVisitLogs = await visitLogHelperFunction(visitLogSnapshot);
+
+    // Slice the results to simulate offset-based pagination
+    let visitLogs;
+    if(offset!=1){
+       visitLogs = allVisitLogs.slice((offset*pageSize)-6, offset * pageSize);
+    }else{
+      visitLogs=allVisitLogs;
     }
+    
+    console.log(totalCount)
 
-    const visitLogSnapshot = await getDocs(visitLogsRef);
-    const visitLogs = await visitLogHelperFunction(visitLogSnapshot);
-
-    // Get the last document from the snapshot to use as a cursor
-    const lastDoc = visitLogSnapshot.docs[visitLogSnapshot.docs.length - 1];
-
-    // Extract unique user IDs from the current page's visit logs
-    const userIds = [...new Set(visitLogSnapshot.docs.map((doc) => doc.data().uid))];
-
-    // Fetch user details only for these IDs (users on this page)
-    const userCache = await fetchUserDetailsBatch(userIds);
-
-    // Enrich visit logs with user details
-    const enrichedVisitLogs = visitLogs.map((log) => {
-      const userDetails = userCache[log.uid];
-      return {
-        ...log,
-        userName: userDetails ? userDetails.username : '',
-        photoUrl: userDetails ? userDetails.photoUrl : '',
-        userType: userDetails ? userDetails.userType : ''
-      };
-    });
-
-    return { visitLogs: enrichedVisitLogs, lastVisible: lastDoc };
+    return { visitLogs, totalCount: totalCount };
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
@@ -336,6 +332,7 @@ export const fetchPaginatedPublicVisitLogs = async (lastVisible = null, pageSize
     throw error;
   }
 };
+
 
 //FRONTEND (PAGINATION) INSTRUCTIONS
 
