@@ -659,11 +659,18 @@ export const fetchByCityOrStates = async (
           let outreachByLoc = [];
           for (const doc of outreachDocRef.docs) {
             const pastOutreachData = doc.data();
+            const result = await fetchUserDetails(pastOutreachData.uid);
+            const userName = result.username;
+            const photoUrl = result.photoUrl;
+            const userType = result.userType;
             const id = doc.id;
             // console.log('id wrt loc: '+id);
             outreachByLoc.push({
               ...pastOutreachData,
               id: id,
+              userName,
+              photoUrl,
+              userType,
             });
           }
           return { tot, outreachByLoc };
