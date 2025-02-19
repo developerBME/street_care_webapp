@@ -24,7 +24,7 @@ const PastOutreachEvents = ({ events, isLoading, isError }) => {
     .filter((event) => {
       const eventDate =
         new Date(event.eventDate?.seconds * 1000) || event.eventDate;
-      return eventDate < new Date(); // Check if the event date is before the current date
+        return event.status === "approved" && eventDate < new Date(); // Check for approved and past events
     })
     .slice(0, 3);
 
