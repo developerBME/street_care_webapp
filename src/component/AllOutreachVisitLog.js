@@ -3,12 +3,13 @@ import OutreachVisitLogCard from "./Community/OutreachVisitLogCard";
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { 
-  fetchOffsetPaginatedPublicVisitLogs, fetchPublicVisitLogs } from "./VisitLogCardService";
+  fetchPaginatedPublicVisitLogs, fetchPublicVisitLogs } from "./VisitLogCardService";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 import { parse } from "date-fns";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import UserTypeInfo from "./UserTypeInfo";
+import { Directions } from "@mui/icons-material";
 
 const AllOutreachVisitLog = () => {
   const navigate = useNavigate();
@@ -28,9 +29,6 @@ const AllOutreachVisitLog = () => {
   useEffect(() => {
     const getVisitLogs = async () => {
       const visitLogsData = await fetchPublicVisitLogs();
-      let data1= await fetchOffsetPaginatedPublicVisitLogs();
-      console.log("data")
-      console.log(data1)
       setVisitLogs(visitLogsData);
       setFilteredVisitLogs(visitLogsData);
       setIsLoading(false);

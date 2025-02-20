@@ -10,6 +10,7 @@ import {
   where,
   limit,
   startAfter,
+  startAt,
   getCountFromServer
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -113,11 +114,11 @@ const fetchOutreachEventData = async (eid) => {
   }
 };
 
-const visitLogHelperFunction = async (visitLogDocs) => {
+const visitLogHelperFunction = async (visitLogSnap) => {
   try {
     let visitLogs = [];
-    // Ensure visitLogDocs is always an array of DocumentSnapshots
-    const docsArray = Array.isArray(visitLogDocs) ? visitLogDocs : visitLogDocs.docs;
+   
+    const docsArray = visitLogSnap.docs ? visitLogSnap.docs : [visitLogSnap];
 
     // Gather all unique user IDs
     const userIds = [...new Set(docsArray.map((doc) => doc.data().uid))];
@@ -290,30 +291,44 @@ export const fetchPublicVisitLogs = async () => {
   }
 };
 
-
-
-export const fetchOffsetPaginatedPublicVisitLogs = async (offset = 1, pageSize = 6) => {
+//Cursor based paginated visit logs
+export const fetchPaginatedPublicVisitLogs = async (
+  lastVisible = null,
+  pageSize = 6,
+  direction = "next",
+  pageHistory = []
+) => {
   try {
-    // Fetch more records than needed to simulate offset
-    const fetchSize = offset * pageSize;
-    const visitLogsRef = query(
+    let visitLogsRef = query(
       collection(db, PERSONAL_VISIT_LOG_COLLECTION),
       where("status", "==", "approved"),
-      limit(fetchSize)
+      limit(pageSize)
     );
 
-   //Get total count
-   const visitLogsRefCount = query(
-    collection(db, PERSONAL_VISIT_LOG_COLLECTION),
-    where("status", "==", "approved") // Apply filters if needed
-  );
-  const snapshot = await getCountFromServer(visitLogsRefCount);
-  let totalCount=snapshot.data().count; // Returns the total count of documents  
+    // Handle forward pagination
+    if (lastVisible && direction === "next") {
+      visitLogsRef = query(visitLogsRef, startAfter(lastVisible));
+    }
 
-  const visitLogSnapshot = await getDocs(visitLogsRef);
-  const slicedDocs = visitLogSnapshot.docs.slice((offset*pageSize)-6, offset * pageSize);
-  const visitLogs = await visitLogHelperFunction(slicedDocs);
-  return { visitLogs, totalCount: totalCount };
+    // Handle backward pagination
+    if (lastVisible && direction === "prev" && pageHistory.length > 0) {
+      visitLogsRef = query(visitLogsRef, startAt(pageHistory[pageHistory.length - 2]));
+    }
+
+    const visitLogSnapshot = await getDocs(visitLogsRef);
+    const visitLogs = await visitLogHelperFunction(visitLogSnapshot);
+
+    // Get the last document for the next page
+    const lastDoc = visitLogSnapshot.docs[visitLogSnapshot.docs.length - 1];
+
+    // Store history of cursors for backward pagination
+    if (direction === "next") {
+      pageHistory.push(lastDoc);
+    } else if (direction === "prev") {
+      pageHistory.pop();
+    }
+
+    return { visitLogs: visitLogs, lastVisible: lastDoc, pageHistory };
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
@@ -323,16 +338,26 @@ export const fetchOffsetPaginatedPublicVisitLogs = async (offset = 1, pageSize =
   }
 };
 
-
 //FRONTEND (PAGINATION) INSTRUCTIONS
 
-// Initial fetch (first page)
-   //const { visitLogs, lastVisible } = await fetchPaginatedPublicVisitLogs();
+// State to track history
+// let pageHistory = [];
 
-// Fetch next page using the last visible document as the cursor 
-   //const { visitLogs: nextVisitLogs, lastVisible: nextLastVisible } = await fetchPaginatedPublicVisitLogs(lastVisible, 10);
-//Basically, Associate The fetchPaginatedPublicVisitLogs(lastVisible, 10) function with the 'Next page' button
+// // Load next page
+// const { visitLogs, lastVisible } = await fetchPaginatedPublicVisitLogs(
+//   lastVisible,
+//   6,
+//   "next",
+//   pageHistory
+// );
 
+// // Load previous page
+// const { visitLogs, lastVisible } = await fetchPaginatedPublicVisitLogs(
+//   lastVisible,
+//   6,
+//   "prev",
+//   pageHistory
+// );
 
 
 export const fetchPersonalVisitLogById = async (visitLogId) => {
