@@ -23,7 +23,6 @@ export const fetchHelpRequests = async () => {
   try {
     const helpReqRef = collection(db, HELP_REQ_COLLECTION);
     const helpSnapshot = await getDocs(helpReqRef);
-    console.log(helpSnapshot);
     const helpRequests = helpSnapshot.docs.map((doc) => ({
       ...doc.data(),
       id: doc.id,
@@ -112,7 +111,6 @@ export const fetchTopHelpRequests = async () => {
       req.userName = userNames[index];
     });
 
-    console.log(helpRequests);
     return helpRequests;
   } catch (error) {
     logEvent(
@@ -148,7 +146,6 @@ export const fetchHelpRequestByUser = async () => {
         id: id,
       });
     }
-    console.log(helpRequests)
     return helpRequests;
   } catch (error) {
     logEvent(
@@ -209,7 +206,6 @@ export const fetchByCityAndDate = async (
         id: id,
       });
     }
-    console.log(helpRequestsByCity);
     return helpRequestsByCity;
   } catch (error) {
     logEvent(
