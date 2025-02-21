@@ -68,7 +68,7 @@ const HomePageVisitlog = () => {
       setIsLoading(true);
       setIsError(false);
       try {
-        const visitLogsData = await fetchPublicVisitLogs();
+        const visitLogsData = [];
         setVisitLogs(visitLogsData);
       } catch (error) {
         console.error("Error fetching visit logs:", error);

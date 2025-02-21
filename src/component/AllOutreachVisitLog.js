@@ -3,7 +3,7 @@ import OutreachVisitLogCard from "./Community/OutreachVisitLogCard";
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { 
-  fetchPaginatedPublicVisitLogs, fetchPublicVisitLogs } from "./VisitLogCardService";
+  fetchPaginatedPublicVisitLogs,getApprovedVisitLogsCount, fetchPublicVisitLogs } from "./VisitLogCardService";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 import { parse } from "date-fns";
 import DatePicker from "react-datepicker";
@@ -19,22 +19,46 @@ const AllOutreachVisitLog = () => {
   const [sortOption, setSortOption] = useState("");
   const [startDate, setStartDate] = useState(new Date("2024-01-02"));
   const [endDate, setEndDate] = useState(new Date());
+  const [cityToSearch, setCityToSearch] = useState("");
+  const [searchValue,setSearchValue] = useState("")
+  const [totalPages,setTotalPages] = useState(0)
+  const logsPerPage = 6;
+  const [cursorFields,setCursorFields] = useState({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[]})
   const searchRef = useRef("");
   const searchCity = useRef(""); // Reference for the search city input
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
-  const logsPerPage = 6;
-
+  useEffect(()=>{
+    const getTotalPages = async()=>{
+      let total = await getApprovedVisitLogsCount()
+      setTotalPages(total)
+    }
+    getTotalPages()
+  },[])
+  //console.log(totalPages)
   useEffect(() => {
     const getVisitLogs = async () => {
-      const visitLogsData = await fetchPublicVisitLogs();
-      setVisitLogs(visitLogsData);
-      setFilteredVisitLogs(visitLogsData);
+      // const visitLogsData = await fetchPublicVisitLogs(
+      //   //searchValue,
+      //   cityToSearch,
+      //   startDate,
+      //   endDate
+      // );
+      // console.log(visitLogsData)
+      console.log("in",cursorFields.direction)
+      if(!cursorFields.direction)return
+      const visitLogsData= await fetchPaginatedPublicVisitLogs(cursorFields.lastVisible,cursorFields.pageSize,cursorFields.direction,cursorFields.pageHistory);
+      // console.log("data")
+      console.log(visitLogsData)
+      cursorFields.lastVisible = visitLogsData.lastVisible;
+      cursorFields.pageHistory = visitLogsData.pageHistory;
+      setVisitLogs(visitLogsData.visitLogs);
+      setFilteredVisitLogs(visitLogsData.visitLogs);
       setIsLoading(false);
     };
     getVisitLogs();
-  }, []);
+  }, [cityToSearch, startDate, endDate,cursorFields.direction]);
 
   const searchChange = () => {
     const searchValue = searchRef.current.value.toLowerCase();
@@ -58,16 +82,6 @@ const AllOutreachVisitLog = () => {
     setFilteredVisitLogs(visitLogs);
   };
 
-  // Handle search city input change
-  const searchCityChange = () => {
-    const searchValue = searchCity.current.value.toLowerCase();
-    setFilteredVisitLogs(
-      visitLogs.filter((x) =>
-        x.location.city.toLowerCase().includes(searchValue)
-      )
-    );
-  };
-
   const filterByDate = () => {
     const sortedLogs = visitLogs.filter((log) => {
       const dateFormat = "MMM d, yyyy EEE hh:mm a"; // Define the date format
@@ -87,90 +101,50 @@ const AllOutreachVisitLog = () => {
     }
   }, [startDate, endDate, sortOption]);
 
-  // Get current logs based on pagination
-  const indexOfLastLog = currentPage * logsPerPage;
-  const indexOfFirstLog = indexOfLastLog - logsPerPage;
-  const currentLogs = filteredVisitLogs.slice(indexOfFirstLog, indexOfLastLog);
+
+  // // Get current logs based on pagination
+  // const indexOfLastLog = currentPage * logsPerPage;
+  // const indexOfFirstLog = indexOfLastLog - logsPerPage;
+  // const currentLogs = filteredVisitLogs.slice(indexOfFirstLog, indexOfLastLog);
 
   // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const returnTarget = "/";
   const returnText = "Return to Home";
 
-  const totalPages = Math.ceil(filteredVisitLogs.length / logsPerPage);
   const onPageChange = (page) => {
     setCurrentPage(page);
   };
+
+
+  const handleNext = () =>{
+    onPageChange(currentPage + 1)
+    // Reset direction to force an update
+  setCursorFields((prev) => ({ ...prev, direction: "" })); 
+
+  // Set it to 'next' after a slight delay
+  setTimeout(() => {
+    setCursorFields((prev) => ({ ...prev, direction: "next" }));
+  }, 0); 
+  }
+  const handlePrev=()=>{
+    onPageChange(currentPage - 1)
+    setCursorFields((prev) => ({ ...prev, direction: "" })); 
+
+    setTimeout(() => {
+      setCursorFields((prev) => ({ ...prev, direction: "prev" }));
+    }, 0); 
+  }
   const renderPaginationButtons = () => {
     const buttons = [];
-    const pageRange = 1;
-    // ...Array(
-    //   Math.ceil(filteredVisitLogs.length / logsPerPage)
-    // ).keys(),
-
     if (currentPage > 1) {
       buttons.push(
         <button
           key="prev"
-          onClick={() => onPageChange(currentPage - 1)}
+          onClick={() => handlePrev()}
           className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
         >
           <IoIosArrowBack />
-        </button>
-      );
-    }
-
-    if (currentPage > pageRange + 1) {
-      buttons.push(
-        <button
-          key="first"
-          onClick={() => onPageChange(1)}
-          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
-        >
-          1
-        </button>
-      );
-      buttons.push(
-        <span key="ellipsis-start" className="mx-1">
-          ...
-        </span>
-      );
-    }
-
-    for (
-      let i = Math.max(1, currentPage - pageRange);
-      i <= Math.min(totalPages, currentPage + pageRange);
-      i++
-    ) {
-      buttons.push(
-        <button
-          key={i}
-          onClick={() => onPageChange(i)}
-          className={`mx-1 px-3 py-1 rounded-full ${
-            currentPage === i
-              ? "bg-[#1F0A58] text-white"
-              : "bg-gray-200 text-gray-600"
-          }`}
-        >
-          {i}
-        </button>
-      );
-    }
-
-    if (currentPage < totalPages - pageRange) {
-      buttons.push(
-        <span key="ellipsis-end" className="mx-1">
-          ...
-        </span>
-      );
-      buttons.push(
-        <button
-          key="last"
-          onClick={() => onPageChange(totalPages)}
-          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
-        >
-          {totalPages}
         </button>
       );
     }
@@ -179,7 +153,7 @@ const AllOutreachVisitLog = () => {
       buttons.push(
         <button
           key="next"
-          onClick={() => onPageChange(currentPage + 1)}
+          onClick={() => handleNext()}
           className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
         >
           <IoIosArrowForward />
@@ -220,7 +194,7 @@ const AllOutreachVisitLog = () => {
                   id="searchText"
                   placeholder="Search..."
                   ref={searchRef}
-                  onChange={searchChange}
+                  onChange={e=>setSearchValue(e.target.value)}
                   className="form-input w-fit md:w-[20rem] lg:w-[18rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-10 rounded-2xl"
                   style={{ borderRadius: "0px" }}
                 />
@@ -265,7 +239,7 @@ const AllOutreachVisitLog = () => {
                   id="searchCity"
                   placeholder="Search City"
                   ref={searchCity}
-                  onChange={searchCityChange}
+                  onChange={(e) => setCityToSearch(e.target.value)}
                   className="form-input w-fit md:w-[12rem] lg:w-[8rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-2 rounded-2xl"
                   style={{ borderRadius: "0px" }}
                 />
@@ -306,8 +280,8 @@ const AllOutreachVisitLog = () => {
           ) : (
             <>
               <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-                {currentLogs.length > 0 ? (
-                  currentLogs.map((visitLogData) => (
+                {filteredVisitLogs.length > 0 ? (
+                  filteredVisitLogs.map((visitLogData) => (
                     <OutreachVisitLogCard
                       key={visitLogData.id}
                       visitLogCardData={visitLogData}

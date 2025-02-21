@@ -11,7 +11,9 @@ import {
   limit,
   startAfter,
   startAt,
-  getCountFromServer
+  getCountFromServer,
+  or,
+  and
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { fetchUserDetails } from "./EventCardService";
@@ -271,15 +273,68 @@ export const fetchPersonalVisitLogs = async (uid) => {
   }
 };
 
-export const fetchPublicVisitLogs = async () => {
+export const fetchPublicVisitLogs = async (
+  //searchValue,
+  city,
+  startDate,
+  endDate
+) => {
+  // query(
+  //   collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+  //   //where("public", "==", true),
+  //   where("status", "==", "approved"),
+  //   // where("status", "in", ["approved", "flagged","unflagged"]),
+  // );
   try {
-    const visitLogsRef = query(
-      collection(db, PERSONAL_VISIT_LOG_COLLECTION),
-      //where("public", "==", true),
-      where("status", "==", "approved"),
-      // where("status", "in", ["approved", "flagged","unflagged"]),
-    );
-    const visitLogSnapshot = await getDocs(visitLogsRef);
+    let visitLogSnapshot ;
+    //Make sure start date and end date have values
+    if (!(startDate instanceof Date) || isNaN(startDate)) {
+      console.error("Invalid start date");
+      return;
+    }
+    if (!(endDate instanceof Date) || isNaN(endDate)) {
+      console.error("Invalid end date");
+      return;
+    }
+    // if(searchValue && city){
+    //   const pastOutreachRef = query(
+    //     collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+    //     where("status", "==", "approved"),
+    //     or(
+    //       where('city', "in", searchValue),   
+    //       where('description', "in", searchValue),
+    //       where('')   
+    //     ),
+    //     where("dateTime", ">=", startDate),
+    //     where("dateTime", "<=", endDate)
+    //   );
+    //   visitLogSnapshot = await getDocs(pastOutreachRef);
+    // }
+
+    if (
+      !city ||
+      typeof city !== "string"
+    ) {
+      const pastOutreachRef = query(
+          collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+          where("status", "==", "approved"),
+          where("dateTime", ">=", startDate),
+          where("dateTime", "<=", endDate)
+        );
+      visitLogSnapshot = await getDocs(pastOutreachRef);
+    }
+    else{
+      const pastOutreachRef = query(
+        collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+        where("status", "==", "approved"),
+        where('city', '>=', city),
+        where('city', '<=', city + '\uf8ff'),
+        where("dateTime", ">=", startDate),
+        where("dateTime", "<=", endDate)
+      );
+      visitLogSnapshot = await getDocs(pastOutreachRef);
+      console.log(pastOutreachRef)
+    }
     let visitLogs = await visitLogHelperFunction(visitLogSnapshot);
     return visitLogs;
   } catch (error) {
@@ -288,6 +343,22 @@ export const fetchPublicVisitLogs = async () => {
       `error on fetchVisitLogs VisitLogCardService.js- ${error.message}`
     );
     throw error;
+  }
+};
+
+export const getApprovedVisitLogsCount = async () => {
+  try {
+    const visitLogsRef = query(
+      collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+      where("status", "==", "approved") // Filter applied
+    );
+
+    const snapshot = await getCountFromServer(visitLogsRef);
+    
+    return snapshot.data().count;
+  } catch (error) {
+    console.error("Error fetching count:", error);
+    return 0;
   }
 };
 

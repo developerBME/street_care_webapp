@@ -14,11 +14,8 @@ const PastOutreachEvents = ({ events, isLoading, isError }) => {
 
   // Ensure unique events
   const uniqueEvents = events
-    ? Array.from(new Set(events.map((event) => event.id))).map((id) =>
-        events.find((event) => event.id === id)
-      )
+    ? Array.from(new Set(events.map((event) => event.id)))
     : [];
-
   // Filter events to get only past events
   const pastEvents = uniqueEvents
     .filter((event) => {
