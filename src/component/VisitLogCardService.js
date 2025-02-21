@@ -373,6 +373,7 @@ export const fetchPaginatedPublicVisitLogs = async (
     let visitLogsRef = query(
       collection(db, PERSONAL_VISIT_LOG_COLLECTION),
       where("status", "==", "approved"),
+      orderBy("dateTime","desc"),
       limit(pageSize)
     );
 
@@ -382,8 +383,8 @@ export const fetchPaginatedPublicVisitLogs = async (
     }
 
     // Handle backward pagination
-    if (lastVisible && direction === "prev" && pageHistory.length > 0) {
-      visitLogsRef = query(visitLogsRef, startAt(pageHistory[pageHistory.length - 2]));
+    if (lastVisible && direction === "prev" && pageHistory.length > 2) {
+      visitLogsRef = query(visitLogsRef, startAfter(pageHistory[pageHistory.length - 3]));
     }
 
     const visitLogSnapshot = await getDocs(visitLogsRef);
@@ -398,7 +399,7 @@ export const fetchPaginatedPublicVisitLogs = async (
     } else if (direction === "prev") {
       pageHistory.pop();
     }
-
+      
     return { visitLogs: visitLogs, lastVisible: lastDoc, pageHistory };
   } catch (error) {
     logEvent(
