@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import banner from "../../images/community_banner.png";
 import one from "../../images/community_bg1.png";
 import two from "../../images/community_bg3.png";
-import { fetchHelpRequests } from "../HelpRequestService";
+import { fetchHelpRequestCount } from "../HelpRequestService";
 
 function Spinner() {
   return (
@@ -12,25 +12,23 @@ function Spinner() {
 }
 
 function Metrics() {
-  const [helpRequests, setHelpRequests] = useState([]);
+  const [helpRequestCount, setHelpRequestCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Fetch number of help requests
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const helpRequestData = await fetchHelpRequests();
-        setHelpRequests(helpRequestData);
+        const count = await fetchHelpRequestCount();
+        setHelpRequestCount(count);
       } catch (error) {
-        console.error("Error fetching help requests:", error);
+        console.error("Error fetching total number of help requests", error);
       } finally {
         setIsLoading(false);
       }
     };
-
     fetchData();
   }, []);
-
-  const numberOfHelpRequests = helpRequests.length;
 
   return (
     <div className="bg-white rounded-3xl lg:text-[18px] md:text-[18px] text-[12px] relative z-[9] md:mx-24 -bottom-16">
@@ -105,7 +103,7 @@ function Metrics() {
           </p>
           <p className=" text-center">
             <span className="text-xl mt-auto font-bold lg:text-[38px] md:text-[28px] sm:text-[38px] lg:inline-block md:block block sm:mb-[10px]">
-            {isLoading ? <Spinner /> : numberOfHelpRequests}</span>{" "}
+            {isLoading ? <Spinner /> : helpRequestCount}</span>{" "}
           </p>
           <p className="text-[#1F0A58] text-center">available</p>
         </div>
