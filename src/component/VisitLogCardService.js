@@ -299,6 +299,9 @@ export const fetchPublicVisitLogs = async (
       !city ||
       typeof city !== "string"
     ) {
+
+          lastVisible = null
+          pageHistory =[]
           pastOutreachRef = query(
           collection(db, PERSONAL_VISIT_LOG_COLLECTION),
           where("status", "==", "approved"),
@@ -310,6 +313,9 @@ export const fetchPublicVisitLogs = async (
      // visitLogSnapshot = await getDocs(pastOutreachRef);
     }
     else{
+
+        lastVisible = null
+        pageHistory =[]
         pastOutreachRef = query(
         collection(db, PERSONAL_VISIT_LOG_COLLECTION),
         where("status", "==", "approved"),
@@ -327,12 +333,20 @@ export const fetchPublicVisitLogs = async (
     }
 
     // Handle backward pagination
-    if (lastVisible && direction === "prev" && pageHistory.length > 0) {
-      pastOutreachRef = query(pastOutreachRef, startAt(pageHistory[pageHistory.length - 2]));
+    if (lastVisible && direction === "prev" && pageHistory.length > 2) {
+      pastOutreachRef = query(pastOutreachRef, startAfter(pageHistory[pageHistory.length - 3]));
     }
     const visitLogSnapshot = await getDocs(pastOutreachRef)
     const visitLogs = await visitLogHelperFunction(visitLogSnapshot);
     const lastDoc = visitLogSnapshot.docs[visitLogSnapshot.docs.length - 1];
+
+     // Store history of cursors for backward pagination
+     if (direction === "next") {
+      pageHistory.push(lastDoc);
+    } else if (direction === "prev") {
+      pageHistory.pop();
+    }
+      
     return { visitLogs: visitLogs, lastVisible: lastDoc, pageHistory,pastOutreachRef:pastOutreachRef };
   } catch (error) {
     logEvent(
