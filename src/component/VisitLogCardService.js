@@ -277,16 +277,14 @@ export const fetchPublicVisitLogs = async (
   //searchValue,
   city,
   startDate,
-  endDate
+  endDate,
+  lastVisible = null,
+  pageSize = 6,
+  direction = "next",
+  pageHistory = []
 ) => {
-  // query(
-  //   collection(db, PERSONAL_VISIT_LOG_COLLECTION),
-  //   //where("public", "==", true),
-  //   where("status", "==", "approved"),
-  //   // where("status", "in", ["approved", "flagged","unflagged"]),
-  // );
+
   try {
-    let visitLogSnapshot ;
     //Make sure start date and end date have values
     if (!(startDate instanceof Date) || isNaN(startDate)) {
       console.error("Invalid start date");
@@ -296,47 +294,46 @@ export const fetchPublicVisitLogs = async (
       console.error("Invalid end date");
       return;
     }
-    // if(searchValue && city){
-    //   const pastOutreachRef = query(
-    //     collection(db, PERSONAL_VISIT_LOG_COLLECTION),
-    //     where("status", "==", "approved"),
-    //     or(
-    //       where('city', "in", searchValue),   
-    //       where('description', "in", searchValue),
-    //       where('')   
-    //     ),
-    //     where("dateTime", ">=", startDate),
-    //     where("dateTime", "<=", endDate)
-    //   );
-    //   visitLogSnapshot = await getDocs(pastOutreachRef);
-    // }
-
+    let pastOutreachRef;
     if (
       !city ||
       typeof city !== "string"
     ) {
-      const pastOutreachRef = query(
+          pastOutreachRef = query(
           collection(db, PERSONAL_VISIT_LOG_COLLECTION),
           where("status", "==", "approved"),
           where("dateTime", ">=", startDate),
-          where("dateTime", "<=", endDate)
+          where("dateTime", "<=", endDate),
+          orderBy("dateTime","desc"),
+          limit(pageSize)
         );
-      visitLogSnapshot = await getDocs(pastOutreachRef);
+     // visitLogSnapshot = await getDocs(pastOutreachRef);
     }
     else{
-      const pastOutreachRef = query(
+        pastOutreachRef = query(
         collection(db, PERSONAL_VISIT_LOG_COLLECTION),
         where("status", "==", "approved"),
         where('city', '>=', city),
         where('city', '<=', city + '\uf8ff'),
         where("dateTime", ">=", startDate),
-        where("dateTime", "<=", endDate)
+        where("dateTime", "<=", endDate),
+        orderBy("dateTime","desc"),
+        limit(pageSize)
       );
-      visitLogSnapshot = await getDocs(pastOutreachRef);
-      console.log(pastOutreachRef)
+     // visitLogSnapshot = await getDocs(pastOutreachRef);
     }
-    let visitLogs = await visitLogHelperFunction(visitLogSnapshot);
-    return visitLogs;
+    if (lastVisible && direction === "next") {
+      pastOutreachRef = query(pastOutreachRef, startAfter(lastVisible));
+    }
+
+    // Handle backward pagination
+    if (lastVisible && direction === "prev" && pageHistory.length > 0) {
+      pastOutreachRef = query(pastOutreachRef, startAt(pageHistory[pageHistory.length - 2]));
+    }
+    const visitLogSnapshot = await getDocs(pastOutreachRef)
+    const visitLogs = await visitLogHelperFunction(visitLogSnapshot);
+    const lastDoc = visitLogSnapshot.docs[visitLogSnapshot.docs.length - 1];
+    return { visitLogs: visitLogs, lastVisible: lastDoc, pageHistory,pastOutreachRef:pastOutreachRef };
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",

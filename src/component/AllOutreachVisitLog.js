@@ -13,7 +13,7 @@ import { Directions } from "@mui/icons-material";
 
 const AllOutreachVisitLog = () => {
   const navigate = useNavigate();
-  const [visitLogs, setVisitLogs] = useState([]);
+  //const [visitLogs, setVisitLogs] = useState([]);
   const [filteredVisitLogs, setFilteredVisitLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [sortOption, setSortOption] = useState("");
@@ -23,7 +23,7 @@ const AllOutreachVisitLog = () => {
   const [searchValue,setSearchValue] = useState("")
   const [totalPages,setTotalPages] = useState(0)
   const logsPerPage = 6;
-  const [cursorFields,setCursorFields] = useState({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[]})
+  const [cursorFields,setCursorFields] = useState({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
   const searchRef = useRef("");
   const searchCity = useRef(""); // Reference for the search city input
 
@@ -36,70 +36,73 @@ const AllOutreachVisitLog = () => {
     }
     getTotalPages()
   },[])
-  //console.log(totalPages)
+
   useEffect(() => {
     const getVisitLogs = async () => {
-      // const visitLogsData = await fetchPublicVisitLogs(
-      //   //searchValue,
-      //   cityToSearch,
-      //   startDate,
-      //   endDate
-      // );
-      // console.log(visitLogsData)
-      console.log("in",cursorFields.direction)
       if(!cursorFields.direction)return
-      const visitLogsData= await fetchPaginatedPublicVisitLogs(cursorFields.lastVisible,cursorFields.pageSize,cursorFields.direction,cursorFields.pageHistory);
-      // console.log("data")
-      console.log(visitLogsData)
-      cursorFields.lastVisible = visitLogsData.lastVisible;
-      cursorFields.pageHistory = visitLogsData.pageHistory;
-      setVisitLogs(visitLogsData.visitLogs);
-      setFilteredVisitLogs(visitLogsData.visitLogs);
-      setIsLoading(false);
+      const visitLogsData= await fetchPublicVisitLogs(
+        cityToSearch,
+        startDate,
+        endDate,
+        cursorFields.lastVisible,
+        cursorFields.pageSize,
+        cursorFields.direction,
+        cursorFields.pageHistory);
+//      console.log(visitLogsData)
+        cursorFields.lastVisible = visitLogsData.lastVisible;
+        cursorFields.pageHistory = visitLogsData.pageHistory;
+       // cursorFields.pastOutreachRef = visitLogsData.pastOutreachRef;
+        //setVisitLogs(visitLogsData.visitLogs);
+        setFilteredVisitLogs(visitLogsData.visitLogs);
+        setIsLoading(false);
     };
     getVisitLogs();
   }, [cityToSearch, startDate, endDate,cursorFields.direction]);
 
-  const searchChange = () => {
-    const searchValue = searchRef.current.value.toLowerCase();
-    setFilteredVisitLogs(
-      visitLogs.filter((x) => {
-        return (
-          (x.title && x.title.toLowerCase().includes(searchValue)) ||
-          (x.userName && x.userName.toLowerCase().includes(searchValue)) ||
-          (x.location?.city &&
-            x.location.city.toLowerCase().includes(searchValue)) ||
-          (x.description && x.description.toLowerCase().includes(searchValue))
-        );
-      })
-    );
-  };
+  // const searchChange = () => {
+  //   const searchValue = searchRef.current.value.toLowerCase();
+  //   setFilteredVisitLogs(
+  //     visitLogs.filter((x) => {
+  //       return (
+  //         (x.title && x.title.toLowerCase().includes(searchValue)) ||
+  //         (x.userName && x.userName.toLowerCase().includes(searchValue)) ||
+  //         (x.location?.city &&
+  //           x.location.city.toLowerCase().includes(searchValue)) ||
+  //         (x.description && x.description.toLowerCase().includes(searchValue))
+  //       );
+  //     })
+  //   );
+  // };
 
   const handleSortChange = (e) => {
-    setFilteredVisitLogs(filteredVisitLogs);
+    //setFilteredVisitLogs(filteredVisitLogs);
     const sortBy = e.target.value;
     setSortOption(sortBy);
-    setFilteredVisitLogs(visitLogs);
+    setStartDate(new Date("2024-01-02"))
+    setEndDate(new Date())
+    setCityToSearch("")
+    setCursorFields(prev=>({...prev,"pastOutreachRef":null}))
+    //setFilteredVisitLogs(visitLogs);
   };
 
-  const filterByDate = () => {
-    const sortedLogs = visitLogs.filter((log) => {
-      const dateFormat = "MMM d, yyyy EEE hh:mm a"; // Define the date format
-      const logDate = parse(log.eventDate, dateFormat, new Date());
-      console.log(log.eventDate);
-      if (startDate && logDate < startDate) return false;
-      if (endDate && logDate > endDate) return false;
-      return true;
-    });
+  // const filterByDate = () => {
+  //   const sortedLogs = visitLogs.filter((log) => {
+  //     const dateFormat = "MMM d, yyyy EEE hh:mm a"; // Define the date format
+  //     const logDate = parse(log.eventDate, dateFormat, new Date());
+  //     console.log(log.eventDate);
+  //     if (startDate && logDate < startDate) return false;
+  //     if (endDate && logDate > endDate) return false;
+  //     return true;
+  //   });
 
-    setFilteredVisitLogs(sortedLogs);
-  };
+  //   setFilteredVisitLogs(sortedLogs);
+  // };
 
-  useEffect(() => {
-    if (sortOption === "datePeriod") {
-      filterByDate();
-    }
-  }, [startDate, endDate, sortOption]);
+  // useEffect(() => {
+  //   if (sortOption === "datePeriod") {
+  //     filterByDate();
+  //   }
+  // }, [startDate, endDate, sortOption]);
 
 
   // // Get current logs based on pagination
@@ -225,7 +228,6 @@ const AllOutreachVisitLog = () => {
                   style={{ borderRadius: "0px" }}
                 >
                   <option value="">None</option>
-
                   <option value="city">City</option>
                   <option value="datePeriod">Date Period</option>
                 </select>
