@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useCallback, useState, useEffect, useRef } from "react";
 import OutreachEventCard from "./Community/OutreachEventCard";
 import { fetchEvents, fetchByCityOrStates } from "./EventCardService";
 import { useNavigate } from "react-router-dom";
@@ -58,43 +58,77 @@ const AllPastOutreachEvents = () => {
     }
   }, [eventsDisplay]);
 
-  const fetchCity = async () => {
-    try {
-      setIsLoading(true);
-      setErrorMessage("");
+  const debounceTimeoutRef = useRef(null);
 
-      const { tot, outreachByLoc } = await fetchByCityOrStates(
-        cityToSearch,
-        startDateTime,
-        endDateTime,
-        currentPage,
-        outreachPerPages
-      );
+  const fetchCity = useCallback(() => {
+    clearTimeout(debounceTimeoutRef.current);
 
-      if (outreachByLoc.length > 0) {
-        const pastEvents = outreachByLoc.filter((event) => {
-          const eventDate = event?.eventDate?.seconds
-            ? new Date(event.eventDate.seconds * 1000)
-            : event.eventDate;
-          return eventDate < new Date();
-        });
+    debounceTimeoutRef.current = setTimeout(async () => {
+      try {
+        setIsLoading(true);
+        setErrorMessage("");
 
-        setEvents(pastEvents);
-        console.log("total", Math.ceil(tot / outreachPerPages) - 1);
-        setTotalPages(Math.ceil(tot / outreachPerPages) - 1);
-      } else {
-        throw new Error(
-          "No past outreach events found for the selected date range."
+        const { tot, outreachByLoc } = await fetchByCityOrStates(
+          cityToSearch,
+          startDateTime,
+          endDateTime,
+          currentPage,
+          outreachPerPages
         );
+
+        if (outreachByLoc.length > 0) {
+          setEvents(outreachByLoc);
+          setTotalPages(Math.ceil(tot / outreachPerPages) - 1);
+        } else {
+          throw new Error("No past outreach events found for the selected date range.");
+        }
+      } catch (error) {
+        setErrorMessage(error.message);
+        setEvents([]);
+        setTotalPages(0);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      setErrorMessage(error.message);
-      setEvents([]);
-      setTotalPages(0);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    }, 1000);
+  }, [cityToSearch, startDateTime, endDateTime, currentPage, outreachPerPages]);
+
+  // const fetchCity = async () => {
+  //   try {
+  //     setIsLoading(true);
+  //     setErrorMessage("");
+
+  //     const { tot, outreachByLoc } = await fetchByCityOrStates(
+  //       cityToSearch,
+  //       startDateTime,
+  //       endDateTime,
+  //       currentPage,
+  //       outreachPerPages
+  //     );
+
+  //     if (outreachByLoc.length > 0) {
+  //       const pastEvents = outreachByLoc.filter((event) => {
+  //         const eventDate = event?.eventDate?.seconds
+  //           ? new Date(event.eventDate.seconds * 1000)
+  //           : event.eventDate;
+  //         return eventDate < new Date();
+  //       });
+
+  //       setEvents(pastEvents);
+  //       console.log("total", Math.ceil(tot / outreachPerPages) - 1);
+  //       setTotalPages(Math.ceil(tot / outreachPerPages) - 1);
+  //     } else {
+  //       throw new Error(
+  //         "No past outreach events found for the selected date range."
+  //       );
+  //     }
+  //   } catch (error) {
+  //     setErrorMessage(error.message);
+  //     setEvents([]);
+  //     setTotalPages(0);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   // const fetchCity = async () => {
   //   setIsLoading(true);
