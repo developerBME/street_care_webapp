@@ -3,167 +3,131 @@ import OutreachVisitLogCard from "./Community/OutreachVisitLogCard";
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { 
-  fetchPaginatedPublicVisitLogs,getApprovedVisitLogsCount, fetchPublicVisitLogs } from "./VisitLogCardService";
+  fetchPaginatedPublicVisitLogs,
+  getApprovedVisitLogsCount,
+  fetchPublicVisitLogs 
+} from "./VisitLogCardService";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
-import { parse } from "date-fns";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import UserTypeInfo from "./UserTypeInfo";
-import { Directions } from "@mui/icons-material";
 
 const AllOutreachVisitLog = () => {
   const navigate = useNavigate();
-  //const [visitLogs, setVisitLogs] = useState([]);
   const [filteredVisitLogs, setFilteredVisitLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [sortOption, setSortOption] = useState("");
   const [startDate, setStartDate] = useState(new Date("2024-01-02"));
   const [endDate, setEndDate] = useState(new Date());
   const [cityToSearch, setCityToSearch] = useState("");
-  const [searchValue,setSearchValue] = useState("")
-  const [totalPages,setTotalPages] = useState(0)
+  const [totalPages, setTotalPages] = useState(0);
   const logsPerPage = 6;
-  const [cursorFields,setCursorFields] = useState({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
+
+  // Cursor state for pagination
+  const [cursorFields, setCursorFields] = useState({
+    lastVisible: null,
+    pageSize: logsPerPage,
+    direction: "next",
+    pageHistory: []
+  });
+
   const searchRef = useRef("");
   const searchCity = useRef(""); // Reference for the search city input
-
-  // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
-  useEffect(()=>{
-    const getTotalPages = async()=>{
-      let total = await getApprovedVisitLogsCount()
-      setTotalPages(total)
-    }
-    getTotalPages()
-  },[])
 
+  // Get total pages (count) on mount
+  useEffect(() => {
+    const getTotalPages = async () => {
+      let total = await getApprovedVisitLogsCount();
+      setTotalPages(total);
+    };
+    getTotalPages();
+  }, []);
+
+  // Fetch visit logs whenever filters or pagination direction change
   useEffect(() => {
     const getVisitLogs = async () => {
-      if(!cursorFields.direction)return
-      const visitLogsData= await fetchPublicVisitLogs(
+      // Set loading state
+      setIsLoading(true);
+      const visitLogsData = await fetchPublicVisitLogs(
         cityToSearch,
         startDate,
         endDate,
         cursorFields.lastVisible,
         cursorFields.pageSize,
         cursorFields.direction,
-        cursorFields.pageHistory);
-//      console.log(visitLogsData)
-        cursorFields.lastVisible = visitLogsData.lastVisible;
-        cursorFields.pageHistory = visitLogsData.pageHistory;
-       // cursorFields.pastOutreachRef = visitLogsData.pastOutreachRef;
-        //setVisitLogs(visitLogsData.visitLogs);
-        setFilteredVisitLogs(visitLogsData.visitLogs);
-        setIsLoading(false);
+        cursorFields.pageHistory
+      );
+      // Update pagination state using the setter instead of direct mutation
+      setCursorFields(prev => ({
+        ...prev,
+        lastVisible: visitLogsData.lastVisible,
+        pageHistory: visitLogsData.pageHistory
+      }));
+      setFilteredVisitLogs(visitLogsData.visitLogs);
+      setIsLoading(false);
     };
     getVisitLogs();
-  }, [cityToSearch, startDate, endDate,cursorFields.direction]);
-
-  // const searchChange = () => {
-  //   const searchValue = searchRef.current.value.toLowerCase();
-  //   setFilteredVisitLogs(
-  //     visitLogs.filter((x) => {
-  //       return (
-  //         (x.title && x.title.toLowerCase().includes(searchValue)) ||
-  //         (x.userName && x.userName.toLowerCase().includes(searchValue)) ||
-  //         (x.location?.city &&
-  //           x.location.city.toLowerCase().includes(searchValue)) ||
-  //         (x.description && x.description.toLowerCase().includes(searchValue))
-  //       );
-  //     })
-  //   );
-  // };
+  }, [cityToSearch, startDate, endDate, cursorFields.direction]);
 
   const handleSortChange = (e) => {
-    //setFilteredVisitLogs(filteredVisitLogs);
     const sortBy = e.target.value;
     setSortOption(sortBy);
-    setStartDate(new Date("2024-01-02"))
-    setEndDate(new Date())
-    setCityToSearch("")
-    setCursorFields(prev=>({...prev,"pastOutreachRef":null}))
-    //setFilteredVisitLogs(visitLogs);
+    // Reset filters and pagination state when filter changes
+    setStartDate(new Date("2024-01-02"));
+    setEndDate(new Date());
+    setCityToSearch("");
+    setCursorFields(prev => ({ ...prev, lastVisible: null, pageHistory: [] }));
   };
-
-  // const filterByDate = () => {
-  //   const sortedLogs = visitLogs.filter((log) => {
-  //     const dateFormat = "MMM d, yyyy EEE hh:mm a"; // Define the date format
-  //     const logDate = parse(log.eventDate, dateFormat, new Date());
-  //     console.log(log.eventDate);
-  //     if (startDate && logDate < startDate) return false;
-  //     if (endDate && logDate > endDate) return false;
-  //     return true;
-  //   });
-
-  //   setFilteredVisitLogs(sortedLogs);
-  // };
-
-  // useEffect(() => {
-  //   if (sortOption === "datePeriod") {
-  //     filterByDate();
-  //   }
-  // }, [startDate, endDate, sortOption]);
-
-
-  // // Get current logs based on pagination
-  // const indexOfLastLog = currentPage * logsPerPage;
-  // const indexOfFirstLog = indexOfLastLog - logsPerPage;
-  // const currentLogs = filteredVisitLogs.slice(indexOfFirstLog, indexOfLastLog);
-
-  // Change page
-
-  const returnTarget = "/";
-  const returnText = "Return to Home";
 
   const onPageChange = (page) => {
     setCurrentPage(page);
   };
 
-
-  const handleNext = () =>{
-    onPageChange(currentPage + 1)
+  // Navigate to next page
+  const handleNext = () => {
+    onPageChange(currentPage + 1);
     // Reset direction to force an update
-  setCursorFields((prev) => ({ ...prev, direction: "" })); 
-
-  // Set it to 'next' after a slight delay
-  setTimeout(() => {
-    setCursorFields((prev) => ({ ...prev, direction: "next" }));
-  }, 0); 
-  }
-  const handlePrev=()=>{
-    onPageChange(currentPage - 1)
-    setCursorFields((prev) => ({ ...prev, direction: "" })); 
-
+    setCursorFields(prev => ({ ...prev, direction: "" })); 
+    // Set it to 'next' after a slight delay
     setTimeout(() => {
-      setCursorFields((prev) => ({ ...prev, direction: "prev" }));
+      setCursorFields(prev => ({ ...prev, direction: "next" }));
     }, 0); 
-  }
+  };
+
+  // Navigate to previous page
+  const handlePrev = () => {
+    onPageChange(currentPage - 1);
+    setCursorFields(prev => ({ ...prev, direction: "" })); 
+    setTimeout(() => {
+      setCursorFields(prev => ({ ...prev, direction: "prev" }));
+    }, 0); 
+  };
+
   const renderPaginationButtons = () => {
     const buttons = [];
     if (currentPage > 1) {
       buttons.push(
         <button
           key="prev"
-          onClick={() => handlePrev()}
+          onClick={handlePrev}
           className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
         >
           <IoIosArrowBack />
         </button>
       );
     }
-
     if (currentPage < totalPages) {
       buttons.push(
         <button
           key="next"
-          onClick={() => handleNext()}
+          onClick={handleNext}
           className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
         >
           <IoIosArrowForward />
         </button>
       );
     }
-
     return buttons;
   };
 
@@ -172,13 +136,11 @@ const AllOutreachVisitLog = () => {
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-16 lg:mx-40 mt-48 rounded-2xl bg-white text-black">
         <div
           className="absolute flex mt-[-50px] items-center cursor-pointer"
-          onClick={() => {
-            navigate(returnTarget);
-          }}
+          onClick={() => navigate("/")}
         >
           <IoIosArrowBack className="w-6 h-6" />
           <p className="font-bricolage text-xl font-bold leading-7">
-            {returnText}
+            Return to Home
           </p>
         </div>
         <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
@@ -189,7 +151,6 @@ const AllOutreachVisitLog = () => {
               </p>
             </div>
             <div className="flex items-center gap-4 mt-6 lg:mt-0">
-              {/* Search input */}
               <label className="relative text-gray-400 focus-within:text-gray-600">
                 <input
                   type="text"
@@ -197,9 +158,7 @@ const AllOutreachVisitLog = () => {
                   id="searchText"
                   placeholder="Search..."
                   ref={searchRef}
-                  onChange={e=>setSearchValue(e.target.value)}
-                  className="form-input w-fit md:w-[20rem] lg:w-[18rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-10 rounded-2xl"
-                  style={{ borderRadius: "0px" }}
+                  className="form-input w-fit md:w-[20rem] lg:w-[18rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 block pl-10 rounded-2xl"
                 />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -215,25 +174,18 @@ const AllOutreachVisitLog = () => {
                   />
                 </svg>
               </label>
-
-              {/* Sort by filter */}
               <div className="flex items-center">
-                <label className="mr-2 text-gray-500 font-medium">
-                  Filter:
-                </label>
+                <label className="mr-2 text-gray-500 font-medium">Filter:</label>
                 <select
                   value={sortOption}
                   onChange={handleSortChange}
-                  className="form-select w-fit md:w-[8rem] py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block rounded-2xl"
-                  style={{ borderRadius: "0px" }}
+                  className="form-select w-fit md:w-[8rem] py-2 px-2 border border-[#CACACA] text-gray-500 block rounded-2xl"
                 >
                   <option value="">None</option>
                   <option value="city">City</option>
                   <option value="datePeriod">Date Period</option>
                 </select>
               </div>
-
-              {/* Conditional rendering of City search */}
               {sortOption === "city" && (
                 <input
                   type="text"
@@ -242,33 +194,30 @@ const AllOutreachVisitLog = () => {
                   placeholder="Search City"
                   ref={searchCity}
                   onChange={(e) => setCityToSearch(e.target.value)}
-                  className="form-input w-fit md:w-[12rem] lg:w-[8rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-2 rounded-2xl"
-                  style={{ borderRadius: "0px" }}
-                />
-              )}
-
-              {/* Conditional rendering of DatePickers */}
-              {sortOption === "datePeriod" && (
-                <DatePicker
-                  selected={startDate}
-                  onChange={(date) => setStartDate(date)}
-                  selectsStart
-                  startDate={startDate}
-                  endDate={endDate}
-                  placeholderText="Select Start Date"
-                  className="form-input w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
+                  className="form-input w-fit md:w-[12rem] lg:w-[8rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 block pl-2 rounded-2xl"
                 />
               )}
               {sortOption === "datePeriod" && (
-                <DatePicker
-                  selected={endDate}
-                  onChange={(date) => setEndDate(date)}
-                  selectsEnd
-                  startDate={startDate}
-                  endDate={endDate}
-                  placeholderText="Select End Date"
-                  className="form-input w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
-                />
+                <>
+                  <DatePicker
+                    selected={startDate}
+                    onChange={(date) => setStartDate(date)}
+                    selectsStart
+                    startDate={startDate}
+                    endDate={endDate}
+                    placeholderText="Select Start Date"
+                    className="form-input w-fit py-2 px-2 border border-[#CACACA] text-gray-500 block"
+                  />
+                  <DatePicker
+                    selected={endDate}
+                    onChange={(date) => setEndDate(date)}
+                    selectsEnd
+                    startDate={startDate}
+                    endDate={endDate}
+                    placeholderText="Select End Date"
+                    className="form-input w-fit py-2 px-2 border border-[#CACACA] text-gray-500 block"
+                  />
+                </>
               )}
             </div>
           </div>
@@ -295,25 +244,8 @@ const AllOutreachVisitLog = () => {
                   </p>
                 )}
               </div>
-              {/* Pagination */}
               <div className="flex justify-center mt-8">
                 {renderPaginationButtons()}
-                {/* {[
-                  ...Array(
-                    Math.ceil(filteredVisitLogs.length / logsPerPage)
-                  ).keys(),
-                ].map((i) => (
-                  <button
-                    key={i + 1}
-                    className={`mx-2 px-4 py-2 border rounded-full ${currentPage === i + 1
-                        ? "bg-[#E0D7EC] text-black border-[#1F0A58]"
-                        : "bg-white text-black border-[#9B82CF]"
-                      }`}
-                    onClick={() => paginate(i + 1)}
-                  >
-                    {i + 1}
-                  </button>
-                ))} */}
               </div>
             </>
           )}

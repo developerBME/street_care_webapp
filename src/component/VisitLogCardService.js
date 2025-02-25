@@ -274,7 +274,6 @@ export const fetchPersonalVisitLogs = async (uid) => {
 };
 
 export const fetchPublicVisitLogs = async (
-  //searchValue,
   city,
   startDate,
   endDate,
@@ -283,79 +282,69 @@ export const fetchPublicVisitLogs = async (
   direction = "next",
   pageHistory = []
 ) => {
-
   try {
-    //Make sure start date and end date have values
-    if (!(startDate instanceof Date) || isNaN(startDate)) {
-      console.error("Invalid start date");
-      return;
-    }
-    if (!(endDate instanceof Date) || isNaN(endDate)) {
-      console.error("Invalid end date");
-      return;
-    }
     let pastOutreachRef;
-    if (
-      !city ||
-      typeof city !== "string"
-    ) {
 
-          lastVisible = null
-          pageHistory =[]
-          pastOutreachRef = query(
-          collection(db, PERSONAL_VISIT_LOG_COLLECTION),
-          where("status", "==", "approved"),
-          where("dateTime", ">=", startDate),
-          where("dateTime", "<=", endDate),
-          orderBy("dateTime","desc"),
-          limit(pageSize)
-        );
-     // visitLogSnapshot = await getDocs(pastOutreachRef);
-    }
-    else{
-
-        lastVisible = null
-        pageHistory =[]
-        pastOutreachRef = query(
+    // When no city filter is applied (or empty string)
+    if (!city || typeof city !== "string" || city.trim() === "") {
+      // Only reset the cursors if this is the first page
+      if (!lastVisible) {
+        pageHistory = [];
+      }
+      pastOutreachRef = query(
         collection(db, PERSONAL_VISIT_LOG_COLLECTION),
         where("status", "==", "approved"),
-        where('city', '>=', city),
-        where('city', '<=', city + '\uf8ff'),
         where("dateTime", ">=", startDate),
         where("dateTime", "<=", endDate),
-        orderBy("dateTime","desc"),
+        orderBy("dateTime", "desc"),
         limit(pageSize)
       );
-     // visitLogSnapshot = await getDocs(pastOutreachRef);
+    } else {
+      // With city filter applied, similarly only reset if no cursor is provided
+      if (!lastVisible) {
+        pageHistory = [];
+      }
+      pastOutreachRef = query(
+        collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+        where("status", "==", "approved"),
+        where("city", ">=", city),
+        where("city", "<=", city + "\uf8ff"),
+        where("dateTime", ">=", startDate),
+        where("dateTime", "<=", endDate),
+        orderBy("dateTime", "desc"),
+        limit(pageSize)
+      );
     }
+
+    // Apply pagination cursor based on direction
     if (lastVisible && direction === "next") {
       pastOutreachRef = query(pastOutreachRef, startAfter(lastVisible));
     }
-
-    // Handle backward pagination
     if (lastVisible && direction === "prev" && pageHistory.length > 2) {
-      pastOutreachRef = query(pastOutreachRef, startAfter(pageHistory[pageHistory.length - 3]));
+      pastOutreachRef = query(
+        pastOutreachRef,
+        startAfter(pageHistory[pageHistory.length - 3])
+      );
     }
-    const visitLogSnapshot = await getDocs(pastOutreachRef)
+
+    const visitLogSnapshot = await getDocs(pastOutreachRef);
     const visitLogs = await visitLogHelperFunction(visitLogSnapshot);
     const lastDoc = visitLogSnapshot.docs[visitLogSnapshot.docs.length - 1];
 
-     // Store history of cursors for backward pagination
-     if (direction === "next") {
+    // Update pageHistory based on navigation direction
+    if (direction === "next") {
       pageHistory.push(lastDoc);
     } else if (direction === "prev") {
       pageHistory.pop();
     }
-      
-    return { visitLogs: visitLogs, lastVisible: lastDoc, pageHistory,pastOutreachRef:pastOutreachRef };
+
+    return { visitLogs, lastVisible: lastDoc, pageHistory, pastOutreachRef };
   } catch (error) {
-    logEvent(
-      "STREET_CARE_ERROR",
-      `error on fetchVisitLogs VisitLogCardService.js- ${error.message}`
-    );
+    // Log and rethrow the error as needed
     throw error;
   }
 };
+
 
 export const getApprovedVisitLogsCount = async () => {
   try {
