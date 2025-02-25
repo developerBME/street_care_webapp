@@ -23,19 +23,20 @@ const AllOutreachVisitLog = () => {
   const [searchValue,setSearchValue] = useState("")
   const [totalPages,setTotalPages] = useState(0)
   const logsPerPage = 6;
+  const [currentPageLength,setCurrentPageLength]=useState(logsPerPage)
   const [cursorFields,setCursorFields] = useState({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
   const searchRef = useRef("");
   const searchCity = useRef(""); // Reference for the search city input
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
-  useEffect(()=>{
-    const getTotalPages = async()=>{
-      let total = await getApprovedVisitLogsCount()
-      setTotalPages(total)
-    }
-    getTotalPages()
-  },[])
+  // useEffect(()=>{
+  //   const getTotalPages = async()=>{
+  //     let total = await getApprovedVisitLogsCount()
+  //     setTotalPages(total)
+  //   }
+  //   getTotalPages()
+  // },[])
 
   useEffect(() => {
     const getVisitLogs = async () => {
@@ -48,17 +49,17 @@ const AllOutreachVisitLog = () => {
         cursorFields.pageSize,
         cursorFields.direction,
         cursorFields.pageHistory);
-//      console.log(visitLogsData)
         cursorFields.lastVisible = visitLogsData.lastVisible;
         cursorFields.pageHistory = visitLogsData.pageHistory;
-       // cursorFields.pastOutreachRef = visitLogsData.pastOutreachRef;
+        setTotalPages(visitLogsData.totalRecords)
+        // cursorFields.pastOutreachRef = visitLogsData.pastOutreachRef;
         //setVisitLogs(visitLogsData.visitLogs);
+        //console.log(visitLogsData)
         setFilteredVisitLogs(visitLogsData.visitLogs);
         setIsLoading(false);
     };
     getVisitLogs();
   }, [cityToSearch, startDate, endDate,cursorFields.direction]);
-
   // const searchChange = () => {
   //   const searchValue = searchRef.current.value.toLowerCase();
   //   setFilteredVisitLogs(
@@ -122,6 +123,7 @@ const AllOutreachVisitLog = () => {
 
   const handleNext = () =>{
     onPageChange(currentPage + 1)
+    setCurrentPageLength((prev)=>(prev+filteredVisitLogs.length))
     // Reset direction to force an update
   setCursorFields((prev) => ({ ...prev, direction: "" })); 
 
@@ -132,6 +134,7 @@ const AllOutreachVisitLog = () => {
   }
   const handlePrev=()=>{
     onPageChange(currentPage - 1)
+    setCurrentPageLength((prev)=>(prev-filteredVisitLogs.length))
     setCursorFields((prev) => ({ ...prev, direction: "" })); 
 
     setTimeout(() => {
@@ -296,7 +299,11 @@ const AllOutreachVisitLog = () => {
                 )}
               </div>
               {/* Pagination */}
-              <div className="flex justify-center mt-8">
+              <div className="flex justify-between items-center mt-8 w-full">
+                <p className="text-gray-600">
+                  Showing {currentPageLength} of {totalPages}{" "}
+                  events
+                </p>
                 {renderPaginationButtons()}
                 {/* {[
                   ...Array(

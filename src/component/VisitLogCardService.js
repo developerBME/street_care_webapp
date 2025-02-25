@@ -294,7 +294,7 @@ export const fetchPublicVisitLogs = async (
       console.error("Invalid end date");
       return;
     }
-    let pastOutreachRef;
+    let pastOutreachRef,totalOutreachRef;
     if (
       !city ||
       typeof city !== "string"
@@ -302,30 +302,29 @@ export const fetchPublicVisitLogs = async (
 
           lastVisible = null
           pageHistory =[]
-          pastOutreachRef = query(
+          totalOutreachRef = query(
           collection(db, PERSONAL_VISIT_LOG_COLLECTION),
           where("status", "==", "approved"),
           where("dateTime", ">=", startDate),
           where("dateTime", "<=", endDate),
-          orderBy("dateTime","desc"),
-          limit(pageSize)
-        );
+          orderBy("dateTime","desc"))
+          pastOutreachRef = query(totalOutreachRef,limit(pageSize))
      // visitLogSnapshot = await getDocs(pastOutreachRef);
     }
     else{
 
         lastVisible = null
         pageHistory =[]
-        pastOutreachRef = query(
+        totalOutreachRef = query(
         collection(db, PERSONAL_VISIT_LOG_COLLECTION),
         where("status", "==", "approved"),
         where('city', '>=', city),
         where('city', '<=', city + '\uf8ff'),
         where("dateTime", ">=", startDate),
         where("dateTime", "<=", endDate),
-        orderBy("dateTime","desc"),
-        limit(pageSize)
+        orderBy("dateTime","desc")
       );
+      pastOutreachRef = query(totalOutreachRef,limit(pageSize))
      // visitLogSnapshot = await getDocs(pastOutreachRef);
     }
     if (lastVisible && direction === "next") {
@@ -336,6 +335,7 @@ export const fetchPublicVisitLogs = async (
     if (lastVisible && direction === "prev" && pageHistory.length > 2) {
       pastOutreachRef = query(pastOutreachRef, startAfter(pageHistory[pageHistory.length - 3]));
     }
+    const totalRecords = await getCountFromServer(totalOutreachRef);
     const visitLogSnapshot = await getDocs(pastOutreachRef)
     const visitLogs = await visitLogHelperFunction(visitLogSnapshot);
     const lastDoc = visitLogSnapshot.docs[visitLogSnapshot.docs.length - 1];
@@ -347,7 +347,7 @@ export const fetchPublicVisitLogs = async (
       pageHistory.pop();
     }
       
-    return { visitLogs: visitLogs, lastVisible: lastDoc, pageHistory,pastOutreachRef:pastOutreachRef };
+    return { visitLogs: visitLogs, lastVisible: lastDoc, pageHistory,pastOutreachRef:pastOutreachRef,totalRecords:totalRecords.data().count };
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
