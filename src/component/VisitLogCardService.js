@@ -357,16 +357,18 @@ export const fetchPublicVisitLogs = async (
   }
 };
 
-export const getApprovedVisitLogsCount = async () => {
+export const fetchHomeVisitLogs = async () => {
   try {
     const visitLogsRef = query(
       collection(db, PERSONAL_VISIT_LOG_COLLECTION),
-      where("status", "==", "approved") // Filter applied
+      where("status", "==", "approved"), // Filter applied
+      orderBy("dateTime","desc"),
+      limit(3)
     );
 
-    const snapshot = await getCountFromServer(visitLogsRef);
-    
-    return snapshot.data().count;
+    const snapshot = await getDocs(visitLogsRef);
+    const visitLogs = await visitLogHelperFunction(snapshot);
+    return visitLogs;
   } catch (error) {
     console.error("Error fetching count:", error);
     return 0;
