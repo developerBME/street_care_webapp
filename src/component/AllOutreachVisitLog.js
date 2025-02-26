@@ -23,7 +23,7 @@ const AllOutreachVisitLog = () => {
   const [searchValue,setSearchValue] = useState("")
   const [totalPages,setTotalPages] = useState(0)
   const logsPerPage = 6;
-  const [currentPageLength,setCurrentPageLength]=useState(logsPerPage)
+  const [currentPageLength,setCurrentPageLength]=useState(0)
   const [cursorFields,setCursorFields] = useState({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
   const searchRef = useRef("");
   const searchCity = useRef(""); // Reference for the search city input
@@ -41,6 +41,7 @@ const AllOutreachVisitLog = () => {
   useEffect(() => {
     const getVisitLogs = async () => {
       if(!cursorFields.direction)return
+      //console.log("in")
       const visitLogsData= await fetchPublicVisitLogs(
         filterData.city,
         filterData.startDate,
@@ -52,6 +53,7 @@ const AllOutreachVisitLog = () => {
         cursorFields.lastVisible = visitLogsData.lastVisible;
         cursorFields.pageHistory = visitLogsData.pageHistory;
         setTotalPages(visitLogsData.totalRecords)
+        if(currentPageLength===0)setCurrentPageLength(visitLogsData.visitLogs.length)
         // cursorFields.pastOutreachRef = visitLogsData.pastOutreachRef;
         //setVisitLogs(visitLogsData.visitLogs);
         //console.log(visitLogsData)
@@ -121,6 +123,7 @@ const AllOutreachVisitLog = () => {
 
   const handleNext = () =>{
     onPageChange(currentPage + 1)
+    console.log(filteredVisitLogs.length)
     setCurrentPageLength((prev)=>(prev+filteredVisitLogs.length))
     // Reset direction to force an update
   setCursorFields((prev) => ({ ...prev, direction: "" })); 
@@ -173,6 +176,12 @@ const AllOutreachVisitLog = () => {
     setFilterData((prev)=>({...prev,[name]:value}))
     setCursorFields({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
   }
+
+  const handleDateChange = (date,fieldName) =>{
+    setFilterData((prev) => ({ ...prev, [fieldName]: date }));
+    setCursorFields({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
+  }
+
 
   return (
     <div className="relative flex flex-col items-center">
@@ -244,7 +253,7 @@ const AllOutreachVisitLog = () => {
               {sortOption === "city" && (
                 <input
                   type="text"
-                  name="searchCity"
+                  name="city"
                   id="searchCity"
                   placeholder="Search City"
                   ref={searchCity}
@@ -259,11 +268,12 @@ const AllOutreachVisitLog = () => {
               {sortOption === "datePeriod" && (
                 <DatePicker
                   selected={filterData.startDate}
-                  onChange={handleChange}
                   selectsStart
+                  name="startDate"
                   startDate={filterData.startDate}
                   endDate={filterData.endDate}
                   value={filterData.startDate}
+                  onChange={(date)=>handleDateChange(date,"startDate")}
                   placeholderText="Select Start Date"
                   className="form-input w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
                 />
@@ -271,11 +281,12 @@ const AllOutreachVisitLog = () => {
               {sortOption === "datePeriod" && (
                 <DatePicker
                   selected={filterData.endDate}
-                  onChange={handleChange}
                   selectsEnd
+                  name="endDate"
                   startDate={filterData.startDate}
                   endDate={filterData.endDate}
                   value={filterData.endDate}
+                  onChange={(date)=>handleDateChange(date,"endDate")}
                   placeholderText="Select End Date"
                   className="form-input w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
                 />

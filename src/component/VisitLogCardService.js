@@ -286,39 +286,8 @@ export const fetchPublicVisitLogs = async (
 
   try {
 
-    let pastOutreachRef;
+    let pastOutreachRef,totalOutReachRef;
 
-    // if (!city && !startDate && !endDate) {
-    //   // Case 1: Generic Fetch (No Filters)
-
-    //   console.log("inside default")
-    //   pastOutreachRef = query(
-    //     collection(db, PERSONAL_VISIT_LOG_COLLECTION),
-    //     where("status", "==", "approved"),
-    //     orderBy("dateTime", "desc"),
-    //     limit(pageSize)
-    //   );
-    // } else
-       if (city){
-
-      lastVisible=null;
-      pageHistory=[];
-      console.log("inside city")
-      pastOutreachRef = query(
-        collection(db, PERSONAL_VISIT_LOG_COLLECTION),
-        where("status", "==", "approved"),
-        where('city', '>=', city),
-        where('city', '<=', city + '\uf8ff'),
-        orderBy("dateTime","desc"),
-        limit(pageSize)
-      );
-
-    }
-
-    else if (startDate && endDate) {
-
-      console.log("inside dateTime")
-      // Case 3: Fetch by Date Range
       if (!(startDate instanceof Date) || isNaN(startDate)) {
         console.error("Invalid start date");
         return;
@@ -328,17 +297,28 @@ export const fetchPublicVisitLogs = async (
         return;
       }
 
-      pastOutreachRef = query(
+      if (city){
+        lastVisible=null;
+        pageHistory=[];
+        console.log("inside city")
+        totalOutReachRef = query(
+          collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+          where("status", "==", "approved"),
+          where('city', '>=', city),
+          where('city', '<=', city + '\uf8ff'),
+          orderBy("dateTime","desc"))
+        pastOutreachRef = query(totalOutReachRef,limit(pageSize));
+      }
+    else{
+      totalOutReachRef = query(
         collection(db, PERSONAL_VISIT_LOG_COLLECTION),
         where("status", "==", "approved"),
         where("dateTime", ">=", startDate),
         where("dateTime", "<=", endDate),
-        orderBy("dateTime", "desc"),
-        limit(pageSize)
-      );
+        orderBy("dateTime", "desc"))
+      pastOutreachRef = query(totalOutReachRef,limit(pageSize));
     }
-
-
+    
     if (lastVisible && direction === "next") {
       pastOutreachRef = query(pastOutreachRef, startAfter(lastVisible));
     }
@@ -348,7 +328,7 @@ export const fetchPublicVisitLogs = async (
       pastOutreachRef = query(pastOutreachRef, startAfter(pageHistory[pageHistory.length - 3]));
     }
 
-    const totalRecords = await getCountFromServer(pastOutreachRef);
+    const totalRecords = await getCountFromServer(totalOutReachRef);
     const visitLogSnapshot = await getDocs(pastOutreachRef)
     const visitLogs = await visitLogHelperFunction(visitLogSnapshot);
     const lastDoc = visitLogSnapshot.docs[visitLogSnapshot.docs.length - 1];
