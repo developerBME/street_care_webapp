@@ -29,7 +29,6 @@ const AllOutreachVisitLog = () => {
   const searchCity = useRef(""); // Reference for the search city input
   const [filterData,setFilterData] = useState({city:"",startDate:new Date("2024-01-02"),endDate:new Date()})
   // Pagination states
-  const [currentPage, setCurrentPage] = useState(1);
   // useEffect(()=>{
   //   const getTotalPages = async()=>{
   //     let total = await getApprovedVisitLogsCount()
@@ -53,7 +52,7 @@ const AllOutreachVisitLog = () => {
         cursorFields.lastVisible = visitLogsData.lastVisible;
         cursorFields.pageHistory = visitLogsData.pageHistory;
         setTotalPages(visitLogsData.totalRecords)
-        if(currentPageLength===0)setCurrentPageLength(visitLogsData.visitLogs.length)
+        if(cursorFields.direction ==="next")setCurrentPageLength((prev)=>prev + visitLogsData.visitLogs.length)
         // cursorFields.pastOutreachRef = visitLogsData.pastOutreachRef;
         //setVisitLogs(visitLogsData.visitLogs);
         //console.log(visitLogsData)
@@ -78,53 +77,23 @@ const AllOutreachVisitLog = () => {
   // };
 
   const handleSortChange = (e) => {
-    //setFilteredVisitLogs(filteredVisitLogs);
     const sortBy = e.target.value;
     setSortOption(sortBy);
+    //To make sure when the sort option is changed from None to city or date, api is not triggered
+    if(sortOption === "")return 
+    //To clear the filters in other cases
     setFilterData({city:"",startDate:new Date("2024-01-02"),endDate:new Date()})
     setCursorFields({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
-    //setFilteredVisitLogs(visitLogs);
+    setCurrentPageLength(0)
   };
-
-  // const filterByDate = () => {
-  //   const sortedLogs = visitLogs.filter((log) => {
-  //     const dateFormat = "MMM d, yyyy EEE hh:mm a"; // Define the date format
-  //     const logDate = parse(log.eventDate, dateFormat, new Date());
-  //     console.log(log.eventDate);
-  //     if (startDate && logDate < startDate) return false;
-  //     if (endDate && logDate > endDate) return false;
-  //     return true;
-  //   });
-
-  //   setFilteredVisitLogs(sortedLogs);
-  // };
-
-  // useEffect(() => {
-  //   if (sortOption === "datePeriod") {
-  //     filterByDate();
-  //   }
-  // }, [startDate, endDate, sortOption]);
-
-
-  // // Get current logs based on pagination
-  // const indexOfLastLog = currentPage * logsPerPage;
-  // const indexOfFirstLog = indexOfLastLog - logsPerPage;
-  // const currentLogs = filteredVisitLogs.slice(indexOfFirstLog, indexOfLastLog);
 
   // Change page
 
   const returnTarget = "/";
   const returnText = "Return to Home";
 
-  const onPageChange = (page) => {
-    setCurrentPage(page);
-  };
-
 
   const handleNext = () =>{
-    onPageChange(currentPage + 1)
-    console.log(filteredVisitLogs.length)
-    setCurrentPageLength((prev)=>(prev+filteredVisitLogs.length))
     // Reset direction to force an update
   setCursorFields((prev) => ({ ...prev, direction: "" })); 
 
@@ -134,7 +103,6 @@ const AllOutreachVisitLog = () => {
   }, 0); 
   }
   const handlePrev=()=>{
-    onPageChange(currentPage - 1)
     setCurrentPageLength((prev)=>(prev-filteredVisitLogs.length))
     setCursorFields((prev) => ({ ...prev, direction: "" })); 
 
@@ -144,7 +112,7 @@ const AllOutreachVisitLog = () => {
   }
   const renderPaginationButtons = () => {
     const buttons = [];
-    if (currentPage > 1) {
+    if (currentPageLength > 6) {
       buttons.push(
         <button
           key="prev"
@@ -156,7 +124,7 @@ const AllOutreachVisitLog = () => {
       );
     }
 
-    if (currentPage < totalPages) {
+    if (currentPageLength < totalPages) {
       buttons.push(
         <button
           key="next"
@@ -175,11 +143,13 @@ const AllOutreachVisitLog = () => {
     const { name, value } = e.target;
     setFilterData((prev)=>({...prev,[name]:value}))
     setCursorFields({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
+    setCurrentPageLength(0)
   }
 
   const handleDateChange = (date,fieldName) =>{
     setFilterData((prev) => ({ ...prev, [fieldName]: date }));
     setCursorFields({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
+    setCurrentPageLength(0)
   }
 
 

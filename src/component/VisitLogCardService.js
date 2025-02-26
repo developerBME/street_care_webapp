@@ -13,7 +13,8 @@ import {
   startAt,
   getCountFromServer,
   or,
-  and
+  and,
+  count
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { fetchUserDetails } from "./EventCardService";
