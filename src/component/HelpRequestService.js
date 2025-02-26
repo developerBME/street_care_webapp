@@ -6,47 +6,36 @@ import {
   query,
   where,
   updateDoc,
-  or,
   Timestamp,
   orderBy,
   startAt,
   limit
 } from "firebase/firestore";
 import { db } from "./firebase";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import logEvent from "./FirebaseLogger";
 import { fetchUserName, getNumberOfPages} from "./HelperFunction";
 
 const HELP_REQ_COLLECTION = "helpRequests";
-const USERS_COLLECTION = "users";
 const OUTREACHES_COLLECTION = "outreachEvents";
 
 export const fetchHelpRequests = async () => {
   try {
     const helpReqRef = collection(db, HELP_REQ_COLLECTION);
     const helpSnapshot = await getDocs(helpReqRef);
-    let helpRequests = [];
+    const helpRequests = helpSnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
 
-    const fAuth = getAuth();
-    onAuthStateChanged(fAuth, (user) => {
-      if (user) {
-        console.log("Found user");
-      } else {
-        console.log("USER NOT FOUND!");
-      }
+    const userNames = await Promise.all(      // Promise.all to fetch usernames in parallel
+      helpRequests.map((req) => fetchUserName(req.uid))
+    );
+
+    helpRequests.forEach((req, index) => {
+      req.userName = userNames[index];
     });
 
-    for (const doc of helpSnapshot.docs) {
-      const helpData = doc.data();
-      const id = doc.id;
-      const userName = await fetchUserName(helpData.uid);
-
-      helpRequests.push({
-        ...helpData,
-        userName: userName,
-        id: id,
-      });
-    }
     return helpRequests;
   } catch (error) {
     logEvent(
@@ -56,6 +45,21 @@ export const fetchHelpRequests = async () => {
     throw error;
   }
 };
+
+export const fetchHelpRequestCount = async () => {
+  try {
+    const helpReqRef = collection(db, HELP_REQ_COLLECTION);
+    const helpSnapshot = await getDocs(helpReqRef);
+    return helpSnapshot.size;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchHelpRequestCount HelpRequestService.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
 
 export const fetchHelpReqById = async (helpReqId) => {
   try {
@@ -93,18 +97,20 @@ export const fetchTopHelpRequests = async () => {
       limit(6) // Limit to top 6 records
     );
     const helpRequestDocRef = await getDocs(allTopHelpRequestsByQuery);
-    let helpRequests = [];
-    for (const doc of helpRequestDocRef.docs) {
-      const helpRequestData = doc.data();
-      const id = doc.id;
-      const userName = await fetchUserName(helpRequestData.uid);
-      helpRequests.push({
-        ...helpRequestData,
-        userName: userName,
-        id: id,
-      });
-    }
-    console.log(helpRequests)
+
+    const helpRequests = helpRequestDocRef.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    const userNames = await Promise.all(
+      helpRequests.map((req) => fetchUserName(req.uid))
+    );
+
+    helpRequests.forEach((req, index) => {
+      req.userName = userNames[index];
+    });
+
     return helpRequests;
   } catch (error) {
     logEvent(
@@ -140,7 +146,6 @@ export const fetchHelpRequestByUser = async () => {
         id: id,
       });
     }
-    console.log(helpRequests)
     return helpRequests;
   } catch (error) {
     logEvent(
@@ -201,7 +206,6 @@ export const fetchByCityAndDate = async (
         id: id,
       });
     }
-    console.log(helpRequestsByCity);
     return helpRequestsByCity;
   } catch (error) {
     logEvent(
