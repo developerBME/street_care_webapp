@@ -287,8 +287,10 @@ export const fetchPublicVisitLogs = async (
 
   try {
 
+    //query variables 
     let pastOutreachRef,totalOutReachRef;
 
+      //Handle date Values
       if (!(startDate instanceof Date) || isNaN(startDate)) {
         console.error("Invalid start date");
         return;
@@ -298,6 +300,7 @@ export const fetchPublicVisitLogs = async (
         return;
       }
 
+      //City  Filter
       if (city){
         lastVisible=null;
         pageHistory=[];
@@ -310,6 +313,7 @@ export const fetchPublicVisitLogs = async (
           orderBy("dateTime","desc"))
         pastOutreachRef = query(totalOutReachRef,limit(pageSize));
       }
+      //Date Filter
     else{
       totalOutReachRef = query(
         collection(db, PERSONAL_VISIT_LOG_COLLECTION),
@@ -320,11 +324,12 @@ export const fetchPublicVisitLogs = async (
       pastOutreachRef = query(totalOutReachRef,limit(pageSize));
     }
     
+    //Handle Forward pagination
     if (lastVisible && direction === "next") {
       pastOutreachRef = query(pastOutreachRef, startAfter(lastVisible));
     }
 
-    // Handle backward pagination
+    // Handle Backward pagination
     if (lastVisible && direction === "prev" && pageHistory.length > 2) {
       pastOutreachRef = query(pastOutreachRef, startAfter(pageHistory[pageHistory.length - 3]));
     }
@@ -371,7 +376,7 @@ export const fetchHomeVisitLogs = async () => {
   }
 };
 
-//Cursor based paginated visit logs
+//Cursor based Paginated visit logs
 export const fetchPaginatedPublicVisitLogs = async (
   lastVisible = null,
   pageSize = 6,
@@ -418,28 +423,6 @@ export const fetchPaginatedPublicVisitLogs = async (
     throw error;
   }
 };
-
-//FRONTEND (PAGINATION) INSTRUCTIONS
-
-// State to track history
-// let pageHistory = [];
-
-// // Load next page
-// const { visitLogs, lastVisible } = await fetchPaginatedPublicVisitLogs(
-//   lastVisible,
-//   6,
-//   "next",
-//   pageHistory
-// );
-
-// // Load previous page
-// const { visitLogs, lastVisible } = await fetchPaginatedPublicVisitLogs(
-//   lastVisible,
-//   6,
-//   "prev",
-//   pageHistory
-// );
-
 
 export const fetchPersonalVisitLogById = async (visitLogId) => {
   try {
