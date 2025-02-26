@@ -285,48 +285,60 @@ export const fetchPublicVisitLogs = async (
 ) => {
 
   try {
-    //Make sure start date and end date have values
-    if (!(startDate instanceof Date) || isNaN(startDate)) {
-      console.error("Invalid start date");
-      return;
-    }
-    if (!(endDate instanceof Date) || isNaN(endDate)) {
-      console.error("Invalid end date");
-      return;
-    }
-    let pastOutreachRef,totalOutreachRef;
-    if (
-      !city ||
-      typeof city !== "string"
-    ) {
 
-          lastVisible = null
-          pageHistory =[]
-          totalOutreachRef = query(
-          collection(db, PERSONAL_VISIT_LOG_COLLECTION),
-          where("status", "==", "approved"),
-          where("dateTime", ">=", startDate),
-          where("dateTime", "<=", endDate),
-          orderBy("dateTime","desc"))
-          pastOutreachRef = query(totalOutreachRef,limit(pageSize))
-     // visitLogSnapshot = await getDocs(pastOutreachRef);
-    }
-    else{
+    let pastOutreachRef;
 
-        lastVisible = null
-        pageHistory =[]
-        totalOutreachRef = query(
+    // if (!city && !startDate && !endDate) {
+    //   // Case 1: Generic Fetch (No Filters)
+
+    //   console.log("inside default")
+    //   pastOutreachRef = query(
+    //     collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+    //     where("status", "==", "approved"),
+    //     orderBy("dateTime", "desc"),
+    //     limit(pageSize)
+    //   );
+    // } else
+       if (city){
+
+      lastVisible=null;
+      pageHistory=[];
+      console.log("inside city")
+      pastOutreachRef = query(
         collection(db, PERSONAL_VISIT_LOG_COLLECTION),
         where("status", "==", "approved"),
         where('city', '>=', city),
         where('city', '<=', city + '\uf8ff'),
+        orderBy("dateTime","desc"),
+        limit(pageSize)
+      );
+
+    }
+
+    else if (startDate && endDate) {
+
+      console.log("inside dateTime")
+      // Case 3: Fetch by Date Range
+      if (!(startDate instanceof Date) || isNaN(startDate)) {
+        console.error("Invalid start date");
+        return;
+      }
+      if (!(endDate instanceof Date) || isNaN(endDate)) {
+        console.error("Invalid end date");
+        return;
+      }
+
+      pastOutreachRef = query(
+        collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+        where("status", "==", "approved"),
         where("dateTime", ">=", startDate),
         where("dateTime", "<=", endDate),
-        orderBy("dateTime","desc")
+        orderBy("dateTime", "desc"),
+        limit(pageSize)
       );
-      pastOutreachRef = query(totalOutreachRef,limit(pageSize))
-     // visitLogSnapshot = await getDocs(pastOutreachRef);
     }
+
+
     if (lastVisible && direction === "next") {
       pastOutreachRef = query(pastOutreachRef, startAfter(lastVisible));
     }
@@ -335,10 +347,12 @@ export const fetchPublicVisitLogs = async (
     if (lastVisible && direction === "prev" && pageHistory.length > 2) {
       pastOutreachRef = query(pastOutreachRef, startAfter(pageHistory[pageHistory.length - 3]));
     }
-    const totalRecords = await getCountFromServer(totalOutreachRef);
+
+    const totalRecords = await getCountFromServer(pastOutreachRef);
     const visitLogSnapshot = await getDocs(pastOutreachRef)
     const visitLogs = await visitLogHelperFunction(visitLogSnapshot);
     const lastDoc = visitLogSnapshot.docs[visitLogSnapshot.docs.length - 1];
+    
 
      // Store history of cursors for backward pagination
      if (direction === "next") {
@@ -347,7 +361,7 @@ export const fetchPublicVisitLogs = async (
       pageHistory.pop();
     }
       
-    return { visitLogs: visitLogs, lastVisible: lastDoc, pageHistory,pastOutreachRef:pastOutreachRef,totalRecords:totalRecords.data().count };
+    return { visitLogs: visitLogs, lastVisible: lastDoc, pageHistory,pastOutreachRef:pastOutreachRef,totalRecords:totalRecords.data().count  };
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
@@ -356,6 +370,7 @@ export const fetchPublicVisitLogs = async (
     throw error;
   }
 };
+
 
 export const fetchHomeVisitLogs = async () => {
   try {
