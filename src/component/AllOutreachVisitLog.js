@@ -27,7 +27,7 @@ const AllOutreachVisitLog = () => {
   const [cursorFields,setCursorFields] = useState({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
   const searchRef = useRef("");
   const searchCity = useRef(""); // Reference for the search city input
-
+  const [filterData,setFilterData] = useState({city:"",startDate:new Date("2024-01-02"),endDate:new Date()})
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   // useEffect(()=>{
@@ -42,9 +42,9 @@ const AllOutreachVisitLog = () => {
     const getVisitLogs = async () => {
       if(!cursorFields.direction)return
       const visitLogsData= await fetchPublicVisitLogs(
-        cityToSearch,
-        startDate,
-        endDate,
+        filterData.city,
+        filterData.startDate,
+        filterData.endDate,
         cursorFields.lastVisible,
         cursorFields.pageSize,
         cursorFields.direction,
@@ -59,7 +59,7 @@ const AllOutreachVisitLog = () => {
         setIsLoading(false);
     };
     getVisitLogs();
-  }, [cityToSearch, startDate, endDate,cursorFields.direction]);
+  }, [filterData.city, filterData.startDate, filterData.endDate,cursorFields.direction]);
   // const searchChange = () => {
   //   const searchValue = searchRef.current.value.toLowerCase();
   //   setFilteredVisitLogs(
@@ -79,9 +79,7 @@ const AllOutreachVisitLog = () => {
     //setFilteredVisitLogs(filteredVisitLogs);
     const sortBy = e.target.value;
     setSortOption(sortBy);
-    setStartDate(new Date("2024-01-02"))
-    setEndDate(new Date())
-    setCityToSearch("")
+    setFilterData({city:"",startDate:new Date("2024-01-02"),endDate:new Date()})
     setCursorFields({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
     //setFilteredVisitLogs(visitLogs);
   };
@@ -170,6 +168,12 @@ const AllOutreachVisitLog = () => {
     return buttons;
   };
 
+  const handleChange = (e) =>{
+    const { name, value } = e.target;
+    setFilterData((prev)=>({...prev,[name]:value}))
+    setCursorFields({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
+  }
+
   return (
     <div className="relative flex flex-col items-center">
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-16 lg:mx-40 mt-48 rounded-2xl bg-white text-black">
@@ -244,7 +248,8 @@ const AllOutreachVisitLog = () => {
                   id="searchCity"
                   placeholder="Search City"
                   ref={searchCity}
-                  onChange={(e) => setCityToSearch(e.target.value)}
+                  value={filterData.city}
+                  onChange={handleChange}
                   className="form-input w-fit md:w-[12rem] lg:w-[8rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-2 rounded-2xl"
                   style={{ borderRadius: "0px" }}
                 />
@@ -253,22 +258,24 @@ const AllOutreachVisitLog = () => {
               {/* Conditional rendering of DatePickers */}
               {sortOption === "datePeriod" && (
                 <DatePicker
-                  selected={startDate}
-                  onChange={(date) => setStartDate(date)}
+                  selected={filterData.startDate}
+                  onChange={handleChange}
                   selectsStart
-                  startDate={startDate}
-                  endDate={endDate}
+                  startDate={filterData.startDate}
+                  endDate={filterData.endDate}
+                  value={filterData.startDate}
                   placeholderText="Select Start Date"
                   className="form-input w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
                 />
               )}
               {sortOption === "datePeriod" && (
                 <DatePicker
-                  selected={endDate}
-                  onChange={(date) => setEndDate(date)}
+                  selected={filterData.endDate}
+                  onChange={handleChange}
                   selectsEnd
-                  startDate={startDate}
-                  endDate={endDate}
+                  startDate={filterData.startDate}
+                  endDate={filterData.endDate}
+                  value={filterData.endDate}
                   placeholderText="Select End Date"
                   className="form-input w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
                 />
