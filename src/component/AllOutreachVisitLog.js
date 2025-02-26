@@ -82,7 +82,7 @@ const AllOutreachVisitLog = () => {
     setStartDate(new Date("2024-01-02"))
     setEndDate(new Date())
     setCityToSearch("")
-    setCursorFields(prev=>({...prev,"pastOutreachRef":null}))
+    setCursorFields({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
     //setFilteredVisitLogs(visitLogs);
   };
 
