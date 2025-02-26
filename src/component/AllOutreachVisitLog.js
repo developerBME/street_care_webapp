@@ -28,14 +28,6 @@ const AllOutreachVisitLog = () => {
   const searchRef = useRef("");
   const searchCity = useRef(""); // Reference for the search city input
   const [filterData,setFilterData] = useState({city:"",startDate:new Date("2024-01-02"),endDate:new Date()})
-  // Pagination states
-  // useEffect(()=>{
-  //   const getTotalPages = async()=>{
-  //     let total = await getApprovedVisitLogsCount()
-  //     setTotalPages(total)
-  //   }
-  //   getTotalPages()
-  // },[])
 
   useEffect(() => {
     const getVisitLogs = async () => {
@@ -103,13 +95,15 @@ const AllOutreachVisitLog = () => {
   }, 0); 
   }
   const handlePrev=()=>{
+    //Handling here since I need length of the records one render before
     setCurrentPageLength((prev)=>(prev-filteredVisitLogs.length))
+    //Reset direction to force an update
     setCursorFields((prev) => ({ ...prev, direction: "" })); 
-
     setTimeout(() => {
       setCursorFields((prev) => ({ ...prev, direction: "prev" }));
     }, 0); 
   }
+
   const renderPaginationButtons = () => {
     const buttons = [];
     if (currentPageLength > 6) {
