@@ -40,6 +40,7 @@ const AllPastOutreachEvents = () => {
   const outreachPerPages = 6;
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [cumulativeEventsCount, setCumulativeEventsCount] = useState(0);
   const [cursorFields, setCursorFields] = useState({
     lastVisible: null,
     pageSize: outreachPerPages,
@@ -98,12 +99,23 @@ const AllPastOutreachEvents = () => {
           cursorFields.direction,
           cursorFields.pageHistory
         );
+  
         setEvents(fetchedEvents);
         setCursorFields((prev) => ({
           ...prev,
           lastVisible: lastVisible,
           pageHistory: pageHistory
         }));
+  
+        setCumulativeEventsCount((prevCount) => {
+          if (cursorFields.direction === "next") {
+            return prevCount + fetchedEvents.length;
+          }
+          if (cursorFields.direction === "prev") {
+            return Math.max(prevCount - events.length, fetchedEvents.length);
+          }
+          return fetchedEvents.length;
+        });
       } catch (error) {
         setErrorMessage(error.message);
         setEvents([]);
@@ -113,6 +125,7 @@ const AllPastOutreachEvents = () => {
     };
     fetchData();
   }, [cursorFields.direction, cityToSearch, startDateTime, endDateTime, currentPage]);
+  
 
   const resetPagination = () => {
     setCursorFields({
@@ -122,7 +135,9 @@ const AllPastOutreachEvents = () => {
       pageHistory: []
     });
     setCurrentPage(0);
+    setCumulativeEventsCount(0); 
   };
+  
 
   const handleStartDateChange = (e) => {
     setStartDateTime(new Date(e.target.value));
@@ -288,7 +303,7 @@ const AllPastOutreachEvents = () => {
           <UserTypeInfo />
           <div className="flex justify-between items-center mt-8 w-full">
             <p className="text-gray-600">
-              Showing {events.length} of {totaloutreaches} events
+              Showing {cumulativeEventsCount} of {totaloutreaches} events
             </p>
             <div className="flex justify-end">{renderPaginationButtons()}</div>
           </div>
@@ -318,7 +333,7 @@ const AllPastOutreachEvents = () => {
           )}
           <div className="flex justify-between items-center mt-8 w-full">
             <p className="text-gray-600">
-              Showing {events.length} of {totaloutreaches} events
+            Showing {cumulativeEventsCount} of {totaloutreaches} events
             </p>
             <div className="flex justify-end">{renderPaginationButtons()}</div>
           </div>

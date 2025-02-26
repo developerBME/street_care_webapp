@@ -108,7 +108,7 @@ function splitArrayIntoChunksOfLen(arr, len) {
   return chunks;
 }
 
-// Fetch Outreach Events in a Paginated Manner
+// Fetch Outreach Events in a Paginated Manner with User Details
 export const fetchPaginatedEvents = async (
   city,
   startDate,
@@ -118,60 +118,78 @@ export const fetchPaginatedEvents = async (
   direction = "next",
   pageHistory = []
 ) => {
-  let eventsQuery;
-  if (!city || city.trim() === "") {
-    eventsQuery = query(
-      collection(db, OUTREACH_EVENTS_COLLECTION),
-      where("status", "==", "approved"),
-      where("eventDate", ">=", startDate),
-      where("eventDate", "<=", endDate),
-      orderBy("eventDate", "desc"),
-      limit(pageSize)
-    );
-  } else {
-    eventsQuery = query(
-      collection(db, OUTREACH_EVENTS_COLLECTION),
-      where("status", "==", "approved"),
-      where("location.city", ">=", city),
-      where("location.city", "<=", city + "\uf8ff"),
-      where("eventDate", ">=", startDate),
-      where("eventDate", "<=", endDate),
-      orderBy("eventDate", "desc"),
-      limit(pageSize)
-    );
-  }
-  
-  if (lastVisible && direction === "next") {
-    eventsQuery = query(eventsQuery, startAfter(lastVisible));
-  }
-  if (lastVisible && direction === "prev" && pageHistory.length > 2) {
-    eventsQuery = query(eventsQuery, startAfter(pageHistory[pageHistory.length - 3]));
-  }
-  
-  const snapshot = await getDocs(eventsQuery);
-  const fetchedEvents = snapshot.docs.map((doc) => {
-    const data = doc.data();
-    console.log("Data from pagina", data);
+  try {
+    let eventsQuery;
+    if (!city || city.trim() === "") {
+      eventsQuery = query(
+        collection(db, OUTREACH_EVENTS_COLLECTION),
+        where("status", "==", "approved"),
+        where("eventDate", ">=", startDate),
+        where("eventDate", "<=", endDate),
+        orderBy("eventDate", "desc"),
+        limit(pageSize)
+      );
+    } else {
+      eventsQuery = query(
+        collection(db, OUTREACH_EVENTS_COLLECTION),
+        where("status", "==", "approved"),
+        where("location.city", ">=", city),
+        where("location.city", "<=", city + "\uf8ff"),
+        where("eventDate", ">=", startDate),
+        where("eventDate", "<=", endDate),
+        orderBy("eventDate", "desc"),
+        limit(pageSize)
+      );
+    }
+
+    if (lastVisible && direction === "next") {
+      eventsQuery = query(eventsQuery, startAfter(lastVisible));
+    }
+    if (lastVisible && direction === "prev" && pageHistory.length > 2) {
+      eventsQuery = query(eventsQuery, startAfter(pageHistory[pageHistory.length - 3]));
+    }
+
+    const snapshot = await getDocs(eventsQuery);
     
-    return {
-      ...data,
-      id: doc.id,
-      eventDate:
-        data.eventDate && data.eventDate.seconds
-          ? formatDate(new Date(data.eventDate.seconds * 1000))
-          : ""
-    };
-  });
-  const lastDoc = snapshot.docs[snapshot.docs.length - 1];
-  if (direction === "next") {
-    pageHistory.push(lastDoc);
-  } else if (direction === "prev") {
-    pageHistory.pop();
+    // Collect unique user IDs
+    const userIds = [...new Set(snapshot.docs.map(doc => doc.data().uid))];
+
+    // Batch fetch user details
+    const userDetails = await fetchUserDetailsBatch(userIds);
+
+    const fetchedEvents = snapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        ...data,
+        id: doc.id,
+        eventDate:
+          data.eventDate && data.eventDate.seconds
+            ? formatDate(new Date(data.eventDate.seconds * 1000))
+            : "",
+        userName: userDetails[data.uid]?.username || "Unknown User",
+        photoUrl: userDetails[data.uid]?.photoUrl || "",
+        userType: userDetails[data.uid]?.userType || ""
+      };
+    });
+
+    const lastDoc = snapshot.docs[snapshot.docs.length - 1];
+    if (direction === "next") {
+      pageHistory.push(lastDoc);
+    } else if (direction === "prev") {
+      pageHistory.pop();
+    }
+
+    return { events: fetchedEvents, lastVisible: lastDoc, pageHistory };
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `Error fetching paginated events: ${error.message}`
+    );
+    throw error;
   }
-  return { events: fetchedEvents, lastVisible: lastDoc, pageHistory };
 };
 
-// Fetch Past Outreach Events in a a Paginated Manner
+// Fetch Past Outreach Events in a Paginated Manner with User Details
 export const fetchPaginatedPastOutreachEvents = async (
   city,
   startDate,
@@ -181,55 +199,76 @@ export const fetchPaginatedPastOutreachEvents = async (
   direction = "next",
   pageHistory = []
 ) => {
-  let pastOutreachQuery;
-  if (!city || city.trim() === "") {
-    pastOutreachQuery = query(
-      collection(db, PAST_OUTREACH_EVENTS_COLLECTION),
-      where("eventDate", "<", new Date()),
-      where("eventDate", ">=", startDate),
-      where("eventDate", "<=", endDate),
-      orderBy("eventDate", "desc"),
-      limit(pageSize)
-    );
-  } else {
-    pastOutreachQuery = query(
-      collection(db, PAST_OUTREACH_EVENTS_COLLECTION),
-      where("location.city", "==", city),
-      where("eventDate", "<", new Date()),
-      where("eventDate", ">=", startDate),
-      where("eventDate", "<=", endDate),
-      orderBy("eventDate", "desc"),
-      limit(pageSize)
-    );
-  }
+  try {
+    let pastOutreachQuery;
+    if (!city || city.trim() === "") {
+      pastOutreachQuery = query(
+        collection(db, PAST_OUTREACH_EVENTS_COLLECTION),
+        where("eventDate", "<", new Date()),
+        where("eventDate", ">=", startDate),
+        where("eventDate", "<=", endDate),
+        orderBy("eventDate", "desc"),
+        limit(pageSize)
+      );
+    } else {
+      pastOutreachQuery = query(
+        collection(db, PAST_OUTREACH_EVENTS_COLLECTION),
+        where("location.city", "==", city),
+        where("eventDate", "<", new Date()),
+        where("eventDate", ">=", startDate),
+        where("eventDate", "<=", endDate),
+        orderBy("eventDate", "desc"),
+        limit(pageSize)
+      );
+    }
 
-  if (lastVisible && direction === "next") {
-    pastOutreachQuery = query(pastOutreachQuery, startAfter(lastVisible));
-  }
-  if (lastVisible && direction === "prev" && pageHistory.length > 2) {
-    pastOutreachQuery = query(pastOutreachQuery, startAfter(pageHistory[pageHistory.length - 3]));
-  }
+    if (lastVisible && direction === "next") {
+      pastOutreachQuery = query(pastOutreachQuery, startAfter(lastVisible));
+    }
+    if (lastVisible && direction === "prev" && pageHistory.length > 2) {
+      pastOutreachQuery = query(pastOutreachQuery, startAfter(pageHistory[pageHistory.length - 3]));
+    }
 
-  const snapshot = await getDocs(pastOutreachQuery);
-  const fetchedEvents = snapshot.docs.map((doc) => {
-    const data = doc.data();
-    return {
-      ...data,
-      id: doc.id,
-      eventDate:
-        data.eventDate && data.eventDate.seconds
-          ? formatDate(new Date(data.eventDate.seconds * 1000))
-          : ""
-    };
-  });
-  const lastDoc = snapshot.docs[snapshot.docs.length - 1];
-  if (direction === "next") {
-    pageHistory.push(lastDoc);
-  } else if (direction === "prev") {
-    pageHistory.pop();
+    const snapshot = await getDocs(pastOutreachQuery);
+    
+    // Collect unique user IDs
+    const userIds = [...new Set(snapshot.docs.map(doc => doc.data().uid))];
+
+    // Batch fetch user details
+    const userDetails = await fetchUserDetailsBatch(userIds);
+
+    const fetchedEvents = snapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        ...data,
+        id: doc.id,
+        eventDate:
+          data.eventDate && data.eventDate.seconds
+            ? formatDate(new Date(data.eventDate.seconds * 1000))
+            : "",
+        userName: userDetails[data.uid]?.username || "Unknown User",
+        photoUrl: userDetails[data.uid]?.photoUrl || "",
+        userType: userDetails[data.uid]?.userType || ""
+      };
+    });
+
+    const lastDoc = snapshot.docs[snapshot.docs.length - 1];
+    if (direction === "next") {
+      pageHistory.push(lastDoc);
+    } else if (direction === "prev") {
+      pageHistory.pop();
+    }
+
+    return { fetchedEvents, lastVisible: lastDoc, pageHistory };
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `Error fetching paginated past outreach events: ${error.message}`
+    );
+    throw error;
   }
-  return { fetchedEvents, lastVisible: lastDoc, pageHistory };
 };
+
 
 export const fetchPastOutreachEvents = async () => {
   try {

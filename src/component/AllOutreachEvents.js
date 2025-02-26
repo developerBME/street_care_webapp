@@ -54,6 +54,8 @@ const AllOutreachEvents = ({ loggedIn }) => {
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showWithdrawnModal, setShowWithdrawnModal] = useState(false);
   const [triggerEffect, setTriggerEffect] = useState(false);
+  const [totalOutreaches, setTotalOutreaches] = useState(0);
+  const [cumulativeEventsCount, setCumulativeEventsCount] = useState(0);
 
   useEffect(() => {
     const getTotalCount = async () => {
@@ -67,7 +69,6 @@ const AllOutreachEvents = ({ loggedIn }) => {
             orderBy("eventDate", "asc")
           );
         } else if (filterOption === "datePeriod") {
-          // Use provided date range
           countQuery = query(
             collection(db, "outreachEvents"),
             where("eventDate", ">=", startDate),
@@ -75,7 +76,6 @@ const AllOutreachEvents = ({ loggedIn }) => {
             orderBy("eventDate", "asc")
           );
         } else {
-          // No filter: Only upcoming events
           countQuery = query(
             collection(db, "outreachEvents"),
             where("eventDate", ">=", new Date()),
@@ -84,13 +84,14 @@ const AllOutreachEvents = ({ loggedIn }) => {
         }
         const snapshot = await getCountFromServer(countQuery);
         const tot = snapshot.data().count;
-        setTotalPages(Math.ceil(tot / cursorFields.pageSize));
+        setTotalOutreaches(tot);
       } catch (error) {
         console.error("Error fetching total count:", error);
       }
     };
     getTotalCount();
-  }, [filterOption, startDate, endDate, cityToSearch, cursorFields.pageSize]);
+  }, [filterOption, startDate, endDate, cityToSearch]);
+  
 
   useEffect(() => {
     const getEvents = async () => {
@@ -109,12 +110,24 @@ const AllOutreachEvents = ({ loggedIn }) => {
           cursorFields.direction,
           cursorFields.pageHistory
         );
+  
         setEvents(fetchedEvents);
         setCursorFields((prev) => ({
           ...prev,
           lastVisible: newLastVisible,
           pageHistory: newPageHistory
         }));
+  
+        setCumulativeEventsCount((prevCount) => {
+          if (cursorFields.direction === "next") {
+            return prevCount + fetchedEvents.length;
+          }
+          if (cursorFields.direction === "prev") {
+            return Math.max(prevCount - events.length, fetchedEvents.length);
+          }
+          return fetchedEvents.length;
+        });
+  
       } catch (error) {
         console.error("Error fetching events:", error);
       }
@@ -122,12 +135,24 @@ const AllOutreachEvents = ({ loggedIn }) => {
     };
     getEvents();
   }, [cursorFields.direction, filterOption, startDate, endDate, cityToSearch, triggerEffect]);
-
+  
+  
+  const resetPagination = () => {
+    setCursorFields({
+      lastVisible: null,
+      pageSize: 6,
+      direction: "next",
+      pageHistory: []
+    });
+    setCurrentPage(1);
+    setCumulativeEventsCount(0);
+  };
+  
   const handleFilterChange = (e) => {
     const selected = e.target.value;
     setFilterOption(selected);
-    setCursorFields({ lastVisible: null, pageSize: 6, direction: "next", pageHistory: [] });
-    setCurrentPage(1);
+    resetPagination();
+    setTotalOutreaches(0);
   };
 
   const searchCityChange = () => {
@@ -320,7 +345,9 @@ const AllOutreachEvents = ({ loggedIn }) => {
           <UserTypeInfo />
 
           <div className="flex justify-between items-center mt-8 w-full mb-11">
-            <p className="text-gray-600">Showing {events.length} events</p>
+            <p className="text-gray-600">
+              Showing {cumulativeEventsCount} of {totalOutreaches} events
+            </p>
             <div className="flex justify-end">{renderPaginationButtons()}</div>
           </div>
           {isLoading ? (
@@ -342,7 +369,9 @@ const AllOutreachEvents = ({ loggedIn }) => {
           )}
 
           <div className="flex justify-between items-center mt-8 w-full">
-            <p className="text-gray-600">Showing {events.length} events</p>
+            <p className="text-gray-600">
+              Showing {cumulativeEventsCount} of {totalOutreaches} events
+            </p>
             <div className="flex justify-end">{renderPaginationButtons()}</div>
           </div>
         </div>
