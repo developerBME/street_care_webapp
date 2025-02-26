@@ -22,91 +22,90 @@ const AllOutreachVisitLog = () => {
   const [cityToSearch, setCityToSearch] = useState("");
   const [totalPages, setTotalPages] = useState(0);
   const logsPerPage = 6;
-
-  // Cursor state for pagination
-  const [cursorFields, setCursorFields] = useState({
-    lastVisible: null,
-    pageSize: logsPerPage,
-    direction: "next",
-    pageHistory: []
-  });
-
+  const [currentPageLength,setCurrentPageLength]=useState(0)
+  const [cursorFields,setCursorFields] = useState({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
   const searchRef = useRef("");
   const searchCity = useRef(""); // Reference for the search city input
-  const [currentPage, setCurrentPage] = useState(1);
+  const [filterData,setFilterData] = useState({city:"",startDate:new Date("2024-01-02"),endDate:new Date()})
 
-  // Get total pages (count) on mount
-  useEffect(() => {
-    const getTotalPages = async () => {
-      let total = await getApprovedVisitLogsCount();
-      setTotalPages(total);
-    };
-    getTotalPages();
-  }, []);
-
-  // Fetch visit logs whenever filters or pagination direction change
   useEffect(() => {
     const getVisitLogs = async () => {
-      // Set loading state
-      setIsLoading(true);
-      const visitLogsData = await fetchPublicVisitLogs(
-        cityToSearch,
-        startDate,
-        endDate,
+      if(!cursorFields.direction)return
+      //console.log("in")
+      const visitLogsData= await fetchPublicVisitLogs(
+        filterData.city,
+        filterData.startDate,
+        filterData.endDate,
         cursorFields.lastVisible,
         cursorFields.pageSize,
         cursorFields.direction,
-        cursorFields.pageHistory
-      );
-      // Update pagination state using the setter instead of direct mutation
-      setCursorFields(prev => ({
-        ...prev,
-        lastVisible: visitLogsData.lastVisible,
-        pageHistory: visitLogsData.pageHistory
-      }));
-      setFilteredVisitLogs(visitLogsData.visitLogs);
-      setIsLoading(false);
+        cursorFields.pageHistory);
+        cursorFields.lastVisible = visitLogsData.lastVisible;
+        cursorFields.pageHistory = visitLogsData.pageHistory;
+        setTotalPages(visitLogsData.totalRecords)
+        if(cursorFields.direction ==="next")setCurrentPageLength((prev)=>prev + visitLogsData.visitLogs.length)
+        // cursorFields.pastOutreachRef = visitLogsData.pastOutreachRef;
+        //setVisitLogs(visitLogsData.visitLogs);
+        //console.log(visitLogsData)
+        setFilteredVisitLogs(visitLogsData.visitLogs);
+        setIsLoading(false);
     };
     getVisitLogs();
-  }, [cityToSearch, startDate, endDate, cursorFields.direction]);
+  }, [filterData.city, filterData.startDate, filterData.endDate,cursorFields.direction]);
+  // const searchChange = () => {
+  //   const searchValue = searchRef.current.value.toLowerCase();
+  //   setFilteredVisitLogs(
+  //     visitLogs.filter((x) => {
+  //       return (
+  //         (x.title && x.title.toLowerCase().includes(searchValue)) ||
+  //         (x.userName && x.userName.toLowerCase().includes(searchValue)) ||
+  //         (x.location?.city &&
+  //           x.location.city.toLowerCase().includes(searchValue)) ||
+  //         (x.description && x.description.toLowerCase().includes(searchValue))
+  //       );
+  //     })
+  //   );
+  // };
 
   const handleSortChange = (e) => {
     const sortBy = e.target.value;
     setSortOption(sortBy);
-    // Reset filters and pagination state when filter changes
-    setStartDate(new Date("2024-01-02"));
-    setEndDate(new Date());
-    setCityToSearch("");
-    setCursorFields(prev => ({ ...prev, lastVisible: null, pageHistory: [] }));
+    //To make sure when the sort option is changed from None to city or date, api is not triggered
+    if(sortOption === "")return 
+    //To clear the filters in other cases
+    setFilterData({city:"",startDate:new Date("2024-01-02"),endDate:new Date()})
+    setCursorFields({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
+    setCurrentPageLength(0)
   };
 
-  const onPageChange = (page) => {
-    setCurrentPage(page);
-  };
+  // Change page
 
-  // Navigate to next page
-  const handleNext = () => {
-    onPageChange(currentPage + 1);
+  const returnTarget = "/";
+  const returnText = "Return to Home";
+
+
+  const handleNext = () =>{
     // Reset direction to force an update
-    setCursorFields(prev => ({ ...prev, direction: "" })); 
-    // Set it to 'next' after a slight delay
-    setTimeout(() => {
-      setCursorFields(prev => ({ ...prev, direction: "next" }));
-    }, 0); 
-  };
+  setCursorFields((prev) => ({ ...prev, direction: "" })); 
 
-  // Navigate to previous page
-  const handlePrev = () => {
-    onPageChange(currentPage - 1);
-    setCursorFields(prev => ({ ...prev, direction: "" })); 
+  // Set it to 'next' after a slight delay
+  setTimeout(() => {
+    setCursorFields((prev) => ({ ...prev, direction: "next" }));
+  }, 0); 
+  }
+  const handlePrev=()=>{
+    //Handling here since I need length of the records one render before
+    setCurrentPageLength((prev)=>(prev-filteredVisitLogs.length))
+    //Reset direction to force an update
+    setCursorFields((prev) => ({ ...prev, direction: "" })); 
     setTimeout(() => {
       setCursorFields(prev => ({ ...prev, direction: "prev" }));
     }, 0); 
-  };
+  }
 
   const renderPaginationButtons = () => {
     const buttons = [];
-    if (currentPage > 1) {
+    if (currentPageLength > 6) {
       buttons.push(
         <button
           key="prev"
@@ -117,7 +116,8 @@ const AllOutreachVisitLog = () => {
         </button>
       );
     }
-    if (currentPage < totalPages) {
+
+    if (currentPageLength < totalPages) {
       buttons.push(
         <button
           key="next"
@@ -130,6 +130,20 @@ const AllOutreachVisitLog = () => {
     }
     return buttons;
   };
+
+  const handleChange = (e) =>{
+    const { name, value } = e.target;
+    setFilterData((prev)=>({...prev,[name]:value}))
+    setCursorFields({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
+    setCurrentPageLength(0)
+  }
+
+  const handleDateChange = (date,fieldName) =>{
+    setFilterData((prev) => ({ ...prev, [fieldName]: date }));
+    setCursorFields({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
+    setCurrentPageLength(0)
+  }
+
 
   return (
     <div className="relative flex flex-col items-center">
@@ -189,35 +203,41 @@ const AllOutreachVisitLog = () => {
               {sortOption === "city" && (
                 <input
                   type="text"
-                  name="searchCity"
+                  name="city"
                   id="searchCity"
                   placeholder="Search City"
                   ref={searchCity}
-                  onChange={(e) => setCityToSearch(e.target.value)}
-                  className="form-input w-fit md:w-[12rem] lg:w-[8rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 block pl-2 rounded-2xl"
+                  value={filterData.city}
+                  onChange={handleChange}
+                  className="form-input w-fit md:w-[12rem] lg:w-[8rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-2 rounded-2xl"
+                  style={{ borderRadius: "0px" }}
                 />
               )}
               {sortOption === "datePeriod" && (
-                <>
-                  <DatePicker
-                    selected={startDate}
-                    onChange={(date) => setStartDate(date)}
-                    selectsStart
-                    startDate={startDate}
-                    endDate={endDate}
-                    placeholderText="Select Start Date"
-                    className="form-input w-fit py-2 px-2 border border-[#CACACA] text-gray-500 block"
-                  />
-                  <DatePicker
-                    selected={endDate}
-                    onChange={(date) => setEndDate(date)}
-                    selectsEnd
-                    startDate={startDate}
-                    endDate={endDate}
-                    placeholderText="Select End Date"
-                    className="form-input w-fit py-2 px-2 border border-[#CACACA] text-gray-500 block"
-                  />
-                </>
+                <DatePicker
+                  selected={filterData.startDate}
+                  selectsStart
+                  name="startDate"
+                  startDate={filterData.startDate}
+                  endDate={filterData.endDate}
+                  value={filterData.startDate}
+                  onChange={(date)=>handleDateChange(date,"startDate")}
+                  placeholderText="Select Start Date"
+                  className="form-input w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
+                />
+              )}
+              {sortOption === "datePeriod" && (
+                <DatePicker
+                  selected={filterData.endDate}
+                  selectsEnd
+                  name="endDate"
+                  startDate={filterData.startDate}
+                  endDate={filterData.endDate}
+                  value={filterData.endDate}
+                  onChange={(date)=>handleDateChange(date,"endDate")}
+                  placeholderText="Select End Date"
+                  className="form-input w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
+                />
               )}
             </div>
           </div>
@@ -244,7 +264,12 @@ const AllOutreachVisitLog = () => {
                   </p>
                 )}
               </div>
-              <div className="flex justify-center mt-8">
+              {/* Pagination */}
+              <div className="flex justify-between items-center mt-8 w-full">
+                <p className="text-gray-600">
+                  Showing {currentPageLength} of {totalPages}{" "}
+                  events
+                </p>
                 {renderPaginationButtons()}
               </div>
             </>

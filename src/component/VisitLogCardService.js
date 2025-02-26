@@ -13,7 +13,8 @@ import {
   startAt,
   getCountFromServer,
   or,
-  and
+  and,
+  count
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { fetchUserDetails } from "./EventCardService";
@@ -283,43 +284,50 @@ export const fetchPublicVisitLogs = async (
   pageHistory = []
 ) => {
   try {
-    let pastOutreachRef;
 
-    // When no city filter is applied (or empty string)
-    if (!city || typeof city !== "string" || city.trim() === "") {
-      // Only reset the cursors if this is the first page
-      if (!lastVisible) {
-        pageHistory = [];
+    //query variables 
+    let pastOutreachRef,totalOutReachRef;
+
+      //Handle date Values
+      if (!(startDate instanceof Date) || isNaN(startDate)) {
+        console.error("Invalid start date");
+        return;
       }
-      pastOutreachRef = query(
+      if (!(endDate instanceof Date) || isNaN(endDate)) {
+        console.error("Invalid end date");
+        return;
+      }
+
+      //City  Filter
+      if (city){
+        lastVisible=null;
+        pageHistory=[];
+        console.log("inside city")
+        totalOutReachRef = query(
+          collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+          where("status", "==", "approved"),
+          where('city', '>=', city),
+          where('city', '<=', city + '\uf8ff'),
+          orderBy("dateTime","desc"))
+        pastOutreachRef = query(totalOutReachRef,limit(pageSize));
+      }
+      //Date Filter
+    else{
+      totalOutReachRef = query(
         collection(db, PERSONAL_VISIT_LOG_COLLECTION),
         where("status", "==", "approved"),
         where("dateTime", ">=", startDate),
         where("dateTime", "<=", endDate),
-        orderBy("dateTime", "desc"),
-        limit(pageSize)
-      );
-    } else {
-      // With city filter applied, similarly only reset if no cursor is provided
-      if (!lastVisible) {
-        pageHistory = [];
-      }
-      pastOutreachRef = query(
-        collection(db, PERSONAL_VISIT_LOG_COLLECTION),
-        where("status", "==", "approved"),
-        where("city", ">=", city),
-        where("city", "<=", city + "\uf8ff"),
-        where("dateTime", ">=", startDate),
-        where("dateTime", "<=", endDate),
-        orderBy("dateTime", "desc"),
-        limit(pageSize)
-      );
+        orderBy("dateTime", "desc"))
+      pastOutreachRef = query(totalOutReachRef,limit(pageSize));
     }
-
-    // Apply pagination cursor based on direction
+    
+    //Handle Forward pagination
     if (lastVisible && direction === "next") {
       pastOutreachRef = query(pastOutreachRef, startAfter(lastVisible));
     }
+
+    // Handle Backward pagination
     if (lastVisible && direction === "prev" && pageHistory.length > 2) {
       pastOutreachRef = query(
         pastOutreachRef,
@@ -327,18 +335,20 @@ export const fetchPublicVisitLogs = async (
       );
     }
 
-    const visitLogSnapshot = await getDocs(pastOutreachRef);
+    const totalRecords = await getCountFromServer(totalOutReachRef);
+    const visitLogSnapshot = await getDocs(pastOutreachRef)
     const visitLogs = await visitLogHelperFunction(visitLogSnapshot);
     const lastDoc = visitLogSnapshot.docs[visitLogSnapshot.docs.length - 1];
+    
 
-    // Update pageHistory based on navigation direction
-    if (direction === "next") {
+     // Store history of cursors for backward pagination
+     if (direction === "next") {
       pageHistory.push(lastDoc);
     } else if (direction === "prev") {
       pageHistory.pop();
     }
-
-    return { visitLogs, lastVisible: lastDoc, pageHistory, pastOutreachRef };
+      
+    return { visitLogs: visitLogs, lastVisible: lastDoc, pageHistory,pastOutreachRef:pastOutreachRef,totalRecords:totalRecords.data().count  };
   } catch (error) {
     // Log and rethrow the error as needed
     throw error;
@@ -346,23 +356,25 @@ export const fetchPublicVisitLogs = async (
 };
 
 
-export const getApprovedVisitLogsCount = async () => {
+export const fetchHomeVisitLogs = async () => {
   try {
     const visitLogsRef = query(
       collection(db, PERSONAL_VISIT_LOG_COLLECTION),
-      where("status", "==", "approved") // Filter applied
+      where("status", "==", "approved"), // Filter applied
+      orderBy("dateTime","desc"),
+      limit(3)
     );
 
-    const snapshot = await getCountFromServer(visitLogsRef);
-    
-    return snapshot.data().count;
+    const snapshot = await getDocs(visitLogsRef);
+    const visitLogs = await visitLogHelperFunction(snapshot);
+    return visitLogs;
   } catch (error) {
     console.error("Error fetching count:", error);
     return 0;
   }
 };
 
-//Cursor based paginated visit logs
+//Cursor based Paginated visit logs
 export const fetchPaginatedPublicVisitLogs = async (
   lastVisible = null,
   pageSize = 6,
@@ -409,28 +421,6 @@ export const fetchPaginatedPublicVisitLogs = async (
     throw error;
   }
 };
-
-//FRONTEND (PAGINATION) INSTRUCTIONS
-
-// State to track history
-// let pageHistory = [];
-
-// // Load next page
-// const { visitLogs, lastVisible } = await fetchPaginatedPublicVisitLogs(
-//   lastVisible,
-//   6,
-//   "next",
-//   pageHistory
-// );
-
-// // Load previous page
-// const { visitLogs, lastVisible } = await fetchPaginatedPublicVisitLogs(
-//   lastVisible,
-//   6,
-//   "prev",
-//   pageHistory
-// );
-
 
 export const fetchPersonalVisitLogById = async (visitLogId) => {
   try {
