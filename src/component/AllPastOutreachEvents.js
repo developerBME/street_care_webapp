@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import OutreachEventCard from "./Community/OutreachEventCard";
 import { useNavigate } from "react-router-dom";
 import {
@@ -7,16 +7,12 @@ import {
   IoIosArrowDown,
 } from "react-icons/io";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
-import { formatDate } from "./HelperFunction";
 import UserTypeInfo from "./UserTypeInfo";
 import { 
   collection, 
   query, 
   where, 
   orderBy, 
-  limit, 
-  startAfter, 
-  getDocs, 
   getCountFromServer 
 } from "firebase/firestore";
 import {fetchPaginatedPastOutreachEvents} from "./EventCardService.js";
@@ -27,6 +23,7 @@ const AllPastOutreachEvents = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const [searchTerm, setSearchTerm] = useState("");
   const [cityToSearch, setCityToSearch] = useState("");
   const [startDateTime, setStartDateTime] = useState(() => {
     const d = new Date();
@@ -49,8 +46,6 @@ const AllPastOutreachEvents = () => {
   });
 
   const navigate = useNavigate();
-  const searchRef = useRef("");
-  const searchCityRef = useRef("");
 
   useEffect(() => {
     const getTotalCount = async () => {
@@ -89,42 +84,50 @@ const AllPastOutreachEvents = () => {
     const fetchData = async () => {
       setIsLoading(true);
       setErrorMessage("");
+    
       try {
-        const { fetchedEvents, lastVisible, pageHistory } = await fetchPaginatedPastOutreachEvents(
+        const { fetchedEvents, lastVisible, pageHistory, totalFilteredEvents } = await fetchPaginatedPastOutreachEvents(
           cityToSearch,
           startDateTime,
           endDateTime,
+          searchTerm,
           cursorFields.lastVisible,
           cursorFields.pageSize,
           cursorFields.direction,
           cursorFields.pageHistory
         );
-  
+    
         setEvents(fetchedEvents);
         setCursorFields((prev) => ({
           ...prev,
           lastVisible: lastVisible,
           pageHistory: pageHistory
         }));
-  
-        setCumulativeEventsCount((prevCount) => {
-          if (cursorFields.direction === "next") {
-            return prevCount + fetchedEvents.length;
-          }
-          if (cursorFields.direction === "prev") {
-            return Math.max(prevCount - events.length, fetchedEvents.length);
-          }
-          return fetchedEvents.length;
-        });
+    
+        if (searchTerm) {
+          setTotalOutreaches(totalFilteredEvents);
+          setCumulativeEventsCount(fetchedEvents.length);
+        } else {
+          setTotalOutreaches((prev) => prev || totalFilteredEvents);
+          setCumulativeEventsCount((prevCount) => {
+            if (cursorFields.direction === "next") {
+              return prevCount + fetchedEvents.length;
+            }
+            if (cursorFields.direction === "prev") {
+              return Math.max(prevCount - events.length, fetchedEvents.length);
+            }
+            return fetchedEvents.length;
+          });
+        }
       } catch (error) {
         setErrorMessage(error.message);
         setEvents([]);
       } finally {
         setIsLoading(false);
       }
-    };
+    };    
     fetchData();
-  }, [cursorFields.direction, cityToSearch, startDateTime, endDateTime, currentPage]);
+  }, [cursorFields.direction, cityToSearch, startDateTime, endDateTime, currentPage, searchTerm]);
   
 
   const resetPagination = () => {
@@ -135,9 +138,21 @@ const AllPastOutreachEvents = () => {
       pageHistory: []
     });
     setCurrentPage(0);
-    setCumulativeEventsCount(0); 
+    
+    if (!searchTerm) {
+      setCumulativeEventsCount(0);
+    }
   };
   
+  const handleSearchChange = (e) => {
+    const value = e.target.value.trim();
+    setSearchTerm(value);
+    resetPagination();
+    if (!value) {
+      setTotalOutreaches((prev) => prev);
+      setCumulativeEventsCount(0);
+    }
+  };
 
   const handleStartDateChange = (e) => {
     setStartDateTime(new Date(e.target.value));
@@ -248,11 +263,9 @@ const AllPastOutreachEvents = () => {
               <div className="relative w-full lg:w-auto">
                 <input
                   type="text"
-                  name="searchText"
-                  id="searchText"
-                  placeholder="Search Outreach Events"
-                  ref={searchRef}
-                  className="form-input w-full py-1 px-3 border border-[#CACACA] placeholder-gray-400 text-xs md:text-sm lg:text-base text-gray-500 rounded-lg focus:ring-1 focus:ring-[#1F0A58]"
+                  placeholder="Search by description..."
+                  onChange={handleSearchChange}
+                  className="form-input py-1 px-3 border border-[#CACACA] rounded-lg text-sm"
                 />
               </div>
               <div className="flex items-center space-x-2">
@@ -303,7 +316,7 @@ const AllPastOutreachEvents = () => {
           <UserTypeInfo />
           <div className="flex justify-between items-center mt-8 w-full">
             <p className="text-gray-600">
-              Showing {cumulativeEventsCount} of {totaloutreaches} events
+              Showing {searchTerm ? events.length : cumulativeEventsCount} of {totaloutreaches} events
             </p>
             <div className="flex justify-end">{renderPaginationButtons()}</div>
           </div>
@@ -333,7 +346,7 @@ const AllPastOutreachEvents = () => {
           )}
           <div className="flex justify-between items-center mt-8 w-full">
             <p className="text-gray-600">
-            Showing {cumulativeEventsCount} of {totaloutreaches} events
+              Showing {searchTerm ? events.length : cumulativeEventsCount} of {totaloutreaches} events
             </p>
             <div className="flex justify-end">{renderPaginationButtons()}</div>
           </div>

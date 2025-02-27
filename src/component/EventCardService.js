@@ -108,11 +108,12 @@ function splitArrayIntoChunksOfLen(arr, len) {
   return chunks;
 }
 
-// Fetch Outreach Events in a Paginated Manner with User Details
+// Pagination for Upcoming Events
 export const fetchPaginatedEvents = async (
   city,
   startDate,
   endDate,
+  searchDescription = "",
   lastVisible = null,
   pageSize = 6,
   direction = "next",
@@ -120,27 +121,27 @@ export const fetchPaginatedEvents = async (
 ) => {
   try {
     let eventsQuery;
-    if (!city || city.trim() === "") {
-      eventsQuery = query(
-        collection(db, OUTREACH_EVENTS_COLLECTION),
-        where("status", "==", "approved"),
-        where("eventDate", ">=", startDate),
-        where("eventDate", "<=", endDate),
-        orderBy("eventDate", "desc"),
-        limit(pageSize)
-      );
-    } else {
-      eventsQuery = query(
-        collection(db, OUTREACH_EVENTS_COLLECTION),
-        where("status", "==", "approved"),
-        where("location.city", ">=", city),
-        where("location.city", "<=", city + "\uf8ff"),
-        where("eventDate", ">=", startDate),
-        where("eventDate", "<=", endDate),
-        orderBy("eventDate", "desc"),
-        limit(pageSize)
-      );
+    const eventsCollection = collection(db, OUTREACH_EVENTS_COLLECTION);
+
+    let filters = [
+      where("status", "==", "approved"),
+      where("eventDate", ">=", startDate),
+      where("eventDate", "<=", endDate),
+      orderBy("eventDate", "desc")
+    ];
+
+    if (city && city.trim() !== "") {
+      filters.push(where("location.city", ">=", city));
+      filters.push(where("location.city", "<=", city + "\uf8ff"));
     }
+
+    if (searchDescription && searchDescription.trim() !== "") {
+      filters.push(where("description", ">=", searchDescription));
+      filters.push(where("description", "<=", searchDescription + "\uf8ff"));
+      filters.push(orderBy("description"));
+    }
+
+    eventsQuery = query(eventsCollection, ...filters, limit(pageSize));
 
     if (lastVisible && direction === "next") {
       eventsQuery = query(eventsQuery, startAfter(lastVisible));
@@ -150,11 +151,9 @@ export const fetchPaginatedEvents = async (
     }
 
     const snapshot = await getDocs(eventsQuery);
-    
-    // Collect unique user IDs
+
     const userIds = [...new Set(snapshot.docs.map(doc => doc.data().uid))];
 
-    // Batch fetch user details
     const userDetails = await fetchUserDetailsBatch(userIds);
 
     const fetchedEvents = snapshot.docs.map((doc) => {
@@ -183,17 +182,18 @@ export const fetchPaginatedEvents = async (
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `Error fetching paginated events: ${error.message}`
+      `Error fetching paginated events with search: ${error.message}`
     );
     throw error;
   }
 };
 
-// Fetch Past Outreach Events in a Paginated Manner with User Details
+// Pagination for PastOutreachEvents
 export const fetchPaginatedPastOutreachEvents = async (
   city,
   startDate,
   endDate,
+  searchTerm = "",
   lastVisible = null,
   pageSize = 6,
   direction = "next",
@@ -201,26 +201,27 @@ export const fetchPaginatedPastOutreachEvents = async (
 ) => {
   try {
     let pastOutreachQuery;
-    if (!city || city.trim() === "") {
-      pastOutreachQuery = query(
-        collection(db, PAST_OUTREACH_EVENTS_COLLECTION),
-        where("eventDate", "<", new Date()),
-        where("eventDate", ">=", startDate),
-        where("eventDate", "<=", endDate),
-        orderBy("eventDate", "desc"),
-        limit(pageSize)
-      );
-    } else {
-      pastOutreachQuery = query(
-        collection(db, PAST_OUTREACH_EVENTS_COLLECTION),
-        where("location.city", "==", city),
-        where("eventDate", "<", new Date()),
-        where("eventDate", ">=", startDate),
-        where("eventDate", "<=", endDate),
-        orderBy("eventDate", "desc"),
-        limit(pageSize)
-      );
+    const pastOutreachCollection = collection(db, PAST_OUTREACH_EVENTS_COLLECTION);
+
+    let filters = [
+      where("eventDate", "<", new Date()),
+      where("eventDate", ">=", startDate),
+      where("eventDate", "<=", endDate),
+      orderBy("eventDate", "desc")
+    ];
+
+    if (city && city.trim() !== "") {
+      filters.push(where("location.city", ">=", city));
+      filters.push(where("location.city", "<=", city + "\uf8ff"));
     }
+
+    if (searchTerm && searchTerm.trim() !== "") {
+      filters.push(where("description", ">=", searchTerm));
+      filters.push(where("description", "<=", searchTerm + "\uf8ff"));
+      filters.push(orderBy("description"));
+    }
+
+    pastOutreachQuery = query(pastOutreachCollection, ...filters, limit(pageSize));
 
     if (lastVisible && direction === "next") {
       pastOutreachQuery = query(pastOutreachQuery, startAfter(lastVisible));
@@ -230,11 +231,9 @@ export const fetchPaginatedPastOutreachEvents = async (
     }
 
     const snapshot = await getDocs(pastOutreachQuery);
-    
-    // Collect unique user IDs
+
     const userIds = [...new Set(snapshot.docs.map(doc => doc.data().uid))];
 
-    // Batch fetch user details
     const userDetails = await fetchUserDetailsBatch(userIds);
 
     const fetchedEvents = snapshot.docs.map((doc) => {
@@ -263,7 +262,7 @@ export const fetchPaginatedPastOutreachEvents = async (
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `Error fetching paginated past outreach events: ${error.message}`
+      `Error fetching paginated past outreach events with search: ${error.message}`
     );
     throw error;
   }

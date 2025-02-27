@@ -8,7 +8,6 @@ import OutreachSignupModal from "./Community/OutreachSignupModal";
 import RSVPConfirmationModal from "./UserProfile/RSVPConfirmationModal";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { formatDate } from "./HelperFunction";
 import UserTypeInfo from "./UserTypeInfo";
 import { 
   getCountFromServer, 
@@ -16,9 +15,6 @@ import {
   query, 
   where, 
   orderBy, 
-  limit, 
-  startAfter, 
-  getDocs 
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { fetchPaginatedEvents } from "./EventCardService.js";
@@ -37,6 +33,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(0);
 
+  const [searchDescription, setSearchDescription] = useState("");
   const [filterOption, setFilterOption] = useState("");
   const [startDate, setStartDate] = useState(new Date());
 
@@ -46,8 +43,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
     return d;
   });
   const [cityToSearch, setCityToSearch] = useState("");
-  
-  const searchRef = useRef("");
+
   const searchCity = useRef("");
 
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -100,17 +96,21 @@ const AllOutreachEvents = ({ loggedIn }) => {
         const {
           events: fetchedEvents,
           lastVisible: newLastVisible,
-          pageHistory: newPageHistory
+          pageHistory: newPageHistory,
+          totalFilteredEvents
         } = await fetchPaginatedEvents(
           filterOption === "city" ? cityToSearch : "",
           filterOption === "datePeriod" ? startDate : new Date(),
           filterOption === "datePeriod" ? endDate : new Date("9999-12-31"),
+          searchDescription,
           cursorFields.lastVisible,
           cursorFields.pageSize,
           cursorFields.direction,
           cursorFields.pageHistory
         );
-  
+        
+        console.log("fetchedEvents", fetchedEvents);
+        
         setEvents(fetchedEvents);
         setCursorFields((prev) => ({
           ...prev,
@@ -118,24 +118,29 @@ const AllOutreachEvents = ({ loggedIn }) => {
           pageHistory: newPageHistory
         }));
   
-        setCumulativeEventsCount((prevCount) => {
-          if (cursorFields.direction === "next") {
-            return prevCount + fetchedEvents.length;
-          }
-          if (cursorFields.direction === "prev") {
-            return Math.max(prevCount - events.length, fetchedEvents.length);
-          }
-          return fetchedEvents.length;
-        });
-  
+        if (searchDescription.trim()) {
+          setTotalOutreaches(totalFilteredEvents);
+          setCumulativeEventsCount(fetchedEvents.length);
+        } else {
+          setTotalOutreaches((prev) => prev || totalFilteredEvents);
+          setCumulativeEventsCount((prevCount) => {
+            if (cursorFields.direction === "next") {
+              return prevCount + fetchedEvents.length;
+            }
+            if (cursorFields.direction === "prev") {
+              return Math.max(prevCount - events.length, fetchedEvents.length);
+            }
+            return fetchedEvents.length;
+          });
+        }
       } catch (error) {
         console.error("Error fetching events:", error);
       }
       setIsLoading(false);
     };
-    getEvents();
-  }, [cursorFields.direction, filterOption, startDate, endDate, cityToSearch, triggerEffect]);
   
+    getEvents();
+  }, [cursorFields.direction, filterOption, startDate, endDate, cityToSearch, searchDescription, triggerEffect]);  
   
   const resetPagination = () => {
     setCursorFields({
@@ -233,8 +238,24 @@ const AllOutreachEvents = ({ loggedIn }) => {
     setShowWithdrawnModal(false);
   };
 
-  const searchChange = () => {
-  };
+  const searchChange = (e) => {
+    const searchTerm = e.target.value.trim();
+    setSearchDescription(searchTerm);
+  
+    setCursorFields({
+      lastVisible: null,
+      pageSize: 6,
+      direction: "next",
+      pageHistory: []
+    });
+    setCurrentPage(1);
+    setCumulativeEventsCount(0);
+  
+    if (!searchTerm) {
+      setTotalOutreaches((prev) => prev);
+      setCumulativeEventsCount(0);
+    }
+  };  
 
   return (
     <div className="relative flex flex-col items-center">
@@ -261,12 +282,18 @@ const AllOutreachEvents = ({ loggedIn }) => {
                   type="text"
                   name="searchText"
                   id="searchText"
-                  placeholder="Search Outreach Events"
-                  ref={searchRef}
+                  placeholder="Search by Description"
+                  value={searchDescription}
                   onChange={searchChange}
+                  onBlur={() => {
+                    if (searchDescription.trim() === "") {
+                      resetPagination();
+                      setTotalOutreaches(0);
+                    }
+                  }}
                   className="form-input w-fit md:w-[16rem] lg:w-[16rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 block pl-10 rounded-2xl"
-                  style={{ borderRadius: "0px" }}
                 />
+
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -346,7 +373,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
 
           <div className="flex justify-between items-center mt-8 w-full mb-11">
             <p className="text-gray-600">
-              Showing {cumulativeEventsCount} of {totalOutreaches} events
+              Showing {cumulativeEventsCount} of {searchDescription ? totalOutreaches : totalOutreaches} events
             </p>
             <div className="flex justify-end">{renderPaginationButtons()}</div>
           </div>
@@ -370,7 +397,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
 
           <div className="flex justify-between items-center mt-8 w-full">
             <p className="text-gray-600">
-              Showing {cumulativeEventsCount} of {totalOutreaches} events
+              Showing {cumulativeEventsCount} of {searchDescription ? totalOutreaches : totalOutreaches} events
             </p>
             <div className="flex justify-end">{renderPaginationButtons()}</div>
           </div>
