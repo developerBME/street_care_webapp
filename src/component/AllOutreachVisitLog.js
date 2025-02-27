@@ -27,20 +27,23 @@ const AllOutreachVisitLog = () => {
   const [cursorFields,setCursorFields] = useState({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
   const searchRef = useRef("");
   const searchCity = useRef(""); // Reference for the search city input
-  const [filterData,setFilterData] = useState({city:"",startDate:new Date("2024-01-02"),endDate:new Date()})
+  const [filterData,setFilterData] = useState({city:"",isDateFilter:false,startDate:new Date("2024-01-02"),endDate:new Date(),searchValue:""})
 
   useEffect(() => {
     const getVisitLogs = async () => {
       if(!cursorFields.direction)return
       //console.log("in")
       const visitLogsData= await fetchPublicVisitLogs(
+        filterData.searchValue,
         filterData.city,
         filterData.startDate,
         filterData.endDate,
+        filterData.isDateFilter,
         cursorFields.lastVisible,
         cursorFields.pageSize,
         cursorFields.direction,
         cursorFields.pageHistory);
+        console.log(visitLogsData)
         cursorFields.lastVisible = visitLogsData.lastVisible;
         cursorFields.pageHistory = visitLogsData.pageHistory;
         setTotalPages(visitLogsData.totalRecords)
@@ -52,7 +55,7 @@ const AllOutreachVisitLog = () => {
         setIsLoading(false);
     };
     getVisitLogs();
-  }, [filterData.city, filterData.startDate, filterData.endDate,cursorFields.direction]);
+  }, [filterData.city,filterData.searchValue, filterData.startDate, filterData.endDate,cursorFields.direction]);
   // const searchChange = () => {
   //   const searchValue = searchRef.current.value.toLowerCase();
   //   setFilteredVisitLogs(
@@ -74,7 +77,7 @@ const AllOutreachVisitLog = () => {
     //To make sure when the sort option is changed from None to city or date, api is not triggered
     if(sortOption === "")return 
     //To clear the filters in other cases
-    setFilterData({city:"",startDate:new Date("2024-01-02"),endDate:new Date()})
+    setFilterData({city:"",startDate:new Date("2024-01-02"),endDate:new Date(),isDateFilter:false})
     setCursorFields({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
     setCurrentPageLength(0)
   };
@@ -141,7 +144,7 @@ const AllOutreachVisitLog = () => {
   }
 
   const handleDateChange = (date,fieldName) =>{
-    setFilterData((prev) => ({ ...prev, [fieldName]: date }));
+    setFilterData((prev) => ({ ...prev, [fieldName]: date,isDateFilter: true }));
     setCursorFields({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
     setCurrentPageLength(0)
   }
@@ -173,11 +176,11 @@ const AllOutreachVisitLog = () => {
               <label className="relative text-gray-400 focus-within:text-gray-600">
                 <input
                   type="text"
-                  name="searchText"
+                  name="searchValue"
                   id="searchText"
                   placeholder="Search..."
                   ref={searchRef}
-                  onChange={e=>setSearchValue(e.target.value)}
+                  onChange={handleChange}
                   className="form-input w-fit md:w-[20rem] lg:w-[18rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-10 rounded-2xl"
                   style={{ borderRadius: "0px" }}
                 />
