@@ -289,7 +289,7 @@ const AllOutreachVisitLog = () => {
                   Showing {currentPageLength} of {totalPages}{" "}
                   events
                 </p>
-                <>{renderPaginationButtons()}</>
+                <div>{renderPaginationButtons()}</div>
                 {/* {[
                   ...Array(
                     Math.ceil(filteredVisitLogs.length / logsPerPage)
