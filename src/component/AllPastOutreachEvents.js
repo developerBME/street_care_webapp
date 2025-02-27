@@ -84,26 +84,26 @@ const AllPastOutreachEvents = () => {
     const fetchData = async () => {
       setIsLoading(true);
       setErrorMessage("");
-    
+  
       try {
         const { fetchedEvents, lastVisible, pageHistory, totalFilteredEvents } = await fetchPaginatedPastOutreachEvents(
           cityToSearch,
           startDateTime,
           endDateTime,
-          searchTerm,
+          searchTerm,  // Pass the search term for description
           cursorFields.lastVisible,
           cursorFields.pageSize,
           cursorFields.direction,
           cursorFields.pageHistory
         );
-    
+  
         setEvents(fetchedEvents);
         setCursorFields((prev) => ({
           ...prev,
           lastVisible: lastVisible,
           pageHistory: pageHistory
         }));
-    
+  
         if (searchTerm) {
           setTotalOutreaches(totalFilteredEvents);
           setCumulativeEventsCount(fetchedEvents.length);
@@ -125,9 +125,10 @@ const AllPastOutreachEvents = () => {
       } finally {
         setIsLoading(false);
       }
-    };    
+    };
     fetchData();
-  }, [cursorFields.direction, cityToSearch, startDateTime, endDateTime, currentPage, searchTerm]);
+  }, [cursorFields.direction, cityToSearch, startDateTime, endDateTime, searchTerm]);
+  
   
 
   const resetPagination = () => {
@@ -199,29 +200,6 @@ const AllPastOutreachEvents = () => {
           className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
         >
           <IoIosArrowBack />
-        </button>
-      );
-    }
-
-    for (
-      let i = Math.max(0, currentPage - pageRange);
-      i <= Math.min(totalPages - 1, currentPage + pageRange);
-      i++
-    ) {
-      buttons.push(
-        <button
-          key={i}
-          onClick={() => {
-            setCurrentPage(i);
-            resetPagination();
-          }}
-          className={`mx-1 px-3 py-1 rounded-full ${
-            currentPage === i
-              ? "bg-[#1F0A58] text-white"
-              : "bg-gray-200 text-gray-600"
-          }`}
-        >
-          {i + 1}
         </button>
       );
     }
@@ -316,7 +294,7 @@ const AllPastOutreachEvents = () => {
           <UserTypeInfo />
           <div className="flex justify-between items-center mt-8 w-full">
             <p className="text-gray-600">
-              Showing {searchTerm ? events.length : cumulativeEventsCount} of {totaloutreaches} events
+              Showing {events.length} of {totaloutreaches} events
             </p>
             <div className="flex justify-end">{renderPaginationButtons()}</div>
           </div>
@@ -346,7 +324,7 @@ const AllPastOutreachEvents = () => {
           )}
           <div className="flex justify-between items-center mt-8 w-full">
             <p className="text-gray-600">
-              Showing {searchTerm ? events.length : cumulativeEventsCount} of {totaloutreaches} events
+              Showing {events.length} of {totaloutreaches} events
             </p>
             <div className="flex justify-end">{renderPaginationButtons()}</div>
           </div>

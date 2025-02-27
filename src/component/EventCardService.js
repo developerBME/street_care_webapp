@@ -11,6 +11,8 @@ import {
   startAt,
   startAfter,
   or,
+  and,
+  getCountFromServer,
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -188,7 +190,7 @@ export const fetchPaginatedEvents = async (
   }
 };
 
-// Pagination for PastOutreachEvents
+
 export const fetchPaginatedPastOutreachEvents = async (
   city,
   startDate,
@@ -200,40 +202,45 @@ export const fetchPaginatedPastOutreachEvents = async (
   pageHistory = []
 ) => {
   try {
-    let pastOutreachQuery;
-    const pastOutreachCollection = collection(db, PAST_OUTREACH_EVENTS_COLLECTION);
-
-    let filters = [
+    let pastOutreachQuery = query(
+      collection(db, PAST_OUTREACH_EVENTS_COLLECTION),
       where("eventDate", "<", new Date()),
       where("eventDate", ">=", startDate),
       where("eventDate", "<=", endDate),
       orderBy("eventDate", "desc")
-    ];
+    );
 
     if (city && city.trim() !== "") {
-      filters.push(where("location.city", ">=", city));
-      filters.push(where("location.city", "<=", city + "\uf8ff"));
+      pastOutreachQuery = query(
+        pastOutreachQuery,
+        where("location.city", ">=", city),
+        where("location.city", "<=", city + "\uf8ff")
+      );
     }
 
     if (searchTerm && searchTerm.trim() !== "") {
-      filters.push(where("description", ">=", searchTerm));
-      filters.push(where("description", "<=", searchTerm + "\uf8ff"));
-      filters.push(orderBy("description"));
+      pastOutreachQuery = query(
+        pastOutreachQuery,
+        where("description", ">=", searchTerm),
+        where("description", "<=", searchTerm + "\uf8ff")
+      );
     }
 
-    pastOutreachQuery = query(pastOutreachCollection, ...filters, limit(pageSize));
+    // Count total records **before** applying pagination
+    const totalRecordsSnapshot = await getCountFromServer(pastOutreachQuery);
+    const totalRecords = totalRecordsSnapshot.data().count;
+
+    // Apply pagination
+    let paginatedQuery = query(pastOutreachQuery, limit(pageSize));
 
     if (lastVisible && direction === "next") {
-      pastOutreachQuery = query(pastOutreachQuery, startAfter(lastVisible));
-    }
-    if (lastVisible && direction === "prev" && pageHistory.length > 2) {
-      pastOutreachQuery = query(pastOutreachQuery, startAfter(pageHistory[pageHistory.length - 3]));
+      paginatedQuery = query(paginatedQuery, startAfter(lastVisible));
+    } else if (lastVisible && direction === "prev" && pageHistory.length > 2) {
+      paginatedQuery = query(paginatedQuery, startAfter(pageHistory[pageHistory.length - 3]));
     }
 
-    const snapshot = await getDocs(pastOutreachQuery);
-
+    const snapshot = await getDocs(paginatedQuery);
     const userIds = [...new Set(snapshot.docs.map(doc => doc.data().uid))];
-
     const userDetails = await fetchUserDetailsBatch(userIds);
 
     const fetchedEvents = snapshot.docs.map((doc) => {
@@ -252,22 +259,19 @@ export const fetchPaginatedPastOutreachEvents = async (
     });
 
     const lastDoc = snapshot.docs[snapshot.docs.length - 1];
+
     if (direction === "next") {
       pageHistory.push(lastDoc);
     } else if (direction === "prev") {
       pageHistory.pop();
     }
 
-    return { fetchedEvents, lastVisible: lastDoc, pageHistory };
+    return { fetchedEvents, lastVisible: lastDoc, pageHistory, totalRecords };
   } catch (error) {
-    logEvent(
-      "STREET_CARE_ERROR",
-      `Error fetching paginated past outreach events with search: ${error.message}`
-    );
+    logEvent("STREET_CARE_ERROR", `Error fetching paginated past outreach events: ${error.message}`);
     throw error;
   }
 };
-
 
 export const fetchPastOutreachEvents = async () => {
   try {
