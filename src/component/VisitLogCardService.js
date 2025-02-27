@@ -14,7 +14,7 @@ import {
   getCountFromServer,
   or,
   and,
-  count
+  count,
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { fetchUserDetails } from "./EventCardService";
@@ -274,11 +274,45 @@ export const fetchPersonalVisitLogs = async (uid) => {
   }
 };
 
+
+const descriptionFilter = (searchTerm,filterQuery)=>{
+  return query(
+    filterQuery,
+    or(
+      and(
+          where("city", ">=", searchTerm),
+          where("city", "<=", searchTerm + "\uf8ff")
+      ),
+      and(
+          where("description", ">=", searchTerm),
+          where("description", "<=", searchTerm + "\uf8ff")
+      )
+    ));
+}
+
+const cityFilter = (city,filterQuery)=>{
+  return query(
+    filterQuery,
+    where('city', '>=', city),
+    where('city', '<=', city + '\uf8ff')
+    );
+}
+
+const dateFilter = (startDate,endDate,filterQuery) =>{
+  return query(
+    filterQuery,
+    where("dateTime", ">=", startDate),
+    where("dateTime", "<=", endDate)
+    );
+}
+
+
 export const fetchPublicVisitLogs = async (
-  //searchValue,
+  searchValue,
   city,
   startDate,
   endDate,
+  isDateFilter = false,
   lastVisible = null,
   pageSize = 6,
   direction = "next",
@@ -301,29 +335,48 @@ export const fetchPublicVisitLogs = async (
       }
 
       //City  Filter
-      if (city){
-        lastVisible=null;
-        pageHistory=[];
-        console.log("inside city")
-        totalOutReachRef = query(
-          collection(db, PERSONAL_VISIT_LOG_COLLECTION),
-          where("status", "==", "approved"),
-          where('city', '>=', city),
-          where('city', '<=', city + '\uf8ff'),
-          orderBy("dateTime","desc"))
-        pastOutreachRef = query(totalOutReachRef,limit(pageSize));
-      }
-      //Date Filter
-    else{
-      totalOutReachRef = query(
-        collection(db, PERSONAL_VISIT_LOG_COLLECTION),
-        where("status", "==", "approved"),
-        where("dateTime", ">=", startDate),
-        where("dateTime", "<=", endDate),
-        orderBy("dateTime", "desc"))
-      pastOutreachRef = query(totalOutReachRef,limit(pageSize));
+    //   if (city){
+    //     lastVisible=null;
+    //     pageHistory=[];
+    //     console.log("inside city")
+    //     totalOutReachRef = query(
+    //       collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+    //       where("status", "==", "approved"),
+    //       where('city', '>=', city),
+    //       where('city', '<=', city + '\uf8ff'),
+    //       orderBy("dateTime","desc"))
+    //     pastOutreachRef = query(totalOutReachRef,limit(pageSize));
+    //   }
+    //   //Date Filter
+    // else{
+    //   totalOutReachRef = query(
+    //     collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+    //     where("status", "==", "approved"),
+    //     where("dateTime", ">=", startDate),
+    //     where("dateTime", "<=", endDate),
+    //     orderBy("dateTime", "desc"))
+    //   pastOutreachRef = query(totalOutReachRef,limit(pageSize));
+    // }
+    pastOutreachRef = query(collection(db, PERSONAL_VISIT_LOG_COLLECTION),where("status", "==", "approved"))
+    totalOutReachRef = pastOutreachRef
+    if(searchValue){
+      const descriptionQuery = descriptionFilter(searchValue,totalOutReachRef)
+      totalOutReachRef = descriptionQuery
     }
-    
+
+    if(city){
+      const cityQuery = cityFilter(city,totalOutReachRef)
+      totalOutReachRef = cityQuery
+    }
+
+    if(isDateFilter){
+      const dateQuery = dateFilter(startDate,endDate,totalOutReachRef)
+      totalOutReachRef = dateQuery
+    }
+    // if(!s && !d && !c){
+    //   pastOutreachRef = query(pastOutreachRef,limit(pageSize))
+    // }
+    pastOutreachRef = query(totalOutReachRef,orderBy("dateTime", "desc"),limit(pageSize))
     //Handle Forward pagination
     if (lastVisible && direction === "next") {
       pastOutreachRef = query(pastOutreachRef, startAfter(lastVisible));
