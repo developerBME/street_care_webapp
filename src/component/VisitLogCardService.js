@@ -275,6 +275,7 @@ export const fetchPersonalVisitLogs = async (uid) => {
 };
 
 export const fetchPublicVisitLogs = async (
+  //searchValue,
   city,
   startDate,
   endDate,
@@ -283,6 +284,7 @@ export const fetchPublicVisitLogs = async (
   direction = "next",
   pageHistory = []
 ) => {
+
   try {
 
     //query variables 
@@ -329,10 +331,7 @@ export const fetchPublicVisitLogs = async (
 
     // Handle Backward pagination
     if (lastVisible && direction === "prev" && pageHistory.length > 2) {
-      pastOutreachRef = query(
-        pastOutreachRef,
-        startAfter(pageHistory[pageHistory.length - 3])
-      );
+      pastOutreachRef = query(pastOutreachRef, startAfter(pageHistory[pageHistory.length - 3]));
     }
 
     const totalRecords = await getCountFromServer(totalOutReachRef);
@@ -350,7 +349,10 @@ export const fetchPublicVisitLogs = async (
       
     return { visitLogs: visitLogs, lastVisible: lastDoc, pageHistory,pastOutreachRef:pastOutreachRef,totalRecords:totalRecords.data().count  };
   } catch (error) {
-    // Log and rethrow the error as needed
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchVisitLogs VisitLogCardService.js- ${error.message}`
+    );
     throw error;
   }
 };
@@ -627,4 +629,3 @@ export const ToggleApproveStatus = async function (documentId) {
     console.error("Error updating document:", error.message);
   }
 };
-
