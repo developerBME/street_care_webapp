@@ -113,7 +113,7 @@ const AllOutreachVisitLog = () => {
           onClick={() => handlePrev()}
           className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
         >
-          <IoIosArrowBack />
+          <IoIosArrowBack className="w-6 h-6" />
         </button>
       );
     }
@@ -125,7 +125,7 @@ const AllOutreachVisitLog = () => {
           onClick={() => handleNext()}
           className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
         >
-          <IoIosArrowForward />
+          <IoIosArrowForward className="w-6 h-6" />
         </button>
       );
     }
@@ -286,7 +286,7 @@ const AllOutreachVisitLog = () => {
                   Showing {currentPageLength} of {totalPages}{" "}
                   events
                 </p>
-                {renderPaginationButtons()}
+                <>{renderPaginationButtons()}</>
                 {/* {[
                   ...Array(
                     Math.ceil(filteredVisitLogs.length / logsPerPage)
