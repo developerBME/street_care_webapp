@@ -11,7 +11,7 @@ import HelpRequestConfirmationModal from "../Community/HelpRequestConfirmationMo
 
 let autoComplete;
 
-export const GOOGLE_PLACES_API_KEY = "AIzaSyBpaLVj2EjhjCeHbTUXfcBhBoaQLVathvE";
+export const GOOGLE_PLACES_API_KEY = "AIzaSyBnF0aSySY400NMs2LV32sNzR29BEbPV3s";
 const USERS_COLLECTION = "users";
 
 const loadScript = (url, callback) => {

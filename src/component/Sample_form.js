@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 // import { useNavigate } from "react-router-dom";
 
-export const GOOGLE_PLACES_API_KEY = "AIzaSyBpaLVj2EjhjCeHbTUXfcBhBoaQLVathvE";
+export const GOOGLE_PLACES_API_KEY = "AIzaSyBnF0aSySY400NMs2LV32sNzR29BEbPV3s";
 
 let autoComplete;
 
