@@ -682,4 +682,3 @@ export const ToggleApproveStatus = async function (documentId) {
     console.error("Error updating document:", error.message);
   }
 };
-
