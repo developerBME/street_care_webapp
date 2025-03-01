@@ -34,10 +34,11 @@ const AllPastOutreachEvents = () => {
   const [filterType, setFilterType] = useState("date");
 
   const [totaloutreaches, setTotalOutreaches] = useState(0);
+  const [filteredTotal, setFilteredTotal] = useState(0);
   const outreachPerPages = 6;
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [cumulativeEventsCount, setCumulativeEventsCount] = useState(0);
+  const [isFiltered, setIsFiltered] = useState(false);
   const [cursorFields, setCursorFields] = useState({
     lastVisible: null,
     pageSize: outreachPerPages,
@@ -48,12 +49,23 @@ const AllPastOutreachEvents = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const hasActiveFilter = searchTerm.trim() !== '' || cityToSearch.trim() !== '';
+    
+    if (!hasActiveFilter && isFiltered) {
+      setTotalPages(Math.ceil(totaloutreaches / outreachPerPages));
+    }
+    
+    setIsFiltered(hasActiveFilter);
+  }, [searchTerm, cityToSearch, totaloutreaches]);
+
+  useEffect(() => {
     const getTotalCount = async () => {
       try {
         let countQuery;
         if (!cityToSearch || cityToSearch.trim() === "") {
           countQuery = query(
             collection(db, "outreachEvents"),
+            where("status", "==", "approved"),
             where("eventDate", "<", new Date()), 
             where("eventDate", ">=", startDateTime),
             where("eventDate", "<=", endDateTime),
@@ -62,6 +74,7 @@ const AllPastOutreachEvents = () => {
         } else {
           countQuery = query(
             collection(db, "outreachEvents"),
+            where("status", "==", "approved"),
             where("location.city", "==", cityToSearch),
             where("eventDate", "<", new Date()),
             where("eventDate", ">=", startDateTime),
@@ -90,7 +103,7 @@ const AllPastOutreachEvents = () => {
           cityToSearch,
           startDateTime,
           endDateTime,
-          searchTerm,  // Pass the search term for description
+          searchTerm,
           cursorFields.lastVisible,
           cursorFields.pageSize,
           cursorFields.direction,
@@ -103,21 +116,10 @@ const AllPastOutreachEvents = () => {
           lastVisible: lastVisible,
           pageHistory: pageHistory
         }));
-  
-        if (searchTerm) {
-          setTotalOutreaches(totalFilteredEvents);
-          setCumulativeEventsCount(fetchedEvents.length);
-        } else {
-          setTotalOutreaches((prev) => prev || totalFilteredEvents);
-          setCumulativeEventsCount((prevCount) => {
-            if (cursorFields.direction === "next") {
-              return prevCount + fetchedEvents.length;
-            }
-            if (cursorFields.direction === "prev") {
-              return Math.max(prevCount - events.length, fetchedEvents.length);
-            }
-            return fetchedEvents.length;
-          });
+
+        if (searchTerm.trim() !== '' || cityToSearch.trim() !== '') {
+          setFilteredTotal(totalFilteredEvents || 0);
+          setTotalPages(Math.ceil((totalFilteredEvents || 0) / outreachPerPages));
         }
       } catch (error) {
         setErrorMessage(error.message);
@@ -129,8 +131,6 @@ const AllPastOutreachEvents = () => {
     fetchData();
   }, [cursorFields.direction, cityToSearch, startDateTime, endDateTime, searchTerm]);
   
-  
-
   const resetPagination = () => {
     setCursorFields({
       lastVisible: null,
@@ -140,8 +140,8 @@ const AllPastOutreachEvents = () => {
     });
     setCurrentPage(0);
     
-    if (!searchTerm) {
-      setCumulativeEventsCount(0);
+    if (searchTerm.trim() === '' && cityToSearch.trim() === '') {
+      setTotalPages(Math.ceil(totaloutreaches / outreachPerPages));
     }
   };
   
@@ -149,10 +149,6 @@ const AllPastOutreachEvents = () => {
     const value = e.target.value.trim();
     setSearchTerm(value);
     resetPagination();
-    if (!value) {
-      setTotalOutreaches((prev) => prev);
-      setCumulativeEventsCount(0);
-    }
   };
 
   const handleStartDateChange = (e) => {
@@ -188,9 +184,27 @@ const AllPastOutreachEvents = () => {
     }, 0);
   };
 
+  const getTotalToDisplay = () => {
+    if (isFiltered) {
+      return filteredTotal > 0 ? filteredTotal : events.length;
+    } else {
+      return totaloutreaches;
+    }
+  };
+
+  const getDisplayCount = () => {
+    if (isFiltered) {
+      return events.length;
+    } else {
+      return Math.min((currentPage + 1) * outreachPerPages, totaloutreaches);
+    }
+  };
+
+  const displayCount = getDisplayCount();
+  const totalToDisplay = getTotalToDisplay();
+
   const renderPaginationButtons = () => {
     const buttons = [];
-    const pageRange = 1;
 
     if (currentPage > 0) {
       buttons.push(
@@ -242,6 +256,7 @@ const AllPastOutreachEvents = () => {
                 <input
                   type="text"
                   placeholder="Search by description..."
+                  value={searchTerm}
                   onChange={handleSearchChange}
                   className="form-input py-1 px-3 border border-[#CACACA] rounded-lg text-sm"
                 />
@@ -294,7 +309,7 @@ const AllPastOutreachEvents = () => {
           <UserTypeInfo />
           <div className="flex justify-between items-center mt-8 w-full">
             <p className="text-gray-600">
-              Showing {events.length} of {totaloutreaches} events
+              Showing {displayCount} of {totalToDisplay} events
             </p>
             <div className="flex justify-end">{renderPaginationButtons()}</div>
           </div>
@@ -324,7 +339,7 @@ const AllPastOutreachEvents = () => {
           )}
           <div className="flex justify-between items-center mt-8 w-full">
             <p className="text-gray-600">
-              Showing {events.length} of {totaloutreaches} events
+              Showing {displayCount} of {totalToDisplay} events
             </p>
             <div className="flex justify-end">{renderPaginationButtons()}</div>
           </div>

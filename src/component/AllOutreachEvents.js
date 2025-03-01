@@ -28,6 +28,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
     direction: "next",
     pageHistory: []
   });
+  
   const [currentPage, setCurrentPage] = useState(1);
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -43,15 +44,17 @@ const AllOutreachEvents = ({ loggedIn }) => {
     return d;
   });
   const [cityToSearch, setCityToSearch] = useState("");
-
+  const outreachPerPages = 6;
   const searchCity = useRef("");
-
+  const [errorMessage, setErrorMessage] = useState("");
+  const [filteredTotal, setFilteredTotal] = useState(0);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showWithdrawnModal, setShowWithdrawnModal] = useState(false);
   const [triggerEffect, setTriggerEffect] = useState(false);
   const [totalOutreaches, setTotalOutreaches] = useState(0);
   const [cumulativeEventsCount, setCumulativeEventsCount] = useState(0);
+  const [paginationTrigger, setPaginationTrigger] = useState(0); // New state to trigger pagination fetches
 
   useEffect(() => {
     const getTotalCount = async () => {
@@ -60,6 +63,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
         if (filterOption === "city" && cityToSearch.trim() !== "") {
           countQuery = query(
             collection(db, "outreachEvents"),
+            where("status", "==", "approved"),
             where("location.city", "==", cityToSearch),
             where("eventDate", ">=", new Date()),
             orderBy("eventDate", "asc")
@@ -67,6 +71,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
         } else if (filterOption === "datePeriod") {
           countQuery = query(
             collection(db, "outreachEvents"),
+            where("status", "==", "approved"),
             where("eventDate", ">=", startDate),
             where("eventDate", "<=", endDate),
             orderBy("eventDate", "asc")
@@ -74,6 +79,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
         } else {
           countQuery = query(
             collection(db, "outreachEvents"),
+            where("status", "==", "approved"),
             where("eventDate", ">=", new Date()),
             orderBy("eventDate", "asc")
           );
@@ -95,8 +101,8 @@ const AllOutreachEvents = ({ loggedIn }) => {
       try {
         const {
           events: fetchedEvents,
-          lastVisible: newLastVisible,
-          pageHistory: newPageHistory,
+          lastVisible,
+          pageHistory,
           totalFilteredEvents
         } = await fetchPaginatedEvents(
           filterOption === "city" ? cityToSearch : "",
@@ -114,34 +120,28 @@ const AllOutreachEvents = ({ loggedIn }) => {
         setEvents(fetchedEvents);
         setCursorFields((prev) => ({
           ...prev,
-          lastVisible: newLastVisible,
-          pageHistory: newPageHistory
+          lastVisible: lastVisible,
+          pageHistory: pageHistory
         }));
-  
-        if (searchDescription.trim()) {
-          setTotalOutreaches(totalFilteredEvents);
-          setCumulativeEventsCount(fetchedEvents.length);
-        } else {
-          setTotalOutreaches((prev) => prev || totalFilteredEvents);
-          setCumulativeEventsCount((prevCount) => {
-            if (cursorFields.direction === "next") {
-              return prevCount + fetchedEvents.length;
-            }
-            if (cursorFields.direction === "prev") {
-              return Math.max(prevCount - events.length, fetchedEvents.length);
-            }
-            return fetchedEvents.length;
-          });
+
+        if (searchDescription.trim() !== '' || cityToSearch.trim() !== '') {
+          setFilteredTotal(totalFilteredEvents || 0);
+          setTotalPages(Math.ceil((totalFilteredEvents || 0) / outreachPerPages));
         }
       } catch (error) {
-        console.error("Error fetching events:", error);
+        setErrorMessage(error.message);
+        setEvents([]);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
-  
     getEvents();
-  }, [cursorFields.direction, filterOption, startDate, endDate, cityToSearch, searchDescription, triggerEffect]);  
+  }, [paginationTrigger, cityToSearch, startDate, endDate, searchDescription]);
   
+  useEffect(() => {
+    setTotalPages(Math.ceil(totalOutreaches / outreachPerPages));
+  }, [totalOutreaches, outreachPerPages]);
+
   const resetPagination = () => {
     setCursorFields({
       lastVisible: null,
@@ -151,6 +151,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
     });
     setCurrentPage(1);
     setCumulativeEventsCount(0);
+    setPaginationTrigger(prev => prev + 1);
   };
   
   const handleFilterChange = (e) => {
@@ -160,27 +161,47 @@ const AllOutreachEvents = ({ loggedIn }) => {
     setTotalOutreaches(0);
   };
 
+  const getTotalToDisplay = () => {
+    if (searchDescription.trim() !== "" || cityToSearch.trim() !== "") {
+      return filteredTotal > 0 ? filteredTotal : events.length;
+    } else {
+      return totalOutreaches;
+    }
+  };
+
+  const getDisplayCount = () => {
+    if (searchDescription.trim() !== "" || cityToSearch.trim() !== "") {
+      return events.length;
+    } else {
+      return Math.min(currentPage * outreachPerPages, totalOutreaches);
+    }
+  };
+
+  const displayCount = getDisplayCount();
+  const totalToDisplay = getTotalToDisplay();
+
   const searchCityChange = () => {
-    setCurrentPage(1);
     setCityToSearch(searchCity.current.value);
-    setCursorFields({ lastVisible: null, pageSize: 6, direction: "next", pageHistory: [] });
+    resetPagination();
   };
 
   const handleNext = () => {
     setCurrentPage((prev) => prev + 1);
-    setCursorFields((prev) => ({ ...prev, direction: "" }));
-    setTimeout(() => {
-      setCursorFields((prev) => ({ ...prev, direction: "next" }));
-    }, 0);
+    setCursorFields(prev => ({
+      ...prev,
+      direction: "next"
+    }));
+    setPaginationTrigger(prev => prev + 1);
   };
 
   const handlePrev = () => {
     if (currentPage === 1) return;
     setCurrentPage((prev) => prev - 1);
-    setCursorFields((prev) => ({ ...prev, direction: "" }));
-    setTimeout(() => {
-      setCursorFields((prev) => ({ ...prev, direction: "prev" }));
-    }, 0);
+    setCursorFields(prev => ({
+      ...prev,
+      direction: "prev"
+    }));
+    setPaginationTrigger(prev => prev + 1);
   };
 
   const renderPaginationButtons = () => {
@@ -196,8 +217,13 @@ const AllOutreachEvents = ({ loggedIn }) => {
         </button>
       );
     }
-   
-    if (events.length === cursorFields.pageSize && currentPage < totalPages) {
+    
+    const hasMoreItems = 
+      (searchDescription.trim() !== "" || cityToSearch.trim() !== "" || filterOption === "datePeriod") 
+        ? currentPage < totalPages
+        : currentPage * cursorFields.pageSize < totalOutreaches;
+    
+    if (hasMoreItems) {
       buttons.push(
         <button
           key="next"
@@ -241,20 +267,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
   const searchChange = (e) => {
     const searchTerm = e.target.value.trim();
     setSearchDescription(searchTerm);
-  
-    setCursorFields({
-      lastVisible: null,
-      pageSize: 6,
-      direction: "next",
-      pageHistory: []
-    });
-    setCurrentPage(1);
-    setCumulativeEventsCount(0);
-  
-    if (!searchTerm) {
-      setTotalOutreaches((prev) => prev);
-      setCumulativeEventsCount(0);
-    }
+    resetPagination();
   };  
 
   return (
@@ -285,12 +298,6 @@ const AllOutreachEvents = ({ loggedIn }) => {
                   placeholder="Search by Description"
                   value={searchDescription}
                   onChange={searchChange}
-                  onBlur={() => {
-                    if (searchDescription.trim() === "") {
-                      resetPagination();
-                      setTotalOutreaches(0);
-                    }
-                  }}
                   className="form-input w-fit md:w-[16rem] lg:w-[16rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 block pl-10 rounded-2xl"
                 />
 
@@ -342,8 +349,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
                     selected={startDate}
                     onChange={(date) => {
                       setStartDate(date);
-                      setCursorFields({ lastVisible: null, pageSize: 6, direction: "next", pageHistory: [] });
-                      setCurrentPage(1);
+                      resetPagination();
                     }}
                     selectsStart
                     startDate={startDate}
@@ -356,8 +362,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
                     selected={endDate}
                     onChange={(date) => {
                       setEndDate(date);
-                      setCursorFields({ lastVisible: null, pageSize: 6, direction: "next", pageHistory: [] });
-                      setCurrentPage(1);
+                      resetPagination();
                     }}
                     selectsEnd
                     startDate={startDate}
@@ -373,7 +378,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
 
           <div className="flex justify-between items-center mt-8 w-full mb-11">
             <p className="text-gray-600">
-              Showing {cumulativeEventsCount} of {searchDescription ? totalOutreaches : totalOutreaches} events
+              Showing {displayCount} of {totalToDisplay} events
             </p>
             <div className="flex justify-end">{renderPaginationButtons()}</div>
           </div>
@@ -397,7 +402,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
 
           <div className="flex justify-between items-center mt-8 w-full">
             <p className="text-gray-600">
-              Showing {cumulativeEventsCount} of {searchDescription ? totalOutreaches : totalOutreaches} events
+              Showing {displayCount} of {totalToDisplay} events
             </p>
             <div className="flex justify-end">{renderPaginationButtons()}</div>
           </div>

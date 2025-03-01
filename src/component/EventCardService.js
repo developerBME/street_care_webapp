@@ -13,6 +13,7 @@ import {
   or,
   and,
   getCountFromServer,
+  endBefore,
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -110,7 +111,6 @@ function splitArrayIntoChunksOfLen(arr, len) {
   return chunks;
 }
 
-// Pagination for Upcoming Events
 export const fetchPaginatedEvents = async (
   city,
   startDate,
@@ -128,34 +128,63 @@ export const fetchPaginatedEvents = async (
     let filters = [
       where("status", "==", "approved"),
       where("eventDate", ">=", startDate),
-      where("eventDate", "<=", endDate),
-      orderBy("eventDate", "desc")
+      orderBy("eventDate", "asc")
     ];
 
+    if (endDate && endDate.getFullYear() < 9000) {
+      filters.push(where("eventDate", "<=", endDate));
+    }
+
     if (city && city.trim() !== "") {
-      filters.push(where("location.city", ">=", city));
-      filters.push(where("location.city", "<=", city + "\uf8ff"));
+      filters.push(where("location.city", ">=", city.trim()));
+      filters.push(where("location.city", "<=", city.trim() + '\uf8ff'));
     }
 
     if (searchDescription && searchDescription.trim() !== "") {
-      filters.push(where("description", ">=", searchDescription));
-      filters.push(where("description", "<=", searchDescription + "\uf8ff"));
+      const searchTerm = searchDescription.trim();
       filters.push(orderBy("description"));
+      filters.push(where("description", ">=", searchTerm));
+      filters.push(where("description", "<=", searchTerm + "\uf8ff"));
     }
 
-    eventsQuery = query(eventsCollection, ...filters, limit(pageSize));
+    eventsQuery = query(eventsCollection, ...filters);
 
-    if (lastVisible && direction === "next") {
-      eventsQuery = query(eventsQuery, startAfter(lastVisible));
-    }
-    if (lastVisible && direction === "prev" && pageHistory.length > 2) {
-      eventsQuery = query(eventsQuery, startAfter(pageHistory[pageHistory.length - 3]));
-    }
+    const totalRecordsSnapshot = await getCountFromServer(eventsQuery);
+    const totalRecords = totalRecordsSnapshot.data().count;
 
+    let newPageHistory = [...pageHistory];
+
+    if (direction === "next") {
+      if (lastVisible) {
+        eventsQuery = query(eventsQuery, startAfter(lastVisible), limit(pageSize));
+        newPageHistory.push(lastVisible);
+      } else {
+        eventsQuery = query(eventsQuery, limit(pageSize));
+      }
+    } else if (direction === "prev") {
+      if (newPageHistory.length > 1) {
+        newPageHistory.pop();
+        
+        const prevPageCursor = newPageHistory[newPageHistory.length - 1];
+        
+        if (prevPageCursor) {
+          eventsQuery = query(eventsQuery, startAfter(prevPageCursor), limit(pageSize));
+        } else {
+          eventsQuery = query(eventsQuery, limit(pageSize));
+          newPageHistory = [];
+        }
+      } else {
+        eventsQuery = query(eventsQuery, limit(pageSize));
+        newPageHistory = [];
+      }
+    } else {
+      eventsQuery = query(eventsQuery, limit(pageSize));
+    }
+  
+    console.log("Executing query with direction:", direction);
     const snapshot = await getDocs(eventsQuery);
 
     const userIds = [...new Set(snapshot.docs.map(doc => doc.data().uid))];
-
     const userDetails = await fetchUserDetailsBatch(userIds);
 
     const fetchedEvents = snapshot.docs.map((doc) => {
@@ -173,15 +202,16 @@ export const fetchPaginatedEvents = async (
       };
     });
 
-    const lastDoc = snapshot.docs[snapshot.docs.length - 1];
-    if (direction === "next") {
-      pageHistory.push(lastDoc);
-    } else if (direction === "prev") {
-      pageHistory.pop();
-    }
+    const lastDoc = snapshot.docs[snapshot.docs.length - 1] || null;
 
-    return { events: fetchedEvents, lastVisible: lastDoc, pageHistory };
+    return { 
+      events: fetchedEvents, 
+      lastVisible: lastDoc, 
+      pageHistory: newPageHistory, 
+      totalFilteredEvents: totalRecords 
+    };
   } catch (error) {
+    console.error("Error fetching paginated events:", error);
     logEvent(
       "STREET_CARE_ERROR",
       `Error fetching paginated events with search: ${error.message}`
@@ -189,7 +219,6 @@ export const fetchPaginatedEvents = async (
     throw error;
   }
 };
-
 
 export const fetchPaginatedPastOutreachEvents = async (
   city,
@@ -204,6 +233,7 @@ export const fetchPaginatedPastOutreachEvents = async (
   try {
     let pastOutreachQuery = query(
       collection(db, PAST_OUTREACH_EVENTS_COLLECTION),
+      where("status", "==", "approved"),
       where("eventDate", "<", new Date()),
       where("eventDate", ">=", startDate),
       where("eventDate", "<=", endDate),
@@ -226,11 +256,9 @@ export const fetchPaginatedPastOutreachEvents = async (
       );
     }
 
-    // Count total records **before** applying pagination
     const totalRecordsSnapshot = await getCountFromServer(pastOutreachQuery);
     const totalRecords = totalRecordsSnapshot.data().count;
 
-    // Apply pagination
     let paginatedQuery = query(pastOutreachQuery, limit(pageSize));
 
     if (lastVisible && direction === "next") {
