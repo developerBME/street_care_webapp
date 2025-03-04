@@ -24,7 +24,12 @@ const AllPastOutreachEvents = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+
+  
   const [cityToSearch, setCityToSearch] = useState("");
+  const [debouncedCityToSearch, setDebouncedCityToSearch] = useState("");
+
   const [startDateTime, setStartDateTime] = useState(() => {
     const d = new Date();
     d.setDate(d.getDate() - 7);
@@ -59,6 +64,22 @@ const AllPastOutreachEvents = () => {
     
     setIsFiltered(hasActiveFilter);
   }, [searchTerm, cityToSearch, totaloutreaches]);
+
+  useEffect(() => {
+    const delaySearch = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+  
+    return () => clearTimeout(delaySearch);
+  }, [searchTerm]);
+  
+  useEffect(() => {
+    const delayCitySearch = setTimeout(() => {
+      setDebouncedCityToSearch(cityToSearch);
+    }, 500);
+  
+    return () => clearTimeout(delayCitySearch); 
+  }, [cityToSearch]);
 
   useEffect(() => {
     const getTotalCount = async () => {
@@ -102,10 +123,10 @@ const AllPastOutreachEvents = () => {
   
       try {
         const { fetchedEvents, lastVisible, pageHistory, totalFilteredEvents } = await fetchPaginatedPastOutreachEvents(
-          cityToSearch,
+          debouncedCityToSearch,
           startDateTime,
           endDateTime,
-          searchTerm,
+          debouncedSearchTerm,
           cursorFields.lastVisible,
           cursorFields.pageSize,
           cursorFields.direction,
@@ -119,7 +140,7 @@ const AllPastOutreachEvents = () => {
           pageHistory: pageHistory
         }));
 
-        if (searchTerm.trim() !== '' || cityToSearch.trim() !== '') {
+        if (debouncedSearchTerm.trim() !== '' || debouncedCityToSearch.trim() !== '') {
           setFilteredTotal(totalFilteredEvents || 0);
           setTotalPages(Math.ceil((totalFilteredEvents || 0) / outreachPerPages));
         }
@@ -131,7 +152,7 @@ const AllPastOutreachEvents = () => {
       }
     };
     fetchData();
-  }, [cursorFields.direction, cityToSearch, startDateTime, endDateTime, searchTerm]);
+  }, [cursorFields.direction, debouncedCityToSearch, startDateTime, endDateTime, debouncedSearchTerm]);
   
   const resetPagination = () => {
     setCursorFields({
@@ -150,7 +171,7 @@ const AllPastOutreachEvents = () => {
   const handleSearchChange = (e) => {
     const value = e.target.value.trim();
     setSearchTerm(value);
-    resetPagination();
+      resetPagination();
   };
 
   const handleStartDateChange = (e) => {
@@ -172,7 +193,7 @@ const AllPastOutreachEvents = () => {
   };
 
   const handleCityChange = (e) => {
-    setCityToSearch(e.target.value);
+    setCityToSearch(e.target.value.trim());
     resetPagination();
   };
 
