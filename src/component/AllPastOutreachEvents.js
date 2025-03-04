@@ -30,7 +30,9 @@ const AllPastOutreachEvents = () => {
     d.setDate(d.getDate() - 7);
     return d;
   });
+  const [selectedStartDate, setSelectedStartDate] = useState(startDateTime);
   const [endDateTime, setEndDateTime] = useState(new Date());
+  const [selectedEndDate, setSelectedEndDate] = useState(endDateTime);
   const [filterType, setFilterType] = useState("date");
 
   const [totaloutreaches, setTotalOutreaches] = useState(0);
@@ -152,13 +154,21 @@ const AllPastOutreachEvents = () => {
   };
 
   const handleStartDateChange = (e) => {
-    setStartDateTime(new Date(e.target.value));
+    setSelectedStartDate(new Date(e.target.value));
+  };
+
+  const applyStartDateFilter = () => {
+    setStartDateTime(selectedStartDate);
     resetPagination();
   };
 
   const handleEndDateChange = (e) => {
-    setEndDateTime(new Date(e.target.value));
-    resetPagination();
+    setSelectedEndDate(new Date(e.target.value));
+  };
+
+  const applyEndDateFilter = () => {
+    setEndDateTime(selectedEndDate);
+  resetPagination();
   };
 
   const handleCityChange = (e) => {
@@ -283,6 +293,7 @@ const AllPastOutreachEvents = () => {
                       type="date"
                       value={startDateTime.toISOString().split("T")[0]}
                       onChange={handleStartDateChange}
+                      onBlur={applyStartDateFilter}
                       className="form-input py-1 px-2 border border-gray-300 rounded-lg text-xs md:text-sm"
                     />
                     <span>|</span>
@@ -290,6 +301,7 @@ const AllPastOutreachEvents = () => {
                       type="date"
                       value={endDateTime.toISOString().split("T")[0]}
                       onChange={handleEndDateChange}
+                      onBlur={applyEndDateFilter}
                       className="form-input py-1 px-2 border border-gray-300 rounded-lg text-xs md:text-sm"
                     />
                   </>
