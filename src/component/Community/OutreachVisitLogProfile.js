@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import icon from "../../images/icon.png";
 // import OutreachVisitLogCard from "./OutreachVisitLogCard";
 // import { fetchEvents, formatDate } from "../EventCardService";
-import { fetchPersonalVisitLogs } from "../VisitLogCardService";
+import { fetchPersonalVisitLogss } from "../VisitLogCardService";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import CustomButton from "../Buttons/CustomButton";
 import NoOutreachDoc from "./NoOutreachDoc";
@@ -19,22 +19,29 @@ const OutreachVisitLogProfile = () => {
   };
 
   const navigate = useNavigate();
-  const [visitLogs, setVisitLogs] = useState(null);
+  const [visitLogs, setVisitLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-
+  const logsPerPage = 3;
+  const [cursorFields,setCursorFields] = useState({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[]})
+  
   const fetchData = async () => {
     const user = auth.currentUser;
-
     if (user) {
       try {
-        const logs = await fetchPersonalVisitLogs(auth?.currentUser?.uid);
-        setVisitLogs(logs);
+        const logs = await fetchPersonalVisitLogss(
+          user.uid,
+          cursorFields.pageSize,
+          cursorFields.lastVisible,
+          cursorFields.direction,
+          cursorFields.pageHistory
+        );
+        console.log(logs)
+        setCursorFields((prev)=>({...prev,lastVisible:logs.lastVisible,pageHistory:logs.pageHistory}))
+        setVisitLogs(logs.visitLogs);
       } catch (error) {
         setIsError(true);
         setVisitLogs([]);
-        setErrorMsg("Visit logs could not be loaded. Please try again later.");
       }
     } else {
       console.log("No user is signed in.");
@@ -44,7 +51,7 @@ const OutreachVisitLogProfile = () => {
 
   useEffect(() => {
     fetchData();
-  }, [auth.currentUser]);
+  }, [auth.currentUser,cursorFields.direction]);
 
   useEffect(() => {
     if (Array.isArray(visitLogs)) {
@@ -86,13 +93,11 @@ const OutreachVisitLogProfile = () => {
             <EventCardSkeleton />
             <EventCardSkeleton />
           </div>
-        ) : isError ? (
-          <ErrorMessage displayName="Visit Logs" />
-        ) : (
+        ) :  (
           <>
             {visitLogs?.length > 0 && (
           <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {visitLogs.slice(0, visibleItems).map((visitLogData) => (
+          {visitLogs.map((visitLogData) => (
             <div key={visitLogData.id} className="bg-[#F5EEFE] w-full rounded-[30px] mb-4 flex flex-col justify-between p-6">
               <div className="flex w-full">
                 <OutreachVisitLogProfileCard
@@ -105,7 +110,7 @@ const OutreachVisitLogProfile = () => {
         </div>
           )}
 
-          {visibleItems < visitLogs?.length && (
+          { visitLogs?.length > logsPerPage && (
               <div className="">
           <CustomButton
             label="More of My Visit Logs"
@@ -119,7 +124,7 @@ const OutreachVisitLogProfile = () => {
           )}
 
           {/* {visitLogs.length == 0 && <NoOutreachDoc isPersonalVisitLog={true} />} */}
-          {visitLogs.length == 0 && (
+          {visitLogs.length === 0 && (
             <NoDisplayData name="visitlog" label="No visit logs created" />
           )}
         </>

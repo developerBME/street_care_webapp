@@ -242,6 +242,55 @@ export const fetchTopVisitLogs = async () => {
   }
 };
 
+
+export const fetchPersonalVisitLogss = async (
+  uid,
+  pageSize =3,
+  lastVisible,
+  direction="next",
+  pageHistory=[]
+  ) => {
+    
+try{
+let personalVisitLogRef = query(collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+//where("status", "==", "approved"),
+where("uid","==",uid),
+orderBy("dateTime", "desc"),
+limit(pageSize))
+
+ //Handle Forward pagination
+ if (lastVisible && direction === "next") {
+  personalVisitLogRef = query(personalVisitLogRef, startAfter(lastVisible));
+}
+
+// Handle Backward pagination
+if (lastVisible && direction === "prev" && pageHistory.length > 2) {
+  personalVisitLogRef = query(personalVisitLogRef, startAfter(pageHistory[pageHistory.length - 3]));
+}
+
+console.log("in",uid,pageSize,lastVisible,direction,pageHistory)
+const visitLogSnapshot = await getDocs(personalVisitLogRef)
+console.log("in",visitLogSnapshot)
+const visitLogs = await visitLogHelperFunction(visitLogSnapshot);
+const lastDoc = visitLogSnapshot.docs[visitLogSnapshot.docs.length - 1];
+    
+// Store history of cursors for backward pagination
+if (direction === "next") {
+  pageHistory.push(lastDoc);
+} else if (direction === "prev") {
+    pageHistory.pop();
+}
+
+return { visitLogs: visitLogs, lastVisible: lastDoc, pageHistory};
+}catch (error) {
+  logEvent(
+    "STREET_CARE_ERROR",
+    `error on fetchVisitLogs VisitLogCardService.js- ${error.message}`
+  );
+  throw error;
+}
+}
+
 export const fetchPersonalVisitLogs = async (uid) => {
   try {
     const userQuery = query(
