@@ -4,19 +4,15 @@ import { useNavigate } from "react-router-dom";
 import icon from "../../images/icon.png";
 // import OutreachVisitLogCard from "./OutreachVisitLogCard";
 // import { fetchEvents, formatDate } from "../EventCardService";
-import { fetchPersonalVisitLogss } from "../VisitLogCardService";
+import { fetchPersonalVisitLogss,PersonalVisitLogsCount } from "../VisitLogCardService";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import CustomButton from "../Buttons/CustomButton";
-import NoOutreachDoc from "./NoOutreachDoc";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { auth } from "../firebase";
 import NoDisplayData from "../UserProfile/NoDisplayData";
 import ErrorMessage from "../ErrorMessage";
 
 const OutreachVisitLogProfile = () => {
-  const [visibleItems, setVisibleItems] = useState(3);
-  const loadMore = () => {
-    setVisibleItems((prev) => prev + 3);
-  };
 
   const navigate = useNavigate();
   const [visitLogs, setVisitLogs] = useState([]);
@@ -24,9 +20,13 @@ const OutreachVisitLogProfile = () => {
   const [isError, setIsError] = useState(false);
   const logsPerPage = 3;
   const [cursorFields,setCursorFields] = useState({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[]})
-  
+  const [currentPageLength,setCurrentPageLength] = useState(0)
+  const [totalPages,setTotalPages] = useState(0)
   const fetchData = async () => {
+    if(!cursorFields.direction)return
     const user = auth.currentUser;
+    setIsLoading(true);
+    console.log("in",cursorFields)
     if (user) {
       try {
         const logs = await fetchPersonalVisitLogss(
@@ -36,32 +36,96 @@ const OutreachVisitLogProfile = () => {
           cursorFields.direction,
           cursorFields.pageHistory
         );
-        console.log(logs)
         setCursorFields((prev)=>({...prev,lastVisible:logs.lastVisible,pageHistory:logs.pageHistory}))
         setVisitLogs(logs.visitLogs);
+        if(cursorFields.direction ==="next")setCurrentPageLength((prev)=>prev+logs.visitLogs.length)
+        setIsLoading(false);
       } catch (error) {
         setIsError(true);
         setVisitLogs([]);
       }
     } else {
       console.log("No user is signed in.");
-      setVisitLogs([]);
     }
   };
+
+  const fetchTotalRecords = async() =>{
+    const user = auth.currentUser;
+    if(user){
+      const totalRecords = await PersonalVisitLogsCount(user.uid)
+      setTotalPages(totalRecords)
+    }else {
+      console.log("No user is signed in.");
+    }
+  }
 
   useEffect(() => {
     fetchData();
   }, [auth.currentUser,cursorFields.direction]);
+  //On Page Load is enough
+  useEffect(()=>{
+    fetchTotalRecords()
+  },[])
 
-  useEffect(() => {
-    if (Array.isArray(visitLogs)) {
-      setIsLoading(false);
-    }
-  }, [visitLogs]);
+  // useEffect(() => {
+  //   if (Array.isArray(visitLogs)) {
+  //     setIsLoading(false);
+  //   }
+  // }, [visitLogs]);
 
   const handleRefresh = () => {
     fetchData();
   };
+
+
+  const handleNext = () =>{
+    // Reset direction to force an update
+  setCursorFields((prev) => ({ ...prev, direction: "" })); 
+
+  // Set it to 'next' after a slight delay
+  setTimeout(() => {
+    setCursorFields((prev) => ({ ...prev, direction: "next" }));
+  }, 0); 
+  }
+  const handlePrev=()=>{
+    //Handling here since I need length of the records one render before
+    setCurrentPageLength((prev)=>(prev-visitLogs.length))
+    //Reset direction to force an update
+    setCursorFields((prev) => ({ ...prev, direction: "" })); 
+    setTimeout(() => {
+      setCursorFields((prev) => ({ ...prev, direction: "prev" }));
+    }, 0); 
+  }
+
+  const renderPaginationButtons = () => {
+    const buttons = [];
+    if (currentPageLength > logsPerPage) {
+      buttons.push(
+        <button
+          key="prev"
+          onClick={() => handlePrev()}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          <IoIosArrowBack className="w-6 h-6" />
+        </button>
+      );
+    }
+
+    if (currentPageLength < totalPages) {
+      buttons.push(
+        <button
+          key="next"
+          onClick={() => handleNext()}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          <IoIosArrowForward className="w-6 h-6" />
+        </button>
+      );
+    }
+
+    return buttons;
+  };
+
 
   return (
     <>
@@ -110,7 +174,7 @@ const OutreachVisitLogProfile = () => {
         </div>
           )}
 
-          { visitLogs?.length > logsPerPage && (
+          {/* { visitLogs?.length > logsPerPage && (
               <div className="">
           <CustomButton
             label="More of My Visit Logs"
@@ -121,12 +185,19 @@ const OutreachVisitLogProfile = () => {
           />
         </div>
             
-          )}
+          )} */}
 
           {/* {visitLogs.length == 0 && <NoOutreachDoc isPersonalVisitLog={true} />} */}
           {visitLogs.length === 0 && (
             <NoDisplayData name="visitlog" label="No visit logs created" />
           )}
+          <div className="flex justify-between items-center mt-8 w-full">
+                <p className="text-gray-600">
+                  Showing {currentPageLength} of {totalPages}{" "}
+                  events
+                </p>
+          <div>{renderPaginationButtons()}</div>
+          </div>
         </>
       )}
     </>

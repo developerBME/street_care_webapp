@@ -253,11 +253,12 @@ export const fetchPersonalVisitLogss = async (
     
 try{
 let personalVisitLogRef = query(collection(db, PERSONAL_VISIT_LOG_COLLECTION),
-//where("status", "==", "approved"),
+where("status", "==", "approved"),
 where("uid","==",uid),
-orderBy("dateTime", "desc"),
-limit(pageSize))
+orderBy("dateTime", "desc")
+)
 
+personalVisitLogRef = query(personalVisitLogRef,limit(pageSize))
  //Handle Forward pagination
  if (lastVisible && direction === "next") {
   personalVisitLogRef = query(personalVisitLogRef, startAfter(lastVisible));
@@ -268,12 +269,14 @@ if (lastVisible && direction === "prev" && pageHistory.length > 2) {
   personalVisitLogRef = query(personalVisitLogRef, startAfter(pageHistory[pageHistory.length - 3]));
 }
 
-console.log("in",uid,pageSize,lastVisible,direction,pageHistory)
 const visitLogSnapshot = await getDocs(personalVisitLogRef)
-console.log("in",visitLogSnapshot)
-const visitLogs = await visitLogHelperFunction(visitLogSnapshot);
-const lastDoc = visitLogSnapshot.docs[visitLogSnapshot.docs.length - 1];
-    
+const visitLogs = [];
+for(let i of visitLogSnapshot.docs){
+  visitLogs.push(i.data())
+}
+const lastDoc = visitLogs[visitLogs.length - 1];
+
+
 // Store history of cursors for backward pagination
 if (direction === "next") {
   pageHistory.push(lastDoc);
@@ -289,6 +292,27 @@ return { visitLogs: visitLogs, lastVisible: lastDoc, pageHistory};
   );
   throw error;
 }
+}
+
+export const PersonalVisitLogsCount = async (uid) =>{
+  
+  try {
+    let totalVisitLogRef;
+  
+  totalVisitLogRef= query(collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+  where("status", "==", "approved"),
+  where("uid","==",uid),
+  orderBy("dateTime", "desc"));
+
+  const totalRecords = await getCountFromServer(totalVisitLogRef);
+  return totalRecords.data().count;
+  }catch(ex){
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchPersonalVisitLogs VisitLogCardService.js- ${ex.message}`
+    );
+    throw ex;
+  }
 }
 
 export const fetchPersonalVisitLogs = async (uid) => {
