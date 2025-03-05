@@ -258,9 +258,8 @@ where("uid","==",uid),
 orderBy("dateTime", "desc")
 )
 
-personalVisitLogRef = query(personalVisitLogRef,limit(pageSize))
- //Handle Forward pagination
- if (lastVisible && direction === "next") {
+//Handle Forward pagination
+if (lastVisible && direction === "next") {
   personalVisitLogRef = query(personalVisitLogRef, startAfter(lastVisible));
 }
 
@@ -268,6 +267,7 @@ personalVisitLogRef = query(personalVisitLogRef,limit(pageSize))
 if (lastVisible && direction === "prev" && pageHistory.length > 2) {
   personalVisitLogRef = query(personalVisitLogRef, startAfter(pageHistory[pageHistory.length - 3]));
 }
+personalVisitLogRef = query(personalVisitLogRef,limit(pageSize))
 
 const visitLogSnapshot = await getDocs(personalVisitLogRef)
 const visitLogs = [];
