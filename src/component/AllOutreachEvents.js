@@ -35,6 +35,8 @@ const AllOutreachEvents = ({ loggedIn }) => {
   const [totalPages, setTotalPages] = useState(0);
 
   const [searchDescription, setSearchDescription] = useState("");
+  const [debouncedCityToSearch, setDebouncedCityToSearch] = useState("");
+
   const [filterOption, setFilterOption] = useState("");
   const [startDate, setStartDate] = useState(new Date());
 
@@ -44,6 +46,8 @@ const AllOutreachEvents = ({ loggedIn }) => {
     return d;
   });
   const [cityToSearch, setCityToSearch] = useState("");
+  const [debouncedSearchDescription, setDebouncedSearchDescription] = useState("");
+
   const outreachPerPages = 6;
   const searchCity = useRef("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -54,8 +58,24 @@ const AllOutreachEvents = ({ loggedIn }) => {
   const [triggerEffect, setTriggerEffect] = useState(false);
   const [totalOutreaches, setTotalOutreaches] = useState(0);
   const [cumulativeEventsCount, setCumulativeEventsCount] = useState(0);
-  const [paginationTrigger, setPaginationTrigger] = useState(0); // New state to trigger pagination fetches
+  const [paginationTrigger, setPaginationTrigger] = useState(0);
 
+  useEffect(() => {
+    const delaySearch = setTimeout(() => {
+      setDebouncedSearchDescription(searchDescription);
+    }, 500);
+  
+    return () => clearTimeout(delaySearch);
+  }, [searchDescription]);
+
+  useEffect(() => {
+    const delayCitySearch = setTimeout(() => {
+      setDebouncedCityToSearch(cityToSearch);
+    }, 500);
+  
+    return () => clearTimeout(delayCitySearch);
+  }, [cityToSearch]);
+  
   useEffect(() => {
     const getTotalCount = async () => {
       try {
@@ -105,26 +125,24 @@ const AllOutreachEvents = ({ loggedIn }) => {
           pageHistory,
           totalFilteredEvents
         } = await fetchPaginatedEvents(
-          filterOption === "city" ? cityToSearch : "",
+          filterOption === "city" ? debouncedCityToSearch : "",
           filterOption === "datePeriod" ? startDate : new Date(),
           filterOption === "datePeriod" ? endDate : new Date("9999-12-31"),
-          searchDescription,
+          debouncedSearchDescription,
           cursorFields.lastVisible,
           cursorFields.pageSize,
           cursorFields.direction,
           cursorFields.pageHistory
         );
-        
-        console.log("fetchedEvents", fetchedEvents);
-        
+  
         setEvents(fetchedEvents);
         setCursorFields((prev) => ({
           ...prev,
           lastVisible: lastVisible,
           pageHistory: pageHistory
         }));
-
-        if (searchDescription.trim() !== '' || cityToSearch.trim() !== '') {
+  
+        if (debouncedSearchDescription.trim() !== '' || debouncedCityToSearch.trim() !== '') {
           setFilteredTotal(totalFilteredEvents || 0);
           setTotalPages(Math.ceil((totalFilteredEvents || 0) / outreachPerPages));
         }
@@ -136,8 +154,8 @@ const AllOutreachEvents = ({ loggedIn }) => {
       }
     };
     getEvents();
-  }, [paginationTrigger, cityToSearch, startDate, endDate, searchDescription]);
-  
+  }, [paginationTrigger, debouncedCityToSearch, startDate, endDate, debouncedSearchDescription]); 
+
   useEffect(() => {
     setTotalPages(Math.ceil(totalOutreaches / outreachPerPages));
   }, [totalOutreaches, outreachPerPages]);
