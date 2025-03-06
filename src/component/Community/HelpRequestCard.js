@@ -5,7 +5,7 @@ import help_announcement from "../../images/help_announcement.png";
 import help_pending from "../../images/help_pending.png";
 import help_received from "../../images/help_received.png";
 import CustomButton from "../Buttons/CustomButton";
-import { Modal, Box } from "@mui/material"; // Import Modal and Box from MUI
+import { Modal, Box, ButtonGroup } from "@mui/material"; // Import Modal and Box from MUI
 import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import {
@@ -54,51 +54,58 @@ const HelpRequestCard = ({
   };
 
   // Button text and style based on status
-  let buttonText;
-  let buttonStyleClass;
+  let buttons
 
-  switch (helpStatus) {
-    case "Need Help":
-      buttonText = "I can help";
-      buttonStyleClass = "buttondefaultwide";
-      break;
-    case "Help on the way":
-      buttonText = "Mark as Help Received";
-      buttonStyleClass = "buttondInprogressWide";
-      break;
-    case "Help Received":
-      buttonText = "Reopen Help Request";
-      buttonStyleClass = "buttonClosedWide";
-      break;
-    default:
-      buttonText = "Take Action";
-      buttonStyleClass = "bg-gray-600 text-white hover:bg-gray-500";
-  }
-
-  const handleButtonClick = () => {
+  const handleAuth = () => {
     if (!fAuth?.currentUser?.uid) {
       navigate("/login"); // Redirect to login if user is not authenticated
+      return true;
+    }
+    return false;
+  };
+
+  const btnCreateOutreach = () =>{
+    if (handleAuth()){
+      return;
+    }
+    navigate(`/createOutreach/`);
+  };
+
+  const btnMarkHelpReceived = () =>{
+    if (handleAuth()){
       return;
     }
 
-    switch (helpStatus) {
-      case "Need Help":
-        navigate(`/community/icanhelp/${id}`);
-        break;
-      case "Help on the way":
-        if (fAuth.currentUser.uid === helpUid) {
-          handleHelpRecieved(id, refresh); // Mark as Help Received
-        }
-        break;
-      case "Help Received":
-        if (fAuth.currentUser.uid === helpUid) {
-          handleReopenHelpRequest(id, refresh); // Reopen Help Request
-        }
-        break;
-      default:
-        break;
-    }
+    handleHelpRecieved(id, refresh); // Mark as Help Received
   };
+
+  const btnReopenHelpRequest = () =>{
+    if (handleAuth())
+      return;
+
+    handleReopenHelpRequest(id, refresh); // Reopen Help Request
+
+  };
+  
+  switch (helpStatus) {
+    case "Need Help":
+      buttons = [{label : "Create an Outreach", style : "buttondefaultwide", 
+        clickEvent : btnCreateOutreach, disable : "false"}];
+      break;
+    case "Help on the way":
+      buttons = [{label : "Create an Outreach", style : "buttondefaultwide", 
+        clickEvent : btnCreateOutreach, disable : "false"},
+        {label : "Mark as Help Received", style : "buttondefaultwide", 
+          clickEvent : btnMarkHelpReceived, disable : (fAuth.currentUser.uid != helpUid).toString()}];
+      break;
+    case "Help Received":
+      buttons = [{label : "Reopen Help Request", style : "buttondefaultwide", 
+        clickEvent : btnReopenHelpRequest, disable : (fAuth.currentUser.uid != helpUid).toString()}];
+      break;
+    default:
+      buttons = [{label : "Take Action", style : "buttondefaultwide", 
+        clickEvent : handleAuth, disbale : "false"}];
+  }
 
   const handleOpenModal = () => {
     setIsModalOpen(true); // Open the modal
@@ -268,14 +275,18 @@ const HelpRequestCard = ({
               <div className="text-sm text-gray-600 mb-4">{helpDescription}</div>
             )}
 
+            <p className="text-sm text-gray-700 font-medium">
+              Outreaches: <span className="font-normal">No outreaches created</span>
+            </p>
+
             {/* Button */}
-            {!isProfileHelpCard && (
-              <CustomButton
-                label={buttonText}
-                name={buttonStyleClass}
-                onClick={handleButtonClick}
-              />
-            )}
+            <ButtonGroup variant="text" aria-label="Basic button group">
+              {!isProfileHelpCard && (
+                buttons.filter(Boolean).map((button, index) => (
+                  <CustomButton key={index} label={button.label} name={button.style} onClick={button.clickEvent} disable={button.disable}/>
+                )
+              ))}
+            </ButtonGroup>
           </div>
         </Box>
       </Modal>
