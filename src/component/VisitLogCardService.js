@@ -274,17 +274,17 @@ const visitLogs = [];
 for(let i of visitLogSnapshot.docs){
   visitLogs.push(i.data())
 }
-const lastDoc = visitLogs[visitLogs.length - 1];
+const lastDocSnapshot = visitLogSnapshot.docs[visitLogSnapshot.docs.length - 1];
 
 
 // Store history of cursors for backward pagination
 if (direction === "next") {
-  pageHistory.push(lastDoc);
+  pageHistory.push(lastDocSnapshot);
 } else if (direction === "prev") {
     pageHistory.pop();
 }
 
-return { visitLogs: visitLogs, lastVisible: lastDoc, pageHistory};
+return { visitLogs: visitLogs, lastVisible: lastDocSnapshot, pageHistory};
 }catch (error) {
   logEvent(
     "STREET_CARE_ERROR",
