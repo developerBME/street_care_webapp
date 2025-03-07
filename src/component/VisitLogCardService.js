@@ -271,8 +271,11 @@ personalVisitLogRef = query(personalVisitLogRef,limit(pageSize))
 
 const visitLogSnapshot = await getDocs(personalVisitLogRef)
 const visitLogs = [];
-for(let i of visitLogSnapshot.docs){
-  visitLogs.push(i.data())
+for (let doc of visitLogSnapshot.docs) {
+  visitLogs.push({
+      id: doc.id,          
+      ...doc.data()         
+  });
 }
 const lastDocSnapshot = visitLogSnapshot.docs[visitLogSnapshot.docs.length - 1];
 
@@ -552,6 +555,8 @@ export const fetchPaginatedPublicVisitLogs = async (
 
 export const fetchPersonalVisitLogById = async (visitLogId) => {
   try {
+
+    console.log("inside trauma")
     const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
     const visitLogDoc = await getDoc(visitLogRef);
     if (visitLogDoc.exists()) {
