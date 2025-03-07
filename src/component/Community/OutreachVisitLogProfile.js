@@ -19,14 +19,13 @@ const OutreachVisitLogProfile = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const logsPerPage = 3;
-  const [cursorFields,setCursorFields] = useState({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[]})
-  const [currentPageLength,setCurrentPageLength] = useState(0)
+  let [cursorFields,setCursorFields] = useState({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[]})
+  let [currentPageLength,setCurrentPageLength] = useState(0)
   const [totalPages,setTotalPages] = useState(0)
   const fetchData = async () => {
     if(!cursorFields.direction)return
     const user = auth.currentUser;
     setIsLoading(true);
-    console.log("in",cursorFields)
     if (user) {
       try {
         const logs = await fetchPersonalVisitLogss(
@@ -67,16 +66,22 @@ const OutreachVisitLogProfile = () => {
     fetchTotalRecords()
   },[])
 
+  //removed because the useEffect checks a value is changed by value type while the array is reference type.
   // useEffect(() => {
   //   if (Array.isArray(visitLogs)) {
   //     setIsLoading(false);
   //   }
   // }, [visitLogs]);
 
-  const handleRefresh = () => {
-    fetchData();
+  //Calling this function when a record is deleted. Since the setState updates after the rerender we are setting the state values locally and using those to fetch the data. Using await to aviod race conditions.
+  const handleRefresh = async() => {
+    cursorFields = {"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[]}
+    setCursorFields(cursorFields);
+    currentPageLength = 0
+    setCurrentPageLength(0)
+    await fetchTotalRecords();
+    await fetchData();
   };
-
 
   const handleNext = () =>{
     // Reset direction to force an update
