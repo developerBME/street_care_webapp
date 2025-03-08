@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import OutreachEventCard from "./Community/OutreachEventCard";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate } from "react-router-dom";
 import {
   IoIosArrowBack,
@@ -175,22 +177,36 @@ const AllPastOutreachEvents = () => {
   };
 
   const handleStartDateChange = (e) => {
-    setSelectedStartDate(new Date(e.target.value));
+    const newDate = new Date(e.target.value);
+    setSelectedStartDate(newDate);
+    setStartDateTime(newDate);
+    resetPagination();
   };
-
-  const applyStartDateFilter = () => {
-    setStartDateTime(selectedStartDate);
+  
+  const handleEndDateChange = (e) => {
+    const newDate = new Date(e.target.value);
+    setSelectedEndDate(newDate);
+    setEndDateTime(newDate);
     resetPagination();
   };
 
-  const handleEndDateChange = (e) => {
-    setSelectedEndDate(new Date(e.target.value));
-  };
+  // const handleStartDateChange = (e) => {
+  //   setSelectedStartDate(new Date(e.target.value));
+  // };
 
-  const applyEndDateFilter = () => {
-    setEndDateTime(selectedEndDate);
-  resetPagination();
-  };
+  // const applyStartDateFilter = () => {
+  //   setStartDateTime(selectedStartDate);
+  //   resetPagination();
+  // };
+
+  // const handleEndDateChange = (e) => {
+  //   setSelectedEndDate(new Date(e.target.value));
+  // };
+
+  // const applyEndDateFilter = () => {
+  //   setEndDateTime(selectedEndDate);
+  // resetPagination();
+  // };
 
   const handleCityChange = (e) => {
     setCityToSearch(e.target.value.trim());
@@ -310,20 +326,32 @@ const AllPastOutreachEvents = () => {
                 </div>
                 {filterType === "date" && (
                   <>
-                    <input
-                      type="date"
-                      value={startDateTime.toISOString().split("T")[0]}
-                      onChange={handleStartDateChange}
-                      onBlur={applyStartDateFilter}
-                      className="form-input py-1 px-2 border border-gray-300 rounded-lg text-xs md:text-sm"
+                    <DatePicker
+                      selected={selectedStartDate}
+                      onChange={(date) => {
+                        setSelectedStartDate(date);
+                        setStartDateTime(date);
+                        resetPagination();
+                      }}
+                      selectsStart
+                      startDate={selectedStartDate}
+                      endDate={selectedEndDate}
+                      placeholderText="Select Start Date"
+                      className="py-1 px-1 border border-gray-300 rounded-lg text-sm w-[100px]"
                     />
                     <span>|</span>
-                    <input
-                      type="date"
-                      value={endDateTime.toISOString().split("T")[0]}
-                      onChange={handleEndDateChange}
-                      onBlur={applyEndDateFilter}
-                      className="form-input py-1 px-2 border border-gray-300 rounded-lg text-xs md:text-sm"
+                    <DatePicker
+                      selected={selectedEndDate}
+                      onChange={(date) => {
+                        setSelectedEndDate(date);
+                        setEndDateTime(date);
+                        resetPagination();
+                      }}
+                      selectsEnd
+                      startDate={selectedStartDate}
+                      endDate={selectedEndDate}
+                      placeholderText="Select End Date"
+                      className="py-1 px-1 border border-gray-300 rounded-lg text-sm w-[100px]"
                     />
                   </>
                 )}
