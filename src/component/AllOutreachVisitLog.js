@@ -54,7 +54,11 @@ const AllOutreachVisitLog = () => {
         setFilteredVisitLogs(visitLogsData.visitLogs);
         setIsLoading(false);
     };
-    getVisitLogs();
+    //Implemented debounce to improve performance
+    const delayTimer = setTimeout(()=>{
+      getVisitLogs();
+    },500)
+    return ()=>clearTimeout(delayTimer)
   }, [filterData.city,filterData.searchValue, filterData.startDate, filterData.endDate,cursorFields.direction]);
   // const searchChange = () => {
   //   const searchValue = searchRef.current.value.toLowerCase();
