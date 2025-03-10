@@ -14,6 +14,7 @@ const PastOutreachEvents = ({ events, isLoading, isError }) => {
   const navigate = useNavigate();
 
   // Ensure unique events
+
   const pastEvents = events ? events.slice(0, 3) : [];
 
   return (
