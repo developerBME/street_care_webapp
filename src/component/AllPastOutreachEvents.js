@@ -370,7 +370,6 @@ const AllPastOutreachEvents = () => {
           <UserTypeInfo />
           <div className="flex justify-between items-center mt-8 w-full">
             <p className="text-gray-600">
-              Showing {displayCount} of {totalToDisplay} events
             </p>
             <div className="flex justify-end">{renderPaginationButtons()}</div>
           </div>

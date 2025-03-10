@@ -412,7 +412,6 @@ const AllOutreachEvents = ({ loggedIn }) => {
 
           <div className="flex justify-between items-center mt-8 w-full mb-11">
             <p className="text-gray-600">
-              Showing {displayCount} of {totalToDisplay} events
             </p>
             <div className="flex justify-end">{renderPaginationButtons()}</div>
           </div>
