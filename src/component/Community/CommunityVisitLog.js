@@ -10,6 +10,7 @@ import ErrorMessage from "../ErrorMessage";
 const CommunityVisitLog = ({ loggedIn}) => {
   const navigate = useNavigate();
   const [visitLogs, setVisitLogs] = useState([]);
+  const [visitLogsCount, setCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -31,6 +32,7 @@ const CommunityVisitLog = ({ loggedIn}) => {
         );
       
         setVisitLogs(visitLogsData.visitLogs);
+        setCount(visitLogsData.totalRecords);
         setIsLoading(false);
       } catch (error) {
         setIsError(true);
@@ -54,7 +56,7 @@ const CommunityVisitLog = ({ loggedIn}) => {
           <div className="">
             <div className="flex flex-row gap-4">
               <div className="text-[45px] font-medium font-dmsans">
-                Visit Logs ({visitLogs?.length || 0})
+                Visit Logs ({visitLogsCount ?visitLogsCount:0})
               </div>
               {loggedIn && (
               <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-medium font-dmsans leading-tight self-stretch">
