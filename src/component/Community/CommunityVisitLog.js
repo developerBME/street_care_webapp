@@ -18,8 +18,19 @@ const CommunityVisitLog = ({ loggedIn}) => {
     const fetchData = async () => {
       try {
         // Fetch all visit logs
-        const visitLogsData = await fetchPublicVisitLogs();
-        setVisitLogs(visitLogsData);
+        const visitLogsData = await fetchPublicVisitLogs(
+          "", 
+          "", 
+          new Date(), 
+          new Date(), 
+          false, 
+          null, 
+          6, 
+          "next", 
+          []
+        );
+      
+        setVisitLogs(visitLogsData.visitLogs);
         setIsLoading(false);
       } catch (error) {
         setIsError(true);

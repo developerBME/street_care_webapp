@@ -253,7 +253,7 @@ export const fetchPersonalVisitLogss = async (
     
 try{
 let personalVisitLogRef = query(collection(db, PERSONAL_VISIT_LOG_COLLECTION),
-where("status", "==", "approved"),
+//where("status", "==", "approved"),
 where("uid","==",uid),
 orderBy("dateTime", "desc")
 )
