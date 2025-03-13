@@ -9,24 +9,13 @@ import arrowRight from "../images/arrowRight.png";
 import CustomButton from "./Buttons/CustomButton";
 import UserTypeInfo from "./UserTypeInfo";
 
+
 const PastOutreachEvents = ({ events, isLoading, isError }) => {
   const navigate = useNavigate();
 
   // Ensure unique events
-  const uniqueEvents = events
-    ? Array.from(new Set(events.map((event) => event.id))).map((id) =>
-        events.find((event) => event.id === id)
-      )
-    : [];
 
-  // Filter events to get only past events
-  const pastEvents = uniqueEvents
-    .filter((event) => {
-      const eventDate =
-        new Date(event.eventDate?.seconds * 1000) || event.eventDate;
-        return event.status === "approved" && eventDate < new Date(); // Check for approved and past events
-    })
-    .slice(0, 3);
+  const pastEvents = events ? events.slice(0, 3) : [];
 
   return (
     <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">

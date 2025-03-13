@@ -4,57 +4,133 @@ import { useNavigate } from "react-router-dom";
 import icon from "../../images/icon.png";
 // import OutreachVisitLogCard from "./OutreachVisitLogCard";
 // import { fetchEvents, formatDate } from "../EventCardService";
-import { fetchPersonalVisitLogs } from "../VisitLogCardService";
+import { fetchPersonalVisitLogss,PersonalVisitLogsCount } from "../VisitLogCardService";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import CustomButton from "../Buttons/CustomButton";
-import NoOutreachDoc from "./NoOutreachDoc";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { auth } from "../firebase";
 import NoDisplayData from "../UserProfile/NoDisplayData";
 import ErrorMessage from "../ErrorMessage";
 
 const OutreachVisitLogProfile = () => {
-  const [visibleItems, setVisibleItems] = useState(3);
-  const loadMore = () => {
-    setVisibleItems((prev) => prev + 3);
-  };
 
   const navigate = useNavigate();
-  const [visitLogs, setVisitLogs] = useState(null);
+  const [visitLogs, setVisitLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-
+  const logsPerPage = 3;
+  let [cursorFields,setCursorFields] = useState({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[]})
+  let [currentPageLength,setCurrentPageLength] = useState(0)
+  const [totalPages,setTotalPages] = useState(0)
   const fetchData = async () => {
+    if(!cursorFields.direction)return
     const user = auth.currentUser;
-
+    setIsLoading(true);
     if (user) {
       try {
-        const logs = await fetchPersonalVisitLogs(auth?.currentUser?.uid);
-        setVisitLogs(logs);
+        const logs = await fetchPersonalVisitLogss(
+          user.uid,
+          cursorFields.pageSize,
+          cursorFields.lastVisible,
+          cursorFields.direction,
+          cursorFields.pageHistory
+        );
+        setCursorFields((prev)=>({...prev,lastVisible:logs.lastVisible,pageHistory:logs.pageHistory}))
+        setVisitLogs(logs.visitLogs);
+        if(cursorFields.direction ==="next")setCurrentPageLength((prev)=>prev+logs.visitLogs.length)
+        setIsLoading(false);
       } catch (error) {
         setIsError(true);
         setVisitLogs([]);
-        setErrorMsg("Visit logs could not be loaded. Please try again later.");
       }
     } else {
       console.log("No user is signed in.");
-      setVisitLogs([]);
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, [auth.currentUser]);
-
-  useEffect(() => {
-    if (Array.isArray(visitLogs)) {
-      setIsLoading(false);
+  const fetchTotalRecords = async() =>{
+    const user = auth.currentUser;
+    if(user){
+      const totalRecords = await PersonalVisitLogsCount(user.uid)
+      setTotalPages(totalRecords)
+    }else {
+      console.log("No user is signed in.");
     }
-  }, [visitLogs]);
+  }
 
-  const handleRefresh = () => {
+  useEffect(() => {
     fetchData();
+  }, [auth.currentUser,cursorFields.direction]);
+  //On Page Load is enough
+  useEffect(()=>{
+    fetchTotalRecords()
+  },[])
+
+  //removed because the useEffect checks a value is changed by value type while the array is reference type.
+  // useEffect(() => {
+  //   if (Array.isArray(visitLogs)) {
+  //     setIsLoading(false);
+  //   }
+  // }, [visitLogs]);
+
+  //Calling this function when a record is deleted. Since the setState updates after the rerender we are setting the state values locally and using those to fetch the data. Using await to aviod race conditions.
+  const handleRefresh = async() => {
+    cursorFields = {"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[]}
+    setCursorFields(cursorFields);
+    currentPageLength = 0
+    setCurrentPageLength(0)
+    await fetchTotalRecords();
+    await fetchData();
   };
+
+  const handleNext = () =>{
+    // Reset direction to force an update
+  setCursorFields((prev) => ({ ...prev, direction: "" })); 
+
+  // Set it to 'next' after a slight delay
+  setTimeout(() => {
+    setCursorFields((prev) => ({ ...prev, direction: "next" }));
+  }, 0); 
+  }
+  const handlePrev=()=>{
+    //Handling here since I need length of the records one render before
+    setCurrentPageLength((prev)=>(prev-visitLogs.length))
+    //Reset direction to force an update
+    setCursorFields((prev) => ({ ...prev, direction: "" })); 
+    setTimeout(() => {
+      setCursorFields((prev) => ({ ...prev, direction: "prev" }));
+    }, 0); 
+  }
+
+  const renderPaginationButtons = () => {
+    const buttons = [];
+    if (currentPageLength > logsPerPage) {
+      buttons.push(
+        <button
+          key="prev"
+          onClick={() => handlePrev()}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          <IoIosArrowBack className="w-6 h-6" />
+        </button>
+      );
+    }
+
+    if (currentPageLength < totalPages) {
+      buttons.push(
+        <button
+          key="next"
+          onClick={() => handleNext()}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          <IoIosArrowForward className="w-6 h-6" />
+        </button>
+      );
+    }
+
+    return buttons;
+  };
+
 
   return (
     <>
@@ -86,13 +162,11 @@ const OutreachVisitLogProfile = () => {
             <EventCardSkeleton />
             <EventCardSkeleton />
           </div>
-        ) : isError ? (
-          <ErrorMessage displayName="Visit Logs" />
-        ) : (
+        ) :  (
           <>
             {visitLogs?.length > 0 && (
           <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {visitLogs.slice(0, visibleItems).map((visitLogData) => (
+          {visitLogs.map((visitLogData) => (
             <div key={visitLogData.id} className="bg-[#F5EEFE] w-full rounded-[30px] mb-4 flex flex-col justify-between p-6">
               <div className="flex w-full">
                 <OutreachVisitLogProfileCard
@@ -105,7 +179,7 @@ const OutreachVisitLogProfile = () => {
         </div>
           )}
 
-          {visibleItems < visitLogs?.length && (
+          {/* { visitLogs?.length > logsPerPage && (
               <div className="">
           <CustomButton
             label="More of My Visit Logs"
@@ -116,12 +190,19 @@ const OutreachVisitLogProfile = () => {
           />
         </div>
             
-          )}
+          )} */}
 
           {/* {visitLogs.length == 0 && <NoOutreachDoc isPersonalVisitLog={true} />} */}
-          {visitLogs.length == 0 && (
+          {visitLogs.length === 0 && (
             <NoDisplayData name="visitlog" label="No visit logs created" />
           )}
+          <div className="flex justify-between items-center mt-8 w-full">
+                <p className="text-gray-600">
+                  Showing {currentPageLength} of {totalPages}{" "}
+                  events
+                </p>
+          <div>{renderPaginationButtons()}</div>
+          </div>
         </>
       )}
     </>

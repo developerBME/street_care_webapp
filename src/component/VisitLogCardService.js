@@ -10,6 +10,11 @@ import {
   where,
   limit,
   startAfter,
+  startAt,
+  getCountFromServer,
+  or,
+  and,
+  count,
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { fetchUserDetails } from "./EventCardService";
@@ -115,6 +120,7 @@ const fetchOutreachEventData = async (eid) => {
 const visitLogHelperFunction = async (visitLogSnap) => {
   try {
     let visitLogs = [];
+   
     const docsArray = visitLogSnap.docs ? visitLogSnap.docs : [visitLogSnap];
 
     // Gather all unique user IDs
@@ -236,6 +242,82 @@ export const fetchTopVisitLogs = async () => {
   }
 };
 
+
+export const fetchPersonalVisitLogss = async (
+  uid,
+  pageSize =3,
+  lastVisible,
+  direction="next",
+  pageHistory=[]
+  ) => {
+    
+try{
+let personalVisitLogRef = query(collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+//where("status", "==", "approved"),
+where("uid","==",uid),
+orderBy("dateTime", "desc")
+)
+
+//Handle Forward pagination
+if (lastVisible && direction === "next") {
+  personalVisitLogRef = query(personalVisitLogRef, startAfter(lastVisible));
+}
+
+// Handle Backward pagination
+if (lastVisible && direction === "prev" && pageHistory.length > 2) {
+  personalVisitLogRef = query(personalVisitLogRef, startAfter(pageHistory[pageHistory.length - 3]));
+}
+personalVisitLogRef = query(personalVisitLogRef,limit(pageSize))
+
+const visitLogSnapshot = await getDocs(personalVisitLogRef)
+const visitLogs = [];
+for (let doc of visitLogSnapshot.docs) {
+  visitLogs.push({
+      id: doc.id,          
+      ...doc.data()         
+  });
+}
+const lastDocSnapshot = visitLogSnapshot.docs[visitLogSnapshot.docs.length - 1];
+
+
+// Store history of cursors for backward pagination
+if (direction === "next") {
+  pageHistory.push(lastDocSnapshot);
+} else if (direction === "prev") {
+    pageHistory.pop();
+}
+
+return { visitLogs: visitLogs, lastVisible: lastDocSnapshot, pageHistory};
+}catch (error) {
+  logEvent(
+    "STREET_CARE_ERROR",
+    `error on fetchVisitLogs VisitLogCardService.js- ${error.message}`
+  );
+  throw error;
+}
+}
+
+export const PersonalVisitLogsCount = async (uid) =>{
+  
+  try {
+    let totalVisitLogRef;
+  
+  totalVisitLogRef= query(collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+  where("status", "==", "approved"),
+  where("uid","==",uid),
+  orderBy("dateTime", "desc"));
+
+  const totalRecords = await getCountFromServer(totalVisitLogRef);
+  return totalRecords.data().count;
+  }catch(ex){
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchPersonalVisitLogs VisitLogCardService.js- ${ex.message}`
+    );
+    throw ex;
+  }
+}
+
 export const fetchPersonalVisitLogs = async (uid) => {
   try {
     const userQuery = query(
@@ -268,17 +350,200 @@ export const fetchPersonalVisitLogs = async (uid) => {
   }
 };
 
-export const fetchPublicVisitLogs = async () => {
+
+const descriptionFilter = (searchTerm,filterQuery)=>{
+  return query(
+    filterQuery,
+    or(
+      and(
+          where("city", ">=", searchTerm),
+          where("city", "<=", searchTerm + "\uf8ff")
+      ),
+      and(
+          where("description", ">=", searchTerm),
+          where("description", "<=", searchTerm + "\uf8ff")
+      )
+    ));
+}
+
+const cityFilter = (city,filterQuery)=>{
+  return query(
+    filterQuery,
+    where('city', '>=', city),
+    where('city', '<=', city + '\uf8ff')
+    );
+}
+
+const dateFilter = (startDate,endDate,filterQuery) =>{
+  return query(
+    filterQuery,
+    where("dateTime", ">=", startDate),
+    where("dateTime", "<=", endDate)
+    );
+}
+
+
+export const fetchPublicVisitLogs = async (
+  searchValue,
+  city,
+  startDate,
+  endDate,
+  isDateFilter = false,
+  lastVisible = null,
+  pageSize = 6,
+  direction = "next",
+  pageHistory = []
+) => {
+
+  try {
+
+    //query variables 
+    let pastOutreachRef,totalOutReachRef;
+
+      //Handle date Values
+      if (!(startDate instanceof Date) || isNaN(startDate)) {
+        console.error("Invalid start date");
+        return;
+      }
+      if (!(endDate instanceof Date) || isNaN(endDate)) {
+        console.error("Invalid end date");
+        return;
+      }
+
+      //City  Filter
+    //   if (city){
+    //     lastVisible=null;
+    //     pageHistory=[];
+    //     console.log("inside city")
+    //     totalOutReachRef = query(
+    //       collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+    //       where("status", "==", "approved"),
+    //       where('city', '>=', city),
+    //       where('city', '<=', city + '\uf8ff'),
+    //       orderBy("dateTime","desc"))
+    //     pastOutreachRef = query(totalOutReachRef,limit(pageSize));
+    //   }
+    //   //Date Filter
+    // else{
+    //   totalOutReachRef = query(
+    //     collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+    //     where("status", "==", "approved"),
+    //     where("dateTime", ">=", startDate),
+    //     where("dateTime", "<=", endDate),
+    //     orderBy("dateTime", "desc"))
+    //   pastOutreachRef = query(totalOutReachRef,limit(pageSize));
+    // }
+    pastOutreachRef = query(collection(db, PERSONAL_VISIT_LOG_COLLECTION),where("status", "==", "approved"))
+    totalOutReachRef = pastOutreachRef
+    if(searchValue){
+      const descriptionQuery = descriptionFilter(searchValue,totalOutReachRef)
+      totalOutReachRef = descriptionQuery
+    }
+
+    if(city){
+      const cityQuery = cityFilter(city,totalOutReachRef)
+      totalOutReachRef = cityQuery
+    }
+
+    if(isDateFilter){
+      const dateQuery = dateFilter(startDate,endDate,totalOutReachRef)
+      totalOutReachRef = dateQuery
+    }
+    // if(!s && !d && !c){
+    //   pastOutreachRef = query(pastOutreachRef,limit(pageSize))
+    // }
+    pastOutreachRef = query(totalOutReachRef,orderBy("dateTime", "desc"),limit(pageSize))
+    //Handle Forward pagination
+    if (lastVisible && direction === "next") {
+      pastOutreachRef = query(pastOutreachRef, startAfter(lastVisible));
+    }
+
+    // Handle Backward pagination
+    if (lastVisible && direction === "prev" && pageHistory.length > 2) {
+      pastOutreachRef = query(pastOutreachRef, startAfter(pageHistory[pageHistory.length - 3]));
+    }
+
+    const totalRecords = await getCountFromServer(totalOutReachRef);
+    const visitLogSnapshot = await getDocs(pastOutreachRef)
+    const visitLogs = await visitLogHelperFunction(visitLogSnapshot);
+    const lastDoc = visitLogSnapshot.docs[visitLogSnapshot.docs.length - 1];
+    
+
+     // Store history of cursors for backward pagination
+     if (direction === "next") {
+      pageHistory.push(lastDoc);
+    } else if (direction === "prev") {
+      pageHistory.pop();
+    }
+      
+    return { visitLogs: visitLogs, lastVisible: lastDoc, pageHistory,pastOutreachRef:pastOutreachRef,totalRecords:totalRecords.data().count  };
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchVisitLogs VisitLogCardService.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
+
+export const fetchHomeVisitLogs = async () => {
   try {
     const visitLogsRef = query(
       collection(db, PERSONAL_VISIT_LOG_COLLECTION),
-      //where("public", "==", true),
-      where("status", "==", "approved"),
-      // where("status", "in", ["approved", "flagged","unflagged"]),
+      where("status", "==", "approved"), // Filter applied
+      orderBy("dateTime","desc"),
+      limit(3)
     );
-    const visitLogSnapshot = await getDocs(visitLogsRef);
-    let visitLogs = await visitLogHelperFunction(visitLogSnapshot);
+
+    const snapshot = await getDocs(visitLogsRef);
+    const visitLogs = await visitLogHelperFunction(snapshot);
     return visitLogs;
+  } catch (error) {
+    console.error("Error fetching count:", error);
+    return 0;
+  }
+};
+
+//Cursor based Paginated visit logs
+export const fetchPaginatedPublicVisitLogs = async (
+  lastVisible = null,
+  pageSize = 6,
+  direction = "next",
+  pageHistory = []
+) => {
+  try {
+    let visitLogsRef = query(
+      collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+      where("status", "==", "approved"),
+      orderBy("dateTime","desc"),
+      limit(pageSize)
+    );
+
+    // Handle forward pagination
+    if (lastVisible && direction === "next") {
+      visitLogsRef = query(visitLogsRef, startAfter(lastVisible));
+    }
+
+    // Handle backward pagination
+    if (lastVisible && direction === "prev" && pageHistory.length > 2) {
+      visitLogsRef = query(visitLogsRef, startAfter(pageHistory[pageHistory.length - 3]));
+    }
+
+    const visitLogSnapshot = await getDocs(visitLogsRef);
+    const visitLogs = await visitLogHelperFunction(visitLogSnapshot);
+
+    // Get the last document for the next page
+    const lastDoc = visitLogSnapshot.docs[visitLogSnapshot.docs.length - 1];
+
+    // Store history of cursors for backward pagination
+    if (direction === "next") {
+      pageHistory.push(lastDoc);
+    } else if (direction === "prev") {
+      pageHistory.pop();
+    }
+      
+    return { visitLogs: visitLogs, lastVisible: lastDoc, pageHistory };
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
@@ -290,6 +555,8 @@ export const fetchPublicVisitLogs = async () => {
 
 export const fetchPersonalVisitLogById = async (visitLogId) => {
   try {
+
+    console.log("inside trauma")
     const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
     const visitLogDoc = await getDoc(visitLogRef);
     if (visitLogDoc.exists()) {
@@ -493,4 +760,3 @@ export const ToggleApproveStatus = async function (documentId) {
     console.error("Error updating document:", error.message);
   }
 };
-
