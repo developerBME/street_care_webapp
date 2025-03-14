@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { RxCaretSort } from "react-icons/rx";
 import { FormControl, MenuItem, Select, useMediaQuery } from "@mui/material";
 import { CiFilter } from "react-icons/ci";
+import { fetchUsers } from "../UserService.js";
 import {
   IoChevronBackCircle,
   IoChevronBackCircleOutline,
