@@ -19,15 +19,15 @@ const UpcomingOutreachEvents = ({
   const navigate = useNavigate();
 
   // Filter events to get only upcoming events
-  const upcomingEvents = events
-    ? events
-        .filter((event) => {
-          const eventDate =
-            new Date(event.eventDate?.seconds * 1000) || event.eventDate;
-          return eventDate >= new Date(); // Check if the event date is before the current date
-        })
-        .slice(0, 3)
-    : [];
+  // const upcomingEvents = events
+  //   ? events
+  //       .filter((event) => {
+  //         const eventDate =
+  //           new Date(event.eventDate?.seconds * 1000) || event.eventDate;
+  //         return eventDate >= new Date(); // Check if the event date is before the current date
+  //       })
+  //       .slice(0, 3)
+  //   : [];
 
   return (
     <div
@@ -62,7 +62,7 @@ const UpcomingOutreachEvents = ({
         ) : (
           <>
             <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-              {upcomingEvents.map((eventData) => (
+              {events.map((eventData) => (
                 <OutreachEventCard
                   key={eventData.id}
                   cardData={{
