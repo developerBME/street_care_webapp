@@ -5,6 +5,10 @@ import {
 } from "./HelpRequestService";
 import { collection, getDocs, where, query } from "firebase/firestore";
 import { db } from "./firebase"; // Ensure this import is correct
+import collectionMapping from "../utils/firestoreCollections";
+
+const outreachEvents_collection = collectionMapping.outreachEvents;
+const helpRequests_collection = collectionMapping.helpRequests;
 
 jest.mock("firebase/firestore");
 
@@ -24,7 +28,7 @@ describe("fetchOutreaches function", () => {
 
     expect(getDocs).toHaveBeenCalledWith(
       query(
-        collection(db, "outreachEvents"),
+        collection(db, outreachEvents_collection),
         where("HelpRequest.id", "==", helpRequestId)
       )
     );
@@ -49,7 +53,7 @@ describe("fetchOutreaches function", () => {
 
     expect(getDocs).toHaveBeenCalledWith(
       query(
-        collection(db, "outreachEvents"),
+        collection(db, outreachEvents_collection),
         where("HelpRequest.id", "==", helpRequestId)
       )
     );
@@ -70,7 +74,7 @@ describe("calculateNumberOfPagesForHelpReq function", () => {
 
     const result = await calculateNumberOfPagesForHelpReq(helpReqPerPage);
 
-    expect(getDocs).toHaveBeenCalledWith(collection(db, "helpRequests"));
+    expect(getDocs).toHaveBeenCalledWith(collection(db, helpRequests_collection));
     expect(result).toBe(expectedNumberOfPages);
   });
 
@@ -185,7 +189,7 @@ describe("fetchByCityAndDate function", () => {
     console.log("Results - no documents found:", helpRequests);
     expect(getDocs).toHaveBeenCalledWith(
       query(
-        collection(db, "helpRequests"),
+        collection(db, helpRequests_collection),
         where("location.city", "==", validSearchCityValue),
         where("createdAt", ">=", validStartDate),
         where("createdAt", "<=", validEndDate)

@@ -8,11 +8,14 @@ import errorImg from "../../images/error.png";
 import { Link, useNavigate } from "react-router-dom";
 import { emailConfirmation } from "../EmailService";
 import HelpRequestConfirmationModal from "../Community/HelpRequestConfirmationModal";
+import collectionMapping from "../../utils/firestoreCollections";
 
 let autoComplete;
 
-export const GOOGLE_PLACES_API_KEY = "AIzaSyBnF0aSySY400NMs2LV32sNzR29BEbPV3s";
-const USERS_COLLECTION = "users";
+export const GOOGLE_PLACES_API_KEY = process.env.REACT_APP_GOOGLE_PLACES_API_KEY;
+
+const users_collection = collectionMapping.users;
+const helpRequests_collection = collectionMapping.helpRequests;
 
 const loadScript = (url, callback) => {
   let script = document.createElement("script");
@@ -203,7 +206,7 @@ function HelpRequestForm() {
   //   </div>`;
 
   //   try {
-  //     const reqRef = collection(db, "helpRequests");
+  //     const reqRef = collection(db, helpRequests_collection);
   //     const docRef = await addDoc(reqRef, obj);
   //     if (docRef.id) {
   //       console.log(docRef.id);
@@ -308,20 +311,20 @@ function HelpRequestForm() {
     </div>`;
 
     try {
-      const reqRef = collection(db, "helpRequests");
+      const reqRef = collection(db, helpRequests_collection);
       const docRef = await addDoc(reqRef, obj);
       if (docRef.id) {
         
         //added outreach to user collection 
         const userQuery = query(
-          collection(db, USERS_COLLECTION),
+          collection(db, users_collection),
           where("uid", "==", fAuth?.currentUser?.uid)
         );
         const userDocRef = await getDocs(userQuery);
         const userDocID = userDocRef.docs[0].id;
         console.log(userDocID);
         // reference for the userdoc
-        const userRef = doc(db, USERS_COLLECTION, userDocID);
+        const userRef = doc(db, users_collection, userDocID);
         // outreach event collection
         const docSnap = await getDoc(userRef);
         let createdHelpRequests = docSnap.data().createdHelpRequests || [];

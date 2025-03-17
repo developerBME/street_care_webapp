@@ -8,7 +8,7 @@ import {
  import { getDocs, collection, query, where } from "firebase/firestore";
  import { db } from "./component/firebase";
  import { UserProvider } from "./context/Usercontext.js";
- 
+ import collectionMapping from "./utils/firestoreCollections.js";
  
  import Home from "./component/Home";
  import UserList from "./component/admin_test/UserList.js";
@@ -79,7 +79,7 @@ import {
  import AdminOutreachEvents from "./component/Admin/AdminOutreachEvents.js";
  
  
- 
+ const users_collection = collectionMapping.users;
  
  function App() {
   const fAuth = getAuth();
@@ -102,7 +102,7 @@ import {
         setLoadingUser(false);
         try {
           const userRef = query(
-            collection(db, "users"),
+            collection(db, users_collection),
             where("uid", "==", fAuth?.currentUser?.uid)
           );
           const data = await getDocs(userRef);

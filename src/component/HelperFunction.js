@@ -9,13 +9,15 @@ import {
   } from "firebase/firestore";
 import logEvent from "./FirebaseLogger";
 
-const USERS_COLLECTION = "users";
+import collectionMapping from "../utils/firestoreCollections";
+
+const users_collection = collectionMapping.users;
 
 export async function fetchUserName(uid){
     // Reference to the uid instead of the docid of the user.
     if(uid != undefined){
       const userQuery = query(
-        collection(db, USERS_COLLECTION),
+        collection(db, users_collection),
         where("uid", "==", uid)
       );
       const userDocRef = await getDocs(userQuery);
@@ -23,7 +25,7 @@ export async function fetchUserName(uid){
       const userDocID = userDocRef.docs[0]?.id;
       // reference for the userdoc
       if(userDocID !== undefined){
-        const userRef = doc(db, USERS_COLLECTION, userDocID);
+        const userRef = doc(db, users_collection, userDocID);
         const userDoc = await getDoc(userRef);
         
         if (userDoc !== undefined || userDoc.exists()) {

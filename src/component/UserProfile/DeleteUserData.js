@@ -8,6 +8,9 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 
+import collectionMapping from "../../utils/firestoreCollections";
+
+const users_collection = collectionMapping.users;
 
 const deleteUserData = async (uid) => {
   const user = auth.currentUser;
@@ -16,7 +19,7 @@ const deleteUserData = async (uid) => {
     try {
       console.log("inside the try block delete user");
       // Delete user data in Firestore based on UID
-      const userRef = collection(db, "users");
+      const userRef = collection(db, users_collection);
       const q = query(userRef, where("uid", "==", uid));
       const querySnapshot = await getDocs(q);
 

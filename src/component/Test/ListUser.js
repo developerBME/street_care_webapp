@@ -4,11 +4,15 @@ import { useEffect, useState } from "react";
 import { db } from "../firebase";
 import EditUser from "./EditUser";
 
+import collectionMapping from "../../utils/firestoreCollections";
+
+const testUser_collection = collectionMapping.testUser;
+
 function ListUser() {
 
     const [userList, setUserList] = useState([]);
     const [userId, seteditUserId] = useState([]);
-    const usercollectionRef = collection(db, 'TestUser')
+    const usercollectionRef = collection(db, testUser_collection);
 
 
     const getUserList = async() => {
@@ -35,7 +39,7 @@ function ListUser() {
 
     const deleteUser = async (id) => {
         try {
-            const userDoc = doc(db,"TestUser",id)
+            const userDoc = doc(db,testUser_collection,id)
             await deleteDoc(userDoc);
             alert("User deleted successfully");
             getUserList();

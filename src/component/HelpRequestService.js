@@ -17,13 +17,14 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import logEvent from "./FirebaseLogger";
 import { fetchUserName, getNumberOfPages} from "./HelperFunction";
 
-const HELP_REQ_COLLECTION = "helpRequests";
-const USERS_COLLECTION = "users";
-const OUTREACHES_COLLECTION = "outreachEvents";
+import collectionMapping from "../utils/firestoreCollections";
+
+const outreachEvents_collection = collectionMapping.outreachEvents;
+const helpRequests_collection = collectionMapping.helpRequests;
 
 export const fetchHelpRequests = async () => {
   try {
-    const helpReqRef = collection(db, HELP_REQ_COLLECTION);
+    const helpReqRef = collection(db, helpRequests_collection);
     const helpSnapshot = await getDocs(helpReqRef);
     let helpRequests = [];
 
@@ -60,7 +61,7 @@ export const fetchHelpRequests = async () => {
 export const fetchHelpReqById = async (helpReqId) => {
   try {
     // Reference to the specific document in the Help Request collection
-    const helpRef = doc(db, HELP_REQ_COLLECTION, helpReqId);
+    const helpRef = doc(db, helpRequests_collection, helpReqId);
 
     const helpSnap = await getDoc(helpRef);
 
@@ -86,7 +87,7 @@ export const fetchHelpReqById = async (helpReqId) => {
 
 export const fetchTopHelpRequests = async () => {
   try {
-    const helpReqRef = collection(db, HELP_REQ_COLLECTION);
+    const helpReqRef = collection(db, helpRequests_collection);
       const allTopHelpRequestsByQuery = query(
       helpReqRef,
       orderBy('createdAt', 'desc'), // Order help requests by the 'createdAt' field in descending order to get the newest entries first
@@ -120,7 +121,7 @@ export const fetchHelpRequestByUser = async () => {
     const fAuth = getAuth();
     const uid = fAuth?.currentUser?.uid;
     //Fetching Help Requests created by the loggedIn user
-    const helpReqRef = collection(db, HELP_REQ_COLLECTION);
+    const helpReqRef = collection(db, helpRequests_collection);
       const allhelpRequestsByUserQuery = query(
       helpReqRef,
       where('uid', '==', uid)
@@ -176,7 +177,7 @@ export const fetchByCityAndDate = async (
     const startDateTimestamp = Timestamp.fromDate(startDate);
     const endDateTimestamp = Timestamp.fromDate(endDate);
 
-    const helpReqRef = collection(db, HELP_REQ_COLLECTION);
+    const helpReqRef = collection(db, helpRequests_collection);
     // Performs Full text keyword search filtering on the City field and range filtering on CreatedAt field using composite index filtering
     const helpRequestByCityQuery = query(
       helpReqRef,
@@ -216,7 +217,7 @@ export const handleHelpRecieved = async (e, id, refresh) => {
   try {
     e.preventDefault();
     // Reference to the specific document in the Help Request collection
-    const helpRequestRef = doc(db, HELP_REQ_COLLECTION, id);
+    const helpRequestRef = doc(db, helpRequests_collection, id);
     const updateRef = await updateDoc(helpRequestRef, {
       status: "Help Received",
     });
@@ -237,7 +238,7 @@ export const handleReopenHelpRequest = async (e, id, refresh) => {
   try {
     e.preventDefault();
     // Reference to the specific document in the Help Request collection
-    const helpRequestRef = doc(db, HELP_REQ_COLLECTION, id);
+    const helpRequestRef = doc(db, helpRequests_collection, id);
     const updateRef = await updateDoc(helpRequestRef, {
       status: "Need Help",
     });
@@ -258,7 +259,7 @@ export async function fetchOutreaches(helpRequestId) {
   console.log("Fetching outreaches for helpRequestId: ", helpRequestId);
 
   try {
-    const outreachesRef = collection(db, OUTREACHES_COLLECTION);
+    const outreachesRef = collection(db, outreachEvents_collection);
     const outreachQuery = query(
       outreachesRef,
       where("helpRequest", "array-contains", helpRequestId)
@@ -301,18 +302,18 @@ export async function fetchOutreaches(helpRequestId) {
 
 
 export async function calculateNumberOfPagesForHelpReq(helpReqPerPage) {
-  return getNumberOfPages(helpReqPerPage, HELP_REQ_COLLECTION);
+  return getNumberOfPages(helpReqPerPage, helpRequests_collection);
 }
 
 
 export async function getHelpRequestsWithPageIndex(pageIndex = 0, numberOfEventsPerPage = 5){
-  const q = query(collection(db, HELP_REQ_COLLECTION), orderBy("createdAt","asc"));
+  const q = query(collection(db, helpRequests_collection), orderBy("createdAt","asc"));
   const documentSnapshots = await getDocs(q);
 
   const startIndex = pageIndex*numberOfEventsPerPage;
   const startDoc = documentSnapshots.docs[startIndex];
 
-  let docsq = query(collection(db, HELP_REQ_COLLECTION), orderBy("createdAt","asc"), startAt(startDoc),limit(numberOfEventsPerPage));
+  let docsq = query(collection(db, helpRequests_collection), orderBy("createdAt","asc"), startAt(startDoc),limit(numberOfEventsPerPage));
   const pageResults = await getDocs(docsq);
   return pageResults;
 }

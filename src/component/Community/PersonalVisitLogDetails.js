@@ -19,7 +19,10 @@ import {
 import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
 
-const USERS_COLLECTION = "users";
+import collectionMapping from "../../utils/firestoreCollections";
+
+const users_collection = collectionMapping.users;
+const visitLogs_collection = collectionMapping.visitLogs;
 
 const PersonalVisitLogDetails = () => {
   const { id } = useParams();
@@ -43,17 +46,17 @@ const PersonalVisitLogDetails = () => {
 
   const deleteVisitLog = async () => {
     try {
-      const visitLogDoc = doc(db, "personalVisitLog", id);
+      const visitLogDoc = doc(db, visitLogs_collection, id);
 
       const userQuery = query(
-        collection(db, USERS_COLLECTION),
+        collection(db, users_collection),
         where("uid", "==", fAuth?.currentUser?.uid)
       );
       const userDocRef = await getDocs(userQuery);
 
       const userDocID = userDocRef.docs[0].id;
       // reference for the userdoc
-      const userRef = doc(db, USERS_COLLECTION, userDocID);
+      const userRef = doc(db, users_collection, userDocID);
       // outreach event collection
       const docSnap = await getDoc(userRef);
       let personalVisitLogs = docSnap.data().personalVisitLogs || [];
