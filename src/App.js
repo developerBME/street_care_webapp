@@ -38,7 +38,6 @@ import {
  import Newscard from "./component/HomePage/Newscard";
  import ComingSoon from "./component/ComingSoon";
  import Readmorenews from "./component/HomePage/Readmorenews";
- import ICanHelpForm from "./component/Community/ICanHelpForm";
  import CommunityComingSoon from "./component/CommunityComingSoon";
  import VisitLogDetails from "./component/Community/VisitLogDetails";
  import Temp_Profile from "./component/Temp_Profile";
@@ -220,7 +219,6 @@ import {
           <Route path="/outreachsignup/:id" element={<OutreachSignup />} />
           {/* <Route path="/helpRequestEventWindow" element={<ComingSoon />} /> */}
           {/* <Route path="/helpRequestForm" element={<ComingSoon />} /> */}
-          <Route path="/community/icanhelp/:id" element={<ICanHelpForm />} />
           {/* <Route path="/icanhelp" element={<ComingSoon />} /> */}
           {/* <Route path="/donateForm" element={<DonateForm />} /> */}
           <Route path="/donateForm" element={<ComingSoon />} />
