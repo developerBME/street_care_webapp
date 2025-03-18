@@ -9,7 +9,6 @@ import locate from "../../images/location.png";
 import defaultImage from "../../images/default_avatar.svg";
 import verifiedImg from "../../images/verified_purple.png";
 import userSlots from "../../images/userSlots.png";
-import HelpRequestOutreachCard from "./HelpRequestOutreachCard";
 import { formatDate } from "./../HelperFunction";
 
 const ICanHelpConfirmationModal = ({ id }) => {

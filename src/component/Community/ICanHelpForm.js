@@ -232,13 +232,6 @@ const ICanHelpForm = () => {
               }}
             />
           </div>
-          {success && (
-            <ICanHelpConfirmationModal
-              id={id}
-              helpRequestId={data ? data.id : null} // Pass the help request ID to the modal
-              outreaches={outreaches}
-            />
-          )}
         </div>
       </div>
     </div>
