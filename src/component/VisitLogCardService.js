@@ -392,7 +392,8 @@ export const fetchPublicVisitLogs = async (
   lastVisible = null,
   pageSize = 6,
   direction = "next",
-  pageHistory = []
+  pageHistory = [],
+  status="approved"
 ) => {
 
   try {
@@ -433,7 +434,7 @@ export const fetchPublicVisitLogs = async (
     //     orderBy("dateTime", "desc"))
     //   pastOutreachRef = query(totalOutReachRef,limit(pageSize));
     // }
-    pastOutreachRef = query(collection(db, PERSONAL_VISIT_LOG_COLLECTION),where("status", "==", "approved"))
+    pastOutreachRef = query(collection(db, PERSONAL_VISIT_LOG_COLLECTION),where("status", "==", status))
     totalOutReachRef = pastOutreachRef
     if(searchValue){
       const descriptionQuery = descriptionFilter(searchValue,totalOutReachRef)

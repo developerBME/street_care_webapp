@@ -119,17 +119,22 @@ export const fetchPaginatedEvents = async (
   lastVisible = null,
   pageSize = 6,
   direction = "next",
-  pageHistory = []
+  pageHistory = [],
+  status = "approved",
+  allPendingEvents=false
 ) => {
   try {
     let eventsQuery;
     const eventsCollection = collection(db, OUTREACH_EVENTS_COLLECTION);
 
     let filters = [
-      where("status", "==", "approved"),
-      where("eventDate", ">=", startDate),
+      where("status", "==", status),
       orderBy("eventDate", "asc")
     ];
+
+    if(!allPendingEvents){
+      filters.push(where("eventDate", ">=", startDate))
+    }
 
     if (endDate && endDate.getFullYear() < 9000) {
       filters.push(where("eventDate", "<=", endDate));

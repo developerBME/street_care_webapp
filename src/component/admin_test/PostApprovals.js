@@ -16,7 +16,7 @@ import { fetchPublicVisitLogs } from "../VisitLogCardService";
 import infoIcon from "../../images/info_icon.png";
 import arrowBack from "../../images/arrowBack.png";
 import searchIcon from "../../images/search-icon-PostApproval.png";
-import { fetchUserDetails, fetchUserTypeDetails } from "../EventCardService";
+import { fetchPaginatedEvents, fetchUserDetails, fetchUserTypeDetails } from "../EventCardService";
 
 const PostApprovals = () => {
   const [pendingPosts, setPendingPosts] = useState({
@@ -36,63 +36,131 @@ const PostApprovals = () => {
   const postsPerPage = 6;
   const searchRef = useRef("");
 
+  //VisitLog cursors
+  const logsPerPage = 6;
+  const [FilterData,setFilterData] = useState({city:"",isDateFilter:false,startDate:new Date("2024-01-02"),endDate:new Date(),searchValue:""})
+  const [logsCursorFields,setLogsCursorFields] = useState({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
+
+
+  //Events cursors
+  const [eventsCursorFields, setCursorFields] = useState({
+    lastVisible: null,
+    pageSize: 6,
+    direction: "next",
+    pageHistory: []
+  });
+  const [filterOption, setFilterOption] = useState("");
+ // const [cityToSearch, setCityToSearch] = useState("");
+  const [debouncedCityToSearch, setDebouncedCityToSearch] = useState("");
+  //const [searchDescription, setSearchDescription] = useState("");
+  const [debouncedSearchDescription, setDebouncedSearchDescription] = useState("");
+  
+
   useEffect(() => {
-    const fetchPendingPosts = async () => {
-      try {
-        setIsLoading(true);
 
-        // Fetch outreaches
-        const outreachQuery = query(
-          collection(db, "outreachEvents"),
-          where("status", "==", "pending")
+
+    const fetchPendingPosts = async ()=>{
+     
+     
+      //visitLogs
+      const visitLogsData= await fetchPublicVisitLogs(
+        FilterData.searchValue,
+        FilterData.city,
+        FilterData.startDate,
+        FilterData.endDate,
+        FilterData.isDateFilter,
+        logsCursorFields.lastVisible,
+        logsCursorFields.pageSize,
+        logsCursorFields.direction,
+        logsCursorFields.pageHistory,
+        "pending"
         );
-        const outreachSnapshot = await getDocs(outreachQuery);
-        const outreaches = await Promise.all(
-          outreachSnapshot.docs.map(async (doc) => {
-            const post = { id: doc.id, ...doc.data() };
+        console.log(visitLogsData);
 
-            // Fetch userName using uid
-            const userDetails = await fetchUserTypeDetails(post.uid);
-            return {
-              ...post,
-              userName: userDetails?.username || "Unknown User",
-              userType: userDetails?.type || "",
-            };
-          })
+
+       
+       
+        //eventsData
+        const {
+          events: fetchedEvents,
+          lastVisible,
+          pageHistory,
+          totalFilteredEvents
+        }  = await fetchPaginatedEvents(
+          filterOption === "city" ? debouncedCityToSearch : "",
+          filterOption === "datePeriod" ? FilterData.startDate : new Date(),
+          filterOption === "datePeriod" ? FilterData.endDate : new Date("9999-12-31"),
+          debouncedSearchDescription,
+          eventsCursorFields.lastVisible,
+          eventsCursorFields.pageSize,
+          eventsCursorFields.direction,
+          eventsCursorFields.pageHistory,
+          "pending",
+          true
         );
+        console.log(fetchedEvents);
 
-        // Fetch visit logs
-        const visitLogQuery = query(
-          collection(db, "personalVisitLog"),
-          where("status", "==", "pending")
-        );
-        const visitLogSnapshot = await getDocs(visitLogQuery);
-        const visitLogs = await Promise.all(
-          visitLogSnapshot.docs.map(async (doc) => {
-            const post = { id: doc.id, ...doc.data() };
-
-            // Fetch userName using uid
-            const userDetails = await fetchUserTypeDetails(post.uid);
-            return {
-              ...post,
-              userName: userDetails?.username || "Unknown User",
-              userType: userDetails?.type || "",
-            };
-          })
-        );
-        // const visitLogs = await fetchPublicVisitLogs();
-
-        setPendingPosts({ outreaches, visitLogs });
-        setIsError(false);
-      } catch (error) {
-        console.error("Error fetching pending posts:", error);
-        setIsError(true);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    }
 
     fetchPendingPosts();
+
+
+    // const fetchPendingPosts = async () => {
+    //   try {
+    //     setIsLoading(true);
+
+    //     // Fetch outreaches
+    //     const outreachQuery = query(
+    //       collection(db, "outreachEvents"),
+    //       where("status", "==", "pending")
+    //     );
+    //     const outreachSnapshot = await getDocs(outreachQuery);
+    //     const outreaches = await Promise.all(
+    //       outreachSnapshot.docs.map(async (doc) => {
+    //         const post = { id: doc.id, ...doc.data() };
+
+    //         // Fetch userName using uid
+    //         const userDetails = await fetchUserTypeDetails(post.uid);
+    //         return {
+    //           ...post,
+    //           userName: userDetails?.username || "Unknown User",
+    //           userType: userDetails?.type || "",
+    //         };
+    //       })
+    //     );
+
+    //     // Fetch visit logs
+    //     const visitLogQuery = query(
+    //       collection(db, "personalVisitLog"),
+    //       where("status", "==", "pending")
+    //     );
+    //     const visitLogSnapshot = await getDocs(visitLogQuery);
+    //     const visitLogs = await Promise.all(
+    //       visitLogSnapshot.docs.map(async (doc) => {
+    //         const post = { id: doc.id, ...doc.data() };
+
+    //         // Fetch userName using uid
+    //         const userDetails = await fetchUserTypeDetails(post.uid);
+    //         return {
+    //           ...post,
+    //           userName: userDetails?.username || "Unknown User",
+    //           userType: userDetails?.type || "",
+    //         };
+    //       })
+    //     );
+    //     // const visitLogs = await fetchPublicVisitLogs();
+
+    //     setPendingPosts({ outreaches, visitLogs });
+    //     setIsError(false);
+    //   } catch (error) {
+    //     console.error("Error fetching pending posts:", error);
+    //     setIsError(true);
+    //   } finally {
+    //     setIsLoading(false);
+    //   }
+    // };
+
+ 
   }, []);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
