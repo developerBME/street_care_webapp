@@ -17,10 +17,9 @@ import {
   count,
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { fetchUserDetails } from "./EventCardService";
+import { fetchUserDetails,fetchUserTypeDetails } from "./EventCardService";
 import { fetchUserName, formatDate, getNumberOfPages } from "./HelperFunction";
 import { fetchUserDetailsBatch } from "./EventCardService";
-
 import logEvent from "./FirebaseLogger";
 
 const VISIT_LOG_COLLECTION = "testLog";
@@ -410,29 +409,6 @@ export const fetchPublicVisitLogs = async (
         return;
       }
 
-      //City  Filter
-    //   if (city){
-    //     lastVisible=null;
-    //     pageHistory=[];
-    //     console.log("inside city")
-    //     totalOutReachRef = query(
-    //       collection(db, PERSONAL_VISIT_LOG_COLLECTION),
-    //       where("status", "==", "approved"),
-    //       where('city', '>=', city),
-    //       where('city', '<=', city + '\uf8ff'),
-    //       orderBy("dateTime","desc"))
-    //     pastOutreachRef = query(totalOutReachRef,limit(pageSize));
-    //   }
-    //   //Date Filter
-    // else{
-    //   totalOutReachRef = query(
-    //     collection(db, PERSONAL_VISIT_LOG_COLLECTION),
-    //     where("status", "==", "approved"),
-    //     where("dateTime", ">=", startDate),
-    //     where("dateTime", "<=", endDate),
-    //     orderBy("dateTime", "desc"))
-    //   pastOutreachRef = query(totalOutReachRef,limit(pageSize));
-    // }
     pastOutreachRef = query(collection(db, PERSONAL_VISIT_LOG_COLLECTION),where("status", "==", "approved"))
     totalOutReachRef = pastOutreachRef
     if(searchValue){
@@ -485,6 +461,97 @@ export const fetchPublicVisitLogs = async (
     throw error;
   }
 };
+
+const descriptionFilterOutreaches = (searchTerm,filterQuery)=>{
+  return query(
+    filterQuery,
+    or(
+      and(
+          where("location.city", ">=", searchTerm),
+          where("location.city", "<=", searchTerm + "\uf8ff")
+      ),
+      and(
+          where("description", ">=", searchTerm),
+          where("description", "<=", searchTerm + "\uf8ff")
+      )
+    ));
+}
+
+export const fetchPendingOutreaches=async(
+  searchValue,
+  sortBy,
+  lastVisible = null,
+  pageSize = 6,
+  direction = "next",
+  pageHistory = []
+)=>{
+
+  let totalOutReachRef, pastOutreachRef
+  pastOutreachRef = query(
+        collection(db, "outreachEvents"),
+        where("status", "==", "pending")
+      );
+  totalOutReachRef = pastOutreachRef
+
+  if(searchValue){
+    const descriptionQuery = descriptionFilterOutreaches(searchValue,totalOutReachRef)
+    totalOutReachRef = descriptionQuery
+  } 
+  
+  switch(sortBy){
+    case "Oldest First":
+      totalOutReachRef = query(totalOutReachRef,orderBy("eventDate","asc"))
+      break;
+    case "Alphabetical":
+      totalOutReachRef =query(totalOutReachRef,orderBy("title","asc"))
+      break;
+    default:
+      totalOutReachRef = query(totalOutReachRef,orderBy("eventDate","desc"))
+  }
+
+  pastOutreachRef = query(totalOutReachRef,limit(pageSize))
+
+   //Handle Forward pagination
+   if (lastVisible && direction === "next") {
+    pastOutreachRef = query(pastOutreachRef, startAfter(lastVisible));
+  }
+
+  // Handle Backward pagination
+  if (lastVisible && direction === "prev" && pageHistory.length > 2) {
+    pastOutreachRef = query(pastOutreachRef, startAfter(pageHistory[pageHistory.length - 3]));
+  }
+
+  let outReachData = await getDocs(pastOutreachRef);
+  const outreaches = await Promise.all(
+    outReachData.docs.map(async (doc) => {
+        const post = { id: doc.id, ...doc.data() };
+
+        // Fetch userName using uid
+        const userDetails = await fetchUserTypeDetails(post.uid);
+        return {
+          ...post,
+          userName: userDetails?.username || "Unknown User",
+          userType: userDetails?.type || "",
+        };
+      })
+    );
+    const lastDoc = outReachData.docs[outReachData.docs.length - 1];
+    if (direction === "next") {
+      pageHistory.push(lastDoc);
+    } else if (direction === "prev") {
+      pageHistory.pop();
+    }
+    const totalRecords = await getCountFromServer(totalOutReachRef);
+    return {totalRecords:totalRecords.data().count,outreaches,lastDoc,pageHistory}
+}
+
+
+
+
+
+
+
+
 
 
 export const fetchHomeVisitLogs = async () => {

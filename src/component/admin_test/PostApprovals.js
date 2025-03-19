@@ -17,6 +17,9 @@ import infoIcon from "../../images/info_icon.png";
 import arrowBack from "../../images/arrowBack.png";
 import searchIcon from "../../images/search-icon-PostApproval.png";
 import { fetchUserDetails, fetchUserTypeDetails } from "../EventCardService";
+import {fetchPendingOutreaches} from "../VisitLogCardService"
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+
 
 const PostApprovals = () => {
   const [pendingPosts, setPendingPosts] = useState({
@@ -35,54 +38,50 @@ const PostApprovals = () => {
   const [sortOption, setSortOption] = useState('Most Recent');
   const postsPerPage = 6;
   const searchRef = useRef("");
+  const [cursorFields,setCursorFields] = useState({"lastVisible":null,"pageSize" : postsPerPage,"direction":"next","pageHistory":[]})
+  const [currentPageLength,setCurrentPageLength]=useState(0)
+  const [totalPages,setTotalPages] = useState(0)
+  const [filterData,setFilterData] = useState({searchValue:"",sortBy:"Most Recent"})
+  
+
 
   useEffect(() => {
     const fetchPendingPosts = async () => {
       try {
         setIsLoading(true);
-
-        // Fetch outreaches
-        const outreachQuery = query(
-          collection(db, "outreachEvents"),
-          where("status", "==", "pending")
-        );
-        const outreachSnapshot = await getDocs(outreachQuery);
-        const outreaches = await Promise.all(
-          outreachSnapshot.docs.map(async (doc) => {
-            const post = { id: doc.id, ...doc.data() };
-
-            // Fetch userName using uid
-            const userDetails = await fetchUserTypeDetails(post.uid);
-            return {
-              ...post,
-              userName: userDetails?.username || "Unknown User",
-              userType: userDetails?.type || "",
-            };
-          })
-        );
-
-        // Fetch visit logs
-        const visitLogQuery = query(
-          collection(db, "personalVisitLog"),
-          where("status", "==", "pending")
-        );
-        const visitLogSnapshot = await getDocs(visitLogQuery);
-        const visitLogs = await Promise.all(
-          visitLogSnapshot.docs.map(async (doc) => {
-            const post = { id: doc.id, ...doc.data() };
-
-            // Fetch userName using uid
-            const userDetails = await fetchUserTypeDetails(post.uid);
-            return {
-              ...post,
-              userName: userDetails?.username || "Unknown User",
-              userType: userDetails?.type || "",
-            };
-          })
-        );
-        // const visitLogs = await fetchPublicVisitLogs();
-
-        setPendingPosts({ outreaches, visitLogs });
+        if(activeTab === "outreaches"){
+          const outreachData = await fetchPendingOutreaches(
+            filterData.searchValue,
+            filterData.sortBy,
+            cursorFields.lastVisible,
+            cursorFields.pageSize,
+            cursorFields.direction,
+            cursorFields.pageHistory)
+          setCursorFields(prev=>({...prev,lastVisible:outreachData.lastDoc,pageHistory:outreachData.pageHistory}))
+          setTotalPages(outreachData.totalRecords)
+          if(cursorFields.direction ==="next")setCurrentPageLength((prev)=>prev + outreachData.outreaches.length)
+          setPendingPosts({ outreaches : outreachData.outreaches});
+        }else{
+          const visitLogQuery = query(
+            collection(db, "personalVisitLog"),
+            where("status", "==", "pending")
+          );
+          const visitLogSnapshot = await getDocs(visitLogQuery);
+          const visitLogs = await Promise.all(
+            visitLogSnapshot.docs.map(async (doc) => {
+              const post = { id: doc.id, ...doc.data() };
+      
+              // Fetch userName using uid
+              const userDetails = await fetchUserTypeDetails(post.uid);
+              return {
+                ...post,
+                userName: userDetails?.username || "Unknown User",
+                userType: userDetails?.type || "",
+              };
+            })
+          );
+          setPendingPosts({visitLogs:visitLogs });
+        }
         setIsError(false);
       } catch (error) {
         console.error("Error fetching pending posts:", error);
@@ -91,10 +90,11 @@ const PostApprovals = () => {
         setIsLoading(false);
       }
     };
-
-    fetchPendingPosts();
-  }, []);
-
+    const delayTimer = setTimeout(()=>{
+      fetchPendingPosts();
+    },500)
+    return ()=>clearTimeout(delayTimer)
+  }, [cursorFields.direction,activeTab,filterData.searchValue,filterData.sortBy]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
 
@@ -103,6 +103,8 @@ const PostApprovals = () => {
     setIsModalOpen(true);
   };
 
+
+  
   const Modal = ({ post, onClose, onAccept, onReject, isVisitLogs }) => {
     return (
       <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-md">
@@ -199,6 +201,8 @@ const PostApprovals = () => {
       console.error("Error approving posts:", error);
     }
   };
+
+  
 
   // Reject selected posts
   const handleRejectSelected = async () => {
@@ -352,7 +356,6 @@ const PostApprovals = () => {
     indexOfFirstPost,
     indexOfLastPost
   );
-
   useEffect(() => {
     setCurrentPage(1);
   }, [activeTab]);
@@ -362,88 +365,63 @@ const PostApprovals = () => {
     setActiveTab(tab);
   };
 
+  const handleNext = () =>{
+    // Reset direction to force an update
+  setCursorFields((prev) => ({ ...prev, direction: "" })); 
+
+  // Set it to 'next' after a slight delay
+  setTimeout(() => {
+    setCursorFields((prev) => ({ ...prev, direction: "next" }));
+  }, 0); 
+  }
+  const handlePrev=()=>{
+    //Handling here since I need length of the records one render before
+    setCurrentPageLength((prev)=>(prev-pendingPosts[activeTab].length))
+    //Reset direction to force an update
+    setCursorFields((prev) => ({ ...prev, direction: "" })); 
+    setTimeout(() => {
+      setCursorFields((prev) => ({ ...prev, direction: "prev" }));
+    }, 0); 
+  }
+
+  const handleChange = (e) =>{
+    const { name, value } = e.target;
+    setFilterData((prev)=>({...prev,[name]:value}))
+    setCursorFields({"lastVisible":null,"pageSize" : postsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
+    setCurrentPageLength(0)
+  }
+
   // Render pagination buttons with ellipsis style
   const renderPaginationButtons = () => {
-    const totalPages = Math.ceil(pendingPosts[activeTab].length / postsPerPage);
-    const pages = [];
-
-    // Generate pagination buttons
-    if (totalPages <= 5) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
-    } else if (currentPage <= 3) {
-      pages.push(1, 2, 3, "...", totalPages);
-    } else if (currentPage >= totalPages - 2) {
-      pages.push(1, "...", totalPages - 2, totalPages - 1, totalPages);
-    } else {
-      pages.push(
-        1,
-        "...",
-        currentPage - 1,
-        currentPage,
-        currentPage + 1,
-        "...",
-        totalPages
+    const buttons = [];
+    if (currentPageLength > 6) {
+      buttons.push(
+        <button
+          key="prev"
+          onClick={() => handlePrev()}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          <IoIosArrowBack className="w-6 h-6" />
+        </button>
       );
     }
 
-    const handleTabChange = (tab) => {
-      setActiveTab(tab);
-      setCurrentPage(1);
-    };
-
-    return (
-      <div className="flex items-center space-x-1 text-sm">
-        {/* Previous Button */}
+    if (currentPageLength < totalPages) {
+      buttons.push(
         <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-          className="w-8 h-8 flex items-center justify-center rounded-full bg-white border border-[#9B82CF] disabled:opacity-50"
+          key="next"
+          onClick={() => handleNext()}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
         >
-          &lt;
+          <IoIosArrowForward className="w-6 h-6" />
         </button>
+      );
+    }
 
-        {/* Page Buttons */}
-        {pages.map((page, index) =>
-          page === "..." ? (
-            <span
-              key={`ellipsis-${index}`}
-              className="w-8 h-8 flex items-center justify-center"
-            >
-              ...
-            </span>
-          ) : (
-            <button
-              key={`page-${page}`}
-              onClick={() => setCurrentPage(page)}
-              className={`w-8 h-8 flex items-center justify-center rounded-full ${
-                currentPage === page
-                  ? "bg-[#1F0A58] text-white"
-                  : "bg-white text-black border border-[#9B82CF]"
-              }`}
-            >
-              {page}
-            </button>
-          )
-        )}
-
-        {/* Next Button */}
-        <button
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
-          disabled={currentPage === totalPages}
-          className="w-8 h-8 flex items-center justify-center rounded-full bg-white border border-[#9B82CF] disabled:opacity-50"
-        >
-          &gt;
-        </button>
-      </div>
-    );
+    return buttons;
   };
 
-  const totalPosts =
-    pendingPosts.outreaches.length + pendingPosts.visitLogs.length;
+  const totalPosts =10
 
   return (
     <div className="relative flex flex-col items-center">
@@ -464,9 +442,9 @@ const PostApprovals = () => {
                 <input
                   type="text"
                   placeholder="Search here..."
-                  name="searchText"
+                  name="searchValue"
                   id="searchText"
-                  onChange={searchChange}
+                  onChange={handleChange}
                   ref={searchRef}
                   className="w-full h-full text-sm outline-none"
                 />
@@ -485,9 +463,10 @@ const PostApprovals = () => {
                 </label>
                 <select
                   id="sort"
+                  name="sortBy"
                   className="w-[134px] h-[40px] border border-gray-300 rounded bg-white px-3 text-sm"
                   value={sortOption}
-                  onChange={handleSortChange}
+                  onChange={handleChange}
                 >
                   <option>Most Recent</option>
                   <option>Oldest First</option>
@@ -560,7 +539,7 @@ const PostApprovals = () => {
                   }`}
                   onClick={() => handleTabChange("outreaches")}
                 >
-                  Outreaches ({pendingPosts.outreaches.length})
+                  Outreaches ({totalPages})
                 </button>
                 <button
                   className={`flex justify-center items-center px-[16px] py-[12px] w-[186.5px] h-[48px] rounded-[16px] font-medium ${
@@ -570,7 +549,7 @@ const PostApprovals = () => {
                   }`}
                   onClick={() => handleTabChange("visitLogs")}
                 >
-                  Visit Logs ({pendingPosts.visitLogs.length})
+                  Visit Logs ({pendingPosts.length})
                 </button>
               </div>
 
@@ -595,7 +574,7 @@ const PostApprovals = () => {
             <>
               {/* Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-[20px] gap-y-[30px] mt-[20px]">
-                {currentPosts.map((post) =>
+                {pendingPosts[activeTab].map((post) =>
                   activeTab === "outreaches" ? (
                     <ApprovalCardOutreachEvents
                       key={post.id}
@@ -623,8 +602,8 @@ const PostApprovals = () => {
               {/* Pagination */}
               <div className="mt-[20px] w-full flex justify-between items-center">
                 <p className="text-gray-600">
-                  Showing {indexOfFirstPost + currentPosts.length} of{" "}
-                  {pendingPosts[activeTab].length} posts.
+                  Showing {currentPageLength} of{" "}
+                  {totalPages} posts.
                 </p>
                 {renderPaginationButtons()}
               </div>
