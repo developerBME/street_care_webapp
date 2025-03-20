@@ -236,7 +236,7 @@ function Success2() {
                 label="Create an Outreach"
                 name="buttondefault"
                 onClick={() => {
-                  navigate("/profile");
+                  navigate("/createOutreach");
                 }}
               />
             </div>
@@ -258,7 +258,7 @@ function Success2() {
                 label="Create a Visit Log"
                 name="buttondefault"
                 onClick={() => {
-                  navigate("/profile");
+                  navigate("/profile/personaloutform");
                 }}
               />
             </div>
