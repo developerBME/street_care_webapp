@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import wavingHand from "../../images/waving_hand2.png";
 import HelpRequestCard from "./HelpRequestCard";
 import CustomButton from "../Buttons/CustomButton";
-import { formatDate, fetchHelpRequests } from "../HelpRequestService";
-import { Link, useNavigate } from "react-router-dom";
+import { fetchHelpRequests } from "../HelpRequestService";
+import { useNavigate } from "react-router-dom";
 import HelpRequestSkeleton from "../Skeletons/HelpRequestSkeleton";
 import arrowRight from "../../images/arrowRight.png";
 
@@ -24,7 +23,6 @@ const HelpRequest = ({ loggedIn}) => {
   const [helpRequests, setHelpRequests] = useState([]);
 
   useEffect(() => {
-
     fetchData();
   }, []);
 
