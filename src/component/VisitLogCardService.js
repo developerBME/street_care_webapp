@@ -477,7 +477,8 @@ const descriptionFilterOutreaches = (searchTerm,filterQuery)=>{
     ));
 }
 
-export const fetchPendingOutreaches=async(
+export const fetchPendingPosts=async(
+  tab,
   searchValue,
   sortBy,
   lastVisible = null,
@@ -487,26 +488,49 @@ export const fetchPendingOutreaches=async(
 )=>{
 
   let totalOutReachRef, pastOutreachRef
-  pastOutreachRef = query(
+      if(tab === "outreaches"){
+       pastOutreachRef = query(
         collection(db, "outreachEvents"),
         where("status", "==", "pending")
-      );
-  totalOutReachRef = pastOutreachRef
+       );
+      totalOutReachRef = pastOutreachRef
 
-  if(searchValue){
-    const descriptionQuery = descriptionFilterOutreaches(searchValue,totalOutReachRef)
-    totalOutReachRef = descriptionQuery
-  } 
-  
-  switch(sortBy){
-    case "Oldest First":
-      totalOutReachRef = query(totalOutReachRef,orderBy("eventDate","asc"))
-      break;
-    case "Alphabetical":
-      totalOutReachRef =query(totalOutReachRef,orderBy("title","asc"))
-      break;
-    default:
-      totalOutReachRef = query(totalOutReachRef,orderBy("eventDate","desc"))
+      if(searchValue){
+        const descriptionQuery = descriptionFilterOutreaches(searchValue,totalOutReachRef)
+        totalOutReachRef = descriptionQuery
+      } 
+      switch(sortBy){
+        case "Oldest First":
+          totalOutReachRef = query(totalOutReachRef,orderBy("eventDate","asc"))
+          break;
+        case "Alphabetical":
+          totalOutReachRef =query(totalOutReachRef,orderBy("title","asc"))
+          break;
+        default:
+          totalOutReachRef = query(totalOutReachRef,orderBy("eventDate","desc"))
+      }
+  }
+  else{
+      pastOutreachRef = query(
+        collection(db, "personalVisitLog"),
+        where("status", "==", "pending")
+      );
+    totalOutReachRef = pastOutreachRef
+
+    if(searchValue){
+      const descriptionQuery = descriptionFilter(searchValue,totalOutReachRef)
+      totalOutReachRef = descriptionQuery
+    } 
+    switch(sortBy){
+      case "Oldest First":
+        totalOutReachRef = query(totalOutReachRef,orderBy("dateTime","asc"))
+        break;
+      case "Alphabetical":
+        totalOutReachRef =query(totalOutReachRef,orderBy("description","asc"))
+        break;
+      default:
+        totalOutReachRef = query(totalOutReachRef,orderBy("dateTime","desc"))
+    }
   }
 
   pastOutreachRef = query(totalOutReachRef,limit(pageSize))
@@ -522,7 +546,7 @@ export const fetchPendingOutreaches=async(
   }
 
   let outReachData = await getDocs(pastOutreachRef);
-  const outreaches = await Promise.all(
+  const records = await Promise.all(
     outReachData.docs.map(async (doc) => {
         const post = { id: doc.id, ...doc.data() };
 
@@ -542,15 +566,16 @@ export const fetchPendingOutreaches=async(
       pageHistory.pop();
     }
     const totalRecords = await getCountFromServer(totalOutReachRef);
-    return {totalRecords:totalRecords.data().count,outreaches,lastDoc,pageHistory}
+    return {totalRecords:totalRecords.data().count,records,lastDoc,pageHistory}
 }
 
-
-
-
-
-
-
+export const fetchTotalCountOfPendingPosts = async() =>{
+  const outreachQuery = query(collection(db, "outreachEvents"),where("status", "==", "pending"));
+  const visitLogsQuery = query(collection(db,"personalVisitLog"),where("status", "==", "pending")) 
+  const outreaches = await getCountFromServer(outreachQuery)
+  const visitLogs = await getCountFromServer(visitLogsQuery)
+  return {outreachCount : outreaches.data().count,visitLogCount : visitLogs.data().count}
+}
 
 
 
