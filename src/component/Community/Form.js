@@ -677,13 +677,13 @@ const Form = (hrid) => {
     }
 
     if (!startDate) {
-      updateErrorState("stimeError", "Start DateTime is required");
+      updateErrorState("stimeError", "Start Date-Time is required");
     } else {
       updateErrorState("stimeError", "");
     }
 
     if (!endDate) {
-      updateErrorState("etimeError", "End DateTime is required");
+      updateErrorState("etimeError", "End Date-Time is required");
     } else {
       updateErrorState("etimeError", "");
     }
@@ -1048,7 +1048,7 @@ const Form = (hrid) => {
               </div>
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
-                  Zipcode
+                  ZIP Code
                 </p>
                 <input
                   type="text"
@@ -1256,7 +1256,7 @@ const Form = (hrid) => {
             <div className="grid grid-cols-2 space-x-4">
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
-                  Start DateTime*
+                  Start Date-Time*
                 </p>
                 <DatePicker
                   selected={startDate}
@@ -1291,7 +1291,7 @@ const Form = (hrid) => {
               </div>
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
-                  End DateTime*
+                  End Date-Time*
                 </p>
                 <DatePicker
                   selected={endDate}
