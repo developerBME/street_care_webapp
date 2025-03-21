@@ -1,11 +1,11 @@
-const branch = process.env.REACT_APP_VERCEL_GIT_COMMIT_REF || 'dev';
+const branch = process.env.REACT_APP_VERCEL_GIT_COMMIT_REF || 'main';
 
 const COLLECTIONS = {
   main: {
     users: process.env.REACT_APP_USERS_COLLECTION,
     bannedUser: process.env.REACT_APP_BANNED_USER_COLLECTION,
     adminUsers: process.env.REACT_APP_ADMIN_USER_COLLECTION,
-    outreactEvents: process.env.REACT_APP_MAIN_OUTREACH_EVENTS_COLLECTION,
+    outreachEvents: process.env.REACT_APP_MAIN_OUTREACH_EVENTS_COLLECTION,
     visitLogs: process.env.REACT_APP_MAIN_VISIT_LOG_COLLECTION,
     bmeEvents: process.env.REACT_APP_BMEEVENTS_COLLECTION,
     helpRequests: process.env.REACT_APP_HELP_REQUESTS_COLLECTION,
