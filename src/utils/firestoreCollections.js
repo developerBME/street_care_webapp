@@ -1,4 +1,4 @@
-const branch = process.env.REACT_APP_VERCEL_GIT_COMMIT_REF || 'main';
+const branch = process.env.REACT_APP_VERCEL_GIT_COMMIT_REF || 'dev';
 
 const COLLECTIONS = {
   main: {
