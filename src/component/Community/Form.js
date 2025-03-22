@@ -23,7 +23,6 @@ import {
 } from "../helper/validator";
 import { UpdateDisabledRounded } from "@mui/icons-material";
 import CreateOutreachModal from "./CreateOutreachModal";
-import { fetchHelpReqById } from "../HelpRequestService";
 import { emailConfirmation } from "../EmailService";
 import { Link } from "react-router-dom";
 import { fetchUserTypeDetails } from "../EventCardService";
@@ -217,22 +216,6 @@ const Form = (hrid) => {
   }
   const [shouldSubmit, setShouldSubmit] = useState(false);
 
-  useEffect(() => {
-    if (hrid.hrid) {
-      setHelpBool(true);
-      const getHelpDetails = async () => {
-        try {
-          const helpData = await fetchHelpReqById(hrid.hrid);
-          setHelpDetails(helpData);
-        } catch (e) {
-          setHelpReqError(true);
-        }
-      };
-      getHelpDetails();
-    } else {
-      setHelpBool(false);
-    }
-  }, [hrid.hrid]);
 
   useEffect(() => {
     if (helpDetails.title) {
@@ -301,7 +284,6 @@ const Form = (hrid) => {
             interests: 0,
             participants: [],
             status: statusValue,
-            helpRequest: isHelpReqFlow ? [hrid.hrid] : [],
             consentStatus: consentStatus,
 
           };
@@ -333,17 +315,6 @@ const Form = (hrid) => {
             createdOutreaches: createdOutreaches,
           });
 
-          // check if flow comes from help request
-          if (isHelpReqFlow) {
-            const helpRequestRef = doc(db, "helpRequests", hrid.hrid);
-            const helpData = await fetchHelpReqById(hrid.hrid);
-            let outreachEvent = helpData.outreachEvent || [];
-            outreachEvent.push(ack);
-            const updateRef = await updateDoc(helpRequestRef, {
-              status: "Help on the way",
-              outreachEvent: outreachEvent,
-            });
-          }
 
           const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px"><h1>Thank you for creating the outreach</h1><p>Your outreach <b>${nameRef.current.value}</b> has been successfully created and you can view it in your profile.</p>
           <p>Here are some of the details:</p>
