@@ -181,11 +181,17 @@ function PersonalOutForm() {
     console.log("Selected date:", date);
   };
 
+  const handleStreetChange = (e) => {
+    setStreet(e.target.value);
+    updateErrorState("cityError", "");
+  };
+
   const handleCityChange = (e) => {
     setCityName(e.target.value);
     updateErrorState("cityError", "");
   };
   const handleStateChange = (e) => {
+    setStateName(e.target.value);
     updateErrorState("stateError", "");
   };
   const handleZipChange = (e) => {
@@ -1189,6 +1195,7 @@ function PersonalOutForm() {
                             id="street-address"
                             name="street-address"
                             value={street}
+                            onChange={handleStreetChange}
                           />
                           {error.streetError && (
                             <div className="inline-flex items-center">
