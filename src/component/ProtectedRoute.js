@@ -5,8 +5,7 @@ import { Navigate, Outlet } from "react-router-dom";
 // import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export const ProtectedRoute = ({ user, loading }) => {
-  console.log(user);
-  console.log(loading);
+
 
   if (loading) return null;
 

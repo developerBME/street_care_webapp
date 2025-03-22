@@ -24,7 +24,7 @@ const NoOutreachDoc = ({ isPersonalVisitLog }) => {
                     label="Document Personal Visit Log"
                     name="buttondefault"
                     onClick={() => {
-                    navigate("/profile/visitlogform");
+                    navigate("/profile/personaloutform");
                     window.scrollTo(0, 0);
                     }}
                 />
