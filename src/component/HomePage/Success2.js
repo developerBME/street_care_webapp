@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 // import { db } from "../firebase";
 // import { useNavigate } from "react-router-dom";
 // import { fetchVisitLogs } from "../VisitLogCardService";
-import HomePageVisitlog from "../HomePage/HomePageVisitlog";
 
 function Success2() {
   const navigate = useNavigate();
