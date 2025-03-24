@@ -4,6 +4,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import FAQs from "./HomePage/FAQs2";
 import Success2 from "./HomePage/Success2";
+import HomePageVisitlog from "./HomePage/HomePageVisitlog";
 import Landing from "./HomePage/Landing";
 import News from "./HomePage/News";
 import Map from "./HomePage/Map";
@@ -23,11 +24,16 @@ import OutreachSignupModal from "./Community/OutreachSignupModal";
 import RSVPConfirmationModal from "./UserProfile/RSVPConfirmationModal";
 import PastOutreachEvents from "./PastOutreachEvents";
 import UpcomingOutreachEvents from "./UpcomingOutreachEvents";
+import { fetchPaginatedPastOutreachEvents } from "./EventCardService";
 
 function HomePage() {
   const navigate = useNavigate();
   const fAuth = getAuth();
   const [loggedIn, setLoggedIn] = useState(false);
+  
+  const [pastEvents, setPastEvents] = useState([]);
+  const [isPastLoading, setIsPastLoading] = useState(true);
+  const [isPastError, setIsPastError] = useState(false);
 
   onAuthStateChanged(fAuth, (user) => {
     if (user) {
@@ -263,20 +269,34 @@ function HomePage() {
         .slice(0, 3)
     : [];
 
-  // Filter events to get only past events
-  const pastEvents = events
-    ? events
-        .filter((event) => {
-          const eventDate =
-            new Date(event.eventDate?.seconds * 1000) || event.eventDate;
-          return eventDate < new Date(); // Check if the event date is before the current date
-        })
-        .slice(0, 3)
-    : [];
+  useEffect(() => {
+    const getPastEvents = async () => {
+      setIsPastLoading(true);
+      try {
+        const { fetchedEvents } = await fetchPaginatedPastOutreachEvents(
+          "",
+          new Date("2000-01-01"),
+          new Date(),
+          "",
+          null,
+          3,
+          "next",
+          []
+        );
+        setPastEvents(fetchedEvents);
+      } catch (error) {
+        console.error("Error fetching past outreach events:", error);
+        setIsPastError(true);
+      }
+      setIsPastLoading(false);
+    };
+  
+    getPastEvents();
+  }, []);
 
   useEffect(() => {
-    document.title = "Home - Street Care";
-  }, []);
+    console.log("Fetched Events:", events);
+  }, [events]);  
  
   return (
     <div className="relative flex flex-col items-center ">
@@ -299,12 +319,14 @@ function HomePage() {
 
       {/* Past Outreach Events */}
       <PastOutreachEvents
-        events={events}
-        isLoading={isLoading}
-        isError={isError.events}
+        events={pastEvents}
+        isLoading={isPastLoading}
+        isError={isPastError}
       />
 
-      
+      <div className="mt-16 w-full md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 rounded-2xl bg-[#F7F7F7] text-black px-4 py-8 lg:px-24 lg:py-24">
+        <HomePageVisitlog />
+      </div>
 
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8  rounded-2xl bg-white text-black ">
         <Process2 />

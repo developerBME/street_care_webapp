@@ -181,11 +181,17 @@ function PersonalOutForm() {
     console.log("Selected date:", date);
   };
 
+  const handleStreetChange = (e) => {
+    setStreet(e.target.value);
+    updateErrorState("cityError", "");
+  };
+
   const handleCityChange = (e) => {
     setCityName(e.target.value);
     updateErrorState("cityError", "");
   };
   const handleStateChange = (e) => {
+    setStateName(e.target.value);
     updateErrorState("stateError", "");
   };
   const handleZipChange = (e) => {
@@ -386,7 +392,7 @@ function PersonalOutForm() {
     }
 
     if (!zipcodeRef.current.value) {
-      updateErrorState("zipError", "Zipcode is required");
+      updateErrorState("zipError", "ZIP Code is required");
       setReturn = true;
     } else {
       try {
@@ -1189,6 +1195,7 @@ function PersonalOutForm() {
                             id="street-address"
                             name="street-address"
                             value={street}
+                            onChange={handleStreetChange}
                           />
                           {error.streetError && (
                             <div className="inline-flex items-center">
@@ -1254,7 +1261,7 @@ function PersonalOutForm() {
                         </div>
                         <div className="space-y-1.5">
                           <p className="font-semibold font-['Inter'] text-[15px]">
-                            Zipcode*
+                            ZIP Code*
                           </p>
                           <input
                             type="text"

@@ -4,7 +4,7 @@ import arrowRight from "../../images/arrowRight.png";
 import OutreachVisitLogCard from "../Community/OutreachVisitLogCard";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import {
-  fetchTopVisitLogs,
+  fetchHomeVisitLogs,
   fetchPublicVisitLogs,
 } from "../VisitLogCardService";
 import ErrorMessage from "../ErrorMessage";
@@ -68,7 +68,7 @@ const HomePageVisitlog = () => {
       setIsLoading(true);
       setIsError(false);
       try {
-        const visitLogsData = await fetchPublicVisitLogs();
+        const visitLogsData = await fetchHomeVisitLogs();
         setVisitLogs(visitLogsData);
       } catch (error) {
         console.error("Error fetching visit logs:", error);

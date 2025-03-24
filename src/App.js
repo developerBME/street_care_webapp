@@ -28,8 +28,6 @@ import {
  import Documenting from "./component/UserProfile/Documenting";
  import AccSetting from "./component/UserProfile/AccSetting";
  import OutreachSignup from "./component/Community/OutreachSignup";
- import HelpRequestForm from "./component/Community/HelpRequstForm";
- import HelpRequestEventWindow from "./component/Community/HelpRequestEventWindow";
  import DonateForm from "./component/Donate/DonateForm";
  import AllOutreachEvents from "./component/AllOutreachEvents";
  import AllPastOutreachEvents from "./component/AllPastOutreachEvents";
@@ -40,7 +38,6 @@ import {
  import Newscard from "./component/HomePage/Newscard";
  import ComingSoon from "./component/ComingSoon";
  import Readmorenews from "./component/HomePage/Readmorenews";
- import ICanHelpForm from "./component/Community/ICanHelpForm";
  import CommunityComingSoon from "./component/CommunityComingSoon";
  import VisitLogDetails from "./component/Community/VisitLogDetails";
  import Temp_Profile from "./component/Temp_Profile";
@@ -51,7 +48,6 @@ import {
  
  
  import SampleForm from "./component/Sample_form";
- import AllHelpRequests from "./component/AllHelpRequests";
  import ProfileSettings from "./component/UserProfile/ProfileSettings";
  import UpdateEmailAddress from "./component/UserProfile/ProfileSettings/UpdateEmailAddress";
  import DeleteAccount from "./component/UserProfile/ProfileSettings/DeleteAccount";
@@ -212,8 +208,6 @@ import {
  
             <Route path="/createOutreach" element={<CreateOutreach />} />
  
- 
-            <Route path="/helpRequestForm" element={<HelpRequestForm />} />
           </Route>
           <Route
             path="/profile/profilesettings/deleteaccconfirmation"
@@ -223,13 +217,8 @@ import {
           {/* <Route path="/profile/commoutform" element={<ComingSoon />} /> */}
           <Route path="/outreachsignup" element={<OutreachSignup />} />
           <Route path="/outreachsignup/:id" element={<OutreachSignup />} />
-          <Route
-            path="/helpRequestEventWindow"
-            element={<HelpRequestEventWindow />}
-          />
           {/* <Route path="/helpRequestEventWindow" element={<ComingSoon />} /> */}
           {/* <Route path="/helpRequestForm" element={<ComingSoon />} /> */}
-          <Route path="/community/icanhelp/:id" element={<ICanHelpForm />} />
           {/* <Route path="/icanhelp" element={<ComingSoon />} /> */}
           {/* <Route path="/donateForm" element={<DonateForm />} /> */}
           <Route path="/donateForm" element={<ComingSoon />} />
@@ -272,14 +261,6 @@ import {
           />
           <Route path="/*" element={<Not404 />} />
           <Route path="/temp_profile" element={<Temp_Profile />} />
-          <Route
-            path="/community/allHelpRequests"
-            element={<AllHelpRequests />}
-          />
-          <Route
-            path="/community/allHelpRequests"
-            element={<AllHelpRequests />}
-          />
           <Route path="/test" element={<TestUser />} />
           <Route path="/list" element={<ListUser />} />
           <Route

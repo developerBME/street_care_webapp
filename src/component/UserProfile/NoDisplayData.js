@@ -54,7 +54,7 @@ function NoDisplayData({name,label}){
                         label="Document visit logs"
                         name="buttondefault"
                         onClick={() => {
-                            navigate("/profile/visitlogform");
+                            navigate("/profile/personaloutform");
                         }}
                     />
                     <CustomButton 
