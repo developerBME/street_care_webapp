@@ -1,5 +1,3 @@
-const branch = process.env.REACT_APP_VERCEL_GIT_COMMIT_REF || 'dev';
-
 const COLLECTIONS = {
   main: {
     users: process.env.REACT_APP_USERS_COLLECTION,
@@ -31,8 +29,10 @@ const COLLECTIONS = {
   },
 };
 
+const env = process.env.REACT_APP_ENV || 'main';
+
 // Determine the collections based on the branch
-const collectionMapping = branch === 'main' ? COLLECTIONS.main : COLLECTIONS.development;
+const collectionMapping = env === 'main' ? COLLECTIONS.main : COLLECTIONS.development;
 
 // Export the collections
 export default collectionMapping;
