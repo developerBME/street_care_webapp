@@ -4,6 +4,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import FAQs from "./HomePage/FAQs2";
 import Success2 from "./HomePage/Success2";
+import HomePageVisitlog from "./HomePage/HomePageVisitlog";
 import Landing from "./HomePage/Landing";
 import News from "./HomePage/News";
 import Map from "./HomePage/Map";
@@ -323,7 +324,9 @@ function HomePage() {
         isError={isPastError}
       />
 
-      
+      <div className="mt-16 w-full md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 rounded-2xl bg-[#F7F7F7] text-black px-4 py-8 lg:px-24 lg:py-24">
+        <HomePageVisitlog />
+      </div>
 
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8  rounded-2xl bg-white text-black ">
         <Process2 />

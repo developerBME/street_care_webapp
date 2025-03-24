@@ -392,7 +392,7 @@ function PersonalOutForm() {
     }
 
     if (!zipcodeRef.current.value) {
-      updateErrorState("zipError", "Zipcode is required");
+      updateErrorState("zipError", "ZIP Code is required");
       setReturn = true;
     } else {
       try {
@@ -1261,7 +1261,7 @@ function PersonalOutForm() {
                         </div>
                         <div className="space-y-1.5">
                           <p className="font-semibold font-['Inter'] text-[15px]">
-                            Zipcode*
+                            ZIP Code*
                           </p>
                           <input
                             type="text"

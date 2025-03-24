@@ -15,16 +15,16 @@ module.exports = {
         let monthNumber = new Date(Date.parse(month + ' 1, 2000')).getMonth() + 1;
     
         // Adjust hours if it's PM
-        if (ampm === 'PM' && hours < 12) {
-            hours += 12;
-        }
+        //if (ampm === 'PM' && hours < 12) {
+        //    hours += 12;
+        //}
     
         // Format the date as MM/DD/YYYY hh:mm
         let formattedDate = monthNumber.toString().padStart(2, '0') + '/' +
                             day.toString().padStart(2, '0') + '/' +
                             year + ' ' +
                             hours.toString().padStart(2, '0') + ':' +
-                            minutes.toString().padStart(2, '0');
+                            minutes.toString().padStart(2, '0') + ampm.toString();
     
         return formattedDate;
     }

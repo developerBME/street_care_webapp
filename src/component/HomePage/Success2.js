@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 // import { db } from "../firebase";
 // import { useNavigate } from "react-router-dom";
 // import { fetchVisitLogs } from "../VisitLogCardService";
-import HomePageVisitlog from "../HomePage/HomePageVisitlog";
 
 function Success2() {
   const navigate = useNavigate();
@@ -264,10 +263,6 @@ function Success2() {
             </div>
           </div>
         </div>
-      </div>
-
-      <div className=" mt-16 w-full  justify-start items-start">
-        <HomePageVisitlog />
       </div>
     </div>
   );

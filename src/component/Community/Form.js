@@ -141,6 +141,7 @@ const Form = (hrid) => {
   const [success, setSuccess] = useState(false);
   const nameRef = useRef("");
   const contactRef = useRef("");
+  const emailRef = useRef("");
   const descRef = useRef("");
   const maxCapRef = useRef("");
   const streetRef = useRef("");
@@ -165,6 +166,7 @@ const Form = (hrid) => {
   const [error, setError] = useState({
     nameError: "",
     contactError: "",
+    emailError: "",
     streetError: "",
     cityError: "",
     stateError: "",
@@ -196,6 +198,7 @@ const Form = (hrid) => {
     stateRef.current.value = "";
     nameRef.current.value = "";
     contactRef.current.value = "";
+    emailRef.current.value = "";
     descRef.current.value = "";
     maxCapRef.current.value = "";
     streetRef.current.value = "";
@@ -266,6 +269,7 @@ const Form = (hrid) => {
             uid: fAuth.currentUser.uid,
             title: nameRef.current.value,
             contactNumber: contactRef.current.value || "N/A",
+            emailAddress: emailRef.current.value || "N/A",
             description: descRef.current.value,
             eventDate: Timestamp.fromDate(startDate),
             eventEndTime: Timestamp.fromDate(endDate),
@@ -405,6 +409,9 @@ const Form = (hrid) => {
   };
   const contactNumberChange = (e) => {
     updateErrorState("contactError", "");
+  };
+  const emailChange = (e) => {
+    //updateErrorState("emailError", "");
   };
   const handleStreetChange = (e) => {
     setStreet(e.target.value);
@@ -648,13 +655,13 @@ const Form = (hrid) => {
     }
 
     if (!startDate) {
-      updateErrorState("stimeError", "Start DateTime is required");
+      updateErrorState("stimeError", "Start Date-Time is required");
     } else {
       updateErrorState("stimeError", "");
     }
 
     if (!endDate) {
-      updateErrorState("etimeError", "End DateTime is required");
+      updateErrorState("etimeError", "End Date-Time is required");
     } else {
       updateErrorState("etimeError", "");
     }
@@ -833,7 +840,7 @@ const Form = (hrid) => {
                 className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset  ${
                   error.nameError !== "" ? "ring-red-500" : "ring-gray-300"
                 }`}
-                placeholder="Use Location by default for group meetup"
+                placeholder="Enter the Event Name here"
                 id="event-name"
                 disabled={helpBool}
                 ref={nameRef}
@@ -856,7 +863,7 @@ const Form = (hrid) => {
                 className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset  ${
                   error.contactError !== "" ? "ring-red-500" : "ring-gray-300"
                 }`}
-                placeholder="Use Location by default for group meetup"
+                placeholder="Enter your Contact Number here"
                 id="event-contact"
                 disabled={helpBool}
                 ref={contactRef}
@@ -870,6 +877,23 @@ const Form = (hrid) => {
                   </p>
                 </div>
               )}
+            </div>
+
+            <div className="space-y-1.5">
+              <p className="font-semibold font-['Inter'] text-[15px]">
+                Email Address
+              </p>
+              <input
+                type="text"
+                className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset  ${
+                  error.emailError !== "" ? "ring-red-500" : "ring-gray-300"
+                }`}
+                placeholder="Enter your Email Address here"
+                id="event-email"
+                disabled={helpBool}
+                ref={emailRef}
+                onChange={emailChange}
+              />
             </div>
 
             <div className="space-y-1.5">
@@ -1019,7 +1043,7 @@ const Form = (hrid) => {
               </div>
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
-                  Zipcode
+                  ZIP Code
                 </p>
                 <input
                   type="text"
@@ -1227,7 +1251,7 @@ const Form = (hrid) => {
             <div className="grid grid-cols-2 space-x-4">
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
-                  Start DateTime*
+                  Start Date-Time*
                 </p>
                 <DatePicker
                   selected={startDate}
@@ -1262,7 +1286,7 @@ const Form = (hrid) => {
               </div>
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
-                  End DateTime*
+                  End Date-Time*
                 </p>
                 <DatePicker
                   selected={endDate}
