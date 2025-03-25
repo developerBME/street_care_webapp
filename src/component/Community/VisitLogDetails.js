@@ -18,6 +18,10 @@ import { db } from "../firebase";
 import flagIcon from "../../images/flag.svg";
 import { useUserContext } from "../../context/Usercontext.js";
 
+import collectionMapping from "../../utils/firestoreCollections.js";
+
+const visitLogs_collection = collectionMapping.visitLogs;
+const users_collection = collectionMapping.users;
 
 const VisitLogDetails = () => {
   const navigate = useNavigate();
@@ -25,8 +29,7 @@ const VisitLogDetails = () => {
   const { id } = useParams();
   const [data, setData] = useState(null);
 
-  const PERSONAL_VISIT_LOG_COLLECTION = "personalVisitLog";
-const USERS_COLLECTION = "users";
+
 
 const { user } = useUserContext();
 const [isFlagged, setIsFlagged] = useState(false);
@@ -35,7 +38,7 @@ useEffect(() => {
   if (id) {
     const fetchFlagStatus = async () => {
       try {
-        const docRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, id);
+        const docRef = doc(db, visitLogs_collection, id);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           setIsFlagged(docSnap.data().isFlagged || false);
@@ -56,7 +59,7 @@ const handleFlag = async (e) => {
   }
   try {
     // Get the user document to check the user type
-    const userRef = doc(db, USERS_COLLECTION, user.uid);
+    const userRef = doc(db, users_collection, user.uid);
     const userDoc = await getDoc(userRef);
     if (!userDoc.exists()) {
       console.error("User document does not exist");
@@ -65,7 +68,7 @@ const handleFlag = async (e) => {
     const { Type: userType } = userDoc.data();
     
     // Get the visit log document
-    const docRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, id);
+    const docRef = doc(db, visitLogs_collection, id);
     const docSnap = await getDoc(docRef);
     if (!docSnap.exists()) {
       console.error("Document does not exist");

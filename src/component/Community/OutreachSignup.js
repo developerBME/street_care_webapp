@@ -38,9 +38,10 @@ import { getAuth } from "firebase/auth";
 import { isPast } from "date-fns";
 import flagSvg from "../../images/flag.svg"; // Flag icon
 import { useUserContext } from "../../context/Usercontext.js";
+import collectionMapping from "../../utils/firestoreCollections.js";
 
-
-const USERS_COLLECTION = "users";
+const users_collection = collectionMapping.users;
+const outreachEvents_collection = collectionMapping.outreachEvents;
 
 const OutreachSignup = () => {
   const navigate = useNavigate();
@@ -97,7 +98,7 @@ const [isFlagged, setIsFlagged] = useState(false);
           console.error("Invalid id:", id);
           return;
         }
-        const docRef = doc(db, "outreachEvents", id);
+        const docRef = doc(db, outreachEvents_collection, id);
         const currentDoc = await getDoc(docRef);
         if (currentDoc.exists()) {
           const { isFlagged } = currentDoc.data();
@@ -124,14 +125,14 @@ const [isFlagged, setIsFlagged] = useState(false);
         console.error("Invalid id:", id);
         return;
       }
-      const userRef = doc(db, USERS_COLLECTION, fAuth.currentUser.uid);
+      const userRef = doc(db, users_collection, fAuth.currentUser.uid);
       const userDoc = await getDoc(userRef);
       if (!userDoc.exists()) {
         console.error("User document does not exist:", fAuth.currentUser.uid);
         return;
       }
       const { Type: userType } = userDoc.data();
-      const docRef = doc(db, "outreachEvents", id);
+      const docRef = doc(db, outreachEvents_collection, id);
       const currentDoc = await getDoc(docRef);
       if (!currentDoc.exists()) {
         console.error("Outreach document does not exist:", id);
@@ -231,10 +232,10 @@ const [isFlagged, setIsFlagged] = useState(false);
 
   const deleteVisitLog = async () => {
     try {
-      const visitLogDoc = doc(db, "outreachEvents", id);
+      const visitLogDoc = doc(db, outreachEvents_collection, id);
 
       const userQuery = query(
-        collection(db, USERS_COLLECTION),
+        collection(db, users_collection),
         where("uid", "==", fAuth?.currentUser?.uid)
       );
 
@@ -242,7 +243,7 @@ const [isFlagged, setIsFlagged] = useState(false);
 
       const userDocID = userDocRef.docs[0].id;
       // reference for the userdoc
-      const userRef = doc(db, USERS_COLLECTION, userDocID);
+      const userRef = doc(db, users_collection, userDocID);
       // outreach event collection
       const docSnap = await getDoc(userRef);
       let personalVisitLogs = docSnap.data().personalVisitLogs || [];
