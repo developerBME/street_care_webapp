@@ -59,7 +59,7 @@ export function formatDate(dateObj) {
     "Nov",
     "Dec",
   ];
-  const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   const month = monthNames[dateObj.getMonth()];
   const day = dateObj.getDate();
