@@ -3,7 +3,7 @@ import OutreachEventCard from "./OutreachEventCard";
 import { useNavigate } from "react-router-dom";
 import arrowRight from "../../images/arrowRight.png";
 import CustomButton from "../Buttons/CustomButton";
-import { fetchEvents } from "../EventCardService";
+import { fetchEvents, fetchPaginatedEvents } from "../EventCardService";
 import { fetchVisitLogs } from "../VisitLogCardService";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import { formatDate } from "./../HelperFunction";
@@ -25,24 +25,33 @@ const CommunityOutreachEvent = ({ loggedIn}) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const eventsData = await fetchEvents();
+      const eventsData = await fetchPaginatedEvents(
+        "",
+                new Date(),
+                "",
+                "",
+                null,
+                3,
+                "next",
+                []
+      );
       
 
       // Filter events to get only upcoming events
-      const upcomingEvents = eventsData.filter((event) => {
-        const eventDate = new Date(event.eventDate?.seconds * 1000) || event.eventDate;
-        return eventDate >= new Date(); // Check if the event date is after the current date
-      });
+      // const upcomingEvents = eventsData.filter((event) => {
+      //   const eventDate = new Date(event.eventDate?.seconds * 1000) || event.eventDate;
+      //   return eventDate >= new Date(); // Check if the event date is after the current date
+      // });
 
       // Sort events based on their date
-      upcomingEvents.sort((a, b) => a.eventDate - b.eventDate);
+      // upcomingEvents.sort((a, b) => a.eventDate - b.eventDate);
 
-      setEvents(upcomingEvents);
+      setEvents(eventsData.events);
       // Extract states and remove duplicates
-      const extractedStates = [
-        ...new Set(upcomingEvents.map((event) => event.location.state)),
-      ];
-      setStates(extractedStates);
+      // const extractedStates = [
+      //   ...new Set(upcomingEvents.map((event) => event.location.state)),
+      // ];
+      // setStates(extractedStates);
     };
 
     fetchData();
@@ -112,7 +121,7 @@ const CommunityOutreachEvent = ({ loggedIn}) => {
           ) : (
             <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
               {selectedState === ""
-                ? eventsDisplay.map((eventData) => (
+                ? events.map((eventData) => (
                     <OutreachEventCard
                       key={eventData.id}
                       cardData={{

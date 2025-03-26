@@ -8,6 +8,10 @@ import { useNavigate } from "react-router-dom";
 // import { db } from "../firebase";
 // import { useNavigate } from "react-router-dom";
 // import { fetchVisitLogs } from "../VisitLogCardService";
+import HomePageVisitlog from "../HomePage/HomePageVisitlog";
+import collectionMapping from "../../utils/firestoreCollections";
+
+const visitLogs_collection = collectionMapping.visitLogs;
 
 function Success2() {
   const navigate = useNavigate();
@@ -21,7 +25,7 @@ function Success2() {
   // useEffect(() => {
   //   const getValues = async () => {
   //     try {
-  //       const logOfUserRef = query(collection(db, "personalVisitLog"));
+  //       const logOfUserRef = query(collection(db, vistiLogs_collection));
   //       const data = await getDocs(logOfUserRef);
   //       let totalDonations = 0;
   //       let totalHelpedPeople = 0;

@@ -11,6 +11,10 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { db } from "../firebase";
+
+import collectionMapping from "../../utils/firestoreCollections";
+
+const users_collection = collectionMapping.users;
 const chipList = [
   "Childcare",
   "Clothing",
@@ -58,12 +62,12 @@ const SuperpowerModal = ({
     e.preventDefault();
     try {
       const userQuery = query(
-        collection(db, "users"),
+        collection(db, users_collection),
         where("uid", "==", fAuth?.currentUser?.uid)
       );
       const userDocRef = await getDocs(userQuery);
       const userDocID = userDocRef.docs[0].id;
-      const userDocUpdate = doc(db, "users", userDocID);
+      const userDocUpdate = doc(db, users_collection, userDocID);
       const updateRef = await updateDoc(userDocUpdate, {
         superpowers: superpowers,
       });

@@ -20,7 +20,9 @@ import defaultImage from "../../images/default_avatar.svg";
 import Avatar from "@mui/material/Avatar";
 import edit from "../../images/edit.png";
 
-const USERS_COLLECTION = "users";
+import collectionMapping from "../../utils/firestoreCollections";
+
+const users_collection = collectionMapping.users;
 
 async function uploadProfileImage(
   file,
@@ -39,12 +41,12 @@ async function uploadProfileImage(
     const photoUrl = await getDownloadURL(fileRef);
 
     const userQuery = query(
-      collection(db, USERS_COLLECTION),
+      collection(db, users_collection),
       where("uid", "==", fAuth.currentUser.uid)
     );
     const userDocRef = await getDocs(userQuery);
     const userDocID = userDocRef.docs[0].id;
-    const userRef = doc(db, USERS_COLLECTION, userDocID);
+    const userRef = doc(db, users_collection, userDocID);
     await updateDoc(userRef, {
       photoUrl: photoUrl,
     });
@@ -79,7 +81,7 @@ function AccSetting() {
   const getUserData = async () => {
     try {
       const userRef = query(
-        collection(db, "users"),
+        collection(db, users_collection),
         where("uid", "==", fAuth?.currentUser?.uid)
       );
       const data = await getDocs(userRef);
@@ -154,12 +156,12 @@ function AccSetting() {
     } else if (username.current.value !== "") {
       setUsernameError("");
       const userQuery = query(
-        collection(db, USERS_COLLECTION),
+        collection(db, users_collection),
         where("uid", "==", fAuth.currentUser.uid)
       );
       const userDocRef = await getDocs(userQuery);
       const userDocID = userDocRef.docs[0].id;
-      const userRef = doc(db, USERS_COLLECTION, userDocID);
+      const userRef = doc(db, users_collection, userDocID);
       await updateDoc(userRef, {
         username: username.current.value,
       });

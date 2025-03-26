@@ -1,12 +1,13 @@
   import { collection, getDocs } from 'firebase/firestore';
   import { db } from "../firebase";
   import logEvent from '../FirebaseLogger';
-  
-  const USERS_COLLECTION = "users";
+  import collectionMapping from '../../utils/firestoreCollections';
 
+  const users_collection = collectionMapping.users;
+  
   export const fetchAllUsers = async () => {
     try {
-        const usersRef = collection(db, USERS_COLLECTION);
+        const usersRef = collection(db, users_collection);
         const userSnapshot = await getDocs(usersRef);
         const userList = userSnapshot.docs.map(doc => ({
             docId: doc.id,

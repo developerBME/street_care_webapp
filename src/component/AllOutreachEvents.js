@@ -18,6 +18,9 @@ import {
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { fetchPaginatedEvents } from "./EventCardService.js";
+import collectionMapping from "../utils/firestoreCollections.js";
+
+const outreachEvents_collection = collectionMapping.outreachEvents;
 
 const AllOutreachEvents = ({ loggedIn }) => {
   const navigate = useNavigate();
@@ -101,7 +104,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
         let countQuery;
         if (filterOption === "city" && debouncedCityToSearch.trim() !== "") {
           countQuery = query(
-            collection(db, "outreachEvents"),
+            collection(db, outreachEvents_collection),
             where("status", "==", "approved"),
             where("location.city", "==", debouncedCityToSearch),
             where("eventDate", ">=", new Date()),
@@ -109,7 +112,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
           );
         } else if (filterOption === "datePeriod") {
           countQuery = query(
-            collection(db, "outreachEvents"),
+            collection(db, outreachEvents_collection),
             where("status", "==", "approved"),
             where("eventDate", ">=", startDate),
             where("eventDate", "<=", endDate),
@@ -117,7 +120,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
           );
         } else {
           countQuery = query(
-            collection(db, "outreachEvents"),
+            collection(db, outreachEvents_collection),
             where("status", "==", "approved"),
             where("eventDate", ">=", new Date()),
             orderBy("eventDate", "asc")

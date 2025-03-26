@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import OutreachEventCard from "../Community/OutreachEventCard";
 import { useNavigate } from "react-router-dom";
 import arrowRight from "../../images/arrowRight.png";
-import { fetchEvents } from "../EventCardService";
+import { fetchEvents, fetchPaginatedEvents } from "../EventCardService";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import { formatDate } from "./../HelperFunction";
 
@@ -68,18 +68,29 @@ const EventOutrachesSection = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const eventsData = await fetchEvents();
+            const eventsData = await fetchPaginatedEvents(
+                "",
+                new Date(),
+                "",
+                "",
+                null,
+                3,
+                "next",
+                []
+                );
+
+            // console.log("Events Data:", eventsData);
             // const visitLogsData = await fetchVisitLogs();
             // setVisitLogs(visitLogsData);
             // Filter events to get only past events
-            const upcomingEvents = eventsData.filter((event) => {
-                const eventDate = new Date(event?.eventDate?.seconds * 1000);
-                return eventDate <= new Date(); // Check if the event date is before the current date
-            });
+            // const upcomingEvents = eventsData.filter((event) => {
+            //     const eventDate = new Date(event?.eventDate?.seconds * 1000);
+            //     return eventDate <= new Date(); // Check if the event date is before the current date
+            // });
             // Sort events in place based on their date
-            upcomingEvents.sort((a, b) => a.eventDate - b.eventDate);
+            // upcomingEvents.sort((a, b) => a.eventDate - b.eventDate);
 
-            setEvents(upcomingEvents);
+            setEvents(eventsData.events);
             // Extract states and remove duplicates
             // const extractedStates = [
             //     ...new Set(upcomingEvents.map((event) => event.location.state)),
@@ -174,14 +185,14 @@ const EventOutrachesSection = () => {
                             // <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
                             <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
                                 {selectedState === ""
-                                    ? upcomingEvents.map((eventData) => (
+                                    ? events.map((eventData) => (
                                         <OutreachEventCard
                                             key={eventData.id}
                                             cardData={{
                                                 ...eventData,
-                                                eventDate: formatDate(
-                                                    new Date(eventData.eventDate.seconds * 1000)
-                                                ),
+                                                eventDate: eventData.eventDate?.seconds
+                                                ? formatDate(new Date(eventData.eventDate.seconds * 1000))
+                                                : eventData.eventDate,
                                             }}
                                         />
                                     ))

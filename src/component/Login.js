@@ -37,6 +37,10 @@ import {
   where
 } from "firebase/firestore";
 
+import collectionMapping from "../utils/firestoreCollections";
+
+const bannedUser_collection = collectionMapping.bannedUser;
+
 function Login() {
   const navigate = useNavigate();
 
@@ -103,7 +107,7 @@ function Login() {
 
     try {
       const userQuery = query(
-        collection(db, 'bannedUser'),
+        collection(db, bannedUser_collection),
         where("email", "==", email)
       );
       const querySnapshot = await getDocs(userQuery);

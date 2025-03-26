@@ -19,6 +19,12 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import SuperpowerModal from "./SuperpowerModal";
 import CustomButton from "../Buttons/CustomButton";
 
+import collectionMapping from "../../utils/firestoreCollections";
+
+const visitLogs_collection = collectionMapping.visitLogs;
+const users_collection = collectionMapping.users;
+const outreachEvents_collection = collectionMapping.outreachEvents;
+
 const UserInfo = () => {
   const navigate = useNavigate();
   // const userId = "Uej8TTFv5aXghZ6S8JfzhTo0nWw2";
@@ -66,7 +72,7 @@ const UserInfo = () => {
       try {
         console.log("Attempt: " + attempt);
         const userRef = query(
-          collection(db, "users"),
+          collection(db, users_collection),
           where("uid", "==", fAuth?.currentUser?.uid)
         );
         const data = await getDocs(userRef);
@@ -125,7 +131,7 @@ const UserInfo = () => {
     const getDeedValues = async () => {
       try {
         const logOfUserRef = query(
-          collection(db, "personalVisitLog"),
+          collection(db, visitLogs_collection),
           where("uid", "==", fAuth?.currentUser?.uid)
         );
         const data = await getDocs(logOfUserRef);
@@ -154,7 +160,7 @@ const UserInfo = () => {
     const getCreatedOutreaches = async () => {
       try {
         const logOfUserRef = query(
-          collection(db, "outreachEvents"),
+          collection(db, outreachEvents_collection),
           where("uid", "==", fAuth?.currentUser?.uid)
         );
         const data = await getDocs(logOfUserRef);

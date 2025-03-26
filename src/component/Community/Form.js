@@ -27,6 +27,8 @@ import { emailConfirmation } from "../EmailService";
 import { Link } from "react-router-dom";
 import { fetchUserTypeDetails } from "../EventCardService";
 
+import collectionMapping from "../../utils/firestoreCollections";
+
 const chipList = [
   "Childcare",
   "Counseling and Support",
@@ -101,7 +103,9 @@ const stateAbbreviations = {
   "wyoming": "WY",
 };
 
-const USERS_COLLECTION = "users";
+const users_collection = collectionMapping.users;
+const outreachEvents_collection = collectionMapping.outreachEvents;
+const helpRequests_collection = collectionMapping.helpRequests;
 
 const CustomInput = ({ value, onClick, onChange, id, className }) => (
   <div>
@@ -118,7 +122,7 @@ const CustomInput = ({ value, onClick, onChange, id, className }) => (
 
 let autoComplete;
 
-export const GOOGLE_PLACES_API_KEY = "AIzaSyBnF0aSySY400NMs2LV32sNzR29BEbPV3s";
+export const GOOGLE_PLACES_API_KEY = process.env.REACT_APP_GOOGLE_PLACES_API_KEY;
 
 const loadScript = (url, callback) => {
   let script = document.createElement("script");
@@ -293,7 +297,7 @@ const Form = (hrid) => {
           };
 
           // Insert doc in outreach event
-          const eventRef = collection(db, "outreachEvents");
+          const eventRef = collection(db, outreachEvents_collection);
 
           async function postDoc(ref, obj) {
             const docRef = await addDoc(ref, obj);
@@ -303,14 +307,14 @@ const Form = (hrid) => {
 
           //added outreach to user collection
           const userQuery = query(
-            collection(db, USERS_COLLECTION),
+            collection(db, users_collection),
             where("uid", "==", fAuth?.currentUser?.uid)
           );
           const userDocRef = await getDocs(userQuery);
           const userDocID = userDocRef.docs[0].id;
           console.log(userDocID);
           // reference for the userdoc
-          const userRef = doc(db, USERS_COLLECTION, userDocID);
+          const userRef = doc(db, users_collection, userDocID);
           // outreach event collection
           const docSnap = await getDoc(userRef);
           let createdOutreaches = docSnap.data().createdOutreaches || [];
@@ -357,9 +361,8 @@ const Form = (hrid) => {
         "https://parseapi.back4app.com/classes/Usabystate_States?keys=name,postalAbreviation",
         {
           headers: {
-            "X-Parse-Application-Id":
-              "vahnMBqbmIbxOw8R3qtsEMoYrZMljfClGvc1aMyp",
-            "X-Parse-REST-API-Key": "LBjkDrxuUKEfb8liRPgZyv1Lu5WsPIvTx2FWgTpi",
+            "X-Parse-Application-Id":process.env.REACT_APP_X_PARSE_APPLICATION_ID,
+            "X-Parse-REST-API-Key": process.env.REACT_APP_X_PARSE_REST_API_KEY,
           },
         }
       );
@@ -387,8 +390,8 @@ const Form = (hrid) => {
         "?limit=1000&keys=name",
       {
         headers: {
-          "X-Parse-Application-Id": "vahnMBqbmIbxOw8R3qtsEMoYrZMljfClGvc1aMyp",
-          "X-Parse-REST-API-Key": "LBjkDrxuUKEfb8liRPgZyv1Lu5WsPIvTx2FWgTpi",
+          "X-Parse-Application-Id": process.env.REACT_APP_X_PARSE_APPLICATION_ID,
+          "X-Parse-REST-API-Key": process.env.REACT_APP_X_PARSE_REST_API_KEY,
         },
       }
     );

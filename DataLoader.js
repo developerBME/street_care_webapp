@@ -7,14 +7,14 @@ const XLSX = require('xlsx');
 // Firebase configuration
 const firebaseConfig = {
   // Your Firebase configuration
-  apiKey: "AIzaSyCTQrVQKGfscSHnz-NAxsJh3pkeDKW-HCo",
-  authDomain: "streetcare-d0f33.firebaseapp.com",
-  databaseURL: "https://streetcare-d0f33.firebaseio.com",
-  projectId: "streetcare-d0f33",
-  storageBucket: "streetcare-d0f33.appspot.com",
-  messagingSenderId: "223295299587",
-  appId: "1:223295299587:web:10443d950f835b3da5ee36",
-  measurementId: "G-D4CXKEDEQ6",
+  apiKey: REACT_APP_FIREBASE_API_KEY,
+  authDomain: REACT_APP_AUTH_DOMAIN,
+  databaseURL: REACT_APP_DATABASE_URL,
+  projectId: REACT_APP_PROJECT_ID,
+  storageBucket: REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: REACT_APP_MESSAGING_SENDER_ID,
+  appId: REACT_APP_APP_ID,
+  measurementId: REACT_APP_MEASUREMENT_ID,
 };
 
 // Initialize Firebase
@@ -99,7 +99,7 @@ function getRandomTime(existingDate) {
 }
 
 async function updateEventDates() {
-  const eventsRef = db.collection('events');
+  const eventsRef = db.collection(process.env.REACT_APP_EVENTS_COLLECTION);
   const snapshot = await eventsRef.get();
 
   snapshot.forEach(async (doc) => {

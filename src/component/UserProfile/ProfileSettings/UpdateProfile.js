@@ -23,7 +23,9 @@ import { useNavigate } from "react-router-dom";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import imageCompression from "browser-image-compression";
 
-const USERS_COLLECTION = "users";
+import collectionMapping from "../../../utils/firestoreCollections";
+
+const users_collection = collectionMapping.users;
 
 async function uploadProfileImage(
   file,
@@ -42,12 +44,12 @@ async function uploadProfileImage(
     const photoUrl = await getDownloadURL(fileRef);
 
     const userQuery = query(
-      collection(db, USERS_COLLECTION),
+      collection(db, users_collection),
       where("uid", "==", fAuth.currentUser.uid)
     );
     const userDocRef = await getDocs(userQuery);
     const userDocID = userDocRef.docs[0].id;
-    const userRef = doc(db, USERS_COLLECTION, userDocID);
+    const userRef = doc(db, users_collection, userDocID);
     await updateDoc(userRef, {
       photoUrl: photoUrl,
     });
@@ -113,7 +115,7 @@ const UpdateProfile = () => {
   const getUserData = async () => {
     try {
       const userRef = query(
-        collection(db, "users"),
+        collection(db, users_collection),
         where("uid", "==", fAuth?.currentUser?.uid)
       );
       const data = await getDocs(userRef);
@@ -213,12 +215,12 @@ const UpdateProfile = () => {
       if (username.current.value !== "") {
         setUsernameError("");
         const userQuery = query(
-          collection(db, USERS_COLLECTION),
+          collection(db, users_collection),
           where("uid", "==", fAuth.currentUser.uid)
         );
         const userDocRef = await getDocs(userQuery);
         const userDocID = userDocRef.docs[0].id;
-        const userRef = doc(db, USERS_COLLECTION, userDocID);
+        const userRef = doc(db, users_collection, userDocID);
         await updateDoc(userRef, {
           username: username.current.value,
         });
@@ -238,12 +240,12 @@ const UpdateProfile = () => {
       if (city.current.value !== "") {
         setCityError("");
         const userQuery = query(
-          collection(db, USERS_COLLECTION),
+          collection(db, users_collection),
           where("uid", "==", fAuth.currentUser.uid)
         );
         const userDocRef = await getDocs(userQuery);
         const userDocID = userDocRef.docs[0].id;
-        const userRef = doc(db, USERS_COLLECTION, userDocID);
+        const userRef = doc(db, users_collection, userDocID);
         await updateDoc(userRef, {
           city: city.current.value,
         });
@@ -251,12 +253,12 @@ const UpdateProfile = () => {
       if (state.current.value !== "") {
         setStateError("");
         const userQuery = query(
-          collection(db, USERS_COLLECTION),
+          collection(db, users_collection),
           where("uid", "==", fAuth.currentUser.uid)
         );
         const userDocRef = await getDocs(userQuery);
         const userDocID = userDocRef.docs[0].id;
-        const userRef = doc(db, USERS_COLLECTION, userDocID);
+        const userRef = doc(db, users_collection, userDocID);
         await updateDoc(userRef, {
           state: state.current.value,
         });
@@ -264,12 +266,12 @@ const UpdateProfile = () => {
       if (country.current.value !== "") {
         setCountryError("");
         const userQuery = query(
-          collection(db, USERS_COLLECTION),
+          collection(db, users_collection),
           where("uid", "==", fAuth.currentUser.uid)
         );
         const userDocRef = await getDocs(userQuery);
         const userDocID = userDocRef.docs[0].id;
-        const userRef = doc(db, USERS_COLLECTION, userDocID);
+        const userRef = doc(db, users_collection, userDocID);
         await updateDoc(userRef, {
           country: country.current.value,
         });

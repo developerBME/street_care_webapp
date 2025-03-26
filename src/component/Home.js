@@ -11,6 +11,7 @@ import Map from "./HomePage/Map";
 import Process2 from "./HomePage/Process2";
 import {
   fetchEvents,
+  fetchPaginatedEvents,
   fetchOfficialEvents,
 } from "./EventCardService";
 import { formatDate } from "./HelperFunction";
@@ -193,9 +194,20 @@ function HomePage() {
 
   const fetchData = async () => {
     try {
-      const eventsData = await fetchEvents();
-      eventsData.sort((a, b) => a.eventDate - b.eventDate);
-      setEvents(eventsData);
+      const eventsData = await fetchPaginatedEvents(
+        "",
+        new Date(),
+        "",
+        "",
+        null,
+        3,
+        "next",
+        []
+      );
+      
+      // eventsData.sort((a, b) => a.eventDate - b.eventDate);
+      console.log("Events Data:", eventsData);
+      setEvents(eventsData.events);
     } catch (error) {
       setIsError(prev => ({ ...prev, events: true }));
       setEvents([]);
@@ -259,15 +271,15 @@ function HomePage() {
   };
 
   // Filter events to get only past events
-  const upcomingEvents = events
-    ? events
-        .filter((event) => {
-          const eventDate =
-            new Date(event.eventDate?.seconds * 1000) || event.eventDate;
-          return eventDate >= new Date(); // Check if the event date is before the current date
-        })
-        .slice(0, 3)
-    : [];
+  // const upcomingEvents = events
+  //   ? events
+  //       .filter((event) => {
+  //         const eventDate =
+  //           new Date(event.eventDate?.seconds * 1000) || event.eventDate;
+  //         return eventDate >= new Date(); // Check if the event date is before the current date
+  //       })
+  //       .slice(0, 3)
+  //   : [];
 
   useEffect(() => {
     const getPastEvents = async () => {

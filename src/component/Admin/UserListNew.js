@@ -25,6 +25,12 @@ import {
   IoChevronForwardCircleOutline,
 } from "react-icons/io5";
 
+import collectionMapping from "../../utils/firestoreCollections";
+
+const users_collection = collectionMapping.users;
+const bannedUser_collection = collectionMapping.bannedUser;
+const adminUser_collection = collectionMapping.adminUsers; 
+
 const initialSorted = {
   username: 0,
   deviceType: 0,
@@ -61,14 +67,14 @@ export default function UserListNew() {
   };
 
   useEffect(() => {
-    const fetchUsersAndBannedStatus = async () => {
+    const fetchUsersAndBannedStatus = async () => {      
       setLoading(true);
       setError("");
 
       try {
-        const usersQuery = query(collection(db, "users"));
-        const bannedQuery = query(collection(db, "bannedUser"));
-        const adminQuery = query(collection(db, "adminUsers"));
+        const usersQuery = query(collection(db, users_collection));
+        const bannedQuery = query(collection(db, bannedUser_collection));
+        const adminQuery = query(collection(db, adminUser_collection));
 
         const [userSnapshot, bannedSnapshot, adminUserSnapshot] =
           await Promise.all([
@@ -118,11 +124,11 @@ export default function UserListNew() {
     const isBanned = bannedUsers[email];
     try {
       if (!isBanned) {
-        const docRef = await addDoc(collection(db, "bannedUser"), { email });
+        const docRef = await addDoc(collection(db, bannedUser_collection), { email });
         setBannedUsers((prev) => ({ ...prev, [email]: docRef.id }));
         alert(`User with email ${email} has been blocked.`);
       } else {
-        await deleteDoc(doc(db, "bannedUser", isBanned));
+        await deleteDoc(doc(db, bannedUser_collection, isBanned));
         setBannedUsers((prev) => {
           const newState = { ...prev };
           delete newState[email];
@@ -143,11 +149,11 @@ export default function UserListNew() {
     const isAdmin = adminUsers[email];
     try {
       if (!isAdmin) {
-        const docRef = await addDoc(collection(db, "adminUsers"), { email });
+        const docRef = await addDoc(collection(db, adminUser_collection), { email });
         setAdminUsers((prev) => ({ ...prev, [email]: docRef.id }));
         alert(`User with email ${email} was made admin.`);
       } else {
-        await deleteDoc(doc(db, "adminUsers", isAdmin));
+        await deleteDoc(doc(db, adminUser_collection, isAdmin));
         setAdminUsers((prev) => {
           const newState = { ...prev };
           delete newState[email];
@@ -167,7 +173,7 @@ export default function UserListNew() {
   };
   const updateChapterRole = async (email, docId, newRole) => {
     try {
-      const userDocRef = doc(db, "users", docId);
+      const userDocRef = doc(db, users_collection, docId);
       await updateDoc(userDocRef, { Type: newRole }); // Update the role in Firestore
   
       // Update the local state for roles
@@ -189,7 +195,7 @@ export default function UserListNew() {
   const toggleChapterLeader = async (email, docId) => {
     const isChapterLeader = chapterLeaders[email];
     try {
-      const userDocRef = doc(db, "users", docId);
+      const userDocRef = doc(db, users_collection, docId);
       if (!isChapterLeader) {
         await updateDoc(userDocRef, { Type: "Chapter Leader" });
         setChapterLeaders((prev) => ({ ...prev, [email]: true }));
@@ -224,7 +230,7 @@ const changeUserType = async (email, docId, Type) => {
     }
 
     // Get a reference to the user's document
-    const userDocRef = doc(db, "users", docId);
+    const userDocRef = doc(db, users_collection, docId);
 
     // Check if the document exists
     const userDocSnapshot = await getDoc(userDocRef);
@@ -255,7 +261,7 @@ const changeUserType = async (email, docId, Type) => {
   const toggleInternalMember = async (email, docId) => {
     const isInternalMember = false;
     try {
-      const userDocRef = doc(db, "users", docId);
+      const userDocRef = doc(db, users_collection, docId);
       const userDoc = await getDoc(userDocRef);
       if (!userDoc.exists()) {
         console.error(`No user found with docId ${docId}`);

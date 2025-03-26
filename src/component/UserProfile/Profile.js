@@ -25,7 +25,6 @@ import CreatedOutreaches from './CreatedOutreaches';
 import ErrorMessage from '../ErrorMessage';
 import { formatDate } from './../HelperFunction';
 
-
 function Profile() {
   const [createdEvents, setCreatedEvents] = useState([]);
   const [signedUpEvents, setSignedUpEvents] = useState([]);

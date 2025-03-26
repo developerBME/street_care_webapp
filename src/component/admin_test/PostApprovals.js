@@ -18,6 +18,11 @@ import arrowBack from "../../images/arrowBack.png";
 import searchIcon from "../../images/search-icon-PostApproval.png";
 import { fetchUserDetails, fetchUserTypeDetails } from "../EventCardService";
 
+import collectionMapping from "../../utils/firestoreCollections";
+
+const outreachEvents_collection = collectionMapping.outreachEvents;
+const visitLogs_collection = collectionMapping.visitLogs;
+
 const PostApprovals = () => {
   const [pendingPosts, setPendingPosts] = useState({
     outreaches: [],
@@ -43,7 +48,7 @@ const PostApprovals = () => {
 
         // Fetch outreaches
         const outreachQuery = query(
-          collection(db, "outreachEvents"),
+          collection(db, outreachEvents_collection),
           where("status", "==", "pending")
         );
         const outreachSnapshot = await getDocs(outreachQuery);
@@ -63,7 +68,7 @@ const PostApprovals = () => {
 
         // Fetch visit logs
         const visitLogQuery = query(
-          collection(db, "personalVisitLog"),
+          collection(db, visitLogs_collection),
           where("status", "==", "pending")
         );
         const visitLogSnapshot = await getDocs(visitLogQuery);
@@ -179,7 +184,7 @@ const PostApprovals = () => {
   const handleApproveSelected = async () => {
     try {
       const collectionName =
-        activeTab === "outreaches" ? "outreachEvents" : "personalVisitLog";
+        activeTab === "outreaches" ? outreachEvents_collection : visitLogs_collection;
 
       for (const itemId of selectedItems) {
         await updateDoc(doc(db, collectionName, itemId), {
@@ -204,7 +209,7 @@ const PostApprovals = () => {
   const handleRejectSelected = async () => {
     try {
       const collectionName =
-        activeTab === "outreaches" ? "outreachEvents" : "personalVisitLog";
+        activeTab === "outreaches" ? outreachEvents_collection : visitLogs_collection;
 
       for (const itemId of selectedItems) {
         await updateDoc(doc(db, collectionName, itemId), {
@@ -289,7 +294,7 @@ const PostApprovals = () => {
   const handleAccept = async () => {
     try {
       const collectionName =
-        activeTab === "outreaches" ? "outreachEvents" : "personalVisitLog";
+        activeTab === "outreaches" ? outreachEvents_collection : visitLogs_collection;
       await updateDoc(doc(db, collectionName, selectedPost.id), {
         status: "approved",
       });
@@ -312,7 +317,7 @@ const PostApprovals = () => {
   const handleReject = async () => {
     try {
       const collectionName =
-        activeTab === "outreaches" ? "outreachEvents" : "personalVisitLog";
+        activeTab === "outreaches" ? outreachEvents_collection : visitLogs_collection;
       await updateDoc(doc(db, collectionName, selectedPost.id), {
         status: "rejected",
       });
