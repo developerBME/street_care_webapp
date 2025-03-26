@@ -175,22 +175,26 @@ const [isFlagged, setIsFlagged] = useState(false);
           fAuth?.currentUser?.uid
         );
         setUserSignedUpOutreaches(result);
+        console.log("Result in OS: ", result);
+        
+        const eventIds = userSignedUpOutreaches?.map((event) => event.id);
+        // console.log(eventIds);
+        console.log("Event Ids: ", eventIds);
+
+        const isSignedUp = eventIds?.includes(id);
+        // console.log(isSignedUp);
+        if (isSignedUp) {
+          setLabel2("EDIT");
+        } else {
+          setLabel2("RSVP");
+        }
+
       } catch (error) {
         console.error(error.message);
       }
     };
     getUserSignedUpOutreaches();
     // console.log(fAuth.currentUser.uid);
-    const eventIds = userSignedUpOutreaches?.map((event) => event.id);
-    // console.log(eventIds);
-
-    const isSignedUp = eventIds?.includes(id);
-    // console.log(isSignedUp);
-    if (isSignedUp) {
-      setLabel2("EDIT");
-    } else {
-      setLabel2("RSVP");
-    }
 
     if (data?.uid === fAuth?.currentUser?.uid) {
       setHasCreated(true);
