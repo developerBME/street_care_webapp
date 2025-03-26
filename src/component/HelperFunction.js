@@ -68,10 +68,10 @@ export async function fetchUserName(uid){
   
     // Extract hours, minutes, and the AM/PM part
     let hours = dateObj.getHours();
+    const ampm = hours >= 12 ? "PM" : "AM";
     hours = hours % 12;  // Converts 24h to 12h format
     hours = hours ? hours : 12;  // Converts 0 to 12
     const minutes = dateObj.getMinutes();
-    const ampm = hours >= 12 ? "PM" : "AM";
     const formattedTime = `${hours}:${minutes
       .toString()
       .padStart(2, "0")} ${ampm}`;
