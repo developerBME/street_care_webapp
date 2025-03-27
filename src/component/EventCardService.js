@@ -491,6 +491,29 @@ export const fetchEventById = async (eventId) => {
   }
 };
 
+export const isUserParticipantInEvent = async (eventId, userId) => {
+  try {
+    const eventRef = doc(db, OUTREACH_EVENTS_COLLECTION, eventId);
+    const eventSnap = await getDoc(eventRef);
+
+    if (!eventSnap.exists()) {
+      console.warn(`Event with ID ${eventId} does not exist.`);
+      return false;
+    }
+
+    const eventData = eventSnap.data();
+    const participants = eventData.participants || [];
+
+    return participants.includes(userId);
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `Error checking participant in event (${eventId}): ${error.message}`
+    );
+    throw error;
+  }
+};
+
 export const fetchUserSignedUpOutreaches = async (uid) => {
   try {
     const fAuth = getAuth();
