@@ -175,15 +175,9 @@ const [isFlagged, setIsFlagged] = useState(false);
         const result = await fetchUserSignedUpOutreaches(
           fAuth?.currentUser?.uid
         );
-        setUserSignedUpOutreaches(result);
-        console.log("Result in OS: ", result);
-        
-        const eventIds = userSignedUpOutreaches?.map((event) => event.id);
-        // console.log(eventIds);
-        console.log("Event Ids: ", eventIds);
-
+        setUserSignedUpOutreaches(result);        
+        const eventIds = result?.map((event) => event.id);
         const isSignedUp = eventIds?.includes(id);
-        // console.log(isSignedUp);
         if (isSignedUp) {
           setLabel2("EDIT");
         } else {
