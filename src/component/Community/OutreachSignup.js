@@ -6,7 +6,7 @@ import CustomButton from "../Buttons/CustomButton";
 import {
   fetchEventById,
   handleRsvp,
-  fetchUserSignedUpOutreaches,
+  isUserParticipantInEvent
 } from "../EventCardService";
 import { fetchUserName } from "../HelperFunction";
 import { Co2Sharp } from "@mui/icons-material";
@@ -66,7 +66,6 @@ const OutreachSignup = () => {
   ];
 
   const [data, setData] = useState(null);
-  const [userSignedUpOutreaches, setUserSignedUpOutreaches] = useState(null);
 
   const handleRefresh = () => {
     window.location.reload();
@@ -171,26 +170,23 @@ const [isFlagged, setIsFlagged] = useState(false);
   useEffect(() => {
     const getUserSignedUpOutreaches = async () => {
       try {
-        const result = await fetchUserSignedUpOutreaches(
+        const result = await isUserParticipantInEvent(
+          id,
           fAuth?.currentUser?.uid
         );
-        setUserSignedUpOutreaches(result);
+
+        if (result) {
+          setLabel2("EDIT");
+        } else {
+          setLabel2("RSVP");
+        }
+
       } catch (error) {
         console.error(error.message);
       }
     };
     getUserSignedUpOutreaches();
     // console.log(fAuth.currentUser.uid);
-    const eventIds = userSignedUpOutreaches?.map((event) => event.id);
-    // console.log(eventIds);
-
-    const isSignedUp = eventIds?.includes(id);
-    // console.log(isSignedUp);
-    if (isSignedUp) {
-      setLabel2("EDIT");
-    } else {
-      setLabel2("RSVP");
-    }
 
     if (data?.uid === fAuth?.currentUser?.uid) {
       setHasCreated(true);
