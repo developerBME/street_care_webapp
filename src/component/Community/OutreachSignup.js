@@ -7,6 +7,7 @@ import {
   fetchEventById,
   handleRsvp,
   fetchUserSignedUpOutreaches,
+  isUserParticipantInEvent
 } from "../EventCardService";
 import { fetchUserName } from "../HelperFunction";
 import { Co2Sharp } from "@mui/icons-material";
@@ -172,19 +173,20 @@ const [isFlagged, setIsFlagged] = useState(false);
   useEffect(() => {
     const getUserSignedUpOutreaches = async () => {
       try {
-        const result = await fetchUserSignedUpOutreaches(
+        const result = await isUserParticipantInEvent(
+          id,
           fAuth?.currentUser?.uid
         );
-        setUserSignedUpOutreaches(result);
-        console.log("Result in OS: ", result);
+        // setUserSignedUpOutreaches(result);
+        // console.log("Result in OS: ", result);
         
-        const eventIds = userSignedUpOutreaches?.map((event) => event.id);
-        // console.log(eventIds);
-        console.log("Event Ids: ", eventIds);
+        // const eventIds = result?.map((event) => event.id);
+        // // console.log(eventIds);
+        // console.log("Event Ids: ", eventIds);
 
-        const isSignedUp = eventIds?.includes(id);
+        // const isSignedUp = eventIds?.includes(id);
         // console.log(isSignedUp);
-        if (isSignedUp) {
+        if (result) {
           setLabel2("EDIT");
         } else {
           setLabel2("RSVP");
