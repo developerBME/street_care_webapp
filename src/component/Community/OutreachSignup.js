@@ -6,7 +6,7 @@ import CustomButton from "../Buttons/CustomButton";
 import {
   fetchEventById,
   handleRsvp,
-  fetchUserSignedUpOutreaches,
+  isUserParticipantInEvent,
 } from "../EventCardService";
 import { fetchUserName } from "../HelperFunction";
 import { Co2Sharp } from "@mui/icons-material";
@@ -39,7 +39,6 @@ import { isPast } from "date-fns";
 import flagSvg from "../../images/flag.svg"; // Flag icon
 import { useUserContext } from "../../context/Usercontext.js";
 
-
 const USERS_COLLECTION = "users";
 
 const OutreachSignup = () => {
@@ -66,15 +65,13 @@ const OutreachSignup = () => {
   ];
 
   const [data, setData] = useState(null);
-  const [userSignedUpOutreaches, setUserSignedUpOutreaches] = useState(null);
 
   const handleRefresh = () => {
     window.location.reload();
   };
 
   // Add near your other useState hooks
-const [isFlagged, setIsFlagged] = useState(false);
-
+  const [isFlagged, setIsFlagged] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
@@ -110,7 +107,7 @@ const [isFlagged, setIsFlagged] = useState(false);
     };
     fetchFlagStatus();
   }, [id]);
-  
+
   const handleFlag = async (e) => {
     e.stopPropagation(); // Prevent triggering parent click events
     if (!fAuth.currentUser) {
@@ -142,21 +139,25 @@ const [isFlagged, setIsFlagged] = useState(false);
         userType === "Street Care Hub Leader";
       if (currentStatus) {
         if (!canUnflag) {
-          alert("Only the user who flagged this event or a Street Care Hub Leader can unflag it.");
+          alert(
+            "Only the user who flagged this event or a Street Care Hub Leader can unflag it."
+          );
           // console.error("Only the user who flagged this event or a Street Care Hub Leader can unflag it.");
           return;
         }
         await updateDoc(docRef, { isFlagged: false, flaggedByUser: null });
         setIsFlagged(false);
       } else {
-        await updateDoc(docRef, { isFlagged: true, flaggedByUser: fAuth.currentUser.uid });
+        await updateDoc(docRef, {
+          isFlagged: true,
+          flaggedByUser: fAuth.currentUser.uid,
+        });
         setIsFlagged(true);
       }
     } catch (error) {
       console.error("Error toggling document flag status:", error);
     }
   };
-  
 
   const [showModal, setShowModal] = useState(false);
 
@@ -171,24 +172,16 @@ const [isFlagged, setIsFlagged] = useState(false);
   useEffect(() => {
     const getUserSignedUpOutreaches = async () => {
       try {
-        const result = await fetchUserSignedUpOutreaches(
+        const result = await isUserParticipantInEvent(
+          id,
           fAuth?.currentUser?.uid
         );
-        setUserSignedUpOutreaches(result);
-        console.log("Result in OS: ", result);
-        
-        const eventIds = userSignedUpOutreaches?.map((event) => event.id);
-        // console.log(eventIds);
-        console.log("Event Ids: ", eventIds);
 
-        const isSignedUp = eventIds?.includes(id);
-        // console.log(isSignedUp);
-        if (isSignedUp) {
+        if (result) {
           setLabel2("EDIT");
         } else {
           setLabel2("RSVP");
         }
-
       } catch (error) {
         console.error(error.message);
       }
@@ -308,48 +301,58 @@ const [isFlagged, setIsFlagged] = useState(false);
 
                 </div> */}
                 <div className="w-full flex items-center justify-between px-6 pt-9 pb-3">
-  {/* Left side: User info */}
-  <div className="flex items-center gap-2">
-    <img
-      className="w-9 h-9 rounded-full"
-      src={data?.photoUrl || defaultImage}
-      alt="User"
-    />
-    <div className="flex items-center gap-1">
-      {data ? (
-        <div className="text-[#000] text-sm font-normal font-inter leading-snug">
-          {data.userName}
-        </div>
-      ) : (
-        <div className="text-[#000] text-sm font-normal font-inter leading-snug">
-          Loading...
-        </div>
-      )}
-      <img src={verifiedImg} className="w-6 h-6" alt="Verified" />
-    </div>
-  </div>
-  {/* Right side: Flag icon */}
-  <div className="relative group">
-    <img
-      onClick={handleFlag}
-      src={flagSvg}
-      alt="flag"
-      className={`w-8 h-8 cursor-pointer rounded-full p-1 ${
-        isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
-      }`}
-    />
-    <div
-      className="absolute top-full right-0 mt-1 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
-      style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
-    >
-      {!isFlagged ? "Flag the Outreach Event?" : "Unflag the Outreach Event?"}
-    </div>
-  </div>
-</div>
-
+                  {/* Left side: User info */}
+                  <div className="flex items-center gap-2">
+                    <img
+                      className="w-9 h-9 rounded-full"
+                      src={data?.photoUrl || defaultImage}
+                      alt="User"
+                    />
+                    <div className="flex items-center gap-1">
+                      {data ? (
+                        <div className="text-[#000] text-sm font-normal font-inter leading-snug">
+                          {data.userName}
+                        </div>
+                      ) : (
+                        <div className="text-[#000] text-sm font-normal font-inter leading-snug">
+                          Loading...
+                        </div>
+                      )}
+                      <img
+                        src={verifiedImg}
+                        className="w-6 h-6"
+                        alt="Verified"
+                      />
+                    </div>
+                  </div>
+                  {/* Right side: Flag icon */}
+                  <div className="relative group">
+                    <img
+                      onClick={handleFlag}
+                      src={flagSvg}
+                      alt="flag"
+                      className={`w-8 h-8 cursor-pointer rounded-full p-1 ${
+                        isFlagged
+                          ? "bg-red-500"
+                          : "bg-transparent hover:bg-gray-200"
+                      }`}
+                    />
+                    <div
+                      className="absolute top-full right-0 mt-1 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
+                      style={{
+                        minWidth: "150px",
+                        maxWidth: "200px",
+                        textAlign: "center",
+                      }}
+                    >
+                      {!isFlagged
+                        ? "Flag the Outreach Event?"
+                        : "Unflag the Outreach Event?"}
+                    </div>
+                  </div>
+                </div>
               </div>
               <div className="self-stretch h-fit px-6 py-2 flex-col justify-start items-start gap-2 flex">
-
                 <div className="flex flex-col justify-between space-y-3">
                   <div className="flex flex-row justify-normal space-x-2">
                     <img className="w-[13px] h-[15px] my-[3px]" src={date} />
