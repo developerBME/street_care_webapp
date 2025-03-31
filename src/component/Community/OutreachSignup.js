@@ -16,6 +16,7 @@ import userSlots from "../../images/userSlots.png";
 import date from "../../images/date.png";
 import locate from "../../images/location.png";
 import phone from "../../images/phone.png";
+import email from "../../images/email.png";
 import { useLocation } from "react-router-dom";
 import EditModal from "./EditModal";
 import verifiedPurple from "../../images/verified_purple.png";
@@ -366,6 +367,14 @@ const [isFlagged, setIsFlagged] = useState(false);
                       <img className="w-[12px] h-[15px] my-[3px]" src={phone} alt="Phone Icon" />
                         <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
                            {data.contactNumber}
+                        </div>
+                     </div>
+                  )}
+                  {data && data.consentStatus && data.emailAddress && (
+                     <div className="flex flex-row justify-normal space-x-2">
+                      <img className="w-[12px] h-[15px] my-[3px]" src={email} alt="Email Icon" />
+                        <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
+                           {data.emailAddress}
                         </div>
                      </div>
                   )}
