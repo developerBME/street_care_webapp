@@ -11,6 +11,10 @@ import ErrorMessage from "../ErrorMessage";
 import CustomButton from "../Buttons/CustomButton";
 import UserTypeInfo from "../UserTypeInfo";
 
+import collectionMapping from "../../utils/firestoreCollections";
+
+console.log(collectionMapping);
+
 const HomePageVisitlog = () => {
   const navigate = useNavigate();
 

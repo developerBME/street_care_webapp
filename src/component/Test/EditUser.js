@@ -2,6 +2,10 @@ import React,{useState, useEffect} from "react";
 import { updateDoc,doc } from "firebase/firestore";
 import { db } from "../firebase";
 
+import collectionMapping from "../../utils/firestoreCollections";
+
+const testUser_collection = collectionMapping.testUser;
+
 
 function EditUser({user, seteditUserId}){
 
@@ -11,7 +15,7 @@ function EditUser({user, seteditUserId}){
 
     const updateUser = async () =>{
         try{
-            const userDoc = doc(db,"TestUser",user.id)
+            const userDoc = doc(db,testUser_collection,user.id)
             await updateDoc(userDoc, {name : updatedName, email: updatedEmail, contact: updatedContact});
             seteditUserId("")
             alert("User updated successfully")
@@ -79,4 +83,4 @@ function EditUser({user, seteditUserId}){
     )
 }
 
-export default EditUser
+export default EditUser;

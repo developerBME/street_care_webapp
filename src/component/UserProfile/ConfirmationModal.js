@@ -38,13 +38,6 @@ const ConfirmationModal = ({
           </div>
           <div className="w-fit justify-start items-start gap-4 inline-flex">
             <CustomButton
-              label="Add Help Request"
-              name="buttondefault"
-              onClick={() => {
-                navigate("/community");
-              }}
-            />
-            <CustomButton
               label="Back to my Profile"
               name="buttonborder"
               onClick={() => {

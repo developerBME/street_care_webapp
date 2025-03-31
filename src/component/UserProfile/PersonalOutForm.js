@@ -30,7 +30,10 @@ import InfoIcon from "@mui/icons-material/Info";
 import { Tooltip, IconButton } from "@mui/material";
 import { fetchUserTypeDetails } from "../EventCardService";
 
-const USERS_COLLECTION = "users";
+import collectionMapping from "../../utils/firestoreCollections";
+
+const users_collection = collectionMapping.users;
+const visitLogs_collection = collectionMapping.visitLogs;
 
 const CustomInput = ({ value, onClick, onChange, id, className }) => (
   <div>
@@ -47,7 +50,7 @@ const CustomInput = ({ value, onClick, onChange, id, className }) => (
 
 let autoComplete;
 
-export const GOOGLE_PLACES_API_KEY = "AIzaSyBnF0aSySY400NMs2LV32sNzR29BEbPV3s";
+export const GOOGLE_PLACES_API_KEY = process.env.REACT_APP_GOOGLE_PLACES_API_KEY;
 
 const loadScript = (url, callback) => {
   let script = document.createElement("script");
@@ -181,11 +184,17 @@ function PersonalOutForm() {
     console.log("Selected date:", date);
   };
 
+  const handleStreetChange = (e) => {
+    setStreet(e.target.value);
+    updateErrorState("cityError", "");
+  };
+
   const handleCityChange = (e) => {
     setCityName(e.target.value);
     updateErrorState("cityError", "");
   };
   const handleStateChange = (e) => {
+    setStateName(e.target.value);
     updateErrorState("stateError", "");
   };
   const handleZipChange = (e) => {
@@ -221,9 +230,8 @@ function PersonalOutForm() {
         "https://parseapi.back4app.com/classes/Usabystate_States?keys=name,postalAbreviation",
         {
           headers: {
-            "X-Parse-Application-Id":
-              "vahnMBqbmIbxOw8R3qtsEMoYrZMljfClGvc1aMyp",
-            "X-Parse-REST-API-Key": "LBjkDrxuUKEfb8liRPgZyv1Lu5WsPIvTx2FWgTpi",
+            "X-Parse-Application-Id":process.env.REACT_APP_X_PARSE_APPLICATION_ID,
+            "X-Parse-REST-API-Key": process.env.REACT_APP_X_PARSE_REST_API_KEY,
           },
         }
       );
@@ -301,8 +309,8 @@ function PersonalOutForm() {
         "?limit=1000&keys=name",
       {
         headers: {
-          "X-Parse-Application-Id": "vahnMBqbmIbxOw8R3qtsEMoYrZMljfClGvc1aMyp",
-          "X-Parse-REST-API-Key": "LBjkDrxuUKEfb8liRPgZyv1Lu5WsPIvTx2FWgTpi",
+          "X-Parse-Application-Id": process.env.REACT_APP_X_PARSE_APPLICATION_ID,
+          "X-Parse-REST-API-Key": process.env.REACT_APP_X_PARSE_REST_API_KEY,
         },
       }
     );
@@ -386,7 +394,7 @@ function PersonalOutForm() {
     }
 
     if (!zipcodeRef.current.value) {
-      updateErrorState("zipError", "Zipcode is required");
+      updateErrorState("zipError", "ZIP Code is required");
       setReturn = true;
     } else {
       try {
@@ -505,20 +513,20 @@ function PersonalOutForm() {
 
     try {
       console.log("Sending email...");
-      const logRef = collection(db, "personalVisitLog");
+      const logRef = collection(db, visitLogs_collection);
       const docRef = await addDoc(logRef, obj);
       if (docRef.id) {
         console.log(docRef.id);
 
         const userQuery = query(
-          collection(db, USERS_COLLECTION),
+          collection(db, users_collection),
           where("uid", "==", fAuth?.currentUser?.uid)
         );
         const userDocRef = await getDocs(userQuery);
         console.log(userDocRef);
         const userDocID = userDocRef.docs[0].id;
         // reference for the userdoc
-        const userRef = doc(db, USERS_COLLECTION, userDocID);
+        const userRef = doc(db, users_collection, userDocID);
         // outreach event collection
         const docSnap = await getDoc(userRef);
         let personalVisitLogs = docSnap.data().personalVisitLogs || [];
@@ -801,7 +809,7 @@ function PersonalOutForm() {
     };
 
     try {
-      const logRef = doc(db, "personalVisitLog", id);
+      const logRef = doc(db, visitLogs_collection, id);
       await updateDoc(logRef, obj);
       setSuccess(true);
       clearFields();
@@ -1189,6 +1197,7 @@ function PersonalOutForm() {
                             id="street-address"
                             name="street-address"
                             value={street}
+                            onChange={handleStreetChange}
                           />
                           {error.streetError && (
                             <div className="inline-flex items-center">
@@ -1254,7 +1263,7 @@ function PersonalOutForm() {
                         </div>
                         <div className="space-y-1.5">
                           <p className="font-semibold font-['Inter'] text-[15px]">
-                            Zipcode*
+                            ZIP Code*
                           </p>
                           <input
                             type="text"

@@ -19,6 +19,11 @@ import {fetchPendingPosts,fetchTotalCountOfPendingPosts} from "../VisitLogCardSe
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 
+import collectionMapping from "../../utils/firestoreCollections";
+
+const outreachEvents_collection = collectionMapping.outreachEvents;
+const visitLogs_collection = collectionMapping.visitLogs;
+
 const PostApprovals = () => {
   const [pendingPosts, setPendingPosts] = useState({
     outreaches: [],
@@ -53,6 +58,7 @@ const PostApprovals = () => {
           setTotalPages(pageData.totalRecords)
           if(cursorFields.direction ==="next")setCurrentPageLength((prev)=>prev + pageData.records.length)
           setPendingPosts({[activeTab]:pageData.records});
+
         setIsError(false);
       } catch (error) {
         console.error("Error fetching pending posts:", error);
@@ -151,7 +157,7 @@ const PostApprovals = () => {
   const handleApproveSelected = async () => {
     try {
       const collectionName =
-        activeTab === "outreaches" ? "outreachEvents" : "personalVisitLog";
+        activeTab === "outreaches" ? outreachEvents_collection : visitLogs_collection;
 
       for (const itemId of selectedItems) {
         await updateDoc(doc(db, collectionName, itemId), {
@@ -173,7 +179,7 @@ const PostApprovals = () => {
   const handleRejectSelected = async () => {
     try {
       const collectionName =
-        activeTab === "outreaches" ? "outreachEvents" : "personalVisitLog";
+        activeTab === "outreaches" ? outreachEvents_collection : visitLogs_collection;
 
       for (const itemId of selectedItems) {
         await updateDoc(doc(db, collectionName, itemId), {
@@ -255,7 +261,7 @@ const PostApprovals = () => {
   const handleAccept = async () => {
     try {
       const collectionName =
-        activeTab === "outreaches" ? "outreachEvents" : "personalVisitLog";
+        activeTab === "outreaches" ? outreachEvents_collection : visitLogs_collection;
       await updateDoc(doc(db, collectionName, selectedPost.id), {
         status: "approved",
       });
@@ -271,7 +277,7 @@ const PostApprovals = () => {
   const handleReject = async () => {
     try {
       const collectionName =
-        activeTab === "outreaches" ? "outreachEvents" : "personalVisitLog";
+        activeTab === "outreaches" ? outreachEvents_collection : visitLogs_collection;
       await updateDoc(doc(db, collectionName, selectedPost.id), {
         status: "rejected",
       });

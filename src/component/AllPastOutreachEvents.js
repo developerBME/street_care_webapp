@@ -20,6 +20,10 @@ import {
 import {fetchPaginatedPastOutreachEvents} from "./EventCardService.js";
 import { db } from "./firebase";
 
+import collectionMapping from "../utils/firestoreCollections.js";
+
+const outreachEvents_collection = collectionMapping.outreachEvents;
+
 const AllPastOutreachEvents = () => {
   const [events, setEvents] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
@@ -89,7 +93,7 @@ const AllPastOutreachEvents = () => {
         let countQuery;
         if (!cityToSearch || cityToSearch.trim() === "") {
           countQuery = query(
-            collection(db, "outreachEvents"),
+            collection(db, outreachEvents_collection),
             where("status", "==", "approved"),
             where("eventDate", "<", new Date()), 
             where("eventDate", ">=", startDateTime),
@@ -98,7 +102,7 @@ const AllPastOutreachEvents = () => {
           );
         } else {
           countQuery = query(
-            collection(db, "outreachEvents"),
+            collection(db, outreachEvents_collection),
             where("status", "==", "approved"),
             where("location.city", "==", cityToSearch),
             where("eventDate", "<", new Date()),

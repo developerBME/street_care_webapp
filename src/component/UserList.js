@@ -2,6 +2,10 @@ import React, { useEffect, useState, useMemo } from "react";
 import { collection, getDocs, query, where, addDoc, deleteDoc, doc } from "firebase/firestore";
 import { db } from "./firebase";
 import { debounce } from 'lodash';
+import collectionMapping from "../utils/firestoreCollections";
+
+const users_collection = collectionMapping.users;
+const bannedUser_collection = collectionMapping.bannedUser;
 
 function UserList() {
   const [users, setUsers] = useState([]);
@@ -16,8 +20,8 @@ function UserList() {
       setError("");
 
       try {
-        const usersQuery = query(collection(db, "users"), where("deviceType", "==", "Web"));
-        const bannedQuery = query(collection(db, "bannedUser"));
+        const usersQuery = query(collection(db, users_collection), where("deviceType", "==", "Web"));
+        const bannedQuery = query(collection(db, bannedUser_collection));
 
         const [userSnapshot, bannedSnapshot] = await Promise.all([
           getDocs(usersQuery),
@@ -51,11 +55,11 @@ function UserList() {
     const isBanned = bannedUsers[email];
     try {
       if (!isBanned) {
-        const docRef = await addDoc(collection(db, "bannedUser"), { email });
+        const docRef = await addDoc(collection(db, bannedUser_collection), { email });
         setBannedUsers(prev => ({ ...prev, [email]: docRef.id }));
         alert(`User with email ${email} has been banned.`);
       } else {
-        await deleteDoc(doc(db, "bannedUser", isBanned));
+        await deleteDoc(doc(db, bannedUser_collection, isBanned));
         setBannedUsers(prev => {
           const newState = { ...prev };
           delete newState[email];

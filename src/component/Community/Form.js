@@ -23,10 +23,11 @@ import {
 } from "../helper/validator";
 import { UpdateDisabledRounded } from "@mui/icons-material";
 import CreateOutreachModal from "./CreateOutreachModal";
-import { fetchHelpReqById } from "../HelpRequestService";
 import { emailConfirmation } from "../EmailService";
 import { Link } from "react-router-dom";
 import { fetchUserTypeDetails } from "../EventCardService";
+
+import collectionMapping from "../../utils/firestoreCollections";
 
 const chipList = [
   "Childcare",
@@ -102,7 +103,9 @@ const stateAbbreviations = {
   "wyoming": "WY",
 };
 
-const USERS_COLLECTION = "users";
+const users_collection = collectionMapping.users;
+const outreachEvents_collection = collectionMapping.outreachEvents;
+const helpRequests_collection = collectionMapping.helpRequests;
 
 const CustomInput = ({ value, onClick, onChange, id, className }) => (
   <div>
@@ -119,7 +122,7 @@ const CustomInput = ({ value, onClick, onChange, id, className }) => (
 
 let autoComplete;
 
-export const GOOGLE_PLACES_API_KEY = "AIzaSyBnF0aSySY400NMs2LV32sNzR29BEbPV3s";
+export const GOOGLE_PLACES_API_KEY = process.env.REACT_APP_GOOGLE_PLACES_API_KEY;
 
 const loadScript = (url, callback) => {
   let script = document.createElement("script");
@@ -142,6 +145,7 @@ const Form = (hrid) => {
   const [success, setSuccess] = useState(false);
   const nameRef = useRef("");
   const contactRef = useRef("");
+  const emailRef = useRef("");
   const descRef = useRef("");
   const maxCapRef = useRef("");
   const streetRef = useRef("");
@@ -166,6 +170,7 @@ const Form = (hrid) => {
   const [error, setError] = useState({
     nameError: "",
     contactError: "",
+    emailError: "",
     streetError: "",
     cityError: "",
     stateError: "",
@@ -197,6 +202,7 @@ const Form = (hrid) => {
     stateRef.current.value = "";
     nameRef.current.value = "";
     contactRef.current.value = "";
+    emailRef.current.value = "";
     descRef.current.value = "";
     maxCapRef.current.value = "";
     streetRef.current.value = "";
@@ -217,22 +223,6 @@ const Form = (hrid) => {
   }
   const [shouldSubmit, setShouldSubmit] = useState(false);
 
-  useEffect(() => {
-    if (hrid.hrid) {
-      setHelpBool(true);
-      const getHelpDetails = async () => {
-        try {
-          const helpData = await fetchHelpReqById(hrid.hrid);
-          setHelpDetails(helpData);
-        } catch (e) {
-          setHelpReqError(true);
-        }
-      };
-      getHelpDetails();
-    } else {
-      setHelpBool(false);
-    }
-  }, [hrid.hrid]);
 
   useEffect(() => {
     if (helpDetails.title) {
@@ -283,6 +273,7 @@ const Form = (hrid) => {
             uid: fAuth.currentUser.uid,
             title: nameRef.current.value,
             contactNumber: contactRef.current.value || "N/A",
+            emailAddress: emailRef.current.value || "N/A",
             description: descRef.current.value,
             eventDate: Timestamp.fromDate(startDate),
             eventEndTime: Timestamp.fromDate(endDate),
@@ -301,13 +292,12 @@ const Form = (hrid) => {
             interests: 0,
             participants: [],
             status: statusValue,
-            helpRequest: isHelpReqFlow ? [hrid.hrid] : [],
             consentStatus: consentStatus,
 
           };
 
           // Insert doc in outreach event
-          const eventRef = collection(db, "outreachEvents");
+          const eventRef = collection(db, outreachEvents_collection);
 
           async function postDoc(ref, obj) {
             const docRef = await addDoc(ref, obj);
@@ -317,14 +307,14 @@ const Form = (hrid) => {
 
           //added outreach to user collection
           const userQuery = query(
-            collection(db, USERS_COLLECTION),
+            collection(db, users_collection),
             where("uid", "==", fAuth?.currentUser?.uid)
           );
           const userDocRef = await getDocs(userQuery);
           const userDocID = userDocRef.docs[0].id;
           console.log(userDocID);
           // reference for the userdoc
-          const userRef = doc(db, USERS_COLLECTION, userDocID);
+          const userRef = doc(db, users_collection, userDocID);
           // outreach event collection
           const docSnap = await getDoc(userRef);
           let createdOutreaches = docSnap.data().createdOutreaches || [];
@@ -333,17 +323,6 @@ const Form = (hrid) => {
             createdOutreaches: createdOutreaches,
           });
 
-          // check if flow comes from help request
-          if (isHelpReqFlow) {
-            const helpRequestRef = doc(db, "helpRequests", hrid.hrid);
-            const helpData = await fetchHelpReqById(hrid.hrid);
-            let outreachEvent = helpData.outreachEvent || [];
-            outreachEvent.push(ack);
-            const updateRef = await updateDoc(helpRequestRef, {
-              status: "Help on the way",
-              outreachEvent: outreachEvent,
-            });
-          }
 
           const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px"><h1>Thank you for creating the outreach</h1><p>Your outreach <b>${nameRef.current.value}</b> has been successfully created and you can view it in your profile.</p>
           <p>Here are some of the details:</p>
@@ -382,9 +361,8 @@ const Form = (hrid) => {
         "https://parseapi.back4app.com/classes/Usabystate_States?keys=name,postalAbreviation",
         {
           headers: {
-            "X-Parse-Application-Id":
-              "vahnMBqbmIbxOw8R3qtsEMoYrZMljfClGvc1aMyp",
-            "X-Parse-REST-API-Key": "LBjkDrxuUKEfb8liRPgZyv1Lu5WsPIvTx2FWgTpi",
+            "X-Parse-Application-Id":process.env.REACT_APP_X_PARSE_APPLICATION_ID,
+            "X-Parse-REST-API-Key": process.env.REACT_APP_X_PARSE_REST_API_KEY,
           },
         }
       );
@@ -412,8 +390,8 @@ const Form = (hrid) => {
         "?limit=1000&keys=name",
       {
         headers: {
-          "X-Parse-Application-Id": "vahnMBqbmIbxOw8R3qtsEMoYrZMljfClGvc1aMyp",
-          "X-Parse-REST-API-Key": "LBjkDrxuUKEfb8liRPgZyv1Lu5WsPIvTx2FWgTpi",
+          "X-Parse-Application-Id": process.env.REACT_APP_X_PARSE_APPLICATION_ID,
+          "X-Parse-REST-API-Key": process.env.REACT_APP_X_PARSE_REST_API_KEY,
         },
       }
     );
@@ -434,6 +412,9 @@ const Form = (hrid) => {
   };
   const contactNumberChange = (e) => {
     updateErrorState("contactError", "");
+  };
+  const emailChange = (e) => {
+    //updateErrorState("emailError", "");
   };
   const handleStreetChange = (e) => {
     setStreet(e.target.value);
@@ -677,13 +658,13 @@ const Form = (hrid) => {
     }
 
     if (!startDate) {
-      updateErrorState("stimeError", "Start DateTime is required");
+      updateErrorState("stimeError", "Start Date-Time is required");
     } else {
       updateErrorState("stimeError", "");
     }
 
     if (!endDate) {
-      updateErrorState("etimeError", "End DateTime is required");
+      updateErrorState("etimeError", "End Date-Time is required");
     } else {
       updateErrorState("etimeError", "");
     }
@@ -862,7 +843,7 @@ const Form = (hrid) => {
                 className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset  ${
                   error.nameError !== "" ? "ring-red-500" : "ring-gray-300"
                 }`}
-                placeholder="Use Location by default for group meetup"
+                placeholder="Enter the Event Name here"
                 id="event-name"
                 disabled={helpBool}
                 ref={nameRef}
@@ -885,7 +866,7 @@ const Form = (hrid) => {
                 className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset  ${
                   error.contactError !== "" ? "ring-red-500" : "ring-gray-300"
                 }`}
-                placeholder="Use Location by default for group meetup"
+                placeholder="Enter your Contact Number here"
                 id="event-contact"
                 disabled={helpBool}
                 ref={contactRef}
@@ -899,6 +880,23 @@ const Form = (hrid) => {
                   </p>
                 </div>
               )}
+            </div>
+
+            <div className="space-y-1.5">
+              <p className="font-semibold font-['Inter'] text-[15px]">
+                Email Address
+              </p>
+              <input
+                type="text"
+                className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset  ${
+                  error.emailError !== "" ? "ring-red-500" : "ring-gray-300"
+                }`}
+                placeholder="Enter your Email Address here"
+                id="event-email"
+                disabled={helpBool}
+                ref={emailRef}
+                onChange={emailChange}
+              />
             </div>
 
             <div className="space-y-1.5">
@@ -1048,7 +1046,7 @@ const Form = (hrid) => {
               </div>
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
-                  Zipcode
+                  ZIP Code
                 </p>
                 <input
                   type="text"
@@ -1256,7 +1254,7 @@ const Form = (hrid) => {
             <div className="grid grid-cols-2 space-x-4">
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
-                  Start DateTime*
+                  Start Date-Time*
                 </p>
                 <DatePicker
                   selected={startDate}
@@ -1291,7 +1289,7 @@ const Form = (hrid) => {
               </div>
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
-                  End DateTime*
+                  End Date-Time*
                 </p>
                 <DatePicker
                   selected={endDate}

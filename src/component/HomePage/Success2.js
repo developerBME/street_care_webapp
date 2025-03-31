@@ -9,6 +9,9 @@ import { useNavigate } from "react-router-dom";
 // import { useNavigate } from "react-router-dom";
 // import { fetchVisitLogs } from "../VisitLogCardService";
 import HomePageVisitlog from "../HomePage/HomePageVisitlog";
+import collectionMapping from "../../utils/firestoreCollections";
+
+const visitLogs_collection = collectionMapping.visitLogs;
 
 function Success2() {
   const navigate = useNavigate();
@@ -22,7 +25,7 @@ function Success2() {
   // useEffect(() => {
   //   const getValues = async () => {
   //     try {
-  //       const logOfUserRef = query(collection(db, "personalVisitLog"));
+  //       const logOfUserRef = query(collection(db, vistiLogs_collection));
   //       const data = await getDocs(logOfUserRef);
   //       let totalDonations = 0;
   //       let totalHelpedPeople = 0;
@@ -236,7 +239,7 @@ function Success2() {
                 label="Create an Outreach"
                 name="buttondefault"
                 onClick={() => {
-                  navigate("/profile");
+                  navigate("/createOutreach");
                 }}
               />
             </div>
@@ -258,16 +261,12 @@ function Success2() {
                 label="Create a Visit Log"
                 name="buttondefault"
                 onClick={() => {
-                  navigate("/profile");
+                  navigate("/profile/personaloutform");
                 }}
               />
             </div>
           </div>
         </div>
-      </div>
-
-      <div className=" mt-16 w-full  justify-start items-start">
-        <HomePageVisitlog />
       </div>
     </div>
   );
