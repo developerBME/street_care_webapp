@@ -22,17 +22,15 @@ import { fetchUserName, formatDate, getNumberOfPages } from "./HelperFunction";
 import { fetchUserDetailsBatch } from "./EventCardService";
 
 import logEvent from "./FirebaseLogger";
+import collectionMapping from "../utils/firestoreCollections";
 
-const VISIT_LOG_COLLECTION = "testLog";
-const OUTREACH_EVENTS_COLLECTION = "outreachEvents";
-const USERS_COLLECTION = "users";
-const PERSONAL_VISIT_LOG_COLLECTION = "personalVisitLog";
-const VISIT_LOG_COLLECTION_PROD = "visitLogWebProd";
-const PERSONAL_VISIT_LOG = "personalVisitLog";
+const outreachEvents_collection = collectionMapping.outreachEvents;
+const users_collection = collectionMapping.users;
+const visitLogs_collection = collectionMapping.visitLogs;
 
 export const fetchVisitLogs = async () => {
   try {
-    const visitLogsRef = collection(db, PERSONAL_VISIT_LOG_COLLECTION);
+    const visitLogsRef = collection(db, visitLogs_collection);
     const visitLogSnapshot = await getDocs(visitLogsRef);
     let visitLogs = [];
     for (const doc of visitLogSnapshot.docs) {
@@ -79,7 +77,7 @@ const fetchOutreachEventData = async (eid) => {
     }
 
     // Reference to the outreach event ID
-    const outReachEventRef = doc(db, OUTREACH_EVENTS_COLLECTION, eid);
+    const outReachEventRef = doc(db, outreachEvents_collection, eid);
     const outReachEventData = await getDoc(outReachEventRef);
 
     // Check if the document exists
@@ -169,7 +167,7 @@ const visitLogHelperFunction = async (visitLogSnap) => {
 export const fetchVisitLogById = async (visitLogId) => {
   try {
     // Reference to the specific document in the visitlog collection
-    const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
+    const visitLogRef = doc(db, visitLogs_collection, visitLogId);
     const visitLogSnap = await getDoc(visitLogRef);
     let visitLogs = await visitLogHelperFunction(visitLogSnap);
     return visitLogs[0];
@@ -183,7 +181,7 @@ export const fetchVisitLogById = async (visitLogId) => {
 };
 
 // export const fetchPersonalVisitLogs = async (uid) => {
-//   const visitLogsRef = collection(db, PERSONAL_VISIT_LOG_COLLECTION);
+//   const visitLogsRef = collection(db, visitLogs_collection);
 //   const visitLogSnapshot = await getDocs(visitLogsRef);
 //   let visitLogs = [];
 //   for (const doc of visitLogSnapshot.docs) {
@@ -205,14 +203,14 @@ export const fetchVisitLogById = async (visitLogId) => {
 //   return visitLogs;
 // };
 // const userQuery = query(
-//   collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+//   collection(db, visitLogs_collection),
 //   where(firebase.firestore.FieldPath.documentId(), "in", [id1,id2])
 // );
 // const userDocRef = await getDocs(userQuery);
 
 export const fetchTopVisitLogs = async () => {
   try {
-    const visitlogs = collection(db, PERSONAL_VISIT_LOG_COLLECTION);
+    const visitlogs = collection(db, visitLogs_collection);
     const visitlogsQuery = query(
       visitlogs,
       where("status", "==", "approved"), // Add condition to include only approved logs
@@ -252,7 +250,7 @@ export const fetchPersonalVisitLogss = async (
   ) => {
     
 try{
-let personalVisitLogRef = query(collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+let personalVisitLogRef = query(collection(db, visitLogs_collection),
 //where("status", "==", "approved"),
 where("uid","==",uid),
 orderBy("dateTime", "desc")
@@ -302,7 +300,7 @@ export const PersonalVisitLogsCount = async (uid) =>{
   try {
     let totalVisitLogRef;
   
-  totalVisitLogRef= query(collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+  totalVisitLogRef= query(collection(db, visitLogs_collection),
   where("status", "==", "approved"),
   where("uid","==",uid),
   orderBy("dateTime", "desc"));
@@ -321,7 +319,7 @@ export const PersonalVisitLogsCount = async (uid) =>{
 export const fetchPersonalVisitLogs = async (uid) => {
   try {
     const userQuery = query(
-      collection(db, USERS_COLLECTION),
+      collection(db, users_collection),
       where("uid", "==", uid)
     );
     const userDocRef = await getDocs(userQuery);
@@ -416,7 +414,7 @@ export const fetchPublicVisitLogs = async (
     //     pageHistory=[];
     //     console.log("inside city")
     //     totalOutReachRef = query(
-    //       collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+    //       collection(db, visitLogs_collection),
     //       where("status", "==", "approved"),
     //       where('city', '>=', city),
     //       where('city', '<=', city + '\uf8ff'),
@@ -426,14 +424,14 @@ export const fetchPublicVisitLogs = async (
     //   //Date Filter
     // else{
     //   totalOutReachRef = query(
-    //     collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+    //     collection(db, visitLogs_collection),
     //     where("status", "==", "approved"),
     //     where("dateTime", ">=", startDate),
     //     where("dateTime", "<=", endDate),
     //     orderBy("dateTime", "desc"))
     //   pastOutreachRef = query(totalOutReachRef,limit(pageSize));
     // }
-    pastOutreachRef = query(collection(db, PERSONAL_VISIT_LOG_COLLECTION),where("status", "==", "approved"))
+    pastOutreachRef = query(collection(db, visitLogs_collection),where("status", "==", "approved"))
     totalOutReachRef = pastOutreachRef
     if(searchValue){
       const descriptionQuery = descriptionFilter(searchValue,totalOutReachRef)
@@ -490,7 +488,7 @@ export const fetchPublicVisitLogs = async (
 export const fetchHomeVisitLogs = async () => {
   try {
     const visitLogsRef = query(
-      collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+      collection(db, visitLogs_collection),
       where("status", "==", "approved"), // Filter applied
       orderBy("dateTime","desc"),
       limit(3)
@@ -514,7 +512,7 @@ export const fetchPaginatedPublicVisitLogs = async (
 ) => {
   try {
     let visitLogsRef = query(
-      collection(db, PERSONAL_VISIT_LOG_COLLECTION),
+      collection(db, visitLogs_collection),
       where("status", "==", "approved"),
       orderBy("dateTime","desc"),
       limit(pageSize)
@@ -557,7 +555,7 @@ export const fetchPersonalVisitLogById = async (visitLogId) => {
   try {
 
     console.log("inside trauma")
-    const visitLogRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogId);
+    const visitLogRef = doc(db, visitLogs_collection, visitLogId);
     const visitLogDoc = await getDoc(visitLogRef);
     if (visitLogDoc.exists()) {
       const visitLogData = visitLogDoc.data();
@@ -577,7 +575,7 @@ export const fetchPersonalVisitLogById = async (visitLogId) => {
 
 
 export async function calculateNumberOfPagesForVisitlog(visitlogsPerPage) {
-  return getNumberOfPages(visitlogsPerPage, PERSONAL_VISIT_LOG_COLLECTION);
+  return getNumberOfPages(visitlogsPerPage, visitLogs_collection);
   }
 
 export const fetchVisitLogsByCityOrState = async (
@@ -603,7 +601,7 @@ export const fetchVisitLogsByCityOrState = async (
       return;
     }
 
-    const visitlogs = collection(db, PERSONAL_VISIT_LOG);
+    const visitlogs = collection(db, visitLogs_collection);
 
     let pageQuery = null;
     let visitlogsByLocationQuery = null;
@@ -683,14 +681,14 @@ export const fetchVisitLogsByCityOrState = async (
 
 
 // async function addApprovedField() {
-//   const colRef = collection(db, PERSONAL_VISIT_LOG);
+//   const colRef = collection(db, visitLogs_collection);
 //   const snapshot = await getDocs(colRef);
 
 //   for (const document of snapshot.docs) {
-//     const docRef = doc(db, PERSONAL_VISIT_LOG, document.id);
+//     const docRef = doc(db, visitLogs_collection, document.id);
 //     try {
 //       await updateDoc(docRef, { approved: false });
-//       console.log(`Updated document: ${document.id} in '${PERSONAL_VISIT_LOG}'`);
+//       console.log(`Updated document: ${document.id} in '${visitLogs_collection}'`);
 //     } catch (error) {
 //       console.error(`Failed to update document: ${document.id}:`, error);
 //     }
@@ -701,14 +699,14 @@ export const fetchVisitLogsByCityOrState = async (
 
 
 export async function fetchUnapprovedVisitLogs() {
-  const colRef = collection(db, PERSONAL_VISIT_LOG);
+  const colRef = collection(db, visitLogs_collection);
 
   const q = query(colRef, where('approved', '==', false));
 
   const snapshot = await getDocs(q);
 
   if (snapshot.empty) {
-    console.log(`No unapproved documents found in '${PERSONAL_VISIT_LOG}'`);
+    console.log(`No unapproved documents found in '${visitLogs_collection}'`);
     return [];
   }
 
@@ -717,21 +715,21 @@ export async function fetchUnapprovedVisitLogs() {
     unapprovedDocs.push({ id: doc.id, ...doc.data() });
   });
 
-  console.log(`Unapproved documents from '${PERSONAL_VISIT_LOG}':`, unapprovedDocs);
+  console.log(`Unapproved documents from '${visitLogs_collection}':`, unapprovedDocs);
   return unapprovedDocs;
 }
 
 // fetchUnapprovedVisitLogs();
 
 // async function addTypeField() {
-//   const colRef = collection(db, USERS_COLLECTION);
+//   const colRef = collection(db, users_collection);
 //   const snapshot = await getDocs(colRef);
 
 //   for (const document of snapshot.docs) {
-//     const docRef = doc(db, USERS_COLLECTION, document.id);
+//     const docRef = doc(db, users_collection, document.id);
 //     try {
 //       await updateDoc(docRef, { Type: "" });
-//       console.log(`Updated document: ${document.id} in '${USERS_COLLECTION}'`);
+//       console.log(`Updated document: ${document.id} in '${users_collection}'`);
 //     } catch (error) {
 //       console.error(`Failed to update document: ${document.id}:`, error);
 //     }

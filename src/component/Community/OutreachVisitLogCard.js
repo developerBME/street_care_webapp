@@ -16,9 +16,10 @@ import verifiedBlue from "../../images/verified_blue.png";
 import verifiedYellow from "../../images/verified_yellow.png";
 import { useUserContext } from "../../context/Usercontext.js";
 
+import collectionMapping from "../../utils/firestoreCollections.js";
 
-const PERSONAL_VISIT_LOG_COLLECTION = "personalVisitLog";
-const USERS_COLLECTION = "users"; // User collection
+const visitLogs_collection = collectionMapping.visitLogs;
+const users_collection = collectionMapping.users; // User collection
 
 const OutreachVisitLogCard = ({ visitLogCardData }) => {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
     try {
       
       if (visitLogCardData?.id) {
-        const docRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogCardData.id);
+        const docRef = doc(db, visitLogs_collection, visitLogCardData.id);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           setIsFlagged(docSnap.data().isFlagged || false);
@@ -83,7 +84,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
         return;
       }
       
-      const userRef = doc(db, USERS_COLLECTION, user.uid);
+      const userRef = doc(db, users_collection, user.uid);
       const userDoc = await getDoc(userRef);
       
       if (!userDoc.exists()) {
@@ -92,7 +93,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
       }
 
       const { Type: userType } = userDoc.data();
-      const docRef = doc(db, PERSONAL_VISIT_LOG_COLLECTION, visitLogCardData?.id);
+      const docRef = doc(db, visitLogs_collection, visitLogCardData?.id);
       const docSnap = await getDoc(docRef);
   
       if (!docSnap.exists()) {
