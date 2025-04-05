@@ -7,96 +7,21 @@ import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import { Modal } from "@mui/material";
 import OutreachSignupModal from "../Community/OutreachSignupModal";
 import RSVPConfirmationModal from "../UserProfile/RSVPConfirmationModal";
-import { parse } from "date-fns";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { formatDate } from "../HelperFunction"; 
-import Pagination from "../Pagination";
 const AdminOutreachEvents = () => {
 
-  const renderPaginationButtons = () => {
-    const buttons = [];
-    const pageRange = 1;
-
-    if (currentPage > 1) { 
-      buttons.push(
-        <button
-          key="prev"
-          onClick={() => onPageChange(currentPage - 1)}
-          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
-        >
-          <IoIosArrowBack/>
-        </button>
-      );
-    }
-
-    if (currentPage > pageRange + 1) {
-      buttons.push(
-        <button
-          key="first"
-          onClick={() => onPageChange(1)}
-          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
-        >
-          1
-        </button>
-      );
-      buttons.push(<span key="ellipsis-start" className="mx-1">...</span>);
-    }
-
-    for (let i = Math.max(1, currentPage - pageRange); i <= Math.min(totalPages, currentPage + pageRange); i++) {
-      buttons.push(
-        <button
-          key={i}
-          onClick={() => onPageChange(i)}
-          className={`mx-1 px-3 py-1 rounded-full ${
-            currentPage === i ? "bg-[#1F0A58] text-white" : "bg-gray-200 text-gray-600"
-          }`}
-        >
-          {i}
-        </button>
-      );
-    }
-
-    if (currentPage < totalPages - pageRange) {
-      buttons.push(<span key="ellipsis-end" className="mx-1">...</span>);
-      buttons.push(
-        <button
-          key="last"
-          onClick={() => onPageChange(totalPages)}
-          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
-        >
-          {totalPages}
-        </button>
-      );
-    }
-
-    if (currentPage < totalPages) {
-      buttons.push(
-        <button
-          key="next"
-          onClick={() => onPageChange(currentPage + 1)}
-          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
-        >
-          <IoIosArrowForward/>
-        </button>
-      );
-    }
-
-    return buttons;
-  };
+ 
 
   // State variables
   const [allEvents, setAllEvents] = useState([]); //Stores all the events when first loaded from database
   const [events, setEvents] = useState([]); // Stores all events
   const [eventsDisplay, setEventsDisplay] = useState([]); // Stores events to be displayed based on search and pagination
   const [isLoading, setIsLoading] = useState(true); // Loading state for fetching events
-  const [currentPage, setCurrentPage] = useState(1); // Current page for pagination
-  const [eventsPerPage] = useState(6); // Number of events per page
-
   const navigate = useNavigate();
   const searchRef = useRef(""); // Reference for the search input
   const searchCity = useRef(""); // Reference for the search city input
-  const [visibleCards, setVisibleCards] = useState(12);
 
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
@@ -105,91 +30,62 @@ const AdminOutreachEvents = () => {
 
   const [filterOption, setfilterOption] = useState("");
   const [timeframeOption, setTimeframeOption] = useState("");
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(
-    new Date().setDate(new Date().getDate() + 7)
-  );
+  const [totalPages,setTotalPages] = useState(0)
+  const logsPerPage = 6;
+  const [currentPageLength,setCurrentPageLength]=useState(0)
+  const [cursorFields,setCursorFields] = useState({"lastVisible":null,"direction":"next","pageHistory":[],"pastOutreachRef":null})
+  const [filterData,setFilterData] = useState({city:"",isDateFilter:false,startDate:new Date(),endDate:new Date(new Date().setDate(new Date().getDate() + 7)),searchValue:"",timeFrame:"",isTimeFilter:false})
+  
+
 
   const handleFilterChange = (e) => {
-    setEventsDisplay(events);
+    //setEventsDisplay(events);
     const filterBy = e.target.value;
     setfilterOption(filterBy);
+    //To make sure when the sort option is changed from None to city or date, api is not triggered
+    if(filterBy === "")return 
+    //To clear the filters in other cases
+    setFilterData(prev=>({...prev,city:"",startDate:new Date(),endDate:new Date(new Date().setDate(new Date().getDate() + 7)),isDateFilter:filterBy === "datePeriod" ? true : false }))
+    setCursorFields({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
+    setCurrentPageLength(0)
   };
 
   const handleTimeframeChange = (e) => {
-
     const timeframe = e.target.value;
     setTimeframeOption(timeframe)
-    if (timeframe === 'all'){
-            // setEvents(events)
-            setEventsDisplay(allEvents)
-        }
-        else if (timeframe === 'past'){
-            const pastEvents = allEvents.filter((event) => {
-                const eventDate = event?.eventDate?.seconds
-                  ? new Date(event.eventDate.seconds * 1000)
-                  : event.eventDate;
-                return eventDate < new Date();
-              });
-              setEvents(pastEvents)
-            setEventsDisplay(pastEvents)
-        }
-        else if (timeframe === 'upcoming'){
-            const upcomingEvents = allEvents.filter((event) => {
-                const eventDate = event?.eventDate?.seconds
-                  ? new Date(event.eventDate.seconds * 1000)
-                  : event.eventDate;
-                return eventDate >= new Date();
-              });
-              setEvents(upcomingEvents)
-            setEventsDisplay(upcomingEvents)
-        }
-    
-    
-
-    // setEventsDisplay(events);
-    // const timeframe = e.target.value;
-    // setTimeframeOption(timeframe)
-
-    // const pastEvents = events.filter((event) => {
+    if(timeframe === "all")setFilterData(prev=>({...prev,isTimeFilter: false,timeFrame:""}))
+    else setFilterData(prev=>({...prev,isTimeFilter: true,timeFrame:timeframe}))
+    setCursorFields({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
+    setCurrentPageLength(0)
+    // if (timeframe === 'all'){
+    //         // setEvents(events)
+    //         setEventsDisplay(allEvents)
+    //     }
+    //     else if (timeframe === 'past'){
+    //         const pastEvents = allEvents.filter((event) => {
     //             const eventDate = event?.eventDate?.seconds
     //               ? new Date(event.eventDate.seconds * 1000)
     //               : event.eventDate;
     //             return eventDate < new Date();
     //           });
-    // setEventsDisplay(pastEvents)
-
-    // const timeframe = e.target.value;
-    // setTimeframeOption(timeframe);
-    // if (timeframe === 'All'){
-    //     setEventsDisplay(events)
-    // }
-    // else if (timeframe === 'Past Events'){
-    //     const pastEvents = events.filter((event) => {
-    //         const eventDate = event?.eventDate?.seconds
-    //           ? new Date(event.eventDate.seconds * 1000)
-    //           : event.eventDate;
-    //         return eventDate < new Date();
-    //       });
-    //     setEventsDisplay(pastEvents)
-    // }
-    // else if (timeframe === 'Future Events'){
-    //     const futureEvents = events.filter((event) => {
-    //         const eventDate = event?.eventDate?.seconds
-    //           ? new Date(event.eventDate.seconds * 1000)
-    //           : event.eventDate;
-    //         return eventDate >= new Date();
-    //       });
-    //     setEventsDisplay(futureEvents)
-    // }
+    //           setEvents(pastEvents)
+    //         setEventsDisplay(pastEvents)
+    //     }
+    //     else if (timeframe === 'upcoming'){
+    //         const upcomingEvents = allEvents.filter((event) => {
+    //             const eventDate = event?.eventDate?.seconds
+    //               ? new Date(event.eventDate.seconds * 1000)
+    //               : event.eventDate;
+    //             return eventDate >= new Date();
+    //           });
+    //           setEvents(upcomingEvents)
+    //         setEventsDisplay(upcomingEvents)
+    //     }
   };
 
   
 
-  const loadMore = () => {
-    setVisibleCards((prev) => prev + 12);
-  };
-
+  
   const openModal = (event) => {
     setSelectedEvent(event);
   };
@@ -220,100 +116,106 @@ const AdminOutreachEvents = () => {
     setShowWithdrawnModal(false);
   };
 
-  const fetchData = async () => {
-    const eventsData = await fetchEvents();
-    const allEvents = eventsData.filter((event) => {
-      if (!event.eventDate || !event.eventDate.seconds) {
-        return false; // Skip events with undefined eventDate or seconds
-      }
-    //   const eventDate = new Date(event.eventDate.seconds * 1000);
-      return event  // Filter only upcoming events >= new Date();
-    });
-    // Sort events by date
-    allEvents.sort((a, b) => a.eventDate - b.eventDate);
-    setAllEvents(allEvents);
-    setEvents(allEvents);
+
+  useEffect(() => {
+    const fetchData = async () => {
+    if(!cursorFields.direction)return
+    console.log(filterData.searchValue)
+    const eventsData = await fetchEvents(
+      filterData.searchValue,
+      filterData.city,
+      filterData.startDate,
+      filterData.endDate,
+      filterData.isDateFilter,
+      filterData.isTimeFilter,
+      filterData.timeFrame,
+      cursorFields.lastVisible,
+      logsPerPage,
+      cursorFields.direction,
+      cursorFields.pageHistory
+    );
+    setCursorFields(prev=>({...prev,lastVisible:eventsData.lastDoc,pageHistory:eventsData.pageHistory}))
+    setTotalPages(eventsData.totalRecords)
+    if(cursorFields.direction ==="next")setCurrentPageLength((prev)=>prev + eventsData.outreachEvents.length)
+    console.log(eventsData)
+    setAllEvents(eventsData.outreachEvents);
+    setEvents(eventsData.outreachEvents);
     setIsLoading(false); // Set loading to false after fetching data
   };
-
-  useEffect(() => {
+  const delayTimer = setTimeout(()=>{
     fetchData();
-  }, [triggerEffect]);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  },500)
+  return ()=>clearTimeout(delayTimer)
+  }, [filterData.city,filterData.searchValue, filterData.isDateFilter, filterData.startDate, filterData.endDate,triggerEffect,cursorFields.direction,filterData.isTimeFilter,filterData.timeFrame]);
 
   // Update displayed events when the events state changes
   useEffect(() => {
     setEventsDisplay(events);
   }, [events]);
 
-  // Handle search input change
-  const searchChange = () => {
-    const searchValue = searchRef.current.value.toLowerCase();
-    setEventsDisplay(
-      events.filter(
-        (x) =>
-          x.title.toLowerCase().includes(searchValue) ||
-          x.userName.toLowerCase().includes(searchValue) ||
-          x.location.city.toLowerCase().includes(searchValue) ||
-          x.description.toLowerCase().includes(searchValue)
-      )
-    );
-    setCurrentPage(1); // Reset to first page after search
-  };
 
-  // Handle search city input change
-  const searchCityChange = () => {
-    setCurrentPage(1);
-    const searchValue = searchCity.current.value.toLowerCase();
-    setEventsDisplay(
-      events.filter((x) => x.location.city.toLowerCase().includes(searchValue))
-    );
-    setCurrentPage(1); // Reset to first page after search
-  };
+  const handleNext = () =>{
+    // Reset direction to force an update
+  setCursorFields((prev) => ({ ...prev, direction: "" })); 
 
-  //Handling filter by date period
-  const filterByDate = () => {
-    const sortedEvents = events.filter((event) => {
-      if (startDate && event.eventDate.toDate() < startDate) return false;
-      if (endDate && event.eventDate.toDate() > endDate) return false;
-      return true;
-    });
+  // Set it to 'next' after a slight delay
+  setTimeout(() => {
+    setCursorFields((prev) => ({ ...prev, direction: "next" }));
+  }, 0); 
+  }
+  const handlePrev=()=>{
+    //Handling here since I need length of the records one render before
+    setCurrentPageLength((prev)=>(prev-allEvents.length))
+    //Reset direction to force an update
+    setCursorFields((prev) => ({ ...prev, direction: "" })); 
+    setTimeout(() => {
+      setCursorFields((prev) => ({ ...prev, direction: "prev" }));
+    }, 0); 
+  }
 
-    setEventsDisplay(sortedEvents);
-  };
-
-  useEffect(() => {
-    if (filterOption === "datePeriod") {
-      setCurrentPage(1);
-      filterByDate();
+  const renderPaginationButtons = () => {
+    const buttons = [];
+    if (currentPageLength > 6) {
+      buttons.push(
+        <button
+          key="prev"
+          onClick={() => handlePrev()}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          <IoIosArrowBack className="w-6 h-6" />
+        </button>
+      );
     }
-  }, [startDate, endDate, filterOption]);
 
-  // Handle page change for pagination
-  const onPageChange = (page) => {
-    setCurrentPage(page);
+    if (currentPageLength < totalPages) {
+      buttons.push(
+        <button
+          key="next"
+          onClick={() => handleNext()}
+          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+        >
+          <IoIosArrowForward className="w-6 h-6" />
+        </button>
+      );
+    }
+
+    return buttons;
   };
 
-  // Calculate the indices for slicing events for the current page
-  const indexOfLastEvent = currentPage * eventsPerPage;
-  const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
-  const currentEvents = eventsDisplay.slice(
-    indexOfFirstEvent,
-    indexOfLastEvent
-  );
-  const totalPages = Math.ceil(eventsDisplay.length / eventsPerPage); // Calculate total pages
+  const handleChange = (e) =>{
+    const { name, value } = e.target;
+    setFilterData((prev)=>({...prev,[name]:value}))
+    setCursorFields({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
+    setCurrentPageLength(0)
+  }
 
-  // Color variables
-  const inactiveBgColor = "bg-white";
-  const inactiveTextColor = "text-black";
-  const inactiveBorderColor = "border-[#9B82CF]";
-  const activeBgColor = "bg-[#E0D7EC]";
-  const activeTextColor = "text-black";
-  const activeBorderColor = "border-[#1F0A58]";
+  const handleDateChange = (date,fieldName) =>{
+    setFilterData((prev) => ({ ...prev, [fieldName]: date,isDateFilter: true }));
+    setCursorFields({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
+    setCurrentPageLength(0)
+  }
 
+ 
   return (
     <div className="relative flex flex-col items-center">
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-16 lg:mx-40 mt-48 rounded-2xl bg-white text-black">
@@ -342,6 +244,7 @@ const AdminOutreachEvents = () => {
             {/* All/Past/Upcoming Outreach Events */}
             <div className="flex items-center mt-6 lg:mt-0">                
                 <select
+                  name = "timeframeOption"
                   value={timeframeOption}
                   onChange={handleTimeframeChange}
                   className="form-select w-fit md:w-9rem] py-2 px-2 border border-[#CACACA] text-gray-500 bg-white appearance-none block rounded-2xl"
@@ -358,11 +261,11 @@ const AdminOutreachEvents = () => {
               <label className="relative text-gray-400 focus-within:text-gray-600">
                 <input
                   type="text"
-                  name="searchText"
+                  name="searchValue"
                   id="searchText"
                   placeholder="Search Outreach Events"
                   ref={searchRef}
-                  onChange={searchChange}
+                  onChange={handleChange}
                   className="form-input w-fit md:w-[16rem] lg:w-[16rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-10 rounded-2xl"
                   style={{ borderRadius: "0px" }}
                 />
@@ -403,11 +306,11 @@ const AdminOutreachEvents = () => {
               {filterOption === "city" && (
                 <input
                   type="text"
-                  name="searchCity"
+                  name="city"
                   id="searchCity"
                   placeholder="Search City"
                   ref={searchCity}
-                  onChange={searchCityChange}
+                  onChange={handleChange}
                   className="form-input w-fit md:w-[12rem] lg:w-[8rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-2 rounded-2xl"
                   style={{ borderRadius: "0px" }}
                 />
@@ -417,21 +320,24 @@ const AdminOutreachEvents = () => {
               {filterOption === "datePeriod" && (
                 <div className="flex items-center mt-6 lg:mt-0 gap-2">
                   <DatePicker
-                    selected={startDate}
-                    onChange={(date) => setStartDate(date)}
+                    selected={filterData.startDate}
+                    onChange={(date)=>handleDateChange(date,"startDate")}
                     selectsStart
-                    startDate={startDate}
-                    endDate={endDate}
+                    name="startDate"
+                    value={filterData.startDate}
+                    startDate={filterData.startDate}
+                    endDate={filterData.endDate}
                     placeholderText="Select Start Date"
                     className="form-input w-fit md:w-[9rem] lg:w-[9rem] py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
                   />
                   <p>To</p>
                   <DatePicker
-                    selected={endDate}
-                    onChange={(date) => setEndDate(date)}
+                    selected={filterData.endDate}
+                    onChange={(date)=>handleDateChange(date,"endDate")}
                     selectsEnd
-                    startDate={startDate}
-                    endDate={endDate}
+                    startDate={filterData.startDate}
+                    endDate={filterData.endDate}
+                    value={filterData.endDate}
                     placeholderText="Select End Date"
                     className="form-input w-fit md:w-[9rem] lg:w-[9rem] py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
                   />
@@ -445,7 +351,7 @@ const AdminOutreachEvents = () => {
           {/* Add event count and pagination at the bottom */}
           <div className="flex justify-between items-center mt-8 w-full mb-11">
             <p className="text-gray-600">
-              Showing {currentEvents.length} of {eventsDisplay.length} events
+              Showing {currentPageLength} of {totalPages} events
             </p>
 
             <div className="flex justify-end">
@@ -462,8 +368,8 @@ const AdminOutreachEvents = () => {
             </div>
           ) : (
             <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-x-4 gap-y-1">
-              {currentEvents.length > 0 ? (
-                currentEvents.map((eventData) => (
+              {eventsDisplay.length > 0 ? (
+                eventsDisplay.map((eventData) => (
                   <OutreachEventCard
                     key={eventData.id}
                     cardData={{
@@ -494,7 +400,7 @@ const AdminOutreachEvents = () => {
           {/* Add event count and pagination at the bottom */}
           <div className="flex justify-between items-center mt-8 w-full">
             <p className="text-gray-600">
-              Showing {currentEvents.length} of {eventsDisplay.length} events
+              Showing {currentPageLength} of {totalPages} events
             </p>
 
             <div className="flex justify-end">

@@ -27,23 +27,107 @@ const visitLogs_collection = collectionMapping.visitLogs;
 const outreachEvents_collection = collectionMapping.outreachEvents;
 const officialEvents_collection = collectionMapping.officialEvents;
 
-export const fetchEvents = async () => {
-  try {
-    const oureachEventsRef = collection(db, outreachEvents_collection);
-    const approvedEventsQuery = query(
-      oureachEventsRef,
-      where("status", "==", "approved")
+const descriptionFilter = (searchTerm,filterQuery)=>{
+  return query(
+    filterQuery,
+    or(
+      and(
+          where("location.city", ">=", searchTerm),
+          where("location.city", "<=", searchTerm + "\uf8ff")
+      ),
+      and(
+          where("description", ">=", searchTerm),
+          where("description", "<=", searchTerm + "\uf8ff")
+      )
+    ));
+}
+
+const cityFilter = (city,filterQuery)=>{
+  return query(
+    filterQuery,
+    where('location.city', '>=', city),
+    where('location.city', '<=', city + '\uf8ff')
     );
-    const eventSnapshot = await getDocs(approvedEventsQuery);
+}
+
+const dateFilter = (startDate,endDate,filterQuery) =>{
+  return query(
+    filterQuery,
+    where("eventDate", ">=", startDate),
+    where("eventDate", "<=", endDate)
+    );
+}
+
+const timeFilter = (filterQuery,isPast) =>{
+  return query(
+    filterQuery,
+    isPast ? where("eventDate","<=",new Date()) : where("eventDate",">=",new Date())
+  )
+}
+
+export const fetchEvents = async (
+  searchValue,
+  city,
+  startDate,
+  endDate,
+  isDateFilter = false,
+  isTimeFilter = false,
+  timeframe,
+  lastVisible = null,
+  pageSize = 6,
+  direction = "next",
+  pageHistory = []
+) => {
+  try {
+    let totalOutReachRef, pastOutreachRef
+    pastOutreachRef = query(collection(db, outreachEvents_collection),where("status", "==", "approved"))
+    totalOutReachRef = pastOutreachRef
+    
+    if(searchValue){
+      const descriptionQuery = descriptionFilter(searchValue,totalOutReachRef)
+      totalOutReachRef = descriptionQuery
+    }
+
+    if(city){
+      const cityQuery = cityFilter(city,totalOutReachRef)
+      totalOutReachRef = cityQuery
+    }
+
+    if(isDateFilter){
+      const dateQuery = dateFilter(startDate,endDate,totalOutReachRef)
+      totalOutReachRef = dateQuery
+    }
+
+    if(isTimeFilter){
+      const timeQuery = timeFilter(totalOutReachRef,timeframe==="past"?true:false)
+      totalOutReachRef = timeQuery
+    }
+    pastOutreachRef = query(totalOutReachRef,orderBy("eventDate", "asc"),limit(pageSize))
+    //Handle Forward pagination
+    if (lastVisible && direction === "next") {
+      pastOutreachRef = query(pastOutreachRef, startAfter(lastVisible));
+    }
+    
+    // Handle Backward pagination
+    if (lastVisible && direction === "prev" && pageHistory.length > 2) {
+      pastOutreachRef = query(pastOutreachRef, startAfter(pageHistory[pageHistory.length - 3]));
+    }
+    const eventSnapshot = await getDocs(pastOutreachRef);
+    const lastDoc = eventSnapshot.docs[eventSnapshot.docs.length - 1];
+
+
 
     // Collecting all unique user IDs
     const userIds = new Set();
-    eventSnapshot.docs.forEach((doc) => userIds.add(doc.data().uid));
-
+    eventSnapshot.docs.forEach((doc) => {if(doc.data().uid) userIds.add(doc.data().uid)});
+   
     // Batch fetch user details
     const userDetails = await fetchUserDetailsBatch(Array.from(userIds));
 
+
+    const totalRecords = await getCountFromServer(totalOutReachRef);
     const fAuth = getAuth();
+
     const outreachEvents = eventSnapshot.docs.map((doc) => {
       const eventData = doc.data();
       const currentParticipants = eventData.participants || [];
@@ -63,7 +147,13 @@ export const fetchEvents = async () => {
       };
     });
 
-    return outreachEvents;
+    if (direction === "next") {
+      pageHistory.push(lastDoc);
+    } else if (direction === "prev") {
+      pageHistory.pop();
+    }
+
+    return {outreachEvents,totalRecords:totalRecords.data().count,lastDoc,pageHistory};
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
@@ -81,7 +171,7 @@ export async function fetchUserDetailsBatch(userIds) {
   const userDetails = {};
   // Firestore limits 'in' queries to 10 items
   const chunks = splitArrayIntoChunksOfLen(userIds, 10);
-
+  console.log(chunks)
   for (const chunk of chunks) {
     const userQuery = query(
       collection(db, users_collection),
