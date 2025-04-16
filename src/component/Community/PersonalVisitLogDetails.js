@@ -90,7 +90,7 @@ const PersonalVisitLogDetails = () => {
         <div className="md:px-[150px] md:py-[100px] px-[20px] py-[15px]">
           <div className="md:space-y-[64px] space-y-[32px]">
             <div className="font-medium font-dmsans text-[45px] text-neutral-800 leading-[52px]">
-              Visit Log Details
+              Interaction Log Details
             </div>
             <div className="bg-[#F5EEFE] rounded-2xl ">
               {/* <div className="inline-flex gap-2 items-center px-4 pt-6 py-2">
@@ -146,27 +146,27 @@ const PersonalVisitLogDetails = () => {
               </div>
             </div>
           </div>
-            <div className="justify-start items-start gap-[10px] inline-flex mt-6">
-              <CustomButton
-                label="Edit"
-                name="editButton"
-                onClick={() => {
-                  navigate(`/profile/visitlogform/${id}`);
-                }}
+          <div className="justify-start items-start gap-[10px] inline-flex mt-6">
+            <CustomButton
+              label="Edit"
+              name="editButton"
+              onClick={() => {
+                navigate(`/profile/visitlogform/${id}`);
+              }}
+            />
+            <CustomButton
+              label="Delete"
+              name="deleteButton"
+              onClick={() => setShowDeleteModal(true)}
+            />
+            {showDeleteModal && (
+              <DeleteModal
+                handleClose={() => setShowDeleteModal(false)}
+                handleDelete={deleteVisitLog}
+                modalMsg={`Are you sure you want to delete this interaction log?`}
               />
-              <CustomButton
-                label="Delete"
-                name="deleteButton"
-                onClick={() => setShowDeleteModal(true)}
-              />
-              {showDeleteModal && (
-                <DeleteModal
-                  handleClose={() => setShowDeleteModal(false)}
-                  handleDelete={deleteVisitLog}
-                  modalMsg={`Are you sure you want to delete this visit log?`}
-                />
-              )}
-            </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

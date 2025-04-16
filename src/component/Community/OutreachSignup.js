@@ -561,7 +561,7 @@ const [isFlagged, setIsFlagged] = useState(false);
                   <DeleteModal
                     handleClose={() => setShowDeleteModal(false)}
                     handleDelete={deleteVisitLog}
-                    modalMsg={`Are you sure you want to delete this visit log?`}
+                    modalMsg={`Are you sure you want to delete this interaction log?`}
                   />
                 )}
                 {showModal && (

@@ -22,12 +22,12 @@ const UpdateVisitLogConfirmationModal = ({
           <div className="self-stretch h-fit flex-col justify-start items-start gap-6 flex">
             <div className="justify-self-end items-start gap-20 sm:gap-6 inline-flex w-full">
               <div className="w-fit text-[#212121] text-4xl font-medium font-bricolage leading-[44px]">
-                Visit log updated to profile!
+              Interaction log updated to profile!
               </div>
             
             </div>
             <div className="self-stretch text-[#616161] text-lg font-semibold font-['Open Sans'] leading-normal">
-              Visit Log Updated Successfully !!
+            Interaction Log Updated Successfully !!
             </div>
           </div>
           <div className="w-fit justify-start items-start gap-4 inline-flex">

@@ -1998,10 +1998,10 @@ function PersonalOutForm() {
                   </div>
                 )}
                 <span className="text-gray-500 self-stretch justify-normal font-bricolage">
-                  If you can, it’s most helpful for you to fill out one visit
-                  log per person. This way it enables us to provide far better
-                  services and outreach to each person. That’s totally optional,
-                  any information is great!
+                  If you can, it’s most helpful for you to fill out one
+                  interaction log per person. This way it enables us to provide
+                  far better services and outreach to each person. That’s
+                  totally optional, any information is great!
                 </span>
                 {/* Toggle public form */}
                 <div className="flex items-center">
@@ -2013,7 +2013,7 @@ function PersonalOutForm() {
                     className="w-[18px] h-[18px] bg-violet-700 rounded-sm cursor-pointer"
                   />
                   <span className="self-stretch font-bricolage text-[18px] ml-2">
-                    Make this visit log public?
+                    Make this interaction log public?
                   </span>
                 </div>
                 {/* Toggle public form end */}

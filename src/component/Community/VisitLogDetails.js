@@ -54,28 +54,28 @@ useEffect(() => {
 const handleFlag = async (e) => {
   e.stopPropagation(); // Prevent any parent click events
   if (!user) {
-    alert("Please log in to flag or unflag the visit log.");
-    return;
-  }
-  try {
-    // Get the user document to check the user type
-    const userRef = doc(db, users_collection, user.uid);
-    const userDoc = await getDoc(userRef);
-    if (!userDoc.exists()) {
-      console.error("User document does not exist");
+      alert("Please log in to flag or unflag the interaction log.");
       return;
     }
-    const { Type: userType } = userDoc.data();
-    
-    // Get the visit log document
-    const docRef = doc(db, visitLogs_collection, id);
-    const docSnap = await getDoc(docRef);
-    if (!docSnap.exists()) {
-      console.error("Document does not exist");
-      return;
-    }
-    
-    const { isFlagged: currentStatus, flaggedByUser } = docSnap.data();
+    try {
+      // Get the user document to check the user type
+      const userRef = doc(db, users_collection, user.uid);
+      const userDoc = await getDoc(userRef);
+      if (!userDoc.exists()) {
+        console.error("User document does not exist");
+        return;
+      }
+      const { Type: userType } = userDoc.data();
+
+      // Get the visit log document
+      const docRef = doc(db, visitLogs_collection, id);
+      const docSnap = await getDoc(docRef);
+      if (!docSnap.exists()) {
+        console.error("Document does not exist");
+        return;
+      }
+
+      const { isFlagged: currentStatus, flaggedByUser } = docSnap.data();
     const canUnflag = flaggedByUser === user.uid || userType === "Street Care Hub Leader";
     // (Optional) Restrict unflagging if needed:
     if (currentStatus && !canUnflag) {
@@ -98,7 +98,7 @@ const handleFlag = async (e) => {
 
 
   const returnTarget = "/allOutreachVisitLog";
-  const returnText = "Return to Visit Logs";
+  const returnText = "Return to Interaction Logs";
 
   useEffect(() => {
     const getData = async () => {
@@ -148,7 +148,7 @@ const handleFlag = async (e) => {
         <div className="md:px-[150px] md:py-[100px] px-[20px] py-[15px]">
           <div className="md:space-y-[64px] space-y-[32px]">
             <div className="font-medium font-dmsans text-[45px] text-neutral-800 leading-[52px]">
-              Visit Log Details
+              Interaction Log Details
             </div>
             {data ? (
               <div className="bg-[#F5EEFE] min-w-full max-w-[320px] lg:w-full rounded-[30px] mb-4 flex flex-col justify-between p-6">
@@ -181,9 +181,11 @@ const handleFlag = async (e) => {
             className="absolute right-10 top-0 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-30 whitespace-normal"
             style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
           >
-            {!isFlagged ? 'Flag the Visit Log?' : 'Unflag the Visit Log?'}
-        </div>
-</div>
+                      {!isFlagged
+                        ? "Flag the Interaction Log?"
+                        : "Unflag the Interaction Log?"}
+                    </div>
+                  </div>
 
 </div>
 

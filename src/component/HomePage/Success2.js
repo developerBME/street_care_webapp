@@ -254,11 +254,11 @@ function Success2() {
             />
             <p className="mt-4 font-dmsans font-normal text-[14px] leading-[22px] tracking-normal text-center text-[#444746]">
               Inspire others by sharing your impact and capture your journey of
-              helping those in need with visit logs!
+              helping those in need with interaction logs!
             </p>
             <div className="mt-auto">
               <CustomButton
-                label="Create a Visit Log"
+                label="Create a Interaction Log"
                 name="buttondefault"
                 onClick={() => {
                   navigate("/profile/personaloutform");
