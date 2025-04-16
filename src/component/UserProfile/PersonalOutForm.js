@@ -873,7 +873,8 @@ function PersonalOutForm() {
                 <div className="self-stretch h-fit flex-col justify-center items-start gap-[24px] flex">
                   <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                     <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
-                      Who did you help (and how many people)?*
+                      Describe who you supported and how many individuals were
+                      involved*
                     </div>
                     {/*  */}
                     <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
@@ -942,7 +943,7 @@ function PersonalOutForm() {
 
                   <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                     <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
-                      What kind of help did you provide?
+                      What kind of support did you provide?
                     </div>
 
                     <div className="self-stretch w-full h-fit grid md:grid-cols-4 grid-cols-2 gap-2 ">

@@ -923,7 +923,7 @@ const Form = (hrid) => {
 
             <div className="space-y-1.5">
               <p className="font-semibold font-['Inter'] text-[15px]">
-                Maximum capacity of participants allowed*
+                Total allowable participants*
               </p>
               <input
                 type="number"
@@ -1331,7 +1331,7 @@ const Form = (hrid) => {
         </div>
         <div className="space-y-6 md:px-12 lg:px-0">
           <div className="font-semibold font-bricolage text-[22px]">
-            What kind of help they need?
+            What support are they looking for?
           </div>
           <div className="space-y-1.5 relative">
             {/* <p className="font-semibold font-['Inter'] text-[15px]">
@@ -1352,7 +1352,7 @@ const Form = (hrid) => {
               <img alt="" src={arrowDown} />
             </div> */}
             <p className="font-semibold font-['Inter'] text-[15px]">
-              Help Type Required*
+              Required Support Type*
             </p>
             <input
               type="text"
@@ -1372,7 +1372,7 @@ const Form = (hrid) => {
             )}
           </div>
           <div className="font-semibold font-bricolage text-[15px]">
-            Select skills it would require to provide the help
+            Select the skills required to provide support
           </div>
           <div className=" space-y-2">
             {chipList.map((value, index) => (

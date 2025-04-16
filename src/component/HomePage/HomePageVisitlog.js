@@ -104,7 +104,7 @@ const HomePageVisitlog = () => {
                 }}
               >
                 <div className="font-medium text-2xl md:text-[45px] font-dmsans">
-                  Latest actions - Interaction Log
+                  Latest Actions - Interaction Log
                 </div>
 
                 <img src={arrowRight} className="w-6 h-6 lg:w-10 lg:h-10 " />
