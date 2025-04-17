@@ -752,6 +752,204 @@ export const handleRsvp = async (
   }
 };
 
+export const handleLikes = async (
+  e,
+  id,
+  label,
+  navigate,
+  label2,
+  setLabel2,
+  isVisitLog,
+  refresh
+) => {
+  // check if button is going to RSVP or EDIT
+  if (label2 === "LIKE") {
+    e.preventDefault();
+    const fAuth = getAuth();
+    const currentUser = fAuth.currentUser;
+
+    if (!currentUser) {
+      navigate("/login");
+      return;
+    }
+    // if user exists, check user.outreachevents, else navigate to login page.
+    if (currentUser) {
+      try {
+        // reference for the event clicked on
+        const eventRef = isVisitLog
+          ? doc(db, visitLogs_collection, id)
+          : doc(db, outreachEvents_collection, id);
+        // find the userdoc with uid of the current user
+        const userQuery = query(
+          collection(db, users_collection),
+          where("uid", "==", fAuth?.currentUser?.uid)
+        );
+        const userDocRef = await getDocs(userQuery);
+        const userDocID = userDocRef.docs[0].id;
+        // reference for the userdoc
+        const userRef = doc(db, users_collection, userDocID);
+        // outreach event collection
+        const docSnap = await getDoc(eventRef);
+        // current participants in the eventdoc
+        let currentLikes = docSnap.data().likes || [];
+
+        // current events in userdoc
+        const userSnap = await getDoc(userRef);
+        let currentEvents =
+          (isVisitLog
+            ? userSnap.data().likedVisitLogs
+            : userSnap.data().likedOutreachEvents) || [];
+
+        // check if user exists in current likes and add if not
+        if (currentLikes.includes(fAuth.currentUser.uid)) {
+        } else {
+          const newLikes = [
+            ...currentLikes,
+            fAuth.currentUser.uid,
+          ];
+          console.log(newLikes);
+          const eventDocUpdate = isVisitLog
+            ? doc(db, visitLogs_collection, id)
+            : doc(db, outreachEvents_collection, id);
+          const updateRef = await updateDoc(eventDocUpdate, {
+            likes: newLikes,
+          });
+          console.log("successfully added to user to outreach collection likes");
+          // alert('Signed up for event')
+        }
+
+        // check if event exists in current user and add if not
+        if (currentEvents.includes(id)) {
+          console.log("Event exists for this user");
+          // alert("Event exists for this user");
+        } else {
+          const newEvents = [...currentEvents, id];
+          const userDocUpdate = doc(db, users_collection, userDocID);
+          if (isVisitLog) {
+            const userUpdateRef = await updateDoc(userDocUpdate, {
+              likedVisitLogs: newEvents,
+            });
+          } else {
+            const userUpdateRef = await updateDoc(userDocUpdate, {
+              likedOutreachEvents: newEvents,
+            });
+          }
+
+          logEvent(
+            "STREET_CARE_INFO_LIKES",
+            "Like added for user" + fAuth.currentUser.uid
+          );
+
+          console.log("successfully added outreach to users collection");
+        }
+        setLabel2("DISLIKE");
+      } catch (error) {
+        console.log(error);
+        logEvent("STREET_CARE_ERROR", `error on like- ${error.message}`);
+        throw error;
+      }
+    } else {
+      console.log("USER NOT FOUND!");
+      navigate("/login");
+    }
+  } else {
+    console.log("DISLIKE");
+    const fAuth = getAuth();
+    const currentUser = fAuth.currentUser;
+
+    if (!currentUser) {
+      navigate("/login");
+      return;
+    }
+    if (currentUser) {
+      console.log("Found user");
+      try {
+        // reference for the event clicked on
+        const eventRef = isVisitLog
+          ? doc(db, visitLogs_collection, id)
+          : doc(db, outreachEvents_collection, id);
+        // find the userdoc with uid of the current user
+        const userQuery = query(
+          collection(db, users_collection),
+          where("uid", "==", fAuth?.currentUser?.uid)
+        );
+        const userDocRef = await getDocs(userQuery);
+        const userDocID = userDocRef.docs[0].id;
+        // reference for the userdoc
+        const userRef = doc(db, users_collection, userDocID);
+        // outreach event collection
+        const docSnap = await getDoc(eventRef);
+        // current participants in the eventdoc
+        let currentLikes = docSnap.data().likes || [];
+
+        // current events in userdoc
+        const userSnap = await getDoc(userRef);
+        let currentEvents =
+          (isVisitLog
+            ? userSnap.data().likedVisitLogs
+            : userSnap.data().likedOutreachEvents) || [];
+
+        // check if user exists in current participants and remove if exists
+        if (currentLikes.includes(fAuth.currentUser.uid)) {
+          console.log("removing like from event");
+          const eventDocUpdate = isVisitLog
+            ? doc(db, visitLogs_collection, id)
+            : doc(db, outreachEvents_collection, id);
+          const i = currentLikes.indexOf(fAuth.currentUser.uid);
+          if (i > -1) {
+            currentLikes.splice(i, 1);
+            const updateRef = await updateDoc(eventDocUpdate, {
+              likes: currentLikes,
+            });
+          }
+        } else {
+          console.log("User not found in the event");
+        }
+
+        // check if event exists in current user and remove if exists
+        if (currentEvents.includes(id)) {
+          console.log("removing like from user");
+          //navigate(`/outreachsignup/${id}`);
+          // alert('Withdrew from event');
+          const userDocUpdate = doc(db, users_collection, userDocID);
+          const i = currentEvents.indexOf(id);
+          if (i > -1) {
+            currentEvents.splice(i, 1);
+            if (isVisitLog) {
+              const userUpdateRef = await updateDoc(userDocUpdate, {
+                likedVisitLogs: currentEvents,
+              });
+            } else {
+              const userUpdateRef = await updateDoc(userDocUpdate, {
+                likedOutreachEvents: currentEvents,
+              });
+            }
+            logEvent(
+              "STREET_CARE_INFO_LIKES",
+              "Like edited for user" + userDocID
+            );
+          }
+        } else {
+          console.log("event not found in the user");
+        }
+        setLabel2("LIKE");
+
+        if (typeof refresh == "function") {
+          refresh();
+        }
+      } catch (error) {
+        console.log(error);
+        logEvent("STREET_CARE_ERROR", `error on rsvp edit- ${error.message}`);
+        throw error;
+      }
+    } else {
+      navigate("/login", { replace: true });
+    }
+  }
+};
+
+
+
 export const fetchByCityOrState = async (searchValue, startDate, endDate) => {
   try {
     if (!searchValue || typeof searchValue !== "string") {
