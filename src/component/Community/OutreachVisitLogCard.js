@@ -74,7 +74,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
   const handleFlag = async (e) => {
     e.stopPropagation(); // Prevent triggering parent click events
     if (!user) {
-      alert("Please log in to flag or unflag the visit log.");
+      alert("Please log in to flag or unflag the interaction log.");
       console.error("User is not logged in.");
       return;
     }
@@ -155,7 +155,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
             className="absolute right-16 top-0 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-30 whitespace-normal"
             style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
           >
-            {!isFlagged ? 'Flag the Visit Log?' : 'Unflag the Visit Log?'}
+            {!isFlagged ? 'Flag the Interaction Log?' : 'Unflag the Interaction Log?'}
         </div>
       </div>
       

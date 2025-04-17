@@ -172,7 +172,7 @@ const AllOutreachVisitLog = () => {
           <div className="lg:flex justify-between items-center mb-6">
             <div>
               <p className="font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] lg:mt-2">
-                Visit Logs
+                Interaction Logs
               </p>
             </div>
             <div className="flex items-center gap-4 mt-6 lg:mt-0">

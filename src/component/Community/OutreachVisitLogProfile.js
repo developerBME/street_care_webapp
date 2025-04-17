@@ -136,10 +136,10 @@ const OutreachVisitLogProfile = () => {
     <>
       <div className="inline-flex flex-col sm:flex-row sm:space-x-16 justify-between gap-2">
         <div className="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage text-left leading-[52px]">
-          My Visit Logs
+          My Interaction Logs
         </div>
         <CustomButton
-          label="Document New Visit Log"
+          label="Document New Interaction Log"
           className="text-right"
           name="buttondefaulticon"
           icon={icon}
@@ -151,7 +151,7 @@ const OutreachVisitLogProfile = () => {
       <div className="pt-4">
         <div className="w-full flex flex-col sm:flex-row bg-[#F2F6D8] p-4 rounded-xl gap-4 justify-between">
           <div className="text-neutral-800  text-[20px] font-medium font-bricolage leading-loose">
-            View your documented visit logs here.
+            View your documented interaction logs here.
           </div>
         </div>
       </div>
@@ -194,7 +194,10 @@ const OutreachVisitLogProfile = () => {
 
           {/* {visitLogs.length == 0 && <NoOutreachDoc isPersonalVisitLog={true} />} */}
           {visitLogs.length === 0 && (
-            <NoDisplayData name="visitlog" label="No visit logs created" />
+            <NoDisplayData
+              name="visitlog"
+              label="No interaction logs created"
+            />
           )}
           <div className="flex justify-between items-center mt-8 w-full">
                 <p className="text-gray-600">
