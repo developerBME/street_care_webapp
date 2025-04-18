@@ -8,10 +8,7 @@ import Landing from "./HomePage/Landing";
 import News from "./HomePage/News";
 import Map from "./HomePage/Map";
 import Process2 from "./HomePage/Process2";
-import {
-  fetchEvents,
-  fetchOfficialEvents,
-} from "./EventCardService";
+import { fetchEvents, fetchOfficialEvents } from "./EventCardService";
 import { formatDate } from "./HelperFunction";
 import BMEcardimg1 from "../images/BMEofficialcardimg1.png";
 import BMEcardimg2 from "../images/BMEofficialcardimg2.png";
@@ -23,6 +20,7 @@ import OutreachSignupModal from "./Community/OutreachSignupModal";
 import RSVPConfirmationModal from "./UserProfile/RSVPConfirmationModal";
 import PastOutreachEvents from "./PastOutreachEvents";
 import UpcomingOutreachEvents from "./UpcomingOutreachEvents";
+import MobileAppRedirect from "./MobileAppRedirect";
 
 function HomePage() {
   const navigate = useNavigate();
@@ -171,19 +169,19 @@ function HomePage() {
 
   const closeSignUpModal = () => {
     setShowSignUpModal(false);
-    setTriggerEffect(prev => !prev);
+    setTriggerEffect((prev) => !prev);
   };
 
   const onEventWithdraw = () => {
     setSelectedEvent(null);
     setShowWithdrawnModal(true);
     setIsLoading(true);
-    setTriggerEffect(prev => !prev);
+    setTriggerEffect((prev) => !prev);
   };
 
   const closeWithdrawModal = () => {
     setShowWithdrawnModal(false);
-  }
+  };
 
   const fetchData = async () => {
     try {
@@ -198,9 +196,9 @@ function HomePage() {
       eventsData.sort((a, b) => a.eventDate - b.eventDate);
       setEvents(eventsData);
     } catch (error) {
-      setIsError(prev => ({ ...prev, events: true }));
+      setIsError((prev) => ({ ...prev, events: true }));
       setEvents([]);
-      setErrorMsg(prev => ({
+      setErrorMsg((prev) => ({
         ...prev,
         events: "Events could not be loaded. Please try again later.",
       }));
@@ -214,11 +212,12 @@ function HomePage() {
       const limitedData = eventsData.slice(0, 3);
       setOffevents(limitedData);
     } catch (error) {
-      setIsError(prev => ({ ...prev, officialEvents: true }));
+      setIsError((prev) => ({ ...prev, officialEvents: true }));
       setOffevents([]);
-      setErrorMsg(prev => ({
+      setErrorMsg((prev) => ({
         ...prev,
-        officialEvents: "Official events could not be loaded. Please try again later.",
+        officialEvents:
+          "Official events could not be loaded. Please try again later.",
       }));
     }
   };
@@ -228,9 +227,9 @@ function HomePage() {
       const limitedData = NewsCardData.slice(0, 3);
       setnewsevents(limitedData);
     } catch (error) {
-      setIsError(prev => ({ ...prev, news: true }));
+      setIsError((prev) => ({ ...prev, news: true }));
       setnewsevents([]);
-      setErrorMsg(prev => ({
+      setErrorMsg((prev) => ({
         ...prev,
         news: "News events could not be loaded. Please try again later.",
       }));
@@ -262,23 +261,23 @@ function HomePage() {
   // Filter events to get only upcoming events
   const upcomingEvents = events
     ? events
-      .filter((event) => {
-        const eventDate =
-          new Date(event.eventDate?.seconds * 1000) || event.eventDate;
-        return eventDate >= new Date(); // Check if the event date is after the current date
-      })
-      .slice(0, 3)
+        .filter((event) => {
+          const eventDate =
+            new Date(event.eventDate?.seconds * 1000) || event.eventDate;
+          return eventDate >= new Date(); // Check if the event date is after the current date
+        })
+        .slice(0, 3)
     : [];
 
   // Filter events to get only past events
   const pastEvents = events
     ? events
-      .filter((event) => {
-        const eventDate =
-          new Date(event.eventDate?.seconds * 1000) || event.eventDate;
-        return eventDate < new Date(); // Check if the event date is before the current date
-      })
-      .slice(0, 3)
+        .filter((event) => {
+          const eventDate =
+            new Date(event.eventDate?.seconds * 1000) || event.eventDate;
+          return eventDate < new Date(); // Check if the event date is before the current date
+        })
+        .slice(0, 3)
     : [];
 
   useEffect(() => {
@@ -296,7 +295,10 @@ function HomePage() {
         <Success2 />
       </div>
 
-      <div ref={outreachRef} className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black">
+      <div
+        ref={outreachRef}
+        className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black"
+      >
         <UpcomingOutreachEvents
           events={events}
           isLoading={isLoading}
@@ -313,8 +315,6 @@ function HomePage() {
         isError={isError.events}
       />
 
-
-
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8  rounded-2xl bg-white text-black ">
         <Process2 />
       </div>
@@ -323,7 +323,6 @@ function HomePage() {
         <Map />
       </div>
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black h-full">
-
         {/* <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
           <p className=" text-[25px] lg:text-[45px] font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
             Past Events
@@ -353,16 +352,27 @@ function HomePage() {
         <FAQs />
       </div>
       <Modal open={!!selectedEvent}>
-        <OutreachSignupModal data={{ ...selectedEvent }} closeModal={closeModal} onSignUp={onSignUp} onEventWithdraw={onEventWithdraw} />
+        <OutreachSignupModal
+          data={{ ...selectedEvent }}
+          closeModal={closeModal}
+          onSignUp={onSignUp}
+          onEventWithdraw={onEventWithdraw}
+        />
       </Modal>
       <Modal open={showSignUpModal}>
-        <RSVPConfirmationModal closeModal={closeSignUpModal} type='edit' />
+        <RSVPConfirmationModal closeModal={closeSignUpModal} type="edit" />
       </Modal>
       <Modal open={showWithdrawnModal}>
-        <RSVPConfirmationModal closeModal={closeWithdrawModal} type='withdraw' />
+        <RSVPConfirmationModal
+          closeModal={closeWithdrawModal}
+          type="withdraw"
+        />
       </Modal>
-    </div>
 
+      <div className="fixed bottom-4 right-4">
+        <MobileAppRedirect />
+      </div>
+    </div>
   );
 }
 
