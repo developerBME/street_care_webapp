@@ -752,18 +752,28 @@ export const handleRsvp = async (
   }
 };
 
+export const setInitialLike = ( likes, ) => {
+  const fAuth = getAuth();
+  const currentUser = fAuth.currentUser;
+  if (!currentUser) {
+    return false;
+  }
+
+  return likes.includes(fAuth?.currentUser?.uid);
+};
+
 export const handleLikes = async (
   e,
   id,
-  label,
   navigate,
-  label2,
-  setLabel2,
+  label,
+  setLike,
   isVisitLog,
   refresh
 ) => {
+  e.stopPropagation();
   // check if button is going to RSVP or EDIT
-  if (label2 === "LIKE") {
+  if (label === "LIKE") {
     e.preventDefault();
     const fAuth = getAuth();
     const currentUser = fAuth.currentUser;
@@ -842,7 +852,7 @@ export const handleLikes = async (
 
           console.log("successfully added outreach to users collection");
         }
-        setLabel2("DISLIKE");
+        setLike(true);
       } catch (error) {
         console.log(error);
         logEvent("STREET_CARE_ERROR", `error on like- ${error.message}`);
@@ -932,7 +942,7 @@ export const handleLikes = async (
         } else {
           console.log("event not found in the user");
         }
-        setLabel2("LIKE");
+        setLike(false);
 
         if (typeof refresh == "function") {
           refresh();

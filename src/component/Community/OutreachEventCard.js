@@ -15,6 +15,9 @@ import verifiedBlue from "../../images/verified_blue.png";
 import verifiedYellow from "../../images/verified_yellow.png";
 import { useUserContext } from "../../context/Usercontext.js";
 import collectionMapping from "../../utils/firestoreCollections.js";
+import heartOutline from "../../images/heart-outline.png";
+import heartFilled from "../../images/heart-filled.png";
+import { handleLikes, setInitialLike } from "../EventCardService";
 
 const outreachEvents_collection = collectionMapping.outreachEvents; // Collection name
 const users_collection = collectionMapping.users; // User collection
@@ -35,6 +38,7 @@ const OutreachEventCard = ({
     description,
     skills,
     userType,
+    likes,
   } = cardData;
 
   const navigate = useNavigate();
@@ -44,6 +48,8 @@ const OutreachEventCard = ({
 
   // State for hover
   const [isHovered, setIsHovered] = useState(false);
+
+  const [isLiked, setIsLiked] = useState(setInitialLike(likes));
 
   // Fetch flag status when component mounts
   useEffect(() => {
@@ -157,25 +163,42 @@ const OutreachEventCard = ({
       )}
       onClick={detailOutreach}
     >
-      <div className="relative">
-        {/* Flag Icon with Hover */}
+      <div className="relative flex justify-end space-x-2 absolute right-4 top-0">
+        {/* Like Button */}
         <img
-          onClick={handleFlag}
-          src={flagSvg}
-          alt="flag"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-          className={`absolute right-4 w-8 h-8 cursor-pointer rounded-full p-1 ${
-            isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
-          }`}
+          onClick={(e) => handleLikes(
+            e,
+            id,
+            navigate,
+            isLiked ? "DISLIKE" :"LIKE",
+            setIsLiked,
+            false
+          )}
+          src={isLiked ? heartFilled : heartOutline}
+          alt="like"
+          className="w-8 h-8 cursor-pointer rounded-full p-1 hover:bg-gray-200"
         />
-        {isHovered && (
-          <div className="absolute right-16 top-0 bg-gray-800 text-white text-sm rounded-md px-2 py-1">
-            {!isFlagged ? 'Flag the Outreach Event?' : 'Unflag the Outreach Event?'}
-            
-          </div>
-        )}
+
+        {/* Flag Button */}
+        <div className="relative">
+          <img
+            onClick={handleFlag}
+            src={flagSvg}
+            alt="flag"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            className={`w-8 h-8 cursor-pointer rounded-full p-1 ${
+              isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
+            }`}
+          />
+          {isHovered && (
+            <div className="absolute -left-[150px] top-0 bg-gray-800 text-white text-sm rounded-md px-2 py-1 z-10">
+              {!isFlagged ? "Flag the Outreach Event?" : "Unflag the Outreach Event?"}
+            </div>
+          )}
+        </div>
       </div>
+
 
       {/* User Information */}
       <div className="inline-flex items-center space-x-2">
