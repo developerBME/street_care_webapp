@@ -10,22 +10,21 @@ import {
   limit,
   startAt,
   or,
- } from "firebase/firestore";
- import { db } from "./firebase";
- import { getAuth, onAuthStateChanged } from "firebase/auth";
- import logEvent from "./FirebaseLogger";
- import { Timestamp } from 'firebase/firestore';
- import { fetchUserName, formatDate, getNumberOfPages } from "./HelperFunction";
- 
- const OFFICIAL_EVENTS_COLLECTION = "officialEvents";
- const OUTREACH_EVENTS_COLLECTION = "outreachEventsDev";
- const PAST_OUTREACH_EVENTS_COLLECTION = "outreachEventsDev";
+} from "firebase/firestore";
+import { db } from "./firebase";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import logEvent from "./FirebaseLogger";
+import { Timestamp } from "firebase/firestore";
+import { fetchUserName, formatDate, getNumberOfPages } from "./HelperFunction";
+
+const OFFICIAL_EVENTS_COLLECTION = "officialEvents";
+const OUTREACH_EVENTS_COLLECTION = "outreachEventsDev";
+const PAST_OUTREACH_EVENTS_COLLECTION = "outreachEventsDev";
 // const PAST_OUTREACH_EVENTS_COLLECTION = "pastOutreachEvents";
- const USERS_COLLECTION = "users";
- // const PERSONAL_VISIT_LOG = "personalVisitLog";
- 
- 
- export const fetchEvents = async () => {
+const USERS_COLLECTION = "users";
+// const PERSONAL_VISIT_LOG = "personalVisitLog";
+
+export const fetchEvents = async () => {
   try {
     const oureachEventsRef = collection(db, OUTREACH_EVENTS_COLLECTION);
     const approvedEventsQuery = query(
@@ -42,7 +41,7 @@ import {
       if (uid) {
         userIds.add(uid);
       } else {
-        console.log('Document missing uid:', doc.id);
+        console.log("Document missing uid:", doc.id);
       }
     });
     // Batch fetch user details
@@ -301,6 +300,29 @@ export const fetchEventById = async (eventId) => {
     logEvent(
       "STREET_CARE_ERROR",
       `error on fetchEventById EventCardService.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
+export const isUserParticipantInEvent = async (eventId, userId) => {
+  try {
+    const eventRef = doc(db, OUTREACH_EVENTS_COLLECTION, eventId);
+    const eventSnap = await getDoc(eventRef);
+
+    if (!eventSnap.exists()) {
+      console.warn(`Event with ID ${eventId} does not exist.`);
+      return false;
+    }
+
+    const eventData = eventSnap.data();
+    const participants = eventData.participants || [];
+
+    return participants.includes(userId);
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `Error checking participant in event (${eventId}): ${error.message}`
     );
     throw error;
   }
@@ -667,7 +689,7 @@ export const fetchByCityOrStates = async (
           if (uid) {
             userIds.add(uid);
           } else {
-            console.log('Document missing uid:', doc.id);
+            console.log("Document missing uid:", doc.id);
           }
         });
         // Batch fetch user details
