@@ -18,7 +18,7 @@ const MobileAppRedirect = () => {
       </button>
 
       {isModalOpen && (
-        <div className="absolute bottom-20 right-0 bg-white border border-black rounded-xl p-6 shadow-lg w-72">
+        <div className="absolute bottom-20 right-20 bg-white border border-black rounded-xl p-6 shadow-lg w-72">
           <button
             onClick={() => setIsModalOpen(false)}
             className="absolute top-2 right-3 text-black text-2xl font-bold"
