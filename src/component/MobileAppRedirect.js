@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import MobileAppRedirectButton from "./MobileAppRedirectButton/MobileAppRedirectButton";
-import { IoLogoGooglePlaystore } from "react-icons/io5";
-import { FaApple } from "react-icons/fa6";
-import { CiMobile3 } from "react-icons/ci";
+import { IoLogoAppleAppstore, IoLogoGooglePlaystore } from "react-icons/io5";
+import { IoIosAppstore } from "react-icons/io";
 
 const MobileAppRedirect = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,15 +12,18 @@ const MobileAppRedirect = () => {
         className="flex flex-col items-center border border-black bg-nav text-white rounded-xl px-6 py-4 shadow-sm hover:shadow-md hover:bg-[#504279] transition"
         onClick={() => setIsModalOpen(!isModalOpen)}
       >
-        <CiMobile3 className="w-12 h-12 mb-2" />
+        <div className="flex">
+            <IoLogoGooglePlaystore className="w-12 h-12 mb-2" />
+            <IoIosAppstore className="w-12 h-12 mb-2" />
+        </div>
         <span className="text-base font-semibold">Get the App</span>
       </button>
 
       {isModalOpen && (
-        <div className="absolute bottom-20 right-20 bg-white border border-black rounded-xl p-6 shadow-lg w-72">
+        <div className="absolute bottom-20 right-20 bg-white border border-black rounded-xl pb-6 pl-6 pr-6 shadow-lg w-72">
           <button
             onClick={() => setIsModalOpen(false)}
-            className="absolute top-2 right-3 text-black text-2xl font-bold"
+            className="absolute right-2 text-black text-2xl font-bold"
           >
             ×
           </button>
@@ -35,7 +37,7 @@ const MobileAppRedirect = () => {
             />
             <MobileAppRedirectButton
               title="For IOS Users"
-              iconName={FaApple}
+              iconName={IoLogoAppleAppstore}
               osName="App Store"
               link="https://apps.apple.com/us/app/street-care-help-the-homeless/id1553805037"
             />
