@@ -556,6 +556,50 @@ export const fetchUserSignedUpOutreaches = async (uid) => {
   }
 };
 
+
+export const fetchLikedOutreaches = async (uid) => {
+  try {
+    const fAuth = getAuth();
+    const outreachQuery = query(collection(db, outreachEvents_collection));
+    const snapshot = await getDocs(outreachQuery);
+
+    let likedOutreaches = [];
+
+    for (const doc of snapshot.docs) {
+      const eventData = doc.data();
+      if (eventData.likes && eventData.likes.includes(uid)) {
+        const result = await fetchUserDetails(eventData.uid);
+        const userName = result.username;
+        const photoUrl = result.photoUrl;
+
+        let currentLikes = eventData.likes || [];
+        likedOutreaches.push({
+          ...eventData,
+          userName: userName,
+          id: doc.id,
+          label:
+            fAuth.currentUser &&
+            currentLikes.includes(fAuth?.currentUser?.uid)
+              ? "DISLIKE"
+              : "LIKE",
+          nop: currentLikes.length,
+          photoUrl: photoUrl,
+          userType: result.userType,
+        });
+      }
+    }
+
+    return likedOutreaches;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchLikedOutreaches in EventCardService.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
+
 export const handleRsvp = async (
   e,
   id,
