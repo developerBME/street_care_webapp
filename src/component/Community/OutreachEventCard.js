@@ -52,7 +52,9 @@ const OutreachEventCard = ({
   // State for hover
   const [isHovered, setIsHovered] = useState(false);
 
-  const [isLiked, setIsLiked] = useState(setInitialLike(likes));
+  const [isLiked, setIsLiked] = useState(setInitialLike(likes?likes:[]));
+
+  const [currLikes, setCurrLikes] = useState(likes ? likes: []);
 
   // Fetch flag status when component mounts
   useEffect(() => {
@@ -184,6 +186,12 @@ const OutreachEventCard = ({
       onClick={detailOutreach}
     >
       <div className="relative flex justify-end space-x-2 absolute right-4 top-0">
+        {/* Like Count */}
+        {currLikes?.length > 0 && (
+          <div className="font-medium text-[18px]">
+            {currLikes.length}
+          </div>
+        )}
         {/* Like Button */}
         <img
           onClick={(e) => handleLikes(
@@ -192,6 +200,7 @@ const OutreachEventCard = ({
             navigate,
             isLiked ? "DISLIKE" :"LIKE",
             setIsLiked,
+            setCurrLikes,
             false
           )}
           src={isLiked ? heartFilled : heartOutline}
@@ -199,7 +208,7 @@ const OutreachEventCard = ({
           className="w-8 h-8 cursor-pointer rounded-full p-1 hover:bg-gray-200"
         />
 
-        {/* Like Button */}
+        {/* Share Button */}
         <div className="relative">
           <img
             onClick={(e) => handleShare( e )}
