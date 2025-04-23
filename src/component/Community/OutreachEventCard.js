@@ -17,6 +17,7 @@ import { useUserContext } from "../../context/Usercontext.js";
 import collectionMapping from "../../utils/firestoreCollections.js";
 import heartOutline from "../../images/heart-outline.png";
 import heartFilled from "../../images/heart-filled.png";
+import share from "../../images/share-icon.png";
 import { handleLikes, setInitialLike } from "../EventCardService";
 
 const outreachEvents_collection = collectionMapping.outreachEvents; // Collection name
@@ -45,6 +46,8 @@ const OutreachEventCard = ({
 
   // State for flag status
   const [isFlagged, setIsFlagged] = useState(false);
+
+  const [justCopied, setJustCopied] = useState(false);
 
   // State for hover
   const [isHovered, setIsHovered] = useState(false);
@@ -139,6 +142,23 @@ const OutreachEventCard = ({
     });
   };
 
+
+  const handleShare = async (e) => {
+    e.stopPropagation();
+    const currentUrl = window.location.href + `outreachsignup/${id}`;
+    try {
+      await navigator.clipboard.writeText(currentUrl);
+      console.log("Link copied to clipboard");
+      setJustCopied(true);
+      setTimeout(() => setJustCopied(false), 2000);
+    }
+    catch (err) {
+      console.error("Failed to copy link: ", err);
+      setJustCopied(false);
+    }
+    console.log(currentUrl);
+  };
+
   let verifiedImg;
   switch (userType) {
     case "Chapter Leader":
@@ -178,6 +198,21 @@ const OutreachEventCard = ({
           alt="like"
           className="w-8 h-8 cursor-pointer rounded-full p-1 hover:bg-gray-200"
         />
+
+        {/* Like Button */}
+        <div className="relative">
+          <img
+            onClick={(e) => handleShare( e )}
+            src={share}
+            alt="share"
+            className="w-8 h-8 cursor-pointer rounded-full p-1 hover:bg-gray-200"
+          />
+          {justCopied && (
+            <div className="absolute -left-[150px] top-0 bg-gray-800 text-white text-sm rounded-md px-2 py-1 z-10">
+              {"Copied To Clipboard!"}
+            </div>
+          )}
+        </div>
 
         {/* Flag Button */}
         <div className="relative">
