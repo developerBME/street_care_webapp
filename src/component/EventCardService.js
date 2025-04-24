@@ -768,7 +768,7 @@ export const handleLikes = async (
   navigate,
   label,
   setLike,
-  setCurrLikes,
+  setLikesCount,
   isVisitLog,
   refresh
 ) => {
@@ -819,7 +819,7 @@ export const handleLikes = async (
             fAuth.currentUser.uid,
           ];
           console.log(newLikes);
-          setCurrLikes(newLikes);
+          setLikesCount(newLikes.length);
           const eventDocUpdate = isVisitLog
             ? doc(db, visitLogs_collection, id)
             : doc(db, outreachEvents_collection, id);
@@ -910,7 +910,7 @@ export const handleLikes = async (
           const i = currentLikes.indexOf(fAuth.currentUser.uid);
           if (i > -1) {
             currentLikes.splice(i, 1);
-            setCurrLikes(currentLikes);
+            setLikesCount(currentLikes.length);
             const updateRef = await updateDoc(eventDocUpdate, {
               likes: currentLikes,
             });

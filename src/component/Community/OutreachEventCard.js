@@ -54,7 +54,7 @@ const OutreachEventCard = ({
 
   const [isLiked, setIsLiked] = useState(setInitialLike(likes?likes:[]));
 
-  const [currLikes, setCurrLikes] = useState(likes ? likes: []);
+  const [likesCount, setLikesCount] = useState(likes ? likes.length : 0);
 
   // Fetch flag status when component mounts
   useEffect(() => {
@@ -187,9 +187,9 @@ const OutreachEventCard = ({
     >
       <div className="relative flex justify-end space-x-2 absolute right-4 top-0">
         {/* Like Count */}
-        {currLikes?.length > 0 && (
+        {likesCount > 0 && (
           <div className="font-medium text-[18px]">
-            {currLikes.length}
+            {likesCount}
           </div>
         )}
         {/* Like Button */}
@@ -200,7 +200,7 @@ const OutreachEventCard = ({
             navigate,
             isLiked ? "DISLIKE" :"LIKE",
             setIsLiked,
-            setCurrLikes,
+            setLikesCount,
             false
           )}
           src={isLiked ? heartFilled : heartOutline}
