@@ -796,7 +796,7 @@ export const handleRsvp = async (
   }
 };
 
-export const setInitialLike = ( likes, ) => {
+export const setInitialLike = ( likes=[], ) => {
   const fAuth = getAuth();
   const currentUser = fAuth.currentUser;
   if (!currentUser) {
