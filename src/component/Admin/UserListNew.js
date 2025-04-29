@@ -13,7 +13,11 @@ import { useNavigate } from "react-router-dom";
 import { RxCaretSort } from "react-icons/rx";
 import { FormControl, MenuItem, Select, useMediaQuery } from "@mui/material";
 import { CiFilter } from "react-icons/ci";
-import { fetchUsers } from "../UserService.js";
+import {
+  fetchUsers,
+  // fetchBannedUsers,
+  // fetchUnbannedUsers,
+} from "../UserService.js";
 
 const initialSorted = {
   username: 0,
@@ -61,14 +65,21 @@ export default function UserListNew() {
       setErrorMessage("");
 
       try {
-        const { users, lastVisible, pageHistory, totalRecords } =
-          await fetchUsers(
-            cursorFields.pageSize,
-            cursorFields.lastVisible,
-            cursorFields.direction,
-            cursorFields.pageHistory
-          );
+        let data;
+        // if (filter === "all") {
+        data = await fetchUsers(
+          cursorFields.pageSize,
+          cursorFields.lastVisible,
+          cursorFields.direction,
+          cursorFields.pageHistory
+        );
+        // } else if (filter === true) {
+        //   data = await fetchBannedUsers(cursorFields.pageSize);
+        // } else {
+        //   data = await fetchUnbannedUsers(cursorFields.pageSize);
+        // }
 
+        const { users, lastVisible, pageHistory, totalRecords } = data;
         setUsers(users);
         setTotalUsers(totalRecords);
         setTotalPages(Math.ceil(totalRecords / usersPerPage));
@@ -85,7 +96,7 @@ export default function UserListNew() {
       }
     };
     fetchData();
-  }, [cursorFields.direction]);
+  }, [cursorFields.direction, filter]);
 
   const handleChange = (event) => {
     setFilter(event.target.value);
