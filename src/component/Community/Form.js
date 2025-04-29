@@ -1386,16 +1386,16 @@ const Form = (hrid) => {
             ))}
           </div>
         </div>
-        <div className="flex items-center mt-4">
+        <div className="flex items-start mt-4">
           <input
             type="checkbox"
             id="displayContactInfo"
             checked={consentStatus}
             onChange={handleCheckboxChange}
-            className="mr-2"
+            className="mr-2 mt-1.5"
           />
           <label htmlFor="displayContactInfo" className="text-gray-700">
-            Display my contact information and full address on outreach cards.
+          By selecting this checkbox, I consent to sharing my contact details and event address publicly on this platform / community space to facilitate participation in the outreach event. I understand that this information will be visible to others and acknowledge the associated privacy considerations.
           </label>
         </div>
 
