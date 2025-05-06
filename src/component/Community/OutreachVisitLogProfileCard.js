@@ -176,7 +176,7 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
                     <DeleteModal
                       handleClose={deleteModalCancelOnClick}
                       handleDelete={deleteVisitLog} // Handle delete within modal
-                      modalMsg={`Are you sure you want to delete this visit log?`}
+                      modalMsg={`Are you sure you want to delete this interaction log?`}
                     />
                   )}
                 </ul>

@@ -575,7 +575,7 @@ const PostApprovals = () => {
                   }`}
                   onClick={() => handleTabChange("visitLogs")}
                 >
-                  Visit Logs ({pendingPosts.visitLogs.length})
+                  Interaction Logs ({pendingPosts.visitLogs.length})
                 </button>
               </div>
 

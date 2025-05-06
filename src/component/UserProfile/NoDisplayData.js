@@ -51,14 +51,14 @@ function NoDisplayData({name,label}){
                 </div>
                 <div className="flex justify-center items-start gap-4 mt-9">
                     <CustomButton 
-                        label="Document visit logs"
+                        label="Document interaction logs"
                         name="buttondefault"
                         onClick={() => {
                             navigate("/profile/personaloutform");
                         }}
                     />
                     <CustomButton 
-                        label="Explore visit logs"
+                        label="Explore interaction logs"
                         name="buttonlight"
                         onClick={() => {
                             navigate("/AllOutreachVisitLog")

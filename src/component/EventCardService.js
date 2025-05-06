@@ -493,7 +493,7 @@ export const fetchEventById = async (eventId) => {
 
 export const isUserParticipantInEvent = async (eventId, userId) => {
   try {
-    const eventRef = doc(db, OUTREACH_EVENTS_COLLECTION, eventId);
+    const eventRef = doc(db, outreachEvents_collection, eventId);
     const eventSnap = await getDoc(eventRef);
 
     if (!eventSnap.exists()) {
