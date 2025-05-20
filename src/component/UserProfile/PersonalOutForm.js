@@ -30,7 +30,10 @@ import InfoIcon from "@mui/icons-material/Info";
 import { Tooltip, IconButton } from "@mui/material";
 import { fetchUserTypeDetails } from "../EventCardService";
 
-const USERS_COLLECTION = "users";
+import collectionMapping from "../../utils/firestoreCollections";
+
+const users_collection = collectionMapping.users;
+const visitLogs_collection = collectionMapping.visitLogs;
 
 const CustomInput = ({ value, onClick, onChange, id, className }) => (
   <div>
@@ -47,7 +50,7 @@ const CustomInput = ({ value, onClick, onChange, id, className }) => (
 
 let autoComplete;
 
-export const GOOGLE_PLACES_API_KEY = "AIzaSyBnF0aSySY400NMs2LV32sNzR29BEbPV3s";
+export const GOOGLE_PLACES_API_KEY = process.env.REACT_APP_GOOGLE_PLACES_API_KEY;
 
 const loadScript = (url, callback) => {
   let script = document.createElement("script");
@@ -71,7 +74,7 @@ function PersonalOutForm() {
   // const ratingChanged = (newRating) => {
   //   console.log(newRating);
   // };
-  const dateTimeRef = useRef(null); //Changing from ("") to null
+  const dateTimeRef = useRef(null);
   const date = useRef("");
   const time = useRef("");
   const cityRef = useRef("");
@@ -181,11 +184,17 @@ function PersonalOutForm() {
     console.log("Selected date:", date);
   };
 
+  const handleStreetChange = (e) => {
+    setStreet(e.target.value);
+    updateErrorState("cityError", "");
+  };
+
   const handleCityChange = (e) => {
     setCityName(e.target.value);
     updateErrorState("cityError", "");
   };
   const handleStateChange = (e) => {
+    setStateName(e.target.value);
     updateErrorState("stateError", "");
   };
   const handleZipChange = (e) => {
@@ -221,9 +230,8 @@ function PersonalOutForm() {
         "https://parseapi.back4app.com/classes/Usabystate_States?keys=name,postalAbreviation",
         {
           headers: {
-            "X-Parse-Application-Id":
-              "vahnMBqbmIbxOw8R3qtsEMoYrZMljfClGvc1aMyp",
-            "X-Parse-REST-API-Key": "LBjkDrxuUKEfb8liRPgZyv1Lu5WsPIvTx2FWgTpi",
+            "X-Parse-Application-Id":process.env.REACT_APP_X_PARSE_APPLICATION_ID,
+            "X-Parse-REST-API-Key": process.env.REACT_APP_X_PARSE_REST_API_KEY,
           },
         }
       );
@@ -301,8 +309,8 @@ function PersonalOutForm() {
         "?limit=1000&keys=name",
       {
         headers: {
-          "X-Parse-Application-Id": "vahnMBqbmIbxOw8R3qtsEMoYrZMljfClGvc1aMyp",
-          "X-Parse-REST-API-Key": "LBjkDrxuUKEfb8liRPgZyv1Lu5WsPIvTx2FWgTpi",
+          "X-Parse-Application-Id": process.env.REACT_APP_X_PARSE_APPLICATION_ID,
+          "X-Parse-REST-API-Key": process.env.REACT_APP_X_PARSE_REST_API_KEY,
         },
       }
     );
@@ -335,10 +343,7 @@ function PersonalOutForm() {
     // Form Validation Start
     if (isOtherChecked) {
       setOtherBool = false;
-      updateErrorState(
-        "checkboxesError",
-        "Please specify for other kind of help provided"
-      );
+      updateErrorState("checkboxesError", "");
       if (otherInputValue !== "") {
         whatGivenArr.push(otherInputValue);
         console.log(otherInputValue);
@@ -347,47 +352,38 @@ function PersonalOutForm() {
       }
     }
     if (!numberHelped) {
-      updateErrorState("numberHelpedError", "Number is required");
-      setReturn = true;
+      updateErrorState("numberHelpedError", "");
     } else {
       updateErrorState("numberHelpedError", "");
     }
     // console.log("object");
     // console.log(whatGivenArr);
     if (whatGivenArr == [] || !setOtherBool) {
-      updateErrorState(
-        "checkboxesError",
-        "Please provide the kind of help provided"
-      );
-      setReturn = true;
+      updateErrorState("checkboxesError", "");
     } else {
       updateErrorState("checkboxesError", "");
     }
 
     if (!stateRef.current.value) {
-      updateErrorState("stateError", "State is required");
-      setReturn = true;
+      updateErrorState("stateError", "");
     } else {
       updateErrorState("stateError", "");
     }
 
     if (!cityRef.current.value) {
-      updateErrorState("cityError", "City is required");
-      setReturn = true;
+      updateErrorState("cityError", "");
     } else {
       updateErrorState("cityError", "");
     }
 
     if (!streetRef.current.value) {
-      updateErrorState("streetError", "Street is required");
-      setReturn = true;
+      updateErrorState("streetError", "");
     } else {
       updateErrorState("streetError", "");
     }
 
     if (!zipcodeRef.current.value) {
-      updateErrorState("zipError", "Zipcode is required");
-      setReturn = true;
+      updateErrorState("zipError", "");
     } else {
       try {
         checkNumber(zipcodeRef.current.value, "Event Name");
@@ -398,9 +394,8 @@ function PersonalOutForm() {
     }
 
     if (!dateTime) {
-      updateErrorState("dateTimeError", "DateTime is required");
+      updateErrorState("dateTimeError", "");
       console.log();
-      setReturn = true;
     } else {
       updateErrorState("dateTimeError", "");
     }
@@ -420,38 +415,26 @@ function PersonalOutForm() {
     // }
 
     if (!itemQty) {
-      updateErrorState("itemQtyError", "Enter Quantity");
-      setReturn = true;
+      updateErrorState("itemQtyError", "");
     } else {
       updateErrorState("itemQtyError", "");
     }
     if (showOptionalQuestions) {
       if (!optDesc.current.value) {
-        updateErrorState(
-          "optDescError",
-          "Enter the description of the people who require further help"
-        );
-        setReturn = true;
+        updateErrorState("optDescError", "");
       } else {
         updateErrorState("optDescError", "");
       }
 
       if (!optLandmark.current.value) {
-        updateErrorState(
-          "optLandmarkError",
-          "Enter the location of the people who require further help"
-        );
-        setReturn = true;
+        updateErrorState("optLandmarkError", "");
+
       } else {
         updateErrorState("optLandmarkError", "");
       }
 
       if (!infoShareCheckbox.current.checked) {
-        updateErrorState(
-          "infoShareCheckboxError",
-          "Location sharing is required"
-        );
-        setReturn = true;
+        updateErrorState("infoShareCheckboxError", "");
       } else {
         setInfoShareCheckboxChecked(true);
         updateErrorState("infoShareCheckboxError", "");
@@ -505,21 +488,20 @@ function PersonalOutForm() {
 
     try {
       console.log("Sending email...");
-      //       const logRef = collection(db, "personalVisitLog");
-      const logRef = collection(db, "visitLogWebProd"); //change back to this line in dev branch
+      const logRef = collection(db, visitLogs_collection);
       const docRef = await addDoc(logRef, obj);
       if (docRef.id) {
         console.log(docRef.id);
 
         const userQuery = query(
-          collection(db, USERS_COLLECTION),
+          collection(db, users_collection),
           where("uid", "==", fAuth?.currentUser?.uid)
         );
         const userDocRef = await getDocs(userQuery);
         console.log(userDocRef);
         const userDocID = userDocRef.docs[0].id;
         // reference for the userdoc
-        const userRef = doc(db, USERS_COLLECTION, userDocID);
+        const userRef = doc(db, users_collection, userDocID);
         // outreach event collection
         const docSnap = await getDoc(userRef);
         let personalVisitLogs = docSnap.data().personalVisitLogs || [];
@@ -576,7 +558,7 @@ function PersonalOutForm() {
       autoCompleteRef.current,
       {
         types: ["address"],
-        componentRestrictions: { country: ["us", "ca"] },
+        componentRestrictions: { country: ["us"] },
       }
     );
 
@@ -671,8 +653,7 @@ function PersonalOutForm() {
       }
     }
     if (!numberHelped) {
-      updateErrorState("numberHelpedError", "Number is required");
-      setReturn = true;
+      updateErrorState("numberHelpedError", "");
     } else {
       updateErrorState("numberHelpedError", "");
     }
@@ -682,35 +663,31 @@ function PersonalOutForm() {
         "checkboxesError",
         "Please provide the kind of help provided"
       );
-      setReturn = true;
     } else {
       updateErrorState("checkboxesError", "");
     }
 
     if (!stateRef.current.value) {
-      updateErrorState("stateError", "State is required");
-      setReturn = true;
+      updateErrorState("stateError", "");
+
     } else {
       updateErrorState("stateError", "");
     }
 
     if (!cityRef.current.value) {
-      updateErrorState("cityError", "City is required");
-      setReturn = true;
+      updateErrorState("cityError", "");
     } else {
       updateErrorState("cityError", "");
     }
 
     if (!streetRef.current.value) {
-      updateErrorState("streetError", "Street is required");
-      setReturn = true;
+      updateErrorState("streetError", "");
     } else {
       updateErrorState("streetError", "");
     }
 
     if (!zipcodeRef.current.value) {
-      updateErrorState("zipError", "Zipcode is required");
-      setReturn = true;
+      updateErrorState("zipError", "");
     } else {
       try {
         checkNumber(zipcodeRef.current.value, "Event Name");
@@ -735,46 +712,33 @@ function PersonalOutForm() {
     // }
 
     if (!dateTime) {
-      updateErrorState("dateTimeError", "DateTime is required");
+      updateErrorState("dateTimeError", "");
       console.log();
-      setReturn = true;
     } else {
       updateErrorState("dateTimeError", "");
     }
 
     if (!itemQty) {
-      updateErrorState("itemQtyError", "Enter Quantity");
-      setReturn = true;
+      updateErrorState("itemQtyError", "");
     } else {
       updateErrorState("itemQtyError", "");
     }
     if (showOptionalQuestions) {
       if (!optDesc.current.value) {
-        updateErrorState(
-          "optDescError",
-          "Enter the description of the people who require further help"
-        );
-        setReturn = true;
+        updateErrorState("optDescError", "");
+
       } else {
         updateErrorState("optDescError", "");
       }
 
       if (!optLandmark.current.value) {
-        updateErrorState(
-          "optLandmarkError",
-          "Enter the location of the people who require further help"
-        );
-        setReturn = true;
+        updateErrorState("optLandmarkError", "");
       } else {
         updateErrorState("optLandmarkError", "");
       }
 
       if (!infoShareCheckbox.current.checked) {
-        updateErrorState(
-          "infoShareCheckboxError",
-          "Location sharing is required"
-        );
-        setReturn = true;
+        updateErrorState("infoShareCheckboxError", "");
       } else {
         setInfoShareCheckboxChecked(true);
         updateErrorState("infoShareCheckboxError", "");
@@ -802,7 +766,7 @@ function PersonalOutForm() {
     };
 
     try {
-      const logRef = doc(db, "visitLogWebProd", id);
+      const logRef = doc(db, visitLogs_collection, id);
       await updateDoc(logRef, obj);
       setSuccess(true);
       clearFields();
@@ -866,7 +830,8 @@ function PersonalOutForm() {
                 <div className="self-stretch h-fit flex-col justify-center items-start gap-[24px] flex">
                   <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                     <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
-                      Who did you help (and how many people)?*
+                      Describe who you supported and how many individuals were
+                      involved
                     </div>
                     {/*  */}
                     <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
@@ -935,7 +900,7 @@ function PersonalOutForm() {
 
                   <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                     <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
-                      What kind of help did you provide?
+                      What kind of support did you provide?
                     </div>
 
                     <div className="self-stretch w-full h-fit grid md:grid-cols-4 grid-cols-2 gap-2 ">
@@ -1143,14 +1108,14 @@ function PersonalOutForm() {
                   {/*  */}
                   <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                     <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
-                      Where did you see a person in need?*
+                      Where did you see a person in need?
                     </div>
                     {/*  */}
 
                     <div className="self-stretch w-full h-fit flex-col  flex gap-4">
                       <div className="space-y-1.5">
                         <div className="font-semibold font-['Inter'] text-[15px]">
-                          Enter Address*
+                          Enter Address
                         </div>
                         <input
                           type="text"
@@ -1177,7 +1142,7 @@ function PersonalOutForm() {
                       <div className="grid md:grid-cols-2 md:space-x-4 space-y-3 md:space-y-0">
                         <div className="space-y-1.5">
                           <p className="font-semibold font-['Inter'] text-[15px]">
-                            Street*
+                            Street
                           </p>
                           <input
                             className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
@@ -1190,6 +1155,7 @@ function PersonalOutForm() {
                             id="street-address"
                             name="street-address"
                             value={street}
+                            onChange={handleStreetChange}
                           />
                           {error.streetError && (
                             <div className="inline-flex items-center">
@@ -1202,7 +1168,7 @@ function PersonalOutForm() {
                         </div>
                         <div className="space-y-1.5">
                           <p className="font-semibold font-['Inter'] text-[15px]">
-                            City*
+                            City
                           </p>
                           <input
                             type="text"
@@ -1230,7 +1196,7 @@ function PersonalOutForm() {
                       <div className="grid md:grid-cols-2 md:space-x-4 space-y-3 md:space-y-0">
                         <div className="space-y-1.5">
                           <p className="font-semibold font-['Inter'] text-[15px]">
-                            State*
+                            State
                           </p>
                           <input
                             type="text"
@@ -1255,7 +1221,7 @@ function PersonalOutForm() {
                         </div>
                         <div className="space-y-1.5">
                           <p className="font-semibold font-['Inter'] text-[15px]">
-                            Zipcode*
+                            ZIP Code
                           </p>
                           <input
                             type="text"
@@ -1389,7 +1355,7 @@ function PersonalOutForm() {
                       <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
                         <div className="space-y-1.5">
                           <div className="font-semibold font-['Inter'] text-[15px]">
-                            Date *
+                            Date 
                           </div>
                         </div>
                         <div className="self-stretch h-fit  border-collapse     ">
@@ -1485,7 +1451,7 @@ function PersonalOutForm() {
                     </div>
                     {/**/}
                     <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
-                      Total number of participants*
+                      Total number of items donated by you?
                       <Tooltip title={toolTipContent} placement="right" arrow>
                         <IconButton>
                           <InfoIcon />
@@ -1495,15 +1461,14 @@ function PersonalOutForm() {
                     <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
                       <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
                         <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
-                          Number of Participants
+                          Number of Items
                         </div>
                       </div>
                       <div className="self-stretch h-fit  border-collapse">
                         <div className=" h-14  justify-center items-start ">
-                          {/* Chaning no. of items donated to no. of participants, this is temporary */}
                           <input
                             id="itemsNumber"
-                            placeholder="Number of Participants"
+                            placeholder="Number of Items"
                             className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
                               error.itemQtyError !== ""
                                 ? "ring-red-500"
@@ -1567,7 +1532,7 @@ function PersonalOutForm() {
                     <div className="self-stretch h-fit flex-col justify-center items-start gap-[24px] flex">
                       <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                         <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
-                          Who requires further help?*
+                          Who requires further help?
                         </div>
                         <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
                           <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
@@ -1618,7 +1583,7 @@ function PersonalOutForm() {
                       <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                         <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
                           Can you describe the location or landmark of the
-                          person(s) in need of help?*
+                          person(s) in need of help?
                         </div>
                         <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
                           {/* <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
@@ -1935,7 +1900,7 @@ function PersonalOutForm() {
                       <div className="self-stretch h-fit flex-col justify-center  items-center md:items-start gap-[18px] flex">
                         <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
                           Choose which information to share with the community
-                          to improve assistance*
+                          to improve assistance
                         </div>
                         <div className=" justify-end items-end inline-flex ">
                           <input
@@ -1991,10 +1956,10 @@ function PersonalOutForm() {
                   </div>
                 )}
                 <span className="text-gray-500 self-stretch justify-normal font-bricolage">
-                  If you can, it’s most helpful for you to fill out one visit
-                  log per person. This way it enables us to provide far better
-                  services and outreach to each person. That’s totally optional,
-                  any information is great!
+                  If you can, it’s most helpful for you to fill out one
+                  interaction log per person. This way it enables us to provide
+                  far better services and outreach to each person. That’s
+                  totally optional, any information is great!
                 </span>
                 {/* Toggle public form */}
                 <div className="flex items-center">
@@ -2006,7 +1971,7 @@ function PersonalOutForm() {
                     className="w-[18px] h-[18px] bg-violet-700 rounded-sm cursor-pointer"
                   />
                   <span className="self-stretch font-bricolage text-[18px] ml-2">
-                    Make this visit log public?
+                    Make this interaction log public?
                   </span>
                 </div>
                 {/* Toggle public form end */}
