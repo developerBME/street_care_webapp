@@ -108,7 +108,7 @@ const renderStepTitle = (step, selectedStep) => {
                 selectedStep === step ? "text-black" : ""
               } md:w-1/2`}
             >
-              Document your Visit
+              Document your Interaction
             </div>
           </div>
         </>
@@ -259,12 +259,12 @@ const renderStepContent = (selectedStep) => {
             <div className="space-y-10 md:w-3/5">
               <div className="space-y-2 pr-18">
                 <div className="text-[22px] font-dmsans font-bold leading-7">
-                  Log your visit
+                  Log your interaction
                 </div>
                 <div className="text-[16px] font-dmsans text-[#181818] leading-6">
-                  After your visit, make sure you log your visit to the outreach
-                  on your profile using the streetcare website or mobile
-                  application.
+                  After your interaction, make sure you log your interaction to
+                  the outreach on your profile using the streetcare website or
+                  mobile application.
                 </div>
               </div>
               <div className="space-y-2 pb-4">
@@ -272,9 +272,9 @@ const renderStepContent = (selectedStep) => {
                   Earn Badges
                 </div>
                 <div className="text-[16px] font-dmsans text-[#181818] leading-6">
-                  After your visit, make sure you log your visit to the outreach
-                  on your profile using the streetcare website or mobile
-                  application.
+                  After your interaction, make sure you log your interaction to
+                  the outreach on your profile using the streetcare website or
+                  mobile application.
                 </div>
               </div>
             </div>

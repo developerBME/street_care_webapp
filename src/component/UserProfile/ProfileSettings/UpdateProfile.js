@@ -24,7 +24,9 @@ import { useNavigate } from "react-router-dom";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import imageCompression from "browser-image-compression";
 
-const USERS_COLLECTION = "users";
+import collectionMapping from "../../../utils/firestoreCollections";
+
+const users_collection = collectionMapping.users;
 
 async function uploadProfileImage(
   file,
@@ -43,12 +45,12 @@ async function uploadProfileImage(
     const photoUrl = await getDownloadURL(fileRef);
 
     const userQuery = query(
-      collection(db, USERS_COLLECTION),
+      collection(db, users_collection),
       where("uid", "==", fAuth.currentUser.uid)
     );
     const userDocRef = await getDocs(userQuery);
     const userDocID = userDocRef.docs[0].id;
-    const userRef = doc(db, USERS_COLLECTION, userDocID);
+    const userRef = doc(db, users_collection, userDocID);
     await updateDoc(userRef, {
       photoUrl: photoUrl,
     });
@@ -114,7 +116,7 @@ const UpdateProfile = () => {
   const getUserData = async () => {
     try {
       const userRef = query(
-        collection(db, "users"),
+        collection(db, users_collection),
         where("uid", "==", fAuth?.currentUser?.uid)
       );
       const data = await getDocs(userRef);
@@ -232,38 +234,21 @@ const UpdateProfile = () => {
     if (!username.current.value || !city.current.value || !state.current.value || !country.current.value) {
       setError("Please provide details to update.");
       setSuccess("");
-      return;
-    }
-  
-    try {
-      const fAuth = getAuth();
-      const userQuery = query(
-        collection(db, USERS_COLLECTION),
-        where("uid", "==", fAuth.currentUser.uid)
-      );
-      const userDocRef = await getDocs(userQuery);
-  
-      if (userDocRef.empty) {
-        setError("User not found.");
-        return;
-      }
-  
-      const userDocID = userDocRef.docs[0].id;
-      const userRef = doc(db, USERS_COLLECTION, userDocID);
-  
-      // Prepare data for update
-      const updatedData = {
-        username: username.current.value,
-        city: city.current.value,
-        state: state.current.value,
-        country: country.current.value,
-      };
-  
-      // Check if user removed the image
-      if (isImageRemoved) {
-        updatedData.photoUrl = ""; // Remove from Firestore
-      } else if (newProfileImage) {
-        // If new image is selected, upload it
+    } else {
+      if (username.current.value !== "") {
+        setUsernameError("");
+        const userQuery = query(
+          collection(db, users_collection),
+          where("uid", "==", fAuth.currentUser.uid)
+        );
+        const userDocRef = await getDocs(userQuery);
+        const userDocID = userDocRef.docs[0].id;
+        const userRef = doc(db, users_collection, userDocID);
+        await updateDoc(userRef, {
+          username: username.current.value,
+        });
+      } 
+      if (imgRef.current.value !== "") {
         setUserimageError("");
         await uploadProfileImage(
           newProfileImage,
@@ -275,92 +260,47 @@ const UpdateProfile = () => {
         );
         setNewProfileImage(null);
       }
-  
-      // Update Firestore in a single call
-      await updateDoc(userRef, updatedData);
-      
-      setSuccess("Successfully updated the profile.");
-      setIsImageRemoved(false); // Reset flag
-    } catch (error) {
-      setError("Error updating profile.");
-      console.error("Error updating profile:", error);
+      if (city.current.value !== "") {
+        setCityError("");
+        const userQuery = query(
+          collection(db, users_collection),
+          where("uid", "==", fAuth.currentUser.uid)
+        );
+        const userDocRef = await getDocs(userQuery);
+        const userDocID = userDocRef.docs[0].id;
+        const userRef = doc(db, users_collection, userDocID);
+        await updateDoc(userRef, {
+          city: city.current.value,
+        });
+      }
+      if (state.current.value !== "") {
+        setStateError("");
+        const userQuery = query(
+          collection(db, users_collection),
+          where("uid", "==", fAuth.currentUser.uid)
+        );
+        const userDocRef = await getDocs(userQuery);
+        const userDocID = userDocRef.docs[0].id;
+        const userRef = doc(db, users_collection, userDocID);
+        await updateDoc(userRef, {
+          state: state.current.value,
+        });
+      }
+      if (country.current.value !== "") {
+        setCountryError("");
+        const userQuery = query(
+          collection(db, users_collection),
+          where("uid", "==", fAuth.currentUser.uid)
+        );
+        const userDocRef = await getDocs(userQuery);
+        const userDocID = userDocRef.docs[0].id;
+        const userRef = doc(db, users_collection, userDocID);
+        await updateDoc(userRef, {
+          country: country.current.value,
+        });
+      }
+      setSuccess("Successfully updated the data"); 
     }
-  };
-  
-  
-  // const handleSubmitProfileUpdate = async (e) => {
-  //   e.preventDefault();
-  //   if (!username.current.value ||!city.current.value || !state.current.value || !country.current.value) {
-  //     setError("Please provide a display name and profile image and  location details to update");
-  //     setSuccess("");
-  //   } else {
-  //     if (username.current.value !== "") {
-  //       setUsernameError("");
-  //       const userQuery = query(
-  //         collection(db, USERS_COLLECTION),
-  //         where("uid", "==", fAuth.currentUser.uid)
-  //       );
-  //       const userDocRef = await getDocs(userQuery);
-  //       const userDocID = userDocRef.docs[0].id;
-  //       const userRef = doc(db, USERS_COLLECTION, userDocID);
-  //       await updateDoc(userRef, {
-  //         username: username.current.value,
-  //       });
-  //     } 
-  //     if (imgRef.current.value !== "") {
-  //       setUserimageError("");
-  //       uploadProfileImage(
-  //         newProfileImage,
-  //         fAuth.currentUser,
-  //         setLoading,
-  //         setSuccess,
-  //         setPhotoUrl,
-  //         setAvatarLoading
-  //       );
-  //       imgRef.current.value = "";
-  //       setNewProfileImage(null);
-  //     }
-  //     if (city.current.value !== "") {
-  //       setCityError("");
-  //       const userQuery = query(
-  //         collection(db, USERS_COLLECTION),
-  //         where("uid", "==", fAuth.currentUser.uid)
-  //       );
-  //       const userDocRef = await getDocs(userQuery);
-  //       const userDocID = userDocRef.docs[0].id;
-  //       const userRef = doc(db, USERS_COLLECTION, userDocID);
-  //       await updateDoc(userRef, {
-  //         city: city.current.value,
-  //       });
-  //     }
-  //     if (state.current.value !== "") {
-  //       setStateError("");
-  //       const userQuery = query(
-  //         collection(db, USERS_COLLECTION),
-  //         where("uid", "==", fAuth.currentUser.uid)
-  //       );
-  //       const userDocRef = await getDocs(userQuery);
-  //       const userDocID = userDocRef.docs[0].id;
-  //       const userRef = doc(db, USERS_COLLECTION, userDocID);
-  //       await updateDoc(userRef, {
-  //         state: state.current.value,
-  //       });
-  //     }
-  //     if (country.current.value !== "") {
-  //       setCountryError("");
-  //       const userQuery = query(
-  //         collection(db, USERS_COLLECTION),
-  //         where("uid", "==", fAuth.currentUser.uid)
-  //       );
-  //       const userDocRef = await getDocs(userQuery);
-  //       const userDocID = userDocRef.docs[0].id;
-  //       const userRef = doc(db, USERS_COLLECTION, userDocID);
-  //       await updateDoc(userRef, {
-  //         country: country.current.value,
-  //       });
-  //     }
-  //     setSuccess("Successfully updated the data"); 
-  //   }
     
   // };
 

@@ -21,27 +21,31 @@ const NoOutreachDoc = ({ isPersonalVisitLog }) => {
             <div className="flex justify-center items-start gap-4">
                 {isPersonalVisitLog ? (
                 <CustomButton
-                    label="Document Personal Visit Log"
-                    name="buttondefault"
-                    onClick={() => {
-                    navigate("/profile/visitlogform");
-                    window.scrollTo(0, 0);
-                    }}
-                />
-                ) : (
-                <CustomButton
-                    label="Document Personal Outreach"
-                    name="buttondefault"
-                    onClick={() => {
-                    navigate("/createOutreach");
-                    window.scrollTo(0, 0);
-                    }}
-                />
-                )}
-                <CustomButton
-                    label={isPersonalVisitLog ? "Explore Visit Logs" : "Explore Outreach Events"}
-                    name="buttonlight"
-                    onClick={() => {
+            label="Document Personal Interaction Log"
+            name="buttondefault"
+            onClick={() => {
+              navigate("/profile/personaloutform");
+              window.scrollTo(0, 0);
+            }}
+          />
+        ) : (
+          <CustomButton
+            label="Document Personal Outreach"
+            name="buttondefault"
+            onClick={() => {
+              navigate("/createOutreach");
+              window.scrollTo(0, 0);
+            }}
+          />
+        )}
+        <CustomButton
+          label={
+            isPersonalVisitLog
+              ? "Explore Interaction Logs"
+              : "Explore Outreach Events"
+          }
+          name="buttonlight"
+          onClick={() => {
                         navigate(isPersonalVisitLog ? "/allOutreachVisitLog" : "/allOutreachEvents");
                         window.scrollTo(0, 0);
                     }}

@@ -4,12 +4,16 @@ import arrowRight from "../../images/arrowRight.png";
 import OutreachVisitLogCard from "../Community/OutreachVisitLogCard";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import {
-  fetchTopVisitLogs,
+  fetchHomeVisitLogs,
   fetchPublicVisitLogs,
 } from "../VisitLogCardService";
 import ErrorMessage from "../ErrorMessage";
 import CustomButton from "../Buttons/CustomButton";
 import UserTypeInfo from "../UserTypeInfo";
+
+import collectionMapping from "../../utils/firestoreCollections";
+
+console.log(collectionMapping);
 
 const HomePageVisitlog = () => {
   const navigate = useNavigate();
@@ -68,10 +72,10 @@ const HomePageVisitlog = () => {
       setIsLoading(true);
       setIsError(false);
       try {
-        const visitLogsData = await fetchPublicVisitLogs();
+        const visitLogsData = await fetchHomeVisitLogs();
         setVisitLogs(visitLogsData);
       } catch (error) {
-        console.error("Error fetching visit logs:", error);
+        console.error("Error fetching interaction logs:", error);
         setIsError(true);
       } finally {
         setIsLoading(false);
@@ -100,7 +104,7 @@ const HomePageVisitlog = () => {
                 }}
               >
                 <div className="font-medium text-2xl md:text-[45px] font-dmsans">
-                  Latest actions - Visit Log
+                  Latest Actions - Interaction Log
                 </div>
 
                 <img src={arrowRight} className="w-6 h-6 lg:w-10 lg:h-10 " />
@@ -119,7 +123,7 @@ const HomePageVisitlog = () => {
               <EventCardSkeleton />
             </div>
           ) : isError ? (
-            <ErrorMessage displayName="Visit Logs" />
+            <ErrorMessage displayName="Interaction Logs" />
           ) : visitLogs.length > 0 ? (
             // <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
             <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-5">
@@ -133,13 +137,13 @@ const HomePageVisitlog = () => {
             </div>
           ) : (
             <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-5">
-              No visit logs found.
+              No interaction logs found.
             </div>
           )}
         </div>
         <div className="mt-16">
           <CustomButton
-            label="More Visit Logs"
+            label="More Interaction Logs"
             name="buttondefault"
             onClick={() => {
               navigate("/allOutreachVisitLog");

@@ -18,7 +18,10 @@ import { getAuth } from "firebase/auth";
 import DeleteModal from "./DeleteModal";
 import { formatDate } from "./../HelperFunction";
 
-const USERS_COLLECTION = "users";
+import collectionMapping from "../../utils/firestoreCollections";
+
+const users_collection = collectionMapping.users;
+const visitLogs_collection = collectionMapping.visitLogs;
 
 const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
   const navigate = useNavigate();
@@ -29,17 +32,16 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
   // Function to delete visit log
   const deleteVisitLog = async () => {
     try {
-      // const visitLogDoc = doc(db, "personalVisitLog", visitLogCardData.id); //change back to personalVisitLog in dev branch
-      const visitLogDoc = doc(db, "visitLogWebProd", visitLogCardData.id);
+      const visitLogDoc = doc(db, visitLogs_collection, visitLogCardData.id);
 
       const userQuery = query(
-        collection(db, USERS_COLLECTION),
+        collection(db, users_collection),
         where("uid", "==", fAuth?.currentUser?.uid)
       );
       const userDocRef = await getDocs(userQuery);
 
       const userDocID = userDocRef.docs[0].id;
-      const userRef = doc(db, USERS_COLLECTION, userDocID);
+      const userRef = doc(db, users_collection, userDocID);
       const docSnap = await getDoc(userRef);
       let personalVisitLogs = docSnap.data().personalVisitLogs || [];
       personalVisitLogs = personalVisitLogs.filter(
@@ -174,7 +176,7 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
                     <DeleteModal
                       handleClose={deleteModalCancelOnClick}
                       handleDelete={deleteVisitLog} // Handle delete within modal
-                      modalMsg={`Are you sure you want to delete this visit log?`}
+                      modalMsg={`Are you sure you want to delete this interaction log?`}
                     />
                   )}
                 </ul>

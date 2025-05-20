@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import collectionMapping from "../../utils/firestoreCollections";
+
+const users_collection = collectionMapping.users;
 
 function UserDetails() {
   const { uid } = useParams();  // Get uid from URL
@@ -10,7 +13,7 @@ function UserDetails() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const docRef = doc(db, "users", uid);
+      const docRef = doc(db, users_collection, uid);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {

@@ -10,6 +10,7 @@ import ErrorMessage from "../ErrorMessage";
 const CommunityVisitLog = ({ loggedIn}) => {
   const navigate = useNavigate();
   const [visitLogs, setVisitLogs] = useState([]);
+  const [visitLogsCount, setCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -18,12 +19,26 @@ const CommunityVisitLog = ({ loggedIn}) => {
     const fetchData = async () => {
       try {
         // Fetch all visit logs
-        const visitLogsData = await fetchPublicVisitLogs();
-        setVisitLogs(visitLogsData);
+        const visitLogsData = await fetchPublicVisitLogs(
+          "", 
+          "", 
+          new Date(), 
+          new Date(), 
+          false, 
+          null, 
+          6, 
+          "next", 
+          []
+        );
+      
+        setVisitLogs(visitLogsData.visitLogs);
+        setCount(visitLogsData.totalRecords);
         setIsLoading(false);
       } catch (error) {
         setIsError(true);
-        setErrorMsg("Visit logs could not be loaded. Please try again later.");
+        setErrorMsg(
+          "Interaction logs could not be loaded. Please try again later."
+        );
         setIsLoading(false);
       }
     };
@@ -43,18 +58,18 @@ const CommunityVisitLog = ({ loggedIn}) => {
           <div className="">
             <div className="flex flex-row gap-4">
               <div className="text-[45px] font-medium font-dmsans">
-                Visit Logs ({visitLogs?.length || 0})
+                Interaction Logs ({visitLogsCount ? visitLogsCount : 0})
               </div>
               {loggedIn && (
-              <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-medium font-dmsans leading-tight self-stretch">
-                <CustomButton
-                  label="Create a Visit Log"
-                  name="buttondefault"
-                  onClick={() => {
-                    navigate("/profile/personaloutform");
-                  }}
-                />
-              </div>
+                <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-medium font-dmsans leading-tight self-stretch">
+                  <CustomButton
+                    label="Create a interaction Log"
+                    name="buttondefault"
+                    onClick={() => {
+                      navigate("/profile/personaloutform");
+                    }}
+                  />
+                </div>
               )}
             </div>
             <div className="text-md font-medium font-dmsans text-[#181818] mt-2">
@@ -85,7 +100,7 @@ const CommunityVisitLog = ({ loggedIn}) => {
             <EventCardSkeleton />
           </div>
         ) : isError ? (
-          <ErrorMessage displayName="Visit Logs" />
+          <ErrorMessage displayName="Interaction Logs" />
         ) : visitLogs.length > 0 ? (
           <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
             {visitLogs.slice(0, 3).map((visitLogData, index) => (
@@ -98,7 +113,7 @@ const CommunityVisitLog = ({ loggedIn}) => {
           </div>
         ) : (
           <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            No visit logs found.
+            No interaction logs found.
           </div>
         )}
       </div>

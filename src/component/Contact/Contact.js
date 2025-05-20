@@ -6,6 +6,9 @@ import errorImg from "../../images/error.png";
 import { emailConfirmation } from "../EmailService";
 import { getAuth } from "firebase/auth";
 import { db } from "../firebase";
+import collectionMapping from "../../utils/firestoreCollections";
+
+const contacts_collection = collectionMapping.contacts;
 
 function Contact() {
   const [success, setSuccess] = useState(false);
@@ -108,7 +111,7 @@ function Contact() {
       };
 
       try {
-        const reqRef = collection(db, "contacts");
+        const reqRef = collection(db, contacts_collection);
         console.log(obj);
         const docRef = await addDoc(reqRef, obj);
         if (docRef.id) {

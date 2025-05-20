@@ -23,6 +23,9 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
+import collectionMapping from "../../utils/firestoreCollections";
+
+const visitLogs_collection = collectionMapping.visitLogs;
 
 const MoreVisitLogs = () => {
   const [visitLogs, setVisitLogs] = useState([]);
@@ -52,7 +55,9 @@ const MoreVisitLogs = () => {
       } catch (error) {
         setIsError(true);
         setVisitLogs([]);
-        setErrorMsg("Visit logs could not be loaded. Please try again later.");
+        setErrorMsg(
+          "Interaction logs could not be loaded. Please try again later."
+        );
       }
     } else {
       console.log("No user is signed in.");
@@ -74,14 +79,14 @@ const MoreVisitLogs = () => {
 
   const updateFlagStatusInFirebase = async (id, flagged) => {
     try {
-      const logRef = doc(db, "visitLogWebProd", id); // Correct Firestore reference
+      const logRef = doc(db, visitLogs_collection, id); // Correct Firestore reference
       await updateDoc(logRef, { flagged });
       console.log(`Flag status updated for log ID: ${id}, flagged: ${flagged}`);
     } catch (error) {
       console.error("Error updating flag status in Firebase:", error);
     }
   };
-  
+
   const toggleFlag = (id) => {
     const logToUpdate = visitLogs.find((log) => log.id === id);
     if (!logToUpdate) {
@@ -130,12 +135,12 @@ const MoreVisitLogs = () => {
         </div>
         <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
           <p className="font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
-            My Visit Logs
+            My Interaction Logs
           </p>
           <div className="pt-4 pb-3">
             <div className="w-full flex flex-col sm:flex-row bg-[#F2F6D8] p-4 rounded-xl gap-4 justify-between">
               <div className="text-neutral-800 text-[20px] font-medium font-bricolage leading-loose">
-                View your documented visit logs here.
+                View your documented interaction logs here.
               </div>
             </div>
           </div>
@@ -171,7 +176,10 @@ const MoreVisitLogs = () => {
                 ))}
               </div>
               {visitLogs.length === 0 && (
-                <NoDisplayData name="visitlog" label="No visit logs created" />
+                <NoDisplayData
+                  name="visitlog"
+                  label="No interaction logs created"
+                />
               )}
               {/* Pagination */}
               <div className="flex justify-center mt-8">

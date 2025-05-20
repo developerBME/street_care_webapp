@@ -23,6 +23,10 @@ import { emailConfirmation } from "./EmailService";
 import CustomButton from "./Buttons/CustomButton";
 import logEvent from "./FirebaseLogger";
 
+import collectionMapping from "../utils/firestoreCollections";
+
+const users_collection = collectionMapping.users;
+
 const handleGoogleSignIn = async (e) => {
   e.preventDefault();
   console.log("Google Signup");
@@ -39,7 +43,7 @@ const handleGoogleSignIn = async (e) => {
     const user = result.user;
 
     // Check if document exists in the user collection:
-    const ref = doc(db, "users", user.uid);
+    const ref = doc(db, users_collection, user.uid);
     const docSnap = await getDoc(ref);
     if (docSnap.exists()) {
       // No need to update, just leave a logged in state
@@ -61,7 +65,7 @@ const handleGoogleSignIn = async (e) => {
             .toString()
             .substring(0, user.photoURL.toString().indexOf("=") + 1) + "s224-c",
       };
-      const userRef = doc(db, "users", user.uid);
+      const userRef = doc(db, users_collection, user.uid);
       setDoc(userRef, userData);
       logEvent(
         "STREET_CARE_INFO_AUTH",
@@ -96,7 +100,7 @@ const handleFacebookSignIn = async (e) => {
     const user = result.user;
 
     // Check if document exists in the user collection:
-    const ref = doc(db, "users", user.uid);
+    const ref = doc(db, users_collection, user.uid);
     const docSnap = await getDoc(ref);
     if (docSnap.exists()) {
       // No need to update, just leave a logged in state
@@ -114,7 +118,7 @@ const handleFacebookSignIn = async (e) => {
         username: user.displayName,
         uid: user.uid,
       };
-      const userRef = doc(db, "users", user.uid);
+      const userRef = doc(db, users_collection, user.uid);
       setDoc(userRef, userData);
       logEvent(
         "STREET_CARE_INFO_AUTH",
@@ -150,7 +154,7 @@ const handleTwitterSignIn = async (e) => {
     console.log(user);
 
     // Check if document exists in the user collection:
-    const ref = doc(db, "users", user.uid);
+    const ref = doc(db, users_collection, user.uid);
     const docSnap = await getDoc(ref);
     if (docSnap.exists()) {
       // No need to update, just leave a logged in state
@@ -172,7 +176,7 @@ const handleTwitterSignIn = async (e) => {
             .toString()
             .substring(0, user.photoURL.toString().indexOf("_normal")) + ".png",
       };
-      const userRef = doc(db, "users", user.uid);
+      const userRef = doc(db, users_collection, user.uid);
       setDoc(userRef, userData);
       logEvent(
         "STREET_CARE_INFO_AUTH",
@@ -281,8 +285,8 @@ function Signup2() {
         Type: ""
       };
 
-      // await firestore.collection('users').doc(currentUser.uid).set(userData);
-      const userRef = doc(db, "users", currentUser.uid);
+      // await firestore.collection(users_collection).doc(currentUser.uid).set(userData);
+      const userRef = doc(db, users_collection, currentUser.uid);
       await setDoc(userRef, userData);
 
       //sendEmailVerification(currentUser);
