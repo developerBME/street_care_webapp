@@ -2,7 +2,11 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "./firebase";
 import { calculateNumberOfPagesForVisitlog } from "./VisitLogCardService";
 
+import collectionMapping from "../utils/firestoreCollections";
+
 jest.mock("firebase/firestore");
+
+const visitLogs_collection = collectionMapping.visitLogs;
 
 describe("calculateNumberOfPagesForVisitlog function", () => {
   test("calculates the number of pages correctly", async () => {
@@ -17,9 +21,7 @@ describe("calculateNumberOfPagesForVisitlog function", () => {
 
     const result = await calculateNumberOfPagesForVisitlog(visitlogsPerPage);
 
-    // expect(getDocs).toHaveBeenCalledWith(collection(db, "personalVisitLog")); // change back to this in dev branch
-    expect(getDocs).toHaveBeenCalledWith(collection(db, "visitLogWebProd"));
-
+    expect(getDocs).toHaveBeenCalledWith(collection(db, visitLogs_collection));
     expect(result).toBe(expectedNumberOfPages);
   });
 

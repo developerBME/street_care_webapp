@@ -1,13 +1,20 @@
 import React from "react";
 
 import Campaign from "../../images/campaign.svg";
+import Outreach from "../../images/outreach.png";
+import CustomButton from "../Buttons/CustomButton";
+import { useNavigate } from "react-router-dom";
 // import { getDocs, collection, query } from "firebase/firestore";
 // import { db } from "../firebase";
 // import { useNavigate } from "react-router-dom";
 // import { fetchVisitLogs } from "../VisitLogCardService";
 import HomePageVisitlog from "../HomePage/HomePageVisitlog";
+import collectionMapping from "../../utils/firestoreCollections";
+
+const visitLogs_collection = collectionMapping.visitLogs;
 
 function Success2() {
+  const navigate = useNavigate();
   // Commenting to reduce unnecessary database calls
   // const [donations, setDonations] = useState("");
   // const [helpedBy, setHelpedBy] = useState("");
@@ -18,7 +25,7 @@ function Success2() {
   // useEffect(() => {
   //   const getValues = async () => {
   //     try {
-  //       const logOfUserRef = query(collection(db, "visitLogWebProd"));
+  //       const logOfUserRef = query(collection(db, vistiLogs_collection));
   //       const data = await getDocs(logOfUserRef);
   //       let totalDonations = 0;
   //       let totalHelpedPeople = 0;
@@ -215,9 +222,54 @@ function Success2() {
         </div>
       </div>
 
-      { <div className=" mt-16 w-full  justify-start items-start">
-        <HomePageVisitlog />
-      </div> }
+      <div className="neutral-100 mt-[72px]  flex justify-center items-center">
+        <div className=" flex flex-col md:flex-row gap-6 md:gap-12">
+          {/* Outreach Event Card */}
+          <div className=" h-[265px] bg-white rounded-[30px] flex flex-col items-center text-center justify-center p-6">
+            <img
+              src={Outreach}
+              alt="Outreach Icon"
+              className="w-12 h-12 mb-4"
+            />
+            <p className="mt-4 font-dmsans font-normal text-[14px] leading-[22px] tracking-normal text-center text-[#444746]">
+              Create an Outreach event today, turn compassion into action, and
+              be the reason someone’s life changes for better!
+            </p>
+
+            <div className="mt-auto">
+              <CustomButton
+                label="Create an Outreach"
+                name="buttondefault"
+                onClick={() => {
+                  navigate("/createOutreach");
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Visit Log Card */}
+          <div className=" h-[265px] bg-white rounded-[30px] flex flex-col items-center text-center p-6">
+            <img
+              src={Outreach}
+              alt="Outreach Icon"
+              className="w-12 h-12 mb-4"
+            />
+            <p className="mt-4 font-dmsans font-normal text-[14px] leading-[22px] tracking-normal text-center text-[#444746]">
+              Inspire others by sharing your impact and capture your journey of
+              helping those in need with interaction logs!
+            </p>
+            <div className="mt-auto">
+              <CustomButton
+                label="Create a Interaction Log"
+                name="buttondefault"
+                onClick={() => {
+                  navigate("/profile/personaloutform");
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

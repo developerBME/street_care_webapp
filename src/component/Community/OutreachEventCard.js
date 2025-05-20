@@ -14,9 +14,10 @@ import verifiedGreen from "../../images/verified.png";
 import verifiedBlue from "../../images/verified_blue.png";
 import verifiedYellow from "../../images/verified_yellow.png";
 import { useUserContext } from "../../context/Usercontext.js";
+import collectionMapping from "../../utils/firestoreCollections.js";
 
-const PERSONAL_OUTREACH_COLLECTION = "outreachEventsDev"; // Collection name
-const USERS_COLLECTION = "users"; // User collection
+const outreachEvents_collection = collectionMapping.outreachEvents; // Collection name
+const users_collection = collectionMapping.users; // User collection
 
 const OutreachEventCard = ({
   cardData,
@@ -53,7 +54,7 @@ const OutreachEventCard = ({
           return;
         }
 
-        const docRef = doc(db, PERSONAL_OUTREACH_COLLECTION, id);
+        const docRef = doc(db, outreachEvents_collection, id);
         const currentDoc = await getDoc(docRef);
 
         if (currentDoc.exists()) {
@@ -84,7 +85,7 @@ const OutreachEventCard = ({
         return;
       }
 
-      const userRef = doc(db, USERS_COLLECTION, user.uid);
+      const userRef = doc(db, users_collection, user.uid);
       const userDoc = await getDoc(userRef);
 
       if (!userDoc.exists()) {
@@ -93,7 +94,7 @@ const OutreachEventCard = ({
       }
 
       const { Type: userType } = userDoc.data();
-      const docRef = doc(db, PERSONAL_OUTREACH_COLLECTION, id);
+      const docRef = doc(db, outreachEvents_collection, id);
       const currentDoc = await getDoc(docRef);
 
       if (!currentDoc.exists()) {

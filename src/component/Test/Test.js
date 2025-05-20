@@ -6,6 +6,10 @@ import errorImg from "../../images/error.png";
 import { getAuth } from "firebase/auth";
 import { db } from "../firebase";
 
+import collectionMapping from "../../utils/firestoreCollections";
+
+const testUser_collection = collectionMapping.testUser;
+
 function TestUser() {
   const [success, setSuccess] = useState(false);
   const nameRef = useRef(null);
@@ -89,7 +93,7 @@ function TestUser() {
       };
 
       try {
-        const reqRef = collection(db, "TestUser");
+        const reqRef = collection(db, testUser_collection);
         console.log(obj);
         const docRef = await addDoc(reqRef, obj);
         if (docRef.id) {

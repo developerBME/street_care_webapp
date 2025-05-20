@@ -6,7 +6,8 @@ import CustomButton from "../Buttons/CustomButton";
 import {
   fetchEventById,
   handleRsvp,
-  isUserParticipantInEvent,
+  fetchUserSignedUpOutreaches,
+  isUserParticipantInEvent
 } from "../EventCardService";
 import { fetchUserName } from "../HelperFunction";
 import { Co2Sharp } from "@mui/icons-material";
@@ -15,6 +16,8 @@ import RSVPConfirmationModal from "../UserProfile/RSVPConfirmationModal";
 import userSlots from "../../images/userSlots.png";
 import date from "../../images/date.png";
 import locate from "../../images/location.png";
+import phone from "../../images/phone.png";
+import email from "../../images/email.png";
 import { useLocation } from "react-router-dom";
 import EditModal from "./EditModal";
 import verifiedPurple from "../../images/verified_purple.png";
@@ -38,8 +41,10 @@ import { getAuth } from "firebase/auth";
 import { isPast } from "date-fns";
 import flagSvg from "../../images/flag.svg"; // Flag icon
 import { useUserContext } from "../../context/Usercontext.js";
+import collectionMapping from "../../utils/firestoreCollections.js";
 
-const USERS_COLLECTION = "users";
+const users_collection = collectionMapping.users;
+const outreachEvents_collection = collectionMapping.outreachEvents;
 
 const OutreachSignup = () => {
   const navigate = useNavigate();
@@ -78,6 +83,7 @@ const OutreachSignup = () => {
       try {
         const result = await fetchEventById(id);
         setData(result);
+        console.log(result)
       } catch (error) {
         console.error(error.message);
       }
@@ -93,7 +99,7 @@ const OutreachSignup = () => {
           console.error("Invalid id:", id);
           return;
         }
-        const docRef = doc(db, "outreachEventsDev", id);
+        const docRef = doc(db, outreachEvents_collection, id);
         const currentDoc = await getDoc(docRef);
         if (currentDoc.exists()) {
           const { isFlagged } = currentDoc.data();
@@ -120,14 +126,14 @@ const OutreachSignup = () => {
         console.error("Invalid id:", id);
         return;
       }
-      const userRef = doc(db, USERS_COLLECTION, fAuth.currentUser.uid);
+      const userRef = doc(db, users_collection, fAuth.currentUser.uid);
       const userDoc = await getDoc(userRef);
       if (!userDoc.exists()) {
         console.error("User document does not exist:", fAuth.currentUser.uid);
         return;
       }
       const { Type: userType } = userDoc.data();
-      const docRef = doc(db, "outreachEventsDev", id);
+      const docRef = doc(db, outreachEvents_collection, id);
       const currentDoc = await getDoc(docRef);
       if (!currentDoc.exists()) {
         console.error("Outreach document does not exist:", id);
@@ -176,12 +182,21 @@ const OutreachSignup = () => {
           id,
           fAuth?.currentUser?.uid
         );
+        // setUserSignedUpOutreaches(result);
+        // console.log("Result in OS: ", result);
+        
+        // const eventIds = result?.map((event) => event.id);
+        // // console.log(eventIds);
+        // console.log("Event Ids: ", eventIds);
 
+        // const isSignedUp = eventIds?.includes(id);
+        // console.log(isSignedUp);
         if (result) {
           setLabel2("EDIT");
         } else {
           setLabel2("RSVP");
         }
+
       } catch (error) {
         console.error(error.message);
       }
@@ -227,10 +242,10 @@ const OutreachSignup = () => {
 
   const deleteVisitLog = async () => {
     try {
-      const visitLogDoc = doc(db, "outreachEventsDev", id);
+      const visitLogDoc = doc(db, outreachEvents_collection, id);
 
       const userQuery = query(
-        collection(db, USERS_COLLECTION),
+        collection(db, users_collection),
         where("uid", "==", fAuth?.currentUser?.uid)
       );
 
@@ -238,7 +253,7 @@ const OutreachSignup = () => {
 
       const userDocID = userDocRef.docs[0].id;
       // reference for the userdoc
-      const userRef = doc(db, USERS_COLLECTION, userDocID);
+      const userRef = doc(db, users_collection, userDocID);
       // outreach event collection
       const docSnap = await getDoc(userRef);
       let personalVisitLogs = docSnap.data().personalVisitLogs || [];
@@ -366,13 +381,31 @@ const OutreachSignup = () => {
                       </div>
                     )}
                   </div>
+                  {data && data.consentStatus && (
+                     <div className="flex flex-row justify-normal space-x-2">
+                      <img className="w-[12px] h-[15px] my-[3px]" src={phone} alt="Phone Icon" />
+                        <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
+                           {data.contactNumber}
+                        </div>
+                     </div>
+                  )}
+                  {data && data.consentStatus && data.emailAddress && (
+                     <div className="flex flex-row justify-normal space-x-2">
+                      <img className="w-[12px] h-[15px] my-[3px]" src={email} alt="Email Icon" />
+                        <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
+                           {data.emailAddress}
+                        </div>
+                     </div>
+                  )}
                   <div className="flex flex-row justify-normal space-x-2">
                     <img className="w-[12px] h-[15px] my-[3px]" src={locate} />
                     {data ? (
                       <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
                         {/* for showing complete address of outreach event */}
                         {/* {data.location.street},{data.location.city}, {data.location.stateAbbv}, {data.location.zipcode} */}
-                        {data.location.city}, {data.location.stateAbbv}
+                        {/* {data.location.city}, {data.location.stateAbbv} */}
+                        {data.consentStatus ? `${data.location.street}, ${data.location.city}, ${data.location.stateAbbv}, ${data.location.zipcode}`
+                                   : `${data.location.city}, ${data.location.stateAbbv}`}
                       </div>
                     ) : (
                       <div className="self-stretch text-[#444746] text-sm font-normal font-inter leading-snug">
@@ -542,7 +575,7 @@ const OutreachSignup = () => {
                   <DeleteModal
                     handleClose={() => setShowDeleteModal(false)}
                     handleDelete={deleteVisitLog}
-                    modalMsg={`Are you sure you want to delete this visit log?`}
+                    modalMsg={`Are you sure you want to delete this interaction log?`}
                   />
                 )}
                 {showModal && (

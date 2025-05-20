@@ -39,7 +39,7 @@ const Landing = forwardRef(({ scorllFuntion }, ref) => {
       </div>
       <div className=" grid grid-row-2 gap-y-2 md:gap-y-3 lg:gap-y-3 mt-9 xl:mt-0">
         <div className=" grid grid-cols-2 gap-x-2 md:grid-cols-4 md:gap-x-4 lg:grid-cols-4 lg:gap-x-4 xl:grid-cols-5 ">
-          <img src={one} className=" rounded-3xl h-36 w-full col-span-1 md:h-40 md:w-full md:col-span-1 lg:h-40 lg:col-span-1 lg:w-full xl:col-span-2 xl:col-span-2"></img>
+          <img src={one} className=" rounded-3xl h-36 w-full col-span-1 md:h-40 md:w-full md:col-span-1 lg:h-40 lg:col-span-1 lg:w-full xl:col-span-2"></img>
           <img src={two} className=" rounded-3xl h-36 w-ull col-span-1 md:h-40 md:w-full md:col-span-3 lg:h-40 lg:col-span-3 lg:w-full xl:col-span-3"></img>
         </div>
         <div className=" ">
