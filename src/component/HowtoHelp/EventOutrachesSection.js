@@ -119,47 +119,52 @@ const EventOutrachesSection = () => {
         }
     }, [eventsDisplay]);
 
-  const upcomingEvents = events
-    .filter((event) => {
-      const eventDate = new Date(event.eventDate.seconds * 1000);
-      return eventDate >= new Date(); // Check if the event date is after the current date
-    })
-    .slice(0, 3);
+    const upcomingEvents = events
+        .filter((event) => {
+            const eventDate = new Date(event.eventDate.seconds * 1000);
+            return eventDate <= new Date(); // Check if the event date is before the current date
+        })
+        .slice(0, 3);
 
-  return (
-    <div>
-      <div className="p-4 lg:px-16 lg:py-12 bg-white from-[#D3C3FF] to-[#DEDCE4] rounded-t-2xl flex-col justify-start items-start gap-4 inline-flex w-full">
-        <div className="flex flex-col md:flex md:flex-row justify-between gap-4 md:gap-10 w-full">
-          <div className=" w-full">
-            <div className="flex flex-col lg:flex-row justify-between w-full">
-              <div className="text-[57px] font-medium font-dmsans">
-                {/* Outreach - extending help, resources, and compassion to those in
+    return (
+        <div>
+
+            <div className="p-4 lg:px-16 lg:py-12 bg-white from-[#D3C3FF] to-[#DEDCE4] rounded-t-2xl flex-col justify-start items-start gap-4 inline-flex w-full">
+                <div className="flex flex-col md:flex md:flex-row justify-between gap-4 md:gap-10">
+                    <div className="">
+                        <div className="flex flex-col lg:flex-row justify-between">
+                            <div className="text-[57px] font-medium font-dmsans">
+                                {/* Outreach - extending help, resources, and compassion to those in
             need */}
-                Sign up for outreaches now!
-              </div>
-              <div
-                className="flex flex-row cursor-pointer gap-2 items-center"
-                onClick={() => {
-                  navigate("/allOutreachEvents");
-                }}
-              >
-                <div className="font-medium text-[24px] font-dmsans  whitespace-nowrap gap-4">
-                  View all
-                </div>
-                <img src={arrowRight} className="w-2 h-2 lg:w-4 lg:h-4 " />
-              </div>
-            </div>
-            <div className="font-dmsans text-1 text-grey-300 font-normal py-2">
-              We’ve made a simple guide on how you can contribute to help the
-              homeless. Join our team of 700+ members and contribute in your own
-              way. More than 35% of our volunteers are first-time volunteers.
-            </div>
-          </div>
-        </div>
-      </div>
+                                Sign up to outreachs now!
+                            </div>
 
-      <div className="px-4 pb-4 lg:px-16 lg:pb-10">
-        <div className="flex items-center justify-between"></div>
+                            <div
+                                className="flex flex-row cursor-pointer gap-2 items-center"
+                                onClick={() => {
+                                    navigate("/allOutreachEvents");
+                                }}
+                            >
+                                <div className="font-medium text-[24px] font-dmsans  whitespace-nowrap gap-4">
+                                    View all
+                                </div>
+                                <img src={arrowRight} className="w-2 h-2 lg:w-4 lg:h-4 " />
+                            </div>
+
+                        </div>
+                        <div className="font-dmsans text-1 text-grey-300 font-normal py-2">
+
+                            We’ve made a simple guide on how you can contribute to the homeless.
+                            Join our team of 700+ members and contribute in your own way. More than 35% of our volunteers are first-time volunteers.
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+            <div className="px-4 py-8 pb-4 lg:px-16 lg:pb-10">
+                <div className="flex items-center justify-between">
 
                 </div>
 
@@ -209,17 +214,17 @@ const EventOutrachesSection = () => {
 
 
 
-        {visibleItems < cardData.length && (
-          <button
-            className="w-full px-6 py-2.5 rounded-full text-sm font-medium text-violet-950 font-['DM Sans'] border border-stone-300"
-            onClick={loadMore}
-          >
-            Load More
-          </button>
-        )}
-      </div>
-    </div>
-  );
+                {visibleItems < cardData.length && (
+                    <button
+                        className="w-full px-6 py-2.5 rounded-full text-sm font-medium text-violet-950 font-['DM Sans'] border border-stone-300"
+                        onClick={loadMore}
+                    >
+                        Load More
+                    </button>
+                )}
+            </div>
+        </div>
+    );
 };
 
 export default EventOutrachesSection;
