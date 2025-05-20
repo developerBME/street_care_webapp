@@ -7,7 +7,6 @@ import defaultImage from "../../../images/default_avatar.svg";
 import errorImg from "../../../images/error.png";
 import successImg from "../../../images/verified.png";
 import edit from "../../../images/edit.png";
-import removeIcon from "../../../images/delete.svg";
 import arrowBack from "../../../images/arrowBack.png";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { ImageRounded } from "@mui/icons-material";
@@ -33,11 +32,11 @@ async function uploadProfileImage(
   currentUser,
   setLoading,
   setSuccess,
-  setPhotoUrl,
   setAvatarLoading
 ) {
   const fAuth = getAuth();
   const fileRef = ref(storage, "webappUserImages/" + fAuth.currentUser.uid);
+
   setAvatarLoading(true);
 
   try {
@@ -54,9 +53,10 @@ async function uploadProfileImage(
     await updateDoc(userRef, {
       photoUrl: photoUrl,
     });
+
     setLoading(false);
     setSuccess("File Uploaded successfully");
-    setPhotoUrl(photoUrl);
+
     setAvatarLoading(false);
   } catch (error) {
     setLoading(false);
@@ -83,7 +83,6 @@ const UpdateProfile = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState("");
-  const [isImageRemoved, setIsImageRemoved] = useState(false);
 
   const username = useRef("");
   const city = useRef("");
@@ -93,7 +92,7 @@ const UpdateProfile = () => {
   const fAuth = getAuth();
 
   const [displayName, setDisplayName] = useState("");
-  const [photoUrl, setPhotoUrl] = useState(defaultImage);
+  const [photoUrl, setPhotoUrl] = useState("");
   const [dateCreated, setDateCreated] = useState("");
 
   const [errormsg, setErrors] = useState({
@@ -120,35 +119,19 @@ const UpdateProfile = () => {
         where("uid", "==", fAuth?.currentUser?.uid)
       );
       const data = await getDocs(userRef);
+
       if (data.docs[0]) {
-        const userData = data.docs[0].data();
-        setPhotoUrl(userData.photoUrl || defaultImage);
-        setDisplayName(userData.username);
-        setNewUsername(userData.username); // Pre-fill the profile name field
-        setNewCity(userData.city || "");    // Pre-fill the city field
-        setNewState(userData.state || "");  // Pre-fill the state field
-        setNewCountry(userData.country || ""); // Pre-fill the country field
+        setPhotoUrl(data.docs[0].data().photoUrl || defaultImage);
+        setDisplayName(data.docs[0].data().username);
         setDateCreated(
-          userData.dateCreated.toDate().getMonth() +
+          data.docs[0].data().dateCreated.toDate().getMonth() +
             1 +
             "/" +
-            userData.dateCreated.toDate().getDate() +
+            data.docs[0].data().dateCreated.toDate().getDate() +
             "/" +
-            userData.dateCreated.toDate().getFullYear()
+            data.docs[0].data().dateCreated.toDate().getFullYear()
         );
       }
-      // if (data.docs[0]) {
-      //   setPhotoUrl(data.docs[0].data().photoUrl || defaultImage);
-      //   setDisplayName(data.docs[0].data().username);
-      //   setDateCreated(
-      //     data.docs[0].data().dateCreated.toDate().getMonth() +
-      //       1 +
-      //       "/" +
-      //       data.docs[0].data().dateCreated.toDate().getDate() +
-      //       "/" +
-      //       data.docs[0].data().dateCreated.toDate().getFullYear()
-      //   );
-      // }
     } catch (err) {
       console.log(err);
     }
@@ -222,17 +205,11 @@ const UpdateProfile = () => {
       setAvatarLoading(false);
     }
   };
-  const handleRemoveImage = () => {
-    setNewProfileImage(null); // Remove from local state
-    setUserimageError("");
-    setPhotoUrl(""); // Remove preview
-    setIsImageRemoved(true); // Track that image was removed
-  };
+
   const handleSubmitProfileUpdate = async (e) => {
     e.preventDefault();
-    
-    if (!username.current.value || !city.current.value || !state.current.value || !country.current.value) {
-      setError("Please provide details to update.");
+    if (!username.current.value ||!city.current.value || !state.current.value || !country.current.value) {
+      setError("Please provide a display name and profile image and  location details to update");
       setSuccess("");
     } else {
       if (username.current.value !== "") {
@@ -250,14 +227,14 @@ const UpdateProfile = () => {
       } 
       if (imgRef.current.value !== "") {
         setUserimageError("");
-        await uploadProfileImage(
+        uploadProfileImage(
           newProfileImage,
           fAuth.currentUser,
           setLoading,
           setSuccess,
-          setPhotoUrl,
           setAvatarLoading
         );
+        imgRef.current.value = "";
         setNewProfileImage(null);
       }
       if (city.current.value !== "") {
@@ -302,7 +279,7 @@ const UpdateProfile = () => {
       setSuccess("Successfully updated the data"); 
     }
     
-  // };
+  };
 
   const handleEditClick = () => {
     imgRef.current.click();
@@ -394,16 +371,6 @@ const UpdateProfile = () => {
                           onClick={handleEditClick}
                         />
                       </div>
-                      {photoUrl && photoUrl !== defaultImage && (
-                        <div className="absolute left-0 bottom-0 ml-4 mb-2 md:ml-0 md:mb-0 bg-[#CEBFFC] rounded-full p-1">
-                          <CustomButton
-                            label=""
-                            name="buttonicon8small"
-                            icon={removeIcon} // Add remove icon here
-                            onClick={handleRemoveImage} // Handle remove image
-                          />
-                        </div>
-                      )}
                       {avatarLoading && (
                         <div className="absolute rounded-full text-center inset-0 flex items-center justify-center bg-black bg-capacity-50 p-2 m-0">
                           <div className="text-white text-sm">Updating</div>
