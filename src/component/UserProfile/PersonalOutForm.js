@@ -343,10 +343,7 @@ function PersonalOutForm() {
     // Form Validation Start
     if (isOtherChecked) {
       setOtherBool = false;
-      updateErrorState(
-        "checkboxesError",
-        "Please specify for other kind of help provided"
-      );
+      updateErrorState("checkboxesError", "");
       if (otherInputValue !== "") {
         whatGivenArr.push(otherInputValue);
         console.log(otherInputValue);
@@ -355,47 +352,38 @@ function PersonalOutForm() {
       }
     }
     if (!numberHelped) {
-      updateErrorState("numberHelpedError", "Number is required");
-      setReturn = true;
+      updateErrorState("numberHelpedError", "");
     } else {
       updateErrorState("numberHelpedError", "");
     }
     // console.log("object");
     // console.log(whatGivenArr);
     if (whatGivenArr == [] || !setOtherBool) {
-      updateErrorState(
-        "checkboxesError",
-        "Please provide the kind of help provided"
-      );
-      setReturn = true;
+      updateErrorState("checkboxesError", "");
     } else {
       updateErrorState("checkboxesError", "");
     }
 
     if (!stateRef.current.value) {
-      updateErrorState("stateError", "State is required");
-      setReturn = true;
+      updateErrorState("stateError", "");
     } else {
       updateErrorState("stateError", "");
     }
 
     if (!cityRef.current.value) {
-      updateErrorState("cityError", "City is required");
-      setReturn = true;
+      updateErrorState("cityError", "");
     } else {
       updateErrorState("cityError", "");
     }
 
     if (!streetRef.current.value) {
-      updateErrorState("streetError", "Street is required");
-      setReturn = true;
+      updateErrorState("streetError", "");
     } else {
       updateErrorState("streetError", "");
     }
 
     if (!zipcodeRef.current.value) {
-      updateErrorState("zipError", "ZIP Code is required");
-      setReturn = true;
+      updateErrorState("zipError", "");
     } else {
       try {
         checkNumber(zipcodeRef.current.value, "Event Name");
@@ -406,9 +394,8 @@ function PersonalOutForm() {
     }
 
     if (!dateTime) {
-      updateErrorState("dateTimeError", "DateTime is required");
+      updateErrorState("dateTimeError", "");
       console.log();
-      setReturn = true;
     } else {
       updateErrorState("dateTimeError", "");
     }
@@ -428,38 +415,26 @@ function PersonalOutForm() {
     // }
 
     if (!itemQty) {
-      updateErrorState("itemQtyError", "Enter Quantity");
-      setReturn = true;
+      updateErrorState("itemQtyError", "");
     } else {
       updateErrorState("itemQtyError", "");
     }
     if (showOptionalQuestions) {
       if (!optDesc.current.value) {
-        updateErrorState(
-          "optDescError",
-          "Enter the description of the people who require further help"
-        );
-        setReturn = true;
+        updateErrorState("optDescError", "");
       } else {
         updateErrorState("optDescError", "");
       }
 
       if (!optLandmark.current.value) {
-        updateErrorState(
-          "optLandmarkError",
-          "Enter the location of the people who require further help"
-        );
-        setReturn = true;
+        updateErrorState("optLandmarkError", "");
+
       } else {
         updateErrorState("optLandmarkError", "");
       }
 
       if (!infoShareCheckbox.current.checked) {
-        updateErrorState(
-          "infoShareCheckboxError",
-          "Location sharing is required"
-        );
-        setReturn = true;
+        updateErrorState("infoShareCheckboxError", "");
       } else {
         setInfoShareCheckboxChecked(true);
         updateErrorState("infoShareCheckboxError", "");
@@ -678,8 +653,7 @@ function PersonalOutForm() {
       }
     }
     if (!numberHelped) {
-      updateErrorState("numberHelpedError", "Number is required");
-      setReturn = true;
+      updateErrorState("numberHelpedError", "");
     } else {
       updateErrorState("numberHelpedError", "");
     }
@@ -689,35 +663,31 @@ function PersonalOutForm() {
         "checkboxesError",
         "Please provide the kind of help provided"
       );
-      setReturn = true;
     } else {
       updateErrorState("checkboxesError", "");
     }
 
     if (!stateRef.current.value) {
-      updateErrorState("stateError", "State is required");
-      setReturn = true;
+      updateErrorState("stateError", "");
+
     } else {
       updateErrorState("stateError", "");
     }
 
     if (!cityRef.current.value) {
-      updateErrorState("cityError", "City is required");
-      setReturn = true;
+      updateErrorState("cityError", "");
     } else {
       updateErrorState("cityError", "");
     }
 
     if (!streetRef.current.value) {
-      updateErrorState("streetError", "Street is required");
-      setReturn = true;
+      updateErrorState("streetError", "");
     } else {
       updateErrorState("streetError", "");
     }
 
     if (!zipcodeRef.current.value) {
-      updateErrorState("zipError", "Zipcode is required");
-      setReturn = true;
+      updateErrorState("zipError", "");
     } else {
       try {
         checkNumber(zipcodeRef.current.value, "Event Name");
@@ -742,46 +712,33 @@ function PersonalOutForm() {
     // }
 
     if (!dateTime) {
-      updateErrorState("dateTimeError", "DateTime is required");
+      updateErrorState("dateTimeError", "");
       console.log();
-      setReturn = true;
     } else {
       updateErrorState("dateTimeError", "");
     }
 
     if (!itemQty) {
-      updateErrorState("itemQtyError", "Enter Quantity");
-      setReturn = true;
+      updateErrorState("itemQtyError", "");
     } else {
       updateErrorState("itemQtyError", "");
     }
     if (showOptionalQuestions) {
       if (!optDesc.current.value) {
-        updateErrorState(
-          "optDescError",
-          "Enter the description of the people who require further help"
-        );
-        setReturn = true;
+        updateErrorState("optDescError", "");
+
       } else {
         updateErrorState("optDescError", "");
       }
 
       if (!optLandmark.current.value) {
-        updateErrorState(
-          "optLandmarkError",
-          "Enter the location of the people who require further help"
-        );
-        setReturn = true;
+        updateErrorState("optLandmarkError", "");
       } else {
         updateErrorState("optLandmarkError", "");
       }
 
       if (!infoShareCheckbox.current.checked) {
-        updateErrorState(
-          "infoShareCheckboxError",
-          "Location sharing is required"
-        );
-        setReturn = true;
+        updateErrorState("infoShareCheckboxError", "");
       } else {
         setInfoShareCheckboxChecked(true);
         updateErrorState("infoShareCheckboxError", "");
@@ -874,7 +831,7 @@ function PersonalOutForm() {
                   <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                     <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
                       Describe who you supported and how many individuals were
-                      involved*
+                      involved
                     </div>
                     {/*  */}
                     <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
@@ -1151,14 +1108,14 @@ function PersonalOutForm() {
                   {/*  */}
                   <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                     <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
-                      Where did you see a person in need?*
+                      Where did you see a person in need?
                     </div>
                     {/*  */}
 
                     <div className="self-stretch w-full h-fit flex-col  flex gap-4">
                       <div className="space-y-1.5">
                         <div className="font-semibold font-['Inter'] text-[15px]">
-                          Enter Address*
+                          Enter Address
                         </div>
                         <input
                           type="text"
@@ -1185,7 +1142,7 @@ function PersonalOutForm() {
                       <div className="grid md:grid-cols-2 md:space-x-4 space-y-3 md:space-y-0">
                         <div className="space-y-1.5">
                           <p className="font-semibold font-['Inter'] text-[15px]">
-                            Street*
+                            Street
                           </p>
                           <input
                             className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
@@ -1211,7 +1168,7 @@ function PersonalOutForm() {
                         </div>
                         <div className="space-y-1.5">
                           <p className="font-semibold font-['Inter'] text-[15px]">
-                            City*
+                            City
                           </p>
                           <input
                             type="text"
@@ -1239,7 +1196,7 @@ function PersonalOutForm() {
                       <div className="grid md:grid-cols-2 md:space-x-4 space-y-3 md:space-y-0">
                         <div className="space-y-1.5">
                           <p className="font-semibold font-['Inter'] text-[15px]">
-                            State*
+                            State
                           </p>
                           <input
                             type="text"
@@ -1264,7 +1221,7 @@ function PersonalOutForm() {
                         </div>
                         <div className="space-y-1.5">
                           <p className="font-semibold font-['Inter'] text-[15px]">
-                            ZIP Code*
+                            ZIP Code
                           </p>
                           <input
                             type="text"
@@ -1398,7 +1355,7 @@ function PersonalOutForm() {
                       <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
                         <div className="space-y-1.5">
                           <div className="font-semibold font-['Inter'] text-[15px]">
-                            Date *
+                            Date 
                           </div>
                         </div>
                         <div className="self-stretch h-fit  border-collapse     ">
@@ -1494,7 +1451,7 @@ function PersonalOutForm() {
                     </div>
                     {/**/}
                     <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
-                      Total number of items donated by you?*
+                      Total number of items donated by you?
                       <Tooltip title={toolTipContent} placement="right" arrow>
                         <IconButton>
                           <InfoIcon />
@@ -1575,7 +1532,7 @@ function PersonalOutForm() {
                     <div className="self-stretch h-fit flex-col justify-center items-start gap-[24px] flex">
                       <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                         <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
-                          Who requires further help?*
+                          Who requires further help?
                         </div>
                         <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
                           <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
@@ -1626,7 +1583,7 @@ function PersonalOutForm() {
                       <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                         <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
                           Can you describe the location or landmark of the
-                          person(s) in need of help?*
+                          person(s) in need of help?
                         </div>
                         <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
                           {/* <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
@@ -1943,7 +1900,7 @@ function PersonalOutForm() {
                       <div className="self-stretch h-fit flex-col justify-center  items-center md:items-start gap-[18px] flex">
                         <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
                           Choose which information to share with the community
-                          to improve assistance*
+                          to improve assistance
                         </div>
                         <div className=" justify-end items-end inline-flex ">
                           <input
