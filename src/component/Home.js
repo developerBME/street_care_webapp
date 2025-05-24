@@ -25,6 +25,7 @@ import OutreachSignupModal from "./Community/OutreachSignupModal";
 import RSVPConfirmationModal from "./UserProfile/RSVPConfirmationModal";
 import PastOutreachEvents from "./PastOutreachEvents";
 import UpcomingOutreachEvents from "./UpcomingOutreachEvents";
+import MobileAppRedirect from "./MobileAppRedirect";
 import { fetchPaginatedPastOutreachEvents } from "./EventCardService";
 
 function HomePage() {
@@ -385,9 +386,15 @@ function HomePage() {
       <Modal open={showWithdrawnModal}>
        <RSVPConfirmationModal closeModal={closeWithdrawModal} type='withdraw' />
       </Modal>
+
+      <div className="fixed bottom-4 right-4">
+        <MobileAppRedirect />
+      </div>
+      
     </div>
     
   );
 }
+
 
 export default HomePage;
