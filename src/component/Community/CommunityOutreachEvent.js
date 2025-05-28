@@ -92,8 +92,7 @@ const CommunityOutreachEvent = ({ loggedIn}) => {
             </div>
 
             <div className="text-md font-medium font-dmsans text-[#181818] mt-2">
-              What are help requests and how can they help you? If you are ready
-              to help people now, kindly sign up to outreaches
+              Please document the details of each person you interacted with. The more detailed, the better. And also, a clearer way to present the logging instruction, like: Just one 'log' for your entire event along with the sentence.
             </div>
           </div>
 
