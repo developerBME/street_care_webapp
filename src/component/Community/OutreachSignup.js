@@ -7,6 +7,7 @@ import {
   fetchEventById,
   handleRsvp,
   fetchUserSignedUpOutreaches,
+  isUserParticipantInEvent
 } from "../EventCardService";
 import { fetchUserName } from "../HelperFunction";
 import { Co2Sharp } from "@mui/icons-material";
@@ -16,6 +17,7 @@ import userSlots from "../../images/userSlots.png";
 import date from "../../images/date.png";
 import locate from "../../images/location.png";
 import phone from "../../images/phone.png";
+import email from "../../images/email.png";
 import { useLocation } from "react-router-dom";
 import EditModal from "./EditModal";
 import verifiedPurple from "../../images/verified_purple.png";
@@ -173,26 +175,31 @@ const [isFlagged, setIsFlagged] = useState(false);
   useEffect(() => {
     const getUserSignedUpOutreaches = async () => {
       try {
-        const result = await fetchUserSignedUpOutreaches(
+        const result = await isUserParticipantInEvent(
+          id,
           fAuth?.currentUser?.uid
         );
-        setUserSignedUpOutreaches(result);
+        // setUserSignedUpOutreaches(result);
+        // console.log("Result in OS: ", result);
+        
+        // const eventIds = result?.map((event) => event.id);
+        // // console.log(eventIds);
+        // console.log("Event Ids: ", eventIds);
+
+        // const isSignedUp = eventIds?.includes(id);
+        // console.log(isSignedUp);
+        if (result) {
+          setLabel2("EDIT");
+        } else {
+          setLabel2("RSVP");
+        }
+
       } catch (error) {
         console.error(error.message);
       }
     };
     getUserSignedUpOutreaches();
     // console.log(fAuth.currentUser.uid);
-    const eventIds = userSignedUpOutreaches?.map((event) => event.id);
-    // console.log(eventIds);
-
-    const isSignedUp = eventIds?.includes(id);
-    // console.log(isSignedUp);
-    if (isSignedUp) {
-      setLabel2("EDIT");
-    } else {
-      setLabel2("RSVP");
-    }
 
     if (data?.uid === fAuth?.currentUser?.uid) {
       setHasCreated(true);
@@ -366,6 +373,14 @@ const [isFlagged, setIsFlagged] = useState(false);
                       <img className="w-[12px] h-[15px] my-[3px]" src={phone} alt="Phone Icon" />
                         <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
                            {data.contactNumber}
+                        </div>
+                     </div>
+                  )}
+                  {data && data.consentStatus && data.emailAddress && (
+                     <div className="flex flex-row justify-normal space-x-2">
+                      <img className="w-[12px] h-[15px] my-[3px]" src={email} alt="Email Icon" />
+                        <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
+                           {data.emailAddress}
                         </div>
                      </div>
                   )}
@@ -546,7 +561,7 @@ const [isFlagged, setIsFlagged] = useState(false);
                   <DeleteModal
                     handleClose={() => setShowDeleteModal(false)}
                     handleDelete={deleteVisitLog}
-                    modalMsg={`Are you sure you want to delete this visit log?`}
+                    modalMsg={`Are you sure you want to delete this interaction log?`}
                   />
                 )}
                 {showModal && (

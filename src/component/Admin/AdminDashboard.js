@@ -4,7 +4,7 @@ import outreach from "../../images/outreach_events.svg";
 import visit from "../../images/visit_logs.svg";
 import help from "../../images/help_request.svg";
 import user_list from "../../images/user_list.svg";
-import post_approval_list from "../../images/postApprovals.png"
+import post_approval_list from "../../images/postApprovals.png";
 import users from "../../images/users.svg";
 import Avatar from "@mui/material/Avatar";
 import Card from "./CardInfo";
@@ -43,7 +43,9 @@ const AdminDashboard = () => {
               <div className="w-16 h-16 flex items-center justify-center mb-2">
                 <Avatar src={visit} sx={{ width: 40, height: 40 }} />
               </div>
-              <p className="text-black text-[24px] font-[500]">Visit Logs</p>
+              <p className="text-black text-[24px] font-[500]">
+                Interaction Logs
+              </p>
             </div>
           </Card>
           {/* </button> */}
