@@ -147,7 +147,7 @@ const OutreachEventCard = ({
 
   const handleShare = async (e) => {
     e.stopPropagation();
-    const currentUrl = window.location.href + `outreachsignup/${id}`;
+    const currentUrl = window.location.host + `/outreachsignup/${id}`;
     try {
       await navigator.clipboard.writeText(currentUrl);
       console.log("Link copied to clipboard");
