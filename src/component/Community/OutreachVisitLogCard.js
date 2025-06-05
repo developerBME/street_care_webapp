@@ -52,7 +52,20 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
 }, [visitLogCardData?.id]);
 
   const handleViewDetails = () => {
-    navigate(`/VisitLogDetails/${visitLogCardData.id}`);
+    // Make sure we're passing the current page number
+    const paginationState = window.paginationState || { currentPage: 1 };
+    
+    // Store the pagination state in sessionStorage for more reliable retrieval
+    // This avoids issues with serialization and state loss during navigation
+    sessionStorage.setItem('paginationState', JSON.stringify(paginationState));
+    
+    // Log what we're storing for debugging
+    console.log('Storing in sessionStorage before navigation:', paginationState);
+    
+    // Navigate to the details page
+    navigate(`/VisitLogDetails/${visitLogCardData.id}`, {
+      state: paginationState
+    });
   };
 
   let verifiedImg;

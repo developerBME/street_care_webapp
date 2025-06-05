@@ -28,6 +28,46 @@ const VisitLogDetails = () => {
   const location = useLocation();
   const { id } = useParams();
   const [data, setData] = useState(null);
+  
+  // Log the received state for debugging
+  console.log("VisitLogDetails received state:", location.state);
+  
+  // Initialize state from multiple sources for redundancy
+  const [savedPaginationState, setSavedPaginationState] = useState(() => {
+    // Try to get from sessionStorage first (most reliable)
+    try {
+      const storedState = sessionStorage.getItem('paginationState');
+      if (storedState) {
+        const parsedState = JSON.parse(storedState);
+        console.log("Retrieved pagination state from sessionStorage:", parsedState);
+        return parsedState;
+      }
+    } catch (error) {
+      console.error("Error parsing sessionStorage pagination state:", error);
+    }
+    
+    // Fall back to location.state if sessionStorage fails
+    if (location.state) {
+      return location.state;
+    }
+    
+    // Default fallback
+    return { currentPage: 1 };
+  });
+  
+  // Store pagination state in multiple places for redundancy
+  useEffect(() => {
+    // Store in window object
+    window.paginationState = savedPaginationState;
+    
+    // Also ensure it's in sessionStorage
+    try {
+      sessionStorage.setItem('paginationState', JSON.stringify(savedPaginationState));
+      console.log("Stored pagination state in sessionStorage:", savedPaginationState);
+    } catch (error) {
+      console.error("Error storing pagination state in sessionStorage:", error);
+    }
+  }, [savedPaginationState]);
 
 
 
@@ -135,9 +175,33 @@ const handleFlag = async (e) => {
     <div className="relative flex flex-col items-center ">
       <div className="mx-2 mb-16 lg:mx-40 mt-48 rounded-2xl bg-white text-black w-full md:w-fit">
         <div
-          className=" absolute flex mt-[-50px] items-center cursor-pointer "
+          className="absolute flex mt-[-50px] items-center cursor-pointer "
           onClick={() => {
-            navigate(returnTarget);
+            // Get the pagination state from multiple sources for redundancy
+            let stateToPass;
+            
+            // Try sessionStorage first (most reliable)
+            try {
+              const storedState = sessionStorage.getItem('paginationState');
+              if (storedState) {
+                stateToPass = JSON.parse(storedState);
+                console.log("Using pagination state from sessionStorage for navigation:", stateToPass);
+              }
+            } catch (error) {
+              console.error("Error retrieving pagination state from sessionStorage:", error);
+            }
+            
+            // Fall back to other sources if sessionStorage fails
+            if (!stateToPass) {
+              stateToPass = window.paginationState || savedPaginationState || { currentPage: 1 };
+              console.log("Using fallback pagination state for navigation:", stateToPass);
+            }
+            
+            // Navigate back to the list view with the pagination state
+            navigate(returnTarget, { 
+              state: stateToPass,
+              replace: true // Use replace to avoid history stacking
+            });
           }}
         >
           <IoIosArrowBack className="w-6 h-6" />{" "}

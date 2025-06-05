@@ -13,3 +13,21 @@ code {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Pagination loading state styles */
+.loading-pagination .pagination-content {
+  opacity: 0.3;
+  transition: opacity 0.3s ease-in-out;
+  pointer-events: none;
+}
+
+/* Add a subtle fade effect for smoother transitions */
+.pagination-content {
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Ensure loading skeletons are visible during transitions */
+.loading-pagination .skeleton-loader {
+  opacity: 1;
+}

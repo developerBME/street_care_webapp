@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import OutreachVisitLogCard from "./Community/OutreachVisitLogCard";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { 
   fetchPaginatedPublicVisitLogs,getApprovedVisitLogsCount, fetchPublicVisitLogs } from "./VisitLogCardService";
@@ -13,6 +13,7 @@ import { Directions } from "@mui/icons-material";
 
 const AllOutreachVisitLog = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   //const [visitLogs, setVisitLogs] = useState([]);
   const [filteredVisitLogs, setFilteredVisitLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -25,41 +26,291 @@ const AllOutreachVisitLog = () => {
   const logsPerPage = 6;
   const [currentPageLength,setCurrentPageLength]=useState(0)
   const [cursorFields,setCursorFields] = useState({"lastVisible":null,"pageSize" : logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null})
+  // Track current page number for navigation purposes
+  const [currentPage, setCurrentPage] = useState(1)
   const searchRef = useRef("");
   const searchCity = useRef(""); // Reference for the search city input
   const [filterData,setFilterData] = useState({city:"",isDateFilter:false,startDate:new Date("2024-01-02"),endDate:new Date(),searchValue:""})
 
+  // Use a ref to track if we're in the initial render
+  const initialRenderRef = useRef(true);
+  const [isRestoringPage, setIsRestoringPage] = useState(false);
+  
+  // Store target page data in a ref to avoid re-renders during loading
+  const targetPageRef = useRef(null);
+
   useEffect(() => {
+    // Get pagination state from multiple sources for redundancy
+    let paginationState = null;
+    
+    // First try to get from sessionStorage (most reliable)
+    try {
+      const storedState = sessionStorage.getItem('paginationState');
+      if (storedState) {
+        paginationState = JSON.parse(storedState);
+        console.log("Retrieved pagination state from sessionStorage:", paginationState);
+      }
+    } catch (error) {
+      console.error("Error parsing sessionStorage pagination state:", error);
+    }
+    
+    // Fall back to location.state if sessionStorage fails
+    if (!paginationState && location.state?.currentPage) {
+      paginationState = location.state;
+      console.log("Using location.state for pagination:", paginationState);
+    }
+    
+    // Check if we're returning with saved pagination state
+    if (paginationState?.currentPage && paginationState.currentPage > 1) {
+      // Set loading state immediately to prevent flashing of wrong page
+      setIsLoading(true);
+      setIsRestoringPage(true);
+      
+      // Clear the current content immediately
+      setFilteredVisitLogs([]);
+      
+      // Show loading state in the UI
+      document.body.classList.add('loading-pagination');
+      
+      // Set the target page number
+      setCurrentPage(paginationState.currentPage);
+      
+      // Restore filter data if available
+      if (paginationState.filterData) {
+        // Convert ISO date strings back to Date objects
+        const updatedFilterData = {
+          ...paginationState.filterData,
+          startDate: paginationState.filterData.startDate ? new Date(paginationState.filterData.startDate) : new Date("2024-01-02"),
+          endDate: paginationState.filterData.endDate ? new Date(paginationState.filterData.endDate) : new Date()
+        };
+        
+        setFilterData(updatedFilterData);
+        
+        // Also update the cursor fields to prevent unnecessary fetches
+        setCursorFields({"lastVisible":null,"pageSize":logsPerPage,"direction":"","pageHistory":[],"pastOutreachRef":null});
+      }
+      
+      // Use a longer delay to ensure all state updates have settled
+      setTimeout(() => {
+        // Load the correct page data
+        loadDataToPage(paginationState.currentPage);
+      }, 100);
+    }
+    
+    // Clear the sessionStorage after we've used it to prevent stale data
+    sessionStorage.removeItem('paginationState');
+    
+  }, []);
+  
+  // Function to load data to a specific page
+  const loadDataToPage = async (targetPage) => {
+    console.log(`Loading data to page ${targetPage}`);
+    
+    if (targetPage <= 1) {
+      // First page - reset pagination
+      console.log("Target page is 1, resetting pagination");
+      setCursorFields({"lastVisible":null,"pageSize":logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null});
+      setCurrentPageLength(0);
+      setIsLoading(false);
+      setIsRestoringPage(false);
+      document.body.classList.remove('loading-pagination');
+      return;
+    }
+    
+    // For pages beyond the first, we need to load data page by page
+    setIsLoading(true);
+    
+    try {
+      // Reset pagination first
+      const tempCursorFields = {"lastVisible":null,"pageSize":logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null};
+      
+      // Load data page by page until we reach the target page
+      let currentPageNum = 1;
+      let tempCurrentPageLength = 0;
+      let finalVisitLogs = [];
+      let finalLastVisible = null;
+      let finalPageHistory = [];
+      let finalTotalRecords = 0;
+      
+      console.log(`Starting page loading loop for target page ${targetPage}`);
+      console.log("Using filter data:", filterData);
+      
+      // Load pages sequentially without updating UI until we reach the target page
+      while (currentPageNum < targetPage) {
+        console.log(`Loading page ${currentPageNum} of ${targetPage}`);
+        
+        const visitLogsData = await fetchPublicVisitLogs(
+          filterData.searchValue,
+          filterData.city,
+          filterData.startDate,
+          filterData.endDate,
+          filterData.isDateFilter,
+          tempCursorFields.lastVisible,
+          logsPerPage,
+          "next",
+          tempCursorFields.pageHistory
+        );
+        
+        if (!visitLogsData.visitLogs || visitLogsData.visitLogs.length === 0) {
+          console.log("No more logs to load, breaking loop");
+          break;
+        }
+        
+        tempCursorFields.lastVisible = visitLogsData.lastVisible;
+        tempCursorFields.pageHistory = visitLogsData.pageHistory;
+        tempCurrentPageLength += visitLogsData.visitLogs.length;
+        finalTotalRecords = visitLogsData.totalRecords;
+        
+        currentPageNum++;
+        
+        // Store the final page data
+        if (currentPageNum === targetPage) {
+          finalVisitLogs = visitLogsData.visitLogs;
+          finalLastVisible = visitLogsData.lastVisible;
+          finalPageHistory = [...visitLogsData.pageHistory];
+        }
+      }
+      
+      // Only update UI once we have the final data
+      if (currentPageNum === targetPage) {
+        console.log(`Reached target page ${targetPage}, updating state in one batch`);
+        
+        // Wait for a moment to ensure all previous renders are complete
+        await new Promise(resolve => setTimeout(resolve, 50));
+        
+        // Update all state in one batch to prevent multiple renders
+        setCursorFields({
+          lastVisible: finalLastVisible,
+          pageSize: logsPerPage,
+          direction: "next",
+          pageHistory: finalPageHistory,
+          pastOutreachRef: null
+        });
+        
+        setCurrentPageLength(tempCurrentPageLength);
+        setTotalPages(finalTotalRecords);
+        
+        // Final update of UI
+        setFilteredVisitLogs(finalVisitLogs);
+        setIsLoading(false);
+        setIsRestoringPage(false);
+        document.body.classList.remove('loading-pagination');
+      } else {
+        // If we couldn't reach the target page, reset to page 1
+        console.log(`Could not reach target page ${targetPage}, resetting to page 1`);
+        setCursorFields({"lastVisible":null,"pageSize":logsPerPage,"direction":"next","pageHistory":[],"pastOutreachRef":null});
+        setCurrentPage(1);
+        setCurrentPageLength(0);
+        setFilteredVisitLogs([]);
+        setIsLoading(false);
+        setIsRestoringPage(false);
+        document.body.classList.remove('loading-pagination');
+      }
+      
+      console.log(`Finished loading to page ${currentPageNum}`);
+    } catch (error) {
+      console.error("Error loading data to page:", error);
+      setIsLoading(false);
+      setIsRestoringPage(false);
+      document.body.classList.remove('loading-pagination');
+    }
+  };
+
+  // Update pagination state whenever page number or filters change
+  useEffect(() => {
+    console.log("Updating pagination state with page:", currentPage);
+    
+    // Create a simple serializable version of the pagination state
+    const paginationState = {
+      currentPage: currentPage,
+      filterData: {
+        ...filterData,
+        startDate: filterData.startDate ? filterData.startDate.toISOString() : null,
+        endDate: filterData.endDate ? filterData.endDate.toISOString() : null
+      }
+    };
+    
+    // Store in window object for immediate access
+    window.paginationState = paginationState;
+    
+    // Also store in sessionStorage for more reliable persistence
+    try {
+      sessionStorage.setItem('paginationState', JSON.stringify(paginationState));
+    } catch (error) {
+      console.error("Error storing pagination state in sessionStorage:", error);
+    }
+  }, [currentPage, filterData]);
+  
+  // Effect for fetching visit logs
+  useEffect(() => {
+    // Skip fetching if we're in the process of restoring a page
+    if (isRestoringPage) {
+      console.log("Skipping regular fetch during page restoration");
+      return;
+    }
+    
+    // Skip if no direction is set
+    if(!cursorFields.direction) {
+      console.log("No direction set, skipping fetch");
+      return;
+    }
+    
+    console.log("Starting regular fetch with direction:", cursorFields.direction);
+    setIsLoading(true);
+    
     const getVisitLogs = async () => {
-      if(!cursorFields.direction)return
-      //console.log("in")
-      const visitLogsData= await fetchPublicVisitLogs(
-        filterData.searchValue,
-        filterData.city,
-        filterData.startDate,
-        filterData.endDate,
-        filterData.isDateFilter,
-        cursorFields.lastVisible,
-        cursorFields.pageSize,
-        cursorFields.direction,
-        cursorFields.pageHistory);
-        console.log(visitLogsData)
-        cursorFields.lastVisible = visitLogsData.lastVisible;
-        cursorFields.pageHistory = visitLogsData.pageHistory;
-        setTotalPages(visitLogsData.totalRecords)
-        if(cursorFields.direction ==="next")setCurrentPageLength((prev)=>prev + visitLogsData.visitLogs.length)
-        // cursorFields.pastOutreachRef = visitLogsData.pastOutreachRef;
-        //setVisitLogs(visitLogsData.visitLogs);
-        //console.log(visitLogsData)
+      try {
+        console.log("Fetching data with:", {
+          searchValue: filterData.searchValue,
+          city: filterData.city,
+          startDate: filterData.startDate,
+          endDate: filterData.endDate,
+          isDateFilter: filterData.isDateFilter,
+          direction: cursorFields.direction
+        });
+        
+        const visitLogsData = await fetchPublicVisitLogs(
+          filterData.searchValue,
+          filterData.city,
+          filterData.startDate,
+          filterData.endDate,
+          filterData.isDateFilter,
+          cursorFields.lastVisible,
+          cursorFields.pageSize,
+          cursorFields.direction,
+          cursorFields.pageHistory);
+          
+        console.log("Fetched visit logs:", visitLogsData);
+        
+        // Update cursor fields in a single batch to avoid race conditions
+        setCursorFields(prevFields => ({
+          ...prevFields,
+          lastVisible: visitLogsData.lastVisible,
+          pageHistory: visitLogsData.pageHistory
+        }));
+        
+        setTotalPages(visitLogsData.totalRecords);
+        
+        if(cursorFields.direction === "next") {
+          setCurrentPageLength(prev => prev + visitLogsData.visitLogs.length);
+        }
+        
+        // Update the UI in one batch
         setFilteredVisitLogs(visitLogsData.visitLogs);
         setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching visit logs:", error);
+        setIsLoading(false);
+      }
     };
-    //Implemented debounce to improve performance
-    const delayTimer = setTimeout(()=>{
+    
+    // Implemented debounce to improve performance
+    const delayTimer = setTimeout(() => {
       getVisitLogs();
-    },500)
-    return ()=>clearTimeout(delayTimer)
-  }, [filterData.city,filterData.searchValue, filterData.startDate, filterData.endDate,cursorFields.direction]);
+    }, 500);
+    
+    return () => clearTimeout(delayTimer);
+  }, [filterData.city, filterData.searchValue, filterData.startDate, filterData.endDate, cursorFields.direction, isRestoringPage]);
   // const searchChange = () => {
   //   const searchValue = searchRef.current.value.toLowerCase();
   //   setFilteredVisitLogs(
@@ -94,12 +345,13 @@ const AllOutreachVisitLog = () => {
 
   const handleNext = () =>{
     // Reset direction to force an update
-  setCursorFields((prev) => ({ ...prev, direction: "" })); 
+    setCursorFields((prev) => ({ ...prev, direction: "" })); 
 
-  // Set it to 'next' after a slight delay
-  setTimeout(() => {
-    setCursorFields((prev) => ({ ...prev, direction: "next" }));
-  }, 0); 
+    // Set it to 'next' after a slight delay
+    setTimeout(() => {
+      setCursorFields((prev) => ({ ...prev, direction: "next" }));
+      setCurrentPage(currentPage + 1);
+    }, 0); 
   }
   const handlePrev=()=>{
     //Handling here since I need length of the records one render before
@@ -108,6 +360,7 @@ const AllOutreachVisitLog = () => {
     setCursorFields((prev) => ({ ...prev, direction: "" })); 
     setTimeout(() => {
       setCursorFields((prev) => ({ ...prev, direction: "prev" }));
+      setCurrentPage(Math.max(1, currentPage - 1));
     }, 0); 
   }
 
@@ -273,8 +526,18 @@ const AllOutreachVisitLog = () => {
             </div>
           ) : (
             <>
-              <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-                {filteredVisitLogs.length > 0 ? (
+              <div className="pagination-content w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+                {isLoading || isRestoringPage ? (
+                  // Show loading skeletons when loading or restoring a page
+                  <div className="skeleton-loader col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 w-full">
+                    <EventCardSkeleton />
+                    <EventCardSkeleton />
+                    <EventCardSkeleton />
+                    <EventCardSkeleton />
+                    <EventCardSkeleton />
+                    <EventCardSkeleton />
+                  </div>
+                ) : filteredVisitLogs.length > 0 ? (
                   filteredVisitLogs.map((visitLogData) => (
                     <OutreachVisitLogCard
                       key={visitLogData.id}
