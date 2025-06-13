@@ -52,6 +52,8 @@ export default function UserListNew() {
   const [usersPerPage] = useState(10);
   const [sorted, setSorted] = useState(initialSorted);
   const [chapterRoles, setChapterRoles] = useState({});
+  const startIndex = (currentPage - 1) * usersPerPage;
+  const endIndex = startIndex + usersPerPage;
 
 
   const isMobile = useMediaQuery("(max-width:767px)");
@@ -617,8 +619,9 @@ const changeUserType = async (email, docId, Type) => {
               }`}
             >
               <div>
-                Showing {usersPerPage} of {filteredUsers.length} users
+                Showing {startIndex + 1}–{Math.min(endIndex, filteredUsers.length)} of {filteredUsers.length} users
               </div>
+
               <div className="flex justify-between md:justify-end mt-6 items-center">
                 {currentPage === 1 ? (
                   <IoChevronBackCircle className="w-8 h-8 text-[#565656]" />
