@@ -368,7 +368,7 @@ const [isFlagged, setIsFlagged] = useState(false);
                       </div>
                     )}
                   </div>
-                  {data && data.consentStatus && (
+                  {data && data.consentStatus && data.contactNumber && (
                      <div className="flex flex-row justify-normal space-x-2">
                       <img className="w-[12px] h-[15px] my-[3px]" src={phone} alt="Phone Icon" />
                         <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
