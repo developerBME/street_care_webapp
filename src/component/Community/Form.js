@@ -701,7 +701,7 @@ const Form = (hrid) => {
       autoCompleteRef.current,
       {
         types: ["address"],
-        componentRestrictions: { country: ["us"] },
+        componentRestrictions: { country: ["us", "ca"] },
       }
     );
 

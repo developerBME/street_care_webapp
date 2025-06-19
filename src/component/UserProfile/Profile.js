@@ -15,7 +15,7 @@ import {
 import { auth } from '../firebase';
 import CustomButton from '../Buttons/CustomButton';
 
-// import { fetchPersonalVisitLogs } from "../VisitLogCardService";
+import { fetchPersonalVisitLogs } from "../VisitLogCardService";
 import OutreachVisitLogProfile from "../Community/OutreachVisitLogProfile";
 // import NoOutreachDoc from "../Community/NoOutreachDoc";
 
@@ -41,9 +41,9 @@ function Profile() {
 
   const fetchData = async () => {
     try {
-      // const visitLogsData = await fetchPersonalVisitLogs(
-      //   auth?.currentUser?.uid
-      // );
+       const visitLogsData = await fetchPersonalVisitLogs(
+         auth?.currentUser?.uid
+       );
       const user = auth.currentUser;
 
       if (user) {

@@ -44,7 +44,7 @@ export default function FAQs() {
           <AccordionDetails>
             <div className="pt-4 font-dmsans font-normal text-sm text-[#2C3B3C]">
                 <p>
-                    Street Care provides valuable assistance to homeless individuals through its website and mobile app. It offers educational resources such as video tutorials and tip sheets to educate volunteers on how to interact with homeless people in a respectful and safe manner. Additionally, Street Care provides information on essential care items for homeless individuals, ensuring that volunteers can provide the most useful support.
+                    Street Care provides valuable assistance to homeless individuals through its website and mobile app. It provides educational resources, including video tutorials and tip sheets, to help volunteers interact respectfully and safely with homeless individuals. Additionally, Street Care provides information on essential care items for homeless individuals, ensuring that volunteers can provide the most useful support.
                 </p>
                 <br></br>
                 <p>
@@ -79,7 +79,7 @@ export default function FAQs() {
               No, Street Care primarily focuses on equipping volunteers with the
               tools and knowledge to support homeless individuals but does not
               provide emergency shelter services. It serves as a resource for
-              those who want to make a positive impact in the lives of homeless
+              those who are seeking to make a positive impact in the lives of homeless
               people.
             </p>
           </AccordionDetails>
@@ -107,11 +107,11 @@ export default function FAQs() {
           <hr className="h-px bg-gray-300 border-0 "></hr>
           <AccordionDetails>
             <p className="pt-4 font-dmsans font-normal text-sm text-[#2C3B3C]">
-              Street Care is a web and mobile app and is not location-specific.
-              It can be used by volunteers and individuals anywhere in the world
-              who want to assist homeless people. It transcends geographical
+            Street Care is a web and mobile app that is not location-specific.
+              It can be used by volunteers and individuals located worldwide
+              who are seeking to assist homeless people. It transcends geographical
               boundaries and aims to create a global community of volunteers
-              dedicated to helping homeless people.
+              dedicated to supporting those in need.
             </p>
           </AccordionDetails>
         </Accordion>
@@ -228,7 +228,7 @@ export default function FAQs() {
             <p className="pt-4 font-dmsans font-normal text-sm text-[#2C3B3C]">
               Street Care may feature inspirational stories of volunteers and
               their experiences in the app or on their website. These stories
-              can provide insights into the impact volunteers have made in the
+              can provide insights into the impact volunteers have made on the
               lives of homeless individuals and inspire others to get involved.
             </p>
           </AccordionDetails>

@@ -227,6 +227,9 @@ export const fetchTopVisitLogs = async () => {
         ...visitLogData,
         userName: userName,
         id: id,
+        eventDate: visitLogData?.dateTime?.seconds
+                  ? formatDate(new Date(visitLogData.dateTime.seconds * 1000))
+                  : "",
       });
     }
     // console.log(visitLogs)
@@ -326,7 +329,7 @@ export const fetchPersonalVisitLogs = async (uid) => {
     if (userDocRef.docs.length === 0) {
       console.error("User document not found for uid:", uid);
       return [];
-    }    
+    }
     const userData = userDocRef.docs[0].data();
     const visitLogIds = userData.personalVisitLogs || [];
     const visitLogsData = [];
@@ -334,7 +337,7 @@ export const fetchPersonalVisitLogs = async (uid) => {
     for (let visitLogId of visitLogIds) {
       // console.log(visitLogId);
       const visitLog = await fetchPersonalVisitLogById(visitLogId)
-      if( visitLog != undefined ){
+      if( visitLog !== undefined ){
         visitLogsData.push(visitLog);
       }
     }
@@ -741,7 +744,7 @@ export async function fetchUnapprovedVisitLogs() {
 
 export const ToggleApproveStatus = async function (documentId) {
   try {
-    const docRef = doc(db, "personalVisitLog", documentId);
+    const docRef = doc(db, "visitLogWebProd", documentId);
     const docSnap =  await getDoc(docRef);
 
     if (!docSnap.exists()) {

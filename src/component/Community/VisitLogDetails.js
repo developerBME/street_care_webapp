@@ -31,8 +31,8 @@ const VisitLogDetails = () => {
 
 
 
-const { user } = useUserContext();
-const [isFlagged, setIsFlagged] = useState(false);
+  const { user } = useUserContext();
+  const [isFlagged, setIsFlagged] = useState(false);
 
 useEffect(() => {
   if (id) {
@@ -152,20 +152,19 @@ const handleFlag = async (e) => {
             </div>
             {data ? (
               <div className="bg-[#F5EEFE] min-w-full max-w-[320px] lg:w-full rounded-[30px] mb-4 flex flex-col justify-between p-6">
-                
-                    <div className="flex items-center justify-between">
-  {/* Left side: User info */}
-  <div className="flex items-center space-x-2">
-    <img
-      src={data?.photoUrl || defaultImage}
-      alt="User"
-      className="w-8 h-8 rounded-full"
-    />
-    <span className="text-[13px] font-normal font-inter">
-      {data?.userName || "Not defined"}
-    </span>
-    <img src={verifiedImg} alt="Verified" className="w-5 h-5" />
-  </div>
+                <div className="flex items-center justify-between">
+                  {/* Left side: User info */}
+                  <div className="flex items-center space-x-2">
+                    <img
+                      src={data?.photoUrl || defaultImage}
+                      alt="User"
+                      className="w-8 h-8 rounded-full"
+                    />
+                    <span className="text-[13px] font-normal font-inter">
+                      {data?.userName || "Not defined"}
+                    </span>
+                    <img src={verifiedImg} alt="Verified" className="w-5 h-5" />
+                  </div>
 
   {/* Right side: Flag icon */}
   <div className="relative flex items-center group">
@@ -228,7 +227,8 @@ const handleFlag = async (e) => {
 
                   <div className="flex flex-row justify-between">
                     <div className="font-bold text-[14px] font-dmsans text-[#444746] line-clamp-1">
-                      Items Donated
+                      Participants
+                      {/* Changed from Items Donated on frontend */}
                     </div>
                     <div className="font-bold text-[14px] font-dmsans text-[#444746] line-clamp-1">
                       {data?.itemQty}
