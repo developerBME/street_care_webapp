@@ -381,7 +381,7 @@ const OutreachSignup = () => {
                       </div>
                     )}
                   </div>
-                  {data && data.consentStatus && (
+                  {data && data.consentStatus && data.contactNumber && (
                      <div className="flex flex-row justify-normal space-x-2">
                       <img className="w-[12px] h-[15px] my-[3px]" src={phone} alt="Phone Icon" />
                         <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
@@ -401,11 +401,11 @@ const OutreachSignup = () => {
                     <img className="w-[12px] h-[15px] my-[3px]" src={locate} />
                     {data ? (
                       <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
-                        {/* for showing complete address of outreach event */}
-                        {/* {data.location.street},{data.location.city}, {data.location.stateAbbv}, {data.location.zipcode} */}
-                        {/* {data.location.city}, {data.location.stateAbbv} */}
-                        {data.consentStatus ? `${data.location.street}, ${data.location.city}, ${data.location.stateAbbv}, ${data.location.zipcode}`
-                                   : `${data.location.city}, ${data.location.stateAbbv}`}
+                        {data.consentStatus
+                          ? [data.location.street, data.location.city, data.location.stateAbbv, data.location.zipcode]
+                              .filter(Boolean)
+                              .join(", ")
+                          : `${data.location.city}, ${data.location.stateAbbv}`}
                       </div>
                     ) : (
                       <div className="self-stretch text-[#444746] text-sm font-normal font-inter leading-snug">

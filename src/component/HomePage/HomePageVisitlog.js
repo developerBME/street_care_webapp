@@ -103,7 +103,7 @@ const HomePageVisitlog = () => {
                   navigate("/allOutreachVisitLog");
                 }}
               >
-                <div className="font-medium text-2xl md:text-[45px] font-dmsans">
+                <div className="font-medium text-2xl md:text-[45px] text-[#1F0A58] font-dmsans">
                   Latest Actions - Interaction Log
                 </div>
 
