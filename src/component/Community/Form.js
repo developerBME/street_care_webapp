@@ -272,19 +272,19 @@ const Form = (hrid) => {
           let obj = {
             uid: fAuth.currentUser.uid,
             title: nameRef.current.value,
-            contactNumber: contactRef.current.value || "N/A",
-            emailAddress: emailRef.current.value || "N/A",
+            contactNumber: contactRef.current.value ,
+            emailAddress: emailRef.current.value ,
             description: descRef.current.value,
             eventDate: Timestamp.fromDate(startDate),
             eventEndTime: Timestamp.fromDate(endDate),
             eventStartTime: Timestamp.fromDate(startDate),
             totalSlots: Math.round(Number(maxCapRef.current.value)),
             location: {
-              street: streetRef.current.value || "N/A",
+              street: streetRef.current.value ,
               city: cityRef.current.value,
               state: stateRef.current.value,
               stateAbbv: stateAbbv,
-              zipcode: zipcodeRef.current.value || "N/A",
+              zipcode: zipcodeRef.current.value ,
             },
             helpType: helpRef.current.value,
             skills: helpType,
@@ -498,9 +498,7 @@ const Form = (hrid) => {
     }
 
     if (consentStatus) {
-      if (!contactRef.current.value) {
-        updateErrorState("contactError", "Contact number is required");
-      } else {
+      if (contactRef.current.value) {
         try {
           checkPhoneNumber(contactRef.current.value);
           updateErrorState("contactError", "");
@@ -509,11 +507,7 @@ const Form = (hrid) => {
         }
       }
   
-      if (!streetRef.current.value) {
-        updateErrorState("streetError", "Street is required");
-      } else {
-        updateErrorState("streetError", "");
-      }
+   
   
       if (!cityRef.current.value) {
         updateErrorState("cityError", "City is required");
@@ -527,11 +521,7 @@ const Form = (hrid) => {
         updateErrorState("stateError", "");
       }
   
-      if (!zipcodeRef.current.value) {
-        updateErrorState("zipError", "Zipcode is required");
-      } else {
-        updateErrorState("zipError", "");
-      }
+     
     } else {
       // If checkbox is unchecked, clear errors
       updateErrorState("contactError", "");

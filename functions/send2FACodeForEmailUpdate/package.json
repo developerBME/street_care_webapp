@@ -3,11 +3,11 @@
   "description": "Cloud Function to send Email2FACode ",
   "main": "index.js",
   "dependencies": {
-    "send2FACodeForEmailUpdate": "file:",
     "firebase-admin": "^11.11.1",
     "firebase-functions": "^4.9.0",
     "googleapis": "^129.0.0",
-    "nodemailer": "^6.9.15"
+    "nodemailer": "^6.9.15",
+    "send2FACodeForEmailUpdate": "file:"
   },
   "devDependencies": {
     "firebase-functions-test": "^3.1.0"

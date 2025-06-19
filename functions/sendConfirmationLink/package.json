@@ -3,9 +3,9 @@
   "description": "Cloud Function to send confirmation link",
   "main": "index.js",
   "dependencies": {
-    "sendConfirmationLinkEmail": "file:",
     "firebase-functions": "^4.9.0",
-    "googleapis": "^129.0.0"
+    "googleapis": "^129.0.0",
+    "sendConfirmationLinkEmail": "file:"
   },
   "devDependencies": {
     "firebase-functions-test": "^3.1.0"

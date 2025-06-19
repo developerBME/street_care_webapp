@@ -7,7 +7,7 @@ import {
   fetchEventById,
   handleRsvp,
   fetchUserSignedUpOutreaches,
-  isUserParticipantInEvent
+  isUserParticipantInEvent,
 } from "../EventCardService";
 import { fetchUserName } from "../HelperFunction";
 import { Co2Sharp } from "@mui/icons-material";
@@ -83,7 +83,7 @@ const OutreachSignup = () => {
       try {
         const result = await fetchEventById(id);
         setData(result);
-        console.log(result)
+        console.log(result);
       } catch (error) {
         console.error(error.message);
       }
@@ -184,7 +184,7 @@ const OutreachSignup = () => {
         );
         // setUserSignedUpOutreaches(result);
         // console.log("Result in OS: ", result);
-        
+
         // const eventIds = result?.map((event) => event.id);
         // // console.log(eventIds);
         // console.log("Event Ids: ", eventIds);
@@ -196,7 +196,6 @@ const OutreachSignup = () => {
         } else {
           setLabel2("RSVP");
         }
-
       } catch (error) {
         console.error(error.message);
       }
@@ -382,30 +381,43 @@ const OutreachSignup = () => {
                     )}
                   </div>
                   {data && data.consentStatus && (
-                     <div className="flex flex-row justify-normal space-x-2">
-                      <img className="w-[12px] h-[15px] my-[3px]" src={phone} alt="Phone Icon" />
-                        <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
-                           {data.contactNumber}
-                        </div>
-                     </div>
+                    <div className="flex flex-row justify-normal space-x-2">
+                      <img
+                        className="w-[12px] h-[15px] my-[3px]"
+                        src={phone}
+                        alt="Phone Icon"
+                      />
+                      <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
+                        {data.contactNumber}
+                      </div>
+                    </div>
                   )}
                   {data && data.consentStatus && data.emailAddress && (
-                     <div className="flex flex-row justify-normal space-x-2">
-                      <img className="w-[12px] h-[15px] my-[3px]" src={email} alt="Email Icon" />
-                        <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
-                           {data.emailAddress}
-                        </div>
-                     </div>
+                    <div className="flex flex-row justify-normal space-x-2">
+                      <img
+                        className="w-[12px] h-[15px] my-[3px]"
+                        src={email}
+                        alt="Email Icon"
+                      />
+                      <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
+                        {data.emailAddress}
+                      </div>
+                    </div>
                   )}
                   <div className="flex flex-row justify-normal space-x-2">
                     <img className="w-[12px] h-[15px] my-[3px]" src={locate} />
                     {data ? (
                       <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
-                        {/* for showing complete address of outreach event */}
-                        {/* {data.location.street},{data.location.city}, {data.location.stateAbbv}, {data.location.zipcode} */}
-                        {/* {data.location.city}, {data.location.stateAbbv} */}
-                        {data.consentStatus ? `${data.location.street}, ${data.location.city}, ${data.location.stateAbbv}, ${data.location.zipcode}`
-                                   : `${data.location.city}, ${data.location.stateAbbv}`}
+                        {data.consentStatus
+                          ? [
+                              data.location.street,
+                              data.location.city,
+                              data.location.stateAbbv,
+                              data.location.zipcode,
+                            ]
+                              .filter(Boolean)
+                              .join(", ")
+                          : `${data.location.city}, ${data.location.stateAbbv}`}
                       </div>
                     ) : (
                       <div className="self-stretch text-[#444746] text-sm font-normal font-inter leading-snug">
