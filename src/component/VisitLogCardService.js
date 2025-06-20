@@ -514,7 +514,7 @@ export const fetchPendingPosts=async(
   }
   else{
       pastOutreachRef = query(
-        collection(db, "personalVisitLog"),
+        collection(db, visitLogs_collection),
         where("status", "==", "pending")
       );
     totalOutReachRef = pastOutreachRef
@@ -572,8 +572,8 @@ export const fetchPendingPosts=async(
 }
 
 export const fetchTotalCountOfPendingPosts = async() =>{
-  const outreachQuery = query(collection(db, "outreachEvents"),where("status", "==", "pending"));
-  const visitLogsQuery = query(collection(db,"personalVisitLog"),where("status", "==", "pending")) 
+  const outreachQuery = query(collection(db, outreachEvents_collection),where("status", "==", "pending"));
+  const visitLogsQuery = query(collection(db, visitLogs_collection),where("status", "==", "pending")) 
   const outreaches = await getCountFromServer(outreachQuery)
   const visitLogs = await getCountFromServer(visitLogsQuery)
   return {outreachCount : outreaches.data().count,visitLogCount : visitLogs.data().count}
@@ -837,7 +837,7 @@ export async function fetchUnapprovedVisitLogs() {
 
 export const ToggleApproveStatus = async function (documentId) {
   try {
-    const docRef = doc(db, "visitLogWebProd", documentId);
+    const docRef = doc(db, visitLogs_collection, documentId);
     const docSnap =  await getDoc(docRef);
 
     if (!docSnap.exists()) {
