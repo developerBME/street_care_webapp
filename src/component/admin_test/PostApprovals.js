@@ -22,6 +22,8 @@ import collectionMapping from "../../utils/firestoreCollections";
 
 const outreachEvents_collection = collectionMapping.outreachEvents;
 const visitLogs_collection = collectionMapping.visitLogs;
+const visitLogsNew_collection = collectionMapping.visitLogsBookNew
+
 
 const PostApprovals = () => {
   const [pendingPosts, setPendingPosts] = useState({
@@ -41,7 +43,7 @@ const PostApprovals = () => {
   const postsPerPage = 6;
   const searchRef = useRef("");
 
-  useEffect(() => {
+ /* useEffect(() => {
     const fetchPendingPosts = async () => {
       try {
         setIsLoading(true);
@@ -98,7 +100,87 @@ const PostApprovals = () => {
     };
 
     fetchPendingPosts();
-  }, []);
+  }, []); */
+
+  useEffect(() => {
+  const fetchPendingPosts = async () => {
+    try {
+      setIsLoading(true);
+
+      // Fetch outreaches (unchanged)
+      const outreachQuery = query(
+        collection(db, outreachEvents_collection),
+        where("status", "==", "pending")
+      );
+      const outreachSnapshot = await getDocs(outreachQuery);
+      const outreaches = await Promise.all(
+        outreachSnapshot.docs.map(async (doc) => {
+          const post = { id: doc.id, ...doc.data() };
+          const userDetails = await fetchUserTypeDetails(post.uid);
+          return {
+            ...post,
+            userName: userDetails?.username || "Unknown User",
+            userType: userDetails?.type || "",
+          };
+        })
+      );
+
+      // --- Fetch visit logs from OLD collection ---
+      const visitLogQueryOld = query(
+        collection(db, visitLogs_collection),
+        where("status", "==", "pending")
+      );
+      const visitLogSnapshotOld = await getDocs(visitLogQueryOld);
+      const visitLogsOld = await Promise.all(
+        visitLogSnapshotOld.docs.map(async (doc) => {
+          const post = { id: doc.id, ...doc.data() };
+          const userDetails = await fetchUserTypeDetails(post.uid);
+          return {
+            ...post,
+            userName: userDetails?.username || "Unknown User",
+            userType: userDetails?.type || "",
+            _source: "old" // Optional: to identify where it came from
+          };
+        })
+      );
+
+      // --- Fetch visit logs from NEW collection ---
+      const visitLogQueryNew = query(
+        collection(db, visitLogsNew_collection),
+        where("status", "==", "pending")
+      );
+      const visitLogSnapshotNew = await getDocs(visitLogQueryNew);
+      const visitLogsNew = await Promise.all(
+        visitLogSnapshotNew.docs.map(async (doc) => {
+          const post = { id: doc.id, ...doc.data() };
+          const userDetails = await fetchUserTypeDetails(post.uid);
+          return {
+            ...post,
+            userName: userDetails?.username || "Unknown User",
+            userType: userDetails?.type || "",
+            _source: "new" // Optional: to identify where it came from
+          };
+        })
+      );
+
+      // Combine both old and new visit logs
+      const visitLogs = [...visitLogsOld, ...visitLogsNew];
+
+      setPendingPosts({ outreaches, visitLogs });
+      setIsError(false);
+    } catch (error) {
+      console.error("Error fetching pending posts:", error);
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  fetchPendingPosts();
+}, []);
+
+
+
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
@@ -181,6 +263,7 @@ const PostApprovals = () => {
   };
 
   // Approve selected posts
+  /*
   const handleApproveSelected = async () => {
     try {
       const collectionName =
@@ -204,9 +287,50 @@ const PostApprovals = () => {
       console.error("Error approving posts:", error);
     }
   };
+*/ 
+// Approve selected posts
+const handleApproveSelected = async () => {
+  try {
+    const collectionName =
+      activeTab === "outreaches" ? outreachEvents_collection : visitLogs_collection;
+    const collectionNameNew =
+      activeTab === "outreaches" ? outreachEvents_collection : visitLogsNew_collection;
+
+    for (const itemId of selectedItems) {
+      // Old: approve only in one collection
+      // await updateDoc(doc(db, collectionName, itemId), {
+      //   approved: true,
+      //   status: "approved",
+      // });
+
+      // Approve in BOTH old and new collections (if activeTab is visitLogs)
+      await updateDoc(doc(db, collectionName, itemId), {
+        approved: true,
+        status: "approved",
+      });
+      // For visit logs, also update new collection
+      if (activeTab === "visitLogs") {
+        await updateDoc(doc(db, collectionNameNew, itemId), {
+          approved: true,
+          status: "approved",
+        });
+      }
+    }
+
+    // Update state after approval
+    const updatedPosts = { ...pendingPosts };
+    updatedPosts[activeTab] = pendingPosts[activeTab].filter(
+      (post) => !selectedItems.includes(post.id)
+    );
+    setPendingPosts(updatedPosts);
+    setSelectedItems([]);
+  } catch (error) {
+    console.error("Error approving posts:", error);
+  }
+};
 
   // Reject selected posts
-  const handleRejectSelected = async () => {
+  /*const handleRejectSelected = async () => {
     try {
       const collectionName =
         activeTab === "outreaches" ? outreachEvents_collection : visitLogs_collection;
@@ -232,7 +356,48 @@ const PostApprovals = () => {
   useEffect(() => {
     // Initialize filteredPosts with fetched data
     setFilteredPosts(pendingPosts);
-  }, [pendingPosts]);
+  }, [pendingPosts]); */
+
+  // Reject selected posts
+const handleRejectSelected = async () => {
+  try {
+    const collectionName =
+      activeTab === "outreaches" ? outreachEvents_collection : visitLogs_collection;
+    const collectionNameNew =
+      activeTab === "outreaches" ? outreachEvents_collection : visitLogsNew_collection;
+
+    for (const itemId of selectedItems) {
+      // Old code (single collection):
+      // await updateDoc(doc(db, collectionName, itemId), {
+      //   approved: false,
+      //   status: "rejected",
+      // });
+
+      // Update both old and new collections for visit logs
+      await updateDoc(doc(db, collectionName, itemId), {
+        approved: false,
+        status: "rejected",
+      });
+      if (activeTab === "visitLogs") {
+        await updateDoc(doc(db, collectionNameNew, itemId), {
+          approved: false,
+          status: "rejected",
+        });
+      }
+    }
+
+    // Update state after rejection
+    const updatedPosts = { ...pendingPosts };
+    updatedPosts[activeTab] = pendingPosts[activeTab].filter(
+      (post) => !selectedItems.includes(post.id)
+    );
+    setPendingPosts(updatedPosts);
+    setSelectedItems([]);
+  } catch (error) {
+    console.error("Error rejecting posts:", error);
+  }
+};
+
 
 
   //Search Function
@@ -291,7 +456,7 @@ const PostApprovals = () => {
   };
   
 
-  const handleAccept = async () => {
+ /* const handleAccept = async () => {
     try {
       const collectionName =
         activeTab === "outreaches" ? outreachEvents_collection : visitLogs_collection;
@@ -312,9 +477,46 @@ const PostApprovals = () => {
     } catch (error) {
       console.error("Error accepting post:", error);
     }
-  };
+  };*/
+  const handleAccept = async () => {
+  try {
+    const collectionName =
+      activeTab === "outreaches" ? outreachEvents_collection : visitLogs_collection;
+    const collectionNameNew =
+      activeTab === "outreaches" ? outreachEvents_collection : visitLogsNew_collection;
 
-  const handleReject = async () => {
+    // Old code (single collection)
+    // await updateDoc(doc(db, collectionName, selectedPost.id), {
+    //   status: "approved",
+    // });
+
+    // Update both old and new collections for visit logs
+    await updateDoc(doc(db, collectionName, selectedPost.id), {
+      status: "approved",
+    });
+    if (activeTab === "visitLogs") {
+      await updateDoc(doc(db, collectionNameNew, selectedPost.id), {
+        status: "approved",
+      });
+    }
+
+    // Update state to remove the accepted post
+    setPendingPosts((prev) => ({
+      ...prev,
+      [activeTab]: prev[activeTab].filter(
+        (post) => post.id !== selectedPost.id
+      ),
+    }));
+
+    setSelectedPost(null);
+    setIsModalOpen(false);
+  } catch (error) {
+    console.error("Error accepting post:", error);
+  }
+};
+
+
+  /*const handleReject = async () => {
     try {
       const collectionName =
         activeTab === "outreaches" ? outreachEvents_collection : visitLogs_collection;
@@ -335,7 +537,45 @@ const PostApprovals = () => {
     } catch (error) {
       console.error("Error rejecting post:", error);
     }
-  };
+  };*/
+
+  const handleReject = async () => {
+  try {
+    const collectionName =
+      activeTab === "outreaches" ? outreachEvents_collection : visitLogs_collection;
+    const collectionNameNew =
+      activeTab === "outreaches" ? outreachEvents_collection : visitLogsNew_collection;
+
+    // Old code (single collection only)
+    // await updateDoc(doc(db, collectionName, selectedPost.id), {
+    //   status: "rejected",
+    // });
+
+    // Update both old and new collections for visit logs
+    await updateDoc(doc(db, collectionName, selectedPost.id), {
+      status: "rejected",
+    });
+    if (activeTab === "visitLogs") {
+      await updateDoc(doc(db, collectionNameNew, selectedPost.id), {
+        status: "rejected",
+      });
+    }
+
+    // Update state to remove the rejected post
+    setPendingPosts((prev) => ({
+      ...prev,
+      [activeTab]: prev[activeTab].filter(
+        (post) => post.id !== selectedPost.id
+      ),
+    }));
+
+    setSelectedPost(null);
+    setIsModalOpen(false);
+  } catch (error) {
+    console.error("Error rejecting post:", error);
+  }
+};
+
 
   // Cancel selection
   const handleCancelSelection = () => {

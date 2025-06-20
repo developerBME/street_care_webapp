@@ -11,7 +11,8 @@ const COLLECTIONS = {
     testUser: process.env.REACT_APP_TEST_USER_COLLECTION,
     auditLog: process.env.REACT_APP_AUDIT_LOG_COLLECTION,
     officialEvents: process.env.REACT_APP_OFFICIAL_EVENTS,
-    events: process.env.REACT_APP_EVENTS_COLLECTION
+    events: process.env.REACT_APP_EVENTS_COLLECTION,
+    visitLogsBookNew: process.env.REACT_APP_VISIT_LOG_BOOK_NEW_COLLECTION
   },
   development: {
     users: process.env.REACT_APP_USERS_COLLECTION,
