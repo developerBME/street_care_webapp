@@ -8,7 +8,6 @@ import verifiedBlue from "../../images/verified_blue.png";
 import verifiedYellow from "../../images/verified_yellow.png";
 
 const getTags = (postData, isVisitLogs) => {
-  console.log("ApprovalCard postData:", postData);
   const tags = isVisitLogs ? postData?.whatGiven || [] : postData?.skills || [];
 
   return tags.map((tag, index) => (
