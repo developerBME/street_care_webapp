@@ -7,6 +7,7 @@ import { fetchEvents, fetchPaginatedEvents } from "../EventCardService";
 import { fetchVisitLogs } from "../VisitLogCardService";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import { formatDate } from "./../HelperFunction";
+import { getAuth } from "firebase/auth";
 
 const CommunityOutreachEvent = ({ loggedIn}) => {
   const [visibleItems, setVisibleItems] = useState(3);
@@ -83,8 +84,18 @@ const CommunityOutreachEvent = ({ loggedIn}) => {
                   <CustomButton
                     label="Create an Outreach"
                     name="buttondefault"
-                    onClick={() => {
-                      navigate("/createOutreach");
+                    onClick={async () => {
+                      const fAuth = await getAuth();
+                      const user = fAuth.currentUser;
+
+                      if (user) {
+                        console.log("User is still logged in:", user);
+                        navigate("/createOutreach");
+                      } else {
+                        console.log("User is not logged in");
+                        navigate("/login"); // or show a message
+                      }
+                      // navigate("/createOutreach");
                     }}
                   />
                 </div>
