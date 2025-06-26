@@ -11,6 +11,8 @@ import { useNavigate } from "react-router-dom";
 import HomePageVisitlog from "../HomePage/HomePageVisitlog";
 import collectionMapping from "../../utils/firestoreCollections";
 
+import { getAuth } from "firebase/auth";
+
 const visitLogs_collection = collectionMapping.visitLogs;
 
 function Success2() {
@@ -233,14 +235,27 @@ function Success2() {
               Create an Outreach event today, turn compassion into action, and
               be the reason someone’s life changes for better!
             </p>
-
+            
             <div className="mt-auto">
               <CustomButton
                 label="Create an Outreach"
                 name="buttondefault"
-                onClick={() => {
-                  navigate("/createOutreach");
+                onClick={async () => {
+                  const fAuth = await getAuth();
+                  const user = fAuth.currentUser;
+
+                  if (user) {
+                    console.log("User is still logged in:", user);
+                    navigate("/createOutreach");
+                  } else {
+                    console.log("User is not logged in");
+                    navigate("/login"); // or show a message
+                  }
+                  
                 }}
+                // {() => {
+                //   navigate("/createOutreach");
+                // }}
               />
             </div>
           </div>
@@ -260,8 +275,17 @@ function Success2() {
               <CustomButton
                 label="Create a Interaction Log"
                 name="buttondefault"
-                onClick={() => {
-                  navigate("/profile/personaloutform");
+                onClick={async () => {
+                  const fAuth = await getAuth();
+                  const user = fAuth.currentUser;
+
+                  if (user) {
+                    console.log("User is still logged in:", user);
+                    navigate("/profile/personaloutform");
+                  } else {
+                        console.log("User is not logged in");
+                        navigate("/login"); // or show a message
+                      }
                 }}
               />
             </div>
