@@ -92,8 +92,7 @@ const CommunityOutreachEvent = ({ loggedIn}) => {
             </div>
 
             <div className="text-md font-medium font-dmsans text-[#181818] mt-2">
-              What are help requests and how can they help you? If you are ready
-              to help people now, kindly sign up to outreaches
+              Here you will find upcoming outreaches and events that you can join / sign up. You can create your own events.
             </div>
           </div>
 

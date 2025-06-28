@@ -936,7 +936,7 @@ const Form = (hrid) => {
             </div>
             <div className="space-y-1.5">
               <div className="font-semibold font-['Inter'] text-[15px]">
-                Enter Address
+                Event Address
               </div>
               <input
                 type="text"
