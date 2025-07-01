@@ -22,6 +22,7 @@ import CustomButton from "../Buttons/CustomButton";
 import collectionMapping from "../../utils/firestoreCollections";
 
 const visitLogs_collection = collectionMapping.visitLogs;
+const visitLogsBookNew_collection = collectionMapping.visitLogsBookNew;
 const users_collection = collectionMapping.users;
 const outreachEvents_collection = collectionMapping.outreachEvents;
 
@@ -128,34 +129,35 @@ const UserInfo = () => {
   };
 
   useEffect(() => {
-    const getDeedValues = async () => {
-      try {
+  const getDeedValues = async () => {
+    try {
+      const collectionsToQuery = [visitLogs_collection, visitLogsBookNew_collection];
+      let totalHelped = 0;
+      let totalDonations = 0;
+      let totalOutreaches = 0;
+
+      for (const logsCollection of collectionsToQuery) {
         const logOfUserRef = query(
-          collection(db, visitLogs_collection),
+          collection(db, logsCollection),
           where("uid", "==", fAuth?.currentUser?.uid)
         );
         const data = await getDocs(logOfUserRef);
-        let totalHelped = 0;
-        let totalDonations = 0;
-        data.docs.map((doc) => {
-          totalHelped = isNaN(parseInt(doc.data().numberPeopleHelped))
-            ? totalHelped
-            : totalHelped + parseInt(doc.data().numberPeopleHelped);
-          totalDonations = isNaN(parseInt(doc.data().itemQty))
-            ? totalDonations
-            : totalDonations + parseInt(doc.data().itemQty);
-          return null;
+        totalOutreaches += data.docs.length;
+        
+        data.docs.forEach((doc) => {
+          const numberHelped = parseInt(doc.data().numberOfHelpers ?? doc.data().numberPeopleHelped);
+          const itemQty = parseInt(doc.data().itemQty);
+          if (!isNaN(numberHelped)) totalHelped += numberHelped;
+          if (!isNaN(itemQty)) totalDonations += itemQty;
         });
-        // console.log(totalDonations);
-        setHelped(isNaN(parseInt(totalHelped)) ? 0 : parseInt(totalHelped));
-        setDonations(
-          isNaN(parseInt(totalDonations)) ? 0 : parseInt(totalDonations)
-        );
-        setOutreaches(data.docs.length);
-      } catch (err) {
-        console.log(err);
       }
-    };
+      setHelped(totalHelped);
+      setDonations(totalDonations);
+      setOutreaches(totalOutreaches);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
     const getCreatedOutreaches = async () => {
       try {
