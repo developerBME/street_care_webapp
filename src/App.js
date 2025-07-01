@@ -69,6 +69,7 @@ import {
  import MoreVisitLogs from "./component/Community/MoreVisitLogs";
  import CreateOutreach from "./component/Community/CreateOutreach";
  import AllSignedUpOutreaches from "./component/UserProfile/AllSignedUpOutreaches";
+ import AllLikedOutreaches from "./component/UserProfile/AllLikedOutreaches";
  import AllCreatedOutreaches from "./component/UserProfile/AllCreatedOutreaches.js";
  import OutreachEvents from "./component/Admin/OutreachEvents";
  import PostApprovals from "./component/admin_test/PostApprovals.js";
@@ -235,6 +236,10 @@ import {
           <Route
             path="profile/allSignedUpOutreaches"
             element={<AllSignedUpOutreaches />}
+          />
+          <Route
+            path="profile/allLikedOutreaches"
+            element={<AllLikedOutreaches />}
           />
           <Route
             path="profile/allCreatedOutreaches"
