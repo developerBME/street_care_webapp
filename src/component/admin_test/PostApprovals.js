@@ -293,32 +293,47 @@ const PostApprovals = () => {
 // Approve selected posts
 const handleApproveSelected = async () => {
   try {
-    const collectionName =
-      activeTab === "outreaches" ? outreachEvents_collection : visitLogs_collection;
-    const collectionNameNew =
-      activeTab === "outreaches" ? outreachEvents_collection : visitLogsNew_collection;
-
-    for (const itemId of selectedItems) {
-      // Old: approve only in one collection
-      // await updateDoc(doc(db, collectionName, itemId), {
-      //   approved: true,
-      //   status: "approved",
-      // });
-
-      // Approve in BOTH old and new collections (if activeTab is visitLogs)
-      await updateDoc(doc(db, collectionName, itemId), {
-        approved: true,
-        status: "approved",
-      });
-      // For visit logs, also update new collection
-      if (activeTab === "visitLogs") {
-        await updateDoc(doc(db, collectionNameNew, itemId), {
+    const isVisitLog = activeTab === "visitLogs";
+    const oldCollection = isVisitLog ? visitLogs_collection : outreachEvents_collection;
+    const newCollection = visitLogsNew_collection;
+  
+    console.log("selectedItems", selectedItems);
+  
+    for (const itemID of selectedItems) {
+      const docRefOld = doc(db, oldCollection, itemID);
+      const docRefNew = isVisitLog ? doc(db, newCollection, itemID) : null;
+  
+      let success = false;
+  
+      try {
+        console.log("Approving in OLD collection:", itemID);
+        await updateDoc(docRefOld, {
           approved: true,
           status: "approved",
         });
+        success = true;
+      } catch (errorOld) {
+        console.warn(`Old collection update failed for ${itemID}:`, errorOld);
+  
+        if (isVisitLog && docRefNew) {
+          try {
+            console.log("Fallback to NEW collection:", itemID);
+            await updateDoc(docRefNew, {
+              approved: true,
+              status: "approved",
+            });
+            success = true;
+          } catch (errorNew) {
+            console.error(`New collection update failed for ${itemID}:`, errorNew);
+          }
+        }
+      }
+  
+      if (!success) {
+        console.error(`Approval failed for item: ${itemID}`);
       }
     }
-
+  
     // Update state after approval
     const updatedPosts = { ...pendingPosts };
     updatedPosts[activeTab] = pendingPosts[activeTab].filter(
@@ -362,42 +377,58 @@ const handleApproveSelected = async () => {
 
   // Reject selected posts
 const handleRejectSelected = async () => {
-  try {
-    const collectionName =
-      activeTab === "outreaches" ? outreachEvents_collection : visitLogs_collection;
-    const collectionNameNew =
-      activeTab === "outreaches" ? outreachEvents_collection : visitLogsNew_collection;
-
-    for (const itemId of selectedItems) {
-      // Old code (single collection):
-      // await updateDoc(doc(db, collectionName, itemId), {
-      //   approved: false,
-      //   status: "rejected",
-      // });
-
-      // Update both old and new collections for visit logs
-      await updateDoc(doc(db, collectionName, itemId), {
-        approved: false,
-        status: "rejected",
-      });
-      if (activeTab === "visitLogs") {
-        await updateDoc(doc(db, collectionNameNew, itemId), {
-          approved: false,
-          status: "rejected",
-        });
+    try {
+        const isVisitLog = activeTab === "visitLogs";
+        const oldCollection = isVisitLog ? visitLogs_collection : outreachEvents_collection;
+        const newCollection = visitLogsNew_collection;
+      
+        for (const itemID of selectedItems) {
+          const docRefOld = doc(db, oldCollection, itemID);
+          const docRefNew = isVisitLog ? doc(db, newCollection, itemID) : null;
+      
+          let success = false;
+      
+          // Try old collection first
+          try {
+            console.log("Rejecting in OLD collection:", itemID);
+            await updateDoc(docRefOld, {
+              approved: false,
+              status: "rejected",
+            });
+            success = true;
+          } catch (errorOld) {
+            console.warn(`Old collection update failed for ${itemID}:`, errorOld);
+      
+            // Try new collection if visitLogs
+            if (isVisitLog && docRefNew) {
+              try {
+                console.log("Fallback to NEW collection:", itemID);
+                await updateDoc(docRefNew, {
+                  approved: false,
+                  status: "rejected",
+                });
+                success = true;
+              } catch (errorNew) {
+                console.error(`New collection update failed for ${itemID}:`, errorNew);
+              }
+            }
+          }
+      
+          if (!success) {
+            console.error(`Rejection failed for item: ${itemID}`);
+          }
+        }
+      
+        // Update state after rejection
+        const updatedPosts = { ...pendingPosts };
+        updatedPosts[activeTab] = pendingPosts[activeTab].filter(
+          (post) => !selectedItems.includes(post.id)
+        );
+        setPendingPosts(updatedPosts);
+        setSelectedItems([]);
+      } catch (error) {
+        console.error("Error rejecting posts:", error);
       }
-    }
-
-    // Update state after rejection
-    const updatedPosts = { ...pendingPosts };
-    updatedPosts[activeTab] = pendingPosts[activeTab].filter(
-      (post) => !selectedItems.includes(post.id)
-    );
-    setPendingPosts(updatedPosts);
-    setSelectedItems([]);
-  } catch (error) {
-    console.error("Error rejecting posts:", error);
-  }
 };
 useEffect(() => {
     // Initialize filteredPosts with fetched data
@@ -483,40 +514,55 @@ useEffect(() => {
     }
   };*/
   const handleAccept = async () => {
-  try {
-    const collectionName =
-      activeTab === "outreaches" ? outreachEvents_collection : visitLogs_collection;
-    const collectionNameNew =
-      activeTab === "outreaches" ? outreachEvents_collection : visitLogsNew_collection;
-
-    // Old code (single collection)
-    // await updateDoc(doc(db, collectionName, selectedPost.id), {
-    //   status: "approved",
-    // });
-
-    // Update both old and new collections for visit logs
-    await updateDoc(doc(db, collectionName, selectedPost.id), {
-      status: "approved",
-    });
-    if (activeTab === "visitLogs") {
-      await updateDoc(doc(db, collectionNameNew, selectedPost.id), {
-        status: "approved",
-      });
-    }
-
-    // Update state to remove the accepted post
-    setPendingPosts((prev) => ({
-      ...prev,
-      [activeTab]: prev[activeTab].filter(
-        (post) => post.id !== selectedPost.id
-      ),
-    }));
-
-    setSelectedPost(null);
-    setIsModalOpen(false);
-  } catch (error) {
-    console.error("Error accepting post:", error);
-  }
+    try {
+        const isVisitLog = activeTab === "visitLogs";
+        const oldCollection = isVisitLog ? visitLogs_collection : outreachEvents_collection;
+        const newCollection = visitLogsNew_collection;
+      
+        const docRefOld = doc(db, oldCollection, selectedPost.id);
+        const docRefNew = isVisitLog ? doc(db, newCollection, selectedPost.id) : null;
+      
+        let success = false;
+      
+        // Try old collection first
+        try {
+          console.log("Approving in OLD collection:", selectedPost.id);
+          await updateDoc(docRefOld, { status: "approved" });
+          success = true;
+        } catch (errorOld) {
+          console.warn(`Old collection update failed for ${selectedPost.id}:`, errorOld);
+      
+          // Try new collection if visitLogs
+          if (isVisitLog && docRefNew) {
+            try {
+              console.log("Fallback to NEW collection:", selectedPost.id);
+              await updateDoc(docRefNew, { status: "approved" });
+              success = true;
+            } catch (errorNew) {
+              console.error(`New collection update failed for ${selectedPost.id}:`, errorNew);
+            }
+          }
+        }
+      
+        if (!success) {
+          console.error(`Approval failed for post: ${selectedPost.id}`);
+          return;
+        }
+      
+        // Update state to remove the accepted post
+        setPendingPosts((prev) => ({
+          ...prev,
+          [activeTab]: prev[activeTab].filter(
+            (post) => post.id !== selectedPost.id
+          ),
+        }));
+      
+        setSelectedPost(null);
+        setIsModalOpen(false);
+      } catch (error) {
+        console.error("Error accepting post:", error);
+      }
+      
 };
 
   /*const handleReject = async () => {
@@ -543,40 +589,53 @@ useEffect(() => {
   };*/
 
   const handleReject = async () => {
-  try {
-    const collectionName =
-      activeTab === "outreaches" ? outreachEvents_collection : visitLogs_collection;
-    const collectionNameNew =
-      activeTab === "outreaches" ? outreachEvents_collection : visitLogsNew_collection;
-
-    // Old code (single collection only)
-    // await updateDoc(doc(db, collectionName, selectedPost.id), {
-    //   status: "rejected",
-    // });
-
-    // Update both old and new collections for visit logs
-    await updateDoc(doc(db, collectionName, selectedPost.id), {
-      status: "rejected",
-    });
-    if (activeTab === "visitLogs") {
-      await updateDoc(doc(db, collectionNameNew, selectedPost.id), {
-        status: "rejected",
-      });
-    }
-
-    // Update state to remove the rejected post
-    setPendingPosts((prev) => ({
-      ...prev,
-      [activeTab]: prev[activeTab].filter(
-        (post) => post.id !== selectedPost.id
-      ),
-    }));
-
-    setSelectedPost(null);
-    setIsModalOpen(false);
-  } catch (error) {
-    console.error("Error rejecting post:", error);
-  }
+    try {
+        const isVisitLog = activeTab === "visitLogs";
+        const oldCollection = isVisitLog ? visitLogs_collection : outreachEvents_collection;
+        const newCollection = visitLogsNew_collection;
+      
+        const docRefOld = doc(db, oldCollection, selectedPost.id);
+        const docRefNew = isVisitLog ? doc(db, newCollection, selectedPost.id) : null;
+      
+        let success = false;
+      
+        // Try old collection first
+        try {
+          console.log("Rejecting in OLD collection:", selectedPost.id);
+          await updateDoc(docRefOld, { status: "rejected" });
+          success = true;
+        } catch (errorOld) {
+          console.warn(`Old collection update failed for ${selectedPost.id}:`, errorOld);
+      
+          if (isVisitLog && docRefNew) {
+            try {
+              console.log("Fallback to NEW collection:", selectedPost.id);
+              await updateDoc(docRefNew, { status: "rejected" });
+              success = true;
+            } catch (errorNew) {
+              console.error(`New collection update failed for ${selectedPost.id}:`, errorNew);
+            }
+          }
+        }
+      
+        if (!success) {
+          console.error(`Rejection failed for post: ${selectedPost.id}`);
+          return;
+        }
+      
+        // Update state to remove the rejected post
+        setPendingPosts((prev) => ({
+          ...prev,
+          [activeTab]: prev[activeTab].filter(
+            (post) => post.id !== selectedPost.id
+          ),
+        }));
+      
+        setSelectedPost(null);
+        setIsModalOpen(false);
+      } catch (error) {
+        console.error("Error rejecting post:", error);
+      }      
 };
 
   // Cancel selection
@@ -896,5 +955,3 @@ useEffect(() => {
 };
 
 export default PostApprovals;
-
-
