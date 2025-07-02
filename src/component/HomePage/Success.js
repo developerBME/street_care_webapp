@@ -21,6 +21,7 @@ import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import collectionMapping from "../../utils/firestoreCollections";
 
 const visitLogs_collection = collectionMapping.visitLogs;
+const visitLogsBookNew_collection = collectionMapping.visitLogsBookNew;
 
 function Success() {
   const [donations, setDonations] = useState("");
@@ -32,7 +33,7 @@ function Success() {
   useEffect(() => {
     const getValues = async () => {
       try {
-        const logOfUserRef = query(collection(db, visitLogs_collection));
+        const logOfUserRef = query(collection(db, visitLogsBookNew_collection));
         const data = await getDocs(logOfUserRef);
         let totalDonations = 0;
         let totalHelpedPeople = 0;
@@ -46,11 +47,11 @@ function Success() {
               ? totalDonations
               : totalDonations + parseInt(doc.data().itemQty);
           totalHelpedPeople =
-            isNaN(doc.data().numberPeopleHelped) ||
-            typeof doc.data().numberPeopleHelped === "undefined" ||
-            doc.data().numberPeopleHelped === ""
+            isNaN(doc.data().numberOfHelpers) ||
+            typeof doc.data().numberOfHelpers === "undefined" ||
+            doc.data().numberOfHelpers === ""
               ? totalHelpedPeople
-              : totalHelpedPeople + parseInt(doc.data().numberPeopleHelped);
+              : totalHelpedPeople + parseInt(doc.data().numberOfHelpers);
 
           return null;
         });
