@@ -33,7 +33,7 @@ import { fetchUserTypeDetails } from "../EventCardService";
 import collectionMapping from "../../utils/firestoreCollections";
 
 const users_collection = collectionMapping.users;
-const visitLogs_collection = collectionMapping.visitLogs;
+const visitLogsBookNew_collection = collectionMapping.visitLogsBookNew;
 
 const CustomInput = ({ value, onClick, onChange, id, className }) => (
   <div>
@@ -478,23 +478,22 @@ function PersonalOutForm() {
     ) {
       statusValue = "approved";
     }
+    
+    let whereVisit = `${stateName}, ${cityName}, ${postcode}, ${street}`;
 
     let obj = {
       uid: fAuth.currentUser.uid,
-      description: descriptionHelped,
-      numberPeopleHelped: numberHelped,
+      peopleHelpedDescription: descriptionHelped,
+      numberOfHelpers: numberHelped,
       whatGiven: whatGivenArr,
       itemQty: itemQty,
       //date: date.current.value,
       //time: time.current.value,
-      state: stateName,
       stateAbbv: stateAbbv,
-      city: cityName,
       rating: rating,
-      zipcode: postcode,
-      street: street,
-      dateTime: Timestamp.fromDate(dateTime),
-      public: isPublic,
+      whereVisit: whereVisit,
+      whenVisit: Timestamp.fromDate(dateTime),
+      isPublic: isPublic,
       status: statusValue,
     };
     console.log(obj);
@@ -513,7 +512,7 @@ function PersonalOutForm() {
 
     try {
       console.log("Sending email...");
-      const logRef = collection(db, visitLogs_collection);
+      const logRef = collection(db, visitLogsBookNew_collection);
       const docRef = await addDoc(logRef, obj);
       if (docRef.id) {
         console.log(docRef.id);
@@ -792,24 +791,23 @@ function PersonalOutForm() {
       return;
     }
 
+    let whereVisit = `${stateName}, ${cityName}, ${postcode}, ${street}`;
+
     let obj = {
       uid: fAuth.currentUser.uid,
-      description: descriptionHelped,
-      numberPeopleHelped: numberHelped,
+      peopleHelpedDescription: descriptionHelped,
+      numberOfHelpers: numberHelped,
       whatGiven: whatGivenArr,
       itemQty: itemQty,
       //date: date.current.value,
       //time: time.current.value,
-      state: stateName,
-      city: cityName,
       rating: rating,
-      zipcode: postcode,
-      street: street,
-      dateTime: Timestamp.fromDate(dateTime),
+      whereVisit: whereVisit,
+      whenVisit: Timestamp.fromDate(dateTime),
     };
 
     try {
-      const logRef = doc(db, visitLogs_collection, id);
+      const logRef = doc(db, visitLogsBookNew_collection, id);
       await updateDoc(logRef, obj);
       setSuccess(true);
       clearFields();
