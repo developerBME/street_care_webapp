@@ -26,6 +26,7 @@ import { getAuth } from "firebase/auth";
 import collectionMapping from "../../utils/firestoreCollections";
 
 const visitLogs_collection = collectionMapping.visitLogs;
+const visitLogsNew_collection = collectionMapping.visitLogsBookNew;
 
 const MoreVisitLogs = () => {
   const [visitLogs, setVisitLogs] = useState([]);
@@ -79,7 +80,7 @@ const MoreVisitLogs = () => {
 
   const updateFlagStatusInFirebase = async (id, flagged) => {
     try {
-      const logRef = doc(db, visitLogs_collection, id); // Correct Firestore reference
+      const logRef = doc(db, visitLogsNew_collection, id); // Correct Firestore reference
       await updateDoc(logRef, { flagged });
       console.log(`Flag status updated for log ID: ${id}, flagged: ${flagged}`);
     } catch (error) {

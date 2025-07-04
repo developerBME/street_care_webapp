@@ -19,6 +19,7 @@ import { useUserContext } from "../../context/Usercontext.js";
 import collectionMapping from "../../utils/firestoreCollections.js";
 
 const visitLogs_collection = collectionMapping.visitLogs;
+const visitLogsNew_collection = collectionMapping.visitLogsBookNew;
 const users_collection = collectionMapping.users; // User collection
 
 const OutreachVisitLogCard = ({ visitLogCardData }) => {
@@ -35,7 +36,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
     try {
       
       if (visitLogCardData?.id) {
-        const docRef = doc(db, visitLogs_collection, visitLogCardData.id);
+        const docRef = doc(db, visitLogsNew_collection, visitLogCardData.id);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           setIsFlagged(docSnap.data().isFlagged || false);
@@ -93,7 +94,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
       }
 
       const { Type: userType } = userDoc.data();
-      const docRef = doc(db, visitLogs_collection, visitLogCardData?.id);
+      const docRef = doc(db, visitLogsNew_collection, visitLogCardData?.id);
       const docSnap = await getDoc(docRef);
   
       if (!docSnap.exists()) {
@@ -183,10 +184,10 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
         <div className="flex items-center">
           <img className="w-3 h-4" src={locationIcon} alt="Location" />
           <span className="ml-2 text-sm">
-            {`${visitLogCardData?.location?.city || visitLogCardData?.city}, ${
-              visitLogCardData?.location?.stateAbbv ||
-              visitLogCardData?.stateAbbv ||
-              visitLogCardData?.location?.state
+            {`${visitLogCardData?.location?.whereVisit || visitLogCardData?.whereVisit}, ${
+              visitLogCardData?.location?.whereVisit ||
+              visitLogCardData?.whereVisit ||
+              visitLogCardData?.location?.whereVisit
             }`}
           </span>
         </div>
@@ -195,7 +196,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
       <div className="flex justify-between items-center mt-4">
         <div className="text-sm font-bold">People Helped</div>
         <div className="text-xl font-bold">
-          {visitLogCardData?.numberPeopleHelped}
+          {visitLogCardData?.numberOfHelpers}
         </div>
       </div>
       
@@ -209,7 +210,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
       </div>
       
       <p className="text-sm mt-2 line-clamp-2">
-        {visitLogCardData?.description || ""}
+        {visitLogCardData?.peopleHelpedDescription || ""}
       </p>
     </div>
   );
