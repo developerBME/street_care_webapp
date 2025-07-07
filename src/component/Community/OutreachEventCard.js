@@ -150,7 +150,6 @@ const OutreachEventCard = ({
     const currentUrl = window.location.host + `/outreachsignup/${id}`;
     try {
       await navigator.clipboard.writeText(currentUrl);
-      console.log("Link copied to clipboard");
       setJustCopied(true);
       setTimeout(() => setJustCopied(false), 2000);
     }
@@ -158,7 +157,6 @@ const OutreachEventCard = ({
       console.error("Failed to copy link: ", err);
       setJustCopied(false);
     }
-    console.log(currentUrl);
   };
 
   let verifiedImg;

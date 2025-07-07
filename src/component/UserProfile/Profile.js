@@ -49,7 +49,6 @@ function Profile() {
 
       if (user) {
         const uid = user.uid;
-        console.log("UID is ", uid);
         const createdEventsData = await fetchUserOutreaches(uid);
         createdEventsData.sort((a, b) => a.eventDate - b.eventDate);
         const signedUpEventsData = await fetchUserSignedUpOutreaches(uid);
@@ -57,15 +56,10 @@ function Profile() {
         const likedEventsData = await fetchLikedOutreaches(uid);
         likedEventsData.sort((a, b) => a.eventData - b.eventData);
 
-        console.log("Signed Up Events Data:", signedUpEventsData);
-
         setCreatedEvents(createdEventsData);
         setSignedUpEvents(signedUpEventsData);
         setLikedEvents(likedEventsData);
       } else {
-        console.log("No user is signed in.");
-        // setCreatedEvents([]);
-        // setSignedUpEvents([]);
       }
     } catch (error) {
       console.error("Error Fetching data:", error.message);
@@ -76,7 +70,6 @@ function Profile() {
   };
 
   const openModal = (event) => {
-    console.log("calledddddddddd");
     setSelectedEvent(event);
   };
 

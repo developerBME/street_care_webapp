@@ -23,13 +23,11 @@ const LikedOutreaches = () => {
 
       if (user) {
         const uid = user.uid;
-        console.log("UID is ", uid);
         const likedEventsData = await fetchLikedOutreaches(uid);
         likedEventsData.sort((a, b) => a.eventData - b.eventData);
 
         setLikedEvents(likedEventsData);
       } else {
-        console.log("No user is signed in.");
         setLikedEvents([]);
       }
     } catch (error) {
