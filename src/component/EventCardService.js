@@ -67,8 +67,8 @@ const dateFilter = (startDate, endDate, filterQuery) => {
 const timeFilter = (filterQuery, isPast) => {
   return query(
     filterQuery,
-    isPast ? where("eventDate", "<=", new Date()) : where("eventDate", ">=", new Date())
-  )
+   isPast ? where("eventDate", "<=", new Date()) : where("eventDate", ">=", new Date())
+ )
 }
 
 
@@ -87,43 +87,43 @@ export const fetchEvents = async (
 ) => {
   try {
     let totalOutReachRef, pastOutreachRef
-    pastOutreachRef = query(collection(db, outreachEvents_collection), where("status", "==", "approved"))
-    totalOutReachRef = pastOutreachRef
+   pastOutreachRef = query(collection(db, outreachEvents_collection), where("status", "==", "approved"))
+   totalOutReachRef = pastOutreachRef
 
-    if (searchValue) {
-      const descriptionQuery = descriptionFilter(searchValue, totalOutReachRef)
-      totalOutReachRef = descriptionQuery
-    }
-
-
-    if (city) {
-      const cityQuery = cityFilter(city, totalOutReachRef)
-      totalOutReachRef = cityQuery
-    }
+   if (searchValue) {
+     const descriptionQuery = descriptionFilter(searchValue, totalOutReachRef)
+     totalOutReachRef = descriptionQuery
+   }
 
 
-    if (isDateFilter) {
-      const dateQuery = dateFilter(startDate, endDate, totalOutReachRef)
-      totalOutReachRef = dateQuery
-    }
+   if (city) {
+     const cityQuery = cityFilter(city, totalOutReachRef)
+     totalOutReachRef = cityQuery
+   }
 
 
-    if (isTimeFilter) {
-      const timeQuery = timeFilter(totalOutReachRef, timeframe === "past" ? true : false)
-      totalOutReachRef = timeQuery
-    }
-    pastOutreachRef = query(totalOutReachRef, orderBy("eventDate", "asc"), limit(pageSize))
-    //Handle Forward pagination
-    if (lastVisible && direction === "next") {
-      pastOutreachRef = query(pastOutreachRef, startAfter(lastVisible));
-    }
+   if (isDateFilter) {
+     const dateQuery = dateFilter(startDate, endDate, totalOutReachRef)
+     totalOutReachRef = dateQuery
+   }
 
-    // Handle Backward pagination
-    if (lastVisible && direction === "prev" && pageHistory.length > 2) {
-      pastOutreachRef = query(pastOutreachRef, startAfter(pageHistory[pageHistory.length - 3]));
-    }
-    const eventSnapshot = await getDocs(pastOutreachRef);
-    const lastDoc = eventSnapshot.docs[eventSnapshot.docs.length - 1];
+
+   if (isTimeFilter) {
+     const timeQuery = timeFilter(totalOutReachRef, timeframe === "past" ? true : false)
+     totalOutReachRef = timeQuery
+   }
+   pastOutreachRef = query(totalOutReachRef, orderBy("eventDate", "asc"), limit(pageSize))
+   //Handle Forward pagination
+   if (lastVisible && direction === "next") {
+     pastOutreachRef = query(pastOutreachRef, startAfter(lastVisible));
+   }
+
+   // Handle Backward pagination
+   if (lastVisible && direction === "prev" && pageHistory.length > 2) {
+     pastOutreachRef = query(pastOutreachRef, startAfter(pageHistory[pageHistory.length - 3]));
+   }
+   const eventSnapshot = await getDocs(pastOutreachRef);
+   const lastDoc = eventSnapshot.docs[eventSnapshot.docs.length - 1];
 
 
 
