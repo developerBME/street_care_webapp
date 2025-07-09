@@ -1,4 +1,3 @@
-import React from "react";
 import { useState, useRef, useEffect } from "react";
 import Rating from "@mui/material/Rating";
 import { IoIosArrowBack } from "react-icons/io";
@@ -26,7 +25,6 @@ import UpdateVisitLogConfirmationModal from "./UpdateVisitLogConfirmationModal";
 import DatePicker from "react-datepicker";
 import { Timestamp } from "firebase/firestore";
 import InfoIcon from "@mui/icons-material/Info";
-// import { IconButton } from "@mui/material";
 import { Tooltip, IconButton } from "@mui/material";
 import { fetchUserTypeDetails } from "../EventCardService";
 
@@ -50,7 +48,8 @@ const CustomInput = ({ value, onClick, onChange, id, className }) => (
 
 let autoComplete;
 
-export const GOOGLE_PLACES_API_KEY = process.env.REACT_APP_GOOGLE_PLACES_API_KEY;
+export const GOOGLE_PLACES_API_KEY =
+  process.env.REACT_APP_GOOGLE_PLACES_API_KEY;
 
 const loadScript = (url, callback) => {
   let script = document.createElement("script");
@@ -71,12 +70,8 @@ const loadScript = (url, callback) => {
 
 function PersonalOutForm() {
   const navigate = useNavigate();
-  // const ratingChanged = (newRating) => {
-  //   console.log(newRating);
-  // };
   const dateTimeRef = useRef(null);
   const date = useRef("");
-  const time = useRef("");
   const cityRef = useRef("");
   const stateRef = useRef("");
   const streetRef = useRef("");
@@ -84,7 +79,13 @@ function PersonalOutForm() {
   const checkboxes = useRef([]);
   const [itemQty, setItemQty] = useState("");
   const [numberHelped, setNumberhelped] = useState("");
+  const [furtherHelpDescription, setFurtherHelpDescription] = useState("");
+  const [furtherHelpLocation, setFurtherHelpLocation] = useState("");
+  const [dateTimeEncounter, setDateTimeEncounter] = useState();
+  const [dateTimeFollowUp, setDateTimeFollowUp] = useState();
+  const [futureNotes, setFutureNotes] = useState("");
   const [itemArray, setItemArray] = useState([]);
+  const [furtherItemArray, setFurtherItemArray] = useState([]);
   const [rating, setRating] = useState(0);
   const [success, setSuccess] = useState(false);
   const [stateList, setStateList] = useState({});
@@ -101,15 +102,6 @@ function PersonalOutForm() {
   const optDesc = useRef("");
   const optLandmark = useRef("");
   const today = new Date();
-  //////STATES FOR OPTIONAL PART OF THE FORM
-  // const furtherHelpDescription = useRef("");
-  // const furtherHelpLocation = useRef("");
-  // const [otherInfo, setOtherInfo] = useState("");
-  // const optTime = useRef("");
-  // const [optFurtherHelp, setOptFurtherHelp] = useState([]);
-  // const optFollowUpTime = useRef("");
-  // const optInfo = useRef("");
-  // const [optInfoShare, setOptInfoShare] = useState(false);
 
   const [error, setError] = useState({
     numberHelpedError: "",
@@ -129,13 +121,20 @@ function PersonalOutForm() {
   });
 
   const [isOtherChecked, setIsOtherChecked] = useState(false);
+  const [isFurtherOtherChecked, setIsFurtherOtherChecked] = useState(false);
+
   const [otherInputValue, setOtherInputValue] = useState("");
+  const [furtherOtherInputValue, setFurtherOtherInputValue] = useState("");
 
   const { id } = useParams();
   const [logData, setLogData] = useState(null);
 
   const handleOtherCheck = () => {
     setIsOtherChecked(!isOtherChecked);
+  };
+
+  const handleFurtherOtherCheck = () => {
+    setIsFurtherOtherChecked(!isFurtherOtherChecked);
   };
 
   const handleNumChange = (e) => {
@@ -156,12 +155,19 @@ function PersonalOutForm() {
     setDescriptionHelped(inputValue);
   };
 
-  const handleOptDescChange = (e) => {
-    updateErrorState("optDescError", "");
+  const handleFurtherHelpDescription = (e) => {
+    const inputValue = e.target.value;
+    setFurtherHelpDescription(inputValue);
   };
 
-  const handleOptLandmarkChange = (e) => {
-    updateErrorState("optLandmarkError", "");
+  const handleFurtherHelpLocation = (e) => {
+    const inputValue = e.target.value;
+    setFurtherHelpLocation(inputValue);
+  };
+
+  const handleFutureNotes = (e) => {
+    const inputValue = e.target.value;
+    setFutureNotes(inputValue);
   };
 
   const handleInfoShareCheckboxChange = () => {
@@ -214,23 +220,15 @@ function PersonalOutForm() {
   };
   /* Firebase */
   const fAuth = getAuth();
-  onAuthStateChanged(fAuth, (user) => {
-    if (user) {
-      console.log("Found user");
-    } else {
-      console.log("USER NOT FOUND!");
-      // navigate("/login");
-    }
-  });
 
-  // useEffect(()=>{},[])
   useEffect(() => {
     async function getStates() {
       const response = await fetch(
         "https://parseapi.back4app.com/classes/Usabystate_States?keys=name,postalAbreviation",
         {
           headers: {
-            "X-Parse-Application-Id":process.env.REACT_APP_X_PARSE_APPLICATION_ID,
+            "X-Parse-Application-Id":
+              process.env.REACT_APP_X_PARSE_APPLICATION_ID,
             "X-Parse-REST-API-Key": process.env.REACT_APP_X_PARSE_REST_API_KEY,
           },
         }
@@ -253,6 +251,11 @@ function PersonalOutForm() {
         logResult.whatGiven.map((a) => {
           if (itemArray.indexOf(a) === -1) {
             itemArray.push(a);
+          }
+        });
+        logResult.whatGivenFurther.map((a) => {
+          if (furtherItemArray.indexOf(a) === -1) {
+            furtherItemArray.push(a);
           }
         });
 
@@ -286,8 +289,6 @@ function PersonalOutForm() {
         setCityName(logResult.city);
         setStateName(logResult.state);
         setPostcode(logResult.zipcode);
-        //date.current.value = logResult.date ;
-        //time.current.value = logResult.time ;
         setDateTime(logResult.dateTime.toDate());
       } catch (error) {
         console.error(error.message);
@@ -309,7 +310,8 @@ function PersonalOutForm() {
         "?limit=1000&keys=name",
       {
         headers: {
-          "X-Parse-Application-Id": process.env.REACT_APP_X_PARSE_APPLICATION_ID,
+          "X-Parse-Application-Id":
+            process.env.REACT_APP_X_PARSE_APPLICATION_ID,
           "X-Parse-REST-API-Key": process.env.REACT_APP_X_PARSE_REST_API_KEY,
         },
       }
@@ -318,8 +320,7 @@ function PersonalOutForm() {
     const filteredData = data.results?.map((x) => {
       return x.name;
     });
-    console.log("Unfiltered: " + data.results.length);
-    console.log("Filtered: " + filteredData.length);
+
     setState(e.target.value);
     setCityNames(filteredData);
     updateErrorState("stateError", "");
@@ -335,10 +336,22 @@ function PersonalOutForm() {
     updateErrorState("checkboxesError", "");
   }
 
+  function handleFurtherItemArray(e) {
+    if (e.target.checked) {
+      setFurtherItemArray([...furtherItemArray, e.target.value]);
+    } else {
+      setFurtherItemArray(
+        furtherItemArray.filter((item) => item !== e.target.value)
+      );
+    }
+    updateErrorState("checkboxesError", "");
+  }
+
   const handleSubmit = async (e) => {
     let setReturn = false;
     let setOtherBool = true;
-    let whatGivenArr = [...itemArray];
+    let whatGiven = [...itemArray];
+    let whatGivenFurther = [...furtherItemArray];
     e.preventDefault();
     // Form Validation Start
     if (isOtherChecked) {
@@ -348,21 +361,32 @@ function PersonalOutForm() {
         "Please specify for other kind of help provided"
       );
       if (otherInputValue !== "") {
-        whatGivenArr.push(otherInputValue);
-        console.log(otherInputValue);
+        whatGiven.push(otherInputValue);
         updateErrorState("checkboxesError", "");
         setOtherBool = true;
       }
     }
+
+    if (isFurtherOtherChecked) {
+      setOtherBool = false;
+      updateErrorState(
+        "checkboxesError",
+        "Please specify for other kind of help provided"
+      );
+      if (furtherOtherInputValue !== "") {
+        whatGivenFurther.push(furtherOtherInputValue);
+        updateErrorState("checkboxesError", "");
+        setOtherBool = true;
+      }
+    }
+
     if (!numberHelped) {
       updateErrorState("numberHelpedError", "Number is required");
       setReturn = true;
     } else {
       updateErrorState("numberHelpedError", "");
     }
-    // console.log("object");
-    // console.log(whatGivenArr);
-    if (whatGivenArr == [] || !setOtherBool) {
+    if (whatGiven == [] || !setOtherBool) {
       updateErrorState(
         "checkboxesError",
         "Please provide the kind of help provided"
@@ -412,20 +436,6 @@ function PersonalOutForm() {
     } else {
       updateErrorState("dateTimeError", "");
     }
-
-    // if (!date.current.value) {
-    //   updateErrorState("dateError", "Enter a date");
-    //   setReturn = true;
-    // } else {
-    //   updateErrorState("dateError", "");
-    // }
-
-    // if (!time.current.value) {
-    //   updateErrorState("timeError", "Enter a time");
-    //   setReturn = true;
-    // } else {
-    //   updateErrorState("timeError", "");
-    // }
 
     if (!itemQty) {
       updateErrorState("itemQtyError", "Enter Quantity");
@@ -478,23 +488,31 @@ function PersonalOutForm() {
     ) {
       statusValue = "approved";
     }
-    
-    let whereVisit = `${stateName}, ${cityName}, ${postcode}, ${street}`;
+
+    let whereVisit = `${street}, ${stateName}, ${cityName}, ${postcode}`;
 
     let obj = {
       uid: fAuth.currentUser.uid,
       peopleHelpedDescription: descriptionHelped,
       numberOfHelpers: numberHelped,
-      whatGiven: whatGivenArr,
-      itemQty: itemQty,
-      //date: date.current.value,
-      //time: time.current.value,
-      stateAbbv: stateAbbv,
-      rating: rating,
+      whatGiven: whatGiven,
       whereVisit: whereVisit,
-      whenVisit: Timestamp.fromDate(dateTime),
+      street: street,
+      state: stateName,
+      stateAbbv: stateAbbv,
+      city: cityName,
+      zipcode: postcode,
+      itemQty: itemQty,
+      rating: rating,
+      timeStamp: Timestamp.fromDate(dateTime),
       isPublic: isPublic,
       status: statusValue,
+      peopleNeedFurtherHelpComment: furtherHelpDescription,
+      peopleNeedFurtherHelpLocation: furtherHelpLocation,
+      whenVisit: Timestamp.fromDate(dateTimeEncounter),
+      // whatGivenFurther,
+      followUpWhenVisit: Timestamp.fromDate(dateTimeFollowUp),
+      futureNotes: futureNotes,
     };
     console.log(obj);
 
@@ -575,7 +593,7 @@ function PersonalOutForm() {
   const [stateName, setStateName] = useState("");
   const [stateAbbv, setStateAbbv] = useState("");
   const [postcode, setPostcode] = useState("");
-  const [dateTime, setDateTime] = useState(new Date());
+  const [dateTime, setDateTime] = useState();
 
   const handleScriptLoad = (updateQuery, autoCompleteRef) => {
     autoComplete = new window.google.maps.places.Autocomplete(
@@ -646,7 +664,7 @@ function PersonalOutForm() {
   const handleUpdateVisitLog = async (e) => {
     let setReturn = false;
     let setOtherBool = true;
-    let whatGivenArr = [...itemArray];
+    let whatGiven = [...itemArray];
 
     e.preventDefault();
     const checkboxvalues = [];
@@ -654,11 +672,9 @@ function PersonalOutForm() {
       checkboxvalues.push(x.value);
     });
 
-    const hasOtherValues = whatGivenArr.filter(
-      (a) => !checkboxvalues.includes(a)
-    );
+    const hasOtherValues = whatGiven.filter((a) => !checkboxvalues.includes(a));
     if (hasOtherValues.length > 0) {
-      whatGivenArr = whatGivenArr.filter((a) => a !== hasOtherValues[0]);
+      whatGiven = whatGiven.filter((a) => a !== hasOtherValues[0]);
     }
 
     // Form Validation Start
@@ -670,7 +686,7 @@ function PersonalOutForm() {
       );
 
       if (otherInputValue !== "") {
-        whatGivenArr.push(otherInputValue);
+        whatGiven.push(otherInputValue);
         console.log(otherInputValue);
         updateErrorState("checkboxesError", "");
         setOtherBool = true;
@@ -683,7 +699,7 @@ function PersonalOutForm() {
       updateErrorState("numberHelpedError", "");
     }
 
-    if (whatGivenArr == [] || !setOtherBool) {
+    if (whatGiven == [] || !setOtherBool) {
       updateErrorState(
         "checkboxesError",
         "Please provide the kind of help provided"
@@ -725,20 +741,6 @@ function PersonalOutForm() {
         updateErrorState("zipError", "Should consist of only Numbers");
       }
     }
-
-    // if (!date.current.value) {
-    //   updateErrorState("dateError", "Enter a date");
-    //   setReturn = true;
-    // } else {
-    //   updateErrorState("dateError", "");
-    // }
-
-    // if (!time.current.value) {
-    //   updateErrorState("timeError", "Enter a time");
-    //   setReturn = true;
-    // } else {
-    //   updateErrorState("timeError", "");
-    // }
 
     if (!dateTime) {
       updateErrorState("dateTimeError", "DateTime is required");
@@ -797,13 +799,21 @@ function PersonalOutForm() {
       uid: fAuth.currentUser.uid,
       peopleHelpedDescription: descriptionHelped,
       numberOfHelpers: numberHelped,
-      whatGiven: whatGivenArr,
-      itemQty: itemQty,
-      //date: date.current.value,
-      //time: time.current.value,
-      rating: rating,
+      whatGiven: whatGiven,
       whereVisit: whereVisit,
-      whenVisit: Timestamp.fromDate(dateTime),
+      street: street,
+      state: stateName,
+      stateAbbv: stateAbbv,
+      city: cityName,
+      zipcode: postcode,
+      timeStamp: Timestamp.fromDate(dateTime),
+      isPublic: isPublic,
+      peopleNeedFurtherHelpComment: furtherHelpDescription,
+      peopleNeedFurtherHelpLocation: furtherHelpLocation,
+      whenVisit: Timestamp.fromDate(dateTimeEncounter),
+      // whatGivenFurther,
+      followUpWhenVisit: Timestamp.fromDate(dateTimeFollowUp),
+      futureNotes: futureNotes,
     };
 
     try {
@@ -924,18 +934,8 @@ function PersonalOutForm() {
                           )}
                         </div>
                       </div>
-                      {/* {error.numberHelpedError && (
-                      <div className="inline-flex items-center">
-                        <img alt="" src={errorImg} className="w-3 h-3" />
-                        <p className="text-red-600 text-xs ml-1">
-                          {error.numberHelpedError}
-                        </p>
-                      </div>
-                    )} */}
                     </div>
                   </div>
-                  {/* </div> */}
-                  {/*  */}
 
                   {/* Grid */}
 
@@ -1134,7 +1134,7 @@ function PersonalOutForm() {
                           <input
                             id="otherInput"
                             value={otherInputValue}
-                            placeholder="Other"
+                            placeholder="Kind of help"
                             className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border-0 text-[15px] font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
                             required=""
                             onChange={(e) => {
@@ -1286,105 +1286,7 @@ function PersonalOutForm() {
                           )}
                         </div>
                       </div>
-
-                      {/* Old form fields start */}
-
-                      {/* <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
-                        <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
-                          State
-                        </div>
-                      </div> */}
-                      {/* <div className="self-stretch h-fit border-collapse">
-                        <div className="h-14 inline-flex w-full">
-                          <select
-                            className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
-                              error.stateError !== ""
-                                ? "ring-red-500"
-                                : "ring-gray-300"
-                            }`}
-                            defaultValue=""
-                            ref={stateRef}
-                            onChange={getCities}
-                          >
-                            <option value="" disabled>
-                              Please select from the list
-                            </option>
-                            {stateNames &&
-                              stateNames.map((stateName, index) => {
-                                return (
-                                  <option
-                                    className="w-fit"
-                                    value={stateName}
-                                    key={"state_" + index}
-                                  >
-                                    {stateName}
-                                  </option>
-                                );
-                              })}
-                          </select>
-                        </div>
-                        {error.stateError && (
-                          <div className="inline-flex items-center">
-                            <img alt="" src={errorImg} className="w-3 h-3" />
-                            <p className="text-red-600 text-xs ml-1">
-                              {error.stateError}
-                            </p>
-                          </div>
-                        )}
-                      </div> */}
                     </div>
-                    {/* <div className="self-stretch w-full h-fit flex-col  flex ">
-                      <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
-                        <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
-                          City
-                        </div>
-                      </div>
-                      <div className="self-stretch h-fit  border-collapse     ">
-                        <div className=" h-14 inline-flex w-full">
-                          <select
-                            className={`text-zinc-900  w-full h-full px-4 rounded-[4px] text-base font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
-                              error.cityError !== ""
-                                ? "ring-red-500"
-                                : "ring-gray-300"
-                            }`}
-                            defaultValue=""
-                            disabled={!cityNames}
-                            ref={cityRef}
-                            onChange={(e) => {
-                              setCity(e.target.value);
-                            }}
-                          >
-                            <option value="" disabled>
-                              Please select from the list
-                            </option>
-                            {cityNames &&
-                              cityNames.map((cityName, index) => {
-                                return (
-                                  <option
-                                    className="w-fit"
-                                    value={cityName}
-                                    key={"city_" + index}
-                                  >
-                                    {cityName}
-                                  </option>
-                                );
-                              })}
-                          </select>
-                        </div>
-                        {error.cityError && (
-                          <div className="inline-flex items-center">
-                            <img alt=""
-                              src={errorImg}
-                              className="w-3 h-3"
-                              alt="Error Image"
-                            />
-                            <p className="text-red-600 text-xs ml-1">
-                              {error.cityError}
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    </div> */}
                   </div>
 
                   {/* Old form fields end */}
@@ -1401,15 +1303,6 @@ function PersonalOutForm() {
                         </div>
                         <div className="self-stretch h-fit  border-collapse     ">
                           <div className=" h-14  justify-center items-start ">
-                            {/* <input
-                              type="date"
-                              id="-itemnumber"
-                              placeholder="Number"
-                              className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
-                              ref={date}
-                              onChange={handleDateChange}
-                            ></input> */}
-
                             <DatePicker
                               selected={dateTime}
                               onChange={(date) => {
@@ -1445,52 +1338,10 @@ function PersonalOutForm() {
                                 </p>
                               </div>
                             )}
-
-                            {/* {error.dateError && (
-                            <div className="inline-flex items-center">
-                              <img alt=""
-                                src={errorImg}
-                                className="w-3 h-3"
-                                alt="Date Error"
-                              />
-                              <p className="text-red-600 text-xs ml-1">
-                                {error.dateError}
-                              </p>
-                            </div>
-                          )} */}
                           </div>
                         </div>
                       </div>
-                      {/*  */}
-                      {/* <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
-                        <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
-                          <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
-                            Time
-                          </div>
-                        </div>
-                        <div className="self-stretch h-fit  border-collapse     ">
-                          <div className=" h-14  justify-center items-start ">
-                            <input
-                              type="time"
-                              id="-itemnumber"
-                              placeholder="Number"
-                              className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
-                              ref={time}
-                              onChange={handleTimeChange}
-                            ></input>
-                            {/* {error.timeError && (
-                            <div className="inline-flex items-center">
-                              <img alt="" src={errorImg} className="w-3 h-3" />
-                              <p className="text-red-600 text-xs ml-1">
-                                {error.timeError}
-                              </p>
-                            </div>
-                          )}
-                          </div>
-                        </div>
-                      </div> */}
                     </div>
-                    {/**/}
                     <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
                       Total number of items donated by you?*
                       <Tooltip title={toolTipContent} placement="right" arrow>
@@ -1569,7 +1420,6 @@ function PersonalOutForm() {
 
                 {showOptionalQuestions && (
                   <div>
-                    {/* <div className="flex-col justify-start items-start gap-16 flex"> */}
                     <div className="self-stretch h-fit flex-col justify-center items-start gap-[24px] flex">
                       <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                         <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
@@ -1593,8 +1443,8 @@ function PersonalOutForm() {
                                     : "ring-gray-300"
                                 }`}
                                 required={true}
-                                // value={furtherHelpDescription}
-                                onChange={handleOptDescChange}
+                                value={furtherHelpDescription}
+                                onChange={handleFurtherHelpDescription}
                                 ref={optDesc}
                               ></input>
                               {error.optDescError && (
@@ -1612,14 +1462,6 @@ function PersonalOutForm() {
                             </div>
                           </div>
                         </div>
-                        {/* {error.furtherHelpDescriptionError && (
-                          <div className="inline-flex items-center">
-                            <img alt="" src={errorImg} className="w-3 h-3" />
-                            <p className="text-red-600 text-xs ml-1">
-                              {error.furtherHelpDescriptionError}
-                            </p>
-                          </div>
-                        )} */}
                       </div>
                       <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                         <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
@@ -1627,11 +1469,6 @@ function PersonalOutForm() {
                           person(s) in need of help?*
                         </div>
                         <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
-                          {/* <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
-                        <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
-                          Description
-                        </div>
-                      </div> */}
                           <div className="self-stretch h-fit  border-collapse">
                             <div className=" h-14  justify-center items-start ">
                               <input
@@ -1643,7 +1480,8 @@ function PersonalOutForm() {
                                     : "ring-gray-300"
                                 }`}
                                 required={true}
-                                onChange={handleOptLandmarkChange}
+                                value={furtherHelpLocation}
+                                onChange={handleFurtherHelpLocation}
                                 ref={optLandmark}
                               ></input>
                               {error.optLandmarkError && (
@@ -1667,24 +1505,34 @@ function PersonalOutForm() {
                           What time was the encounter?
                         </div>
                         <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
-                          {/* <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
-                        <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
-                          Description
-                        </div>
-                      </div> */}
                           <div className="self-stretch h-fit  border-collapse">
                             <div className=" h-14  justify-center items-start ">
-                              <input
-                                id="furtherHelpEncounterTime"
-                                placeholder="2023-01-01 10:00"
-                                className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
-                                required=""
-                              ></input>
+                              <DatePicker
+                                selected={dateTimeEncounter}
+                                onChange={(date) => {
+                                  setDateTimeEncounter(date);
+                                }}
+                                showTimeSelect
+                                timeFormat="HH:mm" // Adjust time format as needed
+                                dateFormat="dd/MM/yyyy HH:mm" // Adjust date format to include time
+                                maxDate={today}
+                                wrapperClassName="w-full"
+                                customInput={
+                                  <CustomInput
+                                    id="date"
+                                    className={`h-12 px-4 w-full block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 ${
+                                      error.dateTimeError !== ""
+                                        ? "ring-red-500"
+                                        : "ring-gray-300"
+                                    }`}
+                                    ref={dateTimeRef}
+                                  />
+                                }
+                              />
                             </div>
                           </div>
                         </div>
                       </div>
-                      {/* <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex"> */}
                       <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                         <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
                           What further help is needed?
@@ -1700,7 +1548,7 @@ function PersonalOutForm() {
                               className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                               required=""
                               ref={(el) => (checkboxes.current[0] = el)}
-                              onChange={handleItemArray}
+                              onChange={handleFurtherItemArray}
                             ></input>
                             <label
                               for="food-option"
@@ -1722,7 +1570,7 @@ function PersonalOutForm() {
                               className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                               required=""
                               ref={(el) => (checkboxes.current[1] = el)}
-                              onChange={handleItemArray}
+                              onChange={handleFurtherItemArray}
                             ></input>
                             <label
                               for="clothing-option"
@@ -1743,7 +1591,7 @@ function PersonalOutForm() {
                               className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                               required=""
                               ref={(el) => (checkboxes.current[2] = el)}
-                              onChange={handleItemArray}
+                              onChange={handleFurtherItemArray}
                             ></input>
                             <label
                               for="hygiene-option"
@@ -1763,7 +1611,7 @@ function PersonalOutForm() {
                               className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                               required=""
                               ref={(el) => (checkboxes.current[3] = el)}
-                              onChange={handleItemArray}
+                              onChange={handleFurtherItemArray}
                             ></input>
                             <label
                               for="wellness-option"
@@ -1783,7 +1631,7 @@ function PersonalOutForm() {
                               className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                               required="Medical Help"
                               ref={(el) => (checkboxes.current[4] = el)}
-                              onChange={handleItemArray}
+                              onChange={handleFurtherItemArray}
                             ></input>
                             <label
                               for="medical-option"
@@ -1805,7 +1653,7 @@ function PersonalOutForm() {
                               className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                               required=""
                               ref={(el) => (checkboxes.current[5] = el)}
-                              onChange={handleItemArray}
+                              onChange={handleFurtherItemArray}
                             ></input>
                             <label
                               for="social-option"
@@ -1826,7 +1674,7 @@ function PersonalOutForm() {
                               className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                               required=""
                               ref={(el) => (checkboxes.current[6] = el)}
-                              onChange={handleItemArray}
+                              onChange={handleFurtherItemArray}
                             ></input>
                             <label
                               for="legal-option"
@@ -1842,11 +1690,11 @@ function PersonalOutForm() {
                             <input
                               type="checkbox"
                               id="other-option"
-                              value="Other"
+                              value="Kind of support you provided"
                               className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                               required=""
                               ref={(el) => (checkboxes.current[7] = el)}
-                              onChange={handleItemArray}
+                              onChange={handleFurtherItemArray}
                             ></input>
                             <label
                               for="other-option"
@@ -1857,40 +1705,42 @@ function PersonalOutForm() {
                               </div>
                             </label>
                           </div>
-                          {/*  */}
                         </div>
-                        {/* {error.checkboxesError && (
-                        <div className="inline-flex items-center">
-                          <img alt="" src={errorImg} className="w-3 h-3" />
-                          <p className="text-red-600 text-xs ml-1">
-                            {error.checkboxesError}
-                          </p>
-                        </div>
-                      )} */}
                       </div>
+                      {isFurtherOtherChecked && (
+                        <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
+                          <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
+                            <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
+                              Other
+                            </div>
+                          </div>
+                          <div className="self-stretch h-fit  border-collapse     ">
+                            <div className=" h-14  justify-center items-start ">
+                              <input
+                                id="furtherOtherInput"
+                                value={furtherOtherInputValue}
+                                placeholder="Other"
+                                className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] border-0 text-[15px] font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
+                                required=""
+                                onChange={(e) => {
+                                  setFurtherOtherInputValue(e.target.value);
+                                }}
+                              ></input>
+                            </div>
+                          </div>
+                        </div>
+                      )}
 
                       <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
                         When is the follow-up needed?
                       </div>
                       <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
-                        {/* <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
-                        <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
-                          Description
-                        </div>
-                      </div> */}
                         <div className="self-stretch h-fit  border-collapse">
                           <div className=" h-14  justify-center items-start ">
-                            {/* <input
-                              id="furtherHelpFollowUp"
-                              placeholder="2023-01-01"
-                              className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
-                              required=""
-                            ></input> */}
                             <DatePicker
-                              selected={dateTime}
+                              selected={dateTimeFollowUp}
                               onChange={(date) => {
-                                setDateTime(date);
-                                handleDateTimeChange(date);
+                                setDateTimeFollowUp(date);
                               }}
                               showTimeSelect
                               timeFormat="HH:mm" // Adjust time format as needed
@@ -1921,11 +1771,6 @@ function PersonalOutForm() {
                         Is there anything else other volunteers should know?
                       </div>
                       <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
-                        {/* <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
-                        <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
-                          Description
-                        </div>
-                      </div> */}
                         <div className="self-stretch h-fit  border-collapse">
                           <div className=" h-14  justify-center items-start ">
                             <input
@@ -1933,6 +1778,8 @@ function PersonalOutForm() {
                               placeholder="Please specify here"
                               className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-[15px]  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ring-gray-300`}
                               required=""
+                              value={futureNotes}
+                              onChange={handleFutureNotes}
                             ></input>
                           </div>
                         </div>
@@ -1946,18 +1793,14 @@ function PersonalOutForm() {
                         <div className=" justify-end items-end inline-flex ">
                           <input
                             type="checkbox"
-                            // id="food-option"
                             value=""
                             className="w-[18px] h-[18px] m-5 cursor-pointer accent-[#5F36D6] peer absolute"
                             required=""
-                            // ref={(el) => (checkboxes.current[0] = el)}
-                            // onChange={handleItemArray}
                             ref={infoShareCheckbox}
                             checked={isInfoShareCheckboxChecked}
                             onChange={handleInfoShareCheckboxChange}
                           ></input>
                           <label
-                            // for="food-option"
                             className={`inline-flex items-start justify-between w-full h-[140px] p-3 bg-slate-200 border-4 border-gray-200 rounded-[30px] cursor-pointer peer-checked:border-[#5F36D6] peer-checked:text-gray-600 text-neutral-800 text-base font-bold font-bricolage leading-normal ring-1 ring-inset ring-gray-300 ${
                               !isInfoShareCheckboxChecked &&
                               error.infoShareCheckboxError !== ""
@@ -1987,12 +1830,6 @@ function PersonalOutForm() {
                           In case of a serious situation, dial 911 immediately.
                         </div>
                       </div>
-                      {/* <span className="text-gray-500 self-stretch justify-normal font-bricolage">
-                        If you can, it’s most helpful for you to fill out one
-                        visit log per person. This way it enables us to provide
-                        far better services and outreach to each person. That’s
-                        totally optional, any information is great!
-                      </span> */}
                     </div>
                   </div>
                 )}
@@ -2045,11 +1882,6 @@ function PersonalOutForm() {
                 </div>
                 {/*  */}
                 {success && id === undefined && (
-                  // <div className="justify-start items-start gap-4 inline-flex">
-                  //   <div className="justify-start items-start gap-4 flex">
-                  //     Success!
-                  //   </div>
-                  // </div>
                   <ConfirmationModal isOpen={true} />
                 )}
                 {success && id !== undefined && (

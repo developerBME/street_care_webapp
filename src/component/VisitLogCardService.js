@@ -647,7 +647,6 @@ export const fetchPaginatedPublicVisitLogs = async (
 export const fetchPersonalVisitLogById = async (visitLogId) => {
   try {
 
-    console.log("inside trauma")
     const visitLogRef = doc(db, visitLogs_collection, visitLogId);
     const visitLogDoc = await getDoc(visitLogRef);
     if (visitLogDoc.exists()) {
