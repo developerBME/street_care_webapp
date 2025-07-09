@@ -42,64 +42,6 @@ const PostApprovals = () => {
   const postsPerPage = 6;
   const searchRef = useRef("");
 
- /* useEffect(() => {
-    const fetchPendingPosts = async () => {
-      try {
-        setIsLoading(true);
-
-        // Fetch outreaches
-        const outreachQuery = query(
-          collection(db, outreachEvents_collection),
-          where("status", "==", "pending")
-        );
-        const outreachSnapshot = await getDocs(outreachQuery);
-        const outreaches = await Promise.all(
-          outreachSnapshot.docs.map(async (doc) => {
-            const post = { id: doc.id, ...doc.data() };
-
-            // Fetch userName using uid
-            const userDetails = await fetchUserTypeDetails(post.uid);
-            return {
-              ...post,
-              userName: userDetails?.username || "Unknown User",
-              userType: userDetails?.type || "",
-            };
-          })
-        );
-
-        // Fetch visit logs
-        const visitLogQuery = query(
-          collection(db, visitLogs_collection),
-          where("status", "==", "pending")
-        );
-        const visitLogSnapshot = await getDocs(visitLogQuery);
-        const visitLogs = await Promise.all(
-          visitLogSnapshot.docs.map(async (doc) => {
-            const post = { id: doc.id, ...doc.data() };
-
-            // Fetch userName using uid
-            const userDetails = await fetchUserTypeDetails(post.uid);
-            return {
-              ...post,
-              userName: userDetails?.username || "Unknown User",
-              userType: userDetails?.type || "",
-            };
-          })
-        );
-        // const visitLogs = await fetchPublicVisitLogs();
-
-        setPendingPosts({ outreaches, visitLogs });
-        setIsError(false);
-      } catch (error) {
-        console.error("Error fetching pending posts:", error);
-        setIsError(true);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchPendingPosts();
-  }, []); */
 
   useEffect(() => {
   const fetchPendingPosts = async () => {
@@ -111,7 +53,7 @@ const PostApprovals = () => {
         collection(db, outreachEvents_collection),
         where("status", "==", "pending")
       );
-      console.log("Fetching visit logs from outreach:", outreachEvents_collection);
+     // console.log("Fetching visit logs from outreach:", outreachEvents_collection);
       const outreachSnapshot = await getDocs(outreachQuery);
       const outreaches = await Promise.all(
         outreachSnapshot.docs.map(async (doc) => {
@@ -131,7 +73,7 @@ const PostApprovals = () => {
         collection(db, visitLogs_collection),
         where("status", "==", "pending")
       );
-      console.log("Fetching visit logs from old collection:", visitLogs_collection);
+      //console.log("Fetching visit logs from old collection:", visitLogs_collection);
       const visitLogSnapshotOld = await getDocs(visitLogQueryOld);
       const visitLogsOld = await Promise.all(
         visitLogSnapshotOld.docs.map(async (doc) => {
@@ -151,7 +93,7 @@ const PostApprovals = () => {
         collection(db, visitLogsNew_collection),
         where("status", "==", "pending")
       );
-       console.log("Fetching visit logs from new collection:", visitLogsNew_collection);
+      // console.log("Fetching visit logs from new collection:", visitLogsNew_collection);
       const visitLogSnapshotNew = await getDocs(visitLogQueryNew);
       const visitLogsNew = await Promise.all(
         visitLogSnapshotNew.docs.map(async (doc) => {
@@ -264,32 +206,7 @@ const PostApprovals = () => {
     setIsModalOpen(false);
   };
 
-  // Approve selected posts
-  /*
-  const handleApproveSelected = async () => {
-    try {
-      const collectionName =
-        activeTab === "outreaches" ? outreachEvents_collection : visitLogs_collection;
-
-      for (const itemId of selectedItems) {
-        await updateDoc(doc(db, collectionName, itemId), {
-          approved: true,
-          status: "approved",
-        });
-      }
-
-      // Update state after approval
-      const updatedPosts = { ...pendingPosts };
-      updatedPosts[activeTab] = pendingPosts[activeTab].filter(
-        (post) => !selectedItems.includes(post.id)
-      );
-      setPendingPosts(updatedPosts);
-      setSelectedItems([]);
-    } catch (error) {
-      console.error("Error approving posts:", error);
-    }
-  };
-*/ 
+  
 // Approve selected posts
 const handleApproveSelected = async () => {
   try {
@@ -297,7 +214,7 @@ const handleApproveSelected = async () => {
     const oldCollection = isVisitLog ? visitLogs_collection : outreachEvents_collection;
     const newCollection = visitLogsNew_collection;
   
-    console.log("selectedItems", selectedItems);
+   // console.log("selectedItems", selectedItems);
   
     for (const itemID of selectedItems) {
       const docRefOld = doc(db, oldCollection, itemID);
@@ -306,7 +223,7 @@ const handleApproveSelected = async () => {
       let success = false;
   
       try {
-        console.log("Approving in OLD collection:", itemID);
+     //   console.log("Approving in OLD collection:", itemID);
         await updateDoc(docRefOld, {
           approved: true,
           status: "approved",
@@ -317,7 +234,7 @@ const handleApproveSelected = async () => {
   
         if (isVisitLog && docRefNew) {
           try {
-            console.log("Fallback to NEW collection:", itemID);
+           // console.log("Fallback to NEW collection:", itemID);
             await updateDoc(docRefNew, {
               approved: true,
               status: "approved",
@@ -390,7 +307,7 @@ const handleRejectSelected = async () => {
       
           // Try old collection first
           try {
-            console.log("Rejecting in OLD collection:", itemID);
+           // console.log("Rejecting in OLD collection:", itemID);
             await updateDoc(docRefOld, {
               approved: false,
               status: "rejected",
@@ -402,7 +319,7 @@ const handleRejectSelected = async () => {
             // Try new collection if visitLogs
             if (isVisitLog && docRefNew) {
               try {
-                console.log("Fallback to NEW collection:", itemID);
+              //  console.log("Fallback to NEW collection:", itemID);
                 await updateDoc(docRefNew, {
                   approved: false,
                   status: "rejected",
@@ -526,7 +443,7 @@ useEffect(() => {
       
         // Try old collection first
         try {
-          console.log("Approving in OLD collection:", selectedPost.id);
+      //    console.log("Approving in OLD collection:", selectedPost.id);
           await updateDoc(docRefOld, { status: "approved" });
           success = true;
         } catch (errorOld) {
@@ -535,7 +452,7 @@ useEffect(() => {
           // Try new collection if visitLogs
           if (isVisitLog && docRefNew) {
             try {
-              console.log("Fallback to NEW collection:", selectedPost.id);
+           //   console.log("Fallback to NEW collection:", selectedPost.id);
               await updateDoc(docRefNew, { status: "approved" });
               success = true;
             } catch (errorNew) {
@@ -601,7 +518,7 @@ useEffect(() => {
       
         // Try old collection first
         try {
-          console.log("Rejecting in OLD collection:", selectedPost.id);
+        //  console.log("Rejecting in OLD collection:", selectedPost.id);
           await updateDoc(docRefOld, { status: "rejected" });
           success = true;
         } catch (errorOld) {
@@ -609,7 +526,7 @@ useEffect(() => {
       
           if (isVisitLog && docRefNew) {
             try {
-              console.log("Fallback to NEW collection:", selectedPost.id);
+             // console.log("Fallback to NEW collection:", selectedPost.id);
               await updateDoc(docRefNew, { status: "rejected" });
               success = true;
             } catch (errorNew) {
