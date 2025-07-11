@@ -32,7 +32,6 @@ import {
  import AllOutreachEvents from "./component/AllOutreachEvents";
  import AllPastOutreachEvents from "./component/AllPastOutreachEvents";
  import AllOutreachVisitLog from "./component/AllOutreachVisitLog";
- //import CreateBME from "./component/Community/CreateBME";
  import ScrollToTop from "./component/helper/ScrollToTop";
  import Not404 from "./component/404";
  import Newscard from "./component/HomePage/Newscard";
@@ -56,7 +55,6 @@ import {
  import DeleteAccConfirmation from "./component/UserProfile/ProfileSettings/DeleteAccConfirmation";
  import UpdateProfile from "./component/UserProfile/ProfileSettings/UpdateProfile";
  import UserListNew from "./component/Admin/UserListNew.js"
- //import UserDetails from "./component/admin_test/UserDetails.js";
  import CreateOutreachAdmin from "./component/admin_test/CreateOutreachAdmin.js";
  
  
@@ -65,7 +63,6 @@ import {
  import { ProtectedAdminRoute } from "./component/ProtectedAdminRoute";
  import TestAdmin from "./component/UserProfile/TestAdmin";
  import AdminHomePage from './component/Admin/AdminHomePage.js';
- import Dashboard from "./component/Admin/AdminDashboard.js"
  import MoreVisitLogs from "./component/Community/MoreVisitLogs";
  import CreateOutreach from "./component/Community/CreateOutreach";
  import AllSignedUpOutreaches from "./component/UserProfile/AllSignedUpOutreaches";
@@ -84,8 +81,6 @@ import {
   const [firebaseUser, setFirebaseUser] = useState({});
   const [loadingUser, setLoadingUser] = useState(true);
  
- 
-  // console.log(firebaseUser);
  
  
   useEffect(() => {

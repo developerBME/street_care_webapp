@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import OutreachEventCard from "./OutreachEventCard";
 import { useNavigate } from "react-router-dom";
 import arrowRight from "../../images/arrowRight.png";
 import CustomButton from "../Buttons/CustomButton";
-import { fetchEvents, fetchPaginatedEvents } from "../EventCardService";
-import { fetchVisitLogs } from "../VisitLogCardService";
+import { fetchPaginatedEvents } from "../EventCardService";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import { formatDate } from "./../HelperFunction";
 import { getAuth } from "firebase/auth";
 
-const CommunityOutreachEvent = ({ loggedIn}) => {
+const CommunityOutreachEvent = ({ loggedIn }) => {
   const [visibleItems, setVisibleItems] = useState(3);
   const navigate = useNavigate();
   const loadMore = () => {
@@ -20,39 +19,22 @@ const CommunityOutreachEvent = ({ loggedIn}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [eventsDisplay, setEventsDisplay] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
-  const [states, setStates] = useState([]);
   const [selectedState, setSelectedState] = useState("");
-  const [dropdownVisible, setDropdownVisible] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       const eventsData = await fetchPaginatedEvents(
         "",
-                new Date(),
-                "",
-                "",
-                null,
-                3,
-                "next",
-                []
+        new Date(),
+        "",
+        "",
+        null,
+        3,
+        "next",
+        []
       );
-      
-
-      // Filter events to get only upcoming events
-      // const upcomingEvents = eventsData.filter((event) => {
-      //   const eventDate = new Date(event.eventDate?.seconds * 1000) || event.eventDate;
-      //   return eventDate >= new Date(); // Check if the event date is after the current date
-      // });
-
-      // Sort events based on their date
-      // upcomingEvents.sort((a, b) => a.eventDate - b.eventDate);
 
       setEvents(eventsData.events);
-      // Extract states and remove duplicates
-      // const extractedStates = [
-      //   ...new Set(upcomingEvents.map((event) => event.location.state)),
-      // ];
-      // setStates(extractedStates);
     };
 
     fetchData();
@@ -75,7 +57,7 @@ const CommunityOutreachEvent = ({ loggedIn}) => {
       <div className="p-4 lg:px-10 lg:py-12 bg-gradient-to-br from-[#D3C3FF] to-[#DEDCE4] rounded-t-2xl flex-col justify-start items-start gap-4 inline-flex w-full">
         <div className="flex flex-col md:flex md:flex-row justify-between gap-4 md:gap-10">
           <div className="">
-          <div className="flex flex-row gap-4">
+            <div className="flex flex-row gap-4">
               <div className="text-[45px] font-medium font-dmsans">
                 Outreaches ({events.length})
               </div>
@@ -89,13 +71,10 @@ const CommunityOutreachEvent = ({ loggedIn}) => {
                       const user = fAuth.currentUser;
 
                       if (user) {
-                        console.log("User is still logged in:", user);
                         navigate("/createOutreach");
                       } else {
-                        console.log("User is not logged in");
                         navigate("/login"); // or show a message
                       }
-                      // navigate("/createOutreach");
                     }}
                   />
                 </div>
@@ -137,10 +116,12 @@ const CommunityOutreachEvent = ({ loggedIn}) => {
                       key={eventData.id}
                       cardData={{
                         ...eventData,
-                        label: 'View Details',
-                        eventDate: eventData.eventDate?.seconds ? formatDate(
-                          new Date(eventData.eventDate.seconds * 1000)
-                        ) : eventData.eventDate,
+                        label: "View Details",
+                        eventDate: eventData.eventDate?.seconds
+                          ? formatDate(
+                              new Date(eventData.eventDate.seconds * 1000)
+                            )
+                          : eventData.eventDate,
                       }}
                     />
                   ))
@@ -149,10 +130,12 @@ const CommunityOutreachEvent = ({ loggedIn}) => {
                       key={eventData.id}
                       cardData={{
                         ...eventData,
-                        label: 'View Details',
-                        eventDate: eventData.eventDate?.seconds ? formatDate(
-                          new Date(eventData.eventDate.seconds * 1000)
-                        ) : eventData.eventDate,
+                        label: "View Details",
+                        eventDate: eventData.eventDate?.seconds
+                          ? formatDate(
+                              new Date(eventData.eventDate.seconds * 1000)
+                            )
+                          : eventData.eventDate,
                       }}
                     />
                   ))}
