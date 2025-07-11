@@ -14,7 +14,6 @@ exports.addLogEntry = functions.https.onRequest((req, res) => {
 
     if (messageBody.length && tag.length) {
       const logMessage = `[${tag}]: ${messageBody}`;
-      console.log(logMessage);
       res.status(200).send({ data: { message: "event was logged" } });
     } else {
       res
@@ -23,9 +22,3 @@ exports.addLogEntry = functions.https.onRequest((req, res) => {
     }
   });
 });
-
-// Query Example
-
-// resource.labels.function_name="addLogEntry"
-// severity="DEFAULT"
-// textPayload:"[STREET_CARE_INFO]"

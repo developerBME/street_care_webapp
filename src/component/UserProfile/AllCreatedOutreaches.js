@@ -28,13 +28,11 @@ const AllCreatedOutreaches = () => {
 
       if (user) {
         const uid = user.uid;
-        console.log("UID is ", uid);
         const createdEventsData = await fetchUserOutreaches(uid);
         createdEventsData.sort((a, b) => a.eventData - b.eventData);
 
         setCreatedEvents(createdEventsData);
       } else {
-        console.log("No user is signed in.");
         setCreatedEvents([]);
       }
     } catch (error) {
