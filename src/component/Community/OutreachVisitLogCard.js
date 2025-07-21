@@ -176,18 +176,14 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
         <div className="flex items-center">
           <img className="w-4 h-4" src={dateIcon} alt="Date" />
           <span className="ml-2 text-sm">
-            {visitLogCardData?.eventDate ? formatDate(visitLogCardData.eventDate) : null}
+            {visitLogCardData?.timeStamp ? formatDate(visitLogCardData.timeStamp) : null}
           </span>
         </div>
         
         <div className="flex items-center">
           <img className="w-3 h-4" src={locationIcon} alt="Location" />
           <span className="ml-2 text-sm">
-            {`${visitLogCardData?.location?.city || visitLogCardData?.city}, ${
-              visitLogCardData?.location?.stateAbbv ||
-              visitLogCardData?.stateAbbv ||
-              visitLogCardData?.location?.state
-            }`}
+            {visitLogCardData.whereVisit}
           </span>
         </div>
       </div>
@@ -195,7 +191,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
       <div className="flex justify-between items-center mt-4">
         <div className="text-sm font-bold">People Helped</div>
         <div className="text-xl font-bold">
-          {visitLogCardData?.numberPeopleHelped}
+          {visitLogCardData?.numberOfHelpers}
         </div>
       </div>
       
@@ -209,7 +205,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
       </div>
       
       <p className="text-sm mt-2 line-clamp-2">
-        {visitLogCardData?.description || ""}
+        {visitLogCardData?.peopleHelpedDescription || ""}
       </p>
     </div>
   );

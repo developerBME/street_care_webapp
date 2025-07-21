@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import OutreachEventCard from "./OutreachEventCard";
 import { useNavigate } from "react-router-dom";
 import arrowRight from "../../images/arrowRight.png";
 import CustomButton from "../Buttons/CustomButton";
-import { fetchEvents, fetchPaginatedEvents } from "../EventCardService";
-import { fetchVisitLogs } from "../VisitLogCardService";
+import { fetchPaginatedEvents } from "../EventCardService";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import { formatDate } from "./../HelperFunction";
 

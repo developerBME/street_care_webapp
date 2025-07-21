@@ -81,8 +81,8 @@ function PersonalOutForm() {
   const [numberHelped, setNumberhelped] = useState("");
   const [furtherHelpDescription, setFurtherHelpDescription] = useState("");
   const [furtherHelpLocation, setFurtherHelpLocation] = useState("");
-  const [dateTimeEncounter, setDateTimeEncounter] = useState();
-  const [dateTimeFollowUp, setDateTimeFollowUp] = useState();
+  const [dateTimeEncounter, setDateTimeEncounter] = useState(new Date());
+  const [dateTimeFollowUp, setDateTimeFollowUp] = useState(new Date());
   const [futureNotes, setFutureNotes] = useState("");
   const [itemArray, setItemArray] = useState([]);
   const [furtherItemArray, setFurtherItemArray] = useState([]);
@@ -183,11 +183,6 @@ function PersonalOutForm() {
     } else {
       updateErrorState("itemQtyError", "Please enter a number");
     }
-  };
-
-  const handleDateTimeChange = (date) => {
-    updateErrorState("dateTimeError", "");
-    console.log("Selected date:", date);
   };
 
   const handleStreetChange = (e) => {
@@ -491,6 +486,7 @@ function PersonalOutForm() {
 
     let whereVisit = `${street}, ${stateName}, ${cityName}, ${postcode}`;
 
+    console.log(dateTime)
     let obj = {
       uid: fAuth.currentUser.uid,
       peopleHelpedDescription: descriptionHelped,
@@ -582,7 +578,7 @@ function PersonalOutForm() {
     stateRef.current.value = "";
     zipcodeRef.current.value = "";
     streetRef.current.value = "";
-    setDateTime(null);
+    setDateTime(new Date());
   };
 
   //Address autocomplete functionality
@@ -593,7 +589,7 @@ function PersonalOutForm() {
   const [stateName, setStateName] = useState("");
   const [stateAbbv, setStateAbbv] = useState("");
   const [postcode, setPostcode] = useState("");
-  const [dateTime, setDateTime] = useState();
+  const [dateTime, setDateTime] = useState(new Date());
 
   const handleScriptLoad = (updateQuery, autoCompleteRef) => {
     autoComplete = new window.google.maps.places.Autocomplete(
@@ -1307,7 +1303,6 @@ function PersonalOutForm() {
                               selected={dateTime}
                               onChange={(date) => {
                                 setDateTime(date);
-                                handleDateTimeChange(date);
                               }}
                               showTimeSelect={false} // Remove time selection
                               dateFormat="dd/MM/yyyy" // Adjust format as needed
@@ -1442,7 +1437,6 @@ function PersonalOutForm() {
                                     ? "ring-red-500"
                                     : "ring-gray-300"
                                 }`}
-                                required={true}
                                 value={furtherHelpDescription}
                                 onChange={handleFurtherHelpDescription}
                                 ref={optDesc}
@@ -1479,7 +1473,6 @@ function PersonalOutForm() {
                                     ? "ring-red-500"
                                     : "ring-gray-300"
                                 }`}
-                                required={true}
                                 value={furtherHelpLocation}
                                 onChange={handleFurtherHelpLocation}
                                 ref={optLandmark}
