@@ -261,7 +261,7 @@ export const fetchPublicVisitLogs = async (
       where("status", "==", "approved"),
       orderBy("timeStamp", "desc")
     );
-    
+
     totalInteractionsRef = newInteractionLogRec;
 
     if (searchValue) {

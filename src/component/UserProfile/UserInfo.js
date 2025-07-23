@@ -21,7 +21,8 @@ import CustomButton from "../Buttons/CustomButton";
 
 import collectionMapping from "../../utils/firestoreCollections";
 
-const visitLogs_collection = collectionMapping.visitLogs;
+//const visitLogs_collection = collectionMapping.visitLogs; moving to new colelction visitlLogsBookNew
+const visitLogsNew_collection = collectionMapping.visitLogsBookNew;
 const users_collection = collectionMapping.users;
 const outreachEvents_collection = collectionMapping.outreachEvents;
 
@@ -83,11 +84,11 @@ const UserInfo = () => {
         setDisplayName(data.docs[0].data().username);
         setDateCreated(
           data.docs[0].data().dateCreated.toDate().getMonth() +
-            1 +
-            "/" +
-            data.docs[0].data().dateCreated.toDate().getDate() +
-            "/" +
-            data.docs[0].data().dateCreated.toDate().getFullYear()
+          1 +
+          "/" +
+          data.docs[0].data().dateCreated.toDate().getDate() +
+          "/" +
+          data.docs[0].data().dateCreated.toDate().getFullYear()
         );
         setPhotoUrl(data.docs[0].data().photoUrl);
         // Needs update for facebook
@@ -127,7 +128,7 @@ const UserInfo = () => {
     }
   };
 
-  useEffect(() => {
+  /*useEffect(() => {
     const getDeedValues = async () => {
       try {
         const logOfUserRef = query(
@@ -141,6 +142,35 @@ const UserInfo = () => {
           totalHelped = isNaN(parseInt(doc.data().numberPeopleHelped))
             ? totalHelped
             : totalHelped + parseInt(doc.data().numberPeopleHelped);
+          totalDonations = isNaN(parseInt(doc.data().itemQty))
+            ? totalDonations
+            : totalDonations + parseInt(doc.data().itemQty);
+          return null;
+        });
+        // console.log(totalDonations);
+        setHelped(isNaN(parseInt(totalHelped)) ? 0 : parseInt(totalHelped));
+        setDonations(
+          isNaN(parseInt(totalDonations)) ? 0 : parseInt(totalDonations)
+        );
+        setOutreaches(data.docs.length);
+      } catch (err) {
+        console.log(err);
+      }
+    };*/
+  useEffect(() => {
+    const getDeedValues = async () => {
+      try {
+        const logOfUserRef = query(
+          collection(db, visitLogsNew_collection),
+          where("uid", "==", fAuth?.currentUser?.uid)
+        );
+        const data = await getDocs(logOfUserRef);
+        let totalHelped = 0;
+        let totalDonations = 0;
+        data.docs.map((doc) => {
+          totalHelped = isNaN(parseInt(doc.data().numberOfHelpers))
+            ? totalHelped
+            : totalHelped + parseInt(doc.data().numberOfHelpers);
           totalDonations = isNaN(parseInt(doc.data().itemQty))
             ? totalDonations
             : totalDonations + parseInt(doc.data().itemQty);
