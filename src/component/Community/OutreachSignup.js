@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-//import verifiedImg from "../../images/verified_purple.png";
-import wavingHand from "../../images/waving_hand.png";
 import CustomButton from "../Buttons/CustomButton";
 import {
   fetchEventById,
   handleRsvp,
-  fetchUserSignedUpOutreaches,
   isUserParticipantInEvent
 } from "../EventCardService";
-import { fetchUserName } from "../HelperFunction";
-import { Co2Sharp } from "@mui/icons-material";
 import defaultImage from "../../images/default_avatar.svg";
 import RSVPConfirmationModal from "../UserProfile/RSVPConfirmationModal";
 import userSlots from "../../images/userSlots.png";
@@ -50,26 +45,14 @@ const OutreachSignup = () => {
   const { id } = useParams();
   const [label2, setLabel2] = useState("");
   const [modalLabel, setModalLabel] = useState("");
-  const [success, setSuccess] = useState(false);
   const fAuth = getAuth();
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [hasCreated, setHasCreated] = useState(false);
   const [isPastEvent, setIsPastEvent] = useState(false);
 
-  const location = useLocation();
-  const { label } = location.state || {};
-  const isProfilePage = location?.state?.isProfilePage || false;
-
-  const eventDetails = [
-    {
-      time: "12/12/2023 SAT 12:00pm",
-      location: "200 Eastern Pkwy, Brooklyn, NY 11238",
-    },
-  ];
 
   const [data, setData] = useState(null);
-  const [userSignedUpOutreaches, setUserSignedUpOutreaches] = useState(null);
 
   const handleRefresh = () => {
     window.location.reload();
@@ -89,7 +72,6 @@ const [isFlagged, setIsFlagged] = useState(false);
         console.error(error.message);
       }
     };
-    //  console.log('ProfilePage status'+isProfilePage);
 
     getData(); // Invoke the async function
   }, [label2]);
@@ -147,7 +129,6 @@ const [isFlagged, setIsFlagged] = useState(false);
       if (currentStatus) {
         if (!canUnflag) {
           alert("Only the user who flagged this event or a Street Care Hub Leader can unflag it.");
-          // console.error("Only the user who flagged this event or a Street Care Hub Leader can unflag it.");
           return;
         }
         await updateDoc(docRef, { isFlagged: false, flaggedByUser: null });
@@ -179,15 +160,6 @@ const [isFlagged, setIsFlagged] = useState(false);
           id,
           fAuth?.currentUser?.uid
         );
-        // setUserSignedUpOutreaches(result);
-        // console.log("Result in OS: ", result);
-        
-        // const eventIds = result?.map((event) => event.id);
-        // // console.log(eventIds);
-        // console.log("Event Ids: ", eventIds);
-
-        // const isSignedUp = eventIds?.includes(id);
-        // console.log(isSignedUp);
         if (result) {
           setLabel2("EDIT");
         } else {
@@ -199,7 +171,6 @@ const [isFlagged, setIsFlagged] = useState(false);
       }
     };
     getUserSignedUpOutreaches();
-    // console.log(fAuth.currentUser.uid);
 
     if (data?.uid === fAuth?.currentUser?.uid) {
       setHasCreated(true);
