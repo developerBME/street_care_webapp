@@ -19,6 +19,7 @@ import { formatDate } from "./HelperFunction";
 import { fetchUserDetailsBatch } from "./EventCardService";
 import logEvent from "./FirebaseLogger";
 import collectionMapping from "../utils/firestoreCollections";
+import { CropLandscapeOutlined } from "@mui/icons-material";
 
 const outreachEvents_collection = collectionMapping.outreachEvents;
 const users_collection = collectionMapping.users;
@@ -93,11 +94,12 @@ export const fetchPersonalVisitLogss = async (
 ) => {
   try {
     let personalVisitLogRef = query(
-      collection(db, visitLogs_collection),
-      //where("status", "==", "approved"),
+      collection(db, visitLogsNew_collection),
+      where("status", "==", "approved"),
       where("uid", "==", uid),
-      orderBy("dateTime", "desc")
+      orderBy("timeStamp", "desc")
     );
+    console.log("Fetching personal visit logs for UID:", uid);
 
     //Handle Forward pagination
     if (lastVisible && direction === "next") {
@@ -146,13 +148,14 @@ export const PersonalVisitLogsCount = async (uid) => {
     let totalVisitLogRef;
 
     totalVisitLogRef = query(
-      collection(db, visitLogs_collection),
+      collection(db, visitLogsNew_collection),
       where("status", "==", "approved"),
       where("uid", "==", uid),
-      orderBy("dateTime", "desc")
+      orderBy("timeStamp", "desc")
     );
-
+console.log("Fetching personal visit logs count .... for UID:", uid);
     const totalRecords = await getCountFromServer(totalVisitLogRef);
+    console.log("Total personal visit logs count:", totalRecords.data().count);
     return totalRecords.data().count;
   } catch (ex) {
     logEvent(
@@ -261,6 +264,7 @@ export const fetchPublicVisitLogs = async (
       where("status", "==", "approved"),
       orderBy("timeStamp", "desc")
     );
+    console.log("Fetching public visit logs...");
 
     totalInteractionsRef = newInteractionLogRec;
 
@@ -385,7 +389,7 @@ export const fetchPendingPosts = async (
     }
   } else {
     pastOutreachRef = query(
-      collection(db, visitLogs_collection),
+      collection(db, visitLogsNew_collection),
       where("status", "==", "pending")
     );
     totalOutReachRef = pastOutreachRef;
@@ -473,7 +477,7 @@ export const fetchHomeVisitLogs = async () => {
 
 export const fetchPersonalVisitLogById = async (visitLogId) => {
   try {
-    const visitLogRef = doc(db, visitLogs_collection, visitLogId);
+    const visitLogRef = doc(db, visitLogsNew_collection, visitLogId);
     const visitLogDoc = await getDoc(visitLogRef);
     if (visitLogDoc.exists()) {
       const visitLogData = visitLogDoc.data();
@@ -493,7 +497,7 @@ export const fetchPersonalVisitLogById = async (visitLogId) => {
 
 export const ToggleApproveStatus = async function (documentId) {
   try {
-    const docRef = doc(db, visitLogs_collection, documentId);
+    const docRef = doc(db, visitLogsNew_collection, documentId);
     const docSnap = await getDoc(docRef);
 
     if (!docSnap.exists()) {
