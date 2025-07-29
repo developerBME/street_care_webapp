@@ -12,7 +12,7 @@ const COLLECTIONS = {
     auditLog: process.env.REACT_APP_AUDIT_LOG_COLLECTION,
     officialEvents: process.env.REACT_APP_OFFICIAL_EVENTS,
     events: process.env.REACT_APP_EVENTS_COLLECTION,
-    visitLogsBookNew: process.env.REACT_APP_VISIT_LOG_NEW_COLLECTION
+    visitLogsBookNew: process.env.REACT_APP_MAIN_VISIT_LOG_NEW_COLLECTION
   },
   development: {
     users: process.env.REACT_APP_USERS_COLLECTION,
@@ -27,14 +27,14 @@ const COLLECTIONS = {
     auditLog: process.env.REACT_APP_AUDIT_LOG_COLLECTION,
     officialEvents: process.env.REACT_APP_OFFICIAL_EVENTS,
     events: process.env.REACT_APP_EVENTS_COLLECTION,
-    visitLogsBookNew: process.env.REACT_APP_VISIT_LOG_NEW_COLLECTION 
+    visitLogsBookNew: process.env.REACT_APP_DEV_VISIT_LOG_NEW_COLLECTION 
   },
 };
 
 const env = process.env.REACT_APP_ENV || 'main';
 
 // Determine the collections based on the branch
-const collectionMapping = env === 'development' ? COLLECTIONS.main : COLLECTIONS.development;
+const collectionMapping = env === 'main' ? COLLECTIONS.main : COLLECTIONS.development;
 
 // Export the collections
 export default collectionMapping;

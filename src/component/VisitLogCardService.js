@@ -50,7 +50,7 @@ const visitLogHelperFunction = async (visitLogSnap) => {
         numberOfHelpers: visitLogData?.numberOfHelpers || 0,
         peopleHelpedDescription: visitLogData?.peopleHelpedDescription || "",
         helpType: visitLogData?.helpType || "",
-        whereVisit: [visitLogData?.city, visitLogData?.state].filter(Boolean).join(', '),
+        whereVisit: [visitLogData?.city, visitLogData?.stateAbbv].filter(Boolean).join(', '),
         timeStamp: visitLogData?.timeStamp?.seconds
           ? formatDate(new Date(visitLogData.timeStamp.seconds * 1000))
           : "",
