@@ -1,65 +1,13 @@
-import React from "react";
-
 import Campaign from "../../images/campaign.svg";
 import Outreach from "../../images/outreach.png";
 import CustomButton from "../Buttons/CustomButton";
 import { useNavigate } from "react-router-dom";
-// import { getDocs, collection, query } from "firebase/firestore";
-// import { db } from "../firebase";
-// import { useNavigate } from "react-router-dom";
-// import { fetchVisitLogs } from "../VisitLogCardService";
-import HomePageVisitlog from "../HomePage/HomePageVisitlog";
 import collectionMapping from "../../utils/firestoreCollections";
 
-const visitLogs_collection = collectionMapping.visitLogs;
+import { getAuth } from "firebase/auth";
 
 function Success2() {
   const navigate = useNavigate();
-  // Commenting to reduce unnecessary database calls
-  // const [donations, setDonations] = useState("");
-  // const [helpedBy, setHelpedBy] = useState("");
-  // const [helpedPeople, setHelpedPeople] = useState("");
-  // const [visitLogs, setVisitLogs] = useState([]);
-
-  // const navigate = useNavigate();
-  // useEffect(() => {
-  //   const getValues = async () => {
-  //     try {
-  //       const logOfUserRef = query(collection(db, vistiLogs_collection));
-  //       const data = await getDocs(logOfUserRef);
-  //       let totalDonations = 0;
-  //       let totalHelpedPeople = 0;
-  //       let uniqueID = new Set();
-  //       data.docs.map((doc) => {
-  //         uniqueID.add(doc.data().uid);
-  //         totalDonations =
-  //           isNaN(doc.data().itemQty) ||
-  //           typeof doc.data().itemQty === "undefined" ||
-  //           doc.data().itemQty === ""
-  //             ? totalDonations
-  //             : totalDonations + parseInt(doc.data().itemQty);
-  //         totalHelpedPeople =
-  //           isNaN(doc.data().numberPeopleHelped) ||
-  //           typeof doc.data().numberPeopleHelped === "undefined" ||
-  //           doc.data().numberPeopleHelped === ""
-  //             ? totalHelpedPeople
-  //             : totalHelpedPeople + parseInt(doc.data().numberPeopleHelped);
-
-  //         return null;
-  //       });
-  //       setDonations(
-  //         isNaN(parseInt(totalDonations)) ? 0 : parseInt(totalDonations)
-  //       );
-  //       setHelpedBy(uniqueID.size);
-  //       setHelpedPeople(totalHelpedPeople);
-  //       const visitLogsData = await fetchVisitLogs();
-  //       setVisitLogs(visitLogsData);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   getValues();
-  // }, []);
 
   return (
     <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
@@ -123,9 +71,6 @@ function Success2() {
                   1500+
                 </div>
               </div>
-              {/* <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
-              homeless people
-            </div> */}
             </div>
           </div>
           {/*  */}
@@ -137,13 +82,9 @@ function Success2() {
             <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
               <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
                 <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
-                  {/* {helpedBy} */}
                   700+
                 </div>
               </div>
-              {/* <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
-              volunteers
-            </div> */}
             </div>
           </div>
           {/*  */}
@@ -155,13 +96,9 @@ function Success2() {
             <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
               <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
                 <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
-                  {/* {donations} */}
                   74000+
                 </div>
               </div>
-              {/* <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
-              items
-            </div> */}
             </div>
           </div>
         </div>
@@ -174,13 +111,9 @@ function Success2() {
             <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
               <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
                 <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
-                  {/* {donations} */}
                   2300+
                 </div>
               </div>
-              {/* <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
-              items
-            </div> */}
             </div>
           </div>
 
@@ -195,9 +128,6 @@ function Success2() {
                    50 Million+ People
                 </div>
               </div>
-              {/* <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
-              items
-            </div> */}
             </div>
           </div>
 
@@ -214,9 +144,6 @@ function Success2() {
                   1000+
                 </div>
               </div>
-              {/* <div className="w-fit text-violet-950 text-xl font-medium py-2  inline-flex mt-auto">
-              items
-            </div> */}
             </div>
           </div>
         </div>
@@ -240,8 +167,17 @@ function Success2() {
               <CustomButton
                 label="Create an Outreach"
                 name="buttondefault"
-                onClick={() => {
-                  navigate("/createOutreach");
+                onClick={async () => {
+                  const fAuth = await getAuth();
+                  const user = fAuth.currentUser;
+
+                  if (user) {
+                    console.log("User is still logged in:", user);
+                    navigate("/createOutreach");
+                  } else {
+                    console.log("User is not logged in");
+                    navigate("/login"); // or show a message
+                  }
                 }}
               />
             </div>
@@ -262,8 +198,15 @@ function Success2() {
               <CustomButton
                 label="Create a Interaction Log"
                 name="buttondefault"
-                onClick={() => {
-                  navigate("/profile/personaloutform");
+                onClick={async () => {
+                  const fAuth = await getAuth();
+                  const user = fAuth.currentUser;
+
+                  if (user) {
+                    navigate("/profile/personaloutform");
+                  } else {
+                    navigate("/login"); // or show a message
+                  }
                 }}
               />
             </div>

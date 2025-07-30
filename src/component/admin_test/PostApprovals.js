@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   collection,
   query,
@@ -12,16 +12,14 @@ import ApprovalCardOutreachEvents from "./ApprovalCardOutreachEvents";
 import ApprovalCardVisitlogs from "./ApprovalCardVisitlogs";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import ErrorMessage from "../ErrorMessage";
-import { fetchPublicVisitLogs } from "../VisitLogCardService";
 import infoIcon from "../../images/info_icon.png";
 import arrowBack from "../../images/arrowBack.png";
 import searchIcon from "../../images/search-icon-PostApproval.png";
-import { fetchUserDetails, fetchUserTypeDetails } from "../EventCardService";
+import { fetchUserTypeDetails } from "../EventCardService";
 
 import collectionMapping from "../../utils/firestoreCollections";
 
 const outreachEvents_collection = collectionMapping.outreachEvents;
-const visitLogs_collection = collectionMapping.visitLogs;
 const visitLogsNew_collection = collectionMapping.visitLogsBookNew;
 
 const PostApprovals = () => {
@@ -38,103 +36,74 @@ const PostApprovals = () => {
     outreaches: [],
     visitLogs: [],
   });
-  const [sortOption, setSortOption] = useState('Most Recent');
+  const [sortOption, setSortOption] = useState("Most Recent");
   const postsPerPage = 6;
   const searchRef = useRef("");
 
-
   useEffect(() => {
-  const fetchPendingPosts = async () => {
-    try {
-      setIsLoading(true);
+    const fetchPendingPosts = async () => {
+      try {
+        setIsLoading(true);
 
-      // Fetch outreaches (unchanged)
-      const outreachQuery = query(
-        collection(db, outreachEvents_collection),
-        where("status", "==", "pending")
-      );
-     // console.log("Fetching visit logs from outreach:", outreachEvents_collection);
-      const outreachSnapshot = await getDocs(outreachQuery);
-      const outreaches = await Promise.all(
-        outreachSnapshot.docs.map(async (doc) => {
-          const post = { id: doc.id, ...doc.data() };
-          const userDetails = await fetchUserTypeDetails(post.uid);
-          return {
-            ...post,
-            userName: userDetails?.username || "Unknown User",
-            userType: userDetails?.type || "",
-          };
-        })
-      );
+        const outreachQuery = query(
+          collection(db, outreachEvents_collection),
+          where("status", "==", "pending")
+        );
 
-      // --- Fetch visit logs from OLD collection ---
-      
-      const visitLogQueryOld = query(
-        collection(db, visitLogs_collection),
-        where("status", "==", "pending")
-      );
-      //console.log("Fetching visit logs from old collection:", visitLogs_collection);
-      const visitLogSnapshotOld = await getDocs(visitLogQueryOld);
-      const visitLogsOld = await Promise.all(
-        visitLogSnapshotOld.docs.map(async (doc) => {
-          const post = { id: doc.id, ...doc.data() };
-          const userDetails = await fetchUserTypeDetails(post.uid);
-          return {
-            ...post,
-            userName: userDetails?.username || "Unknown User",
-            userType: userDetails?.type || "",
-            _source: "old" // Optional: to identify where it came from
-          };
-        })
-      );
+        const outreachSnapshot = await getDocs(outreachQuery);
+        const outreaches = await Promise.all(
+          outreachSnapshot.docs.map(async (doc) => {
+            const post = { id: doc.id, ...doc.data() };
+            const userDetails = await fetchUserTypeDetails(post.uid);
+            return {
+              ...post,
+              userName: userDetails?.username || "Unknown User",
+              userType: userDetails?.type || "",
+            };
+          })
+        );
 
-      // --- Fetch visit logs from NEW collection ---
-      const visitLogQueryNew = query(
-        collection(db, visitLogsNew_collection),
-        where("status", "==", "pending")
-      );
-      // console.log("Fetching visit logs from new collection:", visitLogsNew_collection);
-      const visitLogSnapshotNew = await getDocs(visitLogQueryNew);
-      const visitLogsNew = await Promise.all(
-        visitLogSnapshotNew.docs.map(async (doc) => {
-          const post = { id: doc.id, ...doc.data() };
-          const userDetails = await fetchUserTypeDetails(post.uid);
-          return {
-            ...post,
-            userName: userDetails?.username || "Unknown User",
-            userType: userDetails?.type || "",
-            _source: "new" // Optional: to identify where it came from
-          };
-        })
-      );
+        // --- Fetch visit logs from NEW collection ---
+        const visitLogQueryNew = query(
+          collection(db, visitLogsNew_collection),
+          where("status", "==", "pending")
+        );
 
-      // Combine both old and new visit logs
-      const visitLogs = [...visitLogsOld, ...visitLogsNew];
+        const visitLogSnapshotNew = await getDocs(visitLogQueryNew);
+        const visitLogs = await Promise.all(
+          visitLogSnapshotNew.docs.map(async (doc) => {
+            const post = { id: doc.id, ...doc.data() };
+            const userDetails = await fetchUserTypeDetails(post.uid);
+            return {
+              ...post,
+              userName: userDetails?.username || "Unknown User",
+              userType: userDetails?.type || "",
+            };
+          })
+        );
 
-      setPendingPosts({ outreaches, visitLogs });
-      setIsError(false);
-    } catch (error) {
-      console.error("Error fetching pending posts:", error);
-      setIsError(true);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+        setPendingPosts({ outreaches, visitLogs });
+        setIsError(false);
+      } catch (error) {
+        console.error("Error fetching pending posts:", error);
+        setIsError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  fetchPendingPosts();
-}, []);
-
-
+    fetchPendingPosts();
+  }, []);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
 
-  const handleCardClick = (post, event) => {
+  const handleCardClick = (post) => {
     setSelectedPost(post);
     setIsModalOpen(true);
   };
 
-  const Modal = ({ post, onClose, onAccept, onReject, isVisitLogs }) => {
+  const Modal = ({ post, onClose, onAccept, onReject }) => {
     return (
       <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-md">
         {/* Modal Container */}
@@ -183,15 +152,12 @@ const PostApprovals = () => {
             <button
               onClick={onReject}
               className="flex justify-center items-center p-0 gap-2 text-red-600 border border-red-600 rounded-full hover:bg-red-100 transition w-[104px] h-[40px]"
-              /*
-              flex flex-col justify-center items-center p-0 gap-2 mx-auto w-[90px] h-[40px] bg-white border border-gray-300 rounded-full flex-none order-0 grow-0 text-red-500*/
             >
               Reject
             </button>
             <button
               onClick={onAccept}
               className="flex justify-center items-center px-6 py-2.5 text-white bg-green-600 rounded-full hover:bg-green-700 transition w-[104px] h-[40px]"
-              /**flex flex-row justify-center items-center px-6 py-2 gap-2 w-[104px] h-[40px] bg-green-600 text-white rounded-lg hover:bg-green-700 transition flex-none order-0 self-stretch grow */
             >
               Accept
             </button>
@@ -206,68 +172,47 @@ const PostApprovals = () => {
     setIsModalOpen(false);
   };
 
-  
-// Approve selected posts
-const handleApproveSelected = async () => {
-  try {
-    const isVisitLog = activeTab === "visitLogs";
-    const oldCollection = isVisitLog ? visitLogs_collection : outreachEvents_collection;
-    const newCollection = visitLogsNew_collection;
-  
-   // console.log("selectedItems", selectedItems);
-  
-    for (const itemID of selectedItems) {
-      const docRefOld = doc(db, oldCollection, itemID);
-      const docRefNew = isVisitLog ? doc(db, newCollection, itemID) : null;
-  
-      let success = false;
-  
-      try {
-     //   console.log("Approving in OLD collection:", itemID);
-        await updateDoc(docRefOld, {
-          approved: true,
-          status: "approved",
-        });
-        success = true;
-      } catch (errorOld) {
-        console.warn(`Old collection update failed for ${itemID}:`, errorOld);
-  
-        if (isVisitLog && docRefNew) {
-          try {
-           // console.log("Fallback to NEW collection:", itemID);
-            await updateDoc(docRefNew, {
-              approved: true,
-              status: "approved",
-            });
-            success = true;
-          } catch (errorNew) {
-            console.error(`New collection update failed for ${itemID}:`, errorNew);
-          }
+  // Approve selected posts
+  const handleApproveSelected = async () => {
+    try {
+      const isVisitLog = activeTab === "visitLogs";
+      // Use only the new collection for each tab
+      const newCollection = isVisitLog
+        ? visitLogsNew_collection
+        : outreachEvents_collection;
+
+      for (const itemID of selectedItems) {
+        const docRefNew = doc(db, newCollection, itemID);
+
+        try {
+          await updateDoc(docRefNew, {
+            approved: true,
+            status: "approved",
+          });
+        } catch (error) {
+          console.error(`Approval failed for item: ${itemID}`, error);
         }
       }
-  
-      if (!success) {
-        console.error(`Approval failed for item: ${itemID}`);
-      }
+
+      // Update state after approval
+      const updatedPosts = { ...pendingPosts };
+      updatedPosts[activeTab] = pendingPosts[activeTab].filter(
+        (post) => !selectedItems.includes(post.id)
+      );
+      setPendingPosts(updatedPosts);
+      setSelectedItems([]);
+    } catch (error) {
+      console.error("Error approving posts:", error);
     }
-  
-    // Update state after approval
-    const updatedPosts = { ...pendingPosts };
-    updatedPosts[activeTab] = pendingPosts[activeTab].filter(
-      (post) => !selectedItems.includes(post.id)
-    );
-    setPendingPosts(updatedPosts);
-    setSelectedItems([]);
-  } catch (error) {
-    console.error("Error approving posts:", error);
-  }
-};
+  };
 
   // Reject selected posts
-  /*const handleRejectSelected = async () => {
+  const handleRejectSelected = async () => {
     try {
       const collectionName =
-        activeTab === "outreaches" ? outreachEvents_collection : visitLogs_collection;
+        activeTab === "outreaches"
+          ? outreachEvents_collection
+          : visitLogsNew_collection;
 
       for (const itemId of selectedItems) {
         await updateDoc(doc(db, collectionName, itemId), {
@@ -290,67 +235,7 @@ const handleApproveSelected = async () => {
   useEffect(() => {
     // Initialize filteredPosts with fetched data
     setFilteredPosts(pendingPosts);
-  }, [pendingPosts]); */
-
-  // Reject selected posts
-const handleRejectSelected = async () => {
-    try {
-        const isVisitLog = activeTab === "visitLogs";
-        const oldCollection = isVisitLog ? visitLogs_collection : outreachEvents_collection;
-        const newCollection = visitLogsNew_collection;
-      
-        for (const itemID of selectedItems) {
-          const docRefOld = doc(db, oldCollection, itemID);
-          const docRefNew = isVisitLog ? doc(db, newCollection, itemID) : null;
-      
-          let success = false;
-      
-          // Try old collection first
-          try {
-           // console.log("Rejecting in OLD collection:", itemID);
-            await updateDoc(docRefOld, {
-              approved: false,
-              status: "rejected",
-            });
-            success = true;
-          } catch (errorOld) {
-            console.warn(`Old collection update failed for ${itemID}:`, errorOld);
-      
-            // Try new collection if visitLogs
-            if (isVisitLog && docRefNew) {
-              try {
-              //  console.log("Fallback to NEW collection:", itemID);
-                await updateDoc(docRefNew, {
-                  approved: false,
-                  status: "rejected",
-                });
-                success = true;
-              } catch (errorNew) {
-                console.error(`New collection update failed for ${itemID}:`, errorNew);
-              }
-            }
-          }
-      
-          if (!success) {
-            console.error(`Rejection failed for item: ${itemID}`);
-          }
-        }
-      
-        // Update state after rejection
-        const updatedPosts = { ...pendingPosts };
-        updatedPosts[activeTab] = pendingPosts[activeTab].filter(
-          (post) => !selectedItems.includes(post.id)
-        );
-        setPendingPosts(updatedPosts);
-        setSelectedItems([]);
-      } catch (error) {
-        console.error("Error rejecting posts:", error);
-      }
-};
-useEffect(() => {
-    // Initialize filteredPosts with fetched data
-    setFilteredPosts(pendingPosts);
-  }, [pendingPosts]); 
+  }, [pendingPosts]);
 
   //Search Function
   const searchChange = () => {
@@ -361,36 +246,49 @@ useEffect(() => {
         (x) =>
           x.title?.toLowerCase().includes(searchValue) ||
           (x.userName && x.userName.toLowerCase().includes(searchValue)) ||
-          (x.location && x.location.city.toLowerCase().includes(searchValue)) ||
-          x.description?.toLowerCase().includes(searchValue)
+          // (x.location && x.location.city.toLowerCase().includes(searchValue)) ||
+          (x.location &&
+            x.location.city &&
+            x.location.city.toLowerCase().includes(searchValue)) ||
+          (x.city && x.city.toLowerCase().includes(searchValue)) ||
+          x.peopleHelpedDescription?.toLowerCase().includes(searchValue)
       ),
     };
-  
+
     setFilteredPosts(filtered);
     setCurrentPage(1); // Reset to the first page after search
   };
 
-// Sort By Function
+  // Sort By Function
   const handleSortChange = (event) => {
     const selectedOption = event.target.value;
     setSortOption(selectedOption);
-  
+
     let sortedData = [...filteredPosts[activeTab]];
-  
+
     // Determine the correct date field based on the active tab
-    const dateField = activeTab === "outreaches" ? "eventDate" : "dateTime";
-    const alphaSortedField = activeTab === "outreaches" ? "title" : "description";
-  
+    const dateField = activeTab === "outreaches" ? "eventDate" : "timeStamp";
+    const alphaSortedField =
+      activeTab === "outreaches" ? "title" : "peopleHelpedDescription";
+
     if (selectedOption === "Most Recent") {
       sortedData.sort((a, b) => {
-        const dateA = a[dateField]?.seconds ? new Date(a[dateField].seconds * 1000).getTime() : 0;
-        const dateB = b[dateField]?.seconds ? new Date(b[dateField].seconds * 1000).getTime() : 0;
+        const dateA = a[dateField]?.seconds
+          ? new Date(a[dateField].seconds * 1000).getTime()
+          : 0;
+        const dateB = b[dateField]?.seconds
+          ? new Date(b[dateField].seconds * 1000).getTime()
+          : 0;
         return dateB - dateA;
       });
     } else if (selectedOption === "Oldest First") {
       sortedData.sort((a, b) => {
-        const dateA = a[dateField]?.seconds ? new Date(a[dateField].seconds * 1000).getTime() : 0;
-        const dateB = b[dateField]?.seconds ? new Date(b[dateField].seconds * 1000).getTime() : 0;
+        const dateA = a[dateField]?.seconds
+          ? new Date(a[dateField].seconds * 1000).getTime()
+          : 0;
+        const dateB = b[dateField]?.seconds
+          ? new Date(b[dateField].seconds * 1000).getTime()
+          : 0;
         return dateA - dateB;
       });
     } else if (selectedOption === "Alphabetical") {
@@ -400,18 +298,19 @@ useEffect(() => {
         return valueA.localeCompare(valueB);
       });
     }
-  
+
     setFilteredPosts((prevState) => ({
       ...prevState,
       [activeTab]: sortedData,
     }));
   };
-  
 
- /* const handleAccept = async () => {
+  const handleAccept = async () => {
     try {
       const collectionName =
-        activeTab === "outreaches" ? outreachEvents_collection : visitLogs_collection;
+        activeTab === "outreaches"
+          ? outreachEvents_collection
+          : visitLogsNew_collection;
       await updateDoc(doc(db, collectionName, selectedPost.id), {
         status: "approved",
       });
@@ -429,63 +328,14 @@ useEffect(() => {
     } catch (error) {
       console.error("Error accepting post:", error);
     }
-  };*/
-  const handleAccept = async () => {
-    try {
-        const isVisitLog = activeTab === "visitLogs";
-        const oldCollection = isVisitLog ? visitLogs_collection : outreachEvents_collection;
-        const newCollection = visitLogsNew_collection;
-      
-        const docRefOld = doc(db, oldCollection, selectedPost.id);
-        const docRefNew = isVisitLog ? doc(db, newCollection, selectedPost.id) : null;
-      
-        let success = false;
-      
-        // Try old collection first
-        try {
-      //    console.log("Approving in OLD collection:", selectedPost.id);
-          await updateDoc(docRefOld, { status: "approved" });
-          success = true;
-        } catch (errorOld) {
-          console.warn(`Old collection update failed for ${selectedPost.id}:`, errorOld);
-      
-          // Try new collection if visitLogs
-          if (isVisitLog && docRefNew) {
-            try {
-           //   console.log("Fallback to NEW collection:", selectedPost.id);
-              await updateDoc(docRefNew, { status: "approved" });
-              success = true;
-            } catch (errorNew) {
-              console.error(`New collection update failed for ${selectedPost.id}:`, errorNew);
-            }
-          }
-        }
-      
-        if (!success) {
-          console.error(`Approval failed for post: ${selectedPost.id}`);
-          return;
-        }
-      
-        // Update state to remove the accepted post
-        setPendingPosts((prev) => ({
-          ...prev,
-          [activeTab]: prev[activeTab].filter(
-            (post) => post.id !== selectedPost.id
-          ),
-        }));
-      
-        setSelectedPost(null);
-        setIsModalOpen(false);
-      } catch (error) {
-        console.error("Error accepting post:", error);
-      }
-      
-};
+  };
 
-  /*const handleReject = async () => {
+  const handleReject = async () => {
     try {
       const collectionName =
-        activeTab === "outreaches" ? outreachEvents_collection : visitLogs_collection;
+        activeTab === "outreaches"
+          ? outreachEvents_collection
+          : visitLogsNew_collection;
       await updateDoc(doc(db, collectionName, selectedPost.id), {
         status: "rejected",
       });
@@ -503,57 +353,7 @@ useEffect(() => {
     } catch (error) {
       console.error("Error rejecting post:", error);
     }
-  };*/
-
-  const handleReject = async () => {
-    try {
-        const isVisitLog = activeTab === "visitLogs";
-        const oldCollection = isVisitLog ? visitLogs_collection : outreachEvents_collection;
-        const newCollection = visitLogsNew_collection;
-      
-        const docRefOld = doc(db, oldCollection, selectedPost.id);
-        const docRefNew = isVisitLog ? doc(db, newCollection, selectedPost.id) : null;
-      
-        let success = false;
-      
-        // Try old collection first
-        try {
-        //  console.log("Rejecting in OLD collection:", selectedPost.id);
-          await updateDoc(docRefOld, { status: "rejected" });
-          success = true;
-        } catch (errorOld) {
-          console.warn(`Old collection update failed for ${selectedPost.id}:`, errorOld);
-      
-          if (isVisitLog && docRefNew) {
-            try {
-             // console.log("Fallback to NEW collection:", selectedPost.id);
-              await updateDoc(docRefNew, { status: "rejected" });
-              success = true;
-            } catch (errorNew) {
-              console.error(`New collection update failed for ${selectedPost.id}:`, errorNew);
-            }
-          }
-        }
-      
-        if (!success) {
-          console.error(`Rejection failed for post: ${selectedPost.id}`);
-          return;
-        }
-      
-        // Update state to remove the rejected post
-        setPendingPosts((prev) => ({
-          ...prev,
-          [activeTab]: prev[activeTab].filter(
-            (post) => post.id !== selectedPost.id
-          ),
-        }));
-      
-        setSelectedPost(null);
-        setIsModalOpen(false);
-      } catch (error) {
-        console.error("Error rejecting post:", error);
-      }      
-};
+  };
 
   // Cancel selection
   const handleCancelSelection = () => {
@@ -819,9 +619,7 @@ useEffect(() => {
               {/* Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-[20px] gap-y-[30px] mt-[20px]">
                 {console.log("Current Posts:", currentPosts)}
-                {
-                currentPosts.map((post) =>
-                
+                {currentPosts.map((post) =>
                   activeTab === "outreaches" ? (
                     <ApprovalCardOutreachEvents
                       key={post.id}
