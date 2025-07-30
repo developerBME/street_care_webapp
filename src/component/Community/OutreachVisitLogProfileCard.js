@@ -21,7 +21,8 @@ import { formatDate } from "./../HelperFunction";
 import collectionMapping from "../../utils/firestoreCollections";
 
 const users_collection = collectionMapping.users;
-const visitLogs_collection = collectionMapping.visitLogs;
+//const visitLogs_collection = collectionMapping.visitLogs; using new collection
+const visitLogsNew_collection = collectionMapping.visitLogsBookNew;
 
 const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
   // Function to delete visit log
   const deleteVisitLog = async () => {
     try {
-      const visitLogDoc = doc(db, visitLogs_collection, visitLogCardData.id);
+      const visitLogDoc = doc(db, visitLogsNew_collection, visitLogCardData.id);
 
       const userQuery = query(
         collection(db, users_collection),
@@ -118,7 +119,7 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
               <img alt="" className="w-4 h-4" src={calendar} />
               <div className="px-1">
                 {formatDate(
-                  new Date(visitLogCardData?.dateTime?.seconds * 1000)
+                  new Date(visitLogCardData?.timeStamp?.seconds * 1000)
                 )}
               </div>
             </div>
@@ -185,7 +186,7 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
           </div>
         </div>
         <div className="text-zinc-700 text-xl text-[12px] font-normal font-bricolage leading-snug mt-2 mb-2 px-1">
-          {visitLogCardData.description || ""}
+          {visitLogCardData.peopleHelpedDescription  || ""}
         </div>
         <div className="flex flex-col gap-0.5">
           <div className="flex justify-between mt-2 mb-2 px-1">
@@ -193,7 +194,7 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
               People Helped
             </div>
             <div className="text-neutral-900 text-[18px] mt-[-5px] font-bold font-bricolage leading-tight text-right">
-              {visitLogCardData.numberPeopleHelped || ""}
+              {visitLogCardData.numberOfHelpers || ""}
             </div>
           </div>
           <div className="flex justify-between mt-2 mb-2 px-1">

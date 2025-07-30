@@ -12,7 +12,7 @@ const COLLECTIONS = {
     auditLog: process.env.REACT_APP_AUDIT_LOG_COLLECTION,
     officialEvents: process.env.REACT_APP_OFFICIAL_EVENTS,
     events: process.env.REACT_APP_EVENTS_COLLECTION,
-    visitLogsBookNew: process.env.REACT_APP_VISIT_LOG_NEW_COLLECTION
+    visitLogsBookNew: process.env.REACT_APP_MAIN_VISIT_LOG_NEW_COLLECTION
   },
   development: {
     users: process.env.REACT_APP_USERS_COLLECTION,
@@ -27,7 +27,7 @@ const COLLECTIONS = {
     auditLog: process.env.REACT_APP_AUDIT_LOG_COLLECTION,
     officialEvents: process.env.REACT_APP_OFFICIAL_EVENTS,
     events: process.env.REACT_APP_EVENTS_COLLECTION,
-    visitLogsBookNew: process.env.REACT_APP_VISIT_LOG_NEW_COLLECTION 
+    visitLogsBookNew: process.env.REACT_APP_DEV_VISIT_LOG_NEW_COLLECTION 
   },
 };
 
