@@ -12,11 +12,10 @@ import ApprovalCardOutreachEvents from "./ApprovalCardOutreachEvents";
 import ApprovalCardVisitlogs from "./ApprovalCardVisitlogs";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import ErrorMessage from "../ErrorMessage";
-import { fetchPublicVisitLogs } from "../VisitLogCardService";
 import infoIcon from "../../images/info_icon.png";
 import arrowBack from "../../images/arrowBack.png";
 import searchIcon from "../../images/search-icon-PostApproval.png";
-import { fetchUserDetails, fetchUserTypeDetails } from "../EventCardService";
+import { fetchUserTypeDetails } from "../EventCardService";
 
 import collectionMapping from "../../utils/firestoreCollections";
 
@@ -355,56 +354,6 @@ const PostApprovals = () => {
       console.error("Error rejecting post:", error);
     }
   };
-
-  /*const handleReject = async () => {
-    try {
-        const isVisitLog = activeTab === "visitLogs";
-        const oldCollection = isVisitLog ? visitLogs_collection : outreachEvents_collection;
-        const newCollection = visitLogsNew_collection;
-      
-        const docRefOld = doc(db, oldCollection, selectedPost.id);
-        const docRefNew = isVisitLog ? doc(db, newCollection, selectedPost.id) : null;
-      
-        let success = false;
-      
-        // Try old collection first
-        try {
-        //  console.log("Rejecting in OLD collection:", selectedPost.id);
-          await updateDoc(docRefOld, { status: "rejected" });
-          success = true;
-        } catch (errorOld) {
-          console.warn(`Old collection update failed for ${selectedPost.id}:`, errorOld);
-      
-          if (isVisitLog && docRefNew) {
-            try {
-             // console.log("Fallback to NEW collection:", selectedPost.id);
-              await updateDoc(docRefNew, { status: "rejected" });
-              success = true;
-            } catch (errorNew) {
-              console.error(`New collection update failed for ${selectedPost.id}:`, errorNew);
-            }
-          }
-        }
-      
-        if (!success) {
-          console.error(`Rejection failed for post: ${selectedPost.id}`);
-          return;
-        }
-      
-        // Update state to remove the rejected post
-        setPendingPosts((prev) => ({
-          ...prev,
-          [activeTab]: prev[activeTab].filter(
-            (post) => post.id !== selectedPost.id
-          ),
-        }));
-      
-        setSelectedPost(null);
-        setIsModalOpen(false);
-      } catch (error) {
-        console.error("Error rejecting post:", error);
-      }      
-};*/
 
   // Cancel selection
   const handleCancelSelection = () => {
