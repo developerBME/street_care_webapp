@@ -18,9 +18,7 @@ exports.decodeToken = functions.https.onRequest(async (req, res) => {
       console.log(decodedToken)
       const adminUsersCollection = admin.firestore().collection('adminUsers');
       const adminUsersSnapshot = await adminUsersCollection.where('email', '==', decodedToken?.email).get();
-      // adminUsersSnapshot.forEach(doc => {
-      //    console.log('Document Data:', doc.data());
-      // });
+
       if (!adminUsersSnapshot.empty) {
         res.status(200).json({ flag: true });
       } else {

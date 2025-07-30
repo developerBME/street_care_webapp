@@ -147,7 +147,6 @@ const UserInfo = () => {
             : totalDonations + parseInt(doc.data().itemQty);
           return null;
         });
-        // console.log(totalDonations);
         setHelped(isNaN(parseInt(totalHelped)) ? 0 : parseInt(totalHelped));
         setDonations(
           isNaN(parseInt(totalDonations)) ? 0 : parseInt(totalDonations)
@@ -295,46 +294,6 @@ const UserInfo = () => {
         </div>
       </div>
       <div className="px-4 pb-4 grid grid-flow-col overflow-x-auto gap-2 md:px-8 md:pb-12 md:grid md:grid-rows-2 md:grid-cols-2 md:gap-y-4 md:gap-x-6 xl:px-0 xl:pb-16 xl:grid xl:grid-rows-1 xl:grid-cols-3 xl:gap-4">
-        {/* <div className="px-4 pb-4 grid grid-flow-col overflow-x-auto gap-2 md:px-8 md:pb-12 md:grid md:grid-rows-3 md:grid-cols-2 md:gap-y-4 md:gap-x-6 xl:px-0 xl:pb-16 xl:grid xl:grid-rows-2 xl:grid-cols-3 xl:gap-4"> */}
-        {/* {achievments.comm_leader && (
-          <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
-            <img className="w-16 h-16 mr-4" src={crown} alt="..."></img>
-
-            <div className="flex flex-col">
-              <h1 className="text-sm font-bold pb-1 font-bricolage text-[#212121]">
-                Community All-Star
-              </h1>
-              <h3 className="text-xs font-opensans font-semibold pb-1 text-[#616161]">
-                Achieved June 3rd, 2023
-              </h3>
-              <h3 className="text-xs font-opensans font-normal text-[#616161]">
-                Led Community Outreach
-              </h3>
-            </div>
-          </div>
-        )} */}
-        {/* <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
-          <img className="w-16 h-16 mr-4" src={notes} alt="..."></img>
-          <div className="flex flex-col">
-            <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121]">
-              Volunteer Trainers
-            </h1>
-            <h3 className="text-xs mb-2 font-opensans font-normal text-[#616161]">
-              Led Community Orientation
-            </h3>
-          </div>
-        </div> */}
-        {/* <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[265px] md:w-auto">
-          <img className="w-16 h-16 mr-4" src={announcement} alt="..."></img>
-          <div className="flex flex-col">
-            <h1 className="text-sm font-bold mt-2 pb-1 font-bricolage text-[#212121]">
-              Ambassador
-            </h1>
-            <h3 className="text-xs mb-2 font-opensans font-normal text-[#616161]">
-              Had invited friend to join
-            </h3>
-          </div>
-        </div> */}
         {achievments.neighborhood_leader ? (
           <div className="p-4 h-24 rounded-2xl flex border border-[#CACACA] w-[268px] md:w-auto gap-4 ">
             <div className="relative inline-block">
@@ -351,7 +310,6 @@ const UserInfo = () => {
               </h1>
               <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161] self-stretch">
                 Joined {">"} 3 Outreaches in the same neighborhood
-                {/* Joined {">"} 3 Outreaches */}
               </h3>
             </div>
           </div>
@@ -370,7 +328,6 @@ const UserInfo = () => {
               </h1>
               <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161] self-stretch">
                 Joined {">"} 3 Outreaches in the same neighborhood
-                {/* Joined {">"} 3 Outreaches */}
               </h3>
             </div>
           </div>
@@ -407,7 +364,6 @@ const UserInfo = () => {
             <div className="grow shrink basis-0 flex flex-col">
               <h1 className="text-sm font-bold mt-1 lg:mt-2 pb-1 font-bricolage text-[#212121] self-stretch">
                 Benevolent Donor
-                {/* {achievments.benevolent_donor && <> true</>} */}
               </h1>
               <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161] self-stretch">
                 Donated more than 10 items
@@ -431,7 +387,6 @@ const UserInfo = () => {
               </h1>
               <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161] self-stretch">
                 Joined more than 15 outreaches or has helped more than 60 people
-                {/* Helped more than 8 people */}
               </h3>
             </div>
           </div>
@@ -447,7 +402,6 @@ const UserInfo = () => {
               <h3 className="text-[11px] mb-2 font-opensans font-normal text-[#616161] self-stretch">
                 Joined more than 15 outreaches or has helped more than 60
                 people.
-                {/* Helped more than 8 people */}
               </h3>
             </div>
           </div>
@@ -458,7 +412,6 @@ const UserInfo = () => {
         <p className="text-[#212121] pl-4 pt-4 text-3xl md:pl-8 md:pt-0 xl:pl-0 xl:pt-0 sm:text-4xl font-medium font-dmsans leading-9">
           My Impact
         </p>
-        {/* <div className="w-full h-fit justify-center items-center lg:justify-start lg:items-start  grid grid-cols-3 sm:grid-cols-1 lg:grid-cols-3 font-bricolage py-6 px-2 md:px-8 lg:px-0 md:pt-8 md:pb-8  lg:pt-16 lg:pb-12"> */}
         <div className="w-full h-fit justify-center items-center lg:justify-start lg:items-start  grid grid-cols-3 sm:grid-cols-1 lg:grid-cols-3 font-bricolage py-6 px-4 md:px-8 xl:px-0 md:pt-8 md:pb-8  lg:pt-16 lg:pb-12">
           <div className=" sm:flex grow rounded-l-2xl sm:rounded-t-2xl sm:rounded-b-none lg:rounded-tr-none lg:rounded-l-2xl shrink basis-0 h-fit px-8 py-4 bg-gradient-to-br from-emerald-100 to-neutral-200 justify-center items-center sm:justify-start sm:items-end gap-6 ">
             <div className=" w-full sm:w-fit flex-col  justify-center items-center sm:justify-start sm:items-start sm:gap-6 inline-flex">
