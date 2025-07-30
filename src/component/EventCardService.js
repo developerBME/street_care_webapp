@@ -1160,7 +1160,6 @@ export const fetchPastOutreaches = async () => {
     const outreachDocRef = await getDocs(pastOureachEventsRef);
 
     const totaloutreaches = outreachDocRef.size;
-    // const totaloutreaches = count(outreachDocRef.data())
     return totaloutreaches;
   } catch (error) {
     logEvent(
@@ -1228,8 +1227,6 @@ export const fetchByCityOrStates = async (
 
         while (outreachPerPages < totaloutreaches) {
           const outreachDocRef = await getDocs(outreachByLocationQuery);
-          console.log("Test7:");
-          // console.log('outreachDocRef:'+outreachDocRef);
           let outreachByLoc = [];
           for (const doc of outreachDocRef.docs) {
             const pastOutreachData = doc.data();
@@ -1238,7 +1235,6 @@ export const fetchByCityOrStates = async (
             const photoUrl = result.photoUrl;
             const userType = result.userType;
             const id = doc.id;
-            // console.log('id wrt loc: '+id);
             outreachByLoc.push({
               ...pastOutreachData,
               userName: userDetails[pastOutreachData.uid]?.username || "",
@@ -1276,13 +1272,11 @@ export const fetchByCityOrStates = async (
     );
     const snapshots = await getDocs(pastOutreachRef);
     const tot = snapshots.size;
-    console.log("total snapshots:" + tot);
     const start_Index = outreachPerPages * curr_page;
     const init_doc = snapshots.docs[start_Index];
 
     // Full text search - Search filtering by City/State fields matching exact value
     if (tot != 0) {
-      console.log("Test1:");
 
       const outreachByLocationQuery = query(
         pastOutreachRef,
@@ -1292,13 +1286,10 @@ export const fetchByCityOrStates = async (
 
       while (outreachPerPages < totaloutreaches) {
         const outreachDocRef = await getDocs(outreachByLocationQuery);
-        console.log("Test2:");
-        // console.log('outreachDocRef:'+outreachDocRef);
         let outreachByLoc = [];
         for (const doc of outreachDocRef.docs) {
           const pastOutreachData = doc.data();
           const id = doc.id;
-          // console.log('id wrt loc: '+id);
           outreachByLoc.push({
             ...pastOutreachData,
             // userName: userDetails[pastOutreachData.uid]?.username || "",
@@ -1315,7 +1306,6 @@ export const fetchByCityOrStates = async (
     throw new Error(
       "No PastOutreaches available for the given date range and city"
     );
-    // console.log('outreachByLoc: '+outreachByLoc);
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
@@ -1324,30 +1314,6 @@ export const fetchByCityOrStates = async (
     throw error;
   }
 };
-/* 
-const cityToSearch = ""; 
-const startDateTime = new Date("2020-07-01"); 
-const endDateTime = new Date("2023-07-01");
-const curr_page=0;
-const outreachPerPages = 5;
-
-
-(async () => {
-try {
-  // const totaloutreaches = await fetchPastOutreaches()
-  const outreachByLocation = await fetchByCityOrStates(cityToSearch, startDateTime, endDateTime, curr_page, outreachPerPages);
-  console.log("Fetched outreach data:", outreachByLocation);
-  // console.log('fetchPastOutreaches: '+ await fetchPastOutreaches());
-
-} catch (error) {
-  console.error("Error fetching outreach data:", error);
-}
-})();
-
-*/
-// const test1 = await ('Ottawa','07/24/2021', '09/24/2021');
-
-// code by Adarsh ends..................
 
 export const fetchUserOutreaches = async () => {
   try {
@@ -1394,31 +1360,6 @@ export const fetchUserOutreaches = async () => {
   }
 };
 
-//  export async function calculateNumberOfPagesForOutreach(outreachPerPage, currentPage=0){
-//   const testoutreachRef = query(collection(db, outreachEvents_collection), orderBy("createdAt", "asc"));
-//   const snapshot = await getDocs(testoutreachRef);
-//   // console.log('Data : '+snapshot.docs);
-//   const startIndex = outreachPerPage*currentPage;
-//   const startDoc = snapshot.docs[startIndex];
-//   // console.log('starting is: '+ startDoc);
-
-//   // const firstdoc=snapshot.docs(startAt);
-//   // console.log('starting is: '+ firstdoc);
-
-//   const outreachRef = query(collection(db, outreachEvents_collection),  orderBy("createdAt", "asc"), startAt(startDoc), limit(outreachPerPage))
-
-//   const outres = await getDocs(outreachRef);
-//   // console.log('outres '+ outres.docs);
-//   outres.forEach((doc)=>{
-//     // console.log(doc.data());
-//   //   console.log(doc.id); //printing the pagination ids
-//   });
-//   return outres;
-
-//  }
-
-//  const test = await calculateNumberOfPagesForOutreach(5,0)
-
 export const fetchTopOutreaches = async () => {
   try {
     const outreachRef = collection(db, outreachEvents_collection);
@@ -1453,9 +1394,6 @@ export const fetchTopOutreaches = async () => {
     throw error;
   }
 };
-
-//  const testlatestfunc = await fetchTopOutreaches();
-//  console.log(testlatestfunc);
 
 export async function fetchUnapprovedOutreaches() {
   const colRef = collection(db, outreachEvents_collection);
