@@ -67,7 +67,6 @@ const [isFlagged, setIsFlagged] = useState(false);
       try {
         const result = await fetchEventById(id);
         setData(result);
-        console.log(result)
       } catch (error) {
         console.error(error.message);
       }
@@ -188,7 +187,6 @@ const [isFlagged, setIsFlagged] = useState(false);
     }
   }, [data]);
 
-  // console.log(isPastEvent)
 
   let verifiedImg;
   if (data) {
@@ -500,8 +498,6 @@ const [isFlagged, setIsFlagged] = useState(false);
                           setLabel2,
                           false
                         );
-                        // console.log(data);
-                        // setSuccess(true);
                         setModalLabel("EDIT");
                         handleShowModal();
                       }}
