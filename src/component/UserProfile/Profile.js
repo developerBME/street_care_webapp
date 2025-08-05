@@ -35,9 +35,9 @@ function Profile() {
 
   const fetchData = async () => {
     try {
-       const visitLogsData = await fetchPersonalVisitLogs(
-         auth?.currentUser?.uid
-       );
+      //  const visitLogsData = await fetchPersonalVisitLogs(
+      //    auth?.currentUser?.uid
+      //  );
       const user = auth.currentUser;
 
       if (user) {
