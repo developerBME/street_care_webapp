@@ -67,7 +67,6 @@ const OutreachSignup = () => {
       try {
         const result = await fetchEventById(id);
         setData(result);
-        console.log(result)
       } catch (error) {
         console.error(error.message);
       }
@@ -190,7 +189,6 @@ const OutreachSignup = () => {
     }
   }, [data]);
 
-  // console.log(isPastEvent)
 
   let verifiedImg;
   if (data) {
@@ -513,8 +511,6 @@ const OutreachSignup = () => {
                           setLabel2,
                           false
                         );
-                        // console.log(data);
-                        // setSuccess(true);
                         setModalLabel("EDIT");
                         handleShowModal();
                       }}
