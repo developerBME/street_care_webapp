@@ -33,11 +33,6 @@ function getLastWeeksDate() {
 }
 
 function CommOutForm() {
-  const navigate = useNavigate();
-  // const ratingChanged = (newRating) => {
-  //   console.log(newRating);
-  // };
-
   const [numberHelped, setNumberHelped] = useState(null);
   const [itemArray, setItemArray] = useState([]);
   const [itemQty, setItemQty] = useState("");
