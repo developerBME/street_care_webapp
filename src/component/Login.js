@@ -137,7 +137,7 @@ function Login() {
         })
         .catch((error) => {
           // setError(error.message);
-          if (error.code === "auth/user-not-found") {
+          if (error.code === "auth/user-not-found" || error.code === "auth/wrong-password") {
             setError(
               <div className="flex flex-col">
                 <div className="flex items-center">
