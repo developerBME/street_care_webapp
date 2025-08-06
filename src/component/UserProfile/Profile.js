@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import icon from "../../images/icon.png";
 // import add from "../../images/add.png";
 import UserInfo from "./UserInfo";
 import { Modal } from "@mui/material";
@@ -14,15 +13,10 @@ import {
 } from '../EventCardService';
 import { auth } from '../firebase';
 import CustomButton from '../Buttons/CustomButton';
-
-import { fetchPersonalVisitLogs } from "../VisitLogCardService";
 import OutreachVisitLogProfile from "../Community/OutreachVisitLogProfile";
-// import NoOutreachDoc from "../Community/NoOutreachDoc";
 
 import NoDisplayData from './NoDisplayData';
-import SignedUpOutreaches from './SignedUpOutreaches';
 import CreatedOutreaches from './CreatedOutreaches';
-import ErrorMessage from '../ErrorMessage';
 import { formatDate } from './../HelperFunction';
 
 function Profile() {
@@ -30,7 +24,6 @@ function Profile() {
   const [likedEvents, setLikedEvents] = useState([]);
   const [signedUpEvents, setSignedUpEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [eventsDisplay, setEventsDisplay] = useState([]);
   const [isError, setIsError] = useState(false);
 
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -42,9 +35,6 @@ function Profile() {
 
   const fetchData = async () => {
     try {
-       const visitLogsData = await fetchPersonalVisitLogs(
-         auth?.currentUser?.uid
-       );
       const user = auth.currentUser;
 
       if (user) {
@@ -106,10 +96,6 @@ function Profile() {
   useEffect(() => {
     fetchData();
   }, [triggerEffect]);
-
-  useEffect(() => {
-    fetchData();
-  }, [likedEvents]);
 
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
@@ -280,12 +266,6 @@ function Profile() {
           />
         </Modal>
       }
-      {/* <Modal open={showSignUpModal}>
-				<RSVPConfirmationModal
-					closeModal={closeSignUpModal}
-					type="edit"
-				/>
-			</Modal> */}
       <Modal open={showWithdrawnModal}>
         <RSVPConfirmationModal
           closeModal={closeWithdrawModal}

@@ -49,7 +49,6 @@ const AllOutreachVisitLog = () => {
         cursorFields.direction,
         cursorFields.pageHistory
       );
-      console.log(visitLogsData);
       cursorFields.lastVisible = visitLogsData.lastVisible;
       cursorFields.pageHistory = visitLogsData.pageHistory;
       setTotalPages(visitLogsData.totalRecords);
