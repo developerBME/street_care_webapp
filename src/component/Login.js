@@ -139,17 +139,10 @@ function Login() {
           // setError(error.message);
           if (error.code === "auth/user-not-found" || error.code === "auth/wrong-password") {
             setError(
-              <div className="flex flex-col">
-                <div className="flex items-center">
-                  <img src={errorImg} className="w-3 h-3 mr-2" />
-                  <div>User not found.</div>
-                </div>
-                <div className="flex items-center">
-                  <img src={errorImg} className="w-3 h-3 mr-2" />
-
-                  <div>Please check your email address and password.</div>
-                </div>
-              </div>
+            <div className="flex items-center">
+              <img src={errorImg} className="w-3 h-3 mr-2" />
+              <div>Invalid credentials. Please try again.</div>
+            </div>
             );
           } else {
             setError(error.message);
