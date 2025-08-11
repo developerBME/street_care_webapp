@@ -355,27 +355,29 @@ export const fetchPaginatedPastOutreachEvents = async (
       paginatedQuery = query(paginatedQuery, startAfter(lastVisible));
     } else if (lastVisible && direction === "prev" && pageHistory.length > 2) {
       paginatedQuery = query(paginatedQuery, startAfter(pageHistory[pageHistory.length - 3]));
+    } else if(lastVisible && direction === "current" && pageHistory.length > 1){ // If we want to redirect to the current page from the detail page
+      paginatedQuery = query(paginatedQuery, startAfter(pageHistory[pageHistory.length - 2]));
     }
 
     const snapshot = await getDocs(paginatedQuery);
     const userIds = [...new Set(snapshot.docs.map(doc => doc.data().uid))];
     const userDetails = await fetchUserDetailsBatch(userIds);
-
+    
     const fetchedEvents = snapshot.docs.map((doc) => {
       const data = doc.data();
       return {
         ...data,
         id: doc.id,
         eventDate:
-          data.eventDate && data.eventDate.seconds
-            ? formatDate(new Date(data.eventDate.seconds * 1000))
-            : "",
+        data.eventDate && data.eventDate.seconds
+        ? formatDate(new Date(data.eventDate.seconds * 1000))
+        : "",
         userName: userDetails[data.uid]?.username || "Unknown User",
         photoUrl: userDetails[data.uid]?.photoUrl || "",
         userType: userDetails[data.uid]?.userType || ""
       };
     });
-
+    
     const lastDoc = snapshot.docs[snapshot.docs.length - 1];
 
     if (direction === "next") {

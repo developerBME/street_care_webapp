@@ -37,7 +37,7 @@ import { isPast } from "date-fns";
 import flagSvg from "../../images/flag.svg"; // Flag icon
 import { useUserContext } from "../../context/Usercontext.js";
 import collectionMapping from "../../utils/firestoreCollections.js";
-
+import { PastOutreachContext } from "../../context/pastOutreachEventProvider.js";
 const users_collection = collectionMapping.users;
 const outreachEvents_collection = collectionMapping.outreachEvents;
 
@@ -51,13 +51,10 @@ const OutreachSignup = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [hasCreated, setHasCreated] = useState(false);
   const [isPastEvent, setIsPastEvent] = useState(false);
-
+  const {pastOutreachEventState,setPastOutreachEventState} = PastOutreachContext()
+  
 
   const [data, setData] = useState(null);
-
-  const handleRefresh = () => {
-    window.location.reload();
-  };
 
   // Add near your other useState hooks
   const [isFlagged, setIsFlagged] = useState(false);
@@ -525,6 +522,7 @@ const OutreachSignup = () => {
                 <div
                   className="h-10 bg-[#000]] rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 inline-flex"
                   onClick={() => {
+                    setPastOutreachEventState((prev)=>({...prev,direction:"current"}))
                     navigate(-1);
                   }}
                 >
@@ -560,6 +558,7 @@ const OutreachSignup = () => {
                 <div
                   className="h-10 bg-[#000]] rounded-[100px] border border-[#C8C8C8] flex-col justify-center items-center gap-2 inline-flex"
                   onClick={() => {
+                    setPastOutreachEventState((prev)=>({...prev,direction:"current"}))
                     navigate(-1);
                   }}
                 >

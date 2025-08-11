@@ -19,7 +19,7 @@ import {
 } from "firebase/firestore";
 import {fetchPaginatedPastOutreachEvents} from "./EventCardService.js";
 import { db } from "./firebase";
-
+import { PastOutreachContext } from "../context/pastOutreachEventProvider.js";
 import collectionMapping from "../utils/firestoreCollections.js";
 
 const outreachEvents_collection = collectionMapping.outreachEvents;
@@ -36,14 +36,15 @@ const AllPastOutreachEvents = () => {
   const [cityToSearch, setCityToSearch] = useState("");
   const [debouncedCityToSearch, setDebouncedCityToSearch] = useState("");
 
+  const {pastOutreachEventState,setPastOutreachEventState} = PastOutreachContext()
   const [startDateTime, setStartDateTime] = useState(() => {
     const d = new Date();
     d.setDate(d.getDate() - 7);
     return d;
   });
-  const [selectedStartDate, setSelectedStartDate] = useState(startDateTime);
+  const [selectedStartDate, setSelectedStartDate] = useState(pastOutreachEventState.startDateTime);
   const [endDateTime, setEndDateTime] = useState(new Date());
-  const [selectedEndDate, setSelectedEndDate] = useState(endDateTime);
+  const [selectedEndDate, setSelectedEndDate] = useState(pastOutreachEventState.endDateTime);
   const [filterType, setFilterType] = useState("date");
 
   const [totaloutreaches, setTotalOutreaches] = useState(0);
@@ -52,14 +53,23 @@ const AllPastOutreachEvents = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [isFiltered, setIsFiltered] = useState(false);
-  const [cursorFields, setCursorFields] = useState({
-    lastVisible: null,
-    pageSize: outreachPerPages,
-    direction: "next",
-    pageHistory: []
-  });
+  // const [cursorFields, setCursorFields] = useState({
+  //   lastVisible: null,
+  //   pageSize: outreachPerPages,
+  //   direction: "next",
+  //   pageHistory: []
+  // });
 
   const navigate = useNavigate();
+
+  // useEffect(()=>{
+  //   if(!pastOutreachEventState.lastVisible) return;
+  //   setCursorFields((prev) => ({
+  //     ...prev,
+  //     lastVisible: pastOutreachEventState.lastVisible,
+  //     pageHistory: pastOutreachEventState.pageHistory
+  //   }));
+  // },[pastOutreachEventState.lastVisible])
 
   useEffect(() => {
     const hasActiveFilter = searchTerm.trim() !== '' || cityToSearch.trim() !== '';
@@ -73,7 +83,7 @@ const AllPastOutreachEvents = () => {
 
   useEffect(() => {
     const delaySearch = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
+      setPastOutreachEventState((prev)=>({...prev, debouncedSearchTerm: searchTerm }));
     }, 500);
   
     return () => clearTimeout(delaySearch);
@@ -81,7 +91,7 @@ const AllPastOutreachEvents = () => {
   
   useEffect(() => {
     const delayCitySearch = setTimeout(() => {
-      setDebouncedCityToSearch(cityToSearch);
+      setPastOutreachEventState((prev)=>({...prev, debouncedCityToSearch: cityToSearch }));
     }, 500);
   
     return () => clearTimeout(delayCitySearch); 
@@ -96,8 +106,8 @@ const AllPastOutreachEvents = () => {
             collection(db, outreachEvents_collection),
             where("status", "==", "approved"),
             where("eventDate", "<", new Date()), 
-            where("eventDate", ">=", startDateTime),
-            where("eventDate", "<=", endDateTime),
+            where("eventDate", ">=", pastOutreachEventState.startDateTime),
+            where("eventDate", "<=", pastOutreachEventState.endDateTime),
             orderBy("eventDate", "desc")
           );
         } else {
@@ -106,8 +116,8 @@ const AllPastOutreachEvents = () => {
             where("status", "==", "approved"),
             where("location.city", "==", cityToSearch),
             where("eventDate", "<", new Date()),
-            where("eventDate", ">=", startDateTime),
-            where("eventDate", "<=", endDateTime),
+            where("eventDate", ">=", pastOutreachEventState.startDateTime),
+            where("eventDate", "<=", pastOutreachEventState.endDateTime),
             orderBy("eventDate", "desc")
           );
         }
@@ -120,7 +130,7 @@ const AllPastOutreachEvents = () => {
       }
     };
     getTotalCount();
-  }, [cityToSearch, startDateTime, endDateTime]);
+  }, [cityToSearch, pastOutreachEventState.startDateTime, pastOutreachEventState.endDateTime]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -129,27 +139,32 @@ const AllPastOutreachEvents = () => {
   
       try {
         const { fetchedEvents, lastVisible, pageHistory, totalFilteredEvents } = await fetchPaginatedPastOutreachEvents(
-          debouncedCityToSearch,
-          startDateTime,
-          endDateTime,
-          debouncedSearchTerm,
-          cursorFields.lastVisible,
-          cursorFields.pageSize,
-          cursorFields.direction,
-          cursorFields.pageHistory
+          pastOutreachEventState.debouncedCityToSearch,
+          pastOutreachEventState.startDateTime,
+          pastOutreachEventState.endDateTime,
+          pastOutreachEventState.debouncedSearchTerm,
+          pastOutreachEventState.lastVisible,
+          pastOutreachEventState.pageSize,
+          pastOutreachEventState.direction,
+          pastOutreachEventState.pageHistory
         );
   
         setEvents(fetchedEvents);
-        setCursorFields((prev) => ({
+
+        setPastOutreachEventState((prev)=>({
           ...prev,
+          // debouncedCityToSearch: debouncedCityToSearch,
+          // startDateTime: startDateTime, 
+          // endDateTime: endDateTime,
+          // debouncedSearchTerm: debouncedSearchTerm,
           lastVisible: lastVisible,
           pageHistory: pageHistory
-        }));
-
-        if (debouncedSearchTerm.trim() !== '' || debouncedCityToSearch.trim() !== '') {
-          setFilteredTotal(totalFilteredEvents || 0);
-          setTotalPages(Math.ceil((totalFilteredEvents || 0) / outreachPerPages));
-        }
+        }))
+        console.log("Page History:", pageHistory.length);
+        // if (pastOutreachEventState.debouncedSearchTerm && pastOutreachEventState.debouncedSearchTerm.trim() !== '' || pastOutreachEventState.debouncedCityToSearch.trim() !== '') {
+        //   setFilteredTotal(totalFilteredEvents || 0);
+        //   setTotalPages(Math.ceil((totalFilteredEvents || 0) / outreachPerPages));
+        // }
       } catch (error) {
         setErrorMessage(error.message);
         setEvents([]);
@@ -158,16 +173,18 @@ const AllPastOutreachEvents = () => {
       }
     };
     fetchData();
-  }, [cursorFields.direction, debouncedCityToSearch, startDateTime, endDateTime, debouncedSearchTerm]);
-  
+  }, [pastOutreachEventState.direction, pastOutreachEventState.debouncedCityToSearch, pastOutreachEventState.startDateTime, pastOutreachEventState.endDateTime, pastOutreachEventState.debouncedSearchTerm]);
   const resetPagination = () => {
-    setCursorFields({
+    setPastOutreachEventState((prev)=>({
+      ...prev,
       lastVisible: null,
       pageSize: outreachPerPages,
       direction: "next",
+      debouncedCityToSearch: "",
+      debouncedSearchTerm: "",
       pageHistory: []
-    });
-    setCurrentPage(0);
+    }));
+   // setCurrentPage(0);
     
     if (searchTerm.trim() === '' && cityToSearch.trim() === '') {
       setTotalPages(Math.ceil(totaloutreaches / outreachPerPages));
@@ -180,37 +197,9 @@ const AllPastOutreachEvents = () => {
       resetPagination();
   };
 
-  const handleStartDateChange = (e) => {
-    const newDate = new Date(e.target.value);
-    setSelectedStartDate(newDate);
-    setStartDateTime(newDate);
-    resetPagination();
-  };
-  
-  const handleEndDateChange = (e) => {
-    const newDate = new Date(e.target.value);
-    setSelectedEndDate(newDate);
-    setEndDateTime(newDate);
-    resetPagination();
-  };
-
-  // const handleStartDateChange = (e) => {
-  //   setSelectedStartDate(new Date(e.target.value));
-  // };
-
-  // const applyStartDateFilter = () => {
-  //   setStartDateTime(selectedStartDate);
-  //   resetPagination();
-  // };
-
-  // const handleEndDateChange = (e) => {
-  //   setSelectedEndDate(new Date(e.target.value));
-  // };
-
-  // const applyEndDateFilter = () => {
-  //   setEndDateTime(selectedEndDate);
-  // resetPagination();
-  // };
+  useEffect(() => {
+    getDisplayCount();
+  },[pastOutreachEventState.pageHistory.length])
 
   const handleCityChange = (e) => {
     setCityToSearch(e.target.value.trim());
@@ -218,20 +207,20 @@ const AllPastOutreachEvents = () => {
   };
 
   const handleClickPrev = () => {
-    if (currentPage === 0) return;
-    setCurrentPage((prev) => prev - 1);
-    setCursorFields((prev) => ({ ...prev, direction: "" }));
+    //if (currentPage === 0) return;
+    //setCurrentPage((prev) => prev - 1);
+    setPastOutreachEventState((prev) => ({ ...prev, direction: "" }));
     setTimeout(() => {
-      setCursorFields((prev) => ({ ...prev, direction: "prev" }));
+      setPastOutreachEventState((prev) => ({ ...prev, direction: "prev" }));
     }, 0);
   };
 
   const handleClickNext = () => {
-    if (currentPage >= totalPages - 1) return;
-    setCurrentPage((prev) => prev + 1);
-    setCursorFields((prev) => ({ ...prev, direction: "" }));
+    //if (currentPage >= totalPages - 1) return;
+    //setCurrentPage((prev) => prev + 1);
+    setPastOutreachEventState((prev) => ({ ...prev, direction: "" }));
     setTimeout(() => {
-      setCursorFields((prev) => ({ ...prev, direction: "next" }));
+      setPastOutreachEventState((prev) => ({ ...prev, direction: "next" }));
     }, 0);
   };
 
@@ -242,12 +231,15 @@ const AllPastOutreachEvents = () => {
       return totaloutreaches;
     }
   };
-
+  console.log(pastOutreachEventState.searchTerm, pastOutreachEventState);
   const getDisplayCount = () => {
     if (isFiltered) {
       return events.length;
     } else {
-      return Math.min((currentPage + 1) * outreachPerPages, totaloutreaches);
+      if(((pastOutreachEventState.pageHistory.length) * outreachPerPages) > totaloutreaches){
+        return totaloutreaches;
+      }
+      else return (pastOutreachEventState.pageHistory.length) * outreachPerPages;
     }
   };
 
@@ -257,7 +249,7 @@ const AllPastOutreachEvents = () => {
   const renderPaginationButtons = () => {
     const buttons = [];
 
-    if (currentPage > 0) {
+    if ((pastOutreachEventState.pageHistory.length) * outreachPerPages > outreachPerPages) {
       buttons.push(
         <button
           key="prev"
@@ -269,7 +261,7 @@ const AllPastOutreachEvents = () => {
       );
     }
 
-    if (currentPage < totalPages - 1) {
+    if ((pastOutreachEventState.pageHistory.length) * outreachPerPages < totaloutreaches) {
       buttons.push(
         <button
           key="next"
@@ -333,9 +325,9 @@ const AllPastOutreachEvents = () => {
                     <DatePicker
                       selected={selectedStartDate}
                       onChange={(date) => {
-                        setSelectedStartDate(date);
-                        setStartDateTime(date);
                         resetPagination();
+                        setSelectedStartDate(date);
+                        setPastOutreachEventState((prev)=>({...prev, startDateTime: date }));
                       }}
                       selectsStart
                       startDate={selectedStartDate}
@@ -347,9 +339,9 @@ const AllPastOutreachEvents = () => {
                     <DatePicker
                       selected={selectedEndDate}
                       onChange={(date) => {
-                        setSelectedEndDate(date);
-                        setEndDateTime(date);
                         resetPagination();
+                        setSelectedEndDate(date);
+                        setPastOutreachEventState((prev)=>({...prev, endDateTime: date }));
                       }}
                       selectsEnd
                       startDate={selectedStartDate}
