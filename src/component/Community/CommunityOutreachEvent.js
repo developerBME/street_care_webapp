@@ -61,7 +61,7 @@ const CommunityOutreachEvent = ({ loggedIn }) => {
               <div className="text-[45px] font-medium font-dmsans">
                 Outreaches ({events.length})
               </div>
-              {loggedIn && (
+              
                 <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-medium font-dmsans leading-tight self-stretch">
                   <CustomButton
                     label="Create an Outreach"
@@ -78,7 +78,7 @@ const CommunityOutreachEvent = ({ loggedIn }) => {
                     }}
                   />
                 </div>
-              )}
+              
             </div>
 
             <div className="text-md font-medium font-dmsans text-[#181818] mt-2">
