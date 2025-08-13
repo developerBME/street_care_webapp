@@ -173,74 +173,52 @@ function Profile() {
           </div>{" "}
         </div>
 
-        {/* Liked Outreaches section */}
-
-        <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black mb-10">
-          <div className="flex flex-col gap-4 md:px-12 md:py-16 lg:gap-14 lg:p-24 pl-8 pt-4 pb-4 pr-8">
-            <div className="inline-flex flex-col sm:flex-row sm:space-x-16 justify-between gap-2">
-              <div class="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage text-left leading-[52px]">
-                Liked Outreaches
-              </div>
-              <CustomButton
-              label="More Liked Outreaches"
-              name="buttondefault"
-              onClick={() => {
-                navigate("/profile/allLikedOutreaches");
-              }}
-            />
-            </div>
-            {/* <div className="pt-4">
-              <div className="w-full flex flex-col sm:flex-row bg-[#F2F6D8] p-4 rounded-xl gap-4 justify-between">
-                <div className="text-neutral-800  text-[20px] font-medium font-bricolage leading-loose">
-                  Now you can view your created outreach events.
-                </div>
-              </div>
-            </div> */}
-
-            <div className="block overflow-x-auto overflow-y-hidden">
-              {isLoading ? (
-                <div className="flex justify-between items-center w-full h-fit gap-2">
-                  <EventCardSkeleton />
-                  <EventCardSkeleton />
-                  <EventCardSkeleton />
-                </div>
-              ) : likedEvents.length === 0 ? (
-                <NoDisplayData
-                  name="likedoutreaches"
-                  label="No outreach events liked"
-                />
-              ) : (
-                <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 mb-6">
-                  {likedEvents.slice(0,3).map((eventData) => (
-                    <OutreachEventCard
-                      key={eventData.id}
-                      cardData={{
-                        ...eventData,
-                        eventDate: formatDate(
-                          new Date(eventData.eventDate.seconds * 1000)
-                        ),
-                      }}
-                      isProfilePage={true}
-                      refresh={fetchData}
-                      openModal={() =>
-                        openModal({
-                          ...eventData,
-                          eventDate: eventData.eventDate?.seconds
-                            ? formatDate(
-                                new Date(eventData.eventDate.seconds * 1000)
-                              )
-                            : eventData.eventDate,
-                        })
-                      }
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>{" "}
+       {/* Liked Outreaches section */}
+{!isLoading && likedEvents.length > 0 && (
+  <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black mb-10">
+    <div className="flex flex-col gap-4 md:px-12 md:py-16 lg:gap-14 lg:p-24 pl-8 pt-4 pb-4 pr-8">
+      <div className="inline-flex flex-col sm:flex-row sm:space-x-16 justify-between gap-2">
+        <div className="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage text-left leading-[52px]">
+          Liked Outreaches
         </div>
+        <CustomButton
+          label="More Liked Outreaches"
+          name="buttondefault"
+          onClick={() => {
+            navigate("/profile/allLikedOutreaches");
+          }}
+        />
+      </div>
 
-
+      <div className="block overflow-x-auto overflow-y-hidden">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 mb-6">
+          {likedEvents.slice(0, 3).map((eventData) => (
+            <OutreachEventCard
+              key={eventData.id}
+              cardData={{
+                ...eventData,
+                eventDate: formatDate(
+                  new Date((eventData.eventDate?.seconds ?? 0) * 1000)
+                ),
+              }}
+              isProfilePage={true}
+              refresh={fetchData}
+              onUpdate={fetchData}  // NEW: triggers auto re-fetch after unlike
+              openModal={() =>
+                openModal({
+                  ...eventData,
+                  eventDate: eventData.eventDate?.seconds
+                    ? formatDate(new Date(eventData.eventDate.seconds * 1000))
+                    : eventData.eventDate,
+                })
+              }
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+)}
         {/* Created outreaches section */}
 
         <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black mb-10">
