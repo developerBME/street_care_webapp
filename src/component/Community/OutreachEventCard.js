@@ -27,6 +27,7 @@ const OutreachEventCard = ({
   cardData,
   isProfilePage,
   isHelpRequestCard,
+  onUpdate, // NEW: parent refresh callback
 }) => {
   const { user } = useUserContext();
   const {
@@ -158,6 +159,26 @@ const OutreachEventCard = ({
       setJustCopied(false);
     }
   };
+const handleLikeToggle = async (e) => {
+  e.stopPropagation();
+  try {
+    await handleLikes(
+      e,
+      id,
+      navigate,
+      isLiked ? "DISLIKE" : "LIKE",
+      setIsLiked,
+      setLikesCount,
+      false
+    );
+    // Tell parent to refresh (this will hide the section when last like is removed)
+    if (isProfilePage && typeof onUpdate === "function") {
+      onUpdate();
+    }
+  } catch (err) {
+    console.error("Toggle like failed:", err);
+  }
+};
 
   let verifiedImg;
   switch (userType) {
@@ -190,21 +211,14 @@ const OutreachEventCard = ({
             {likesCount}
           </div>
         )}
+
         {/* Like Button */}
         <img
-          onClick={(e) => handleLikes(
-            e,
-            id,
-            navigate,
-            isLiked ? "DISLIKE" :"LIKE",
-            setIsLiked,
-            setLikesCount,
-            false
-          )}
-          src={isLiked ? heartFilled : heartOutline}
-          alt="like"
-          className="w-8 h-8 cursor-pointer rounded-full p-1 hover:bg-gray-200"
-        />
+  onClick={handleLikeToggle}
+  src={isLiked ? heartFilled : heartOutline}
+  alt="like"
+  className="w-8 h-8 cursor-pointer rounded-full p-1 hover:bg-gray-200"
+/>
 
         {/* Share Button */}
         <div className="relative">
