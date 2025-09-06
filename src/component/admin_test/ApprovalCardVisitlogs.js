@@ -44,12 +44,12 @@ const ApprovalCardVisitlogs = ({
   // Inline date  formatting to handle Firebase Timestamp
   const formattedDate = postData?.timeStamp?.seconds
     ? new Date(postData.timeStamp.seconds * 1000).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    })
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
     : "Unknown Date";
 
   let userImage = null;
@@ -108,16 +108,16 @@ const ApprovalCardVisitlogs = ({
           <div className="flex items-center space-x-2">
             <img alt="location" src={locationIcon} className="w-4 h-4" />
             <span className="text-sm text-[#37168B] font-medium">
-              {postData?.location?.city || postData?.city
-                ? (
-                  <>
-                    {postData.location?.city || postData.city}
-                    {postData.stateAbbv || postData.state
-                      ? `, ${postData.stateAbbv || postData.state}`
-                      : ""}
-                  </>
-                )
-                : "Unknown City"}
+              {postData?.location?.city || postData?.city 
+              ? (
+                <>
+                  {postData.location?.city || postData.city}
+                  {postData.stateAbbv || postData.state
+                    ? `, ${postData.stateAbbv || postData.state}`
+                    : ""}
+                </>
+              ) 
+              : "Unknown City"}
             </span>
           </div>
         </div>
@@ -141,9 +141,12 @@ const ApprovalCardVisitlogs = ({
         <h1 className="text-lg font-medium text-[#1F0A58] line-clamp-1">
           {postData.peopleHelpedDescription || "Event Title"}
         </h1>
-        <p className="text-sm text-[#444746] mt-2 line-clamp-2">
-          {postData.peopleHelpedDescription || "No description available."}
-        </p>
+        {/* {Added scroll bar for description} */}
+        <div className="mt-2 max-h-20 overflow-y-auto">
+          <p className="text-sm text-[#444746] leading-relaxed">
+            {postData.peopleHelpedDescription || "No description available."}
+          </p>
+        </div>
       </div>
 
       {/* Tags Section */}
