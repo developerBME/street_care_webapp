@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useMemo } from "react";
 
 import Chip from "../Community/Chip";
 import arrowDown from "../../images/arrowDown.png";
@@ -166,6 +166,22 @@ const Form = (hrid) => {
   const [helpBool, setHelpBool] = useState(false);
   const [helpDetails, setHelpDetails] = useState({});
   const [helpReqError, setHelpReqError] = useState(false);
+
+  const { minTime, maxTime } = useMemo(() => {
+    const min = new Date();
+    min.setHours(9, 0, 0, 0);
+    const max = new Date();
+    max.setHours(17, 0, 0, 0);
+    return { minTime: min, maxTime: max };
+  }, []);
+
+  // Ensure time bounds are created for the same calendar day as the current selection
+  const dayTime = (baseDate, hours, minutes = 0) => {
+    const d = new Date(baseDate || new Date());
+    d.setHours(hours, minutes, 0, 0);
+    return d;
+  };
+
 
   const [error, setError] = useState({
     nameError: "",
@@ -1251,6 +1267,14 @@ const Form = (hrid) => {
                   timeFormat="HH:mm"
                   timeIntervals={15}
                   dateFormat="Pp"
+                  minTime={dayTime(startDate, 9)}
+                  maxTime={dayTime(startDate, 17)}
+                  filterTime={(time) => {
+                    const h = time.getHours();
+                    const m = time.getMinutes();
+                    const total = h * 60 + m;
+                    return total >= 9 * 60 && total <= 17 * 60;
+                  }}
                   customInput={
                     <CustomInput
                       id="date"
@@ -1286,9 +1310,20 @@ const Form = (hrid) => {
                   timeFormat="HH:mm"
                   timeIntervals={15}
                   dateFormat="Pp"
+                  minTime={dayTime(endDate || startDate, 9)}
+                  maxTime={dayTime(endDate || startDate, 17)}
+                  filterTime={(time) => {
+                    // Must be within business hours 09:00–17:00
+                    const h = time.getHours();
+                    const m = time.getMinutes();
+                    const total = h * 60 + m;
+                    const withinBusiness = total >= 9 * 60 && total <= 17 * 60;
+                    // And after the selected startDate (if set)
+                    const afterStart = startDate ? time > startDate : true;
+                    return withinBusiness && afterStart;
+                  }}
                   disabled={!startDate}
                   minDate={startDate}
-                  filterTime={filterEndTime}
                   customInput={
                     <CustomInput
                       id="date"
