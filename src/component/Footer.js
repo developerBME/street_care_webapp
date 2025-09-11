@@ -88,6 +88,13 @@ function Footer() {
                 </div>
               </li>
               <li className="mb-4">
+                <p className=" font-inter text-sm text-white whitespace-nowrap">
+                  <a href="tel:3477191134" className="hover:underline">(347) 719-1134</a>
+                  <span className="mx-2">|</span>
+                  <a href="mailto:info@streetcare.us" className="hover:underline">info@streetcare.us</a>
+                </p>
+              </li>
+              <li className="mb-4">
                 <p className=" font-inter text-xs">
                   (c) Bright Mind Enrichment and Schooling {new Date().getFullYear()} Street Care is a
                   community wellness initiative of Bright Mind, a 501(c)(3)
