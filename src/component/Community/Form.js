@@ -324,7 +324,7 @@ const Form = (hrid) => {
           });
 
 
-          const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px"><h1>Thank you for creating the Outreach</h1><p>Your outreach <b>${nameRef.current.value}</b> has been successfully created and you can view it in your profile.</p>
+          const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px"><h1>Thank you for creating the Outreach</h1><p>Your Outreach <b>${nameRef.current.value}</b> has been successfully created and you can view it in your profile.</p>
           <p>Here are some of the details:</p>
           <ul>
           <li>Contact Number: ${contactRef.current.value}</li>
