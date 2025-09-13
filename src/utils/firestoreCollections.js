@@ -31,10 +31,11 @@ const COLLECTIONS = {
   },
 };
 
-const env = process.env.REACT_APP_ENV || 'main';
+const env = process.env.REACT_APP_ENV || "development";
 
 // Determine the collections based on the branch
-const collectionMapping = env === 'main' ? COLLECTIONS.main : COLLECTIONS.development;
+const collectionMapping =
+  env === "main" ? COLLECTIONS.main : COLLECTIONS.development;
 
 // Export the collections
 export default collectionMapping;

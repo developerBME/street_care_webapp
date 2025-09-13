@@ -513,14 +513,14 @@ function PersonalOutForm() {
     console.log(obj);
 
     const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px">
-      <h1>Thank you for creating the outreach</h1>
+      <h1>Thank you for creating the Interaction</h1>
       <p>Your Personal Outreach Form has been successfully created and you can view it in your profile.</p>
       <p>Here are some of the details:</p>
       <ul>
         <li>Number of People Helped: ${numberHelped}</li>
-        <li>Location: ${state}, ${city}</li>
+        <li>Location: ${whereVisit}</li>
         <li>Item Quantity: ${itemQty}</li>
-        <li>Date: ${date.current.value}</li>
+        <li>Date: ${dateTime}</li>
       </ul>
     </div>`;
 
