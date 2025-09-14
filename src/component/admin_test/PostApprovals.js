@@ -83,6 +83,20 @@ const PostApprovals = () => {
         );
 
         setPendingPosts({ outreaches, visitLogs });
+        // Added sorting logic:
+        const sortedOutreaches = outreaches.sort((a, b) => {
+          const dateA = a.eventDate?.seconds ? new Date(a.eventDate.seconds * 1000).getTime() : 0;
+          const dateB = b.eventDate?.seconds ? new Date(b.eventDate.seconds * 1000).getTime() : 0;
+          return dateB - dateA; // Descending order (newest first)
+        });
+
+        const sortedVisitLogs = visitLogs.sort((a, b) => {
+          const dateA = a.timeStamp?.seconds ? new Date(a.timeStamp.seconds * 1000).getTime() : 0;
+          const dateB = b.timeStamp?.seconds ? new Date(b.timeStamp.seconds * 1000).getTime() : 0;
+          return dateB - dateA; // Descending order (newest first)
+        });
+
+        setPendingPosts({ outreaches: sortedOutreaches, visitLogs: sortedVisitLogs });
         setIsError(false);
       } catch (error) {
         console.error("Error fetching pending posts:", error);
@@ -233,8 +247,20 @@ const PostApprovals = () => {
     }
   };
   useEffect(() => {
-    // Initialize filteredPosts with fetched data
-    setFilteredPosts(pendingPosts);
+    // Apply the same sorting to filteredPosts
+    const sortedFiltered = {
+      outreaches: [...pendingPosts.outreaches].sort((a, b) => {
+        const dateA = a.eventDate?.seconds ? new Date(a.eventDate.seconds * 1000).getTime() : 0;
+        const dateB = b.eventDate?.seconds ? new Date(b.eventDate.seconds * 1000).getTime() : 0;
+        return dateB - dateA;
+      }),
+      visitLogs: [...pendingPosts.visitLogs].sort((a, b) => {
+        const dateA = a.timeStamp?.seconds ? new Date(a.timeStamp.seconds * 1000).getTime() : 0;
+        const dateB = b.timeStamp?.seconds ? new Date(b.timeStamp.seconds * 1000).getTime() : 0;
+        return dateB - dateA;
+      })
+    };
+    setFilteredPosts(sortedFiltered);
   }, [pendingPosts]);
 
   //Search Function
@@ -255,7 +281,18 @@ const PostApprovals = () => {
       ),
     };
 
-    setFilteredPosts(filtered);
+    // Add sorting after filtering to maintain newest first order
+    const sortedFiltered = {
+      ...filtered,
+      [activeTab]: filtered[activeTab].sort((a, b) => {
+        const dateField = activeTab === "outreaches" ? "eventDate" : "timeStamp";
+        const dateA = a[dateField]?.seconds ? new Date(a[dateField].seconds * 1000).getTime() : 0;
+        const dateB = b[dateField]?.seconds ? new Date(b[dateField].seconds * 1000).getTime() : 0;
+        return dateB - dateA; // Maintain newest first after search
+      })
+    };
+
+    setFilteredPosts(sortedFiltered);
     setCurrentPage(1); // Reset to the first page after search
   };
 
@@ -378,6 +415,19 @@ const PostApprovals = () => {
 
   useEffect(() => {
     setCurrentPage(1);
+    // Ensure current tab data is sorted when switching tabs
+    const currentTabData = [...filteredPosts[activeTab]];
+    const dateField = activeTab === "outreaches" ? "eventDate" : "timeStamp";
+    const sortedData = currentTabData.sort((a, b) => {
+      const dateA = a[dateField]?.seconds ? new Date(a[dateField].seconds * 1000).getTime() : 0;
+      const dateB = b[dateField]?.seconds ? new Date(b[dateField].seconds * 1000).getTime() : 0;
+      return dateB - dateA;
+    });
+    
+    setFilteredPosts(prev => ({
+      ...prev,
+      [activeTab]: sortedData
+    }));
   }, [activeTab]);
 
   // Tab switching logic
