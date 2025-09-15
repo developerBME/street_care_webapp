@@ -872,7 +872,13 @@ function PersonalOutForm() {
             <div className="w-fit h-fit md:px-[150px] md:py-[100px] flex-col justify-start items-start gap-16 inline-flex">
               <div className="flex-col justify-start items-start gap-4 md:gap-16 flex px-4 py-4 md:px-0 md:py-0">
                 <div className="w-fit text-neutral-800 md:text-[57px] font-medium font-bricolage md:leading-[64px] text-[32px] leading-[40px]">
-                  Tell us more about who you helped!
+                  Tell us about who you helped!
+                  <p className="text-neutral-700 text-sm md:text-base font-roboto leading-relaxed mt-2">
+                    <span className="font-bold">Voicemail Option:</span> If you are unable to complete the Interaction Log Form 
+                    at the time of the encounter, you may leave a voicemail at 
+                    <span className="font-bold"> 347-719-1134</span>. Please note: completing the form remains the 
+                    preferred method, as it ensures that all aspects of the interaction are recorded accurately.
+                    </p>
                 </div>
                 <div className="self-stretch h-fit flex-col justify-center items-start gap-[24px] flex">
                   <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
