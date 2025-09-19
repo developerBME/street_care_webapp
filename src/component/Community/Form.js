@@ -332,15 +332,19 @@ const Form = (hrid) => {
           });
 
 
-          const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px"><h1>Thank you for creating the Outreach</h1><p>Your Outreach <b>${nameRef.current.value}</b> has been successfully created and you can view it in your profile.</p>
-          <p>Here are some of the details:</p>
-          <ul>
-          <li>Contact Number: ${contactRef.current.value}</li>
-          <li>Description: ${descRef.current.value}</li>
-          <li>Location: ${streetRef.current.value}, ${cityRef.current.value}, ${stateRef.current.value}, ${zipcodeRef.current.value}</li>
-          <li>Help Type: ${helpRef.current.value}</li>
-          </ul>
-          </div>`;
+          const emailHTML = `
+          <div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px">
+            <h1>Thank you for creating the Outreach</h1>
+            <p>Your Outreach <b>${nameRef.current.value}</b> has been successfully created and you can view it in your profile.</p>
+            <p>Here are some of the details:</p>
+            <ul>
+              <li>Contact Number: ${contactRef.current.value}</li>
+              <li>Description: ${descRef.current.value}</li>
+              <li>Location: ${streetRef.current.value}, ${cityRef.current.value}, ${stateRef.current.value}, ${zipcodeRef.current.value}</li>
+              <li>Help Type: ${helpRef.current.value}</li>
+            </ul>
+          </div>
+          `;
           // Successful if outreach event is updated
           if (ack) {
             setSuccess(true);
