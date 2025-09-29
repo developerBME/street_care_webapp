@@ -8,12 +8,27 @@ const MobileAppRedirect = () => {
   return (
     <div className="font-bricolage relative">
       <button
-        className="flex flex-col items-center bg-nav text-white rounded-xl px-3 pt-1 pb-3 shadow-md shadow-gray-600 hover:shadow-lg hover:bg-[#504279] transition"
+        className="w-[60px] h-[60px] flex flex-col items-center bg-nav text-white rounded-xl px-2 py-2 shadow-md shadow-gray-600 hover:shadow-lg hover:bg-[#504279] transition md:w-auto md:h-auto md:px-3 md:pt-1 md:pb-3"
         onClick={() => setIsModalOpen(!isModalOpen)}
       >
-        <span className="mb-1 text-lg font-medium">Get the App</span>
+        <div className="relative block md:hidden w-20 h-20">
+          <img
+            src="/stash-smartphone-light.png"
+            alt="Smart-Phone Logo"
+            className="absolute inset-0 m-auto w-6 h-12 z-10"
+          />
+          <img
+            src="/Vector.png"
+            alt="Download-Vector"
+            className="absolute inset-0 m-auto w-4 h-4 z-20"
+          />
+        </div>
 
-        <div className="flex items-center gap-6">
+        <span className="mb-1 text-lg font-medium hidden md:inline">
+          Get the App
+        </span>
+
+        <div className="hidden md:flex items-center gap-6">
           <img
             src="/stash-smartphone-light.png"
             alt="Smart-Phone Logo"
@@ -28,7 +43,7 @@ const MobileAppRedirect = () => {
       </button>
 
       {isModalOpen && (
-        <div className="font-bricolage absolute bottom-16 right-20 bg-white rounded-xl py-5 px-3 shadow-md shadow-gray-600 w-55">
+        <div className="font-bricolage absolute bottom-10 md:bottom-16 right-10 md:right-20 bg-white rounded-xl py-5 px-3 shadow-md shadow-gray-600 w-55">
           <button
             onClick={() => setIsModalOpen(false)}
             className="absolute right-1 top-1 w-3 h-3 flex items-center justify-center text-white text-sm bg-black rounded-full hover:text-lightgray-600"
