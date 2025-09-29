@@ -400,7 +400,7 @@ function HomePage() {
         />
       </Modal>
 
-      <div className="fixed bottom-4 right-4">
+      <div className="fixed bottom-24 md:bottom-4 right-4">
         <MobileAppRedirect />
       </div>
     </div>
