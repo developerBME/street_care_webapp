@@ -28,6 +28,7 @@ function CreatedOutreaches() {
         createdEventsData.sort((a, b) => a.eventDate - b.eventDate);
         
         setCreatedEvents(createdEventsData);
+        console.log("Fetched Outreach createdEventsData",createdEventsData);
       } else {
         console.log("No user is signed in");
         setCreatedEvents([]);

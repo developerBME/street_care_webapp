@@ -95,7 +95,8 @@ export const fetchPersonalVisitLogss = async (
   try {
     let personalVisitLogRef = query(
       collection(db, visitLogsNew_collection),
-      where("status", "==", "approved"),
+      //where("status", "==", "approved"),
+      where("status", "in", ["approved","pending","rejected"]),
       where("uid", "==", uid),
       orderBy("timeStamp", "desc")
     );
@@ -149,7 +150,8 @@ export const PersonalVisitLogsCount = async (uid) => {
 
     totalVisitLogRef = query(
       collection(db, visitLogsNew_collection),
-      where("status", "==", "approved"),
+      //where("status", "==", "approved"),
+      where("status", "in", ["approved","pending"]),
       where("uid", "==", uid),
       orderBy("timeStamp", "desc")
     );
