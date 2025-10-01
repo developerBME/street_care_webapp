@@ -20,7 +20,7 @@ const getTags = (postData, isVisitLogs) => {
   ));
 };
 
-export const getStatusStyle = (status) => {
+const getStatusStyle = (status) => {
   switch (status) {
     case "approved":
       return "bg-green-100 text-green-600 border border-green-600";

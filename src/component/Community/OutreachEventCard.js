@@ -19,7 +19,6 @@ import heartOutline from "../../images/heart-outline.png";
 import heartFilled from "../../images/heart-filled.png";
 import share from "../../images/share-icon.png";
 import { handleLikes, setInitialLike } from "../EventCardService";
-import {getStatusStyle} from "../../component/admin_test/ApprovalCardOutreachEvents.js";
 
 const outreachEvents_collection = collectionMapping.outreachEvents; // Collection name
 const users_collection = collectionMapping.users; // User collection
@@ -42,7 +41,6 @@ const OutreachEventCard = ({
     skills,
     userType,
     likes,
-    status,
   } = cardData;
 
   const navigate = useNavigate();
@@ -73,7 +71,6 @@ const OutreachEventCard = ({
 
         if (currentDoc.exists()) {
           const { isFlagged } = currentDoc.data();
-          console.log("CurrentDoc.data()",currentDoc.data());
           setIsFlagged(isFlagged || false);
         } else {
           console.error("Document does not exist:", id);
@@ -258,16 +255,7 @@ const handleLikeToggle = async (e) => {
         </div>
       </div>
 
-{/* Status */}
-      <div className="mt-2 text-right mb-2">
-        <span
-          className={`px-3 py-1 text-sm font-medium rounded-full ${getStatusStyle(
-            cardData.status
-          )}`}
-        >
-          {cardData.status || "No Status"}
-        </span>
-      </div>
+
       {/* User Information */}
       <div className="inline-flex items-center space-x-2">
         <img
