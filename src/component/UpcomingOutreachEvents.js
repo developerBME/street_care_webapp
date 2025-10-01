@@ -30,10 +30,7 @@ const UpcomingOutreachEvents = ({
   //   : [];
 
   return (
-    <div
-      id="outreach"
-      className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black"
-    >
+    <div id="outreach">
       <div
         className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] scroll-m-24"
         ref={outreachRef}
@@ -49,7 +46,7 @@ const UpcomingOutreachEvents = ({
           <img alt="" src={arrowRight} className="w-6 h-7 lg:w-10 lg:h-10 " />
         </p>
 
-        <UserTypeInfo/>
+        <UserTypeInfo />
 
         {isLoading ? (
           <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
@@ -62,7 +59,7 @@ const UpcomingOutreachEvents = ({
         ) : (
           <>
             <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-            {events.map((eventData) => (
+              {events.map((eventData) => (
                 <OutreachEventCard
                   key={eventData.id}
                   cardData={{
