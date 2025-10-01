@@ -1314,6 +1314,7 @@ export const fetchUserOutreaches = async () => {
     );
 
     const eventSnapshot = await getDocs(userQuery);
+    console.log("Eventsnapshot",eventSnapshot);
     let userOutreaches = [];
 
     for (const doc of eventSnapshot.docs) {
@@ -1333,7 +1334,7 @@ export const fetchUserOutreaches = async () => {
         userType: result.userType,
       });
     }
-
+console.log("Printing userOutreaches",userOutreaches);
     return userOutreaches;
   } catch (error) {
     logEvent(
