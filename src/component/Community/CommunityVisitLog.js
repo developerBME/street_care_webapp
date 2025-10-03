@@ -6,6 +6,7 @@ import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import { fetchPublicVisitLogs } from "../VisitLogCardService"; // Use this function
 import CustomButton from "../Buttons/CustomButton";
 import ErrorMessage from "../ErrorMessage";
+import { getAuth } from "firebase/auth";
 
 const CommunityVisitLog = ({ loggedIn}) => {
   const navigate = useNavigate();
@@ -60,17 +61,22 @@ const CommunityVisitLog = ({ loggedIn}) => {
               <div className="text-[45px] font-medium font-dmsans">
                 Interaction Logs ({visitLogsCount ? visitLogsCount : 0})
               </div>
-              {loggedIn && (
                 <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-medium font-dmsans leading-tight self-stretch">
                   <CustomButton
                     label="Create a interaction Log"
                     name="buttondefault"
-                    onClick={() => {
-                      navigate("/profile/personaloutform");
+                    onClick={async () => {
+                      const fAuth = await getAuth();
+                      const user = fAuth.currentUser;
+
+                      if (user) {
+                        navigate("/profile/personaloutform");
+                      } else {
+                        navigate("/login", { state: { from: { pathname: "/profile/personaloutform" } } }); // or show a message
+                      }
                     }}
                   />
                 </div>
-              )}
             </div>
             <div className="text-md font-medium font-dmsans text-[#181818] mt-2">
               Please document the details of each person you interacted with. The more detailed, the better. And also, a clearer way to present the logging instruction, like: Just one 'log' for your entire event along with the sentence.

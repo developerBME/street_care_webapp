@@ -172,7 +172,7 @@ function Success2() {
                     navigate("/createOutreach");
                   } else {
                     console.log("User is not logged in");
-                    navigate("/login"); // or show a message
+                    navigate("/login", { state: { from: { pathname: "/createOutreach" } } }); // or show a message
                   }
                 }}
               />
@@ -201,7 +201,7 @@ function Success2() {
                   if (user) {
                     navigate("/profile/personaloutform");
                   } else {
-                    navigate("/login"); // or show a message
+                    navigate("/login", { state: { from: { pathname: "/profile/personaloutform" } } });
                   }
                 }}
               />
