@@ -32,7 +32,7 @@ function HomePage() {
   const navigate = useNavigate();
   const fAuth = getAuth();
   const [loggedIn, setLoggedIn] = useState(false);
-  
+
   const [pastEvents, setPastEvents] = useState([]);
   const [isPastLoading, setIsPastLoading] = useState(true);
   const [isPastError, setIsPastError] = useState(false);
@@ -205,7 +205,7 @@ function HomePage() {
         "next",
         []
       );
-      
+
       // eventsData.sort((a, b) => a.eventDate - b.eventDate);
       console.log("Events Data:", eventsData);
       setEvents(eventsData.events);
@@ -304,14 +304,14 @@ function HomePage() {
       }
       setIsPastLoading(false);
     };
-  
+
     getPastEvents();
   }, []);
 
   useEffect(() => {
     console.log("Fetched Events:", events);
-  }, [events]);  
- 
+  }, [events]);
+
   return (
     <div className="relative flex flex-col items-center ">
       <div className=" w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-32 rounded-2xl text-black ">
@@ -355,7 +355,7 @@ function HomePage() {
         <Map />
       </div>
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black h-full">
-        {/* <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
+              {/*<div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
           <p className=" text-[25px] lg:text-[45px] font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58]">
             Past Events
           </p>
@@ -401,12 +401,11 @@ function HomePage() {
         />
       </Modal>
 
-      <div className="fixed bottom-4 right-4">
+      <div className="fixed bottom-24 md:bottom-4 right-4">
         <MobileAppRedirect />
       </div>
     </div>
   );
 }
-
 
 export default HomePage;
