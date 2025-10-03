@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import howtohelp from "../../images/howtohelp.png";
 import howToHelpOutreachSample from "../../images/howToHelpSampleOutreach.png";
 import EventOutrachesSection from "../HowtoHelp/EventOutrachesSection";
@@ -20,27 +20,93 @@ import badge4 from "../../images/badge4.png";
 import badge5 from "../../images/badge5.png";
 import badge6 from "../../images/badge6.png";
 
+/* ================= POPUP ================= */
+const MEMBERSHIP_URL = "https://streetcare.us/chapter-membership-form/";
+//const //LS_KEY = "sc_verify_popup_snooze_until"; // timestamp (ms)
+
+function shouldShowPopup() {
+  /*try {
+    const snooze = Number(localStorage.getItem(LS_KEY) || 0);
+    return Date.now() > snooze;
+  } catch {
+    return true;
+  }*/
+  return true;
+}
+/*function snooze(days = 7) {
+  try {
+    const until = Date.now() + days * 24 * 60 * 60 * 1000;
+    localStorage.setItem(LS_KEY, String(until));
+  } catch {}
+}*/
+
+function GetVerifiedPopup({ open, onClose }) {
+  const dialogRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const first = dialogRef.current?.querySelector("a,button");
+    first?.focus();
+    const onKey = (e) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  const handleClose = () => {
+    //snooze(7);
+    onClose();
+  };
+
+  const handleCTA = () => {
+    window.location.href = MEMBERSHIP_URL;
+  };
+
+  return (
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/50 p-4">
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        className="w-full max-w-md rounded-2xl bg-[#FFE34F] shadow-xl relative p-5"
+      >
+        <button
+          onClick={handleClose}
+          className="absolute right-3 top-3 text-xl leading-none px-2"
+        >
+          ×
+        </button>
+        <p className="m-0 text-xs font-bold tracking-wide text-[#2563EB]">NOW AVAILABLE</p>
+        <h2 className="mt-1 mb-2 text-2xl font-bold">Get verified!</h2>
+        <p className="text-sm leading-snug">
+          Profile verification will allow anyone who is verified to post upcoming
+          events and document their interactions with homeless individuals.
+        </p>
+        <button
+          onClick={handleCTA}
+          className="mt-4 ml-auto block rounded-full px-4 py-2 font-semibold text-[#FFE34F] bg-black"
+        >
+          Become a Member
+        </button>
+        
+      </div>
+    </div>
+  );
+}
+/* ======================================== */
+
 const skipItems = [
-  {
-    image: skipItem1,
-    content: "A ton of anything",
-  },
-  {
-    image: skipItem2,
-    content: "Alcohol",
-  },
-  {
-    image: skipItem3,
-    content: "Drugs",
-  },
-  {
-    image: skipItem4,
-    content: "Religious Material",
-  },
-  {
-    image: skipItem5,
-    content: "Political Material",
-  },
+  { image: skipItem1, content: "A ton of anything" },
+  { image: skipItem2, content: "Alcohol" },
+  { image: skipItem3, content: "Drugs" },
+  { image: skipItem4, content: "Religious Material" },
+  { image: skipItem5, content: "Political Material" },
 ];
 
 const renderStepTitle = (step, selectedStep) => {
@@ -52,11 +118,7 @@ const renderStepTitle = (step, selectedStep) => {
             Step {step}
           </div>
           <div className="font-dmsans text-[24px] leading-8 text-[#616161]">
-            <div
-              className={`${
-                selectedStep === step ? "text-black" : ""
-              } md:w-1/2`}
-            >
+            <div className={`${selectedStep === step ? "text-black" : ""} md:w-1/2`}>
               Join an Outreach
             </div>
           </div>
@@ -69,11 +131,7 @@ const renderStepTitle = (step, selectedStep) => {
             Step {step}
           </div>
           <div className="font-dmsans text-[24px] leading-8 text-[#616161]">
-            <div
-              className={`${
-                selectedStep === step ? "text-black" : ""
-              } md:w-1/2`}
-            >
+            <div className={`${selectedStep === step ? "text-black" : ""} md:w-1/2`}>
               Prepare an Outreach
             </div>
           </div>
@@ -86,11 +144,7 @@ const renderStepTitle = (step, selectedStep) => {
             Step {step}
           </div>
           <div className="font-dmsans text-[24px] leading-8 text-[#616161]">
-            <div
-              className={`${
-                selectedStep === step ? "text-black" : ""
-              } md:w-1/2`}
-            >
+            <div className={`${selectedStep === step ? "text-black" : ""} md:w-1/2`}>
               Attend Outreach
             </div>
           </div>
@@ -103,11 +157,7 @@ const renderStepTitle = (step, selectedStep) => {
             Step {step}
           </div>
           <div className="font-dmsans text-[24px] leading-8 text-[#616161]">
-            <div
-              className={`${
-                selectedStep === step ? "text-black" : ""
-              } md:w-1/2`}
-            >
+            <div className={`${selectedStep === step ? "text-black" : ""} md:w-1/2`}>
               Document your Interaction
             </div>
           </div>
@@ -286,36 +336,12 @@ const renderStepContent = (selectedStep) => {
             </div>
           </div>
           <div className="flex flex-wrap px-10 hidden md:flex">
-            <img
-              alt=""
-              src={badge1}
-              className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]"
-            />
-            <img
-              alt=""
-              src={badge2}
-              className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]"
-            />
-            <img
-              alt=""
-              src={badge3}
-              className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]"
-            />
-            <img
-              alt=""
-              src={badge4}
-              className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]"
-            />
-            <img
-              alt=""
-              src={badge5}
-              className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]"
-            />
-            <img
-              alt=""
-              src={badge6}
-              className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]"
-            />
+            <img alt="" src={badge1} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]" />
+            <img alt="" src={badge2} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]" />
+            <img alt="" src={badge3} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]" />
+            <img alt="" src={badge4} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]" />
+            <img alt="" src={badge5} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]" />
+            <img alt="" src={badge6} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]" />
           </div>
         </div>
       );
@@ -326,6 +352,7 @@ const renderStepContent = (selectedStep) => {
 
 function HowToHelp() {
   const [selectedStep, setSelectedStep] = useState(1);
+  const [showPopup, setShowPopup] = useState(false);
 
   const handleSelectStep = (step) => {
     setSelectedStep(step);
@@ -333,10 +360,15 @@ function HowToHelp() {
 
   useEffect(() => {
     document.title = "How to help - Street Care";
+    // Force popup with ?verify=1 for testing
+      setShowPopup(true);
   }, []);
 
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
+      {/* RENDER THE POPUP */}
+      <GetVerifiedPopup open={showPopup} onClose={() => setShowPopup(false)} />
+
       <div className="relative flex flex-col items-center ">
         <div className=" w-[95%] md:w-[90%] lg:w-[79%] mx-2 lg:mx-40 mt-32 rounded-2xl bg-white text-black ">
           {/*  casaskasjlkalslssas*/}
@@ -532,6 +564,7 @@ function HowToHelp() {
               name="buttondefault"
             />
           </div> */}
+
         </div>
       </div>
     </div>
