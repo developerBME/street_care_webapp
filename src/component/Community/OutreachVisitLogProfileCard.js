@@ -122,7 +122,7 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
             visitLogCardData.status
           )}`}
         >
-          {visitLogCardData.status || "No Status"}
+          {visitLogCardData.status.charAt(0).toUpperCase() + visitLogCardData.status.slice(1)|| "No Status"}
         </span>
       </div>
       {/* Adding pending status tag=>END,Niharika */}
