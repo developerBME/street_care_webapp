@@ -8,7 +8,6 @@
     "@emotion/styled": "^11.11.0",
     "@firebase/firestore": "^4.2.0",
     "@headlessui/react": "^1.7.17",
-    "@icons-pack/react-simple-icons": "^13.7.0",
     "@mui/icons-material": "^5.14.7",
     "@mui/material": "^5.14.7",
     "@testing-library/jest-dom": "^5.17.0",

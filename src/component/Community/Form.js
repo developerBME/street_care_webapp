@@ -28,88 +28,80 @@ import { Link } from "react-router-dom";
 import { fetchUserTypeDetails } from "../EventCardService";
 
 import collectionMapping from "../../utils/firestoreCollections";
-import { chipList } from "../../lib/constants/chipList";
-import { stateAbbreviations } from "../../lib/constants/stateAbbreviations";
 
+const chipList = [
+  "Childcare",
+  "Counseling and Support",
+  "Clothing",
+  "Education",
+  "Personal Care",
+  "Employment and Training",
+  "Food and water",
+  "Healthcare",
+  "Chinese",
+  "Spanish",
+  "Language(please specify)",
+  "Legal",
+  "Shelter",
+  "Transportation",
+  "LGBTQ Support",
+  "Technology Access",
+  "Social Integration",
+  "Pet Care",
+];
 
-// Moved to src/lib/constants/chipList.js
-
-// const chipList = [
-//   "Childcare",
-//   "Counseling and Support",
-//   "Clothing",
-//   "Education",
-//   "Personal Care",
-//   "Employment and Training",
-//   "Food and water",
-//   "Healthcare",
-//   "Chinese",
-//   "Spanish",
-//   "Language(please specify)",
-//   "Legal",
-//   "Shelter",
-//   "Transportation",
-//   "LGBTQ Support",
-//   "Technology Access",
-//   "Social Integration",
-//   "Pet Care",
-// ];
-
-
-// Moved to src/lib/constants/stateAbbreviations.js
-
-// const stateAbbreviations = {
-//   "alabama": "AL",
-//   "alaska": "AK",
-//   "arizona": "AZ",
-//   "arkansas": "AR",
-//   "california": "CA",
-//   "colorado": "CO",
-//   "connecticut": "CT",
-//   "delaware": "DE",
-//   "florida": "FL",
-//   "georgia": "GA",
-//   "hawaii": "HI",
-//   "idaho": "ID",
-//   "illinois": "IL",
-//   "indiana": "IN",
-//   "iowa": "IA",
-//   "kansas": "KS",
-//   "kentucky": "KY",
-//   "louisiana": "LA",
-//   "maine": "ME",
-//   "maryland": "MD",
-//   "massachusetts": "MA",
-//   "michigan": "MI",
-//   "minnesota": "MN",
-//   "mississippi": "MS",
-//   "missouri": "MO",
-//   "montana": "MT",
-//   "nebraska": "NE",
-//   "nevada": "NV",
-//   "new hampshire": "NH",
-//   "new jersey": "NJ",
-//   "new mexico": "NM",
-//   "new york": "NY",
-//   "north carolina": "NC",
-//   "north dakota": "ND",
-//   "ohio": "OH",
-//   "oklahoma": "OK",
-//   "oregon": "OR",
-//   "pennsylvania": "PA",
-//   "rhode island": "RI",
-//   "south carolina": "SC",
-//   "south dakota": "SD",
-//   "tennessee": "TN",
-//   "texas": "TX",
-//   "utah": "UT",
-//   "vermont": "VT",
-//   "virginia": "VA",
-//   "washington": "WA",
-//   "west virginia": "WV",
-//   "wisconsin": "WI",
-//   "wyoming": "WY",
-// };
+const stateAbbreviations = {
+  "alabama": "AL",
+  "alaska": "AK",
+  "arizona": "AZ",
+  "arkansas": "AR",
+  "california": "CA",
+  "colorado": "CO",
+  "connecticut": "CT",
+  "delaware": "DE",
+  "florida": "FL",
+  "georgia": "GA",
+  "hawaii": "HI",
+  "idaho": "ID",
+  "illinois": "IL",
+  "indiana": "IN",
+  "iowa": "IA",
+  "kansas": "KS",
+  "kentucky": "KY",
+  "louisiana": "LA",
+  "maine": "ME",
+  "maryland": "MD",
+  "massachusetts": "MA",
+  "michigan": "MI",
+  "minnesota": "MN",
+  "mississippi": "MS",
+  "missouri": "MO",
+  "montana": "MT",
+  "nebraska": "NE",
+  "nevada": "NV",
+  "new hampshire": "NH",
+  "new jersey": "NJ",
+  "new mexico": "NM",
+  "new york": "NY",
+  "north carolina": "NC",
+  "north dakota": "ND",
+  "ohio": "OH",
+  "oklahoma": "OK",
+  "oregon": "OR",
+  "pennsylvania": "PA",
+  "rhode island": "RI",
+  "south carolina": "SC",
+  "south dakota": "SD",
+  "tennessee": "TN",
+  "texas": "TX",
+  "utah": "UT",
+  "vermont": "VT",
+  "virginia": "VA",
+  "washington": "WA",
+  "west virginia": "WV",
+  "wisconsin": "WI",
+  "wyoming": "WY",
+};
 
 const users_collection = collectionMapping.users;
 const outreachEvents_collection = collectionMapping.outreachEvents;
@@ -348,19 +340,15 @@ const Form = (hrid) => {
           });
 
 
-          const emailHTML = `
-          <div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px">
-            <h1>Thank you for creating the Outreach</h1>
-            <p>Your Outreach <b>${nameRef.current.value}</b> has been successfully created and you can view it in your profile.</p>
-            <p>Here are some of the details:</p>
-            <ul>
-              <li>Contact Number: ${contactRef.current.value}</li>
-              <li>Description: ${descRef.current.value}</li>
-              <li>Location: ${streetRef.current.value}, ${cityRef.current.value}, ${stateRef.current.value}, ${zipcodeRef.current.value}</li>
-              <li>Help Type: ${helpRef.current.value}</li>
-            </ul>
-          </div>
-          `;
+          const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px"><h1>Thank you for creating the outreach</h1><p>Your outreach <b>${nameRef.current.value}</b> has been successfully created and you can view it in your profile.</p>
+          <p>Here are some of the details:</p>
+          <ul>
+          <li>Contact Number: ${contactRef.current.value}</li>
+          <li>Description: ${descRef.current.value}</li>
+          <li>Location: ${streetRef.current.value}, ${cityRef.current.value}, ${stateRef.current.value}, ${zipcodeRef.current.value}</li>
+          <li>Help Type: ${helpRef.current.value}</li>
+          </ul>
+          </div>`;
           // Successful if outreach event is updated
           if (ack) {
             setSuccess(true);

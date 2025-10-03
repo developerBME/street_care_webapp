@@ -486,7 +486,7 @@ function PersonalOutForm() {
 
     let whereVisit = `${street}, ${stateName}, ${cityName}, ${postcode}`;
 
-    console.log(dateTime);
+    console.log(dateTime)
     let obj = {
       uid: fAuth.currentUser.uid,
       peopleHelpedDescription: descriptionHelped,
@@ -512,34 +512,17 @@ function PersonalOutForm() {
     };
     console.log(obj);
 
-    // Before Email Change
-
-    // const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px">
-    //   <h1>Thank you for creating the Interaction</h1>
-    //   <p>Your Personal Outreach Form has been successfully created and you can view it in your profile.</p>
-    //   <p>Here are some of the details:</p>
-    //   <ul>
-    //     <li>Number of People Helped: ${numberHelped}</li>
-    //     <li>Location: ${state}, ${city}</li>
-    //     <li>Item Quantity: ${itemQty}</li>
-    //     <li>Date: ${date.current.value}</li>
-    //   </ul>
-    // </div>`;
-
-    // After Email Change
-    const emailHTML = `
-    <div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px">
-      <h1>Thank you for creating the Interaction Log</h1>
-      <p>Your Interaction Log has been successfully created and you can view it in your profile.</p>
+    const emailHTML = `<div style="border-radius: 30px;background: #F1EEFE; padding: 20px 50px">
+      <h1>Thank you for creating the outreach</h1>
+      <p>Your Personal Outreach Form has been successfully created and you can view it in your profile.</p>
       <p>Here are some of the details:</p>
       <ul>
         <li>Number of People Helped: ${numberHelped}</li>
-        <li>Location: ${whereVisit}</li>
+        <li>Location: ${state}, ${city}</li>
         <li>Item Quantity: ${itemQty}</li>
-        <li>Date: ${dateTime}</li>
+        <li>Date: ${date.current.value}</li>
       </ul>
-    </div>
-  `;
+    </div>`;
 
     try {
       console.log("Sending email...");
@@ -569,7 +552,7 @@ function PersonalOutForm() {
         emailConfirmation(
           fAuth.currentUser.email,
           fAuth.currentUser.displayName,
-          "Interaction Log Created Successfully",
+          "",
           emailHTML
         );
         clearFields();

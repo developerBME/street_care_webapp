@@ -6,7 +6,6 @@ import {
   getDocs,
   updateDoc,
   doc,
-  orderBy,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import ApprovalCardOutreachEvents from "./ApprovalCardOutreachEvents";
@@ -48,8 +47,7 @@ const PostApprovals = () => {
 
         const outreachQuery = query(
           collection(db, outreachEvents_collection),
-          where("status", "==", "pending"),
-          orderBy("eventDate", "desc")
+          where("status", "==", "pending")
         );
 
         const outreachSnapshot = await getDocs(outreachQuery);
@@ -68,8 +66,7 @@ const PostApprovals = () => {
         // --- Fetch visit logs from NEW collection ---
         const visitLogQueryNew = query(
           collection(db, visitLogsNew_collection),
-          where("status", "==", "pending"),
-          orderBy("timeStamp", "desc")
+          where("status", "==", "pending")
         );
 
         const visitLogSnapshotNew = await getDocs(visitLogQueryNew);
@@ -236,7 +233,7 @@ const PostApprovals = () => {
     }
   };
   useEffect(() => {
-    // Initialize filteredPosts with fetched data (already sorted from backend)
+    // Initialize filteredPosts with fetched data
     setFilteredPosts(pendingPosts);
   }, [pendingPosts]);
 
