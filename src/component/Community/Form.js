@@ -313,13 +313,76 @@ const Form = (hrid) => {
           };
 
           // Insert doc in outreach event
-          const eventRef = collection(db, outreachEvents_collection);
+          //const eventRef = collection(db, outreachEvents_collection);
 
-          async function postDoc(ref, obj) {
-            const docRef = await addDoc(ref, obj);
-            return docRef.id;
+          //async function postDoc(ref, obj) {
+            //const docRef = await addDoc(ref, obj);
+            //return docRef.id;
+          //}
+          //const ack = await postDoc(eventRef, obj);
+
+          // Check if editing an existing outreach
+          if (hrid && hrid.hrid) {
+            // We're updating an existing event, so reset approval 
+            const outreachRef = doc(db, outreachEvents_collection, hrid.hrid);
+            
+            await updateDoc(outreachRef, {
+              title: nameRef.current.value,
+              contactNumber: contactRef.current.value,
+              emailAddress: emailRef.current.value,
+              description: descRef.current.value,
+              eventDate: Timestamp.fromDate(startDate),
+              eventEndTime: Timestamp.fromDate(endDate),
+              eventStartTime: Timestamp.fromDate(startDate),
+              totalSlots: Math.round(Number(maxCapRef.current.value)),
+              location: {
+                street: streetRef.current.value,
+                city: cityRef.current.value,
+                state: stateRef.current.value,
+                stateAbbv: stateAbbv,
+                zipcode: zipcodeRef.current.value,
+              },
+              helpType: helpRef.current.value,
+              skills: helpType,
+              consentStatus: consentStatus,
+              
+              // Force re-approval
+              status: "pending",
+              approved: false,
+              updatedAt: Timestamp.now(),
+            });
+            
+            setSuccess(true);
+            alert("Your changes were saved and sent for re-approval.");
+          } else {
+            // Insert doc in outreach event (original creation flow)
+            const eventRef = collection(db, outreachEvents_collection);
+            
+            async function postDoc(ref, obj) {
+              const docRef = await addDoc(ref, obj);
+              return docRef.id;
+            }
+            
+            const ack = await postDoc(eventRef, obj);
+            
+            // Add outreach ID to user's createdOutreaches
+            const userQuery = query(
+              collection(db, users_collection),
+              where("uid", "==", fAuth?.currentUser?.uid)
+            );
+            
+            const userDocRef = await getDocs(userQuery);
+            const userDocID = userDocRef.docs[0].id;
+            const userRef = doc(db, users_collection, userDocID);
+            const docSnap = await getDoc(userRef);
+            let createdOutreaches = docSnap.data().createdOutreaches || [];
+            createdOutreaches.push(ack);
+            
+            await updateDoc(userRef, {
+              createdOutreaches: createdOutreaches,
+            });
           }
-          const ack = await postDoc(eventRef, obj);
+
 
           //added outreach to user collection
           const userQuery = query(
