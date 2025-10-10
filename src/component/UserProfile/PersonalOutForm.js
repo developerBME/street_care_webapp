@@ -486,7 +486,7 @@ function PersonalOutForm() {
 
     let whereVisit = `${street}, ${stateName}, ${cityName}, ${postcode}`;
 
-    console.log(dateTime)
+    console.log(dateTime);
     let obj = {
       uid: fAuth.currentUser.uid,
       peopleHelpedDescription: descriptionHelped,
