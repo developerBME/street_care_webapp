@@ -36,7 +36,7 @@ const OutreachVisitLogProfile = () => {
           cursorFields.pageHistory
         );
         setCursorFields((prev)=>({...prev,lastVisible:logs.lastVisible,pageHistory:logs.pageHistory}))
-        setVisitLogs(logs.visitLogs);        
+        setVisitLogs(logs.visitLogs);
         if(cursorFields.direction ==="next")setCurrentPageLength((prev)=>prev+logs.visitLogs.length)
         setIsLoading(false);
       } catch (error) {

@@ -19,7 +19,6 @@ import DeleteModal from "./DeleteModal";
 import { formatDate } from "./../HelperFunction";
 
 import collectionMapping from "../../utils/firestoreCollections";
-import {getStatusStyle} from "../../component/admin_test/ApprovalCardOutreachEvents"
 
 const users_collection = collectionMapping.users;
 //const visitLogs_collection = collectionMapping.visitLogs; using new collection

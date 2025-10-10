@@ -1333,6 +1333,7 @@ export const fetchUserOutreaches = async () => {
         userType: result.userType,
       });
     }
+
     return userOutreaches;
   } catch (error) {
     logEvent(
