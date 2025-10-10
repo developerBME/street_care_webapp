@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import OutreachEventCard from "./Community/OutreachEventCard";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 import { Modal } from "@mui/material";
@@ -22,47 +22,112 @@ import collectionMapping from "../utils/firestoreCollections.js";
 
 const outreachEvents_collection = collectionMapping.outreachEvents;
 
+const OUTREACHES_PER_PAGE = 6;
+
+const createDefaultCursorFields = () => ({
+  lastVisible: null,
+  pageSize: OUTREACHES_PER_PAGE,
+  direction: "next",
+  pageHistory: []
+});
+
+const cloneCursorFields = (fields) => ({
+  lastVisible: fields?.lastVisible || null,
+  pageSize: fields?.pageSize || OUTREACHES_PER_PAGE,
+  direction: fields?.direction || "next",
+  pageHistory: Array.isArray(fields?.pageHistory) ? [...fields.pageHistory] : []
+});
+
+let cachedUpcomingOutreachState = null;
+
+const parsePageParam = (search) => {
+  const params = new URLSearchParams(search);
+  const pageValue = parseInt(params.get("page") || "1", 10);
+  if (Number.isNaN(pageValue) || pageValue < 1) {
+    return 1;
+  }
+  return pageValue;
+};
+
 const AllOutreachEvents = ({ loggedIn }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const cachedState = cachedUpcomingOutreachState;
+  const initialPageFromUrl = parsePageParam(location.search);
 
-  const [cursorFields, setCursorFields] = useState({
-    lastVisible: null,
-    pageSize: 6,
-    direction: "next",
-    pageHistory: []
-  });
+  const defaultStartDate = cachedState?.startDate
+    ? new Date(cachedState.startDate)
+    : new Date();
+
+  const defaultEndDate = cachedState?.endDate
+    ? new Date(cachedState.endDate)
+    : (() => {
+        const d = new Date();
+        d.setDate(d.getDate() + 7);
+        return d;
+      })();
+
+  const [cursorFields, setCursorFields] = useState(() =>
+    cachedState?.cursorFields
+      ? { ...cloneCursorFields(cachedState.cursorFields), direction: "current" }
+      : createDefaultCursorFields()
+  );
   
-  const [currentPage, setCurrentPage] = useState(1);
-  const [events, setEvents] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(
+    cachedState?.currentPage ?? initialPageFromUrl
+  );
+  const [events, setEvents] = useState(cachedState?.events || []);
+  const [isLoading, setIsLoading] = useState(!(cachedState?.events?.length));
+  const [totalPages, setTotalPages] = useState(cachedState?.totalPages || 0);
 
-  const [searchDescription, setSearchDescription] = useState("");
-  const [debouncedSearchDescription, setDebouncedSearchDescription] = useState("");
-  const [filterOption, setFilterOption] = useState("");
-  const [startDate, setStartDate] = useState(new Date());
-
-  const [endDate, setEndDate] = useState(() => {
-    const d = new Date();
-    d.setDate(d.getDate() + 7);
-    return d;
-  });
-  const [cityToSearch, setCityToSearch] = useState("");
-  const [debouncedCityToSearch, setDebouncedCityToSearch] = useState("");
-  const outreachPerPages = 6;
+  const [searchDescription, setSearchDescription] = useState(
+    cachedState?.searchDescription || ""
+  );
+  const [debouncedSearchDescription, setDebouncedSearchDescription] = useState(
+    cachedState?.debouncedSearchDescription ??
+      cachedState?.searchDescription ??
+      ""
+  );
+  const [filterOption, setFilterOption] = useState(cachedState?.filterOption || "");
+  const [startDate, setStartDate] = useState(defaultStartDate);
+  const [endDate, setEndDate] = useState(defaultEndDate);
+  const [cityToSearch, setCityToSearch] = useState(
+    cachedState?.cityToSearch || ""
+  );
+  const [debouncedCityToSearch, setDebouncedCityToSearch] = useState(
+    cachedState?.debouncedCityToSearch ??
+      cachedState?.cityToSearch ??
+      ""
+  );
   const searchCity = useRef("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [filteredTotal, setFilteredTotal] = useState(0);
+  const [filteredTotal, setFilteredTotal] = useState(
+    cachedState?.filteredTotal || 0
+  );
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showWithdrawnModal, setShowWithdrawnModal] = useState(false);
   const [triggerEffect, setTriggerEffect] = useState(false);
-  const [totalOutreaches, setTotalOutreaches] = useState(0);
-  const [cumulativeEventsCount, setCumulativeEventsCount] = useState(0);
-  const [paginationTrigger, setPaginationTrigger] = useState(0);
+  const [totalOutreaches, setTotalOutreaches] = useState(
+    cachedState?.totalOutreaches || 0
+  );
+  const [cumulativeEventsCount, setCumulativeEventsCount] = useState(
+    cachedState?.cumulativeEventsCount || 0
+  );
+  const [paginationTrigger, setPaginationTrigger] = useState(
+    cachedState?.paginationTrigger || 0
+  );
 
   const searchDescriptionTimer = useRef(null);
   const citySearchTimer = useRef(null);
+  const isInitialSearchEffect = useRef(true);
+  const isInitialCityEffect = useRef(true);
+  const hasSyncedUrlRef = useRef(false);
+  const currentPageRef = useRef(currentPage);
+
+  useEffect(() => {
+    currentPageRef.current = currentPage;
+  }, [currentPage]);
 
   useEffect(() => {
     if (searchDescriptionTimer.current) {
@@ -71,7 +136,11 @@ const AllOutreachEvents = ({ loggedIn }) => {
     
     searchDescriptionTimer.current = setTimeout(() => {
       setDebouncedSearchDescription(searchDescription);
-      resetPagination();
+      if (isInitialSearchEffect.current) {
+        isInitialSearchEffect.current = false;
+      } else {
+        resetPagination();
+      }
     }, 500);
     
     return () => {
@@ -88,7 +157,11 @@ const AllOutreachEvents = ({ loggedIn }) => {
     
     citySearchTimer.current = setTimeout(() => {
       setDebouncedCityToSearch(cityToSearch);
-      resetPagination();
+      if (isInitialCityEffect.current) {
+        isInitialCityEffect.current = false;
+      } else {
+        resetPagination();
+      }
     }, 500);
     
     return () => {
@@ -139,7 +212,17 @@ const AllOutreachEvents = ({ loggedIn }) => {
 
   useEffect(() => {
     const getEvents = async () => {
-      setIsLoading(true);
+      const shouldShowLoader = !(
+        cursorFields.direction === "current" &&
+        events.length > 0
+      );
+
+      if (shouldShowLoader) {
+        setIsLoading(true);
+      }
+
+      setErrorMessage("");
+
       try {
         const {
           events: fetchedEvents,
@@ -164,9 +247,16 @@ const AllOutreachEvents = ({ loggedIn }) => {
           pageHistory: pageHistory
         }));
 
-        if (debouncedSearchDescription.trim() !== '' || debouncedCityToSearch.trim() !== '') {
+        if (
+          debouncedSearchDescription.trim() !== "" ||
+          debouncedCityToSearch.trim() !== ""
+        ) {
           setFilteredTotal(totalFilteredEvents || 0);
-          setTotalPages(Math.ceil((totalFilteredEvents || 0) / outreachPerPages));
+          setTotalPages(
+            Math.ceil((totalFilteredEvents || 0) / OUTREACHES_PER_PAGE)
+          );
+        } else {
+          setFilteredTotal(0);
         }
       } catch (error) {
         setErrorMessage(error.message);
@@ -176,19 +266,129 @@ const AllOutreachEvents = ({ loggedIn }) => {
       }
     };
     getEvents();
-  }, [paginationTrigger, debouncedCityToSearch, startDate, endDate, debouncedSearchDescription]);
+  }, [paginationTrigger, debouncedCityToSearch, startDate, endDate, debouncedSearchDescription, filterOption]);
   
   useEffect(() => {
-    setTotalPages(Math.ceil(totalOutreaches / outreachPerPages));
-  }, [totalOutreaches, outreachPerPages]);
+    if (
+      typeof window !== "undefined" &&
+      cachedState?.scrollPosition !== undefined
+    ) {
+      window.scrollTo(0, cachedState.scrollPosition);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const handleScroll = () => {
+      cachedUpcomingOutreachState = {
+        ...(cachedUpcomingOutreachState || {}),
+        scrollPosition: window.scrollY,
+      };
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const previousScrollPosition =
+      cachedUpcomingOutreachState?.scrollPosition ??
+      (typeof window !== "undefined" ? window.scrollY : 0);
+
+    cachedUpcomingOutreachState = {
+      events,
+      currentPage,
+      totalPages,
+      searchDescription,
+      debouncedSearchDescription,
+      filterOption,
+      startDate,
+      endDate,
+      cityToSearch,
+      debouncedCityToSearch,
+      filteredTotal,
+      totalOutreaches,
+      cursorFields: cloneCursorFields(cursorFields),
+      paginationTrigger,
+      cumulativeEventsCount,
+      scrollPosition: previousScrollPosition
+    };
+  }, [
+    events,
+    currentPage,
+    totalPages,
+    searchDescription,
+    debouncedSearchDescription,
+    filterOption,
+    startDate,
+    endDate,
+    cityToSearch,
+    debouncedCityToSearch,
+    filteredTotal,
+    totalOutreaches,
+    cursorFields,
+    paginationTrigger,
+    cumulativeEventsCount
+  ]);
+
+  const updateUrlPage = useCallback(
+    (page, replace = false) => {
+      if (typeof window === "undefined") {
+        return;
+      }
+      const currentSearchValue = window.location.search;
+      const params = new URLSearchParams(currentSearchValue);
+      if (page <= 1) {
+        params.delete("page");
+      } else {
+        params.set("page", String(page));
+      }
+      const currentSearch = currentSearchValue.startsWith("?")
+        ? currentSearchValue.slice(1)
+        : currentSearchValue;
+      const newSearch = params.toString();
+      if (newSearch === currentSearch) {
+        return;
+      }
+      navigate(
+        {
+          pathname: location.pathname,
+          search: newSearch ? `?${newSearch}` : "",
+        },
+        { replace }
+      );
+    },
+    [location.pathname, navigate]
+  );
+
+  useEffect(() => {
+    updateUrlPage(currentPage, !hasSyncedUrlRef.current);
+    hasSyncedUrlRef.current = true;
+  }, [currentPage, updateUrlPage]);
+
+  useEffect(() => {
+    const pageFromUrl = parsePageParam(location.search);
+    const currentPageFromState = currentPageRef.current;
+    if (pageFromUrl !== currentPageFromState) {
+      const direction = pageFromUrl > currentPageFromState ? "next" : "prev";
+      setCursorFields((prev) => ({
+        ...prev,
+        direction,
+      }));
+      setCurrentPage(pageFromUrl);
+      setPaginationTrigger((prev) => prev + 1);
+    }
+  }, [location.search]);
+  
+  useEffect(() => {
+    setTotalPages(Math.ceil(totalOutreaches / OUTREACHES_PER_PAGE));
+  }, [totalOutreaches]);
 
   const resetPagination = () => {
-    setCursorFields({
-      lastVisible: null,
-      pageSize: 6,
-      direction: "next",
-      pageHistory: []
-    });
+    setCursorFields(createDefaultCursorFields());
     setCurrentPage(1);
     setCumulativeEventsCount(0);
     setPaginationTrigger(prev => prev + 1);
@@ -213,7 +413,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
     if (debouncedSearchDescription.trim() !== "" || debouncedCityToSearch.trim() !== "") {
       return events.length;
     } else {
-      return Math.min(currentPage * outreachPerPages, totalOutreaches);
+      return Math.min(currentPage * OUTREACHES_PER_PAGE, totalOutreaches);
     }
   };
 
@@ -222,6 +422,11 @@ const AllOutreachEvents = ({ loggedIn }) => {
 
   const searchCityChange = (e) => {
     setCityToSearch(e.target.value);
+  };
+
+  const handleNavigateHome = () => {
+    cachedUpcomingOutreachState = null;
+    navigate("/");
   };
 
   const handleNext = () => {
@@ -312,7 +517,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-16 lg:mx-40 mt-48 rounded-2xl bg-white text-black">
         <div
           className="absolute flex mt-[-50px] items-center cursor-pointer"
-          onClick={() => navigate("/")}
+          onClick={handleNavigateHome}
         >
           <IoIosArrowBack className="w-6 h-6" />
           <p className="font-bricolage text-xl font-bold leading-7">
