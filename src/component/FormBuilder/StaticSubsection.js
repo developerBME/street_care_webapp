@@ -43,9 +43,9 @@ const StaticSubsection = ({ index, interaction, onUpdate }) => {
     additionalDetails: "",
     isPublic: true,
     status: "pending",
-    lastModifiedTimeStamp: null,
+    lastModifiedTimestamp: null,
     lastActionPerformed: null,
-    completedTimeStamp: "",
+    completedTimestamp: "",
     isCompleted: false,
   }); // Centrailized State for easier and manageable state upliftment
 

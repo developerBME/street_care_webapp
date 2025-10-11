@@ -26,6 +26,7 @@ import { fetchUserTypeDetails } from "../EventCardService";
 import GeneralInfoForm from "./GeneralInfoForm";
 import DynamicSubSection from "../FormBuilder/DynamicSubsection";
 import collectionMapping from "../../utils/firestoreCollections";
+import ConfirmationModalInteractionLog from "./ConfirmationModalInteractionLog";
 
 const users_collection = collectionMapping.users;
 const visitLogsBookNew_collection = collectionMapping.visitLogsBookNew;
@@ -150,10 +151,13 @@ function InteractionLogForm() {
         timestampOfInteraction: Timestamp.fromDate(
           helpEntry.timestampOfInteraction?.toDate?.() ?? new Date()
         ),
-        followUpTimestamp: Timestamp.fromDate(
-          helpEntry.followUpTimestamp?.toDate?.() ?? new Date()
-        ),
-        firstName: interactionLogData.firstName,
+        followUpTimestamp:
+          helpEntry.followUpTimestamp == ""
+            ? null
+            : Timestamp.fromDate(
+                helpEntry.followUpTimestamp?.toDate?.() ?? new Date()
+              ),
+        interactionLogFirstName: interactionLogData.firstName,
         isPublic: isPublic,
       }));
 
@@ -169,6 +173,7 @@ function InteractionLogForm() {
       });
 
       console.log("✅ Submission complete");
+      setSuccess(true);
     } catch (error) {
       console.error("❌ Submission failed:", error);
     }
@@ -320,7 +325,7 @@ function InteractionLogForm() {
                   </div>
                 </div>
                 {/*  */}
-                {success && <ConfirmationModal isOpen={true} />}
+                {success && <ConfirmationModalInteractionLog isOpen={true} />}
               </div>
             </div>
           </div>

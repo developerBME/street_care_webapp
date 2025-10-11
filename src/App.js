@@ -218,7 +218,7 @@ function App() {
               element={<AllPastOutreachEvents />}
             />
             <Route
-              path="/interactionLogForm"
+              path="profile/interactionLogForm"
               element={<InteractionLogForm />}
             />
             <Route
