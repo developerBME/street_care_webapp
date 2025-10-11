@@ -113,11 +113,12 @@ function InteractionLogForm() {
         ...interactionLogData,
         outreachId: "",
         lastActionPerformed: null,
+        lastModifiedTimestamp: Timestamp.now(),
         isPublic: isPublic,
         helpRequestCount: 0,
-        startTimestamp: null, //Timestamp.fromDate(null), //nativeStartDate
-        endTimestamp: null, //Timestamp.fromDate(null), //nativeEndDate
-        interactionDate: null, //Timestamp.fromDate(null), //nativeDate
+        startTimestamp: Timestamp.fromDate(nativeStartDate), //nativeStartDate
+        endTimestamp: Timestamp.fromDate(nativeEndDate), //nativeEndDate
+        interactionDate: Timestamp.fromDate(nativeDate), //nativeDate
       };
       console.log(
         "InteractionLog Data just before send:",
@@ -131,29 +132,41 @@ function InteractionLogForm() {
       );
       const interactionLogDocId = interactionLogRef.id;
 
+      console.log(interactionLogDocId);
       // STEP 3: Add each helpRequest entry individually
+
+      // if(helpRequestData){
+
+      // }
       const helpRequestDataWithoutKeys = Object.values(helpRequestData);
+      console.log("HelpRequestData:", helpRequestData);
+      console.log("HelpRequestDataWihoutKeys:", helpRequestDataWithoutKeys);
       const helpRequestDocIds = [];
 
-      for (const helpEntry of helpRequestDataWithoutKeys) {
-        const enrichedHelpEntry = {
-          ...helpEntry,
-          //   interactionLogDocId: interactionLogDocId,
-          firstName: interactionLogData.firstName,
-          isPublic: isPublic,
-        };
+      const enrichedHelpEntry = helpRequestDataWithoutKeys.map((helpEntry) => ({
+        ...helpEntry,
+        interactionLogDocId: interactionLogDocId,
+        lastModifiedTimestamp: Timestamp.now(),
+        timestampOfInteraction: Timestamp.fromDate(
+          helpEntry.timestampOfInteraction?.toDate?.() ?? new Date()
+        ),
+        followUpTimestamp: Timestamp.fromDate(
+          helpEntry.followUpTimestamp?.toDate?.() ?? new Date()
+        ),
+        firstName: interactionLogData.firstName,
+        isPublic: isPublic,
+      }));
 
-        const helpRef = await addDoc(
-          collection(db, "HelpRequest"),
-          enrichedHelpEntry
-        );
+      console.log("HelpReques Data just Before sending it:", enrichedHelpEntry);
+      for (const entry of enrichedHelpEntry) {
+        const helpRef = await addDoc(collection(db, "HelpRequest"), entry);
         helpRequestDocIds.push(helpRef.id);
       }
 
       // STEP 4: Patch helpRequestDocIds into interactionLog entry
-      // await updateDoc(doc(db, "InteractionLog", interactionLogDocId), {
-      //   helpRequestDocIds: helpRequestDocIds,
-      // });
+      await updateDoc(doc(db, "InteractionLog", interactionLogDocId), {
+        helpRequestDocIds: helpRequestDocIds,
+      });
 
       console.log("✅ Submission complete");
     } catch (error) {

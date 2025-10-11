@@ -56,7 +56,7 @@ export default function GeneralInfoForm({ onUpdate = () => {} }) {
     helpRequestDocIds: [],
     isPublic: true,
     status: "Pending",
-    lastModifiedTimeStamp: null,
+    lastModifiedTimestamp: null,
     lastActionPerformed: null,
   });
 

@@ -58,7 +58,7 @@ const StaticSubsection = ({ index, interaction, onUpdate }) => {
       .second(selectedTime.second());
     setInteractionData((prev) => ({
       ...prev,
-      followUpTimeStamp: dayjs(merged, "YYYY-MM-DD hh:mm:A"),
+      followUpTimestamp: dayjs(merged, "YYYY-MM-DD hh:mm:A"),
     }));
   };
   useEffect(() => {
