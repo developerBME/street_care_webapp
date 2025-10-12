@@ -150,7 +150,7 @@ function InteractionLogForm() {
         (helpRequestData === undefined ||
           areObjectsEqual(helpRequestData[1], obj2))
       ) {
-        console.log("Form is Empty.");
+        // console.log("Form is Empty.");
         setEmptyError(true);
         //Here add stuff to notify user/ setErrorState
         return;
@@ -181,10 +181,10 @@ function InteractionLogForm() {
           endTimestamp: Timestamp.fromDate(nativeEndDate), //nativeEndDate
           interactionDate: Timestamp.fromDate(nativeDate), //nativeDate
         };
-        console.log(
-          "InteractionLog Data just before send:",
-          augmentedInteractionLog
-        );
+        // console.log(
+        //   "InteractionLog Data just before send:",
+        //   augmentedInteractionLog
+        // );
 
         // STEP 2: Add to interactionLog collection
         const interactionLogRef = await addDoc(
@@ -198,10 +198,7 @@ function InteractionLogForm() {
         console.log("Same");
       }
 
-      console.log(interactionLogDocId);
-
       // STEP 3: Add each helpRequest entry individually
-      console.log(helpRequestData);
 
       if (
         helpRequestData !== undefined &&
