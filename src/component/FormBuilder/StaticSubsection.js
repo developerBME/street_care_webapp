@@ -28,7 +28,7 @@ const sxTheme = {
   },
 };
 
-const StaticSubsection = ({ index, interaction, onUpdate }) => {
+const StaticSubsection = ({ index, interaction, onUpdate, handleCancel }) => {
   const [selectedDate, setSelectedDate] = useState(null); //For FollowUp Date
   const [selectedTime, setSelectedTime] = useState(null); //For Followup Time
   const [interactionData, setInteractionData] = useState({
@@ -48,7 +48,6 @@ const StaticSubsection = ({ index, interaction, onUpdate }) => {
     completedTimestamp: "",
     isCompleted: false,
   }); // Centrailized State for easier and manageable state upliftment
-
   const handleDateTimeMerge = (selectedDate, selectedTime) => {
     // // merges the FollowUp Date and FollowUp Time
     if (!selectedDate || !selectedTime) return;
@@ -62,9 +61,9 @@ const StaticSubsection = ({ index, interaction, onUpdate }) => {
     }));
   };
   useEffect(() => {
-    console.log(`Date:`, selectedDate);
-    console.log(`Time:`, selectedTime);
-    console.log(`InteractionData ${interaction} Updated:`, interactionData);
+    // console.log(`Date:`, selectedDate);
+    // console.log(`Time:`, selectedTime);
+    // console.log(`InteractionData ${interaction} Updated:`, interactionData);
     onUpdate({ [interaction]: interactionData }); //This Function uplifts the data from this component to its parent component essentially making all Individual Interactions Data available to a single obj like key:value pairs.
     //e.g. {1:{firstName:John,dateOfInteraction:xyz},2:{firstName:Adam,dateOfInteraction:abc}}
   }, [interactionData]);
@@ -75,15 +74,17 @@ const StaticSubsection = ({ index, interaction, onUpdate }) => {
         <div className="text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
           Individual Interaction {index + 1}
         </div>
-        {index !== 0 && (
+        {/* {index !== 0 && (
           <button
             type="button"
             className="bg-red-100 text-red-700 text-sm font-medium px-3 py-1 rounded transition duration-150 ease-in-out hover:bg-red-600 hover:text-white"
-            //   onClick={handleCancel}
+            // onClick={() => {
+            //   handleCancel(interaction);
+            // }}
           >
             Remove
           </button>
-        )}
+        )} */}
       </div>
 
       <TextInput

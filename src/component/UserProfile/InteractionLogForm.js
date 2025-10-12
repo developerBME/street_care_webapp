@@ -40,7 +40,7 @@ function InteractionLogForm() {
     useState("No");
   const [interactionLogData, setInteractionLogData] = useState();
   const [helpRequestData, setHelpRequestData] = useState();
-
+  const [emptyError, setEmptyError] = useState(false);
   const [error, setError] = useState({
     numberHelpedError: "",
     cityError: "",
@@ -62,6 +62,9 @@ function InteractionLogForm() {
 
   /* Firebase */
   const fAuth = getAuth();
+  function areObjectsEqual(obj1, obj2) {
+    return JSON.stringify(obj1) === JSON.stringify(obj2);
+  }
 
   const handleSubmit = async (e) => {
     let setReturn = false;
@@ -76,15 +79,53 @@ function InteractionLogForm() {
     }
 
     const userDetails = await fetchUserTypeDetails(fAuth.currentUser.uid);
-
-    let obj1 = {
-      uid: fAuth.currentUser.uid,
-      //Here Goes General INfo Data
-    };
-
-    console.log(obj1);
   };
 
+  let obj1 = {
+    userId: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    startTimestamp: "",
+    endTimestamp: "",
+    interactionDate: "",
+    addr1: "",
+    addr2: "",
+    city: "",
+    state: "",
+    zipcode: "",
+    country: "USA",
+    listOfSupportsProvided: [],
+    numPeopleHelped: 1,
+    numPeopleJoined: 0,
+    carePackagesDistributed: 0,
+    carePackageContents: null,
+    helpRequestCount: 0,
+    helpRequestDocIds: [],
+    isPublic: true,
+    status: "Pending",
+    lastModifiedTimestamp: null,
+    lastActionPerformed: null,
+  };
+
+  let obj2 = {
+    interactionLogFirstName: "",
+    interactionLogDocId: "",
+    firstName: "",
+    locationLandmark: "",
+    timestampOfInteraction: "",
+    helpProvidedCategory: [],
+    furtherHelpCategory: [],
+    followUpTimestamp: "",
+    additionalDetails: "",
+    isPublic: true,
+    status: "pending",
+    lastModifiedTimestamp: null,
+    lastActionPerformed: null,
+    completedTimestamp: "",
+    isCompleted: false,
+  };
   const clearFields = () => {
     // date.current.value = "";
     //Clear Fields Fn Here
@@ -99,78 +140,119 @@ function InteractionLogForm() {
   };
 
   const handleSubmmit = async () => {
-    //PUT InteractionLog
+    let interactionLogDocId = "";
+    let interactionLogFirstName = "";
+    let helpRequestDocIds = [];
 
     try {
-      // STEP 1: Augment interactionLogData
-      const nativeStartDate =
-        interactionLogData.startTimestamp?.toDate?.() ?? new Date();
-      const nativeEndDate =
-        interactionLogData.endTimestamp?.toDate?.() ?? new Date();
-      const nativeDate =
-        interactionLogData.interactionDate?.toDate?.() ?? new Date();
-
-      const augmentedInteractionLog = {
-        ...interactionLogData,
-        outreachId: "",
-        lastActionPerformed: null,
-        lastModifiedTimestamp: Timestamp.now(),
-        isPublic: isPublic,
-        helpRequestCount: 0,
-        startTimestamp: Timestamp.fromDate(nativeStartDate), //nativeStartDate
-        endTimestamp: Timestamp.fromDate(nativeEndDate), //nativeEndDate
-        interactionDate: Timestamp.fromDate(nativeDate), //nativeDate
-      };
-      console.log(
-        "InteractionLog Data just before send:",
-        augmentedInteractionLog
-      );
-
-      // STEP 2: Add to interactionLog collection
-      const interactionLogRef = await addDoc(
-        collection(db, "InteractionLog"),
-        augmentedInteractionLog
-      );
-      const interactionLogDocId = interactionLogRef.id;
-
-      console.log(interactionLogDocId);
-      // STEP 3: Add each helpRequest entry individually
-
-      // if(helpRequestData){
-
-      // }
-      const helpRequestDataWithoutKeys = Object.values(helpRequestData);
-      console.log("HelpRequestData:", helpRequestData);
-      console.log("HelpRequestDataWihoutKeys:", helpRequestDataWithoutKeys);
-      const helpRequestDocIds = [];
-
-      const enrichedHelpEntry = helpRequestDataWithoutKeys.map((helpEntry) => ({
-        ...helpEntry,
-        interactionLogDocId: interactionLogDocId,
-        lastModifiedTimestamp: Timestamp.now(),
-        timestampOfInteraction: Timestamp.fromDate(
-          helpEntry.timestampOfInteraction?.toDate?.() ?? new Date()
-        ),
-        followUpTimestamp:
-          helpEntry.followUpTimestamp == ""
-            ? null
-            : Timestamp.fromDate(
-                helpEntry.followUpTimestamp?.toDate?.() ?? new Date()
-              ),
-        interactionLogFirstName: interactionLogData.firstName,
-        isPublic: isPublic,
-      }));
-
-      console.log("HelpReques Data just Before sending it:", enrichedHelpEntry);
-      for (const entry of enrichedHelpEntry) {
-        const helpRef = await addDoc(collection(db, "HelpRequest"), entry);
-        helpRequestDocIds.push(helpRef.id);
+      if (
+        areObjectsEqual(interactionLogData, obj1) &&
+        (helpRequestData === undefined ||
+          areObjectsEqual(helpRequestData[1], obj2))
+      ) {
+        console.log("Form is Empty.");
+        setEmptyError(true);
+        //Here add stuff to notify user/ setErrorState
+        return;
       }
 
-      // STEP 4: Patch helpRequestDocIds into interactionLog entry
-      await updateDoc(doc(db, "InteractionLog", interactionLogDocId), {
-        helpRequestDocIds: helpRequestDocIds,
-      });
+      setEmptyError(false);
+
+      // STEP 1: Augment interactionLogData
+
+      if (!areObjectsEqual(interactionLogData, obj1)) {
+        // Checking here if user has changed anything at all in GeneralInfoForm Data
+
+        const nativeStartDate =
+          interactionLogData.startTimestamp?.toDate?.() ?? new Date();
+        const nativeEndDate =
+          interactionLogData.endTimestamp?.toDate?.() ?? new Date();
+        const nativeDate =
+          interactionLogData.interactionDate?.toDate?.() ?? new Date();
+
+        const augmentedInteractionLog = {
+          ...interactionLogData,
+          outreachId: "",
+          lastActionPerformed: null,
+          lastModifiedTimestamp: Timestamp.now(),
+          isPublic: isPublic,
+          helpRequestCount: 0,
+          startTimestamp: Timestamp.fromDate(nativeStartDate), //nativeStartDate
+          endTimestamp: Timestamp.fromDate(nativeEndDate), //nativeEndDate
+          interactionDate: Timestamp.fromDate(nativeDate), //nativeDate
+        };
+        console.log(
+          "InteractionLog Data just before send:",
+          augmentedInteractionLog
+        );
+
+        // STEP 2: Add to interactionLog collection
+        const interactionLogRef = await addDoc(
+          collection(db, "InteractionLog"),
+          augmentedInteractionLog
+        );
+
+        interactionLogDocId = interactionLogRef.id;
+        interactionLogFirstName = augmentedInteractionLog.firstName;
+      } else {
+        console.log("Same");
+      }
+
+      console.log(interactionLogDocId);
+
+      // STEP 3: Add each helpRequest entry individually
+      console.log(helpRequestData);
+
+      if (
+        helpRequestData !== undefined &&
+        !areObjectsEqual(helpRequestData[1], obj2)
+      ) {
+        const helpRequestDataWithoutKeys = Object.values(helpRequestData);
+        console.log("HelpRequestData:", helpRequestData);
+        console.log("HelpRequestDataWihoutKeys:", helpRequestDataWithoutKeys);
+        helpRequestDocIds = [];
+
+        const enrichedHelpEntry = helpRequestDataWithoutKeys.map(
+          (helpEntry) => ({
+            ...helpEntry,
+            interactionLogDocId: interactionLogDocId,
+            lastModifiedTimestamp: Timestamp.now(),
+            timestampOfInteraction:
+              helpEntry.timestampOfInteraction == ""
+                ? null
+                : Timestamp.fromDate(
+                    helpEntry.timestampOfInteraction?.toDate?.() ?? new Date()
+                  ),
+            followUpTimestamp:
+              helpEntry.followUpTimestamp == ""
+                ? null
+                : Timestamp.fromDate(
+                    helpEntry.followUpTimestamp?.toDate?.() ?? new Date()
+                  ),
+            interactionLogFirstName: interactionLogFirstName,
+            isPublic: isPublic,
+          })
+        );
+
+        console.log(
+          "HelpReques Data just Before sending it:",
+          enrichedHelpEntry
+        );
+        for (const entry of enrichedHelpEntry) {
+          const helpRef = await addDoc(collection(db, "HelpRequest"), entry);
+          helpRequestDocIds.push(helpRef.id);
+        }
+      }
+
+      if (
+        !areObjectsEqual(interactionLogData, obj1) &&
+        !areObjectsEqual(helpRequestData, obj2)
+      ) {
+        // STEP 4: Patch helpRequestDocIds into interactionLog entry
+        await updateDoc(doc(db, "InteractionLog", interactionLogDocId), {
+          helpRequestDocIds: helpRequestDocIds,
+        });
+      }
 
       console.log("✅ Submission complete");
       setSuccess(true);
@@ -315,7 +397,12 @@ function InteractionLogForm() {
                 </div>
 
                 {/* Toggle public form end */}
-                <div className="justify-start items-start gap-4 inline-flex">
+                <div className="justify-start items-start gap-4 inline-flex flex-col">
+                  {emptyError && (
+                    <div className="text-red-500 text-sm font-medium -mt-5">
+                      Form is empty. Please fill out the necessary fields.
+                    </div>
+                  )}
                   <div className="justify-start items-start gap-4 flex">
                     <CustomButton
                       label="Submit"

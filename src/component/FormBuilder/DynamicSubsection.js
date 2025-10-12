@@ -13,12 +13,37 @@ const DynamicSubSection = ({
     setInteractions((prev) => ({ ...prev, [key]: value })); //This Fn sets the respective interaction number with its interaction details.Basically pulls the respective interaction data from interaction number/child component(StaticSubSection) into this component(DynamicSubsection).
   };
 
-  //TODO: Also implement Remove Fn for Interactions including removing the respective data from the field
+  // TODO: Add handleCancel Logic here
+  // const handleCancel = (key) => {
+  //   console.log("Key", key);
+  //   console.log(typeof key);
+  //   interactionsSetterArray.pop();
+  //   console.log(interactionsSetterArray);
+  //   setInteractions((prev) => {
+  //     const updated = { ...prev };
+
+  //     // Clear the current key
+  //     updated[key] = {};
+
+  //     // Shift values from key+1 onward
+  //     let current = key;
+  //     while (updated[current + 1] !== undefined) {
+  //       updated[current] = updated[current + 1];
+  //       current++;
+  //     }
+
+  //     // Remove the last key
+  //     delete updated[current];
+  //     console.log(updated);
+
+  //     return updated;
+  //   });
+  // };
 
   useEffect(() => {
-    console.log("Interactions:", interactions);
+    // console.log("Interactions:", interactions);
     onUpdate(interactions);
-  }, [interactions]);
+  }, [interactions, interactionsSetterArray]);
   // need to have a static Subsection
   return (
     <>
@@ -29,6 +54,7 @@ const DynamicSubSection = ({
             index={index}
             interaction={interactionNumber}
             onUpdate={pullData}
+            // handleCancel={handleCancel}
           />
         );
       })}
