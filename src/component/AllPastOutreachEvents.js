@@ -10,14 +10,14 @@ import {
 } from "react-icons/io";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 import UserTypeInfo from "./UserTypeInfo";
-import { 
-  collection, 
-  query, 
-  where, 
-  orderBy, 
-  getCountFromServer 
+import {
+  collection,
+  query,
+  where,
+  orderBy,
+  getCountFromServer,
 } from "firebase/firestore";
-import {fetchPaginatedPastOutreachEvents} from "./EventCardService.js";
+import { fetchPaginatedPastOutreachEvents } from "./EventCardService.js";
 import { db } from "./firebase";
 
 import collectionMapping from "../utils/firestoreCollections.js";
@@ -32,7 +32,6 @@ const AllPastOutreachEvents = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
-  
   const [cityToSearch, setCityToSearch] = useState("");
   const [debouncedCityToSearch, setDebouncedCityToSearch] = useState("");
 
@@ -56,18 +55,19 @@ const AllPastOutreachEvents = () => {
     lastVisible: null,
     pageSize: outreachPerPages,
     direction: "next",
-    pageHistory: []
+    pageHistory: [],
   });
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const hasActiveFilter = searchTerm.trim() !== '' || cityToSearch.trim() !== '';
-    
+    const hasActiveFilter =
+      searchTerm.trim() !== "" || cityToSearch.trim() !== "";
+
     if (!hasActiveFilter && isFiltered) {
       setTotalPages(Math.ceil(totaloutreaches / outreachPerPages));
     }
-    
+
     setIsFiltered(hasActiveFilter);
   }, [searchTerm, cityToSearch, totaloutreaches]);
 
@@ -75,16 +75,16 @@ const AllPastOutreachEvents = () => {
     const delaySearch = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
     }, 500);
-  
+
     return () => clearTimeout(delaySearch);
   }, [searchTerm]);
-  
+
   useEffect(() => {
     const delayCitySearch = setTimeout(() => {
       setDebouncedCityToSearch(cityToSearch);
     }, 500);
-  
-    return () => clearTimeout(delayCitySearch); 
+
+    return () => clearTimeout(delayCitySearch);
   }, [cityToSearch]);
 
   useEffect(() => {
@@ -95,7 +95,7 @@ const AllPastOutreachEvents = () => {
           countQuery = query(
             collection(db, outreachEvents_collection),
             where("status", "==", "approved"),
-            where("eventDate", "<", new Date()), 
+            where("eventDate", "<", new Date()),
             where("eventDate", ">=", startDateTime),
             where("eventDate", "<=", endDateTime),
             orderBy("eventDate", "desc")
@@ -126,29 +126,41 @@ const AllPastOutreachEvents = () => {
     const fetchData = async () => {
       setIsLoading(true);
       setErrorMessage("");
-  
+
       try {
-        const { fetchedEvents, lastVisible, pageHistory, totalFilteredEvents } = await fetchPaginatedPastOutreachEvents(
-          debouncedCityToSearch,
-          startDateTime,
-          endDateTime,
-          debouncedSearchTerm,
-          cursorFields.lastVisible,
-          cursorFields.pageSize,
-          cursorFields.direction,
-          cursorFields.pageHistory
-        );
-  
+        const { fetchedEvents, lastVisible, pageHistory, totalFilteredEvents } =
+          await fetchPaginatedPastOutreachEvents(
+            // Old Code
+            // debouncedCityToSearch,
+
+            "", // In fetchPaginatedPastOutreachEvents, the Firestore query no longer uses debouncedCityToSearch (so Firestore is not filtering city), because filtering is now done client-side
+            startDateTime,
+            endDateTime,
+            // Old Code
+            // debouncedSearchTerm,
+
+            "", // In fetchPaginatedPastOutreachEvents, the Firestore query no longer uses debouncedSearchTerm (so Firestore is not filtering descriptions), because filtering is now done client-side
+            cursorFields.lastVisible,
+            cursorFields.pageSize,
+            cursorFields.direction,
+            cursorFields.pageHistory
+          );
+
         setEvents(fetchedEvents);
         setCursorFields((prev) => ({
           ...prev,
           lastVisible: lastVisible,
-          pageHistory: pageHistory
+          pageHistory: pageHistory,
         }));
 
-        if (debouncedSearchTerm.trim() !== '' || debouncedCityToSearch.trim() !== '') {
+        if (
+          debouncedSearchTerm.trim() !== "" ||
+          debouncedCityToSearch.trim() !== ""
+        ) {
           setFilteredTotal(totalFilteredEvents || 0);
-          setTotalPages(Math.ceil((totalFilteredEvents || 0) / outreachPerPages));
+          setTotalPages(
+            Math.ceil((totalFilteredEvents || 0) / outreachPerPages)
+          );
         }
       } catch (error) {
         setErrorMessage(error.message);
@@ -158,26 +170,38 @@ const AllPastOutreachEvents = () => {
       }
     };
     fetchData();
-  }, [cursorFields.direction, debouncedCityToSearch, startDateTime, endDateTime, debouncedSearchTerm]);
-  
+  }, [
+    cursorFields.direction,
+    debouncedCityToSearch,
+    startDateTime,
+    endDateTime,
+    debouncedSearchTerm,
+  ]);
+
   const resetPagination = () => {
     setCursorFields({
       lastVisible: null,
       pageSize: outreachPerPages,
       direction: "next",
-      pageHistory: []
+      pageHistory: [],
     });
     setCurrentPage(0);
-    
-    if (searchTerm.trim() === '' && cityToSearch.trim() === '') {
+
+    if (searchTerm.trim() === "" && cityToSearch.trim() === "") {
       setTotalPages(Math.ceil(totaloutreaches / outreachPerPages));
     }
   };
-  
+
   const handleSearchChange = (e) => {
-    const value = e.target.value.trim();
+    // No need to trim here
+    // const value = e.target.value.trim();
+
+    // New code added by Rohan Katkam
+    const value = e.target.value;
+    // End
+
     setSearchTerm(value);
-      resetPagination();
+    resetPagination();
   };
 
   const handleStartDateChange = (e) => {
@@ -186,7 +210,7 @@ const AllPastOutreachEvents = () => {
     setStartDateTime(newDate);
     resetPagination();
   };
-  
+
   const handleEndDateChange = (e) => {
     const newDate = new Date(e.target.value);
     setSelectedEndDate(newDate);
@@ -213,7 +237,13 @@ const AllPastOutreachEvents = () => {
   // };
 
   const handleCityChange = (e) => {
-    setCityToSearch(e.target.value.trim());
+    // No need to trim here
+    // setCityToSearch(e.target.value.trim());
+
+    // New code added by Rohan Katkam
+    setCityToSearch(e.target.value);
+    // End
+
     resetPagination();
   };
 
@@ -251,8 +281,10 @@ const AllPastOutreachEvents = () => {
     }
   };
 
-  const displayCount = getDisplayCount();
-  const totalToDisplay = getTotalToDisplay();
+  // Old Code
+  // const displayCount = getDisplayCount();
+  // const totalToDisplay = getTotalToDisplay();
+  // End
 
   const renderPaginationButtons = () => {
     const buttons = [];
@@ -283,6 +315,48 @@ const AllPastOutreachEvents = () => {
     return buttons;
   };
 
+  // New Code Added by Rohan Katkam
+  // Log for event descriptions
+  // console.log(
+  //   "Event descriptions:",
+  //   events
+  //     .filter((eventData) =>
+  //       eventData.description?.toLowerCase().includes(searchTerm.toLowerCase())
+  //     )
+  //     .map((eventData) => eventData.description)
+  // );
+
+  // Log for event locations
+  // console.log(
+  //   "Event Location",
+  //   events
+  //     .filter((eventData) => eventData.location?.city)
+  //     .map((eventData) => eventData.location?.city)
+  // );
+
+  // Client-side filtering by description
+  const filteredEvents = events.filter((event) => {
+    const matchesDescription =
+      debouncedSearchTerm.trim() === "" ||
+      event.description
+        ?.toLowerCase()
+        .includes(debouncedSearchTerm.toLowerCase());
+
+    const matchesCity =
+      debouncedCityToSearch.trim() === "" ||
+      event.location?.city
+        ?.toLowerCase()
+        .includes(debouncedCityToSearch.toLowerCase());
+
+    return matchesDescription && matchesCity;
+  });
+
+  const totalToDisplay = isFiltered ? filteredTotal : totaloutreaches;
+  const displayCount = isFiltered
+    ? filteredEvents.length
+    : Math.min((currentPage + 1) * outreachPerPages, totaloutreaches);
+  // End
+
   return (
     <div className="relative flex flex-col items-center ">
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-16 lg:mx-40 mt-48 rounded-2xl bg-white text-black">
@@ -312,69 +386,86 @@ const AllPastOutreachEvents = () => {
                   className="form-input py-1 px-3 border border-[#CACACA] rounded-lg text-sm"
                 />
               </div>
-              <div className="flex items-center space-x-2">
-                <div className="flex items-center">
-                  <span className="text-gray-700 text-xs md:text-sm">
-                    Filter:
-                  </span>
-                  <button
-                    onClick={() => {
-                      setFilterType((prev) => (prev === "date" ? "city" : "date"));
+              <div className="flex items-center">
+                <span className="text-gray-700 text-xs md:text-sm pr-2">
+                  Filter:
+                </span>
+
+                {/* Old Code */}
+                {/* <button
+                  onClick={() => {
+                    setFilterType((prev) =>
+                      prev === "date" ? "city" : "date"
+                    );
+                    resetPagination();
+                  }}
+                  className="flex items-center bg-white border border-gray-300 px-3 py-1 rounded-lg text-xs md:text-sm text-gray-700"
+                >
+                  {filterType === "date" ? "Date Period" : "City"}
+                  <IoIosArrowDown className="ml-1" />
+                </button> */}
+
+                {/* New Code */}
+                <select
+                  value={filterType}
+                  onChange={(e) => {
+                    setFilterType(e.target.value);
+                    resetPagination();
+                  }}
+                  className="flex items-center bg-white border border-gray-300 px-3 py-1 rounded-lg text-xs md:text-sm text-gray-700"
+                >
+                  {/* <option value="">None</option> */}
+                  <option value="date">Date Period</option>
+                  <option value="city">City</option>
+                </select>
+                {/* End */}
+              </div>
+
+              {/* Conditional Rendering */}
+              {filterType === "date" ? (
+                <div className="flex items-center space-x-2">
+                  <DatePicker
+                    selected={selectedStartDate}
+                    onChange={(date) => {
+                      setSelectedStartDate(date);
+                      setStartDateTime(date);
                       resetPagination();
                     }}
-                    className="flex items-center bg-white border border-gray-300 px-3 py-1 rounded-lg text-xs md:text-sm text-gray-700"
-                  >
-                    {filterType === "date" ? "Date Period" : "City"}
-                    <IoIosArrowDown className="ml-1" />
-                  </button>
-                </div>
-                {filterType === "date" && (
-                  <>
-                    <DatePicker
-                      selected={selectedStartDate}
-                      onChange={(date) => {
-                        setSelectedStartDate(date);
-                        setStartDateTime(date);
-                        resetPagination();
-                      }}
-                      selectsStart
-                      startDate={selectedStartDate}
-                      endDate={selectedEndDate}
-                      placeholderText="Select Start Date"
-                      className="py-1 px-1 border border-gray-300 rounded-lg text-sm w-[100px]"
-                    />
-                    <span>|</span>
-                    <DatePicker
-                      selected={selectedEndDate}
-                      onChange={(date) => {
-                        setSelectedEndDate(date);
-                        setEndDateTime(date);
-                        resetPagination();
-                      }}
-                      selectsEnd
-                      startDate={selectedStartDate}
-                      endDate={selectedEndDate}
-                      placeholderText="Select End Date"
-                      className="py-1 px-1 border border-gray-300 rounded-lg text-sm w-[100px]"
-                    />
-                  </>
-                )}
-                {filterType === "city" && (
-                  <input
-                    type="text"
-                    value={cityToSearch}
-                    onChange={handleCityChange}
-                    placeholder="Enter City"
-                    className="form-input py-1 px-2 border border-gray-300 rounded-lg text-xs md:text-sm"
+                    selectsStart
+                    startDate={selectedStartDate}
+                    endDate={selectedEndDate}
+                    placeholderText="Start Date"
+                    className="py-1 px-2 border border-gray-300 rounded-lg text-sm w-[120px]"
                   />
-                )}
-              </div>
+                  <span>|</span>
+                  <DatePicker
+                    selected={selectedEndDate}
+                    onChange={(date) => {
+                      setSelectedEndDate(date);
+                      setEndDateTime(date);
+                      resetPagination();
+                    }}
+                    selectsEnd
+                    startDate={selectedStartDate}
+                    endDate={selectedEndDate}
+                    placeholderText="End Date"
+                    className="py-1 px-2 border border-gray-300 rounded-lg text-sm w-[120px]"
+                  />
+                </div>
+              ) : (
+                <input
+                  type="text"
+                  value={cityToSearch}
+                  onChange={handleCityChange}
+                  placeholder="Enter City"
+                  className="form-input py-1 px-2 border border-gray-300 rounded-lg text-xs md:text-sm"
+                />
+              )}
             </div>
           </div>
           <UserTypeInfo />
           <div className="flex justify-between items-center mt-8 w-full">
-            <p className="text-gray-600">
-            </p>
+            <p className="text-gray-600"></p>
             <div className="flex justify-end">{renderPaginationButtons()}</div>
           </div>
           {errorMessage && (
@@ -388,12 +479,12 @@ const AllPastOutreachEvents = () => {
             </div>
           ) : (
             <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-              {events.length > 0 ? (
-                events.map((eventData) => (
+              {filteredEvents.length > 0 ? (
+                filteredEvents.map((event) => (
                   <OutreachEventCard
+                    key={event.id}
                     isPastEvent={true}
-                    key={eventData.id}
-                    cardData={eventData}
+                    cardData={event}
                   />
                 ))
               ) : (
