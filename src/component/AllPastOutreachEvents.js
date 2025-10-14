@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import OutreachEventCard from "./Community/OutreachEventCard";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -59,6 +59,9 @@ const AllPastOutreachEvents = () => {
     pageHistory: []
   });
 
+  const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
+  const filterMenuRef = useRef(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -83,9 +86,20 @@ const AllPastOutreachEvents = () => {
     const delayCitySearch = setTimeout(() => {
       setDebouncedCityToSearch(cityToSearch);
     }, 500);
-  
+
     return () => clearTimeout(delayCitySearch); 
   }, [cityToSearch]);
+
+  // Close filter dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (filterMenuRef.current && !filterMenuRef.current.contains(event.target)) {
+        setIsFilterMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const getTotalCount = async () => {
@@ -312,22 +326,50 @@ const AllPastOutreachEvents = () => {
                   className="form-input py-1 px-3 border border-[#CACACA] rounded-lg text-sm"
                 />
               </div>
-              <div className="flex items-center space-x-2">
-                <div className="flex items-center">
-                  <span className="text-gray-700 text-xs md:text-sm">
-                    Filter:
-                  </span>
-                  <button
-                    onClick={() => {
-                      setFilterType((prev) => (prev === "date" ? "city" : "date"));
-                      resetPagination();
-                    }}
-                    className="flex items-center bg-white border border-gray-300 px-3 py-1 rounded-lg text-xs md:text-sm text-gray-700"
-                  >
-                    {filterType === "date" ? "Date Period" : "City"}
-                    <IoIosArrowDown className="ml-1" />
-                  </button>
-                </div>
+            <div className="flex items-center space-x-2">
+              <div className="relative flex items-center" ref={filterMenuRef}>
+                <span className="text-gray-700 text-xs md:text-sm mr-2">Filter:</span>
+                <button
+                  type="button"
+                  aria-haspopup="listbox"
+                  aria-expanded={isFilterMenuOpen}
+                  onClick={() => setIsFilterMenuOpen((prev) => !prev)}
+                  className="flex items-center bg-white border border-gray-300 px-3 py-1 rounded-lg text-xs md:text-sm text-gray-700"
+                >
+                  {filterType === "date" ? "Date Period" : "City"}
+                  <IoIosArrowDown className="ml-1" />
+                </button>
+                {isFilterMenuOpen && (
+                  <div className="absolute top-full right-0 mt-1 w-36 bg-white border border-gray-200 rounded-md shadow z-20">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFilterType("date");
+                        setIsFilterMenuOpen(false);
+                        resetPagination();
+                      }}
+                      className={`block w-full text-left px-3 py-2 text-sm hover:bg-gray-100 ${
+                        filterType === "date" ? "bg-gray-50" : ""
+                      }`}
+                    >
+                      Date Period
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFilterType("city");
+                        setIsFilterMenuOpen(false);
+                        resetPagination();
+                      }}
+                      className={`block w-full text-left px-3 py-2 text-sm hover:bg-gray-100 ${
+                        filterType === "city" ? "bg-gray-50" : ""
+                      }`}
+                    >
+                      City
+                    </button>
+                  </div>
+                )}
+              </div>
                 {filterType === "date" && (
                   <>
                     <DatePicker
