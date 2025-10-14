@@ -63,14 +63,7 @@ const CommunityVisitLog = ({ loggedIn }) => {
               {loggedIn && (
                 <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-medium font-dmsans leading-tight self-stretch">
                   <CustomButton
-                    label="Create a interaction Log"
-                    name="buttondefault"
-                    onClick={() => {
-                      navigate("/profile/personaloutform");
-                    }}
-                  />
-                  <CustomButton
-                    label="New Interaction Log"
+                    label="Create an Interaction Log"
                     name="buttondefault"
                     onClick={() => {
                       navigate("/profile/interactionLogForm");

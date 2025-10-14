@@ -28,8 +28,8 @@ import DynamicSubSection from "../FormBuilder/DynamicSubsection";
 import collectionMapping from "../../utils/firestoreCollections";
 import ConfirmationModalInteractionLog from "./ConfirmationModalInteractionLog";
 
-const users_collection = collectionMapping.users;
-const visitLogsBookNew_collection = collectionMapping.visitLogsBookNew;
+const interactionLog_collection = collectionMapping.interactionLog;
+const helpRequest_collection = collectionMapping.helpRequestsInteractionLog;
 
 function InteractionLogForm() {
   const navigate = useNavigate();
@@ -61,25 +61,9 @@ function InteractionLogForm() {
   //   const { id } = useParams();
 
   /* Firebase */
-  const fAuth = getAuth();
   function areObjectsEqual(obj1, obj2) {
     return JSON.stringify(obj1) === JSON.stringify(obj2);
   }
-
-  const handleSubmit = async (e) => {
-    let setReturn = false;
-
-    e.preventDefault();
-
-    // Form Validation Start
-    // Needed Here
-
-    if (setReturn) {
-      return;
-    }
-
-    const userDetails = await fetchUserTypeDetails(fAuth.currentUser.uid);
-  };
 
   let obj1 = {
     userId: "",
@@ -126,10 +110,6 @@ function InteractionLogForm() {
     completedTimestamp: "",
     isCompleted: false,
   };
-  const clearFields = () => {
-    // date.current.value = "";
-    //Clear Fields Fn Here
-  };
 
   const handleInteractionLog = (data) => {
     setInteractionLogData(data);
@@ -143,6 +123,8 @@ function InteractionLogForm() {
     let interactionLogDocId = "";
     let interactionLogFirstName = "";
     let helpRequestDocIds = [];
+    console.log("interactionLog_collection:", interactionLog_collection);
+    console.log("helpRequest_collection:", helpRequest_collection);
 
     try {
       if (
@@ -188,14 +170,14 @@ function InteractionLogForm() {
 
         // STEP 2: Add to interactionLog collection
         const interactionLogRef = await addDoc(
-          collection(db, "InteractionLog"),
+          collection(db, interactionLog_collection),
           augmentedInteractionLog
         );
 
         interactionLogDocId = interactionLogRef.id;
         interactionLogFirstName = augmentedInteractionLog.firstName;
       } else {
-        console.log("Same");
+        // console.log("Same");
       }
 
       // STEP 3: Add each helpRequest entry individually
@@ -205,8 +187,8 @@ function InteractionLogForm() {
         !areObjectsEqual(helpRequestData[1], obj2)
       ) {
         const helpRequestDataWithoutKeys = Object.values(helpRequestData);
-        console.log("HelpRequestData:", helpRequestData);
-        console.log("HelpRequestDataWihoutKeys:", helpRequestDataWithoutKeys);
+        // console.log("HelpRequestData:", helpRequestData);
+        // console.log("HelpRequestDataWihoutKeys:", helpRequestDataWithoutKeys);
         helpRequestDocIds = [];
 
         const enrichedHelpEntry = helpRequestDataWithoutKeys.map(
@@ -231,12 +213,15 @@ function InteractionLogForm() {
           })
         );
 
-        console.log(
-          "HelpReques Data just Before sending it:",
-          enrichedHelpEntry
-        );
+        // console.log(
+        //   "HelpReques Data just Before sending it:",
+        //   enrichedHelpEntry
+        // );
         for (const entry of enrichedHelpEntry) {
-          const helpRef = await addDoc(collection(db, "HelpRequest"), entry);
+          const helpRef = await addDoc(
+            collection(db, helpRequest_collection),
+            entry
+          );
           helpRequestDocIds.push(helpRef.id);
         }
       }
@@ -246,9 +231,13 @@ function InteractionLogForm() {
         !areObjectsEqual(helpRequestData, obj2)
       ) {
         // STEP 4: Patch helpRequestDocIds into interactionLog entry
-        await updateDoc(doc(db, "InteractionLog", interactionLogDocId), {
-          helpRequestDocIds: helpRequestDocIds,
-        });
+        await updateDoc(
+          doc(db, interactionLog_collection, interactionLogDocId),
+          {
+            helpRequestDocIds: helpRequestDocIds,
+            helpRequestCount: helpRequestDocIds.length,
+          }
+        );
       }
 
       console.log("✅ Submission complete");
@@ -257,12 +246,12 @@ function InteractionLogForm() {
       console.error("❌ Submission failed:", error);
     }
   };
-
-  useEffect(() => {
-    // console.log("interactionLogData:", interactionLogData);
-    // console.log("HelpRequest:", helpRequestData);
-    // console.log("currentUserId", fAuth?.currentUser?.id);
-  }, [interactionLogData, helpRequestData]);
+  //use For debugging
+  // useEffect(() => {
+  //   // console.log("interactionLogData:", interactionLogData);
+  //   // console.log("HelpRequest:", helpRequestData);
+  //   // console.log("currentUserId", fAuth?.currentUser?.id);
+  // }, [interactionLogData, helpRequestData]);
 
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">

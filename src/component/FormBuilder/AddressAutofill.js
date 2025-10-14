@@ -123,14 +123,15 @@ export default function AddressAutofill({ onAddressChange }) {
     });
   }, [AddQuery, AddressLine2, cityName, stateName, postcode, country]);
 
-  useEffect(() => {
-    // console.log("street", street);
-    // console.log("cityName", cityName);
-    // console.log("stateAbbv", stateAbbv);
-    // console.log("stateName", stateName);
-    // console.log("postcode", postcode);
-    // console.log("country", country);
-  }, [street, cityName, stateAbbv, stateName, postcode, country]);
+  // Use for Degbugging
+  // useEffect(() => {
+  //   // console.log("street", street);
+  //   // console.log("cityName", cityName);
+  //   // console.log("stateAbbv", stateAbbv);
+  //   // console.log("stateName", stateName);
+  //   // console.log("postcode", postcode);
+  //   // console.log("country", country);
+  // }, [street, cityName, stateAbbv, stateName, postcode, country]);
   return (
     <>
       <TextInput

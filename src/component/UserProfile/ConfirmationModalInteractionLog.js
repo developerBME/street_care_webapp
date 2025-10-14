@@ -37,6 +37,13 @@ const ConfirmationModalInteractionLog = ({
                 navigate("/profile");
               }}
             />
+            <CustomButton
+              label="Back to Homepage"
+              name="buttonborder"
+              onClick={() => {
+                navigate("/");
+              }}
+            />
           </div>
         </div>
       </div>
