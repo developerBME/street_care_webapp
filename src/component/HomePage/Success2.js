@@ -192,17 +192,20 @@ function Success2() {
             </p>
             <div className="mt-auto">
               <CustomButton
-                label="Create a Interaction Log"
+                label="Create an Interaction Log"
                 name="buttondefault"
-                onClick={async () => {
-                  const fAuth = await getAuth();
-                  const user = fAuth.currentUser;
+                // onClick={async () => {
+                //   const fAuth = await getAuth();
+                //   const user = fAuth.currentUser;
 
-                  if (user) {
-                    navigate("/profile/personaloutform");
-                  } else {
-                    navigate("/login"); // or show a message
-                  }
+                //   if (user) {
+                //     navigate("/profile/personaloutform");
+                //   } else {
+                //     navigate("/login"); // or show a message
+                //   }
+                // }}
+                onClick={() => {
+                  navigate("profile/interactionLogForm");
                 }}
               />
             </div>
