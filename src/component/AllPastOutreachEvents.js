@@ -341,7 +341,6 @@ const AllPastOutreachEvents = () => {
                   <IoIosArrowDown className="ml-1" />
                 </button>
                 {isFilterMenuOpen && (
-                  
                   <div
                     className="absolute top-full right-0 mt-1 w-36 bg-white border border-gray-200 rounded-md shadow z-20"
                     role="listbox"
