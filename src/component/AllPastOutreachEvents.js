@@ -333,6 +333,7 @@ const AllPastOutreachEvents = () => {
                   type="button"
                   aria-haspopup="listbox"
                   aria-expanded={isFilterMenuOpen}
+                  id="filter-menu-button"
                   onClick={() => setIsFilterMenuOpen((prev) => !prev)}
                   className="flex items-center bg-white border border-gray-300 px-3 py-1 rounded-lg text-xs md:text-sm text-gray-700"
                 >
@@ -340,7 +341,12 @@ const AllPastOutreachEvents = () => {
                   <IoIosArrowDown className="ml-1" />
                 </button>
                 {isFilterMenuOpen && (
-                  <div className="absolute top-full right-0 mt-1 w-36 bg-white border border-gray-200 rounded-md shadow z-20">
+                  
+                  <div
+                    className="absolute top-full right-0 mt-1 w-36 bg-white border border-gray-200 rounded-md shadow z-20"
+                    role="listbox"
+                    aria-labelledby="filter-menu-button"
+                  >
                     <button
                       type="button"
                       onClick={() => {
@@ -348,6 +354,8 @@ const AllPastOutreachEvents = () => {
                         setIsFilterMenuOpen(false);
                         resetPagination();
                       }}
+                      role="option"
+                      aria-selected={filterType === "date"}
                       className={`block w-full text-left px-3 py-2 text-sm hover:bg-gray-100 ${
                         filterType === "date" ? "bg-gray-50" : ""
                       }`}
@@ -361,6 +369,8 @@ const AllPastOutreachEvents = () => {
                         setIsFilterMenuOpen(false);
                         resetPagination();
                       }}
+                      role="option"
+                      aria-selected={filterType === "city"}
                       className={`block w-full text-left px-3 py-2 text-sm hover:bg-gray-100 ${
                         filterType === "city" ? "bg-gray-50" : ""
                       }`}
