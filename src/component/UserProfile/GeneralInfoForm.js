@@ -128,7 +128,7 @@ export default function GeneralInfoForm({ onUpdate = () => {} }) {
         <TextInput
           type="full-single-text-input"
           label="Email"
-          placeholder="vinayakkiranji@brightmindenrichment.org"
+          placeholder="johndoe@example.com"
           onChange={(e) => {
             setGeneralInfoData((prev) => ({ ...prev, email: e.target.value }));
           }}
@@ -138,7 +138,7 @@ export default function GeneralInfoForm({ onUpdate = () => {} }) {
         <TextInput
           type="full-single-text-input"
           label="Phone Number"
-          placeholder="+1((123)-34-1234"
+          placeholder="+1(123)-123-1234"
           onChange={(e) => {
             const value = e.target.value;
             if (value.length <= 10 && /^\d*$/.test(value)) {
