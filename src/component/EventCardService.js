@@ -1213,6 +1213,18 @@ export const fetchByCityOrStates = async (
           limit(outreachPerPages)
         );
 
+        const userIds = new Set();
+        snapshots.docs.forEach((doc) => {
+          const uid = doc.data().uid;
+          if (uid) {
+            userIds.add(uid);
+          } else {
+            console.log("Document missing uid:", doc.id);
+          }
+        });
+        // Batch fetch user details
+        const userDetails = await fetchUserDetailsBatch(Array.from(userIds));
+
         while (outreachPerPages < totaloutreaches) {
           const outreachDocRef = await getDocs(outreachByLocationQuery);
           let outreachByLoc = [];
@@ -1225,6 +1237,8 @@ export const fetchByCityOrStates = async (
             const id = doc.id;
             outreachByLoc.push({
               ...pastOutreachData,
+              userName: userDetails[pastOutreachData.uid]?.username || "",
+              userType: userDetails[pastOutreachData.uid]?.userType || "",
               id: id,
               userName,
               photoUrl,
@@ -1278,6 +1292,8 @@ export const fetchByCityOrStates = async (
           const id = doc.id;
           outreachByLoc.push({
             ...pastOutreachData,
+            // userName: userDetails[pastOutreachData.uid]?.username || "",
+            // userType: userDetails[pastOutreachData.uid]?.userType || "",
             id: id,
           });
         }

@@ -199,7 +199,8 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
           </div>
           <div className="flex justify-between mt-2 mb-2 px-1">
             <div className="text-neutral-900 text-[14px] font-bold font-bricolage leading-tight text-left">
-              Items Donated
+              Participants 
+              {/* Changed from Items Donated on frontend */}
             </div>
             <div className="text-neutral-900 text-[18px] mt-[-5px] font-bold font-bricolage leading-tight text-right">
               {visitLogCardData.itemQty || ""}
