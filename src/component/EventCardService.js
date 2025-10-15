@@ -1384,7 +1384,6 @@ export const fetchTopOutreaches = async () => {
         id: id,
       });
     }
-    console.log(outreaches);
     return outreaches;
   } catch (error) {
     logEvent(

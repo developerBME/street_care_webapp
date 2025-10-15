@@ -19,6 +19,7 @@ import DeleteModal from "./DeleteModal";
 import { formatDate } from "./../HelperFunction";
 
 import collectionMapping from "../../utils/firestoreCollections";
+import {getStatusStyle} from "../../component/admin_test/ApprovalCardOutreachEvents"
 
 const users_collection = collectionMapping.users;
 //const visitLogs_collection = collectionMapping.visitLogs; using new collection
@@ -113,6 +114,18 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
       }}
     >
       <div className="bg-[#F5EEFE] min-w-full max-w-[320px] lg:w-full rounded-[30px] flex flex-col justify-between">
+              {/* Adding pending status tag=>START,Niharika */}
+              {/* Status */}
+      <div className="mt-2 text-right mb-2">
+        <span
+          className={`px-3 py-1 text-sm font-medium rounded-full ${getStatusStyle(
+            visitLogCardData.status
+          )}`}
+        >
+          {visitLogCardData.status.charAt(0).toUpperCase() + visitLogCardData.status.slice(1)|| "No Status"}
+        </span>
+      </div>
+      {/* Adding pending status tag=>END,Niharika */}
         <div className="flex justify-between items-center">
           <div className="text-violet-900 text-[12px] font-medium font-bricolage leading-tight flex flex-col">
             <div className="my-Custom-Date flex flex-row">
