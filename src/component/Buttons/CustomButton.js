@@ -1,6 +1,14 @@
 import React from "react";
 
-function CustomButton({ label, name, onClick, icon, disable, type, textColor }) {
+function CustomButton({
+  label,
+  name,
+  onClick,
+  icon,
+  disable,
+  type,
+  textColor,
+}) {
   if (name === "buttonborder") {
     return (
       <button
@@ -52,6 +60,20 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         }`}
       >
         {label}
+      </button>
+    );
+  } else if (name === "buttondefaultinverttransicon") {
+    return (
+      <button
+        onClick={onClick}
+        className={` text-[14px] inline-flex items-center gap-1 font-[700] py-[5px] px-[10px] rounded-full transition ease-in-out duration-200 ${
+          disable !== "true"
+            ? "text-[#6840E0] bg-transparent hover:bg-gray-300"
+            : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
+        }`}
+      >
+        {label}
+        {icon}
       </button>
     );
   } else if (name === "buttondefaultlong") {
@@ -326,7 +348,9 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
         onClick={onClick}
         className={`text-[14px] font-medium py-[5px] px-[24px] border-[1px] rounded-full transition ease-in-out delay-300 ${
           disable !== "true"
-            ? `text-[${textColor ? textColor : "#1F0A58"}] border-[#C8C8C8] hover:bg-violet-200`
+            ? `text-[${
+                textColor ? textColor : "#1F0A58"
+              }] border-[#C8C8C8] hover:bg-violet-200`
             : "text-[#bfbfbf] border[#d8d8d8] cursor-not-allowed hover:bg-white"
         }`}
       >
@@ -624,11 +648,11 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
             : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
         }`}
       >
-        {icon && (<img src={icon} className="w-5 h-5 " />)}
+        {icon && <img src={icon} className="w-5 h-5 " />}
         {label}
       </button>
     );
-  } else if(name==="close"){
+  } else if (name === "close") {
     return (
       <button
         onClick={onClick}
@@ -638,11 +662,11 @@ function CustomButton({ label, name, onClick, icon, disable, type, textColor }) 
             : " text-[#1F0A58] border border-[#6840E0] cursor-not-allowed"
         }`}
       >
-        {icon && (<img src={icon} className="w-5 h-5 " />)}
+        {icon && <img src={icon} className="w-5 h-5 " />}
         {label}
       </button>
     );
-  }else {
+  } else {
     return (
       <button
         onClick={onClick}

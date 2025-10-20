@@ -187,14 +187,14 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
           </span>
         </div>
       </div>
-      
+
       <div className="flex justify-between items-center mt-4">
         <div className="text-sm font-bold">People Helped</div>
         <div className="text-xl font-bold">
           {visitLogCardData?.numberOfHelpers}
         </div>
       </div>
-      
+
       <div className="flex justify-between items-center mt-2">
         <div className="text-sm font-bold">Items Donated</div>
         <div className="text-xl font-bold">{visitLogCardData?.itemQty}</div>
