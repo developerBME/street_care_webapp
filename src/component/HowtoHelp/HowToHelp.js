@@ -64,21 +64,32 @@ function GetVerifiedPopup({ open, onClose }) {
     onClose();
   };
 
+  // 🆕 open StreetCare in a new tab (and keep your site)
   const handleCTA = () => {
-    window.location.href = MEMBERSHIP_URL;
+    window.open(MEMBERSHIP_URL, "_blank", "noopener,noreferrer"); // 🆕
+  };
+
+  // 🆕 close when user clicks the dark backdrop
+  const handleBackdropMouseDown = (e) => {
+    if (e.target === e.currentTarget) onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/50 p-4">
+    <div
+      className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/50 p-4"
+      onMouseDown={handleBackdropMouseDown} // 🆕
+    >
       <div
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
-        className="w-full max-w-md rounded-2xl bg-[#FFE34F] shadow-xl relative p-5"
+        className="w-full max-w-md rounded-2xl bg-white shadow-xl relative p-5"
+        onMouseDown={(e) => e.stopPropagation()} // 🆕 prevent inner clicks from closing
       >
         <button
           onClick={handleClose}
           className="absolute right-3 top-3 text-xl leading-none px-2"
+          aria-label="Close" // (minor a11y improvement)
         >
           ×
         </button>
@@ -90,11 +101,10 @@ function GetVerifiedPopup({ open, onClose }) {
         </p>
         <button
           onClick={handleCTA}
-          className="mt-4 ml-auto block rounded-full px-4 py-2 font-semibold text-[#FFE34F] bg-black"
+          className="mt-4 ml-auto block rounded-full px-4 py-2 font-semibold text-white bg-black"
         >
           Become a Member
         </button>
-        
       </div>
     </div>
   );
@@ -361,7 +371,7 @@ function HowToHelp() {
   useEffect(() => {
     document.title = "How to help - Street Care";
     // Force popup with ?verify=1 for testing
-      setShowPopup(true);
+    setShowPopup(true);
   }, []);
 
   return (
@@ -572,3 +582,5 @@ function HowToHelp() {
 }
 
 export default HowToHelp;
+
+
