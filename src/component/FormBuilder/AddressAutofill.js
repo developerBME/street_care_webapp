@@ -135,12 +135,13 @@ export default function AddressAutofill({ onAddressChange }) {
   return (
     <>
       <TextInput
-        type="full-single-text-input"
+        type="full-single-text-input-with-tooltip"
         label="Address 1"
         ref={autoCompleteRef}
         onChange={(e) => setAddQuery(e.target.value)}
         value={AddQuery}
         placeholder="Enter Address Line 1"
+        tooltipContent="Enter full address with ZIP and a nearby landmark—e.g., ‘123 Main St, near Pier C Park."
       />
 
       <TextInput

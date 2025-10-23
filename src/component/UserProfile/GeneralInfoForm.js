@@ -209,7 +209,7 @@ export default function GeneralInfoForm({ onUpdate = () => {} }) {
                 textField: {
                   fullWidth: true,
                   required: false,
-                  placeholder: "hh:mm:aa",
+                  placeholder: "hh:mm",
                   label: "",
                   InputLabelProps: { shrink: false },
                   sx: sxTheme,
@@ -248,7 +248,7 @@ export default function GeneralInfoForm({ onUpdate = () => {} }) {
                 textField: {
                   fullWidth: true,
                   required: false,
-                  placeholder: "hh:mm:aa",
+                  placeholder: "hh:mm",
                   label: "",
                   InputLabelProps: { shrink: false },
                   sx: sxTheme,
@@ -294,7 +294,7 @@ export default function GeneralInfoForm({ onUpdate = () => {} }) {
 
       <TextInput
         type="full-single-text-input"
-        label="Number of care packages given out"
+        label="Number of care items given out"
         placeholder="e.g. 1"
         onChange={(e) => {
           const value = e.target.value;

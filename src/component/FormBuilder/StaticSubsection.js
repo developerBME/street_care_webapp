@@ -142,7 +142,7 @@ const StaticSubsection = ({ index, interaction, onUpdate, handleCancel }) => {
                 textField: {
                   fullWidth: true,
                   required: false,
-                  placeholder: "hh:mm:aa",
+                  placeholder: "hh:mm",
                   label: "",
                   InputLabelProps: { shrink: false },
                   sx: sxTheme,
@@ -230,7 +230,7 @@ const StaticSubsection = ({ index, interaction, onUpdate, handleCancel }) => {
                 textField: {
                   fullWidth: true,
                   required: false,
-                  placeholder: "hh:mm:aa",
+                  placeholder: "hh:mm",
                   label: "",
                   InputLabelProps: { shrink: false },
                   sx: sxTheme,

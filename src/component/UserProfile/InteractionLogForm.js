@@ -339,7 +339,7 @@ function InteractionLogForm() {
 
                       <div className="flex items-center gap-1">
                         <CustomButton
-                          label="Add More"
+                          label="Click to Add More Interactions"
                           name="buttondefaultinverttransicon"
                           icon={<Plus size={10} strokeWidth={5} />}
                           onClick={() => {

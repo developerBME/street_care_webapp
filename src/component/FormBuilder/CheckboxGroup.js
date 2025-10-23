@@ -19,11 +19,11 @@ const CheckboxGroup = ({
     "Food and Drink",
     "Clothing",
     "Hygiene Products",
-    "Wellness/ Emotional Support",
+    "Wellness / Emotional Support",
     "Medical Help",
     "Social Worker/ Psychiatrist",
-    "Legal/Lawyer",
-    "Other",
+    "Legal / Lawyer",
+    "Other / Add Your Own",
   ];
   const handleCheckboxItems = (e) => {
     setCheckboxItems((prev) =>
