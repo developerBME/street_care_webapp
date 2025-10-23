@@ -141,7 +141,7 @@ export default function AddressAutofill({ onAddressChange }) {
         onChange={(e) => setAddQuery(e.target.value)}
         value={AddQuery}
         placeholder="Enter Address Line 1"
-        tooltipContent="Enter full address with ZIP and a nearby landmark—e.g., ‘123 Main St, near Pier C Park."
+        tooltipContent="Enter a address with ZIP or a nearby landmark e.g., ‘123 Main St, near Central Park’, ‘456 Broadway, NY 10012’, or ‘next to Times Square"
       />
 
       <TextInput
