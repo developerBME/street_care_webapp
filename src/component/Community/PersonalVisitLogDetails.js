@@ -22,7 +22,8 @@ import { getAuth } from "firebase/auth";
 import collectionMapping from "../../utils/firestoreCollections";
 
 const users_collection = collectionMapping.users;
-const visitLogs_collection = collectionMapping.visitLogs;
+//const visitLogs_collection = collectionMapping.visitLogs;
+const visitLogsNew_collection = collectionMapping.visitLogsBookNew;
 
 const PersonalVisitLogDetails = () => {
   const { id } = useParams();
@@ -46,7 +47,7 @@ const PersonalVisitLogDetails = () => {
 
   const deleteVisitLog = async () => {
     try {
-      const visitLogDoc = doc(db, visitLogs_collection, id);
+      const visitLogDoc = doc(db, visitLogsNew_collection, id);
 
       const userQuery = query(
         collection(db, users_collection),
@@ -103,7 +104,7 @@ const PersonalVisitLogDetails = () => {
                   <div className="flex flex-row justify-normal space-x-2">
                     <img className="w-[13px] h-[15px] my-[3px]" src={date} alt="date" />
                     <div className="text-violet-900 text-sm font-medium font-['DM Sans'] leading-tight pt-0.5">
-                      {data?.dateTime.toDate().toLocaleString().toString()}
+                      {data?.timeStamp.toDate().toLocaleString().toString()}
                     </div>
                   </div>
                   <div className="flex flex-row justify-normal space-x-2">
@@ -113,7 +114,7 @@ const PersonalVisitLogDetails = () => {
                     </div>
                   </div>
                   <div className="text-zinc-700 text-[16px] font-normal font-['DM Sans'] leading-snug max-w-3xl">
-                    {data?.description || ""}
+                    {data?.peopleHelpedDescription || ""}
                   </div>
                   <div className="inline-flex items-center gap-2">
                     {data?.whatGiven.map((item, index) => (
@@ -130,13 +131,14 @@ const PersonalVisitLogDetails = () => {
                       People Helped
                     </div>
                     <div className="font-bold text-[14px] font-dmsans text-[#444746] line-clamp-1">
-                      {data?.numberPeopleHelped}
+                      {data?.numberOfHelpers}
                     </div>
                   </div>
 
                   <div className="flex flex-row space-x-5">
                     <div className="font-bold text-[14px] font-dmsans text-[#444746] line-clamp-1">
-                      Items Donated
+                      Participants  
+                      {/* //Changed from Items Donated on frontend */}
                     </div>
                     <div className="font-bold text-[14px] font-dmsans text-[#444746] line-clamp-1">
                       {data?.itemQty}

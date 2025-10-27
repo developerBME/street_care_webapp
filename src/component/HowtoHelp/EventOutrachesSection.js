@@ -79,34 +79,11 @@ const EventOutrachesSection = () => {
                 []
                 );
 
-            // console.log("Events Data:", eventsData);
-            // const visitLogsData = await fetchVisitLogs();
-            // setVisitLogs(visitLogsData);
-            // Filter events to get only past events
-            // const upcomingEvents = eventsData.filter((event) => {
-            //     const eventDate = new Date(event?.eventDate?.seconds * 1000);
-            //     return eventDate <= new Date(); // Check if the event date is before the current date
-            // });
-            // Sort events in place based on their date
-            // upcomingEvents.sort((a, b) => a.eventDate - b.eventDate);
-
             setEvents(eventsData.events);
-            // Extract states and remove duplicates
-            // const extractedStates = [
-            //     ...new Set(upcomingEvents.map((event) => event.location.state)),
-            // ];
-            // setStates(extractedStates);
         };
 
         fetchData();
     }, []);
-    // Handle state selection from dropdown
-    // const handleStateSelection = (state) => {
-    //     setSelectedState(state);
-    //     const filtered = events.filter((event) => event.location.state === state);
-    //     setFilteredEvents(filtered);
-    //     // setDropdownVisible(false);
-    // };
 
     useEffect(() => {
         setEventsDisplay(events);

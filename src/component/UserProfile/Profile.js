@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import icon from "../../images/icon.png";
 // import add from "../../images/add.png";
 import UserInfo from "./UserInfo";
 import { Modal } from "@mui/material";
@@ -10,26 +9,21 @@ import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import OutreachEventCard from "../Community/OutreachEventCard";
 import {
 	fetchUserOutreaches,
-	fetchUserSignedUpOutreaches,
+	fetchUserSignedUpOutreaches, fetchLikedOutreaches
 } from '../EventCardService';
 import { auth } from '../firebase';
 import CustomButton from '../Buttons/CustomButton';
-
-// import { fetchPersonalVisitLogs } from "../VisitLogCardService";
 import OutreachVisitLogProfile from "../Community/OutreachVisitLogProfile";
-// import NoOutreachDoc from "../Community/NoOutreachDoc";
 
 import NoDisplayData from './NoDisplayData';
-import SignedUpOutreaches from './SignedUpOutreaches';
 import CreatedOutreaches from './CreatedOutreaches';
-import ErrorMessage from '../ErrorMessage';
 import { formatDate } from './../HelperFunction';
 
 function Profile() {
   const [createdEvents, setCreatedEvents] = useState([]);
+  const [likedEvents, setLikedEvents] = useState([]);
   const [signedUpEvents, setSignedUpEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [eventsDisplay, setEventsDisplay] = useState([]);
   const [isError, setIsError] = useState(false);
 
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -41,27 +35,21 @@ function Profile() {
 
   const fetchData = async () => {
     try {
-      // const visitLogsData = await fetchPersonalVisitLogs(
-      //   auth?.currentUser?.uid
-      // );
       const user = auth.currentUser;
 
       if (user) {
         const uid = user.uid;
-        console.log("UID is ", uid);
         const createdEventsData = await fetchUserOutreaches(uid);
         createdEventsData.sort((a, b) => a.eventDate - b.eventDate);
         const signedUpEventsData = await fetchUserSignedUpOutreaches(uid);
         signedUpEventsData.sort((a, b) => a.eventData - b.eventData);
-
-        console.log("Signed Up Events Data:", signedUpEventsData);
+        const likedEventsData = await fetchLikedOutreaches(uid);
+        likedEventsData.sort((a, b) => a.eventData - b.eventData);
 
         setCreatedEvents(createdEventsData);
         setSignedUpEvents(signedUpEventsData);
+        setLikedEvents(likedEventsData);
       } else {
-        console.log("No user is signed in.");
-        // setCreatedEvents([]);
-        // setSignedUpEvents([]);
       }
     } catch (error) {
       console.error("Error Fetching data:", error.message);
@@ -72,7 +60,6 @@ function Profile() {
   };
 
   const openModal = (event) => {
-    console.log("calledddddddddd");
     setSelectedEvent(event);
   };
 
@@ -186,6 +173,52 @@ function Profile() {
           </div>{" "}
         </div>
 
+       {/* Liked Outreaches section */}
+{!isLoading && likedEvents.length > 0 && (
+  <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black mb-10">
+    <div className="flex flex-col gap-4 md:px-12 md:py-16 lg:gap-14 lg:p-24 pl-8 pt-4 pb-4 pr-8">
+      <div className="inline-flex flex-col sm:flex-row sm:space-x-16 justify-between gap-2">
+        <div className="text-neutral-800 text-4xl lg:text-5xl font-medium font-bricolage text-left leading-[52px]">
+          Liked Outreaches
+        </div>
+        <CustomButton
+          label="More Liked Outreaches"
+          name="buttondefault"
+          onClick={() => {
+            navigate("/profile/allLikedOutreaches");
+          }}
+        />
+      </div>
+
+      <div className="block overflow-x-auto overflow-y-hidden">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 mb-6">
+          {likedEvents.slice(0, 3).map((eventData) => (
+            <OutreachEventCard
+              key={eventData.id}
+              cardData={{
+                ...eventData,
+                eventDate: formatDate(
+                  new Date((eventData.eventDate?.seconds ?? 0) * 1000)
+                ),
+              }}
+              isProfilePage={true}
+              refresh={fetchData}
+              onUpdate={fetchData}  // NEW: triggers auto re-fetch after unlike
+              openModal={() =>
+                openModal({
+                  ...eventData,
+                  eventDate: eventData.eventDate?.seconds
+                    ? formatDate(new Date(eventData.eventDate.seconds * 1000))
+                    : eventData.eventDate,
+                })
+              }
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+)}
         {/* Created outreaches section */}
 
         <div className="  w-[95%] md:w-[90%] lg:w-[80%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black mb-10">
@@ -211,12 +244,6 @@ function Profile() {
           />
         </Modal>
       }
-      {/* <Modal open={showSignUpModal}>
-				<RSVPConfirmationModal
-					closeModal={closeSignUpModal}
-					type="edit"
-				/>
-			</Modal> */}
       <Modal open={showWithdrawnModal}>
         <RSVPConfirmationModal
           closeModal={closeWithdrawModal}

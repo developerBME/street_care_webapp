@@ -6,6 +6,8 @@ const send2FA = async (userEmail, uid, timestamp) => {
     };
     try {
       const response = await fetch('https://us-central1-streetcare-d0f33.cloudfunctions.net/send2FACodeForEmailUpdate', {
+
+      //const response = await fetch('https://us-central1-streetcare-d0f33.cloudfunctions.net/sendUpdateEmail2FACode', {
         //mode: 'no-cors',
         method: 'POST',
         headers: {

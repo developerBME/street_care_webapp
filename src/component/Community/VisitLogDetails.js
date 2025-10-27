@@ -31,29 +31,29 @@ const VisitLogDetails = () => {
 
 
 
-const { user } = useUserContext();
-const [isFlagged, setIsFlagged] = useState(false);
+  const { user } = useUserContext();
+  const [isFlagged, setIsFlagged] = useState(false);
 
-useEffect(() => {
-  if (id) {
-    const fetchFlagStatus = async () => {
-      try {
-        const docRef = doc(db, visitLogs_collection, id);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setIsFlagged(docSnap.data().isFlagged || false);
+  useEffect(() => {
+    if (id) {
+      const fetchFlagStatus = async () => {
+        try {
+          const docRef = doc(db, visitLogs_collection, id);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            setIsFlagged(docSnap.data().isFlagged || false);
+          }
+        } catch (error) {
+          console.error("Error fetching flag status:", error);
         }
-      } catch (error) {
-        console.error("Error fetching flag status:", error);
-      }
-    };
-    fetchFlagStatus();
-  }
-}, [id]);
+      };
+      fetchFlagStatus();
+    }
+  }, [id]);
 
-const handleFlag = async (e) => {
-  e.stopPropagation(); // Prevent any parent click events
-  if (!user) {
+  const handleFlag = async (e) => {
+    e.stopPropagation(); // Prevent any parent click events
+    if (!user) {
       alert("Please log in to flag or unflag the interaction log.");
       return;
     }
@@ -76,25 +76,25 @@ const handleFlag = async (e) => {
       }
 
       const { isFlagged: currentStatus, flaggedByUser } = docSnap.data();
-    const canUnflag = flaggedByUser === user.uid || userType === "Street Care Hub Leader";
-    // (Optional) Restrict unflagging if needed:
-    if (currentStatus && !canUnflag) {
-      alert("Only Street Care Hub Leader or User who flagged it can unflag this post.");
-      return;
+      const canUnflag = flaggedByUser === user.uid || userType === "Street Care Hub Leader";
+      // (Optional) Restrict unflagging if needed:
+      if (currentStatus && !canUnflag) {
+        alert("Only Street Care Hub Leader or User who flagged it can unflag this post.");
+        return;
+      }
+
+      if (currentStatus) {
+        await updateDoc(docRef, { isFlagged: false, flaggedByUser: null });
+        setIsFlagged(false);
+      } else {
+        await updateDoc(docRef, { isFlagged: true, flaggedByUser: user.uid });
+        setIsFlagged(true);
+      }
     }
-    
-    if (currentStatus) {
-      await updateDoc(docRef, { isFlagged: false, flaggedByUser: null });
-      setIsFlagged(false);
-    } else {
-      await updateDoc(docRef, { isFlagged: true, flaggedByUser: user.uid });
-      setIsFlagged(true);
+    catch (error) {
+      console.error("Error toggling flag status:", error);
     }
-  } 
-  catch (error) {
-    console.error("Error toggling flag status:", error);
-  }
-};
+  };
 
 
   const returnTarget = "/allOutreachVisitLog";
@@ -152,42 +152,41 @@ const handleFlag = async (e) => {
             </div>
             {data ? (
               <div className="bg-[#F5EEFE] min-w-full max-w-[320px] lg:w-full rounded-[30px] mb-4 flex flex-col justify-between p-6">
-                
-                    <div className="flex items-center justify-between">
-  {/* Left side: User info */}
-  <div className="flex items-center space-x-2">
-    <img
-      src={data?.photoUrl || defaultImage}
-      alt="User"
-      className="w-8 h-8 rounded-full"
-    />
-    <span className="text-[13px] font-normal font-inter">
-      {data?.userName || "Not defined"}
-    </span>
-    <img src={verifiedImg} alt="Verified" className="w-5 h-5" />
-  </div>
 
-  {/* Right side: Flag icon */}
-  <div className="relative flex items-center group">
-  <img
-    onClick={handleFlag}
-    src={flagIcon}
-    alt="flag"
-    className={`w-8 h-8 cursor-pointer rounded-full p-1 ${
-      isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
-    }`}
-  />
-   <div 
-            className="absolute right-10 top-0 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-30 whitespace-normal"
-            style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
-          >
+                <div className="flex items-center justify-between">
+                  {/* Left side: User info */}
+                  <div className="flex items-center space-x-2">
+                    <img
+                      src={data?.photoUrl || defaultImage}
+                      alt="User"
+                      className="w-8 h-8 rounded-full"
+                    />
+                    <span className="text-[13px] font-normal font-inter">
+                      {data?.userName || "Not defined"}
+                    </span>
+                    <img src={verifiedImg} alt="Verified" className="w-5 h-5" />
+                  </div>
+
+                  {/* Right side: Flag icon */}
+                  <div className="relative flex items-center group">
+                    <img
+                      onClick={handleFlag}
+                      src={flagIcon}
+                      alt="flag"
+                      className={`w-8 h-8 cursor-pointer rounded-full p-1 ${isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
+                        }`}
+                    />
+                    <div
+                      className="absolute right-10 top-0 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-30 whitespace-normal"
+                      style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
+                    >
                       {!isFlagged
                         ? "Flag the Interaction Log?"
                         : "Unflag the Interaction Log?"}
                     </div>
                   </div>
 
-</div>
+                </div>
 
 
                 <div className="my-3 space-y-3 w-full h-full flex flex-col">
@@ -195,8 +194,8 @@ const handleFlag = async (e) => {
                     <div className="flex flex-row justify-normal space-x-2">
                       <img className="w-[13px] h-[15px] my-[3px]" src={date} />
                       <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
-                        {data && data?.eventDate
-                          ? formatDate(data?.eventDate)
+                        {data && data?.timeStamp
+                          ? formatDate(data?.timeStamp)
                           : null}
                       </div>
                     </div>
@@ -206,15 +205,13 @@ const handleFlag = async (e) => {
                         src={locate}
                       />
                       <div className="font-medium font-dmsans text-[14px] text-[#37168B]">
-                        {`${data?.location?.city}, ${
-                          data?.location?.stateAbbv || data?.location?.state
-                        }`}
+                        {data?.whereVisit }
                       </div>
                     </div>
                   </div>
 
                   <h1 className="font-medium text-[18px] font-dmsans text-[#444746]">
-                    {data?.description || ""}
+                    {data?.peopleHelpedDescription }
                   </h1>
 
                   <div className="flex flex-row justify-between">
@@ -222,13 +219,14 @@ const handleFlag = async (e) => {
                       People Helped
                     </div>
                     <div className="font-bold text-[14px] font-dmsans text-[#444746] line-clamp-1">
-                      {data?.numberPeopleHelped}
+                      {data?.numberOfHelpers}
                     </div>
                   </div>
 
                   <div className="flex flex-row justify-between">
                     <div className="font-bold text-[14px] font-dmsans text-[#444746] line-clamp-1">
-                      Items Donated
+                      Participants
+                      {/* Changed from Items Donated on frontend */}
                     </div>
                     <div className="font-bold text-[14px] font-dmsans text-[#444746] line-clamp-1">
                       {data?.itemQty}

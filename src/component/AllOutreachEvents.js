@@ -323,7 +323,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
           <div className="lg:flex gap-1 justify-between mb-12">
             <div>
               <p className="font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] lg:mt-2">
-                Upcoming outreach events
+                Upcoming Outreach Events
               </p>
             </div>
             <div className="flex items-center gap-4 mt-6 lg:mt-0">

@@ -7,7 +7,7 @@ import { fetchPublicVisitLogs } from "../VisitLogCardService"; // Use this funct
 import CustomButton from "../Buttons/CustomButton";
 import ErrorMessage from "../ErrorMessage";
 
-const CommunityVisitLog = ({ loggedIn}) => {
+const CommunityVisitLog = ({ loggedIn }) => {
   const navigate = useNavigate();
   const [visitLogs, setVisitLogs] = useState([]);
   const [visitLogsCount, setCount] = useState(0);
@@ -20,17 +20,17 @@ const CommunityVisitLog = ({ loggedIn}) => {
       try {
         // Fetch all visit logs
         const visitLogsData = await fetchPublicVisitLogs(
-          "", 
-          "", 
-          new Date(), 
-          new Date(), 
-          false, 
-          null, 
-          6, 
-          "next", 
+          "",
+          "",
+          new Date(),
+          new Date(),
+          false,
+          null,
+          6,
+          "next",
           []
         );
-      
+
         setVisitLogs(visitLogsData.visitLogs);
         setCount(visitLogsData.totalRecords);
         setIsLoading(false);
@@ -63,17 +63,27 @@ const CommunityVisitLog = ({ loggedIn}) => {
               {loggedIn && (
                 <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-medium font-dmsans leading-tight self-stretch">
                   <CustomButton
-                    label="Create a interaction Log"
+                    label="Create an Interaction Log"
                     name="buttondefault"
-                    onClick={() => {
-                      navigate("/profile/personaloutform");
+                    onClick={async() => {
+                      // const fAuth = await getAuth();
+                      // const user = fAuth.currentUser;
+
+                      // if (user) {
+                      navigate("/profile/interactionLogForm");
+                      // } else {
+                      // navigate("/login", { state: { from: { pathname: "/profile/interactionLogForm" } } });
+                      // }
                     }}
                   />
                 </div>
               )}
             </div>
             <div className="text-md font-medium font-dmsans text-[#181818] mt-2">
-              Please document the details of each person you interacted with. The more detailed, the better. And also, a clearer way to present the logging instruction, like: Just one 'log' for your entire event along with the sentence.
+              Please document the details of each person you interacted with.
+              The more detailed, the better. And also, a clearer way to present
+              the logging instruction, like: Just one 'log' for your entire
+              event along with the sentence.
             </div>
           </div>
 

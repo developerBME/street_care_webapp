@@ -12,7 +12,7 @@ import {
   GoogleAuthProvider,
   onAuthStateChanged,
 } from "firebase/auth";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { FcGoogle } from "react-icons/fc";
 import { AiFillApple, AiFillFacebook } from "react-icons/ai";
@@ -43,6 +43,9 @@ const bannedUser_collection = collectionMapping.bannedUser;
 
 function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || "/profile";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -69,7 +72,7 @@ function Login() {
   };
 
   const fAuth = getAuth();
-  if (fAuth.currentUser) navigate("/profile", { replace: true });
+  if (fAuth.currentUser) navigate(from, { replace: true });
   onAuthStateChanged(fAuth, (user) => {
     // Checks Login status for Redirection
     if (user) {
@@ -132,7 +135,7 @@ function Login() {
           setLoginSuccess("Successfully logged in!");
           setError(""); // Clearing out any existing error messages
           // navigate(-1, { preventScrollReset: true });
-          navigate("/profile");
+          navigate(from, { replace: true });
           logEvent("STREET_CARE_INFO_AUTH", `${email} has logged in`);
         })
         .catch((error) => {
