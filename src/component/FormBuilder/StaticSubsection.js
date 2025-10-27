@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import CheckboxGroup from "./CheckboxGroup";
 import TextInput from "../Inputs/TextInput";
 import InlineWrapper from "../Inputs/InlineWrapper";
@@ -28,25 +28,26 @@ const sxTheme = {
   },
 };
 
-const StaticSubsection = ({ index, interaction, onUpdate, handleCancel }) => {
+const StaticSubsection = ({ index, interaction, onUpdate, handleRemove }) => {
   const [selectedDate, setSelectedDate] = useState(null); //For FollowUp Date
   const [selectedTime, setSelectedTime] = useState(null); //For Followup Time
   const [interactionData, setInteractionData] = useState({
-    interactionLogFirstName: "",
-    interactionLogDocId: "",
-    firstName: "",
-    locationLandmark: "",
-    timestampOfInteraction: "",
-    helpProvidedCategory: [],
-    furtherHelpCategory: [],
-    followUpTimestamp: "",
-    additionalDetails: "",
-    isPublic: true,
-    status: "pending",
-    lastModifiedTimestamp: null,
-    lastActionPerformed: null,
-    completedTimestamp: "",
-    isCompleted: false,
+    interactionLogFirstName:
+      interaction.formData?.interactionLogFirstName || "",
+    interactionLogDocId: interaction.formData?.interactionLogDocId || "",
+    firstName: interaction.formData?.firstName || "",
+    locationLandmark: interaction.formData?.locationLandmark || "",
+    timestampOfInteraction: interaction.formData?.timestampOfInteraction || "",
+    helpProvidedCategory: interaction.formData?.helpProvidedCategory || [],
+    furtherHelpCategory: interaction.formData?.furtherHelpCategory || [],
+    followUpTimestamp: interaction.formData?.followUpTimestamp || "",
+    additionalDetails: interaction.formData?.additionalDetails || "",
+    isPublic: interaction.formData?.isPublic ?? true,
+    status: interaction.formData?.status || "pending",
+    lastModifiedTimestamp: interaction.formData?.lastModifiedTimestamp ?? null,
+    lastActionPerformed: interaction.formData?.lastActionPerformed ?? null,
+    completedTimestamp: interaction.formData?.completedTimestamp || "",
+    isCompleted: interaction.formData?.isCompleted ?? false,
   }); // Centrailized State for easier and manageable state upliftment
   const handleDateTimeMerge = (selectedDate, selectedTime) => {
     // // merges the FollowUp Date and FollowUp Time
@@ -64,7 +65,11 @@ const StaticSubsection = ({ index, interaction, onUpdate, handleCancel }) => {
     // console.log(`Date:`, selectedDate);
     // console.log(`Time:`, selectedTime);
     // console.log(`InteractionData ${interaction} Updated:`, interactionData);
-    onUpdate({ [interaction]: interactionData }); //This Function uplifts the data from this component to its parent component essentially making all Individual Interactions Data available to a single obj like key:value pairs.
+    onUpdate({
+      id: interaction.id,
+      formData: interactionData,
+      errors: interaction.errors,
+    }); //This Function uplifts the data from this component to its parent component essentially making all Individual Interactions Data available to a single obj like key:value pairs.
     //e.g. {1:{firstName:John,dateOfInteraction:xyz},2:{firstName:Adam,dateOfInteraction:abc}}
   }, [interactionData]);
 
@@ -74,17 +79,17 @@ const StaticSubsection = ({ index, interaction, onUpdate, handleCancel }) => {
         <div className="text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
           Individual Interaction {index + 1}
         </div>
-        {/* {index !== 0 && (
+        {index !== 0 && (
           <button
             type="button"
             className="bg-red-100 text-red-700 text-sm font-medium px-3 py-1 rounded transition duration-150 ease-in-out hover:bg-red-600 hover:text-white"
-            // onClick={() => {
-            //   handleCancel(interaction);
-            // }}
+            onClick={() => {
+              handleRemove(interaction.id);
+            }}
           >
             Remove
           </button>
-        )} */}
+        )}
       </div>
 
       <TextInput
@@ -167,7 +172,7 @@ const StaticSubsection = ({ index, interaction, onUpdate, handleCancel }) => {
               helpProvidedCategory: array,
             }));
           }}
-          interaction={interaction}
+          interaction={interaction.id}
         />
       </div>
 
@@ -185,7 +190,7 @@ const StaticSubsection = ({ index, interaction, onUpdate, handleCancel }) => {
               furtherHelpCategory: array,
             }));
           }}
-          interaction={interaction}
+          interaction={interaction.id}
         />
       </div>
       {/* Inline Wrapper wraps 2 text inputs to render inline next to each other */}
@@ -198,6 +203,7 @@ const StaticSubsection = ({ index, interaction, onUpdate, handleCancel }) => {
                 setSelectedDate(newValue);
                 handleDateTimeMerge(newValue, selectedTime);
               }}
+              minDate={dayjs().startOf("day")}
               slotProps={{
                 textField: {
                   required: false,
@@ -221,6 +227,8 @@ const StaticSubsection = ({ index, interaction, onUpdate, handleCancel }) => {
               }}
               variant="desktop"
               views={["hours", "minutes"]}
+              minTime={dayjs().hour(9).minute(0)} // ⏰ Earliest selectable time: 9:00 AM
+              maxTime={dayjs().hour(19).minute(0)} // ⏰ Latest selectable time: 7:00 PM
               viewRenderers={{
                 hours: renderTimeViewClock,
                 minutes: renderTimeViewClock,

@@ -1,4 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+} from "react";
 import CheckboxGroup from "../FormBuilder/CheckboxGroup";
 import TextInput from "../Inputs/TextInput";
 import InlineWrapper from "../Inputs/InlineWrapper";
@@ -10,8 +16,10 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
 import dayjs from "dayjs";
 import AddressAutofill from "../FormBuilder/AddressAutofill";
+import { areObjectsEqual } from "../../utils/helperFns";
+import { obj1 } from "./InteractionLogForm";
 
-export default function GeneralInfoForm({ onUpdate = () => {} }) {
+const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
   const sxTheme = {
     backgroundColor: "white",
     "& .MuiOutlinedInput-root": {
@@ -90,8 +98,23 @@ export default function GeneralInfoForm({ onUpdate = () => {} }) {
     }));
   };
 
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        checkIsEmpty() {
+          return areObjectsEqual(generalInfoData, obj1);
+        },
+        getGeneralInforData() {
+          onUpdate(generalInfoData);
+        },
+      };
+    },
+    [generalInfoData]
+  );
+
   useEffect(() => {
-    onUpdate(generalInfoData);
+    // onUpdate(generalInfoData); Comment this out since we dont need to raise data state at each keystroke
   }, [generalInfoData]);
 
   return (
@@ -166,6 +189,7 @@ export default function GeneralInfoForm({ onUpdate = () => {} }) {
                   generalInfoData.interactionDate
                 );
               }}
+              maxDate={dayjs()}
               slotProps={{
                 textField: {
                   required: false,
@@ -200,6 +224,8 @@ export default function GeneralInfoForm({ onUpdate = () => {} }) {
               }}
               variant="desktop"
               views={["hours", "minutes"]}
+              minTime={dayjs().hour(9).minute(0)} // ⏰ Earliest selectable time: 9:00 AM
+              maxTime={dayjs().hour(19).minute(0)} // ⏰ Latest selectable time: 7:00 PM
               viewRenderers={{
                 hours: renderTimeViewClock,
                 minutes: renderTimeViewClock,
@@ -239,6 +265,9 @@ export default function GeneralInfoForm({ onUpdate = () => {} }) {
               }}
               variant="desktop"
               views={["hours", "minutes"]}
+              ampm={false}
+              minTime={dayjs().hour(9).minute(0)} // ⏰ Earliest selectable time: 9:00 AM
+              maxTime={dayjs().hour(19).minute(0)} // ⏰ Latest selectable time: 7:00 PM
               viewRenderers={{
                 hours: renderTimeViewClock,
                 minutes: renderTimeViewClock,
@@ -349,4 +378,6 @@ export default function GeneralInfoForm({ onUpdate = () => {} }) {
       <AddressAutofill onAddressChange={handleAddressChange} />
     </>
   );
-}
+});
+
+export default GeneralInfoForm;
