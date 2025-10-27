@@ -37,5 +37,6 @@ export const emailConfirmation = async (
     .catch((error) => {
       console.error("Error:", error);
       alert("Error signing up for the event.");
+      
     });
 };

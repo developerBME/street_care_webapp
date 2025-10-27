@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-//import verifiedImg from "../../images/verified_purple.png";
-import wavingHand from "../../images/waving_hand.png";
 import CustomButton from "../Buttons/CustomButton";
 import {
   fetchEventById,
   handleRsvp,
-  fetchUserSignedUpOutreaches,
   isUserParticipantInEvent
 } from "../EventCardService";
-import { fetchUserName } from "../HelperFunction";
-import { Co2Sharp } from "@mui/icons-material";
 import defaultImage from "../../images/default_avatar.svg";
 import RSVPConfirmationModal from "../UserProfile/RSVPConfirmationModal";
 import userSlots from "../../images/userSlots.png";
@@ -25,6 +20,7 @@ import verifiedGreen from "../../images/verified.png";
 import verifiedBlue from "../../images/verified_blue.png";
 import verifiedYellow from "../../images/verified_yellow.png";
 import DeleteModal from "./DeleteModal";
+
 import {
   doc,
   deleteDoc,
@@ -50,46 +46,31 @@ const OutreachSignup = () => {
   const { id } = useParams();
   const [label2, setLabel2] = useState("");
   const [modalLabel, setModalLabel] = useState("");
-  const [success, setSuccess] = useState(false);
   const fAuth = getAuth();
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [hasCreated, setHasCreated] = useState(false);
   const [isPastEvent, setIsPastEvent] = useState(false);
 
-  const location = useLocation();
-  const { label } = location.state || {};
-  const isProfilePage = location?.state?.isProfilePage || false;
-
-  const eventDetails = [
-    {
-      time: "12/12/2023 SAT 12:00pm",
-      location: "200 Eastern Pkwy, Brooklyn, NY 11238",
-    },
-  ];
 
   const [data, setData] = useState(null);
-  const [userSignedUpOutreaches, setUserSignedUpOutreaches] = useState(null);
 
   const handleRefresh = () => {
     window.location.reload();
   };
 
   // Add near your other useState hooks
-const [isFlagged, setIsFlagged] = useState(false);
-
+  const [isFlagged, setIsFlagged] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
       try {
         const result = await fetchEventById(id);
         setData(result);
-        console.log(result)
       } catch (error) {
         console.error(error.message);
       }
     };
-    //  console.log('ProfilePage status'+isProfilePage);
 
     getData(); // Invoke the async function
   }, [label2]);
@@ -114,7 +95,7 @@ const [isFlagged, setIsFlagged] = useState(false);
     };
     fetchFlagStatus();
   }, [id]);
-  
+
   const handleFlag = async (e) => {
     e.stopPropagation(); // Prevent triggering parent click events
     if (!fAuth.currentUser) {
@@ -147,20 +128,21 @@ const [isFlagged, setIsFlagged] = useState(false);
       if (currentStatus) {
         if (!canUnflag) {
           alert("Only the user who flagged this event or a Street Care Hub Leader can unflag it.");
-          // console.error("Only the user who flagged this event or a Street Care Hub Leader can unflag it.");
           return;
         }
         await updateDoc(docRef, { isFlagged: false, flaggedByUser: null });
         setIsFlagged(false);
       } else {
-        await updateDoc(docRef, { isFlagged: true, flaggedByUser: fAuth.currentUser.uid });
+        await updateDoc(docRef, {
+          isFlagged: true,
+          flaggedByUser: fAuth.currentUser.uid,
+        });
         setIsFlagged(true);
       }
     } catch (error) {
       console.error("Error toggling document flag status:", error);
     }
   };
-  
 
   const [showModal, setShowModal] = useState(false);
 
@@ -179,15 +161,6 @@ const [isFlagged, setIsFlagged] = useState(false);
           id,
           fAuth?.currentUser?.uid
         );
-        // setUserSignedUpOutreaches(result);
-        // console.log("Result in OS: ", result);
-        
-        // const eventIds = result?.map((event) => event.id);
-        // // console.log(eventIds);
-        // console.log("Event Ids: ", eventIds);
-
-        // const isSignedUp = eventIds?.includes(id);
-        // console.log(isSignedUp);
         if (result) {
           setLabel2("EDIT");
         } else {
@@ -199,7 +172,6 @@ const [isFlagged, setIsFlagged] = useState(false);
       }
     };
     getUserSignedUpOutreaches();
-    // console.log(fAuth.currentUser.uid);
 
     if (data?.uid === fAuth?.currentUser?.uid) {
       setHasCreated(true);
@@ -217,7 +189,6 @@ const [isFlagged, setIsFlagged] = useState(false);
     }
   }, [data]);
 
-  // console.log(isPastEvent)
 
   let verifiedImg;
   if (data) {
@@ -313,48 +284,58 @@ const [isFlagged, setIsFlagged] = useState(false);
 
                 </div> */}
                 <div className="w-full flex items-center justify-between px-6 pt-9 pb-3">
-  {/* Left side: User info */}
-  <div className="flex items-center gap-2">
-    <img
-      className="w-9 h-9 rounded-full"
-      src={data?.photoUrl || defaultImage}
-      alt="User"
-    />
-    <div className="flex items-center gap-1">
-      {data ? (
-        <div className="text-[#000] text-sm font-normal font-inter leading-snug">
-          {data.userName}
-        </div>
-      ) : (
-        <div className="text-[#000] text-sm font-normal font-inter leading-snug">
-          Loading...
-        </div>
-      )}
-      <img src={verifiedImg} className="w-6 h-6" alt="Verified" />
-    </div>
-  </div>
-  {/* Right side: Flag icon */}
-  <div className="relative group">
-    <img
-      onClick={handleFlag}
-      src={flagSvg}
-      alt="flag"
-      className={`w-8 h-8 cursor-pointer rounded-full p-1 ${
-        isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
-      }`}
-    />
-    <div
-      className="absolute top-full right-0 mt-1 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
-      style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
-    >
-      {!isFlagged ? "Flag the Outreach Event?" : "Unflag the Outreach Event?"}
-    </div>
-  </div>
-</div>
-
+                  {/* Left side: User info */}
+                  <div className="flex items-center gap-2">
+                    <img
+                      className="w-9 h-9 rounded-full"
+                      src={data?.photoUrl || defaultImage}
+                      alt="User"
+                    />
+                    <div className="flex items-center gap-1">
+                      {data ? (
+                        <div className="text-[#000] text-sm font-normal font-inter leading-snug">
+                          {data.userName}
+                        </div>
+                      ) : (
+                        <div className="text-[#000] text-sm font-normal font-inter leading-snug">
+                          Loading...
+                        </div>
+                      )}
+                      <img
+                        src={verifiedImg}
+                        className="w-6 h-6"
+                        alt="Verified"
+                      />
+                    </div>
+                  </div>
+                  {/* Right side: Flag icon */}
+                  <div className="relative group">
+                    <img
+                      onClick={handleFlag}
+                      src={flagSvg}
+                      alt="flag"
+                      className={`w-8 h-8 cursor-pointer rounded-full p-1 ${
+                        isFlagged
+                          ? "bg-red-500"
+                          : "bg-transparent hover:bg-gray-200"
+                      }`}
+                    />
+                    <div
+                      className="absolute top-full right-0 mt-1 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
+                      style={{
+                        minWidth: "150px",
+                        maxWidth: "200px",
+                        textAlign: "center",
+                      }}
+                    >
+                      {!isFlagged
+                        ? "Flag the Outreach Event?"
+                        : "Unflag the Outreach Event?"}
+                    </div>
+                  </div>
+                </div>
               </div>
               <div className="self-stretch h-fit px-6 py-2 flex-col justify-start items-start gap-2 flex">
-
                 <div className="flex flex-col justify-between space-y-3">
                   <div className="flex flex-row justify-normal space-x-2">
                     <img className="w-[13px] h-[15px] my-[3px]" src={date} />
@@ -467,6 +448,7 @@ const [isFlagged, setIsFlagged] = useState(false);
                     <div className="font-normal font-dmsans text-[14px]">
                       {/* Open Spots: {totalSlots - nop}/{totalSlots} */}
                       {/* {data.totalSlots - data.nop}/{data.totalSlots} */}
+                      {/* {data.nop} */}
                       {data.nop}/{data.totalSlots}
                     </div>
                   </div>
@@ -529,8 +511,6 @@ const [isFlagged, setIsFlagged] = useState(false);
                           setLabel2,
                           false
                         );
-                        // console.log(data);
-                        // setSuccess(true);
                         setModalLabel("EDIT");
                         handleShowModal();
                       }}

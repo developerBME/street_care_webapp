@@ -25,7 +25,7 @@ const starStyle = {
   height: 60,
 };
 const outreachEvents_collection = collectionMapping.outreachEvents;
-const visitLogs_collection = collectionMapping.visitLogs;
+const visitLogsBookNew_collection = collectionMapping.visitLogsBookNew;
 function getLastWeeksDate() {
   const now = new Date();
 
@@ -33,11 +33,6 @@ function getLastWeeksDate() {
 }
 
 function CommOutForm() {
-  const navigate = useNavigate();
-  // const ratingChanged = (newRating) => {
-  //   console.log(newRating);
-  // };
-
   const [numberHelped, setNumberHelped] = useState(null);
   const [itemArray, setItemArray] = useState([]);
   const [itemQty, setItemQty] = useState("");
@@ -195,7 +190,7 @@ function CommOutForm() {
     }
     let obj = {
       uid: fAuth.currentUser.uid,
-      numberPeopleHelped: numberHelped,
+      numberOfHelpers: numberHelped,
       whatGiven: whatGivenArr,
       itemQty: itemQty,
       rating: rating,
@@ -214,7 +209,7 @@ function CommOutForm() {
     </div>`;
 
     try {
-      const logRef = collection(db, visitLogs_collection);
+      const logRef = collection(db, visitLogsBookNew_collection);
       const docRef = await addDoc(logRef, obj);
       if (docRef.id) {
         console.log(docRef.id);

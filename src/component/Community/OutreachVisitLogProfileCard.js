@@ -19,9 +19,11 @@ import DeleteModal from "./DeleteModal";
 import { formatDate } from "./../HelperFunction";
 
 import collectionMapping from "../../utils/firestoreCollections";
+import {getStatusStyle} from "../../component/admin_test/ApprovalCardOutreachEvents"
 
 const users_collection = collectionMapping.users;
-const visitLogs_collection = collectionMapping.visitLogs;
+//const visitLogs_collection = collectionMapping.visitLogs; using new collection
+const visitLogsNew_collection = collectionMapping.visitLogsBookNew;
 
 const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
   const navigate = useNavigate();
@@ -32,7 +34,7 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
   // Function to delete visit log
   const deleteVisitLog = async () => {
     try {
-      const visitLogDoc = doc(db, visitLogs_collection, visitLogCardData.id);
+      const visitLogDoc = doc(db, visitLogsNew_collection, visitLogCardData.id);
 
       const userQuery = query(
         collection(db, users_collection),
@@ -112,13 +114,25 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
       }}
     >
       <div className="bg-[#F5EEFE] min-w-full max-w-[320px] lg:w-full rounded-[30px] flex flex-col justify-between">
+              {/* Adding pending status tag=>START,Niharika */}
+              {/* Status */}
+      <div className="mt-2 text-right mb-2">
+        <span
+          className={`px-3 py-1 text-sm font-medium rounded-full ${getStatusStyle(
+            visitLogCardData.status
+          )}`}
+        >
+          {visitLogCardData.status.charAt(0).toUpperCase() + visitLogCardData.status.slice(1)|| "No Status"}
+        </span>
+      </div>
+      {/* Adding pending status tag=>END,Niharika */}
         <div className="flex justify-between items-center">
           <div className="text-violet-900 text-[12px] font-medium font-bricolage leading-tight flex flex-col">
             <div className="my-Custom-Date flex flex-row">
               <img alt="" className="w-4 h-4" src={calendar} />
               <div className="px-1">
                 {formatDate(
-                  new Date(visitLogCardData?.dateTime?.seconds * 1000)
+                  new Date(visitLogCardData?.timeStamp?.seconds * 1000)
                 )}
               </div>
             </div>
@@ -185,7 +199,7 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
           </div>
         </div>
         <div className="text-zinc-700 text-xl text-[12px] font-normal font-bricolage leading-snug mt-2 mb-2 px-1">
-          {visitLogCardData.description || ""}
+          {visitLogCardData.peopleHelpedDescription  || ""}
         </div>
         <div className="flex flex-col gap-0.5">
           <div className="flex justify-between mt-2 mb-2 px-1">
@@ -193,12 +207,13 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
               People Helped
             </div>
             <div className="text-neutral-900 text-[18px] mt-[-5px] font-bold font-bricolage leading-tight text-right">
-              {visitLogCardData.numberPeopleHelped || ""}
+              {visitLogCardData.numberOfHelpers || ""}
             </div>
           </div>
           <div className="flex justify-between mt-2 mb-2 px-1">
             <div className="text-neutral-900 text-[14px] font-bold font-bricolage leading-tight text-left">
-              Items Donated
+              Participants 
+              {/* Changed from Items Donated on frontend */}
             </div>
             <div className="text-neutral-900 text-[18px] mt-[-5px] font-bold font-bricolage leading-tight text-right">
               {visitLogCardData.itemQty || ""}
