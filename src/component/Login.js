@@ -141,7 +141,7 @@ function Login() {
             setError(
             <div className="flex items-center">
               <img src={errorImg} className="w-3 h-3 mr-2" />
-              <div>Email or password is incorrect. Please check your credentials and try again.</div>
+              <div>Invalid Email or password .Please try again.</div>
             </div>
             );
           } else {
