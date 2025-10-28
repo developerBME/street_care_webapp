@@ -69,7 +69,8 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
   });
 
   const mergeDateTime = (startTime, endTime, interactionDate) => {
-    if (!startTime || !endTime || !interactionDate) return;
+    interactionDate = interactionDate || dayjs();
+    if (!startTime || !endTime) return;
 
     const date = dayjs(interactionDate); // ensure it's a Day.js object
 
@@ -83,7 +84,7 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
       .minute(dayjs(endTime, "hh:mm A").minute())
       .second(0);
 
-    console.log(mergedDateEndTime, mergedDateStartTime);
+    // console.log(mergedDateEndTime, mergedDateStartTime);
     setGeneralInfoData((prev) => ({
       ...prev,
       startTimestamp: mergedDateStartTime,
@@ -105,8 +106,8 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
         checkIsEmpty() {
           return areObjectsEqual(generalInfoData, obj1);
         },
-        getGeneralInforData() {
-          onUpdate(generalInfoData);
+        getGeneralInfoData() {
+          return generalInfoData;
         },
       };
     },
@@ -265,7 +266,6 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
               }}
               variant="desktop"
               views={["hours", "minutes"]}
-              ampm={false}
               minTime={dayjs().hour(9).minute(0)} // ⏰ Earliest selectable time: 9:00 AM
               maxTime={dayjs().hour(19).minute(0)} // ⏰ Latest selectable time: 7:00 PM
               viewRenderers={{

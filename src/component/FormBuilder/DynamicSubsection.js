@@ -44,7 +44,7 @@ const DynamicSubSection = forwardRef(({ onUpdate = () => {} }, ref) => {
         );
       },
       getHelpRequestData() {
-        onUpdate(interactions.map((interaction) => interaction.formData));
+        return interactions.map((interaction) => interaction.formData);
       },
     }),
     [interactions]

@@ -85,8 +85,6 @@ function InteractionLogForm() {
   // const [interactions, setInteractions] = useState([1]); //Needed
   const [provideInteractionDetail, setProvideInteractionDetail] = //Needed
     useState("No");
-  const [interactionLogData, setInteractionLogData] = useState();
-  const [helpRequestData, setHelpRequestData] = useState();
   const [emptyError, setEmptyError] = useState(false);
   const [errors, setErrors] = useState({
     numberHelpedError: "",
@@ -111,15 +109,8 @@ function InteractionLogForm() {
 
   /* Firebase */
 
-  const handleInteractionLog = (data) => {
-    setInteractionLogData(data);
-  };
-
-  const handleHelpRequest = (data) => {
-    setHelpRequestData(data);
-  };
-
   const handleSubmmit = async () => {
+    let interactionLogData, helpRequestData;
     let interactionLogDocId = "";
     let interactionLogFirstName = "";
     let helpRequestDocIds = [];
@@ -134,7 +125,7 @@ function InteractionLogForm() {
           setEmptyError(true);
           return;
         } else {
-          await generalInfoRef.current.getGeneralInfoData(); // get data if its not empty
+          interactionLogData = generalInfoRef.current.getGeneralInfoData(); // get data if its not empty
         }
       }
 
@@ -149,9 +140,13 @@ function InteractionLogForm() {
         //Here add stuff to notify user/ setErrorState
         return;
       }
-      await generalInfoRef.current.getGeneralInfoData(); // get data if not got it previously.
+      interactionLogData = generalInfoRef.current.getGeneralInfoData(); // get data if not got it previously.
       if (provideInteractionDetail == "Yes") {
-        await dynamicRef.current.getHelpRequestData(); //get HelpRequest Data from the component.
+        if (dynamicRef.current.checkIsEmpty()) {
+          setEmptyError(true);
+          return;
+        }
+        helpRequestData = dynamicRef.current.getHelpRequestData(); //get HelpRequest Data from the component.
       }
 
       setEmptyError(false);
@@ -162,7 +157,6 @@ function InteractionLogForm() {
 
       if (!generalInfoRef.current.checkIsEmpty()) {
         // Checking here if user has changed anything at all in GeneralInfoForm Data
-
         const nativeStartDate =
           interactionLogData.startTimestamp?.toDate?.() ?? new Date();
         const nativeEndDate =
@@ -176,7 +170,7 @@ function InteractionLogForm() {
           lastActionPerformed: null,
           lastModifiedTimestamp: Timestamp.now(),
           isPublic: isPublic,
-          helpRequestCount: 0,
+          helpRequestCount: null,
           startTimestamp: Timestamp.fromDate(nativeStartDate), //nativeStartDate
           endTimestamp: Timestamp.fromDate(nativeEndDate), //nativeEndDate
           interactionDate: Timestamp.fromDate(nativeDate), //nativeDate
@@ -185,6 +179,7 @@ function InteractionLogForm() {
         //   "InteractionLog Data just before send:",
         //   augmentedInteractionLog
         // );
+        //Handle if the individual interaction is empty should not throw error.
 
         // STEP 2: Add to interactionLog collection
         const interactionLogRef = await addDoc(
@@ -301,10 +296,7 @@ function InteractionLogForm() {
                       needs.
                     </div>
 
-                    <GeneralInfoForm
-                      onUpdate={handleInteractionLog}
-                      ref={generalInfoRef}
-                    />
+                    <GeneralInfoForm ref={generalInfoRef} />
                   </div>
 
                   <div className="mb-6">
@@ -347,10 +339,7 @@ function InteractionLogForm() {
                   {/*Help Requested Form Here*/}
                   {provideInteractionDetail === "Yes" && (
                     <>
-                      <DynamicSubSection
-                        onUpdate={handleHelpRequest}
-                        ref={dynamicRef}
-                      />{" "}
+                      <DynamicSubSection ref={dynamicRef} />{" "}
                     </>
                   )}
 
@@ -378,7 +367,7 @@ function InteractionLogForm() {
                 <div className="justify-start items-start gap-4 inline-flex flex-col">
                   {emptyError && (
                     <div className="text-red-500 text-sm font-medium -mt-5">
-                      Form is empty. Please fill out the necessary fields.
+                      Please fill out the Form, Entire Form cannot be empty.
                     </div>
                   )}
                   <div className="justify-start items-start gap-4 flex">
