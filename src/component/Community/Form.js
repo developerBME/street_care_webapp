@@ -791,7 +791,107 @@ const Form = (hrid) => {
     setPostCode(postcode);
   };
 
-  
+  // Determine the earliest selectable start date
+  const getMinStartDate = () => {
+    const now = new Date();
+    const endOfBusiness = new Date();
+    endOfBusiness.setHours(17, 0, 0, 0); // 17:00 today
+
+    // If current time is after business hours, set min date to tomorrow
+    if (now > endOfBusiness) {
+      const tomorrow = new Date();
+      tomorrow.setDate(now.getDate() + 1);
+      tomorrow.setHours(9, 0, 0, 0); // 9:00 AM next day
+      return tomorrow;
+    }
+
+    return now; // else today
+  };
+
+  const getMinEndDate = (start) => {
+    if (!start) return getMinStartDate(); // no start selected yet
+    const minEnd = new Date(start);
+    // If start time is 17:00, set to next day 9:00
+    if (start.getHours() >= 17) {
+      minEnd.setDate(start.getDate() + 1);
+      minEnd.setHours(9, 0, 0, 0);
+    }
+    return minEnd;
+  };
+
+  const getValidStartDateTime = (selectedDate) => {
+    if (!selectedDate) return null;
+
+    const now = new Date();
+    const newStart = new Date(selectedDate);
+
+    const prevHours = selectedDate.getHours();
+    const prevMinutes = selectedDate.getMinutes();
+
+    const isToday = newStart.toDateString() === now.toDateString();
+
+    // Check if previous time is valid
+    const timeInvalid =
+      prevHours < 9 ||
+      prevHours > 17 ||
+      (isToday &&
+        (prevHours < now.getHours() ||
+          (prevHours === now.getHours() && prevMinutes <= now.getMinutes())));
+
+    if (timeInvalid) {
+      // Reset to earliest valid time
+      if (isToday && now.getHours() < 17) {
+        newStart.setHours(now.getHours(), now.getMinutes() + 1, 0, 0); // next minute
+      } else {
+        // Either a future date or today after hours → set 9:00
+        newStart.setHours(9, 0, 0, 0);
+      }
+    } else {
+      // Keep previous valid time
+      newStart.setHours(prevHours, prevMinutes, 0, 0);
+    }
+
+    return newStart;
+  };
+
+  const getValidEndDateTime = (endDate, startDate) => {
+    if (!endDate) return null;
+
+    const newEnd = new Date(endDate);
+    const prevHours = endDate.getHours();
+    const prevMinutes = endDate.getMinutes();
+
+    const now = new Date();
+    const isToday = newEnd.toDateString() === now.toDateString();
+
+    const timeInvalid =
+      prevHours < 9 ||
+      prevHours > 17 ||
+      (isToday && (prevHours < now.getHours() || (prevHours === now.getHours() && prevMinutes <= now.getMinutes()))) ||
+      (startDate && newEnd <= startDate);
+
+    if (timeInvalid) {
+      // Reset to earliest valid time
+      if (isToday && now.getHours() < 17) {
+        newEnd.setHours(now.getHours(), now.getMinutes() + 1, 0, 0);
+      } else if (startDate && startDate.getHours() >= 17) {
+        // Start time was 17:00 → move to next day 9:00
+        newEnd.setDate(startDate.getDate() + 1);
+        newEnd.setHours(9, 0, 0, 0);
+      } else if (startDate && newEnd.toDateString() === startDate.toDateString() && newEnd <= startDate) {
+        // End time same day as start but before start → set to start + 15min
+        newEnd.setTime(startDate.getTime() + 15 * 60 * 1000);
+      } else {
+        newEnd.setHours(9, 0, 0, 0);
+      }
+    } else {
+      newEnd.setHours(prevHours, prevMinutes, 0, 0);
+    }
+
+    return newEnd;
+  };
+
+
 
   // const handleCityPlaceSelect = async (updateCity) => {
   //   const place = await autoComplete.getPlace();
@@ -1272,20 +1372,29 @@ const Form = (hrid) => {
                 <DatePicker
                   selected={startDate}
                   onChange={(date) => {
-                    setStartDate(date);
-                    handleStimeChange(date);
+                    const validStart = getValidStartDateTime(date);
+                    setStartDate(validStart);
+                    handleStimeChange(validStart);
                   }}
+
                   showTimeSelect
                   timeFormat="HH:mm"
                   timeIntervals={15}
                   dateFormat="Pp"
+                  minDate={getMinStartDate()}
                   minTime={dayTime(startDate, 9)}
                   maxTime={dayTime(startDate, 17)}
                   filterTime={(time) => {
                     const h = time.getHours();
                     const m = time.getMinutes();
                     const total = h * 60 + m;
-                    return total >= 9 * 60 && total <= 17 * 60;
+                    const now = new Date();
+                    const isToday = startDate && startDate.toDateString() === now.toDateString();
+
+                    const withinBusiness = total >= 9 * 60 && total <= 17 * 60;
+                    const afterNow = !isToday || time.getTime() > now.getTime(); // only future times today
+
+                    return withinBusiness && afterNow;
                   }}
                   customInput={
                     <CustomInput
@@ -1314,10 +1423,7 @@ const Form = (hrid) => {
                 </p>
                 <DatePicker
                   selected={endDate}
-                  onChange={(date) => {
-                    setEndDate(date);
-                    handleEtimeChange(date);
-                  }}
+                  onChange={(date) => setEndDate(getValidEndDateTime(date, startDate))}
                   showTimeSelect
                   timeFormat="HH:mm"
                   timeIntervals={15}
@@ -1335,7 +1441,7 @@ const Form = (hrid) => {
                     return withinBusiness && afterStart;
                   }}
                   disabled={!startDate}
-                  minDate={startDate}
+                  minDate={getMinEndDate(startDate)}
                   customInput={
                     <CustomInput
                       id="date"
