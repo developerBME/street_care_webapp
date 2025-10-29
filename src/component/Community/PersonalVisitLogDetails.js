@@ -107,9 +107,9 @@ const PersonalVisitLogDetails = () => {
                       {data?.timeStamp.toDate().toLocaleString().toString()}
                     </div>
                   </div>
-                  <div className="flex flex-row justify-normal space-x-2">
-                    <img className="w-[12px] h-[15px] my-[3px]" src={locate} alt = "location" />
-                    <div className="text-violet-900 text-sm font-medium font-['DM Sans'] leading-tight pt-0.5">
+                  <div className="flex flex-row justify-normal items-center space-x-2">
+                    <img className="w-[12px] h-[15px]" src={locate} alt = "location" />
+                    <div className="text-violet-900 text-sm font-medium font-['DM Sans'] leading-tight">
                       {data?.city || ""}, {data?.stateAbbv || data?.state || ""}
                     </div>
                   </div>
