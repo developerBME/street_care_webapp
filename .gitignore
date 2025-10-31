@@ -20,7 +20,6 @@ functions/node_modules/
 .env.test.local
 .env.production.local
 .*env
-.env
 
 #VS Code
 .vs
