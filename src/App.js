@@ -60,6 +60,7 @@ import AllCreatedOutreaches from "./component/UserProfile/AllCreatedOutreaches.j
 import OutreachEvents from "./component/Admin/OutreachEvents";
 import PostApprovals from "./component/admin_test/PostApprovals.js";
 import AdminOutreachEvents from "./component/Admin/AdminOutreachEvents.js";
+import InteractionLogForm from "./component/UserProfile/InteractionLogForm.js";
 
 const users_collection = collectionMapping.users;
 
@@ -192,7 +193,6 @@ function App() {
                 path="/profile/personaloutform"
                 element={<PersonalOutForm />}
               />
-
               <Route path="/createOutreach" element={<CreateOutreach />} />
             </Route>
             <Route
@@ -216,6 +216,10 @@ function App() {
             <Route
               path="/allPastOutreachEvents"
               element={<AllPastOutreachEvents />}
+            />
+            <Route
+              path="profile/interactionLogForm"
+              element={<InteractionLogForm />}
             />
             <Route
               path="/allOutreachVisitLog"

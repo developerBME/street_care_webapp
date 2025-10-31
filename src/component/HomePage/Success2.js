@@ -54,7 +54,7 @@ function Success2() {
               </a>
             </p>
           </div>
-        </div>
+        </div> 
       </div>
       {/* Grid */}
 
@@ -119,12 +119,13 @@ function Success2() {
 
           <div className="grow shrink items-start h-full lg:items-center xl:items-start flex-col basis-0 px-8 py-4 bg-gradient-to-br from-yellow-300 to-zinc-200 justify-start  gap-6 flex">
             <div className="text-violet-950 text-2xl lg:text-xl font-medium leading-loose">
-              Total Outreaches
+              Total Outreach
             </div>
             <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
               <div className=" px-5 xl:px-8 w-fit py-2 bg-white rounded-[100px]">
-                <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px] whitespace-nowrap">
-                  67 Million
+                <div className="text-violet-950  font-bricolage text-[28px] font-normal leading-[64px] whitespace-nowrap">
+                  {/* {donations} */}
+                   50 Million+ People
                 </div>
               </div>
             </div>
@@ -132,12 +133,15 @@ function Success2() {
 
           <div className="grow items-start h-full lg:items-center xl:items-start flex-col rounded-b-2xl lg:rounded-tr-none lg:rounded-bl-none shrink basis-0 px-8 py-4 bg-gradient-to-br from-orange-300 to-neutral-200 justify-start  gap-6 flex">
             <div className="text-violet-950 text-2xl lg:text-xl font-medium leading-loose">
-              App User Rating
+              {/* App User Rating */}
+              Chapter Members
             </div>
             <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
               <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
                 <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
-                  4.9/5
+                  {/* {donations} */}
+                  {/* 4.9/5 */}
+                  1000+
                 </div>
               </div>
             </div>
@@ -172,7 +176,7 @@ function Success2() {
                     navigate("/createOutreach");
                   } else {
                     console.log("User is not logged in");
-                    navigate("/login"); // or show a message
+                    navigate("/login", { state: { from: { pathname: "/createOutreach" } } });// or show a message
                   }
                 }}
               />
@@ -192,17 +196,26 @@ function Success2() {
             </p>
             <div className="mt-auto">
               <CustomButton
-                label="Create a Interaction Log"
+                label="Create an Interaction Log"
                 name="buttondefault"
-                onClick={async () => {
-                  const fAuth = await getAuth();
-                  const user = fAuth.currentUser;
+                // onClick={async () => {
+                //   const fAuth = await getAuth();
+                //   const user = fAuth.currentUser;
 
-                  if (user) {
-                    navigate("/profile/personaloutform");
-                  } else {
-                    navigate("/login"); // or show a message
-                  }
+                //   if (user) {
+                //     navigate("/profile/personaloutform");
+                //   } else {
+                //     navigate("/login"); // or show a message
+                //   }
+                // }}
+                onClick={async() => {
+                //  const fAuth = await getAuth();
+                //  const user = fAuth.currentUser;
+                //  if (user) {
+                    navigate("/profile/interactionLogForm");
+                //  } else {
+                //  navigate("/login", { state: { from: { pathname: "/profile/interactionLogForm" } } });
+                //  }
                 }}
               />
             </div>
