@@ -13,12 +13,12 @@ const iconLinks = [
     label: "Facebook",
     link: "https://www.facebook.com/StreetCareOrg/",
   },
-  {
-    id: 2,
-    icon: RiTwitterXLine,
-    label: "X- Twitter",
-    link: "https://twitter.com/StreetCareOrg",
-  },
+  // {
+  //   id: 2,
+  //   icon: RiTwitterXLine,
+  //   label: "X- Twitter",
+  //   link: "https://twitter.com/StreetCareOrg",
+  // },
   {
     id: 3,
     icon: BsInstagram,
