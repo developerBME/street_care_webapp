@@ -19,7 +19,6 @@ import heartOutline from "../../images/heart-outline.png";
 import heartFilled from "../../images/heart-filled.png";
 import share from "../../images/share-icon.png";
 import { handleLikes, setInitialLike } from "../EventCardService";
-import {getStatusStyle} from "../../component/admin_test/ApprovalCardOutreachEvents.js";
 
 const outreachEvents_collection = collectionMapping.outreachEvents; // Collection name
 const users_collection = collectionMapping.users; // User collection
@@ -42,7 +41,6 @@ const OutreachEventCard = ({
     skills,
     userType,
     likes,
-    status,
   } = cardData;
 
   const navigate = useNavigate();
@@ -161,26 +159,26 @@ const OutreachEventCard = ({
       setJustCopied(false);
     }
   };
-  const handleLikeToggle = async (e) => {
-    e.stopPropagation();
-    try {
-      await handleLikes(
-        e,
-        id,
-        navigate,
-        isLiked ? "DISLIKE" : "LIKE",
-        setIsLiked,
-        setLikesCount,
-        false
-      );
-      // Tell parent to refresh (this will hide the section when last like is removed)
-      if (isProfilePage && typeof onUpdate === "function") {
-        onUpdate();
-      }
-    } catch (err) {
-      console.error("Toggle like failed:", err);
+const handleLikeToggle = async (e) => {
+  e.stopPropagation();
+  try {
+    await handleLikes(
+      e,
+      id,
+      navigate,
+      isLiked ? "DISLIKE" : "LIKE",
+      setIsLiked,
+      setLikesCount,
+      false
+    );
+    // Tell parent to refresh (this will hide the section when last like is removed)
+    if (isProfilePage && typeof onUpdate === "function") {
+      onUpdate();
     }
-  };
+  } catch (err) {
+    console.error("Toggle like failed:", err);
+  }
+};
 
   let verifiedImg;
   switch (userType) {
@@ -216,11 +214,11 @@ const OutreachEventCard = ({
 
         {/* Like Button */}
         <img
-          onClick={handleLikeToggle}
-          src={isLiked ? heartFilled : heartOutline}
-          alt="like"
-          className="w-8 h-8 cursor-pointer rounded-full p-1 hover:bg-gray-200"
-        />
+  onClick={handleLikeToggle}
+  src={isLiked ? heartFilled : heartOutline}
+  alt="like"
+  className="w-8 h-8 cursor-pointer rounded-full p-1 hover:bg-gray-200"
+/>
 
         {/* Share Button */}
         <div className="relative">
@@ -247,7 +245,7 @@ const OutreachEventCard = ({
             onMouseLeave={() => setIsHovered(false)}
             className={`w-8 h-8 cursor-pointer rounded-full p-1 ${
               isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
-              }`}
+            }`}
           />
           {isHovered && (
             <div className="absolute -left-[150px] top-0 bg-gray-800 text-white text-sm rounded-md px-2 py-1 z-10">
@@ -257,30 +255,17 @@ const OutreachEventCard = ({
         </div>
       </div>
 
-{/* User Information */}
-<div className="flex items-center justify-between w-full">
-  {/* Left group (items 1–3) */}
-  <div className="flex items-center gap-2 min-w-0">
-    <img
-      alt=""
-      src={photoUrl || defaultImage}
-      className="w-8 h-8 rounded-full"
-    />
-    <div className="font-normal font-inter text-[13px]">{userName}</div>
-    <img alt="Verified" src={verifiedImg} className="w-5 h-5" />
-  </div>
 
-  {/* Right item (item 4) */}
-  {isProfilePage && (
-    <span
-      className={`px-3 py-1 text-sm font-medium rounded-full ${getStatusStyle(
-        cardData.status
-      )}`}
-    >
-      {cardData.status.charAt(0).toUpperCase() + cardData.status.slice(1) || "No Status"}
-    </span>
-  )}
-</div>
+      {/* User Information */}
+      <div className="inline-flex items-center space-x-2">
+        <img
+          alt=""
+          src={photoUrl || defaultImage}
+          className="w-8 h-8 rounded-full"
+        />
+        <div className="font-normal font-inter text-[13px]">{userName}</div>
+        <img alt="Verified" src={verifiedImg} className="w-5 h-5" />
+      </div>
 
       {/* Event Details */}
       <div className="my-3 space-y-3 w-full h-full flex flex-col">
