@@ -613,7 +613,7 @@ function PersonalOutForm() {
       autoCompleteRef.current,
       {
         types: ["address"],
-        componentRestrictions: { country: ["us"] },
+        componentRestrictions: { country: ["us", "ca"] },
       }
     );
 
@@ -1355,7 +1355,7 @@ function PersonalOutForm() {
                       </div>
                     </div>
                     <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
-                      Total number of items donated by you?*
+                      Total number of participants*
                       <Tooltip title={toolTipContent} placement="right" arrow>
                         <IconButton>
                           <InfoIcon />
@@ -1365,14 +1365,15 @@ function PersonalOutForm() {
                     <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
                       <div className=" absolute w-fit bg-white ml-3 mt-[-5px]  px-1 justify-start items-center inline-flex">
                         <div className="text-zinc-700 text-xs font-normal font-roboto leading-none">
-                          Number of Items
+                          Number of Participants
                         </div>
                       </div>
                       <div className="self-stretch h-fit  border-collapse">
                         <div className=" h-14  justify-center items-start ">
+                          {/* Chaning no. of items donated to no. of participants, this is temporary */}
                           <input
                             id="itemsNumber"
-                            placeholder="Number of Items"
+                            placeholder="Number of Participants"
                             className={`text-zinc-900 w-full h-full pl-4 rounded-[4px] text-base  font-normal font-roboto leading-normal tracking-wide ring-1 ring-inset ${
                               error.itemQtyError !== ""
                                 ? "ring-red-500"
