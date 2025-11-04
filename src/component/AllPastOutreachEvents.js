@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import OutreachEventCard from "./Community/OutreachEventCard";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   IoIosArrowBack,
   IoIosArrowForward,
@@ -24,52 +24,197 @@ import collectionMapping from "../utils/firestoreCollections.js";
 
 const outreachEvents_collection = collectionMapping.outreachEvents;
 
+const OUTREACHES_PER_PAGE = 6;
+
+const createDefaultCursorFields = () => ({
+  lastVisible: null,
+  pageSize: OUTREACHES_PER_PAGE,
+  direction: "next",
+  pageHistory: []
+});
+
+const cloneCursorFields = (fields) => ({
+  lastVisible: fields?.lastVisible || null,
+  pageSize: fields?.pageSize || OUTREACHES_PER_PAGE,
+  direction: fields?.direction || "next",
+  pageHistory: Array.isArray(fields?.pageHistory) ? [...fields.pageHistory] : []
+});
+
+let cachedPastOutreachState = null;
+
+const parsePageParam = (search) => {
+  const params = new URLSearchParams(search);
+  const pageValue = parseInt(params.get("page") || "1", 10);
+  if (Number.isNaN(pageValue) || pageValue < 1) {
+    return 1;
+  }
+  return pageValue;
+};
+
 const AllPastOutreachEvents = () => {
-  const [events, setEvents] = useState([]);
+  const cachedState = cachedPastOutreachState;
+  const location = useLocation();
+  const initialPageFromUrl = parsePageParam(location.search);
+  const initialPageIndex = Math.max(initialPageFromUrl - 1, 0);
+
+  const defaultStartDate = cachedState?.startDateTime
+    ? new Date(cachedState.startDateTime)
+    : (() => {
+        const d = new Date();
+        d.setDate(d.getDate() - 7);
+        return d;
+      })();
+
+  const defaultEndDate = cachedState?.endDateTime
+    ? new Date(cachedState.endDateTime)
+    : new Date();
+
+  const defaultSelectedStartDate = cachedState?.selectedStartDate
+    ? new Date(cachedState.selectedStartDate)
+    : defaultStartDate;
+
+  const defaultSelectedEndDate = cachedState?.selectedEndDate
+    ? new Date(cachedState.selectedEndDate)
+    : defaultEndDate;
+
+  const [events, setEvents] = useState(cachedState?.events || []);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(cachedState?.searchTerm || "");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(
+    cachedState?.debouncedSearchTerm ?? cachedState?.searchTerm ?? ""
+  );
 
-  
-  const [cityToSearch, setCityToSearch] = useState("");
-  const [debouncedCityToSearch, setDebouncedCityToSearch] = useState("");
+  const [cityToSearch, setCityToSearch] = useState(
+    cachedState?.cityToSearch || ""
+  );
+  const [debouncedCityToSearch, setDebouncedCityToSearch] = useState(
+    cachedState?.debouncedCityToSearch ??
+      cachedState?.cityToSearch ??
+      ""
+  );
 
-  const [startDateTime, setStartDateTime] = useState(() => {
-    const d = new Date();
-    d.setDate(d.getDate() - 7);
-    return d;
-  });
-  const [selectedStartDate, setSelectedStartDate] = useState(startDateTime);
-  const [endDateTime, setEndDateTime] = useState(new Date());
-  const [selectedEndDate, setSelectedEndDate] = useState(endDateTime);
-  const [filterType, setFilterType] = useState("date");
+  const [startDateTime, setStartDateTime] = useState(defaultStartDate);
+  const [selectedStartDate, setSelectedStartDate] = useState(
+    defaultSelectedStartDate
+  );
+  const [endDateTime, setEndDateTime] = useState(defaultEndDate);
+  const [selectedEndDate, setSelectedEndDate] = useState(defaultSelectedEndDate);
+  const [filterType, setFilterType] = useState(cachedState?.filterType || "date");
 
-  const [totaloutreaches, setTotalOutreaches] = useState(0);
-  const [filteredTotal, setFilteredTotal] = useState(0);
-  const outreachPerPages = 6;
-  const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
-  const [isFiltered, setIsFiltered] = useState(false);
-  const [cursorFields, setCursorFields] = useState({
-    lastVisible: null,
-    pageSize: outreachPerPages,
-    direction: "next",
-    pageHistory: []
-  });
+  const [totaloutreaches, setTotalOutreaches] = useState(
+    cachedState?.totaloutreaches || 0
+  );
+  const [filteredTotal, setFilteredTotal] = useState(
+    cachedState?.filteredTotal || 0
+  );
+  const [currentPage, setCurrentPage] = useState(
+    cachedState?.currentPage ?? initialPageIndex
+  );
+  const [totalPages, setTotalPages] = useState(cachedState?.totalPages || 0);
+  const [isFiltered, setIsFiltered] = useState(cachedState?.isFiltered || false);
+  const [cursorFields, setCursorFields] = useState(() =>
+    cachedState?.cursorFields
+      ? { ...cloneCursorFields(cachedState.cursorFields), direction: "current" }
+      : createDefaultCursorFields()
+  );
 
   const navigate = useNavigate();
+  const directionResetTimeoutRef = useRef(null);
+  const hasSyncedUrlRef = useRef(false);
+  const currentPageRef = useRef(currentPage);
+
+  const triggerDirectionChange = useCallback((direction) => {
+    setCursorFields((prev) => ({
+      ...prev,
+      direction: ""
+    }));
+
+    if (directionResetTimeoutRef.current) {
+      clearTimeout(directionResetTimeoutRef.current);
+    }
+
+    directionResetTimeoutRef.current = setTimeout(() => {
+      setCursorFields((prev) => ({
+        ...prev,
+        direction
+      }));
+    }, 0);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (directionResetTimeoutRef.current) {
+        clearTimeout(directionResetTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    currentPageRef.current = currentPage;
+  }, [currentPage]);
+
+  const handleNavigateHome = () => {
+    cachedPastOutreachState = null;
+    navigate("/");
+  };
 
   useEffect(() => {
     const hasActiveFilter = searchTerm.trim() !== '' || cityToSearch.trim() !== '';
     
     if (!hasActiveFilter && isFiltered) {
-      setTotalPages(Math.ceil(totaloutreaches / outreachPerPages));
+      setTotalPages(Math.ceil(totaloutreaches / OUTREACHES_PER_PAGE));
     }
     
     setIsFiltered(hasActiveFilter);
   }, [searchTerm, cityToSearch, totaloutreaches]);
+
+  const updateUrlPage = useCallback(
+    (pageIndex, replace = false) => {
+      if (typeof window === "undefined") {
+        return;
+      }
+      const currentSearchValue = window.location.search;
+      const params = new URLSearchParams(currentSearchValue);
+      const pageNumber = pageIndex + 1;
+      if (pageNumber <= 1) {
+        params.delete("page");
+      } else {
+        params.set("page", String(pageNumber));
+      }
+      const currentSearch = currentSearchValue.startsWith("?")
+        ? currentSearchValue.slice(1)
+        : currentSearchValue;
+      const newSearch = params.toString();
+      if (newSearch === currentSearch) {
+        return;
+      }
+      navigate(
+        {
+          pathname: location.pathname,
+          search: newSearch ? `?${newSearch}` : ""
+        },
+        { replace }
+      );
+    },
+    [location.pathname, navigate]
+  );
+
+  useEffect(() => {
+    updateUrlPage(currentPage, !hasSyncedUrlRef.current);
+    hasSyncedUrlRef.current = true;
+  }, [currentPage, updateUrlPage]);
+
+  useEffect(() => {
+    const pageFromUrl = Math.max(parsePageParam(location.search) - 1, 0);
+    const currentPageFromState = currentPageRef.current;
+    if (pageFromUrl !== currentPageFromState) {
+      const direction = pageFromUrl > currentPageFromState ? "next" : "prev";
+      setCurrentPage(pageFromUrl);
+      triggerDirectionChange(direction);
+    }
+  }, [location.search, triggerDirectionChange]);
 
   useEffect(() => {
     const delaySearch = setTimeout(() => {
@@ -114,7 +259,7 @@ const AllPastOutreachEvents = () => {
         const snapshot = await getCountFromServer(countQuery);
         const tot = snapshot.data().count;
         setTotalOutreaches(tot);
-        setTotalPages(Math.ceil(tot / outreachPerPages));
+        setTotalPages(Math.ceil(tot / OUTREACHES_PER_PAGE));
       } catch (error) {
         console.error("Error fetching total count:", error);
       }
@@ -123,12 +268,28 @@ const AllPastOutreachEvents = () => {
   }, [cityToSearch, startDateTime, endDateTime]);
 
   useEffect(() => {
+    if (!cursorFields.direction) {
+      return;
+    }
+
     const fetchData = async () => {
-      setIsLoading(true);
+      const shouldShowLoader = !(
+        cursorFields.direction === "current" && events.length > 0
+      );
+
+      if (shouldShowLoader) {
+        setIsLoading(true);
+      }
+
       setErrorMessage("");
   
       try {
-        const { fetchedEvents, lastVisible, pageHistory, totalFilteredEvents } = await fetchPaginatedPastOutreachEvents(
+        const {
+          fetchedEvents,
+          lastVisible,
+          pageHistory,
+          totalFilteredEvents
+        } = await fetchPaginatedPastOutreachEvents(
           debouncedCityToSearch,
           startDateTime,
           endDateTime,
@@ -148,7 +309,7 @@ const AllPastOutreachEvents = () => {
 
         if (debouncedSearchTerm.trim() !== '' || debouncedCityToSearch.trim() !== '') {
           setFilteredTotal(totalFilteredEvents || 0);
-          setTotalPages(Math.ceil((totalFilteredEvents || 0) / outreachPerPages));
+          setTotalPages(Math.ceil((totalFilteredEvents || 0) / OUTREACHES_PER_PAGE));
         }
       } catch (error) {
         setErrorMessage(error.message);
@@ -159,18 +320,77 @@ const AllPastOutreachEvents = () => {
     };
     fetchData();
   }, [cursorFields.direction, debouncedCityToSearch, startDateTime, endDateTime, debouncedSearchTerm]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && cachedState?.scrollPosition !== undefined) {
+      window.scrollTo(0, cachedState.scrollPosition);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const handleScroll = () => {
+      cachedPastOutreachState = {
+        ...(cachedPastOutreachState || {}),
+        scrollPosition: window.scrollY,
+      };
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const previousScrollPosition =
+      cachedPastOutreachState?.scrollPosition ?? (typeof window !== "undefined" ? window.scrollY : 0);
+
+    cachedPastOutreachState = {
+      events,
+      searchTerm,
+      debouncedSearchTerm,
+      cityToSearch,
+      debouncedCityToSearch,
+      startDateTime,
+      selectedStartDate,
+      endDateTime,
+      selectedEndDate,
+      filterType,
+      totaloutreaches,
+      filteredTotal,
+      currentPage,
+      totalPages,
+      isFiltered,
+      cursorFields: cloneCursorFields(cursorFields),
+      scrollPosition: previousScrollPosition
+    };
+  }, [
+    events,
+    searchTerm,
+    debouncedSearchTerm,
+    cityToSearch,
+    debouncedCityToSearch,
+    startDateTime,
+    selectedStartDate,
+    endDateTime,
+    selectedEndDate,
+    filterType,
+    totaloutreaches,
+    filteredTotal,
+    currentPage,
+    totalPages,
+    isFiltered,
+    cursorFields
+  ]);
   
   const resetPagination = () => {
-    setCursorFields({
-      lastVisible: null,
-      pageSize: outreachPerPages,
-      direction: "next",
-      pageHistory: []
-    });
+    setCursorFields(createDefaultCursorFields());
     setCurrentPage(0);
     
     if (searchTerm.trim() === '' && cityToSearch.trim() === '') {
-      setTotalPages(Math.ceil(totaloutreaches / outreachPerPages));
+      setTotalPages(Math.ceil(totaloutreaches / OUTREACHES_PER_PAGE));
     }
   };
   
@@ -216,23 +436,17 @@ const AllPastOutreachEvents = () => {
     setCityToSearch(e.target.value.trim());
     resetPagination();
   };
-
+  
   const handleClickPrev = () => {
     if (currentPage === 0) return;
     setCurrentPage((prev) => prev - 1);
-    setCursorFields((prev) => ({ ...prev, direction: "" }));
-    setTimeout(() => {
-      setCursorFields((prev) => ({ ...prev, direction: "prev" }));
-    }, 0);
+    triggerDirectionChange("prev");
   };
-
+  
   const handleClickNext = () => {
     if (currentPage >= totalPages - 1) return;
     setCurrentPage((prev) => prev + 1);
-    setCursorFields((prev) => ({ ...prev, direction: "" }));
-    setTimeout(() => {
-      setCursorFields((prev) => ({ ...prev, direction: "next" }));
-    }, 0);
+    triggerDirectionChange("next");
   };
 
   const getTotalToDisplay = () => {
@@ -247,7 +461,7 @@ const AllPastOutreachEvents = () => {
     if (isFiltered) {
       return events.length;
     } else {
-      return Math.min((currentPage + 1) * outreachPerPages, totaloutreaches);
+      return Math.min((currentPage + 1) * OUTREACHES_PER_PAGE, totaloutreaches);
     }
   };
 
@@ -288,7 +502,7 @@ const AllPastOutreachEvents = () => {
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-16 lg:mx-40 mt-48 rounded-2xl bg-white text-black">
         <div
           className="absolute flex mt-[-50px] items-center cursor-pointer"
-          onClick={() => navigate("/")}
+          onClick={handleNavigateHome}
         >
           <IoIosArrowBack className="w-6 h-6" />
           <p className="font-bricolage text-xl font-bold leading-7">
