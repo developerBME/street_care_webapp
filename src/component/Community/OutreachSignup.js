@@ -8,10 +8,6 @@ import {
 } from "../EventCardService";
 import defaultImage from "../../images/default_avatar.svg";
 import RSVPConfirmationModal from "../UserProfile/RSVPConfirmationModal";
-import heartOutline from "../../images/heart-outline.png";
-import heartFilled from "../../images/heart-filled.png";
-import share from "../../images/share-icon.png";
-import { handleLikes, setInitialLike } from "../EventCardService";
 import userSlots from "../../images/userSlots.png";
 import date from "../../images/date.png";
 import locate from "../../images/location.png";
@@ -41,6 +37,10 @@ import { isPast } from "date-fns";
 import flagSvg from "../../images/flag.svg"; // Flag icon
 import { useUserContext } from "../../context/Usercontext.js";
 import collectionMapping from "../../utils/firestoreCollections.js";
+import heartOutline from "../../images/heart-outline.png";
+import heartFilled from "../../images/heart-filled.png";
+import share from "../../images/share-icon.png";
+import { handleLikes, setInitialLike } from "../EventCardService";
 
 const users_collection = collectionMapping.users;
 const outreachEvents_collection = collectionMapping.outreachEvents;
@@ -55,9 +55,11 @@ const OutreachSignup = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [hasCreated, setHasCreated] = useState(false);
   const [isPastEvent, setIsPastEvent] = useState(false);
+
   const [justCopied, setJustCopied] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
+
   const [data, setData] = useState(null);
 
   const handleRefresh = () => {
@@ -80,11 +82,11 @@ const OutreachSignup = () => {
     getData(); // Invoke the async function
   }, [label2]);
 
-  // when `data` arrives/changes, set initial like state & count
   useEffect(() => {
     if (!data) return;
-    setIsLiked(setInitialLike(Array.isArray(data.likes) ? data.likes : []));
-    setLikesCount(Array.isArray(data.likes) ? data.likes.length : 0);
+    const likesArr = Array.isArray(data.likes) ? data.likes : [];
+    setIsLiked(setInitialLike(likesArr));
+    setLikesCount(likesArr.length);
   }, [data]);
 
   const handleLikeToggle = async (e) => {
@@ -115,7 +117,6 @@ const OutreachSignup = () => {
       setJustCopied(false);
     }
   };
-
 
   useEffect(() => {
     const fetchFlagStatus = async () => {
@@ -290,108 +291,40 @@ const OutreachSignup = () => {
               Sign Up For Community Outreach
             </div>
             <div className="self-stretch h-fit bg-[#F5EDFA] rounded-[30px] flex-col justify-start items-start flex">
-              <div className="self-stretch h-fit px-6 pt-9 pb-3 flex items-center justify-between">
-              {/* <div className="justify-start items-center gap-2 inline-flex">
-                <img
-                  className="w-9 h-9 rounded-full"
-                  src={data?.photoUrl || defaultImage}
-                />
-                <div className="justify-start items-center gap-1 flex">
-                  {data ? (
-                    <div className="text-[#000] text-sm font-normal font-inter leading-snug">
-                      {data.userName}
-                    </div>
-                  ) : (
-                    <div className="text-[#000] text-sm font-normal font-inter leading-snug">
-                      Loading...
-                    </div>
-                  )}
-                  <img src={verifiedImg} className="w-6 h-6" />
-                </div>
-                <div className="relative group">
+              <div className="self-stretch h-fit px-6 pt-9 pb-3 flex-col justify-start items-start gap-2.5 flex">
+                {/* <div className="justify-start items-center gap-2 inline-flex">
                   <img
-                    onClick={handleFlag}
-                    src={flagSvg}
-                    alt="flag"
-                    className={`w-8 h-8 cursor-pointer rounded-full p-1 ${
-                      isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
-                    }`}
+                    className="w-9 h-9 rounded-full"
+                    src={data?.photoUrl || defaultImage}
                   />
-                  <div
-                    className="absolute top-full right-0 mt-1 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
-                    style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
-                  >
-                    {!isFlagged ? "Flag the Outreach Event?" : "Unflag the Outreach Event?"}
+                  <div className="justify-start items-center gap-1 flex">
+                    {data ? (
+                      <div className="text-[#000] text-sm font-normal font-inter leading-snug">
+                        {data.userName}
+                      </div>
+                    ) : (
+                      <div className="text-[#000] text-sm font-normal font-inter leading-snug">
+                        Loading...
+                      </div>
+                    )}
+                    <img src={verifiedImg} className="w-6 h-6" />
                   </div>
-                </div>  
-              </div> */}
-
-              {/* Left side: User info */}
-              <div className="flex items-center gap-2">
-                <img
-                  className="w-9 h-9 rounded-full"
-                  src={data?.photoUrl || defaultImage}
-                  alt="User"
-                />
-                <div className="flex items-center gap-1">
-                  {data ? (
-                    <div className="text-[#000] text-sm font-normal font-inter leading-snug">
-                      {data.userName}
+                  <div className="relative group">
+                    <img
+                      onClick={handleFlag}
+                      src={flagSvg}
+                      alt="flag"
+                      className={`w-8 h-8 cursor-pointer rounded-full p-1 ${
+                        isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
+                      }`}
+                    />
+                    <div
+                      className="absolute top-full right-0 mt-1 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
+                      style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
+                    >
+                      {!isFlagged ? "Flag the Outreach Event?" : "Unflag the Outreach Event?"}
                     </div>
-                  ) : (
-                    <div className="text-[#000] text-sm font-normal font-inter leading-snug">
-                      Loading...
-                    </div>
-                  )}
-                  <img src={verifiedImg} className="w-6 h-6" alt="Verified" />
-                </div>
-              </div>
-
-              {/* Right side: Like, Share, Flag */}
-              <div className="flex items-center gap-2">
-                {/* Like count (only if > 0) */}
-                {likesCount > 0 && (
-                  <div className="font-medium text-[18px]">{likesCount}</div>
-                )}
-                {/* Like button */}
-                <img
-                  onClick={handleLikeToggle}
-                  src={isLiked ? heartFilled : heartOutline}
-                  alt="like"
-                  className="w-8 h-8 cursor-pointer rounded-full p-1 hover:bg-gray-200"
-                />
-                {/* Share button */}
-                <div className="relative">
-                  <img
-                    onClick={handleShare}
-                    src={share}
-                    alt="share"
-                  className="w-8 h-8 cursor-pointer rounded-full p-1 hover:bg-gray-200"
-                  />
-                  {justCopied && (
-                    <div className="absolute right-0 top-full mt-1 bg-gray-800 text-white text-sm rounded-md px-2 py-1 z-10">
-                      Copied To Clipboard!
-                    </div>
-                  )}
-                </div>
-                {/* Flag button */}
-                <div className="relative group">
-                  <img
-                    onClick={handleFlag}
-                    src={flagSvg}
-                    alt="flag"
-                    className={`w-8 h-8 cursor-pointer rounded-full p-1 ${
-                      isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
-                    }`}
-                  />
-                  <div
-                    className="absolute top-full right-0 mt-1 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
-                    style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
-                  >
-                    {!isFlagged ? "Flag the Outreach Event?" : "Unflag the Outreach Event?"}
-                  </div>
-                </div>
-              </div>
+                  </div>  
 
                 </div> */}
                 <div className="w-full flex items-center justify-between px-6 pt-9 pb-3">
@@ -420,7 +353,7 @@ const OutreachSignup = () => {
                     </div>
                   </div>
                   {/* Right side: Flag icon */}
-                  <div className="relative group">
+                  {/*<div className="relative group">
                     <img
                       onClick={handleFlag}
                       src={flagSvg}
@@ -442,6 +375,55 @@ const OutreachSignup = () => {
                       {!isFlagged
                         ? "Flag the Outreach Event?"
                         : "Unflag the Outreach Event?"}
+                    </div>
+                  </div>
+                  */}
+                  {/* Right side: Like, Share, Flag */}
+                  <div className="flex items-center gap-2">
+                    {/* Like count (if any) */}
+                    {likesCount > 0 && (
+                      <div className="font-medium text-[18px]">{likesCount}</div>
+                    )}
+
+                    {/* Like toggle */}
+                    <img
+                      onClick={handleLikeToggle}
+                      src={isLiked ? heartFilled : heartOutline}
+                      alt="Like"
+                      className="w-8 h-8 cursor-pointer rounded-full p-1 hover:bg-gray-200"
+                    />
+
+                    {/* Share */}
+                    <div className="relative">
+                      <img
+                        onClick={handleShare}
+                        src={share}
+                        alt="Share"
+                        className="w-8 h-8 cursor-pointer rounded-full p-1 hover:bg-gray-200"
+                      />
+                      {justCopied && (
+                        <div className="absolute right-0 top-full mt-1 bg-gray-800 text-white text-sm rounded-md px-2 py-1 z-10">
+                          Copied To Clipboard!
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Flag */}
+                    <div className="relative group">
+                      <img
+                        onClick={handleFlag}
+                        src={flagSvg}
+                        alt="Flag"
+                        className={`w-8 h-8 cursor-pointer rounded-full p-1 ${
+                          isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
+                        }`}
+                      />
+                      <div
+                        className="absolute top-full right-0 mt-1 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
+                        style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
+                      >
+                        {!isFlagged ? "Flag the Outreach Event?" : "Unflag the Outreach Event?"}
+                      </div>
                     </div>
                   </div>
                 </div>

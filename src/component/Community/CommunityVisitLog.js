@@ -65,15 +65,8 @@ const CommunityVisitLog = ({ loggedIn }) => {
                   <CustomButton
                     label="Create an Interaction Log"
                     name="buttondefault"
-                    onClick={async() => {
-                      // const fAuth = await getAuth();
-                      // const user = fAuth.currentUser;
-
-                      // if (user) {
+                    onClick={() => {
                       navigate("/profile/interactionLogForm");
-                      // } else {
-                      // navigate("/login", { state: { from: { pathname: "/profile/interactionLogForm" } } });
-                      // }
                     }}
                   />
                 </div>
