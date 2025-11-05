@@ -13,6 +13,7 @@ const iconLinks = [
     label: "Facebook",
     link: "https://www.facebook.com/StreetCareOrg/",
   },
+  // Remove Twitter from Footer.
   // {
   //   id: 2,
   //   icon: RiTwitterXLine,
