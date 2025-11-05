@@ -128,11 +128,12 @@ function Footer() {
                       Contact
                     </a>
                   </li> */}
+                  {/* Commented the old Code by Shravan
                   <li className="mb-4">
                     <p className="">
                       Location: New York, Florida, Maryland, International
                     </p>
-                  </li>
+                </li>*/}
                   <li className="mb-4">
                     <a href="" className="hover:underline">
                       {/* (702) 907 - 7390 */}

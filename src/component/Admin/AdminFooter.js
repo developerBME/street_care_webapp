@@ -117,11 +117,12 @@ function AdminFooter() {
                       Contact
                     </a>
                   </li> */}
+                  {/* Commented the old Code by Shravan
                   <li class="mb-4">
                     <p class="">
                       Location: New York, Florida, Maryland, International
                     </p>
-                  </li>
+                </li>*/}
                   <li class="mb-4">
                     <a href="" class="hover:underline">
                       (702) 907 - 7390
