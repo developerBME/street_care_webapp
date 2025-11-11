@@ -37,6 +37,10 @@ import { isPast } from "date-fns";
 import flagSvg from "../../images/flag.svg"; // Flag icon
 import { useUserContext } from "../../context/Usercontext.js";
 import collectionMapping from "../../utils/firestoreCollections.js";
+import heartOutline from "../../images/heart-outline.png";
+import heartFilled from "../../images/heart-filled.png";
+import share from "../../images/share-icon.png";
+import { handleLikes, setInitialLike } from "../EventCardService";
 
 const users_collection = collectionMapping.users;
 const outreachEvents_collection = collectionMapping.outreachEvents;
@@ -52,6 +56,9 @@ const OutreachSignup = () => {
   const [hasCreated, setHasCreated] = useState(false);
   const [isPastEvent, setIsPastEvent] = useState(false);
 
+  const [justCopied, setJustCopied] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(0);
 
   const [data, setData] = useState(null);
 
@@ -74,6 +81,43 @@ const OutreachSignup = () => {
 
     getData(); // Invoke the async function
   }, [label2]);
+
+  useEffect(() => {
+    if (!data) return;
+    const likesArr = Array.isArray(data.likes) ? data.likes : [];
+    setIsLiked(setInitialLike(likesArr));
+    setLikesCount(likesArr.length);
+  }, [data]);
+
+  const handleLikeToggle = async (e) => {
+    e.stopPropagation();
+    try {
+      await handleLikes(
+        e,
+        id,
+        navigate,
+        isLiked ? "DISLIKE" : "LIKE",
+        setIsLiked,
+        setLikesCount,
+        false
+      );
+    } catch (err) {
+      console.error("Toggle like failed:", err);
+    }
+  };
+
+  const handleShare = async (e) => {
+    e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setJustCopied(true);
+      setTimeout(() => setJustCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy link: ", err);
+      setJustCopied(false);
+    }
+  };
+
   useEffect(() => {
     const fetchFlagStatus = async () => {
       try {
@@ -309,7 +353,7 @@ const OutreachSignup = () => {
                     </div>
                   </div>
                   {/* Right side: Flag icon */}
-                  <div className="relative group">
+                  {/*<div className="relative group">
                     <img
                       onClick={handleFlag}
                       src={flagSvg}
@@ -331,6 +375,55 @@ const OutreachSignup = () => {
                       {!isFlagged
                         ? "Flag the Outreach Event?"
                         : "Unflag the Outreach Event?"}
+                    </div>
+                  </div>
+                  */}
+                  {/* Right side: Like, Share, Flag */}
+                  <div className="flex items-center gap-2">
+                    {/* Like count (if any) */}
+                    {likesCount > 0 && (
+                      <div className="font-medium text-[18px]">{likesCount}</div>
+                    )}
+
+                    {/* Like toggle */}
+                    <img
+                      onClick={handleLikeToggle}
+                      src={isLiked ? heartFilled : heartOutline}
+                      alt="Like"
+                      className="w-8 h-8 cursor-pointer rounded-full p-1 hover:bg-gray-200"
+                    />
+
+                    {/* Share */}
+                    <div className="relative">
+                      <img
+                        onClick={handleShare}
+                        src={share}
+                        alt="Share"
+                        className="w-8 h-8 cursor-pointer rounded-full p-1 hover:bg-gray-200"
+                      />
+                      {justCopied && (
+                        <div className="absolute right-0 top-full mt-1 bg-gray-800 text-white text-sm rounded-md px-2 py-1 z-10">
+                          Copied To Clipboard!
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Flag */}
+                    <div className="relative group">
+                      <img
+                        onClick={handleFlag}
+                        src={flagSvg}
+                        alt="Flag"
+                        className={`w-8 h-8 cursor-pointer rounded-full p-1 ${
+                          isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
+                        }`}
+                      />
+                      <div
+                        className="absolute top-full right-0 mt-1 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
+                        style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
+                      >
+                        {!isFlagged ? "Flag the Outreach Event?" : "Unflag the Outreach Event?"}
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -176,7 +176,7 @@ function Success2() {
                     navigate("/createOutreach");
                   } else {
                     console.log("User is not logged in");
-                    navigate("/login", { state: { from: { pathname: "/createOutreach" } } });// or show a message
+                    navigate("/login"); // or show a message
                   }
                 }}
               />
