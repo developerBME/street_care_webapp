@@ -73,7 +73,7 @@ const CommunityOutreachEvent = ({ loggedIn }) => {
                       if (user) {
                         navigate("/createOutreach");
                       } else {
-                        navigate("/login", { state: { from: { pathname: "/createOutreach" } } });// or show a message
+                        navigate("/login"); // or show a message
                       }
                     }}
                   />

@@ -176,7 +176,7 @@ function Success2() {
                     navigate("/createOutreach");
                   } else {
                     console.log("User is not logged in");
-                    navigate("/login", { state: { from: { pathname: "/createOutreach" } } });// or show a message
+                    navigate("/login"); // or show a message
                   }
                 }}
               />
@@ -208,14 +208,8 @@ function Success2() {
                 //     navigate("/login"); // or show a message
                 //   }
                 // }}
-                onClick={async() => {
-                //  const fAuth = await getAuth();
-                //  const user = fAuth.currentUser;
-                //  if (user) {
-                    navigate("/profile/interactionLogForm");
-                //  } else {
-                //  navigate("/login", { state: { from: { pathname: "/profile/interactionLogForm" } } });
-                //  }
+                onClick={() => {
+                  navigate("profile/interactionLogForm");
                 }}
               />
             </div>
