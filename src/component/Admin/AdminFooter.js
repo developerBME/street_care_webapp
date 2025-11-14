@@ -117,7 +117,7 @@ function AdminFooter() {
                       Contact
                     </a>
                   </li> */}
-                  {/* Commented the old Code by Shravan
+                  {/* Old Code
                   <li class="mb-4">
                     <p class="">
                       Location: New York, Florida, Maryland, International

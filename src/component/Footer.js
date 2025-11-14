@@ -128,7 +128,7 @@ function Footer() {
                       Contact
                     </a>
                   </li> */}
-                  {/* Commented the old Code by Shravan
+                  {/* Old Code
                   <li className="mb-4">
                     <p className="">
                       Location: New York, Florida, Maryland, International
