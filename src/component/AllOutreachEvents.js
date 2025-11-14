@@ -20,6 +20,15 @@ import { db } from "./firebase";
 import { fetchPaginatedEvents } from "./EventCardService.js";
 import collectionMapping from "../utils/firestoreCollections.js";
 
+// Utility function to get current timezone abbreviation
+const getCurrentTimezone = () => {
+  return new Intl.DateTimeFormat("en-US", {
+    timeZoneName: "short",
+  })
+    .formatToParts(new Date())
+    .find((part) => part.type === "timeZoneName")?.value || "";
+};
+
 const outreachEvents_collection = collectionMapping.outreachEvents;
 
 const OUTREACHES_PER_PAGE = 6;
@@ -596,7 +605,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
                     selectsStart
                     startDate={startDate}
                     endDate={endDate}
-                    placeholderText="Select Start Date"
+                    placeholderText={`Select Start Date (${getCurrentTimezone()})`}
                     className="form-input w-fit md:w-[9rem] lg:w-[9rem] py-2 px-2 border border-[#CACACA] text-gray-500 block"
                   />
                   <p>To</p>
@@ -609,7 +618,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
                     selectsEnd
                     startDate={startDate}
                     endDate={endDate}
-                    placeholderText="Select End Date"
+                    placeholderText={`Select End Date (${getCurrentTimezone()})`}
                     className="form-input w-fit md:w-[9rem] lg:w-[9rem] py-2 px-2 border border-[#CACACA] text-gray-500 block"
                   />
                 </div>

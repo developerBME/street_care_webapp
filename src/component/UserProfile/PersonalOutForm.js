@@ -30,6 +30,15 @@ import { fetchUserTypeDetails } from "../EventCardService";
 
 import collectionMapping from "../../utils/firestoreCollections";
 
+// Utility function to get current timezone abbreviation
+const getCurrentTimezone = () => {
+  return new Intl.DateTimeFormat("en-US", {
+    timeZoneName: "short",
+  })
+    .formatToParts(new Date())
+    .find((part) => part.type === "timeZoneName")?.value || "";
+};
+
 const users_collection = collectionMapping.users;
 const visitLogsBookNew_collection = collectionMapping.visitLogsBookNew;
 
@@ -1311,7 +1320,7 @@ function PersonalOutForm() {
                       <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
                         <div className="space-y-1.5">
                           <div className="font-semibold font-['Inter'] text-[15px]">
-                            Date *
+                            Date * ({getCurrentTimezone()})
                           </div>
                         </div>
                         <div className="self-stretch h-fit  border-collapse     ">
@@ -1513,7 +1522,7 @@ function PersonalOutForm() {
                       </div>
                       <div className="self-stretch h-fit flex-col justify-center items-start gap-[18px] flex">
                         <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
-                          What time was the encounter?
+                          What time was the encounter? ({getCurrentTimezone()})
                         </div>
                         <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
                           <div className="self-stretch h-fit  border-collapse">
@@ -1743,7 +1752,7 @@ function PersonalOutForm() {
                       )}
 
                       <div className="self-stretch text-neutral-800 text-[16px] md:text-[22px] font-bold font-bricolage leading-7">
-                        When is the follow-up needed?
+                        When is the follow-up needed? ({getCurrentTimezone()})
                       </div>
                       <div className="self-stretch w-full h-fit flex-col justify-start items-start flex ">
                         <div className="self-stretch h-fit  border-collapse">

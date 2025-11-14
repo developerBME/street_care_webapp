@@ -11,6 +11,15 @@ import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
 import dayjs from "dayjs";
 import AddressAutofill from "../FormBuilder/AddressAutofill";
 
+// Utility function to get current timezone abbreviation
+const getCurrentTimezone = () => {
+  return new Intl.DateTimeFormat("en-US", {
+    timeZoneName: "short",
+  })
+    .formatToParts(new Date())
+    .find((part) => part.type === "timeZoneName")?.value || "";
+};
+
 export default function GeneralInfoForm({ onUpdate = () => {} }) {
   const sxTheme = {
     backgroundColor: "white",
@@ -151,7 +160,7 @@ export default function GeneralInfoForm({ onUpdate = () => {} }) {
       </InlineWrapper>
 
       <InlineWrapper>
-        <InputLabel label="Date">
+        <InputLabel label={`Date (${getCurrentTimezone()})`}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               value={generalInfoData.interactionDate}
@@ -180,7 +189,7 @@ export default function GeneralInfoForm({ onUpdate = () => {} }) {
       </InlineWrapper>
 
       <InlineWrapper>
-        <InputLabel label="Start Time">
+        <InputLabel label={`Start Time (${getCurrentTimezone()})`}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <TimePicker
               label="Select Time"
@@ -219,7 +228,7 @@ export default function GeneralInfoForm({ onUpdate = () => {} }) {
           </LocalizationProvider>
         </InputLabel>
 
-        <InputLabel label="End Time">
+        <InputLabel label={`End Time (${getCurrentTimezone()})`}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <TimePicker
               label="Select Time"
