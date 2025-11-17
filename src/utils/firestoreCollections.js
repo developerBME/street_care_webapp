@@ -30,13 +30,14 @@ const COLLECTIONS = {
     officialEvents: process.env.REACT_APP_OFFICIAL_EVENTS,
     events: process.env.REACT_APP_EVENTS_COLLECTION,
     visitLogsBookNew: process.env.REACT_APP_DEV_VISIT_LOG_NEW_COLLECTION,
-    helpRequestsInteractionLog:
+	  helpRequestsInteractionLog:
       process.env.REACT_APP_HELP_REQUEST_COLLECTION_DEV,
     interactionLog: process.env.REACT_APP_INTERACTION_LOG_COLLECTION_DEV,
   },
 };
 
 const env = process.env.REACT_APP_ENV || "main";
+// "development";
 
 // Determine the collections based on the branch
 const collectionMapping =
