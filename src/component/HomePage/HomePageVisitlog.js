@@ -3,10 +3,7 @@ import { useNavigate } from "react-router-dom";
 import arrowRight from "../../images/arrowRight.png";
 import OutreachVisitLogCard from "../Community/OutreachVisitLogCard";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
-import {
-  fetchHomeVisitLogs,
-  fetchPublicVisitLogs,
-} from "../VisitLogCardService";
+import { fetchHomeVisitLogs } from "../VisitLogCardService";
 import ErrorMessage from "../ErrorMessage";
 import CustomButton from "../Buttons/CustomButton";
 import UserTypeInfo from "../UserTypeInfo";
@@ -110,7 +107,7 @@ const HomePageVisitlog = () => {
                 <img src={arrowRight} className="w-6 h-6 lg:w-10 lg:h-10 " />
               </div>
             </div>
-            <UserTypeInfo/>
+            <UserTypeInfo />
           </div>
         </div>
 

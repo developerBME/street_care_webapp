@@ -2,14 +2,13 @@ import { useState, useEffect, useRef } from "react";
 import OutreachVisitLogCard from "./Community/OutreachVisitLogCard";
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import {
-  fetchPublicVisitLogs,
-} from "./VisitLogCardService";
+import { fetchPublicVisitLogs } from "./VisitLogCardService";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import UserTypeInfo from "./UserTypeInfo";
-
+import { getPageNumbersFormat } from "../utils/helperFns";
+// import RenderPaginationBtns from "./HomePage/RenderPaginatinBtns";
 const AllOutreachVisitLog = () => {
   const navigate = useNavigate();
   const [filteredVisitLogs, setFilteredVisitLogs] = useState([]);
@@ -22,6 +21,8 @@ const AllOutreachVisitLog = () => {
     lastVisible: null,
     pageSize: logsPerPage,
     direction: "next",
+    currentPage: 0,
+    pageStartDocs: [],
     pageHistory: [],
     pastOutreachRef: null,
   });
@@ -37,7 +38,10 @@ const AllOutreachVisitLog = () => {
 
   useEffect(() => {
     const getVisitLogs = async () => {
-      if (!cursorFields.direction) return;
+      setIsLoading(true);
+      console.log("cursorField.currentPage:", cursorFields.currentPage);
+      console.log("FilterData", filterData);
+      // if (!cursorFields.direction) return;
       const visitLogsData = await fetchPublicVisitLogs(
         filterData.searchValue,
         filterData.city,
@@ -46,32 +50,45 @@ const AllOutreachVisitLog = () => {
         filterData.isDateFilter,
         cursorFields.lastVisible,
         cursorFields.pageSize,
-        cursorFields.direction,
-        cursorFields.pageHistory
+        cursorFields.pageHistory,
+        cursorFields.currentPage,
+        cursorFields.pageStartDocs
       );
-      cursorFields.lastVisible = visitLogsData.lastVisible;
-      cursorFields.pageHistory = visitLogsData.pageHistory;
+      console.log("Got the Response.");
+      //cursorFields.pageStartDocs = visitLogsData.pageStartDocs;
+      setCursorFields((prev) => ({
+        ...prev,
+        pageStartDocs: visitLogsData.pageStartDocs,
+      }));
+
+      console.log("visitLogs:", visitLogsData.visitLogs);
       setTotalPages(visitLogsData.totalRecords);
-      if (cursorFields.direction === "next")
-        setCurrentPageLength((prev) => prev + visitLogsData.visitLogs.length);
+      // if (cursorFields.direction === "next")
+      //   setCurrentPageLength((prev) => prev + visitLogsData.visitLogs.length);
       setFilteredVisitLogs(visitLogsData.visitLogs);
       setIsLoading(false);
     };
     //Implemented debounce to improve performance
     const delayTimer = setTimeout(() => {
       getVisitLogs();
-    }, 500);
+    }, 300);
     return () => clearTimeout(delayTimer);
   }, [
     filterData.city,
     filterData.searchValue,
     filterData.startDate,
     filterData.endDate,
-    cursorFields.direction,
+    cursorFields.currentPage,
   ]);
+
+  useEffect(() => {
+    console.log("pageStartDocs", cursorFields.pageStartDocs);
+  }, [cursorFields.pageStartDocs]);
 
   const handleSortChange = (e) => {
     const sortBy = e.target.value;
+    console.log("cursorFields from handleSortChange", cursorFields);
+    console.log(sortBy);
     setSortOption(sortBy);
     //To make sure when the sort option is changed from None to city or date, api is not triggered
     if (sortOption === "") return;
@@ -81,14 +98,15 @@ const AllOutreachVisitLog = () => {
       startDate: new Date("2024-01-02"),
       endDate: new Date(),
       isDateFilter: false,
+      searchValue: "",
     });
-    setCursorFields({
-      lastVisible: null,
-      pageSize: logsPerPage,
-      direction: "next",
-      pageHistory: [],
-      pastOutreachRef: null,
-    });
+    // setCursorFields({
+    //   lastVisible: null,
+    //   pageSize: logsPerPage,
+    //   direction: "next",
+    //   pageHistory: [],
+    //   pastOutreachRef: null,
+    // });
     setCurrentPageLength(0);
   };
 
@@ -98,63 +116,153 @@ const AllOutreachVisitLog = () => {
   const returnText = "Return to Home";
 
   const handleNext = () => {
-    // Reset direction to force an update
-    setCursorFields((prev) => ({ ...prev, direction: "" }));
-
-    // Set it to 'next' after a slight delay
-    setTimeout(() => {
-      setCursorFields((prev) => ({ ...prev, direction: "next" }));
-    }, 0);
+    setIsLoading(true);
+    setCursorFields((prev) => ({
+      ...prev,
+      currentPage: prev.currentPage + 1,
+    }));
   };
   const handlePrev = () => {
-    //Handling here since I need length of the records one render before
-    setCurrentPageLength((prev) => prev - filteredVisitLogs.length);
-    //Reset direction to force an update
-    setCursorFields((prev) => ({ ...prev, direction: "" }));
-    setTimeout(() => {
-      setCursorFields((prev) => ({ ...prev, direction: "prev" }));
-    }, 0);
+    setIsLoading(true);
+    setCursorFields((prev) => ({
+      ...prev,
+      currentPage: prev.currentPage - 1,
+    }));
   };
 
-  const renderPaginationButtons = () => {
+  const handlePaginationBtn = (page) => {
+    setIsLoading(true);
+    setCursorFields((prev) => ({ ...prev, currentPage: page - 1 }));
+    console.log("currentPage 0 Indexed-index:", page - 1);
+    console.log("Pagenumber 1 Indexed, index + 1:", page);
+  };
+
+  // TODO: Modify this function to add pagination numbers.
+  const renderPaginationButtons = (
+    lastPage = 1,
+    currPage = 1,
+    windowSize = 5
+  ) => {
+    const layout = getPageNumbersFormat(windowSize, currPage, lastPage);
+    const disabledBtnCss =
+      "mx-1 w-8 h-8 rounded-full bg-[#565656] opacity-50 text-gray-600 flex items-center justify-center";
+    const activeBtnCss =
+      "mx-1 w-8 h-8 rounded-full border border-[#C8C8C8] bg-white opacity-100 flex items-center justify-center";
+
     const buttons = [];
-    if (currentPageLength > 6) {
-      buttons.push(
-        <button
-          key="prev"
-          onClick={() => handlePrev()}
-          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
-        >
-          <IoIosArrowBack className="w-6 h-6" />
-        </button>
-      );
+    buttons.push(
+      <button
+        key="prev"
+        disabled={cursorFields.currentPage == 0}
+        onClick={() => {
+          setIsLoading(true);
+          setCursorFields((prev) => ({
+            ...prev,
+            currentPage: prev.currentPage - 1,
+          }));
+        }}
+        className={
+          cursorFields.currentPage == 0 ? disabledBtnCss : activeBtnCss
+        }
+      >
+        <IoIosArrowBack
+          className={`w-6 h-6 ${
+            cursorFields.currentPage == 0 ? "text-white" : "text-black"
+          }`}
+        />
+      </button>
+    );
+    {
+      console.log("layout:", layout);
     }
 
-    if (currentPageLength < totalPages) {
+    layout.forEach((page, index) => {
       buttons.push(
         <button
-          key="next"
-          onClick={() => handleNext()}
-          className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
+          key={page}
+          className={
+            cursorFields.currentPage == page - 1
+              ? "mx-1 w-8 h-8 rounded-full border border-[#1F0A58] bg-[#E8DFFD] opacity-100 text-gray-600 font-medium hover:bg-[#D9CCF9] hover:border-[#150544] hover:text-gray-800 transition-colors duration-200 ease-in-out"
+              : "mx-1 w-8 h-8 rounded-full border border-[#C8C8C8] bg-white opacity-100 text-gray-600 font-medium hover:bg-gray-100 hover:border-gray-400 hover:text-gray-800 transition-colors duration-200 ease-in-out"
+          }
+          onClick={() => {
+            setIsLoading(true);
+            setCursorFields((prev) => ({ ...prev, currentPage: page - 1 }));
+            console.log("currentPage 0 Indexed-index:", page - 1);
+            console.log("Pagenumber 1 Indexed, index + 1:", page);
+          }}
         >
-          <IoIosArrowForward className="w-6 h-6" />
+          {page}
         </button>
       );
-    }
+      if (index < layout.length - 1 && layout[index + 1] !== page + 1) {
+        buttons.push(
+          <button
+            key={`disabledBtnAfter-${page}`}
+            className="mx-1 w-8 h-8 rounded-full border border-[#C8C8C8] bg-white opacity-100 text-gray-600 font-medium"
+            disabled={true}
+          >
+            ...
+          </button>
+        );
+      }
+    });
+
+    // if (cursorFields.pageStartDocs) {
+    //   cursorFields.pageStartDocs.forEach((doc, index) => {
+    //     buttons.push(
+    //       <button
+    //         key={index + 1}
+    //         className="mx-1 px-1 py-1 rounded-full bg-gray-200 text-gray-600"
+    //         onClick={() => {
+    //           setCursorFields((prev) => ({ ...prev, currentPage: index }));
+    //           console.log("currentPage 0 Indexed-index:", index);
+    //           console.log("Pagenumber 1 Indexed, index + 1:", index + 1);
+    //         }}
+    //       >
+    //         {index + 1}
+    //       </button>
+    //     );
+    //   });
+    // }
+
+    buttons.push(
+      <button
+        key="next"
+        disabled={
+          cursorFields.currentPage == cursorFields.pageStartDocs.length - 1
+        }
+        onClick={() => {
+          setIsLoading(true);
+          setCursorFields((prev) => ({
+            ...prev,
+            currentPage: prev.currentPage + 1,
+          }));
+        }}
+        className={
+          cursorFields.currentPage == cursorFields.pageStartDocs.length - 1
+            ? disabledBtnCss
+            : activeBtnCss
+        } // disabled
+      >
+        <IoIosArrowForward
+          className={`w-6 h-6 ${
+            cursorFields.currentPage == cursorFields.pageStartDocs.length - 1
+              ? "text-white"
+              : "text-black"
+          }`}
+        />
+      </button>
+    );
 
     return buttons;
   };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFilterData((prev) => ({ ...prev, [name]: value }));
-    setCursorFields({
-      lastVisible: null,
-      pageSize: logsPerPage,
-      direction: "next",
-      pageHistory: [],
-      pastOutreachRef: null,
-    });
+    //Reset pageStartDocs to empty Array to avoid passing stale pageStartDocs.
+    if (!value) setCursorFields((prev) => ({ ...prev, pageStartDocs: [] })); // This helps when we remove the search filter , without it we would be sending stale pageStartDocs.
+    setCursorFields((prev) => ({ ...prev, currentPage: 0 })); // reseting page so everytime there is change in filter we set the current page to 0 to fetch the first page.
     setCurrentPageLength(0);
   };
 
@@ -164,13 +272,6 @@ const AllOutreachVisitLog = () => {
       [fieldName]: date,
       isDateFilter: true,
     }));
-    setCursorFields({
-      lastVisible: null,
-      pageSize: logsPerPage,
-      direction: "next",
-      pageHistory: [],
-      pastOutreachRef: null,
-    });
     setCurrentPageLength(0);
   };
 
@@ -290,6 +391,9 @@ const AllOutreachVisitLog = () => {
               <EventCardSkeleton />
               <EventCardSkeleton />
               <EventCardSkeleton />
+              <EventCardSkeleton />
+              <EventCardSkeleton />
+              <EventCardSkeleton />
             </div>
           ) : (
             <>
@@ -308,12 +412,25 @@ const AllOutreachVisitLog = () => {
                 )}
               </div>
               {/* Pagination */}
-              <div className="flex justify-between items-center mt-8 w-full">
+              <div className="flex justify-center items-center mt-8 w-full mx-auto">
                 <p className="text-gray-600">
                   Showing {currentPageLength} of {totalPages} events
                 </p>
-                <div>{renderPaginationButtons()}</div>
               </div>
+              <div className="flex justify-between items-center w-full md:w-3/4 lg:w-3/4 mx-auto mt-4">
+                {/* {renderPaginationButtons()} */}
+                {!isLoading &&
+                  renderPaginationButtons(
+                    cursorFields?.pageStartDocs.length,
+                    cursorFields?.currentPage + 1
+                  )}
+              </div>
+              {/* <RenderPaginationBtns
+                handlePrev={handlePrev}
+                handleNext={handleNext}
+                cursorFields={cursorFields}
+                onClick={handlePaginationBtn}
+              /> */}
             </>
           )}
         </div>

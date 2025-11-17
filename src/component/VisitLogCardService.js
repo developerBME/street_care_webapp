@@ -13,6 +13,7 @@ import {
   getCountFromServer,
   or,
   and,
+  startAt,
 } from "firebase/firestore";
 import { fetchUserTypeDetails } from "./EventCardService";
 import { formatDate } from "./HelperFunction";
@@ -50,7 +51,9 @@ const visitLogHelperFunction = async (visitLogSnap) => {
         numberOfHelpers: visitLogData?.numberOfHelpers || 0,
         peopleHelpedDescription: visitLogData?.peopleHelpedDescription || "",
         helpType: visitLogData?.helpType || "",
-        whereVisit: [visitLogData?.city, visitLogData?.stateAbbv].filter(Boolean).join(', '),
+        whereVisit: [visitLogData?.city, visitLogData?.stateAbbv]
+          .filter(Boolean)
+          .join(", "),
         timeStamp: visitLogData?.timeStamp?.seconds
           ? formatDate(new Date(visitLogData.timeStamp.seconds * 1000))
           : "",
@@ -153,7 +156,7 @@ export const PersonalVisitLogsCount = async (uid) => {
       where("uid", "==", uid),
       orderBy("timeStamp", "desc")
     );
-console.log("Fetching personal visit logs count .... for UID:", uid);
+    console.log("Fetching personal visit logs count .... for UID:", uid);
     const totalRecords = await getCountFromServer(totalVisitLogRef);
     console.log("Total personal visit logs count:", totalRecords.data().count);
     return totalRecords.data().count;
@@ -237,9 +240,11 @@ export const fetchPublicVisitLogs = async (
   isDateFilter = false,
   lastVisible = null,
   pageSize = 6,
-  direction = "next",
-  pageHistory = []
+  pageHistory = [],
+  currentPage = 0,
+  pageStartDocs
 ) => {
+  let direction = "not";
   try {
     //query variables
     let newInteractionLogRec, totalInteractionsRef;
@@ -274,36 +279,59 @@ export const fetchPublicVisitLogs = async (
         totalInteractionsRef
       );
       totalInteractionsRef = descriptionQuery;
+      pageStartDocs = [];
     }
 
     if (city) {
       const cityQuery = cityFilter(city, totalInteractionsRef);
       totalInteractionsRef = cityQuery;
+      pageStartDocs = [];
     }
 
     if (isDateFilter) {
       const dateQuery = dateFilter(startDate, endDate, totalInteractionsRef);
       totalInteractionsRef = dateQuery;
+      pageStartDocs = [];
     }
 
-    newInteractionLogRec = query(
-      totalInteractionsRef,
-      limit(pageSize)
-    );
-    //Handle Forward pagination
-    if (lastVisible && direction === "next") {
-      newInteractionLogRec = query(
-        newInteractionLogRec,
-        startAfter(lastVisible)
-      );
+    // Here adding Fn to get pageStartDocs
+    if (pageStartDocs.length <= 0) {
+      let lastDocument = null;
+      let hasMore = true;
+
+      while (hasMore) {
+        const modifiedQuery = lastDocument
+          ? query(
+              totalInteractionsRef,
+              limit(pageSize),
+              startAfter(lastDocument)
+            )
+          : query(totalInteractionsRef, limit(pageSize));
+
+        const snapshot = await getDocs(modifiedQuery);
+        const docs = snapshot.docs;
+
+        if (docs.length > 0) {
+          lastDocument = docs[docs.length - 1];
+          pageStartDocs.push(docs[0]);
+        }
+
+        hasMore = docs.length == pageSize;
+      }
     }
 
-    // Handle Backward pagination
-    if (lastVisible && direction === "prev" && pageHistory.length > 2) {
+    // newInteractionLogRec = query(totalInteractionsRef, limit(pageSize));
+    // console.log("currentPage from LogCardService:", currentPage);
+    // console.log("pageStartDocs just before returning:", pageStartDocs);
+    //Handle page to return
+    if (pageStartDocs?.[currentPage]) {
       newInteractionLogRec = query(
-        newInteractionLogRec,
-        startAfter(pageHistory[pageHistory.length - 3])
+        totalInteractionsRef,
+        startAt(pageStartDocs[currentPage]),
+        limit(pageSize)
       );
+    } else {
+      newInteractionLogRec = query(totalInteractionsRef, limit(pageSize));
     }
 
     const totalRecords = await getCountFromServer(totalInteractionsRef);
@@ -311,19 +339,13 @@ export const fetchPublicVisitLogs = async (
     const visitLogs = await visitLogHelperFunction(visitLogSnapshot);
     const lastDoc = visitLogSnapshot.docs[visitLogSnapshot.docs.length - 1];
 
-    // Store history of cursors for backward pagination
-    if (direction === "next") {
-      pageHistory.push(lastDoc);
-    } else if (direction === "prev") {
-      pageHistory.pop();
-    }
-
     return {
       visitLogs: visitLogs,
       lastVisible: lastDoc,
-      pageHistory,
       newInteractionLogRec: newInteractionLogRec,
       totalRecords: totalRecords.data().count,
+      pageStartDocs: pageStartDocs,
+      currentPage: currentPage,
     };
   } catch (error) {
     logEvent(

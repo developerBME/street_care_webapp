@@ -9,6 +9,7 @@ import locationIcon from "../../images/location.png";
 import defaultImage from "../../images/default_avatar.svg";
 import { formatDate } from "../helper";
 import CardTags from "./CardTags";
+import EventCardSkeleton from "../Skeletons/EventCardSkeleton.js";
 
 import verifiedPurple from "../../images/verified_purple.png";
 import verifiedGreen from "../../images/verified.png";
@@ -31,25 +32,24 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
   const currentUserType = visitLogCardData?.userType;
   const { user } = useUserContext();
   useEffect(() => {
-  const fetchFlagStatus = async () => {
-    try {
-      
-      if (visitLogCardData?.id) {
-        const docRef = doc(db, visitLogs_collection, visitLogCardData.id);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setIsFlagged(docSnap.data().isFlagged || false);
+    const fetchFlagStatus = async () => {
+      try {
+        if (visitLogCardData?.id) {
+          const docRef = doc(db, visitLogs_collection, visitLogCardData.id);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            setIsFlagged(docSnap.data().isFlagged || false);
+          }
         }
+      } catch (error) {
+        console.error("Error fetching flag status:", error);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error("Error fetching flag status:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    };
 
-  fetchFlagStatus();
-}, [visitLogCardData?.id]);
+    fetchFlagStatus();
+  }, [visitLogCardData?.id]);
 
   const handleViewDetails = () => {
     navigate(`/VisitLogDetails/${visitLogCardData.id}`);
@@ -83,10 +83,10 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
         console.error("Invalid visitLogCardData.id");
         return;
       }
-      
+
       const userRef = doc(db, users_collection, user.uid);
       const userDoc = await getDoc(userRef);
-      
+
       if (!userDoc.exists()) {
         console.error("User document does not exist:", user.uid);
         return;
@@ -95,45 +95,46 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
       const { Type: userType } = userDoc.data();
       const docRef = doc(db, visitLogs_collection, visitLogCardData?.id);
       const docSnap = await getDoc(docRef);
-  
+
       if (!docSnap.exists()) {
         console.error("Document does not exist:", user.uid);
         return;
       }
-      console.log("user:",userType);
+      console.log("user:", userType);
       const { isFlagged: currentStatus, flaggedByUser } = docSnap.data();
       const canUnflag =
         flaggedByUser === user.uid || userType === "Street Care Hub Leader";
       const currentIsFlagged = docSnap.data().isFlagged;
-  
+
       // Restrict unflagging to specific user types
-      if (currentIsFlagged && !(canUnflag)) {
-        alert("Only Street Care Hub Leader or User who flagged it can unflag this post.");
-        return; 
+      if (currentIsFlagged && !canUnflag) {
+        alert(
+          "Only Street Care Hub Leader or User who flagged it can unflag this post."
+        );
+        return;
       }
-  
+
       if (currentStatus) {
-              if (!canUnflag) {
-                console.error(
-                  "Only the user who flagged this event or a Street Care Hub Leader can unflag it."
-                );
-                return;
-              }
-      
-              await updateDoc(docRef, { isFlagged: false, flaggedByUser: null });
-              setIsFlagged(false);
-            } else {
-              await updateDoc(docRef, { isFlagged: true, flaggedByUser: user.uid });
-              setIsFlagged(true);
-            }
+        if (!canUnflag) {
+          console.error(
+            "Only the user who flagged this event or a Street Care Hub Leader can unflag it."
+          );
+          return;
+        }
+
+        await updateDoc(docRef, { isFlagged: false, flaggedByUser: null });
+        setIsFlagged(false);
+      } else {
+        await updateDoc(docRef, { isFlagged: true, flaggedByUser: user.uid });
+        setIsFlagged(true);
+      }
     } catch (error) {
       console.error("Error toggling flag status:", error);
     }
   };
-  
 
   if (isLoading) {
-    return <div>Loading...</div>; // Placeholder while loading flag status
+    return <EventCardSkeleton />; // Placeholder Skeleton while loading flag status
   }
 
   return (
@@ -151,14 +152,16 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
             isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
           }`}
         />
-        <div 
-            className="absolute right-16 top-0 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-30 whitespace-normal"
-            style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
-          >
-            {!isFlagged ? 'Flag the Interaction Log?' : 'Unflag the Interaction Log?'}
+        <div
+          className="absolute right-16 top-0 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-30 whitespace-normal"
+          style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
+        >
+          {!isFlagged
+            ? "Flag the Interaction Log?"
+            : "Unflag the Interaction Log?"}
         </div>
       </div>
-      
+
       {/* Rest of the Component */}
       <div className="inline-flex items-center space-x-2">
         <img
@@ -171,20 +174,20 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
         </div>
         <img alt="" src={verifiedImg} className="w-5 h-5" />
       </div>
-      
+
       <div className="flex justify-between items-center mt-2">
         <div className="flex items-center">
           <img className="w-4 h-4" src={dateIcon} alt="Date" />
           <span className="ml-2 text-sm">
-            {visitLogCardData?.timeStamp ? formatDate(visitLogCardData.timeStamp) : null}
+            {visitLogCardData?.timeStamp
+              ? formatDate(visitLogCardData.timeStamp)
+              : null}
           </span>
         </div>
-        
+
         <div className="flex items-center">
           <img className="w-3 h-4" src={locationIcon} alt="Location" />
-          <span className="ml-2 text-sm">
-            {visitLogCardData.whereVisit}
-          </span>
+          <span className="ml-2 text-sm">{visitLogCardData.whereVisit}</span>
         </div>
       </div>
 
@@ -199,11 +202,11 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
         <div className="text-sm font-bold">Items Donated</div>
         <div className="text-xl font-bold">{visitLogCardData?.itemQty}</div>
       </div>
-      
+
       <div className="mt-3">
         <CardTags tags={visitLogCardData?.whatGiven || []} />
       </div>
-      
+
       <p className="text-sm mt-2 line-clamp-2">
         {visitLogCardData?.peopleHelpedDescription || ""}
       </p>
