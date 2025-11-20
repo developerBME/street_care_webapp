@@ -242,37 +242,35 @@ export const fetchPaginatedEvents = async (
     const totalRecordsSnapshot = await getCountFromServer(eventsQuery);
     const totalRecords = totalRecordsSnapshot.data().count;
 
-    let newPageHistory = [...pageHistory];
+    const historyReference = Array.isArray(pageHistory) ? [...pageHistory] : [];
+    let updatedPageHistory = [...historyReference];
 
-    if (direction === "next") {
-      if (lastVisible) {
-        eventsQuery = query(eventsQuery, startAfter(lastVisible), limit(pageSize));
-        newPageHistory.push(lastVisible);
-      } else {
-        eventsQuery = query(eventsQuery, limit(pageSize));
-      }
+    let paginatedQuery = query(eventsQuery, limit(pageSize));
+
+    if (direction === "next" && lastVisible) {
+      paginatedQuery = query(paginatedQuery, startAfter(lastVisible));
+      updatedPageHistory = [...historyReference, lastVisible];
     } else if (direction === "prev") {
-      if (newPageHistory.length > 1) {
-        newPageHistory.pop();
-        
-        const prevPageCursor = newPageHistory[newPageHistory.length - 1];
-        
-        if (prevPageCursor) {
-          eventsQuery = query(eventsQuery, startAfter(prevPageCursor), limit(pageSize));
-        } else {
-          eventsQuery = query(eventsQuery, limit(pageSize));
-          newPageHistory = [];
-        }
-      } else {
-        eventsQuery = query(eventsQuery, limit(pageSize));
-        newPageHistory = [];
+      const trimmedHistory =
+        historyReference.length > 0 ? historyReference.slice(0, -1) : [];
+      const prevCursor =
+        trimmedHistory.length > 0
+          ? trimmedHistory[trimmedHistory.length - 1]
+          : null;
+
+      updatedPageHistory = trimmedHistory;
+
+      if (prevCursor) {
+        paginatedQuery = query(paginatedQuery, startAfter(prevCursor));
       }
-    } else {
-      eventsQuery = query(eventsQuery, limit(pageSize));
+    } else if (direction === "current") {
+      if (historyReference.length > 0) {
+        const currentCursor = historyReference[historyReference.length - 1];
+        paginatedQuery = query(paginatedQuery, startAfter(currentCursor));
+      }
     }
-  
-    console.log("Executing query with direction:", direction);
-    const snapshot = await getDocs(eventsQuery);
+
+    const snapshot = await getDocs(paginatedQuery);
 
     const userIds = [...new Set(snapshot.docs.map(doc => doc.data().uid))];
     const userDetails = await fetchUserDetailsBatch(userIds);
@@ -297,7 +295,7 @@ export const fetchPaginatedEvents = async (
     return { 
       events: fetchedEvents, 
       lastVisible: lastDoc, 
-      pageHistory: newPageHistory, 
+      pageHistory: updatedPageHistory, 
       totalFilteredEvents: totalRecords 
     };
   } catch (error) {
@@ -346,16 +344,32 @@ export const fetchPaginatedPastOutreachEvents = async (
       );
     }
 
-    const totalRecordsSnapshot = await getCountFromServer(pastOutreachQuery);
-    const totalRecords = totalRecordsSnapshot.data().count;
-
-    let paginatedQuery = query(pastOutreachQuery, limit(pageSize));
-
-    if (lastVisible && direction === "next") {
-      paginatedQuery = query(paginatedQuery, startAfter(lastVisible));
-    } else if (lastVisible && direction === "prev" && pageHistory.length > 2) {
-      paginatedQuery = query(paginatedQuery, startAfter(pageHistory[pageHistory.length - 3]));
-    }
+      const totalRecordsSnapshot = await getCountFromServer(pastOutreachQuery);
+      const totalRecords = totalRecordsSnapshot.data().count;
+  
+      let paginatedQuery = query(pastOutreachQuery, limit(pageSize));
+      const historyReference = Array.isArray(pageHistory)
+        ? [...pageHistory]
+        : [];
+      const historyLength = historyReference.length;
+  
+      if (lastVisible && direction === "next") {
+        paginatedQuery = query(paginatedQuery, startAfter(lastVisible));
+      } else if (direction === "prev" && historyLength > 2) {
+        paginatedQuery = query(
+          paginatedQuery,
+          startAfter(historyReference[historyLength - 3])
+        );
+      } else if (direction === "current") {
+        if (historyLength > 1) {
+          paginatedQuery = query(
+            paginatedQuery,
+            startAfter(historyReference[historyLength - 2])
+          );
+        } else if (!historyLength && lastVisible) {
+          paginatedQuery = query(paginatedQuery, startAfter(lastVisible));
+        }
+      }
 
     const snapshot = await getDocs(paginatedQuery);
     const userIds = [...new Set(snapshot.docs.map(doc => doc.data().uid))];
@@ -376,15 +390,32 @@ export const fetchPaginatedPastOutreachEvents = async (
       };
     });
 
-    const lastDoc = snapshot.docs[snapshot.docs.length - 1];
-
-    if (direction === "next") {
-      pageHistory.push(lastDoc);
-    } else if (direction === "prev") {
-      pageHistory.pop();
-    }
-
-    return { fetchedEvents, lastVisible: lastDoc, pageHistory, totalRecords };
+      const lastDoc = snapshot.docs[snapshot.docs.length - 1];
+      let updatedPageHistory = [...historyReference];
+  
+      if (direction === "next") {
+        if (lastDoc) {
+          updatedPageHistory.push(lastDoc);
+        }
+      } else if (direction === "prev") {
+        updatedPageHistory.pop();
+      } else if (direction === "current") {
+        if (lastDoc) {
+          if (updatedPageHistory.length === 0) {
+            updatedPageHistory.push(lastDoc);
+          } else {
+            updatedPageHistory[updatedPageHistory.length - 1] = lastDoc;
+          }
+        }
+      }
+  
+      return {
+        fetchedEvents,
+        lastVisible: lastDoc,
+        pageHistory: updatedPageHistory,
+        totalRecords,
+        totalFilteredEvents: totalRecords
+      };
   } catch (error) {
     logEvent("STREET_CARE_ERROR", `Error fetching paginated past outreach events: ${error.message}`);
     throw error;
@@ -1213,6 +1244,18 @@ export const fetchByCityOrStates = async (
           limit(outreachPerPages)
         );
 
+        const userIds = new Set();
+        snapshots.docs.forEach((doc) => {
+          const uid = doc.data().uid;
+          if (uid) {
+            userIds.add(uid);
+          } else {
+            console.log("Document missing uid:", doc.id);
+          }
+        });
+        // Batch fetch user details
+        const userDetails = await fetchUserDetailsBatch(Array.from(userIds));
+
         while (outreachPerPages < totaloutreaches) {
           const outreachDocRef = await getDocs(outreachByLocationQuery);
           let outreachByLoc = [];
@@ -1225,6 +1268,8 @@ export const fetchByCityOrStates = async (
             const id = doc.id;
             outreachByLoc.push({
               ...pastOutreachData,
+              userName: userDetails[pastOutreachData.uid]?.username || "",
+              userType: userDetails[pastOutreachData.uid]?.userType || "",
               id: id,
               userName,
               photoUrl,
@@ -1278,6 +1323,8 @@ export const fetchByCityOrStates = async (
           const id = doc.id;
           outreachByLoc.push({
             ...pastOutreachData,
+            // userName: userDetails[pastOutreachData.uid]?.username || "",
+            // userType: userDetails[pastOutreachData.uid]?.userType || "",
             id: id,
           });
         }
