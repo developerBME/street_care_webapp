@@ -10,6 +10,15 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import UserTypeInfo from "./UserTypeInfo";
 
+// Utility function to get current timezone abbreviation
+const getCurrentTimezone = () => {
+  return new Intl.DateTimeFormat("en-US", {
+    timeZoneName: "short",
+  })
+    .formatToParts(new Date())
+    .find((part) => part.type === "timeZoneName")?.value || "";
+};
+
 const AllOutreachVisitLog = () => {
   const navigate = useNavigate();
   const [filteredVisitLogs, setFilteredVisitLogs] = useState([]);
@@ -265,7 +274,7 @@ const AllOutreachVisitLog = () => {
                   endDate={filterData.endDate}
                   value={filterData.startDate}
                   onChange={(date) => handleDateChange(date, "startDate")}
-                  placeholderText="Select Start Date"
+                  placeholderText={`Select Start Date (${getCurrentTimezone()})`}
                   className="form-input w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
                 />
               )}
@@ -278,7 +287,7 @@ const AllOutreachVisitLog = () => {
                   endDate={filterData.endDate}
                   value={filterData.endDate}
                   onChange={(date) => handleDateChange(date, "endDate")}
-                  placeholderText="Select End Date"
+                  placeholderText={`Select End Date (${getCurrentTimezone()})`}
                   className="form-input w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
                 />
               )}

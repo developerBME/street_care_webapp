@@ -9,7 +9,17 @@ import OutreachSignupModal from "../Community/OutreachSignupModal";
 import RSVPConfirmationModal from "../UserProfile/RSVPConfirmationModal";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { formatDate } from "../HelperFunction"; 
+import { formatDate } from "../HelperFunction";
+
+// Utility function to get current timezone abbreviation
+const getCurrentTimezone = () => {
+  return new Intl.DateTimeFormat("en-US", {
+    timeZoneName: "short",
+  })
+    .formatToParts(new Date())
+    .find((part) => part.type === "timeZoneName")?.value || "";
+};
+
 const AdminOutreachEvents = () => {
 
  
@@ -327,7 +337,7 @@ const AdminOutreachEvents = () => {
                     value={filterData.startDate}
                     startDate={filterData.startDate}
                     endDate={filterData.endDate}
-                    placeholderText="Select Start Date"
+                    placeholderText={`Select Start Date (${getCurrentTimezone()})`}
                     className="form-input w-fit md:w-[9rem] lg:w-[9rem] py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
                   />
                   <p>To</p>
@@ -338,7 +348,7 @@ const AdminOutreachEvents = () => {
                     startDate={filterData.startDate}
                     endDate={filterData.endDate}
                     value={filterData.endDate}
-                    placeholderText="Select End Date"
+                    placeholderText={`Select End Date (${getCurrentTimezone()})`}
                     className="form-input w-fit md:w-[9rem] lg:w-[9rem] py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
                   />
                 </div>
