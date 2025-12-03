@@ -8,21 +8,23 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import UserTypeInfo from "./UserTypeInfo";
 import { getPageNumbersFormat } from "../utils/helperFns";
-// import RenderPaginationBtns from "./HomePage/RenderPaginatinBtns";
+import DummyDataButton from "./dummyDataScript";
+// import RenderPaginationBtns from "./HomePage/RenderPaginationBtns";
+// Refactor to use PageCheckpoints and think of a way to handle pages.
 const AllOutreachVisitLog = () => {
   const navigate = useNavigate();
   const [filteredVisitLogs, setFilteredVisitLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [sortOption, setSortOption] = useState("");
+  const [totalRecords, setTotalRecords] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const logsPerPage = 6;
   const [currentPageLength, setCurrentPageLength] = useState(0);
   const [cursorFields, setCursorFields] = useState({
-    lastVisible: null,
+    pageCheckpoints: {}, //{pageNumber: [firstDoc, lastDoc]}
     pageSize: logsPerPage,
     direction: "next",
     currentPage: 0,
-    pageStartDocs: [],
     pageHistory: [],
     pastOutreachRef: null,
   });
@@ -41,6 +43,10 @@ const AllOutreachVisitLog = () => {
       setIsLoading(true);
       console.log("cursorField.currentPage:", cursorFields.currentPage);
       console.log("FilterData", filterData);
+      console.log(
+        "pageCheckPoints before sending:",
+        cursorFields.pageCheckpoints
+      );
       // if (!cursorFields.direction) return;
       const visitLogsData = await fetchPublicVisitLogs(
         filterData.searchValue,
@@ -52,26 +58,29 @@ const AllOutreachVisitLog = () => {
         cursorFields.pageSize,
         cursorFields.pageHistory,
         cursorFields.currentPage,
-        cursorFields.pageStartDocs
+        cursorFields.pageCheckpoints
       );
       console.log("Got the Response.");
       //cursorFields.pageStartDocs = visitLogsData.pageStartDocs;
       setCursorFields((prev) => ({
         ...prev,
-        pageStartDocs: visitLogsData.pageStartDocs,
+        pageCheckpoints: visitLogsData.pageCheckpoints,
       }));
-
+      // console.log("Receieved pageCheckpoints:", cursorFields.pageCheckpoints);
       console.log("visitLogs:", visitLogsData.visitLogs);
-      setTotalPages(visitLogsData.totalRecords);
+      setTotalRecords(visitLogsData.totalRecords);
+      setTotalPages(Math.ceil(visitLogsData.totalRecords / logsPerPage));
       // if (cursorFields.direction === "next")
-      //   setCurrentPageLength((prev) => prev + visitLogsData.visitLogs.length);
+      setCurrentPageLength(
+        visitLogsData.visitLogs.length + visitLogsData.currentPage * 6
+      );
       setFilteredVisitLogs(visitLogsData.visitLogs);
       setIsLoading(false);
     };
     //Implemented debounce to improve performance
     const delayTimer = setTimeout(() => {
       getVisitLogs();
-    }, 300);
+    }, 500);
     return () => clearTimeout(delayTimer);
   }, [
     filterData.city,
@@ -82,8 +91,8 @@ const AllOutreachVisitLog = () => {
   ]);
 
   useEffect(() => {
-    console.log("pageStartDocs", cursorFields.pageStartDocs);
-  }, [cursorFields.pageStartDocs]);
+    console.log("CursorFields,pageCheckpoints:", cursorFields.pageCheckpoints);
+  }, [cursorFields.pageCheckpoints]);
 
   const handleSortChange = (e) => {
     const sortBy = e.target.value;
@@ -93,6 +102,7 @@ const AllOutreachVisitLog = () => {
     //To make sure when the sort option is changed from None to city or date, api is not triggered
     if (sortOption === "") return;
     //To clear the filters in other cases
+    setCursorFields((prev) => ({ ...prev, pageCheckpoints: {} }));
     setFilterData({
       city: "",
       startDate: new Date("2024-01-02"),
@@ -100,13 +110,6 @@ const AllOutreachVisitLog = () => {
       isDateFilter: false,
       searchValue: "",
     });
-    // setCursorFields({
-    //   lastVisible: null,
-    //   pageSize: logsPerPage,
-    //   direction: "next",
-    //   pageHistory: [],
-    //   pastOutreachRef: null,
-    // });
     setCurrentPageLength(0);
   };
 
@@ -137,9 +140,9 @@ const AllOutreachVisitLog = () => {
     console.log("Pagenumber 1 Indexed, index + 1:", page);
   };
 
-  // TODO: Modify this function to add pagination numbers.
+  // TODO: Modify this function to add pagination numbers.// when windowSize is greater than the number of pages.
   const renderPaginationButtons = (
-    lastPage = 1,
+    lastPage = 10,
     currPage = 1,
     windowSize = 5
   ) => {
@@ -173,9 +176,10 @@ const AllOutreachVisitLog = () => {
       </button>
     );
     {
-      console.log("layout:", layout);
+      // console.log("layout:", layout);
     }
-
+    // in layOut page number is 1-indexed
+    // in currentPage and others page is 0-indexed
     layout.forEach((page, index) => {
       buttons.push(
         <button
@@ -208,30 +212,10 @@ const AllOutreachVisitLog = () => {
       }
     });
 
-    // if (cursorFields.pageStartDocs) {
-    //   cursorFields.pageStartDocs.forEach((doc, index) => {
-    //     buttons.push(
-    //       <button
-    //         key={index + 1}
-    //         className="mx-1 px-1 py-1 rounded-full bg-gray-200 text-gray-600"
-    //         onClick={() => {
-    //           setCursorFields((prev) => ({ ...prev, currentPage: index }));
-    //           console.log("currentPage 0 Indexed-index:", index);
-    //           console.log("Pagenumber 1 Indexed, index + 1:", index + 1);
-    //         }}
-    //       >
-    //         {index + 1}
-    //       </button>
-    //     );
-    //   });
-    // }
-
     buttons.push(
       <button
         key="next"
-        disabled={
-          cursorFields.currentPage == cursorFields.pageStartDocs.length - 1
-        }
+        disabled={cursorFields.currentPage == totalPages - 1}
         onClick={() => {
           setIsLoading(true);
           setCursorFields((prev) => ({
@@ -240,14 +224,14 @@ const AllOutreachVisitLog = () => {
           }));
         }}
         className={
-          cursorFields.currentPage == cursorFields.pageStartDocs.length - 1
+          cursorFields.currentPage == totalPages - 1
             ? disabledBtnCss
             : activeBtnCss
         } // disabled
       >
         <IoIosArrowForward
           className={`w-6 h-6 ${
-            cursorFields.currentPage == cursorFields.pageStartDocs.length - 1
+            cursorFields.currentPage == totalPages - 1
               ? "text-white"
               : "text-black"
           }`}
@@ -260,8 +244,8 @@ const AllOutreachVisitLog = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFilterData((prev) => ({ ...prev, [name]: value }));
-    //Reset pageStartDocs to empty Array to avoid passing stale pageStartDocs.
-    if (!value) setCursorFields((prev) => ({ ...prev, pageStartDocs: [] })); // This helps when we remove the search filter , without it we would be sending stale pageStartDocs.
+    //Reset pageCheckpoints to empty Array to avoid passing stale pageCheckpoints.
+    setCursorFields((prev) => ({ ...prev, pageCheckpoints: {} }));
     setCursorFields((prev) => ({ ...prev, currentPage: 0 })); // reseting page so everytime there is change in filter we set the current page to 0 to fetch the first page.
     setCurrentPageLength(0);
   };
@@ -296,9 +280,9 @@ const AllOutreachVisitLog = () => {
                 Interaction Logs
               </p>
             </div>
-            <div className="flex items-center gap-4 mt-6 lg:mt-0">
+            <div className="flex flex-wrap lg:flex-nowrap items-center gap-4 mt-6 lg:mt-0">
               {/* Search input */}
-              <label className="relative text-gray-400 focus-within:text-gray-600">
+              <label className="relative text-gray-400 focus-within:text-gray-600 w-full sm:w-auto">
                 <input
                   type="text"
                   name="searchValue"
@@ -306,7 +290,7 @@ const AllOutreachVisitLog = () => {
                   placeholder="Search..."
                   ref={searchRef}
                   onChange={handleChange}
-                  className="form-input w-fit md:w-[20rem] lg:w-[18rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-10 rounded-2xl"
+                  className="form-input w-full sm:w-fit md:w-[20rem] lg:w-[18rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-10 rounded-2xl"
                   style={{ borderRadius: "0px" }}
                 />
                 <svg
@@ -325,14 +309,14 @@ const AllOutreachVisitLog = () => {
               </label>
 
               {/* Sort by filter */}
-              <div className="flex items-center">
+              <div className="flex items-center w-full sm:w-auto">
                 <label className="mr-2 text-gray-500 font-medium">
                   Filter:
                 </label>
                 <select
                   value={sortOption}
                   onChange={handleSortChange}
-                  className="form-select w-fit md:w-[8rem] py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block rounded-2xl"
+                  className="form-select w-full sm:w-fit md:w-[8rem] py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block rounded-2xl"
                   style={{ borderRadius: "0px" }}
                 >
                   <option value="">None</option>
@@ -351,37 +335,37 @@ const AllOutreachVisitLog = () => {
                   ref={searchCity}
                   value={filterData.city}
                   onChange={handleChange}
-                  className="form-input w-fit md:w-[12rem] lg:w-[8rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-2 rounded-2xl"
+                  className="form-input w-full sm:w-fit md:w-[12rem] lg:w-[8rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-2 rounded-2xl"
                   style={{ borderRadius: "0px" }}
                 />
               )}
 
               {/* Conditional rendering of DatePickers */}
               {sortOption === "datePeriod" && (
-                <DatePicker
-                  selected={filterData.startDate}
-                  selectsStart
-                  name="startDate"
-                  startDate={filterData.startDate}
-                  endDate={filterData.endDate}
-                  value={filterData.startDate}
-                  onChange={(date) => handleDateChange(date, "startDate")}
-                  placeholderText="Select Start Date"
-                  className="form-input w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
-                />
-              )}
-              {sortOption === "datePeriod" && (
-                <DatePicker
-                  selected={filterData.endDate}
-                  selectsEnd
-                  name="endDate"
-                  startDate={filterData.startDate}
-                  endDate={filterData.endDate}
-                  value={filterData.endDate}
-                  onChange={(date) => handleDateChange(date, "endDate")}
-                  placeholderText="Select End Date"
-                  className="form-input w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
-                />
+                <>
+                  <DatePicker
+                    selected={filterData.startDate}
+                    selectsStart
+                    name="startDate"
+                    startDate={filterData.startDate}
+                    endDate={filterData.endDate}
+                    value={filterData.startDate}
+                    onChange={(date) => handleDateChange(date, "startDate")}
+                    placeholderText="Select Start Date"
+                    className="form-input w-full sm:w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
+                  />
+                  <DatePicker
+                    selected={filterData.endDate}
+                    selectsEnd
+                    name="endDate"
+                    startDate={filterData.startDate}
+                    endDate={filterData.endDate}
+                    value={filterData.endDate}
+                    onChange={(date) => handleDateChange(date, "endDate")}
+                    placeholderText="Select End Date"
+                    className="form-input w-full sm:w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
+                  />
+                </>
               )}
             </div>
           </div>
@@ -414,17 +398,18 @@ const AllOutreachVisitLog = () => {
               {/* Pagination */}
               <div className="flex justify-center items-center mt-8 w-full mx-auto">
                 <p className="text-gray-600">
-                  Showing {currentPageLength} of {totalPages} events
+                  Showing {currentPageLength} of {totalRecords} events
                 </p>
               </div>
               <div className="flex justify-between items-center w-full md:w-3/4 lg:w-3/4 mx-auto mt-4">
                 {/* {renderPaginationButtons()} */}
                 {!isLoading &&
                   renderPaginationButtons(
-                    cursorFields?.pageStartDocs.length,
+                    totalPages,
                     cursorFields?.currentPage + 1
                   )}
               </div>
+              <div>{/* <DummyDataButton /> */}</div>
               {/* <RenderPaginationBtns
                 handlePrev={handlePrev}
                 handleNext={handleNext}

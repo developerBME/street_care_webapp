@@ -18,6 +18,7 @@ export const getPageNumbersFormat = (windowSize, currPage, lastPage) => {
     if (1 <= next && next <= lastPage) pageNums.add(next);
     prev -= 1;
     next += 1;
+    if (prev < 1 && next > lastPage) break;
   }
 
   return [...pageNums].sort((a, b) => a - b);

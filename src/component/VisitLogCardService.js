@@ -231,7 +231,12 @@ const dateFilter = (startDate, endDate, filterQuery) => {
     where("timeStamp", "<=", endDate)
   );
 };
-
+// change PageStartDocs use lastVisible and startAfter combined change this.
+//Incorporate Logic to get any page.
+//get 1st page according to filters & get total numbers of pages from records.
+//Remove page Start Docs
+//If we jump to far off pages we need to run a loop to get records up till that page.
+//Make sure to use 0 indexed page numbers here.
 export const fetchPublicVisitLogs = async (
   searchValue,
   city,
@@ -242,12 +247,17 @@ export const fetchPublicVisitLogs = async (
   pageSize = 6,
   pageHistory = [],
   currentPage = 0,
-  pageStartDocs
+  pageCheckpoints
 ) => {
   let direction = "not";
   try {
     //query variables
+    //Another Issue when jumping to last page from somewhere else causes it to crash undefined reading 1
     let newInteractionLogRec, totalInteractionsRef;
+    console.log(
+      "Check this pageCheckpoints:",
+      JSON.stringify(Object.keys(pageCheckpoints))
+    );
 
     //Handle date Values
     if (!(startDate instanceof Date) || isNaN(startDate)) {
@@ -279,73 +289,113 @@ export const fetchPublicVisitLogs = async (
         totalInteractionsRef
       );
       totalInteractionsRef = descriptionQuery;
-      pageStartDocs = [];
+      // pageStartDocs = [];
     }
 
     if (city) {
       const cityQuery = cityFilter(city, totalInteractionsRef);
       totalInteractionsRef = cityQuery;
-      pageStartDocs = [];
+      // pageStartDocs = [];
     }
 
     if (isDateFilter) {
       const dateQuery = dateFilter(startDate, endDate, totalInteractionsRef);
       totalInteractionsRef = dateQuery;
-      pageStartDocs = [];
+      // pageStartDocs = [];
     }
+    //Add Function to get result docs
+    // if lastVisible is null then
 
-    // Here adding Fn to get pageStartDocs
-    if (pageStartDocs.length <= 0) {
-      let lastDocument = null;
-      let hasMore = true;
-
-      while (hasMore) {
-        const modifiedQuery = lastDocument
-          ? query(
-              totalInteractionsRef,
-              limit(pageSize),
-              startAfter(lastDocument)
-            )
-          : query(totalInteractionsRef, limit(pageSize));
-
-        const snapshot = await getDocs(modifiedQuery);
-        const docs = snapshot.docs;
-
-        if (docs.length > 0) {
-          lastDocument = docs[docs.length - 1];
-          pageStartDocs.push(docs[0]);
+    if (
+      pageCheckpoints[currentPage] ||
+      pageCheckpoints[currentPage - 1] ||
+      pageCheckpoints[currentPage + 1]
+    ) {
+      //get the startAfter or endBefore
+      //for currentPage in checkpoint get firstDoc-- startAt
+      //for currentPage - 1 in checkpoint get lastDoc-- startAfter
+      //for currentPgae + 1 in checkpoint get reverse order + firstDoc-- startAfter
+      if (pageCheckpoints[currentPage]) {
+        console.log("Getting page that exists in checkPoints.");
+        newInteractionLogRec = query(
+          totalInteractionsRef,
+          startAt(pageCheckpoints[currentPage][0]),
+          limit(pageSize)
+        );
+      } else if (pageCheckpoints[currentPage - 1]) {
+        console.log("Getting Next Page.");
+        newInteractionLogRec = query(
+          totalInteractionsRef,
+          startAfter(pageCheckpoints[currentPage - 1][1]),
+          limit(pageSize)
+        );
+      }
+      // } else if (pageCheckpoints[currentPage + 1]) {
+      //   //reverse the results to maintain order
+      //   console.log("Getting Previous Page");
+      //   newInteractionLogRec = query(
+      //     totalInteractionsRef,
+      //     orderBy("timestamp", "asc"),
+      //     startAfter(pageCheckpoints[currentPage + 1][0]),
+      //     limit(pageSize)
+      //   );
+      // }
+    } else {
+      // write Fnc to get the currentPage doc
+      // Save Checkpoints to get to the current page.
+      // Rewire logic from AllOutreachVisitLogs to here.
+      // Function to iterate to that particular page.
+      if (currentPage > 0) {
+        const pageNums = Object.keys(pageCheckpoints).map(Number); // get pageNums as num type from pageCheckpoints.
+        let pageDocs = [];
+        let lastPageInCheckpoint = Math.max(...pageNums); // start iterating through the maxPage.
+        while (lastPageInCheckpoint < currentPage - 1) {
+          newInteractionLogRec = query(
+            totalInteractionsRef,
+            limit(pageSize),
+            startAfter(pageCheckpoints[lastPageInCheckpoint][1])
+          );
+          pageDocs = await getDocs(newInteractionLogRec);
+          pageCheckpoints[lastPageInCheckpoint + 1] = [
+            pageDocs.docs[0],
+            pageDocs.docs[pageDocs.docs.length - 1],
+          ];
+          // add pageCheckpoint here.
+          lastPageInCheckpoint++;
+          console.log(
+            "From VisitCard pageCheckpoints fr error:",
+            JSON.stringify(Object.keys(pageCheckpoints))
+          );
         }
-
-        hasMore = docs.length == pageSize;
+        newInteractionLogRec = query(
+          totalInteractionsRef,
+          limit(pageSize),
+          startAfter(pageCheckpoints[lastPageInCheckpoint][1])
+        );
+      } else {
+        newInteractionLogRec = query(totalInteractionsRef, limit(pageSize)); //Get the First Page
       }
     }
 
-    // newInteractionLogRec = query(totalInteractionsRef, limit(pageSize));
-    // console.log("currentPage from LogCardService:", currentPage);
-    // console.log("pageStartDocs just before returning:", pageStartDocs);
-    //Handle page to return
-    if (pageStartDocs?.[currentPage]) {
-      newInteractionLogRec = query(
-        totalInteractionsRef,
-        startAt(pageStartDocs[currentPage]),
-        limit(pageSize)
-      );
-    } else {
-      newInteractionLogRec = query(totalInteractionsRef, limit(pageSize));
-    }
+    //iterate from MaxPage to the desiredPage(currentPage).
 
     const totalRecords = await getCountFromServer(totalInteractionsRef);
     const visitLogSnapshot = await getDocs(newInteractionLogRec);
     const visitLogs = await visitLogHelperFunction(visitLogSnapshot);
     const lastDoc = visitLogSnapshot.docs[visitLogSnapshot.docs.length - 1];
+    pageCheckpoints[currentPage] = [
+      visitLogSnapshot.docs[0],
+      visitLogSnapshot.docs[visitLogSnapshot.docs.length - 1],
+    ];
+    console.log("From VisitLogCard:", pageCheckpoints);
 
     return {
       visitLogs: visitLogs,
       lastVisible: lastDoc,
       newInteractionLogRec: newInteractionLogRec,
       totalRecords: totalRecords.data().count,
-      pageStartDocs: pageStartDocs,
       currentPage: currentPage,
+      pageCheckpoints: pageCheckpoints,
     };
   } catch (error) {
     logEvent(
