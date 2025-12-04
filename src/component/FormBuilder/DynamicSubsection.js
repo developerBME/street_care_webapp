@@ -50,10 +50,10 @@ const DynamicSubSection = forwardRef(({ onUpdate = () => {} }, ref) => {
     [interactions]
   );
 
-  useEffect(() => {
-    console.log("Interactions:", interactions);
-    // onUpdate(interactionData); commented this since it uplifts the data which i do not want now
-  }, [interactions]);
+  // Use incase of Debugging.
+  // useEffect(() => {
+  //   console.log("Interactions:", interactions);
+  // }, [interactions]);
 
   return (
     <>
