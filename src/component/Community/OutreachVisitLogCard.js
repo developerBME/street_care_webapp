@@ -181,7 +181,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
         </div>
         
         <div className="flex items-center">
-          <img className="w-3 h-4" src={locationIcon} alt="Location" />
+          <img className="w-3 h-4 flex-shrink-0" src={locationIcon} alt="Location" />
           <span className="ml-2 text-sm">
             {visitLogCardData.whereVisit}
           </span>
