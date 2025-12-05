@@ -3,9 +3,7 @@ import Checkbox from "./Checkbox";
 import InputLabel from "../Inputs/InputLabel";
 import TextInput from "../Inputs/TextInput";
 
-// Here we should have the CheckBox group layout with validation and error handling.
-// Need to uplift the info of the checkboxGroup to the parent component
-// Need to collect all the selections and send them up to the parent for collection
+// Here we have the CheckBox group layout with validation and error handling.
 
 const CheckboxGroup = ({
   error,
@@ -19,11 +17,11 @@ const CheckboxGroup = ({
     "Food and Drink",
     "Clothing",
     "Hygiene Products",
-    "Wellness/ Emotional Support",
+    "Wellness / Emotional Support",
     "Medical Help",
     "Social Worker/ Psychiatrist",
-    "Legal/Lawyer",
-    "Other",
+    "Legal / Lawyer",
+    "Other / Add Your Own",
   ];
   const handleCheckboxItems = (e) => {
     setCheckboxItems((prev) =>
@@ -38,8 +36,7 @@ const CheckboxGroup = ({
   const [otherHelp, setOtherHelp] = useState("");
 
   useEffect(() => {
-    //console.log(checkboxItems); // For checking if it actually works
-    onUpdate([...checkboxItems]);
+    onUpdate([...checkboxItems]); //Updates and lifts states to parent component everytime we checkboxItems change.
   }, [checkboxItems]);
 
   useEffect(() => {
