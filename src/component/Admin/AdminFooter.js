@@ -118,11 +118,6 @@ function AdminFooter() {
                     </a>
                   </li> */}
                   <li class="mb-4">
-                    <p class="">
-                      Location: New York, Florida, Maryland, International
-                    </p>
-                  </li>
-                  <li class="mb-4">
                     <a href="" class="hover:underline">
                       (702) 907 - 7390
                     </a>

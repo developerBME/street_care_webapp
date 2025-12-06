@@ -13,12 +13,13 @@ const iconLinks = [
     label: "Facebook",
     link: "https://www.facebook.com/StreetCareOrg/",
   },
-  {
-    id: 2,
-    icon: RiTwitterXLine,
-    label: "X- Twitter",
-    link: "https://twitter.com/StreetCareOrg",
-  },
+  // Remove Twitter from Footer.
+  // {
+  //   id: 2,
+  //   icon: RiTwitterXLine,
+  //   label: "X- Twitter",
+  //   link: "https://twitter.com/StreetCareOrg",
+  // },
   {
     id: 3,
     icon: BsInstagram,
@@ -87,13 +88,16 @@ function Footer() {
                   })}
                 </div>
               </li>
-              <li class="mb-4">
+              <li className="mb-4">
                 <div className="flex mt-4 space-x-4 md:mt-0 text-sm">
                   <a href="tel:+13477191134" className="hover:text-gray-400">
                     (347) 719-1134
                   </a>
                   <span>|</span>
-                  <a href="mailto:info@streetcare.us" className="hover:text-gray-400">
+                  <a
+                    href="mailto:info@streetcare.us"
+                    className="hover:text-gray-400"
+                  >
                     info@streetcare.us
                   </a>
                 </div>
@@ -128,11 +132,6 @@ function Footer() {
                       Contact
                     </a>
                   </li> */}
-                  <li className="mb-4">
-                    <p className="">
-                      Location: New York, Florida, Maryland, International
-                    </p>
-                  </li>
                   <li className="mb-4">
                     <a href="" className="hover:underline">
                       {/* (702) 907 - 7390 */}
@@ -187,7 +186,9 @@ function Footer() {
         <hr className=" bg-gray-800 mx-4" />
         <div className="px-4 pt-6 pb-12 sm:py-6 bg-nav md:flex md:items-center md:justify-between">
           <span className="text-sm text-gray-300 sm:text-center"></span>
-          <div className=" float-right text-white space-x-5 ">Terms & Policies</div>
+          <div className=" float-right text-white space-x-5 ">
+            Terms & Policies
+          </div>
         </div>
       </div>
     </footer>
