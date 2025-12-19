@@ -11,7 +11,7 @@ const Checkbox = ({
   SetIsOtherChecked,
   interaction,
 }) => {
-  if (name !== "Other") {
+  if (name !== "Other / Add Your Own") {
     return (
       <>
         <div className=" justify-end items-end inline-flex ">

@@ -31,6 +31,15 @@ import collectionMapping from "../../utils/firestoreCollections";
 import { chipList } from "../../lib/constants/chipList";
 import { stateAbbreviations } from "../../lib/constants/stateAbbreviations";
 
+// Utility function to get current timezone abbreviation
+const getCurrentTimezone = () => {
+  return new Intl.DateTimeFormat("en-US", {
+    timeZoneName: "short",
+  })
+    .formatToParts(new Date())
+    .find((part) => part.type === "timeZoneName")?.value || "";
+};
+
 
 // Moved to src/lib/constants/chipList.js
 
@@ -1267,7 +1276,7 @@ const Form = (hrid) => {
             <div className="grid grid-cols-2 space-x-4">
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
-                  Start Date-Time*
+                  Start Date-Time* ({getCurrentTimezone()})
                 </p>
                 <DatePicker
                   selected={startDate}
@@ -1310,7 +1319,7 @@ const Form = (hrid) => {
               </div>
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
-                  End Date-Time*
+                  End Date-Time* ({getCurrentTimezone()})
                 </p>
                 <DatePicker
                   selected={endDate}

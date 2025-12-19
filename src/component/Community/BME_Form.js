@@ -13,6 +13,15 @@ import collectionMapping from "../../utils/firestoreCollections";
 
 const bmeEvents_collection = collectionMapping.bmeEvents;
 
+// Utility function to get current timezone abbreviation
+const getCurrentTimezone = () => {
+  return new Intl.DateTimeFormat("en-US", {
+    timeZoneName: "short",
+  })
+    .formatToParts(new Date())
+    .find((part) => part.type === "timeZoneName")?.value || "";
+};
+
 const CustomInput = ({ value, onClick, onChange, id, className }) => (
   <div>
     <input
@@ -411,7 +420,7 @@ const BME_Form = () => {
             <div className="grid grid-cols-2 space-x-4">
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
-                  Start DateTime*
+                  Start DateTime* ({getCurrentTimezone()})
                 </p>
                 <DatePicker
                   selected={startDate}
@@ -438,7 +447,7 @@ const BME_Form = () => {
               </div>
               <div className="space-y-1.5">
                 <p className="font-semibold font-['Inter'] text-[15px]">
-                  End DateTime*
+                  End DateTime* ({getCurrentTimezone()})
                 </p>
                 <DatePicker
                   selected={endDate}
