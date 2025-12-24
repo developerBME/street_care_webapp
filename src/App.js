@@ -261,7 +261,7 @@ function App() {
             <Route path="/list" element={<ListUser />} />
             <Route
               path="/profile/visitlogform/:id"
-              element={<PersonalOutForm />}
+              element={<InteractionLogForm />}
             />
             <Route path="/myvisitlogs" element={<MoreVisitLogs />} />
 
