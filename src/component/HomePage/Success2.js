@@ -203,7 +203,7 @@ function Success2() {
                 //   const user = fAuth.currentUser;
 
                 //   if (user) {
-                //     navigate("/profile/personaloutform");
+                //     navigate("/profile/interactionLogForm");
                 //   } else {
                 //     navigate("/login"); // or show a message
                 //   }
