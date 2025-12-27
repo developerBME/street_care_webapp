@@ -40,6 +40,7 @@ function Success2() {
               </a>
             </span>*/}
           </div>
+          {/* We'll be enabling this following on Monday.*/}
           {/* <div className="self-stretch font-bricolage text-[18px] font-small ">
             <p>
               Learn more about{" "}
