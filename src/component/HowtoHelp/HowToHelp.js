@@ -19,6 +19,7 @@ import badge3 from "../../images/badge3.png";
 import badge4 from "../../images/badge4.png";
 import badge5 from "../../images/badge5.png";
 import badge6 from "../../images/badge6.png";
+import useSuccessMetrics from "../../utils/successMetrics";
 
 /* ================= POPUP ================= */
 const MEMBERSHIP_URL = "https://streetcare.us/chapter-membership-form/";
@@ -396,6 +397,7 @@ const renderStepContent = (selectedStep) => {
 function HowToHelp() {
   const [selectedStep, setSelectedStep] = useState(1);
   const [showPopup, setShowPopup] = useState(false);
+  const { isLoading, error, metrics } = useSuccessMetrics();
 
   const handleSelectStep = (step) => {
     setSelectedStep(step);
@@ -461,9 +463,10 @@ function HowToHelp() {
                 </div>
                 <div className="font-dmsans text-1 text-grey-300 font-normal">
                   We’ve created a simple guide on how you can contribute to the
-                  help homeless. Join our team of 700+ members and contribute in
-                  your own way. Over 35% of our volunteers are first-time
-                  volunteers.
+                  help homeless. Join our team of{" "}
+                  {metrics.TotalVolunteers.toLocaleString()}+ members and
+                  contribute in your own way. Over 35% of our volunteers are
+                  first-time volunteers.
                 </div>
               </div>
               {/* Desktop screen */}
