@@ -42,12 +42,12 @@ function useSuccessMetrics() {
           });
         } else {
           console.log("No metrics documents found. Using default values.");
-          // If no documents are found, metrics will retain their initial 0 values
+          // If no documents are found, metrics will retain default values.
         }
       } catch (err) {
         console.error("Error fetching latest metrics:", err);
         setError("Failed to fetch metrics.");
-        // Metrics will retain initial 0 values on error
+        // Metrics will retain default values on error
       } finally {
         setIsLoading(false);
       }
