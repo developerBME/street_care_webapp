@@ -15,6 +15,7 @@ const COLLECTIONS = {
     visitLogsBookNew: process.env.REACT_APP_MAIN_VISIT_LOG_NEW_COLLECTION,
     helpRequestsInteractionLog: process.env.REACT_APP_HELP_REQUEST_COLLECTION,
     interactionLog: process.env.REACT_APP_INTERACTION_LOG_COLLECTION,
+    metrics: process.env.REACT_APP_METRICS_COLLECTION,
   },
   development: {
     users: process.env.REACT_APP_USERS_COLLECTION,
@@ -33,6 +34,7 @@ const COLLECTIONS = {
     helpRequestsInteractionLog:
       process.env.REACT_APP_HELP_REQUEST_COLLECTION_DEV,
     interactionLog: process.env.REACT_APP_INTERACTION_LOG_COLLECTION_DEV,
+    metrics: process.env.REACT_APP_METRICS_COLLECTION_DEV,
   },
 };
 

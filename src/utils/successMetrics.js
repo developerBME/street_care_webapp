@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { db } from "../component/firebase";
-import { collection, query, orderBy, limit, getDocs } from "firebase/firestore"; // Import necessary Firestore functions
+import { collection, query, orderBy, limit, getDocs } from "firebase/firestore";
+import collectionMapping from "./firestoreCollections";
 
 function useSuccessMetrics() {
   const [isLoading, setIsLoading] = useState(true);
@@ -18,7 +19,7 @@ function useSuccessMetrics() {
   useEffect(() => {
     const fetchLatestMetrics = async () => {
       try {
-        const metricsCollectionRef = collection(db, "Metrics");
+        const metricsCollectionRef = collection(db, collectionMapping.metrics);
         const q = query(
           metricsCollectionRef,
           orderBy("TimeStamp", "desc"), // Order by TimeStamp descending to get the latest
