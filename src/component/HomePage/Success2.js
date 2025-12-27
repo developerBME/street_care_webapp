@@ -29,28 +29,34 @@ function Success2() {
           </div>
           <div className="self-stretch">
             <span className="text-neutral-900 text-[24px] font-medium leading-10">
-              We've recently achieved the 2023 Platinum Seal from{" "}
+              Street Care and Bright Mind have expanded national university
+              engagement, connecting with 88 campuses and securing
+              collaborations with Northeastern, UT Dallas, and Stanford.{" "}
             </span>
-            <span className="text-violet-600 text-[24px] font-medium leading-10">
-              <a href="https://candid.org/" target="_blank">
+            {/* Saving the Hyperlink css for later.*/}
+            {/* <span className="text-violet-600 text-[24px] font-medium leading-10">
+              <a href="https://example.com" target="_blank">
                 Candid
               </a>
-            </span>
-            <span className="text-neutral-900 text-[24px] font-medium leading-10">
-              ! This is our commitment to transparency and accountability in all
-              we do.
-            </span>
+            </span>*/}
           </div>
           <div className="self-stretch font-bricolage text-[18px] font-small ">
             <p>
-              We are excited to share the work our nonprofit does through our
+              Learn more about{" "}
               <a
                 href="https://brightmindenrichment.org/about-us/"
                 target="_blank"
                 className="text-violet-600 underline"
               >
-                {" "}
-                Nonprofit Profile{" "}
+                The new grant funding
+              </a>
+              {" and "}
+              <a
+                href="https://brightmindenrichment.org/about-us/"
+                target="_blank"
+                className="text-violet-600 underline"
+              >
+                Volunteer training.
               </a>
             </p>
           </div>
