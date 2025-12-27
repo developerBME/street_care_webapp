@@ -54,7 +54,7 @@ function Success2() {
               </a>
             </p>
           </div>
-        </div> 
+        </div>
       </div>
       {/* Grid */}
 
@@ -68,7 +68,7 @@ function Success2() {
               <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
                 <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
                   {/* {helpedPeople} */}
-                  1500+
+                  12,500+
                 </div>
               </div>
             </div>
@@ -82,7 +82,7 @@ function Success2() {
             <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
               <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
                 <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
-                  700+
+                  900+
                 </div>
               </div>
             </div>
@@ -96,7 +96,7 @@ function Success2() {
             <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
               <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
                 <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
-                  74000+
+                  81,000+
                 </div>
               </div>
             </div>
@@ -111,7 +111,7 @@ function Success2() {
             <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
               <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
                 <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
-                  2300+
+                  11,000+
                 </div>
               </div>
             </div>
@@ -125,7 +125,7 @@ function Success2() {
               <div className=" px-5 xl:px-8 w-fit py-2 bg-white rounded-[100px]">
                 <div className="text-violet-950  font-bricolage text-[28px] font-normal leading-[64px] whitespace-nowrap">
                   {/* {donations} */}
-                   50 Million+ People
+                  67 Million+ People
                 </div>
               </div>
             </div>
@@ -141,7 +141,7 @@ function Success2() {
                 <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
                   {/* {donations} */}
                   {/* 4.9/5 */}
-                  1000+
+                  1,800+
                 </div>
               </div>
             </div>
