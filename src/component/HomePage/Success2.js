@@ -2,12 +2,12 @@ import Campaign from "../../images/campaign.svg";
 import Outreach from "../../images/outreach.png";
 import CustomButton from "../Buttons/CustomButton";
 import { useNavigate } from "react-router-dom";
-import collectionMapping from "../../utils/firestoreCollections";
-
+import useSuccessMetrics from "../../utils/successMetrics";
 import { getAuth } from "firebase/auth";
 
 function Success2() {
   const navigate = useNavigate();
+  const { isLoading, error, metrics } = useSuccessMetrics();
 
   return (
     <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
@@ -40,7 +40,7 @@ function Success2() {
               </a>
             </span>*/}
           </div>
-          <div className="self-stretch font-bricolage text-[18px] font-small ">
+          {/* <div className="self-stretch font-bricolage text-[18px] font-small ">
             <p>
               Learn more about{" "}
               <a
@@ -59,7 +59,7 @@ function Success2() {
                 Volunteer training.
               </a>
             </p>
-          </div>
+          </div>*/}
         </div>
       </div>
       {/* Grid */}
@@ -73,8 +73,7 @@ function Success2() {
             <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto ">
               <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
                 <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
-                  {/* {helpedPeople} */}
-                  12,500+
+                  {metrics.HomelessPeopleAided.toLocaleString()}+
                 </div>
               </div>
             </div>
@@ -102,7 +101,7 @@ function Success2() {
             <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
               <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
                 <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
-                  81,000+
+                  {metrics.ItemsShared.toLocaleString()}+
                 </div>
               </div>
             </div>
@@ -117,7 +116,7 @@ function Success2() {
             <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
               <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
                 <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
-                  11,000+
+                  {metrics.PeopleMentored.toLocaleString()}+
                 </div>
               </div>
             </div>
@@ -130,8 +129,7 @@ function Success2() {
             <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
               <div className=" px-5 xl:px-8 w-fit py-2 bg-white rounded-[100px]">
                 <div className="text-violet-950  font-bricolage text-[28px] font-normal leading-[64px] whitespace-nowrap">
-                  {/* {donations} */}
-                  67 Million+ People
+                  {metrics.TotalOutreach.toLocaleString()} Million+ People
                 </div>
               </div>
             </div>
@@ -145,9 +143,8 @@ function Success2() {
             <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
               <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
                 <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
-                  {/* {donations} */}
                   {/* 4.9/5 */}
-                  1,800+
+                  {metrics.ChapterMembers.toLocaleString()}+
                 </div>
               </div>
             </div>
