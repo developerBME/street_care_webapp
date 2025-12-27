@@ -93,11 +93,14 @@ function GetVerifiedPopup({ open, onClose }) {
         >
           ×
         </button>
-        <p className="m-0 text-xs font-bold tracking-wide text-[#2563EB]">NOW AVAILABLE</p>
+        <p className="m-0 text-xs font-bold tracking-wide text-[#2563EB]">
+          NOW AVAILABLE
+        </p>
         <h2 className="mt-1 mb-2 text-2xl font-bold">Get verified!</h2>
         <p className="text-sm leading-snug">
-          Profile verification will allow anyone who is verified to post upcoming
-          events and document their interactions with homeless individuals.
+          Profile verification will allow anyone who is verified to post
+          upcoming events and document their interactions with homeless
+          individuals.
         </p>
         <button
           onClick={handleCTA}
@@ -128,7 +131,9 @@ const renderStepTitle = (step, selectedStep) => {
             Step {step}
           </div>
           <div className="font-dmsans text-[24px] leading-8 text-[#616161]">
-            <div className={`${selectedStep === step ? "text-black" : ""} md:w-1/2`}>
+            <div
+              className={`${selectedStep === step ? "text-black" : ""} md:w-1/2`}
+            >
               Join an Outreach
             </div>
           </div>
@@ -141,7 +146,9 @@ const renderStepTitle = (step, selectedStep) => {
             Step {step}
           </div>
           <div className="font-dmsans text-[24px] leading-8 text-[#616161]">
-            <div className={`${selectedStep === step ? "text-black" : ""} md:w-1/2`}>
+            <div
+              className={`${selectedStep === step ? "text-black" : ""} md:w-1/2`}
+            >
               Prepare an Outreach
             </div>
           </div>
@@ -154,7 +161,9 @@ const renderStepTitle = (step, selectedStep) => {
             Step {step}
           </div>
           <div className="font-dmsans text-[24px] leading-8 text-[#616161]">
-            <div className={`${selectedStep === step ? "text-black" : ""} md:w-1/2`}>
+            <div
+              className={`${selectedStep === step ? "text-black" : ""} md:w-1/2`}
+            >
               Attend Outreach
             </div>
           </div>
@@ -167,7 +176,9 @@ const renderStepTitle = (step, selectedStep) => {
             Step {step}
           </div>
           <div className="font-dmsans text-[24px] leading-8 text-[#616161]">
-            <div className={`${selectedStep === step ? "text-black" : ""} md:w-1/2`}>
+            <div
+              className={`${selectedStep === step ? "text-black" : ""} md:w-1/2`}
+            >
               Document your Interaction
             </div>
           </div>
@@ -190,7 +201,8 @@ const renderStepContent = (selectedStep) => {
               </div>
               <div className="text-[16px] font-dmsans text-[#181818] leading-6">
                 With StreetCare, you can sign up for existing outreaches or
-                create an outreach for any help request where you can provide assistance.
+                create an outreach for any help request where you can provide
+                assistance.
                 <br />
                 <br />
                 Outreaches are created by users who are willing to help for a
@@ -236,9 +248,7 @@ const renderStepContent = (selectedStep) => {
               </div>
             </div>
             <div className="flex w-full justify-end">
-              <div>
-                {/* <img alt="" src={howtohelp} /> */}
-              </div>
+              <div>{/* <img alt="" src={howtohelp} /> */}</div>
             </div>
           </div>
           <div className="px-10 pt-8">
@@ -345,12 +355,36 @@ const renderStepContent = (selectedStep) => {
             </div>
           </div>
           <div className="flex flex-wrap px-10 hidden md:flex">
-            <img alt="" src={badge1} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]" />
-            <img alt="" src={badge2} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]" />
-            <img alt="" src={badge3} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]" />
-            <img alt="" src={badge4} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]" />
-            <img alt="" src={badge5} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]" />
-            <img alt="" src={badge6} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]" />
+            <img
+              alt=""
+              src={badge1}
+              className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]"
+            />
+            <img
+              alt=""
+              src={badge2}
+              className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]"
+            />
+            <img
+              alt=""
+              src={badge3}
+              className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]"
+            />
+            <img
+              alt=""
+              src={badge4}
+              className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]"
+            />
+            <img
+              alt=""
+              src={badge5}
+              className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]"
+            />
+            <img
+              alt=""
+              src={badge6}
+              className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 max-w-[146px] max-h-[132px]"
+            />
           </div>
         </div>
       );
@@ -398,7 +432,7 @@ function HowToHelp() {
               </div>
               <div className="flex w-full ">
                 <div className="bg-gradient-to-br from-[#D3F2CE] to-[#E7E7E7] p-8 w-full rounded-l-2xl">
-                  <span className="font-dmsans text-[45px]">650k+</span>
+                  <span className="font-dmsans text-[45px]">771k+</span>
                   <br />
                   <span className="font-dmsans text-[12px]">
                     Total homeless population in United States
@@ -426,9 +460,10 @@ function HowToHelp() {
                   How to help with Street Care
                 </div>
                 <div className="font-dmsans text-1 text-grey-300 font-normal">
-                We’ve created a simple guide on how you can contribute to the help homeless.
-                 Join our team of 700+ members and contribute in your own way. 
-                 Over 35% of our volunteers are first-time volunteers.
+                  We’ve created a simple guide on how you can contribute to the
+                  help homeless. Join our team of 700+ members and contribute in
+                  your own way. Over 35% of our volunteers are first-time
+                  volunteers.
                 </div>
               </div>
               {/* Desktop screen */}
@@ -501,10 +536,9 @@ function HowToHelp() {
         </div>
 
         <div className=" w-[95%] md:w-[90%] lg:w-[79%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
-          
           {/* <div className="items-center justify-center p-8 lg:p-16 h-full w-full rounded-2xl bg-[#F7F7F7] "> */}
-            {/* <div className="flex-col justify-start items-start gap-10 inline-flex"> */}
-              {/* <div className="space-y-12">
+          {/* <div className="flex-col justify-start items-start gap-10 inline-flex"> */}
+          {/* <div className="space-y-12">
                 <div className="font-bricolage text-[57px] text-[#273164] font-medium">
                   What else can I do to help?
                 </div>
@@ -555,7 +589,7 @@ function HowToHelp() {
                   </div>
                 </div>
               </div> */}
-            {/* </div> */}
+          {/* </div> */}
           {/* </div> */}
         </div>
         {/* <div className="  w-[95%] md:w-[90%] lg:w-[75%] mx-2 lg:mx-40 mt-8 mb-20 rounded-2xl bg-white text-black ">
@@ -572,12 +606,9 @@ function HowToHelp() {
               name="buttondefault"
             />
           </div> */}
-      
       </div>
     </div>
   );
 }
 
 export default HowToHelp;
-
-
