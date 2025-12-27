@@ -34,7 +34,7 @@ const COLLECTIONS = {
     helpRequestsInteractionLog:
       process.env.REACT_APP_HELP_REQUEST_COLLECTION_DEV,
     interactionLog: process.env.REACT_APP_INTERACTION_LOG_COLLECTION_DEV,
-    metrics: process.env.REACT_APP_METRICS_COLLECTION_DEV,
+    metrics: process.env.REACT_APP_METRICS_COLLECTION || "Metrics",
   },
 };
 

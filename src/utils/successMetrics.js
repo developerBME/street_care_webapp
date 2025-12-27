@@ -10,7 +10,7 @@ function useSuccessMetrics() {
     TimeStamp: null,
     HomelessPeopleAided: 12500,
     TotalVolunteers: 900,
-    ItemsShared: 81000,
+    ItemsShared: -81000,
     PeopleMentored: 11000,
     TotalOutreach: 67,
     ChapterMembers: 1800,

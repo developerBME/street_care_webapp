@@ -40,7 +40,7 @@ function Success2() {
               </a>
             </span>*/}
           </div>
-          {/* We'll be enabling this following on Monday.*/}
+          {/* We'll be enabling the following on Monday 2025-12-29.*/}
           {/* <div className="self-stretch font-bricolage text-[18px] font-small ">
             <p>
               Learn more about{" "}
