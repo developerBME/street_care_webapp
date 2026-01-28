@@ -11,6 +11,7 @@ import {
 import { db } from "../firebase";
 import ApprovalCardOutreachEvents from "./ApprovalCardOutreachEvents";
 import ApprovalCardVisitlogs from "./ApprovalCardVisitlogs";
+import ApprovalCardHelpRequests from "./ApprovalCardHelpRequests";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import ErrorMessage from "../ErrorMessage";
 import infoIcon from "../../images/info_icon.png";
@@ -22,11 +23,13 @@ import collectionMapping from "../../utils/firestoreCollections";
 
 const outreachEvents_collection = collectionMapping.outreachEvents;
 const visitLogsNew_collection = collectionMapping.visitLogsBookNew;
+const helpRequests_collection = collectionMapping.helpRequestsInteractionLog;
 
 const PostApprovals = () => {
   const [pendingPosts, setPendingPosts] = useState({
     outreaches: [],
     visitLogs: [],
+    helpRequests: [],
   });
   const [activeTab, setActiveTab] = useState("outreaches");
   const [selectedItems, setSelectedItems] = useState([]);
@@ -36,11 +39,16 @@ const PostApprovals = () => {
   const [filteredPosts, setFilteredPosts] = useState({
     outreaches: [],
     visitLogs: [],
+    helpRequests: [],
   });
   const [sortOption, setSortOption] = useState("Most Recent");
   const postsPerPage = 6;
   const searchRef = useRef("");
-
+  const collectionMap = {
+    outreaches: outreachEvents_collection,
+    visitLogs: visitLogsNew_collection,
+    helpRequests: helpRequests_collection,
+  };
   useEffect(() => {
     const fetchPendingPosts = async () => {
       try {
@@ -85,7 +93,27 @@ const PostApprovals = () => {
           })
         );
 
-        setPendingPosts({ outreaches, visitLogs });
+        const helpRequestQuery = query(
+          collection(db, helpRequests_collection),
+          where("status", "==", "pending"),
+          orderBy("lastModifiedTimestamp","desc")
+        );
+
+        const helpRequestSnapshot = await getDocs(helpRequestQuery);
+
+        const helpRequests = await Promise.all(
+          helpRequestSnapshot.docs.map(async (doc) => {
+            const post = { id: doc.id, ...doc.data() };
+            const userDetails = await fetchUserTypeDetails(post.uid);
+            return {
+              ...post,
+              userName: userDetails?.username || "Unknown User",
+              userType: userDetails?.type || "",
+            };
+          })
+        );
+
+        setPendingPosts({ outreaches, visitLogs, helpRequests });
         setIsError(false);
       } catch (error) {
         console.error("Error fetching pending posts:", error);
@@ -138,13 +166,19 @@ const PostApprovals = () => {
               selectedButton={false}
               onClick={() => {}}
             />
-          ) : (
+          ) : activeTab == "visitLogs" ? (
             <ApprovalCardVisitlogs
               postData={post}
               userName={post.userName || "Unknown User"}
               onToggleSelect={() => {}}
               isSelected={false}
               isVisitLogs={true}
+              selectedButton={false}
+              onClick={() => {}}
+            />
+          ) : (
+            <ApprovalCardHelpRequests
+              postData={post}
               selectedButton={false}
               onClick={() => {}}
             />
@@ -178,11 +212,7 @@ const PostApprovals = () => {
   // Approve selected posts
   const handleApproveSelected = async () => {
     try {
-      const isVisitLog = activeTab === "visitLogs";
-      // Use only the new collection for each tab
-      const newCollection = isVisitLog
-        ? visitLogsNew_collection
-        : outreachEvents_collection;
+      const newCollection = collectionMap[activeTab];
 
       for (const itemID of selectedItems) {
         const docRefNew = doc(db, newCollection, itemID);
@@ -212,10 +242,7 @@ const PostApprovals = () => {
   // Reject selected posts
   const handleRejectSelected = async () => {
     try {
-      const collectionName =
-        activeTab === "outreaches"
-          ? outreachEvents_collection
-          : visitLogsNew_collection;
+      const collectionName = collectionMap[activeTab];
 
       for (const itemId of selectedItems) {
         await updateDoc(doc(db, collectionName, itemId), {
@@ -242,37 +269,74 @@ const PostApprovals = () => {
 
   //Search Function
   const searchChange = () => {
-    const searchValue = searchRef.current.value.toLowerCase();
-    const filtered = {
-      ...filteredPosts,
-      [activeTab]: pendingPosts[activeTab].filter(
-        (x) =>
-          x.title?.toLowerCase().includes(searchValue) ||
-          (x.userName && x.userName.toLowerCase().includes(searchValue)) ||
-          // (x.location && x.location.city.toLowerCase().includes(searchValue)) ||
-          (x.location &&
-            x.location.city &&
-            x.location.city.toLowerCase().includes(searchValue)) ||
-          (x.city && x.city.toLowerCase().includes(searchValue)) ||
-          x.peopleHelpedDescription?.toLowerCase().includes(searchValue)
-      ),
-    };
+  const searchValue = searchRef.current.value.toLowerCase();
 
-    setFilteredPosts(filtered);
-    setCurrentPage(1); // Reset to the first page after search
-  };
+  const filtered = pendingPosts[activeTab].filter((x) => {
+    if (activeTab === "outreaches") {
+      return (
+        x.title?.toLowerCase().includes(searchValue) ||
+        x.userName?.toLowerCase().includes(searchValue) ||
+        x.location?.city?.toLowerCase().includes(searchValue)
+      );
+    }
+
+    if (activeTab === "visitLogs") {
+      return (
+        x.peopleHelpedDescription?.toLowerCase().includes(searchValue) ||
+        x.userName?.toLowerCase().includes(searchValue) ||
+        x.city?.toLowerCase().includes(searchValue)
+      );
+    }
+
+    // ✅ HELP REQUESTS (THIS WAS MISSING)
+    if (activeTab === "helpRequests") {
+      return (
+        x.firstName?.toLowerCase().includes(searchValue) ||
+        x.interactionLogFirstName?.toLowerCase().includes(searchValue) ||
+        x.additionalDetails?.toLowerCase().includes(searchValue) ||
+        x.locationLandmark?.toLowerCase().includes(searchValue) ||
+        x.helpProvidedCategory?.some((c) =>
+          c.toLowerCase().includes(searchValue)
+        ) ||
+        x.furtherHelpCategory?.some((c) =>
+          c.toLowerCase().includes(searchValue)
+        )
+      );
+    }
+
+    return false;
+  });
+
+  setFilteredPosts((prev) => ({
+    ...prev,
+    [activeTab]: filtered,
+  }));
+
+  setCurrentPage(1); // reset to the first page
+};
+
 
   // Sort By Function
   const handleSortChange = (event) => {
     const selectedOption = event.target.value;
     setSortOption(selectedOption);
-
+    setCurrentPage(1); 
     let sortedData = [...filteredPosts[activeTab]];
 
     // Determine the correct date field based on the active tab
-    const dateField = activeTab === "outreaches" ? "eventDate" : "timeStamp";
-    const alphaSortedField =
-      activeTab === "outreaches" ? "title" : "peopleHelpedDescription";
+    let dateField;
+    let alphaSortedField;
+
+    if (activeTab === "outreaches") {
+      dateField = "eventDate";
+      alphaSortedField = "title";
+    } else if (activeTab === "visitLogs") {
+      dateField = "timeStamp";
+      alphaSortedField = "peopleHelpedDescription";
+    } else {
+      dateField = "lastModifiedTimestamp";
+      alphaSortedField = "firstName";
+    }
 
     if (selectedOption === "Most Recent") {
       sortedData.sort((a, b) => {
@@ -310,10 +374,7 @@ const PostApprovals = () => {
 
   const handleAccept = async () => {
     try {
-      const collectionName =
-        activeTab === "outreaches"
-          ? outreachEvents_collection
-          : visitLogsNew_collection;
+      const collectionName = collectionMap[activeTab];
       await updateDoc(doc(db, collectionName, selectedPost.id), {
         status: "approved",
       });
@@ -335,10 +396,7 @@ const PostApprovals = () => {
 
   const handleReject = async () => {
     try {
-      const collectionName =
-        activeTab === "outreaches"
-          ? outreachEvents_collection
-          : visitLogsNew_collection;
+      const collectionName = collectionMap[activeTab];
       await updateDoc(doc(db, collectionName, selectedPost.id), {
         status: "rejected",
       });
@@ -414,10 +472,10 @@ const PostApprovals = () => {
       );
     }
 
-    const handleTabChange = (tab) => {
-      setActiveTab(tab);
-      setCurrentPage(1);
-    };
+    // const handleTabChange = (tab) => {
+    //   setActiveTab(tab);
+    //   setCurrentPage(1);
+    // };
 
     return (
       <div className="flex items-center space-x-1 text-sm">
@@ -577,9 +635,9 @@ const PostApprovals = () => {
           <div className="pt-4 pb-3">
             <div className="w-full flex justify-between items-center gap-[48px]">
               {/* Tabs Container */}
-              <div className="flex items-start bg-[#EEEEEE] rounded-[16px] w-[373px] h-[48px]">
+              <div className="flex items-start bg-[#EEEEEE] rounded-[16px]  h-[48px]">
                 <button
-                  className={`flex justify-center items-center px-[16px] py-[12px] w-[186.5px] h-[48px] rounded-[16px] font-medium ${
+                  className={`flex justify-center items-center px-4 min-w-[140px] h-[48px] rounded-[16px] font-medium ${
                     activeTab === "outreaches"
                       ? "bg-[#6840E0] text-white" // Active Tab Style
                       : "bg-transparent text-black" // Inactive Tab Style
@@ -589,7 +647,7 @@ const PostApprovals = () => {
                   Outreaches ({pendingPosts.outreaches.length})
                 </button>
                 <button
-                  className={`flex justify-center items-center px-[16px] py-[12px] w-[186.5px] h-[48px] rounded-[16px] font-medium ${
+                  className={`flex justify-center items-center px-4 min-w-[140px] h-[48px] rounded-[16px] font-medium ${
                     activeTab === "visitLogs"
                       ? "bg-[#6840E0] text-white" // Active Tab Style
                       : "bg-transparent text-black" // Inactive Tab Style
@@ -597,6 +655,16 @@ const PostApprovals = () => {
                   onClick={() => handleTabChange("visitLogs")}
                 >
                   Interaction Logs ({pendingPosts.visitLogs.length})
+                </button>
+                <button
+                  className={`flex justify-center items-center px-4 min-w-[140px] h-[48px] rounded-[16px] font-medium ${
+                    activeTab === "helpRequests"
+                      ? "bg-[#6840E0] text-white" // Active Tab Style
+                      : "bg-transparent text-black" // Inactive Tab Style
+                  }`}
+                  onClick={() => handleTabChange("helpRequests")}
+                >
+                  Help Requests ({pendingPosts.helpRequests.length})
                 </button>
               </div>
 
@@ -633,13 +701,22 @@ const PostApprovals = () => {
                       selectedButton={true}
                       onClick={() => handleCardClick(post)}
                     />
-                  ) : (
+                  ) : activeTab === "visitLogs" ? (
                     <ApprovalCardVisitlogs
                       key={post.id}
                       postData={post}
                       onToggleSelect={toggleSelect}
                       isSelected={selectedItems.includes(post.id)}
                       isVisitLogs={true}
+                      selectedButton={true}
+                      onClick={() => handleCardClick(post)}
+                    />
+                  ) : (
+                    <ApprovalCardHelpRequests
+                      key={post.id}
+                      postData={post}
+                      onToggleSelect={toggleSelect}
+                      isSelected={selectedItems.includes(post.id)}
                       selectedButton={true}
                       onClick={() => handleCardClick(post)}
                     />
