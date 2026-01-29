@@ -91,7 +91,7 @@ function NoDisplayData({name,label}){
                         label="Explore Help Requests"
                         name="buttonlight"
                         onClick={() => {
-                            navigate("/AllHelpRequests");
+                            navigate("/allHelpRequests");
                     }}
                     />
                 </div>

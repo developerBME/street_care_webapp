@@ -25,6 +25,7 @@ const outreachEvents_collection = collectionMapping.outreachEvents;
 const users_collection = collectionMapping.users;
 const visitLogs_collection = collectionMapping.visitLogs;
 const visitLogsNew_collection = collectionMapping.visitLogsBookNew;
+const helpRequests_collection = collectionMapping.helpRequestsInteractionLog;
 
 const visitLogHelperFunction = async (visitLogSnap) => {
   try {
@@ -64,6 +65,44 @@ const visitLogHelperFunction = async (visitLogSnap) => {
     logEvent(
       "STREET_CARE_ERROR",
       `error on visitLogHelperFunction VisitLogCardService.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
+const helpRequestHelperFunction = async (helpRequestSnap) => {
+  try {
+    const docsArray = helpRequestSnap.docs ? helpRequestSnap.docs : [helpRequestSnap];
+
+    const toDateSafe = (value) => {
+      if (!value) return null;
+      if (typeof value.toDate === "function") return value.toDate();
+      if (value?.seconds) return new Date(value.seconds * 1000);
+      return null;
+    };
+
+    return docsArray.map((doc) => {
+      const helpRequestData = doc.data();
+      return {
+        id: doc.id,
+        interactionLogDocId: helpRequestData?.interactionLogDocId || "",
+        interactionLogFirstName: helpRequestData?.interactionLogFirstName || "",
+        firstName: helpRequestData?.firstName || "",
+        locationLandmark: helpRequestData?.locationLandmark || "",
+        helpProvidedCategory: helpRequestData?.helpProvidedCategory || [],
+        furtherHelpCategory: helpRequestData?.furtherHelpCategory || [],
+        additionalDetails: helpRequestData?.additionalDetails || "",
+        status: helpRequestData?.status || "",
+        isCompleted: helpRequestData?.isCompleted || false,
+        followUpTimestamp: toDateSafe(helpRequestData?.followUpTimestamp),
+        completedTimestamp: toDateSafe(helpRequestData?.completedTimestamp),
+        lastModifiedTimestamp: toDateSafe(helpRequestData?.lastModifiedTimestamp),
+      };
+    });
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on helpRequestHelperFunction VisitLogCardService.js- ${error.message}`
     );
     throw error;
   }
@@ -213,6 +252,42 @@ const descriptionFilter = (searchTerm, filterQuery) => {
   );
 };
 
+const helpRequestDescriptionFilter = (searchTerm, filterQuery) => {
+  return query(
+    filterQuery,
+    or(
+      and(
+        where("locationLandmark", ">=", searchTerm),
+        where("locationLandmark", "<=", searchTerm + "\uf8ff")
+      ),
+      and(
+        where("additionalDetails", ">=", searchTerm),
+        where("additionalDetails", "<=", searchTerm + "\uf8ff")
+      ),
+      and(
+        where("firstName", ">=", searchTerm),
+        where("firstName", "<=", searchTerm + "\uf8ff")
+      )
+    )
+  );
+};
+
+const helpRequestLocationFilter = (location, filterQuery) => {
+  return query(
+    filterQuery,
+    where("locationLandmark", ">=", location),
+    where("locationLandmark", "<=", location + "\uf8ff")
+  );
+};
+
+const helpRequestDateFilter = (startDate, endDate, filterQuery) => {
+  return query(
+    filterQuery,
+    where("lastModifiedTimestamp", ">=", startDate),
+    where("lastModifiedTimestamp", "<=", endDate)
+  );
+};
+
 const cityFilter = (city, filterQuery) => {
   return query(
     filterQuery,
@@ -329,6 +404,98 @@ export const fetchPublicVisitLogs = async (
     logEvent(
       "STREET_CARE_ERROR",
       `error on fetchVisitLogs VisitLogCardService.js- ${error.message}`
+    );
+    throw error;
+  }
+};
+
+export const fetchPublicHelpRequests = async (
+  searchValue,
+  location,
+  startDate,
+  endDate,
+  isDateFilter = false,
+  lastVisible = null,
+  pageSize = 6,
+  direction = "next",
+  pageHistory = []
+) => {
+  try {
+    let helpRequestQuery, totalHelpRequestRef;
+
+    if (!(startDate instanceof Date) || isNaN(startDate)) {
+      console.error("Invalid start date");
+      return;
+    }
+    if (!(endDate instanceof Date) || isNaN(endDate)) {
+      console.error("Invalid end date");
+      return;
+    }
+
+    helpRequestQuery = query(
+      collection(db, helpRequests_collection),
+      where("isPublic", "==", true),
+      orderBy("lastModifiedTimestamp", "desc")
+    );
+
+    totalHelpRequestRef = helpRequestQuery;
+
+    if (searchValue) {
+      totalHelpRequestRef = helpRequestDescriptionFilter(
+        searchValue,
+        totalHelpRequestRef
+      );
+    }
+
+    if (location) {
+      totalHelpRequestRef = helpRequestLocationFilter(
+        location,
+        totalHelpRequestRef
+      );
+    }
+
+    if (isDateFilter) {
+      totalHelpRequestRef = helpRequestDateFilter(
+        startDate,
+        endDate,
+        totalHelpRequestRef
+      );
+    }
+
+    helpRequestQuery = query(totalHelpRequestRef, limit(pageSize));
+
+    if (lastVisible && direction === "next") {
+      helpRequestQuery = query(helpRequestQuery, startAfter(lastVisible));
+    }
+
+    if (lastVisible && direction === "prev" && pageHistory.length > 2) {
+      helpRequestQuery = query(
+        helpRequestQuery,
+        startAfter(pageHistory[pageHistory.length - 3])
+      );
+    }
+
+    const totalRecords = await getCountFromServer(totalHelpRequestRef);
+    const helpRequestSnapshot = await getDocs(helpRequestQuery);
+    const helpRequests = await helpRequestHelperFunction(helpRequestSnapshot);
+    const lastDoc = helpRequestSnapshot.docs[helpRequestSnapshot.docs.length - 1];
+
+    if (direction === "next") {
+      pageHistory.push(lastDoc);
+    } else if (direction === "prev") {
+      pageHistory.pop();
+    }
+
+    return {
+      helpRequests,
+      lastVisible: lastDoc,
+      pageHistory,
+      totalRecords: totalRecords.data().count,
+    };
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on fetchPublicHelpRequests VisitLogCardService.js- ${error.message}`
     );
     throw error;
   }
@@ -472,6 +639,24 @@ export const fetchHomeVisitLogs = async () => {
   } catch (error) {
     console.error("Error fetching count:", error);
     return 0;
+  }
+};
+
+export const fetchHomeHelpRequests = async () => {
+  try {
+    const helpRequestRef = query(
+      collection(db, helpRequests_collection),
+      where("isPublic", "==", true),
+      orderBy("lastModifiedTimestamp", "desc"),
+      limit(3)
+    );
+
+    const snapshot = await getDocs(helpRequestRef);
+    const helpRequests = await helpRequestHelperFunction(snapshot);
+    return helpRequests;
+  } catch (error) {
+    console.error("Error fetching help requests:", error);
+    return [];
   }
 };
 

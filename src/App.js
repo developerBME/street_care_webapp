@@ -26,6 +26,7 @@ import OutreachSignup from "./component/Community/OutreachSignup";
 import AllOutreachEvents from "./component/AllOutreachEvents";
 import AllPastOutreachEvents from "./component/AllPastOutreachEvents";
 import AllOutreachVisitLog from "./component/AllOutreachVisitLog";
+import AllHelpRequests from "./component/HelpRequest/AllHelpRequests";
 import ScrollToTop from "./component/helper/ScrollToTop";
 import Not404 from "./component/404";
 import Newscard from "./component/HomePage/Newscard";
@@ -225,6 +226,7 @@ function App() {
               path="/allOutreachVisitLog"
               element={<AllOutreachVisitLog />}
             />
+            <Route path="/allHelpRequests" element={<AllHelpRequests />} />
             <Route
               path="profile/allSignedUpOutreaches"
               element={<AllSignedUpOutreaches />}
