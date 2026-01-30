@@ -45,13 +45,13 @@ const NavBar = (props) => {
     },
     {
       id: 2,
-      label: "Help Requests",
-      link: "/allHelpRequests",
+      label: "How to help",
+      link: "Howtohelp",
     },
     {
       id: 3,
-      label: "How to help",
-      link: "Howtohelp",
+      label: "Help Requests",
+      link: "/allHelpRequests",
     },
     {
       id: 4,

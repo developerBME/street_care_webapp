@@ -6,6 +6,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import HelpRequestCard from "./HelpRequestCard";
 import HelpRequestSkeleton from "../Skeletons/HelpRequestSkeleton";
 import { fetchPublicHelpRequests } from "../VisitLogCardService";
+import CustomButton from "../Buttons/CustomButton";
+import { getAuth } from "firebase/auth";
 
 const AllHelpRequests = () => {
   const navigate = useNavigate();
@@ -177,12 +179,21 @@ const AllHelpRequests = () => {
           </p>
         </div>
         <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
-          <div className="lg:flex justify-between items-center mb-6">
+          <div className="lg:flex justify-between items-center mb-6 gap-6">
             <div>
               <p className="font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] lg:mt-2">
                 Help Requests
               </p>
             </div>
+            <div className="flex items-center gap-4 mt-4 lg:mt-0">
+              <CustomButton
+                label="Create a Help Request"
+                name="buttondefault"
+              onClick={() => {
+                navigate("/profile/interactionLogForm");
+              }}
+            />
+          </div>
             <div className="flex items-center gap-4 mt-6 lg:mt-0">
               <label className="relative text-gray-400 focus-within:text-gray-600">
                 <input

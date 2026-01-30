@@ -5,6 +5,8 @@ import HelpRequestCard from "./HelpRequestCard";
 import HelpRequestSkeleton from "../Skeletons/HelpRequestSkeleton";
 import { fetchPublicHelpRequests } from "../VisitLogCardService";
 import ErrorMessage from "../ErrorMessage";
+import CustomButton from "../Buttons/CustomButton";
+import { getAuth } from "firebase/auth";
 
 const CommunityHelpRequests = () => {
   const navigate = useNavigate();
@@ -49,6 +51,15 @@ const CommunityHelpRequests = () => {
               <div className="text-[45px] font-medium font-dmsans">
                 Help Requests ({helpRequestsCount})
               </div>
+              <div className="my-2 flex-col justify-center items-center gap-2 inline-flex font-medium font-dmsans leading-tight self-stretch">
+                <CustomButton
+                  label="Create a Help Request"
+                  name="buttondefault"
+                onClick={() => {
+                  navigate("/profile/interactionLogForm");
+                }}
+              />
+            </div>
             </div>
             <div className="text-md font-medium font-dmsans text-[#181818] mt-2">
               Browse recent help requests submitted by community members.
