@@ -18,6 +18,8 @@ import infoIcon from "../../images/info_icon.png";
 import arrowBack from "../../images/arrowBack.png";
 import searchIcon from "../../images/search-icon-PostApproval.png";
 import { fetchUserTypeDetails } from "../EventCardService";
+import { fetchPendingHelpRequests } from "./HelpRequests.js"; 
+
 
 import collectionMapping from "../../utils/firestoreCollections";
 
@@ -36,6 +38,9 @@ const PostApprovals = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [helpLoaded, setHelpLoaded] = useState(false);
+const [helpLoading, setHelpLoading] = useState(false);
+
   const [filteredPosts, setFilteredPosts] = useState({
     outreaches: [],
     visitLogs: [],
@@ -93,27 +98,8 @@ const PostApprovals = () => {
           })
         );
 
-        const helpRequestQuery = query(
-          collection(db, helpRequests_collection),
-          where("status", "==", "pending"),
-          orderBy("lastModifiedTimestamp","desc")
-        );
 
-        const helpRequestSnapshot = await getDocs(helpRequestQuery);
-
-        const helpRequests = await Promise.all(
-          helpRequestSnapshot.docs.map(async (doc) => {
-            const post = { id: doc.id, ...doc.data() };
-            const userDetails = await fetchUserTypeDetails(post.uid);
-            return {
-              ...post,
-              userName: userDetails?.username || "Unknown User",
-              userType: userDetails?.type || "",
-            };
-          })
-        );
-
-        setPendingPosts({ outreaches, visitLogs, helpRequests });
+        setPendingPosts({ outreaches, visitLogs, helpRequests:[] });
         setIsError(false);
       } catch (error) {
         console.error("Error fetching pending posts:", error);
@@ -125,6 +111,34 @@ const PostApprovals = () => {
 
     fetchPendingPosts();
   }, []);
+
+  useEffect(() => {
+  const loadHelpRequests = async () => {
+    // only load when user opens the tab, and only once
+    if (activeTab !== "helpRequests" || helpLoaded) return;
+
+    try {
+      setHelpLoading(true);
+
+      const helpRequests = await fetchPendingHelpRequests();
+
+      setPendingPosts((prev) => ({
+        ...prev,
+        helpRequests,
+      }));
+
+      setHelpLoaded(true);
+    } catch (e) {
+      console.error("Error fetching help requests:", e);
+      setIsError(true);
+    } finally {
+      setHelpLoading(false);
+    }
+  };
+
+  loadHelpRequests();
+}, [activeTab, helpLoaded]);
+
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
@@ -288,7 +302,7 @@ const PostApprovals = () => {
       );
     }
 
-    // ✅ HELP REQUESTS (THIS WAS MISSING)
+    
     if (activeTab === "helpRequests") {
       return (
         x.firstName?.toLowerCase().includes(searchValue) ||
@@ -472,10 +486,7 @@ const PostApprovals = () => {
       );
     }
 
-    // const handleTabChange = (tab) => {
-    //   setActiveTab(tab);
-    //   setCurrentPage(1);
-    // };
+       const loadingForTab = activeTab === "helpRequests" ? helpLoading : isLoading;
 
     return (
       <div className="flex items-center space-x-1 text-sm">
