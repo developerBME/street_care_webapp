@@ -3,15 +3,33 @@ import { IoLogoGooglePlaystore } from "react-icons/io5";
 import { SiAppstore } from "@icons-pack/react-simple-icons";
 
 const MobileAppRedirect = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isGetAppOpen, setIsGetAppOpen] = useState(true);
+  const [ui, setUi] = useState({
+    modalOpen: false,
+    dismissed: false,
+  });
+
+  const toggleModal = () => {
+    setUi(prev => ({
+      ...prev,
+      modalOpen: !prev.modalOpen,
+    }));
+  };
+
+  const dismissWidget = (e) => {
+    e.stopPropagation();
+    setUi(prev => ({
+      ...prev,
+      modalOpen: false,
+      dismissed: true,
+    }));
+  };
 
   return (
     <div className="font-bricolage relative">
-      {isGetAppOpen && (
+      {!ui.dismissed && (
         <button
           className="w-[60px] h-[60px] flex flex-col items-center bg-nav text-white rounded-xl px-2 py-2 shadow-md shadow-gray-600 hover:shadow-lg hover:bg-[#504279] transition md:w-auto md:h-auto md:px-3 md:pt-1 md:pb-3"
-          onClick={() => setIsModalOpen(!isModalOpen)}
+          onClick={toggleModal}
         >
           <div className="relative block md:hidden w-20 h-20">
             <img
@@ -26,13 +44,11 @@ const MobileAppRedirect = () => {
             />
           </div>
 
+          {/* Dismiss button */}
           <span
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsModalOpen(false)
-              setIsGetAppOpen(false);
-            }}
+            onClick={dismissWidget}
             className="absolute -top-2 -right-2 w-5 h-5 flex items-center justify-center text-lg bg-black text-white rounded-full cursor-pointer hover:bg-gray-700 z-10"
+            aria-label="Dismiss"
           >
             ×
           </span>
@@ -56,10 +72,12 @@ const MobileAppRedirect = () => {
         </button>
       )}
 
-      {isModalOpen && (
+      {ui.modalOpen && (
         <div className="font-bricolage absolute bottom-10 md:bottom-16 right-10 md:right-20 bg-white rounded-xl py-5 px-3 shadow-md shadow-gray-600 w-55 overflow-visible">
           <button
-            onClick={() => setIsModalOpen(false)}
+            onClick={() =>
+              setUi(prev => ({ ...prev, modalOpen: false }))
+            }
             className="absolute -top-2 -right-2 w-5 h-5 flex items-center justify-center text-white text-lg bg-black rounded-full cursor-pointer hover:bg-gray-700 z-10"
           >
             ×
