@@ -23,3 +23,31 @@ export const getPageNumbersFormat = (windowSize, currPage, lastPage) => {
 
   return [...pageNums].sort((a, b) => a - b);
 };
+
+export const formatTimeStampDate = (firebaseTimestamp) => {
+  if (!firebaseTimestamp) return "";
+
+  const date = firebaseTimestamp.toDate();
+
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+  const year = date.getFullYear();
+
+  let hours = date.getHours();
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+
+  const ampm = hours >= 12 ? "PM" : "AM";
+
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  hours = hours.toString().padStart(2, "0");
+
+  // Dynamically get timezone abbreviation (EST/EDT/etc.)
+  const timeZone = Intl.DateTimeFormat("en-US", {
+    timeZoneName: "short",
+  })
+    .formatToParts(date)
+    .find((part) => part.type === "timeZoneName").value;
+
+  return `${month}/${day}/${year} ${hours}:${minutes}${ampm} ${timeZone} `;
+};

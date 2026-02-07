@@ -9,6 +9,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import UserTypeInfo from "./UserTypeInfo";
 import { getPageNumbersFormat } from "../utils/helperFns";
 import DummyDataButton from "./dummyDataScript";
+import DisplayInteractionLogCard from "./Community/DisplayInteractionLogCard";
 // import RenderPaginationBtns from "./HomePage/RenderPaginationBtns";
 // Refactor to use PageCheckpoints and think of a way to handle pages.
 const AllOutreachVisitLog = () => {
@@ -381,12 +382,13 @@ const AllOutreachVisitLog = () => {
             </div>
           ) : (
             <>
+              {/* <OutreachVisitLogCard /> */}
               <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
                 {filteredVisitLogs.length > 0 ? (
                   filteredVisitLogs.map((visitLogData) => (
-                    <OutreachVisitLogCard
+                    <DisplayInteractionLogCard
                       key={visitLogData.id}
-                      visitLogCardData={visitLogData}
+                      interactionLogCardData={visitLogData}
                     />
                   ))
                 ) : (
@@ -395,6 +397,7 @@ const AllOutreachVisitLog = () => {
                   </p>
                 )}
               </div>
+
               {/* Pagination */}
               <div className="flex justify-center items-center mt-8 w-full mx-auto">
                 <p className="text-gray-600">

@@ -26,6 +26,47 @@ const outreachEvents_collection = collectionMapping.outreachEvents;
 const users_collection = collectionMapping.users;
 const visitLogs_collection = collectionMapping.visitLogs;
 const visitLogsNew_collection = collectionMapping.visitLogsBookNew;
+const interactionLog_collection = collectionMapping.interactionLog;
+
+//Implement a interactioLogHelpFunction
+const interactionLogHelperFunction = async (interactionLogSnap) => {
+  try {
+    let interactionLogs = [];
+
+    const docsArray = interactionLogSnap.docs
+      ? interactionLogSnap.docs
+      : [interactionLogSnap];
+
+    const userIds = [...new Set(docsArray.map((doc) => doc.data()?.userId))];
+    console.log(userIds);
+
+    const userCache = await fetchUserDetailsBatch(userIds);
+    console.log(userCache);
+
+    for (const doc of docsArray) {
+      const interactionLogData = doc.data();
+      const uid = interactionLogData?.userId;
+      const userDetails = uid ? userCache[uid] : {};
+
+      interactionLogs.push({
+        id: doc.id,
+        ...interactionLogData,
+        userName: userDetails?.username || "",
+        photoUrl: userDetails?.photoUrl || "",
+        userType: userDetails?.userType || "",
+        //replace format with the one we need or have.
+      });
+    }
+
+    return interactionLogs;
+  } catch (error) {
+    logEvent(
+      "STREET_CARE_ERROR",
+      `error on interactionLogHelperFunction VisitLogCardService.js- ${error.message}`,
+    );
+    throw error;
+  }
+};
 
 const visitLogHelperFunction = async (visitLogSnap) => {
   try {
@@ -38,11 +79,12 @@ const visitLogHelperFunction = async (visitLogSnap) => {
 
     // Fetch user details in batch
     const userCache = await fetchUserDetailsBatch(userIds);
+    console.log("docsArray:", docsArray[0].data());
 
     for (const doc of docsArray) {
       const visitLogData = doc.data();
-      const uid = visitLogData.uid;
-      const userDetails = userCache[uid] || {};
+      const uid = visitLogData?.uid || "";
+      const userDetails = uid ? userCache[uid] : {};
 
       visitLogs.push({
         id: doc.id,
@@ -57,16 +99,16 @@ const visitLogHelperFunction = async (visitLogSnap) => {
         timeStamp: visitLogData?.timeStamp?.seconds
           ? formatDate(new Date(visitLogData.timeStamp.seconds * 1000))
           : "",
-        userName: userDetails.username || "",
-        photoUrl: userDetails.photoUrl || "",
-        userType: userDetails.userType || "",
+        userName: userDetails?.username || "",
+        photoUrl: userDetails?.photoUrl || "",
+        userType: userDetails?.userType || "",
       });
     }
     return visitLogs;
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on visitLogHelperFunction VisitLogCardService.js- ${error.message}`
+      `error on visitLogHelperFunction VisitLogCardService.js- ${error.message}`,
     );
     throw error;
   }
@@ -82,7 +124,7 @@ export const fetchVisitLogById = async (visitLogId) => {
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchVisitLogById VisitLogCardService.js- ${error.message}`
+      `error on fetchVisitLogById VisitLogCardService.js- ${error.message}`,
     );
     throw error;
   }
@@ -93,14 +135,14 @@ export const fetchPersonalVisitLogss = async (
   pageSize = 3,
   lastVisible,
   direction = "next",
-  pageHistory = []
+  pageHistory = [],
 ) => {
   try {
     let personalVisitLogRef = query(
       collection(db, visitLogsNew_collection),
       where("status", "==", "approved"),
       where("uid", "==", uid),
-      orderBy("timeStamp", "desc")
+      orderBy("timeStamp", "desc"),
     );
     console.log("Fetching personal visit logs for UID:", uid);
 
@@ -113,7 +155,7 @@ export const fetchPersonalVisitLogss = async (
     if (lastVisible && direction === "prev" && pageHistory.length > 2) {
       personalVisitLogRef = query(
         personalVisitLogRef,
-        startAfter(pageHistory[pageHistory.length - 3])
+        startAfter(pageHistory[pageHistory.length - 3]),
       );
     }
     personalVisitLogRef = query(personalVisitLogRef, limit(pageSize));
@@ -140,7 +182,7 @@ export const fetchPersonalVisitLogss = async (
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchVisitLogs VisitLogCardService.js- ${error.message}`
+      `error on fetchVisitLogs VisitLogCardService.js- ${error.message}`,
     );
     throw error;
   }
@@ -154,7 +196,7 @@ export const PersonalVisitLogsCount = async (uid) => {
       collection(db, visitLogsNew_collection),
       where("status", "==", "approved"),
       where("uid", "==", uid),
-      orderBy("timeStamp", "desc")
+      orderBy("timeStamp", "desc"),
     );
     console.log("Fetching personal visit logs count .... for UID:", uid);
     const totalRecords = await getCountFromServer(totalVisitLogRef);
@@ -163,7 +205,7 @@ export const PersonalVisitLogsCount = async (uid) => {
   } catch (ex) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchPersonalVisitLogs VisitLogCardService.js- ${ex.message}`
+      `error on fetchPersonalVisitLogs VisitLogCardService.js- ${ex.message}`,
     );
     throw ex;
   }
@@ -173,7 +215,7 @@ export const fetchPersonalVisitLogs = async (uid) => {
   try {
     const userQuery = query(
       collection(db, users_collection),
-      where("uid", "==", uid)
+      where("uid", "==", uid),
     );
     const userDocRef = await getDocs(userQuery);
     if (userDocRef.docs.length === 0) {
@@ -194,7 +236,7 @@ export const fetchPersonalVisitLogs = async (uid) => {
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchPersonalVisitLogs VisitLogCardService.js- ${error.message}`
+      `error on fetchPersonalVisitLogs VisitLogCardService.js- ${error.message}`,
     );
     throw error;
   }
@@ -206,13 +248,13 @@ const descriptionFilter = (searchTerm, filterQuery) => {
     or(
       and(
         where("city", ">=", searchTerm),
-        where("city", "<=", searchTerm + "\uf8ff")
+        where("city", "<=", searchTerm + "\uf8ff"),
       ),
       and(
         where("peopleHelpedDescription", ">=", searchTerm),
-        where("peopleHelpedDescription", "<=", searchTerm + "\uf8ff")
-      )
-    )
+        where("peopleHelpedDescription", "<=", searchTerm + "\uf8ff"),
+      ),
+    ),
   );
 };
 
@@ -220,15 +262,20 @@ const cityFilter = (city, filterQuery) => {
   return query(
     filterQuery,
     where("city", ">=", city),
-    where("city", "<=", city + "\uf8ff")
+    where("city", "<=", city + "\uf8ff"),
   );
 };
 
-const dateFilter = (startDate, endDate, filterQuery) => {
+const dateFilter = (
+  startDate,
+  endDate,
+  filterQuery,
+  timeStampVarName = "timeStamp",
+) => {
   return query(
     filterQuery,
-    where("timeStamp", ">=", startDate),
-    where("timeStamp", "<=", endDate)
+    where(timeStampVarName, ">=", startDate),
+    where(timeStampVarName, "<=", endDate),
   );
 };
 // change PageStartDocs use lastVisible and startAfter combined change this.
@@ -247,7 +294,7 @@ export const fetchPublicVisitLogs = async (
   pageSize = 6,
   pageHistory = [],
   currentPage = 0,
-  pageCheckpoints
+  pageCheckpoints,
 ) => {
   let direction = "not";
   try {
@@ -256,7 +303,7 @@ export const fetchPublicVisitLogs = async (
     let newInteractionLogRec, totalInteractionsRef;
     console.log(
       "Check this pageCheckpoints:",
-      JSON.stringify(Object.keys(pageCheckpoints))
+      JSON.stringify(Object.keys(pageCheckpoints)),
     );
 
     //Handle date Values
@@ -275,22 +322,22 @@ export const fetchPublicVisitLogs = async (
     // );
 
     newInteractionLogRec = query(
-      collection(db, visitLogsNew_collection),
-      where("status", "==", "approved"),
-      orderBy("timeStamp", "desc")
+      collection(db, interactionLog_collection), //visitLogsNew_collection
+      where("status", "==", "Pending"),
+      orderBy("lastModifiedTimestamp", "desc"),
     );
     console.log("Fetching public visit logs...");
 
     totalInteractionsRef = newInteractionLogRec;
 
-    if (searchValue) {
-      const descriptionQuery = descriptionFilter(
-        searchValue,
-        totalInteractionsRef
-      );
-      totalInteractionsRef = descriptionQuery;
-      // pageStartDocs = [];
-    }
+    // if (searchValue) {
+    //   const descriptionQuery = descriptionFilter(
+    //     searchValue,
+    //     totalInteractionsRef
+    //   );
+    //   totalInteractionsRef = descriptionQuery;
+    //   // pageStartDocs = [];
+    // }
 
     if (city) {
       const cityQuery = cityFilter(city, totalInteractionsRef);
@@ -299,7 +346,13 @@ export const fetchPublicVisitLogs = async (
     }
 
     if (isDateFilter) {
-      const dateQuery = dateFilter(startDate, endDate, totalInteractionsRef);
+      console.log("dateInputs:", { startDate, endDate });
+      const dateQuery = dateFilter(
+        startDate,
+        endDate,
+        totalInteractionsRef,
+        "lastModifiedTimestamp",
+      );
       totalInteractionsRef = dateQuery;
       // pageStartDocs = [];
     }
@@ -320,14 +373,14 @@ export const fetchPublicVisitLogs = async (
         newInteractionLogRec = query(
           totalInteractionsRef,
           startAt(pageCheckpoints[currentPage][0]),
-          limit(pageSize)
+          limit(pageSize),
         );
       } else if (pageCheckpoints[currentPage - 1]) {
         console.log("Getting Next Page.");
         newInteractionLogRec = query(
           totalInteractionsRef,
           startAfter(pageCheckpoints[currentPage - 1][1]),
-          limit(pageSize)
+          limit(pageSize),
         );
       }
       // } else if (pageCheckpoints[currentPage + 1]) {
@@ -353,7 +406,7 @@ export const fetchPublicVisitLogs = async (
           newInteractionLogRec = query(
             totalInteractionsRef,
             limit(pageSize),
-            startAfter(pageCheckpoints[lastPageInCheckpoint][1])
+            startAfter(pageCheckpoints[lastPageInCheckpoint][1]),
           );
           pageDocs = await getDocs(newInteractionLogRec);
           pageCheckpoints[lastPageInCheckpoint + 1] = [
@@ -364,13 +417,13 @@ export const fetchPublicVisitLogs = async (
           lastPageInCheckpoint++;
           console.log(
             "From VisitCard pageCheckpoints fr error:",
-            JSON.stringify(Object.keys(pageCheckpoints))
+            JSON.stringify(Object.keys(pageCheckpoints)),
           );
         }
         newInteractionLogRec = query(
           totalInteractionsRef,
           limit(pageSize),
-          startAfter(pageCheckpoints[lastPageInCheckpoint][1])
+          startAfter(pageCheckpoints[lastPageInCheckpoint][1]),
         );
       } else {
         newInteractionLogRec = query(totalInteractionsRef, limit(pageSize)); //Get the First Page
@@ -381,7 +434,9 @@ export const fetchPublicVisitLogs = async (
 
     const totalRecords = await getCountFromServer(totalInteractionsRef);
     const visitLogSnapshot = await getDocs(newInteractionLogRec);
-    const visitLogs = await visitLogHelperFunction(visitLogSnapshot);
+    console.log("visitLogSnapshot:", visitLogSnapshot);
+    const visitLogs = await interactionLogHelperFunction(visitLogSnapshot); // gotta have a modifed version of this function. for interaction Logs
+    console.log("Trying this part.");
     const lastDoc = visitLogSnapshot.docs[visitLogSnapshot.docs.length - 1];
     pageCheckpoints[currentPage] = [
       visitLogSnapshot.docs[0],
@@ -390,7 +445,7 @@ export const fetchPublicVisitLogs = async (
     console.log("From VisitLogCard:", pageCheckpoints);
 
     return {
-      visitLogs: visitLogs,
+      visitLogs: visitLogs, //add visitLogs here
       lastVisible: lastDoc,
       newInteractionLogRec: newInteractionLogRec,
       totalRecords: totalRecords.data().count,
@@ -400,7 +455,7 @@ export const fetchPublicVisitLogs = async (
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchVisitLogs VisitLogCardService.js- ${error.message}`
+      `error on fetchVisitLogs VisitLogCardService.js- ${error.message}`,
     );
     throw error;
   }
@@ -412,13 +467,13 @@ const descriptionFilterOutreaches = (searchTerm, filterQuery) => {
     or(
       and(
         where("location.city", ">=", searchTerm),
-        where("location.city", "<=", searchTerm + "\uf8ff")
+        where("location.city", "<=", searchTerm + "\uf8ff"),
       ),
       and(
         where("description", ">=", searchTerm),
-        where("description", "<=", searchTerm + "\uf8ff")
-      )
-    )
+        where("description", "<=", searchTerm + "\uf8ff"),
+      ),
+    ),
   );
 };
 
@@ -429,20 +484,20 @@ export const fetchPendingPosts = async (
   lastVisible = null,
   pageSize = 6,
   direction = "next",
-  pageHistory = []
+  pageHistory = [],
 ) => {
   let totalOutReachRef, pastOutreachRef;
   if (tab === "outreaches") {
     pastOutreachRef = query(
       collection(db, outreachEvents_collection),
-      where("status", "==", "pending")
+      where("status", "==", "pending"),
     );
     totalOutReachRef = pastOutreachRef;
 
     if (searchValue) {
       const descriptionQuery = descriptionFilterOutreaches(
         searchValue,
-        totalOutReachRef
+        totalOutReachRef,
       );
       totalOutReachRef = descriptionQuery;
     }
@@ -456,13 +511,13 @@ export const fetchPendingPosts = async (
       default:
         totalOutReachRef = query(
           totalOutReachRef,
-          orderBy("eventDate", "desc")
+          orderBy("eventDate", "desc"),
         );
     }
   } else {
     pastOutreachRef = query(
       collection(db, visitLogsNew_collection),
-      where("status", "==", "pending")
+      where("status", "==", "pending"),
     );
     totalOutReachRef = pastOutreachRef;
 
@@ -477,7 +532,7 @@ export const fetchPendingPosts = async (
       case "Alphabetical":
         totalOutReachRef = query(
           totalOutReachRef,
-          orderBy("description", "asc")
+          orderBy("description", "asc"),
         );
         break;
       default:
@@ -496,7 +551,7 @@ export const fetchPendingPosts = async (
   if (lastVisible && direction === "prev" && pageHistory.length > 2) {
     pastOutreachRef = query(
       pastOutreachRef,
-      startAfter(pageHistory[pageHistory.length - 3])
+      startAfter(pageHistory[pageHistory.length - 3]),
     );
   }
 
@@ -512,7 +567,7 @@ export const fetchPendingPosts = async (
         userName: userDetails?.username || "Unknown User",
         userType: userDetails?.type || "",
       };
-    })
+    }),
   );
   const lastDoc = outReachData.docs[outReachData.docs.length - 1];
   if (direction === "next") {
@@ -535,7 +590,7 @@ export const fetchHomeVisitLogs = async () => {
       collection(db, visitLogsNew_collection),
       where("status", "==", "approved"), // Filter applied
       orderBy("timeStamp", "desc"),
-      limit(3)
+      limit(3),
     );
 
     const snapshot = await getDocs(visitLogsRef);
@@ -561,7 +616,7 @@ export const fetchPersonalVisitLogById = async (visitLogId) => {
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchPersonalVisitLogById VisitLogCardService.js- ${error.message}`
+      `error on fetchPersonalVisitLogById VisitLogCardService.js- ${error.message}`,
     );
     throw error;
   }
