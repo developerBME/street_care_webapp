@@ -2,12 +2,12 @@ import Campaign from "../../images/campaign.svg";
 import Outreach from "../../images/outreach.png";
 import CustomButton from "../Buttons/CustomButton";
 import { useNavigate } from "react-router-dom";
-import collectionMapping from "../../utils/firestoreCollections";
-
+import useSuccessMetrics from "../../utils/successMetrics";
 import { getAuth } from "firebase/auth";
 
 function Success2() {
   const navigate = useNavigate();
+  const { isLoading, error, metrics } = useSuccessMetrics();
 
   return (
     <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7] ">
@@ -29,32 +29,39 @@ function Success2() {
           </div>
           <div className="self-stretch">
             <span className="text-neutral-900 text-[24px] font-medium leading-10">
-              We've recently achieved the 2023 Platinum Seal from{" "}
+              Street Care and Bright Mind have expanded national university
+              engagement, connecting with 88 campuses and securing
+              collaborations with Northeastern, UT Dallas, and Stanford.{" "}
             </span>
-            <span className="text-violet-600 text-[24px] font-medium leading-10">
-              <a href="https://candid.org/" target="_blank">
+            {/* Saving the Hyperlink css for later.*/}
+            {/* <span className="text-violet-600 text-[24px] font-medium leading-10">
+              <a href="https://example.com" target="_blank">
                 Candid
               </a>
-            </span>
-            <span className="text-neutral-900 text-[24px] font-medium leading-10">
-              ! This is our commitment to transparency and accountability in all
-              we do.
-            </span>
+            </span>*/}
           </div>
-          <div className="self-stretch font-bricolage text-[18px] font-small ">
+          {/* We'll be enabling the following on Monday 2025-12-29.*/}
+          {/* <div className="self-stretch font-bricolage text-[18px] font-small ">
             <p>
-              We are excited to share the work our nonprofit does through our
+              Learn more about{" "}
               <a
                 href="https://brightmindenrichment.org/about-us/"
                 target="_blank"
                 className="text-violet-600 underline"
               >
-                {" "}
-                Nonprofit Profile{" "}
+                The new grant funding
+              </a>
+              {" and "}
+              <a
+                href="https://brightmindenrichment.org/about-us/"
+                target="_blank"
+                className="text-violet-600 underline"
+              >
+                Volunteer training.
               </a>
             </p>
-          </div>
-        </div> 
+          </div>*/}
+        </div>
       </div>
       {/* Grid */}
 
@@ -67,8 +74,7 @@ function Success2() {
             <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto ">
               <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
                 <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
-                  {/* {helpedPeople} */}
-                  1500+
+                  {metrics.HomelessPeopleAided.toLocaleString()}+
                 </div>
               </div>
             </div>
@@ -82,7 +88,7 @@ function Success2() {
             <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
               <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
                 <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
-                  700+
+                  900+
                 </div>
               </div>
             </div>
@@ -96,7 +102,7 @@ function Success2() {
             <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
               <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
                 <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
-                  74000+
+                  {metrics.ItemsShared.toLocaleString()}+
                 </div>
               </div>
             </div>
@@ -111,7 +117,7 @@ function Success2() {
             <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
               <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
                 <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
-                  2300+
+                  {metrics.PeopleMentored.toLocaleString()}+
                 </div>
               </div>
             </div>
@@ -124,8 +130,7 @@ function Success2() {
             <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
               <div className=" px-5 xl:px-8 w-fit py-2 bg-white rounded-[100px]">
                 <div className="text-violet-950  font-bricolage text-[28px] font-normal leading-[64px] whitespace-nowrap">
-                  {/* {donations} */}
-                   50 Million+ People
+                  {metrics.TotalOutreach.toLocaleString()} Million+ People
                 </div>
               </div>
             </div>
@@ -139,9 +144,8 @@ function Success2() {
             <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
               <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
                 <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
-                  {/* {donations} */}
                   {/* 4.9/5 */}
-                  1000+
+                  {metrics.ChapterMembers.toLocaleString()}+
                 </div>
               </div>
             </div>

@@ -3,15 +3,14 @@ import React, { useState, useEffect } from "react";
 import banner from "../../images/community_banner.png";
 import one from "../../images/community_bg1.png";
 import two from "../../images/community_bg3.png";
+import useSuccessMetrics from "../../utils/successMetrics";
 
 function Spinner() {
-  return (
-    <div className="spinner"></div>
-  );
+  return <div className="spinner"></div>;
 }
 
 function Metrics() {
-  const [isLoading, setIsLoading] = useState(true);
+  const { isLoading, error, metrics } = useSuccessMetrics();
 
   return (
     <div className="bg-white rounded-3xl lg:text-[18px] md:text-[18px] text-[12px] relative z-[9] md:mx-24 -bottom-16">
@@ -43,7 +42,12 @@ function Metrics() {
           </p>
           <p className="text-center">
             <span className="text-xl font-bold lg:text-[38px] md:text-[28px] sm:text-[38px] lg:inline-block md:block block sm:mb-[10px]">
-              1000+
+              {isLoading ? (
+                <Spinner />
+              ) : (
+                metrics.HomelessPeopleAided.toLocaleString()
+              )}
+              +
             </span>{" "}
           </p>
           <p className="text-[#1F0A58] text-center">homeless people</p>
@@ -57,7 +61,12 @@ function Metrics() {
           </p>
           <p className="text-center">
             <span className="text-xl font-bold lg:text-[38px] md:text-[28px] sm:text-[38px] lg:inline-block md:block block sm:mb-[10px]">
-              400+
+              {isLoading ? (
+                <Spinner />
+              ) : (
+                metrics.TotalVolunteers.toLocaleString()
+              )}
+              +
             </span>{" "}
           </p>
           <p className="text-[#1F0A58] text-center">volunteers</p>
@@ -71,7 +80,7 @@ function Metrics() {
           </p>
           <p className="text-center">
             <span className="text-xl mt-auto font-bold lg:text-[38px] md:text-[28px] sm:text-[38px] lg:inline-block md:block block sm:mb-[10px]">
-              11,752
+              {isLoading ? <Spinner /> : metrics.ItemsShared.toLocaleString()}+
             </span>{" "}
           </p>
           <p className="text-[#1F0A58] text-center">items</p>
@@ -112,7 +121,7 @@ function Banner() {
           </div>
         </div>
       </div>
-      <Metrics  />
+      <Metrics />
     </div>
   );
 }
