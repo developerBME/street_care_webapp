@@ -11,7 +11,6 @@ function Spinner() {
 
 function Metrics() {
   const { isLoading, error, metrics } = useSuccessMetrics();
-
   return (
     <div className="bg-white rounded-3xl lg:text-[18px] md:text-[18px] text-[12px] relative z-[9] md:mx-24 -bottom-16">
       <style>
