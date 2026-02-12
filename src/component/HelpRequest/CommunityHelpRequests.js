@@ -6,7 +6,6 @@ import HelpRequestSkeleton from "../Skeletons/HelpRequestSkeleton";
 import { fetchPublicHelpRequests } from "../VisitLogCardService";
 import ErrorMessage from "../ErrorMessage";
 import CustomButton from "../Buttons/CustomButton";
-import { getAuth } from "firebase/auth";
 
 const CommunityHelpRequests = () => {
   const navigate = useNavigate();
@@ -55,11 +54,11 @@ const CommunityHelpRequests = () => {
                 <CustomButton
                   label="Create a Help Request"
                   name="buttondefault"
-                onClick={() => {
-                  navigate("/profile/interactionLogForm");
-                }}
-              />
-            </div>
+                  onClick={() => {
+                    navigate("/helpRequestForm");
+                  }}
+                />
+              </div>
             </div>
             <div className="text-md font-medium font-dmsans text-[#181818] mt-2">
               Browse recent help requests submitted by community members.

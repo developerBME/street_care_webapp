@@ -7,7 +7,6 @@ import HelpRequestCard from "./HelpRequestCard";
 import HelpRequestSkeleton from "../Skeletons/HelpRequestSkeleton";
 import { fetchPublicHelpRequests } from "../VisitLogCardService";
 import CustomButton from "../Buttons/CustomButton";
-import { getAuth } from "firebase/auth";
 
 const AllHelpRequests = () => {
   const navigate = useNavigate();
@@ -164,6 +163,15 @@ const AllHelpRequests = () => {
     setCurrentPageLength(0);
   };
 
+  const totalRequestPages = Math.max(
+    1,
+    Math.ceil(totalPages / helpRequestsPerPage)
+  );
+  const currentRequestPage =
+    totalPages === 0
+      ? 0
+      : Math.max(1, Math.ceil(currentPageLength / helpRequestsPerPage));
+
   return (
     <div className="relative flex flex-col items-center">
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-16 lg:mx-40 mt-48 rounded-2xl bg-white text-black">
@@ -189,11 +197,11 @@ const AllHelpRequests = () => {
               <CustomButton
                 label="Create a Help Request"
                 name="buttondefault"
-              onClick={() => {
-                navigate("/profile/interactionLogForm");
-              }}
-            />
-          </div>
+                onClick={() => {
+                  navigate("/helpRequestForm");
+                }}
+              />
+            </div>
             <div className="flex items-center gap-4 mt-6 lg:mt-0">
               <label className="relative text-gray-400 focus-within:text-gray-600">
                 <input
@@ -300,9 +308,17 @@ const AllHelpRequests = () => {
                 )}
               </div>
               <div className="flex justify-between items-center mt-8 w-full">
-                <p className="text-gray-600">
-                  Showing {currentPageLength} of {totalPages} requests
-                </p>
+                <div className="text-gray-600">
+                  <p>
+                    Showing {filteredHelpRequests.length} of {totalPages}{" "}
+                    requests
+                  </p>
+                  {totalPages > 0 && (
+                    <p>
+                      Page {currentRequestPage} of {totalRequestPages}
+                    </p>
+                  )}
+                </div>
                 <div>{renderPaginationButtons()}</div>
               </div>
             </>

@@ -202,12 +202,12 @@ function Success2() {
               <CustomButton
                 label="Create a Help Request"
                 name="buttondefault"
-              onClick={() => {
-                navigate("/profile/interactionLogForm");
-              }}
-            />
+                onClick={() => {
+                  navigate("/helpRequestForm");
+                }}
+              />
+            </div>
           </div>
-        </div>
 
           {/* Visit Log Card */}
           <div className=" h-[265px] bg-white rounded-[30px] flex flex-col items-center text-center p-6">

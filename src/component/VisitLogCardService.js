@@ -108,6 +108,113 @@ const helpRequestHelperFunction = async (helpRequestSnap) => {
   }
 };
 
+const isMissingIndexError = (error) =>
+  error?.code === "failed-precondition" &&
+  typeof error?.message === "string" &&
+  error.message.includes("requires an index");
+
+const getHelpRequestTimestamp = (helpRequest) => {
+  const value = helpRequest?.lastModifiedTimestamp;
+  if (!value) return 0;
+  if (value instanceof Date) return value.getTime();
+  if (typeof value?.toDate === "function") return value.toDate().getTime();
+  if (value?.seconds) return value.seconds * 1000;
+  return 0;
+};
+
+const applyHelpRequestClientFilters = (
+  helpRequests,
+  searchValue,
+  location,
+  startDate,
+  endDate,
+  isDateFilter
+) => {
+  let filtered = [...helpRequests];
+
+  const normalizedSearch = (searchValue || "").trim().toLowerCase();
+  if (normalizedSearch) {
+    filtered = filtered.filter((request) => {
+      const fields = [
+        request?.locationLandmark,
+        request?.additionalDetails,
+        request?.firstName,
+      ]
+        .filter(Boolean)
+        .map((value) => String(value).toLowerCase());
+      return fields.some((value) => value.includes(normalizedSearch));
+    });
+  }
+
+  const normalizedLocation = (location || "").trim().toLowerCase();
+  if (normalizedLocation) {
+    filtered = filtered.filter((request) =>
+      String(request?.locationLandmark || "")
+        .toLowerCase()
+        .includes(normalizedLocation)
+    );
+  }
+
+  if (isDateFilter) {
+    const startMs =
+      startDate instanceof Date && !isNaN(startDate)
+        ? startDate.getTime()
+        : Number.NEGATIVE_INFINITY;
+    const endMs =
+      endDate instanceof Date && !isNaN(endDate)
+        ? endDate.getTime()
+        : Number.POSITIVE_INFINITY;
+
+    filtered = filtered.filter((request) => {
+      const timestamp = getHelpRequestTimestamp(request);
+      return timestamp >= startMs && timestamp <= endMs;
+    });
+  }
+
+  return filtered.sort(
+    (a, b) => getHelpRequestTimestamp(b) - getHelpRequestTimestamp(a)
+  );
+};
+
+const paginateHelpRequestsClientSide = (
+  helpRequests,
+  pageSize,
+  direction,
+  lastVisible,
+  pageHistory
+) => {
+  const history = Array.isArray(pageHistory) ? [...pageHistory] : [];
+  let startIndex = 0;
+
+  if (direction === "next" && typeof lastVisible === "number") {
+    startIndex = lastVisible + 1;
+  } else if (direction === "prev" && history.length > 2) {
+    const previousPageLastIndex = history[history.length - 3];
+    if (typeof previousPageLastIndex === "number") {
+      startIndex = previousPageLastIndex + 1;
+    }
+  }
+
+  const pagedRequests = helpRequests.slice(startIndex, startIndex + pageSize);
+  const nextLastVisible =
+    pagedRequests.length > 0 ? startIndex + pagedRequests.length - 1 : null;
+
+  if (direction === "next") {
+    if (nextLastVisible !== null) {
+      history.push(nextLastVisible);
+    }
+  } else if (direction === "prev" && history.length > 0) {
+    history.pop();
+  }
+
+  return {
+    helpRequests: pagedRequests,
+    lastVisible: nextLastVisible,
+    pageHistory: history,
+    totalRecords: helpRequests.length,
+  };
+};
+
 export const fetchVisitLogById = async (visitLogId) => {
   try {
     // Reference to the specific document in the visitlog collection
@@ -493,6 +600,31 @@ export const fetchPublicHelpRequests = async (
       totalRecords: totalRecords.data().count,
     };
   } catch (error) {
+    if (isMissingIndexError(error)) {
+      const fallbackQuery = query(
+        collection(db, helpRequests_collection),
+        where("isPublic", "==", true)
+      );
+      const snapshot = await getDocs(fallbackQuery);
+      const helpRequests = await helpRequestHelperFunction(snapshot);
+      const filteredHelpRequests = applyHelpRequestClientFilters(
+        helpRequests,
+        searchValue,
+        location,
+        startDate,
+        endDate,
+        isDateFilter
+      );
+
+      return paginateHelpRequestsClientSide(
+        filteredHelpRequests,
+        pageSize,
+        direction,
+        lastVisible,
+        pageHistory
+      );
+    }
+
     logEvent(
       "STREET_CARE_ERROR",
       `error on fetchPublicHelpRequests VisitLogCardService.js- ${error.message}`
@@ -655,6 +787,20 @@ export const fetchHomeHelpRequests = async () => {
     const helpRequests = await helpRequestHelperFunction(snapshot);
     return helpRequests;
   } catch (error) {
+    if (isMissingIndexError(error)) {
+      const fallbackQuery = query(
+        collection(db, helpRequests_collection),
+        where("isPublic", "==", true)
+      );
+      const snapshot = await getDocs(fallbackQuery);
+      const helpRequests = await helpRequestHelperFunction(snapshot);
+      return helpRequests
+        .sort(
+          (a, b) => getHelpRequestTimestamp(b) - getHelpRequestTimestamp(a)
+        )
+        .slice(0, 3);
+    }
+
     console.error("Error fetching help requests:", error);
     return [];
   }

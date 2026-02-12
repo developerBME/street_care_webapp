@@ -62,6 +62,7 @@ import OutreachEvents from "./component/Admin/OutreachEvents";
 import PostApprovals from "./component/admin_test/PostApprovals.js";
 import AdminOutreachEvents from "./component/Admin/AdminOutreachEvents.js";
 import InteractionLogForm from "./component/UserProfile/InteractionLogForm.js";
+import HelpRequestForm from "./component/HelpRequest/HelpRequestForm.js";
 
 const users_collection = collectionMapping.users;
 
@@ -205,7 +206,7 @@ function App() {
             <Route path="/outreachsignup" element={<OutreachSignup />} />
             <Route path="/outreachsignup/:id" element={<OutreachSignup />} />
             {/* <Route path="/helpRequestEventWindow" element={<ComingSoon />} /> */}
-            {/* <Route path="/helpRequestForm" element={<ComingSoon />} /> */}
+            <Route path="/helpRequestForm" element={<HelpRequestForm />} />
             {/* <Route path="/icanhelp" element={<ComingSoon />} /> */}
             {/* <Route path="/donateForm" element={<DonateForm />} /> */}
             <Route path="/donateForm" element={<ComingSoon />} />
