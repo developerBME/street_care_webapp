@@ -16,44 +16,56 @@ import verifiedGreen from "../../images/verified.png";
 import verifiedBlue from "../../images/verified_blue.png";
 import verifiedYellow from "../../images/verified_yellow.png";
 import { useUserContext } from "../../context/Usercontext.js";
+import { formatTimeStampDate } from "../../utils/helperFns.js";
 
 import collectionMapping from "../../utils/firestoreCollections.js";
 
 const visitLogs_collection = collectionMapping.visitLogs;
 const users_collection = collectionMapping.users; // User collection
 
-const OutreachVisitLogCard = ({ visitLogCardData }) => {
+const DisplayInteractionLogCard = ({ interactionLogCardData }) => {
   const navigate = useNavigate();
 
   // Fetch flag info when component mounts
   const [isFlagged, setIsFlagged] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // Change this back to true
 
-  const currentUserType = visitLogCardData?.userType;
+  const currentUserType = interactionLogCardData?.userType;
   const { user } = useUserContext();
-  useEffect(() => {
-    const fetchFlagStatus = async () => {
-      try {
-        if (visitLogCardData?.id) {
-          const docRef = doc(db, visitLogs_collection, visitLogCardData.id);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
+  //UnComment the below when ready to plug the flag interaction functionality.
+  {
+    /* 
+    Need to Plug the fetchFlagStatus again after the field is added.
+    useEffect(() => {
+        const fetchFlagStatus = async () => {
+            try {
+                if (interactionLogCardData?.id) {
+                    const docRef = doc(db, visitLogs_collection, interactionLogCardData.id);
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists()) {
             setIsFlagged(docSnap.data().isFlagged || false);
           }
         }
-      } catch (error) {
+    } catch (error) {
         console.error("Error fetching flag status:", error);
-      } finally {
+    } finally {
         setIsLoading(false);
-      }
-    };
+    }
+};
 
-    fetchFlagStatus();
-  }, [visitLogCardData?.id]);
+fetchFlagStatus();
+}, [interactionLogCardData?.id]);
+*/
+  }
+  //TODO: Add popup functionality for viewing additional details.
 
   const handleViewDetails = () => {
-    navigate(`/VisitLogDetails/${visitLogCardData.id}`);
+    navigate(`/VisitLogDetails/${interactionLogCardData.id}`);
   };
+
+  useEffect(() => {
+    console.log("This is Working.");
+  }, []);
 
   let verifiedImg;
   switch (currentUserType) {
@@ -79,8 +91,8 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
       return;
     }
     try {
-      if (!visitLogCardData?.id) {
-        console.error("Invalid visitLogCardData.id");
+      if (!interactionLogCardData?.id) {
+        console.error("Invalid interactionLogCardData.id");
         return;
       }
 
@@ -93,7 +105,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
       }
 
       const { Type: userType } = userDoc.data();
-      const docRef = doc(db, visitLogs_collection, visitLogCardData?.id);
+      const docRef = doc(db, visitLogs_collection, interactionLogCardData?.id);
       const docSnap = await getDoc(docRef);
 
       if (!docSnap.exists()) {
@@ -109,7 +121,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
       // Restrict unflagging to specific user types
       if (currentIsFlagged && !canUnflag) {
         alert(
-          "Only Street Care Hub Leader or User who flagged it can unflag this post."
+          "Only Street Care Hub Leader or User who flagged it can unflag this post.",
         );
         return;
       }
@@ -117,7 +129,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
       if (currentStatus) {
         if (!canUnflag) {
           console.error(
-            "Only the user who flagged this event or a Street Care Hub Leader can unflag it."
+            "Only the user who flagged this event or a Street Care Hub Leader can unflag it.",
           );
           return;
         }
@@ -136,6 +148,22 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
   if (isLoading) {
     return <EventCardSkeleton />; // Placeholder Skeleton while loading flag status
   }
+
+  // To calculate items Donated
+  // num of care Packages donated(num) * items in care packages(string -> num)
+  // possible user left items in care packages blank, also possible items donated is null , undefined, NaN.
+
+  //This needs to be more readable and clean. Remove unnecessary conditional Chaining.
+  let donatedItemsNum;
+
+  if (!Array.isArray(interactionLogCardData?.carePackageContents)) {
+    donatedItemsNum =
+      interactionLogCardData?.carePackageContents?.split(",")?.length ?? 1;
+  } else {
+    donatedItemsNum = interactionLogCardData?.carePackageContents?.length ?? 1;
+  }
+  const itemsDonated =
+    interactionLogCardData.carePackagesDistributed * donatedItemsNum || 1;
 
   return (
     <div
@@ -166,11 +194,13 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
       <div className="inline-flex items-center space-x-2">
         <img
           alt=""
-          src={visitLogCardData.defaultImage || defaultImage}
+          src={interactionLogCardData?.defaultImage || defaultImage}
           className="w-8 h-8 rounded-full"
         />
         <div className="font-normal font-inter text-[13px]">
-          {visitLogCardData.userName}
+          {interactionLogCardData?.firstName ||
+            interactionLogCardData?.userName ||
+            ""}
         </div>
         <img alt="" src={verifiedImg} className="w-5 h-5" />
       </div>
@@ -179,39 +209,39 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
         <div className="flex items-center">
           <img className="w-4 h-4" src={dateIcon} alt="Date" />
           <span className="ml-2 text-sm">
-            {visitLogCardData?.timeStamp
-              ? formatDate(visitLogCardData.timeStamp)
+            {interactionLogCardData?.startTimestamp
+              ? formatTimeStampDate(interactionLogCardData.startTimestamp)
               : null}
           </span>
         </div>
 
         <div className="flex items-center">
           <img className="w-3 h-4" src={locationIcon} alt="Location" />
-          <span className="ml-2 text-sm">{visitLogCardData.whereVisit}</span>
+          <span className="ml-2 text-sm">{`${interactionLogCardData?.city}, ${interactionLogCardData?.state}`}</span>
         </div>
       </div>
 
       <div className="flex justify-between items-center mt-4">
         <div className="text-sm font-bold">People Helped</div>
         <div className="text-xl font-bold">
-          {visitLogCardData?.numberOfHelpers}
+          {interactionLogCardData?.numPeopleHelped}
         </div>
       </div>
 
       <div className="flex justify-between items-center mt-2">
         <div className="text-sm font-bold">Items Donated</div>
-        <div className="text-xl font-bold">{visitLogCardData?.itemQty}</div>
+        <div className="text-xl font-bold">{donatedItemsNum}</div>
       </div>
 
       <div className="mt-3">
-        <CardTags tags={visitLogCardData?.whatGiven || []} />
+        <CardTags tags={interactionLogCardData?.listOfSupportsProvided || []} />
       </div>
 
       <p className="text-sm mt-2 line-clamp-2">
-        {visitLogCardData?.peopleHelpedDescription || ""}
+        {interactionLogCardData?.peopleHelpedDescription || ""}
       </p>
     </div>
   );
 };
 
-export default OutreachVisitLogCard;
+export default DisplayInteractionLogCard;

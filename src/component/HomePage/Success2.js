@@ -32,7 +32,7 @@ function Success2() {
               We've recently achieved the 2023 Platinum Seal from{" "}
             </span>
             <span className="text-violet-600 text-[24px] font-medium leading-10">
-              <a href="https://candid.org/" target="_blank">
+              <a href="https://candid.org/" target="_blank" rel="noreferrer">
                 Candid
               </a>
             </span>
@@ -47,7 +47,7 @@ function Success2() {
               <a
                 href="https://brightmindenrichment.org/about-us/"
                 target="_blank"
-                className="text-violet-600 underline"
+                className="text-violet-600 underline" rel="noreferrer"
               >
                 {" "}
                 Nonprofit Profile{" "}
