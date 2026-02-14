@@ -13,7 +13,6 @@ import {
   getCountFromServer,
   or,
   and,
-  startAt,
 } from "firebase/firestore";
 import { fetchUserTypeDetails } from "./EventCardService";
 import { formatDate } from "./HelperFunction";
@@ -26,47 +25,6 @@ const outreachEvents_collection = collectionMapping.outreachEvents;
 const users_collection = collectionMapping.users;
 const visitLogs_collection = collectionMapping.visitLogs;
 const visitLogsNew_collection = collectionMapping.visitLogsBookNew;
-const interactionLog_collection = collectionMapping.interactionLog;
-
-//Implement a interactioLogHelpFunction
-const interactionLogHelperFunction = async (interactionLogSnap) => {
-  try {
-    let interactionLogs = [];
-
-    const docsArray = interactionLogSnap.docs
-      ? interactionLogSnap.docs
-      : [interactionLogSnap];
-
-    const userIds = [...new Set(docsArray.map((doc) => doc.data()?.userId))];
-    console.log(userIds);
-
-    const userCache = await fetchUserDetailsBatch(userIds);
-    console.log(userCache);
-
-    for (const doc of docsArray) {
-      const interactionLogData = doc.data();
-      const uid = interactionLogData?.userId;
-      const userDetails = uid ? userCache[uid] : {};
-
-      interactionLogs.push({
-        id: doc.id,
-        ...interactionLogData,
-        userName: userDetails?.username || "",
-        photoUrl: userDetails?.photoUrl || "",
-        userType: userDetails?.userType || "",
-        //replace format with the one we need or have.
-      });
-    }
-
-    return interactionLogs;
-  } catch (error) {
-    logEvent(
-      "STREET_CARE_ERROR",
-      `error on interactionLogHelperFunction VisitLogCardService.js- ${error.message}`,
-    );
-    throw error;
-  }
-};
 
 const visitLogHelperFunction = async (visitLogSnap) => {
   try {
@@ -79,12 +37,11 @@ const visitLogHelperFunction = async (visitLogSnap) => {
 
     // Fetch user details in batch
     const userCache = await fetchUserDetailsBatch(userIds);
-    console.log("docsArray:", docsArray[0].data());
 
     for (const doc of docsArray) {
       const visitLogData = doc.data();
-      const uid = visitLogData?.uid || "";
-      const userDetails = uid ? userCache[uid] : {};
+      const uid = visitLogData.uid;
+      const userDetails = userCache[uid] || {};
 
       visitLogs.push({
         id: doc.id,
@@ -93,22 +50,20 @@ const visitLogHelperFunction = async (visitLogSnap) => {
         numberOfHelpers: visitLogData?.numberOfHelpers || 0,
         peopleHelpedDescription: visitLogData?.peopleHelpedDescription || "",
         helpType: visitLogData?.helpType || "",
-        whereVisit: [visitLogData?.city, visitLogData?.stateAbbv]
-          .filter(Boolean)
-          .join(", "),
+        whereVisit: [visitLogData?.city, visitLogData?.stateAbbv].filter(Boolean).join(', '),
         timeStamp: visitLogData?.timeStamp?.seconds
           ? formatDate(new Date(visitLogData.timeStamp.seconds * 1000))
           : "",
-        userName: userDetails?.username || "",
-        photoUrl: userDetails?.photoUrl || "",
-        userType: userDetails?.userType || "",
+        userName: userDetails.username || "",
+        photoUrl: userDetails.photoUrl || "",
+        userType: userDetails.userType || "",
       });
     }
     return visitLogs;
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on visitLogHelperFunction VisitLogCardService.js- ${error.message}`,
+      `error on visitLogHelperFunction VisitLogCardService.js- ${error.message}`
     );
     throw error;
   }
@@ -124,7 +79,7 @@ export const fetchVisitLogById = async (visitLogId) => {
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchVisitLogById VisitLogCardService.js- ${error.message}`,
+      `error on fetchVisitLogById VisitLogCardService.js- ${error.message}`
     );
     throw error;
   }
@@ -135,14 +90,14 @@ export const fetchPersonalVisitLogss = async (
   pageSize = 3,
   lastVisible,
   direction = "next",
-  pageHistory = [],
+  pageHistory = []
 ) => {
   try {
     let personalVisitLogRef = query(
       collection(db, visitLogsNew_collection),
       where("status", "==", "approved"),
       where("uid", "==", uid),
-      orderBy("timeStamp", "desc"),
+      orderBy("timeStamp", "desc")
     );
     console.log("Fetching personal visit logs for UID:", uid);
 
@@ -155,7 +110,7 @@ export const fetchPersonalVisitLogss = async (
     if (lastVisible && direction === "prev" && pageHistory.length > 2) {
       personalVisitLogRef = query(
         personalVisitLogRef,
-        startAfter(pageHistory[pageHistory.length - 3]),
+        startAfter(pageHistory[pageHistory.length - 3])
       );
     }
     personalVisitLogRef = query(personalVisitLogRef, limit(pageSize));
@@ -182,7 +137,7 @@ export const fetchPersonalVisitLogss = async (
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchVisitLogs VisitLogCardService.js- ${error.message}`,
+      `error on fetchVisitLogs VisitLogCardService.js- ${error.message}`
     );
     throw error;
   }
@@ -196,16 +151,16 @@ export const PersonalVisitLogsCount = async (uid) => {
       collection(db, visitLogsNew_collection),
       where("status", "==", "approved"),
       where("uid", "==", uid),
-      orderBy("timeStamp", "desc"),
+      orderBy("timeStamp", "desc")
     );
-    console.log("Fetching personal visit logs count .... for UID:", uid);
+console.log("Fetching personal visit logs count .... for UID:", uid);
     const totalRecords = await getCountFromServer(totalVisitLogRef);
     console.log("Total personal visit logs count:", totalRecords.data().count);
     return totalRecords.data().count;
   } catch (ex) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchPersonalVisitLogs VisitLogCardService.js- ${ex.message}`,
+      `error on fetchPersonalVisitLogs VisitLogCardService.js- ${ex.message}`
     );
     throw ex;
   }
@@ -215,7 +170,7 @@ export const fetchPersonalVisitLogs = async (uid) => {
   try {
     const userQuery = query(
       collection(db, users_collection),
-      where("uid", "==", uid),
+      where("uid", "==", uid)
     );
     const userDocRef = await getDocs(userQuery);
     if (userDocRef.docs.length === 0) {
@@ -236,7 +191,7 @@ export const fetchPersonalVisitLogs = async (uid) => {
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchPersonalVisitLogs VisitLogCardService.js- ${error.message}`,
+      `error on fetchPersonalVisitLogs VisitLogCardService.js- ${error.message}`
     );
     throw error;
   }
@@ -248,13 +203,13 @@ const descriptionFilter = (searchTerm, filterQuery) => {
     or(
       and(
         where("city", ">=", searchTerm),
-        where("city", "<=", searchTerm + "\uf8ff"),
+        where("city", "<=", searchTerm + "\uf8ff")
       ),
       and(
         where("peopleHelpedDescription", ">=", searchTerm),
-        where("peopleHelpedDescription", "<=", searchTerm + "\uf8ff"),
-      ),
-    ),
+        where("peopleHelpedDescription", "<=", searchTerm + "\uf8ff")
+      )
+    )
   );
 };
 
@@ -262,28 +217,18 @@ const cityFilter = (city, filterQuery) => {
   return query(
     filterQuery,
     where("city", ">=", city),
-    where("city", "<=", city + "\uf8ff"),
+    where("city", "<=", city + "\uf8ff")
   );
 };
 
-const dateFilter = (
-  startDate,
-  endDate,
-  filterQuery,
-  timeStampVarName = "timeStamp",
-) => {
+const dateFilter = (startDate, endDate, filterQuery) => {
   return query(
     filterQuery,
-    where(timeStampVarName, ">=", startDate),
-    where(timeStampVarName, "<=", endDate),
+    where("timeStamp", ">=", startDate),
+    where("timeStamp", "<=", endDate)
   );
 };
-// change PageStartDocs use lastVisible and startAfter combined change this.
-//Incorporate Logic to get any page.
-//get 1st page according to filters & get total numbers of pages from records.
-//Remove page Start Docs
-//If we jump to far off pages we need to run a loop to get records up till that page.
-//Make sure to use 0 indexed page numbers here.
+
 export const fetchPublicVisitLogs = async (
   searchValue,
   city,
@@ -292,19 +237,12 @@ export const fetchPublicVisitLogs = async (
   isDateFilter = false,
   lastVisible = null,
   pageSize = 6,
-  pageHistory = [],
-  currentPage = 0,
-  pageCheckpoints,
+  direction = "next",
+  pageHistory = []
 ) => {
-  let direction = "not";
   try {
     //query variables
-    //Another Issue when jumping to last page from somewhere else causes it to crash undefined reading 1
     let newInteractionLogRec, totalInteractionsRef;
-    console.log(
-      "Check this pageCheckpoints:",
-      JSON.stringify(Object.keys(pageCheckpoints)),
-    );
 
     //Handle date Values
     if (!(startDate instanceof Date) || isNaN(startDate)) {
@@ -322,140 +260,75 @@ export const fetchPublicVisitLogs = async (
     // );
 
     newInteractionLogRec = query(
-      collection(db, interactionLog_collection), //visitLogsNew_collection
-      where("status", "==", "Pending"),
-      orderBy("lastModifiedTimestamp", "desc"),
+      collection(db, visitLogsNew_collection),
+      where("status", "==", "approved"),
+      orderBy("timeStamp", "desc")
     );
     console.log("Fetching public visit logs...");
 
     totalInteractionsRef = newInteractionLogRec;
 
-    // if (searchValue) {
-    //   const descriptionQuery = descriptionFilter(
-    //     searchValue,
-    //     totalInteractionsRef
-    //   );
-    //   totalInteractionsRef = descriptionQuery;
-    //   // pageStartDocs = [];
-    // }
+    if (searchValue) {
+      const descriptionQuery = descriptionFilter(
+        searchValue,
+        totalInteractionsRef
+      );
+      totalInteractionsRef = descriptionQuery;
+    }
 
     if (city) {
       const cityQuery = cityFilter(city, totalInteractionsRef);
       totalInteractionsRef = cityQuery;
-      // pageStartDocs = [];
     }
 
     if (isDateFilter) {
-      console.log("dateInputs:", { startDate, endDate });
-      const dateQuery = dateFilter(
-        startDate,
-        endDate,
-        totalInteractionsRef,
-        "lastModifiedTimestamp",
-      );
+      const dateQuery = dateFilter(startDate, endDate, totalInteractionsRef);
       totalInteractionsRef = dateQuery;
-      // pageStartDocs = [];
-    }
-    //Add Function to get result docs
-    // if lastVisible is null then
-
-    if (
-      pageCheckpoints[currentPage] ||
-      pageCheckpoints[currentPage - 1] ||
-      pageCheckpoints[currentPage + 1]
-    ) {
-      //get the startAfter or endBefore
-      //for currentPage in checkpoint get firstDoc-- startAt
-      //for currentPage - 1 in checkpoint get lastDoc-- startAfter
-      //for currentPgae + 1 in checkpoint get reverse order + firstDoc-- startAfter
-      if (pageCheckpoints[currentPage]) {
-        console.log("Getting page that exists in checkPoints.");
-        newInteractionLogRec = query(
-          totalInteractionsRef,
-          startAt(pageCheckpoints[currentPage][0]),
-          limit(pageSize),
-        );
-      } else if (pageCheckpoints[currentPage - 1]) {
-        console.log("Getting Next Page.");
-        newInteractionLogRec = query(
-          totalInteractionsRef,
-          startAfter(pageCheckpoints[currentPage - 1][1]),
-          limit(pageSize),
-        );
-      }
-      // } else if (pageCheckpoints[currentPage + 1]) {
-      //   //reverse the results to maintain order
-      //   console.log("Getting Previous Page");
-      //   newInteractionLogRec = query(
-      //     totalInteractionsRef,
-      //     orderBy("timestamp", "asc"),
-      //     startAfter(pageCheckpoints[currentPage + 1][0]),
-      //     limit(pageSize)
-      //   );
-      // }
-    } else {
-      // write Fnc to get the currentPage doc
-      // Save Checkpoints to get to the current page.
-      // Rewire logic from AllOutreachVisitLogs to here.
-      // Function to iterate to that particular page.
-      if (currentPage > 0) {
-        const pageNums = Object.keys(pageCheckpoints).map(Number); // get pageNums as num type from pageCheckpoints.
-        let pageDocs = [];
-        let lastPageInCheckpoint = Math.max(...pageNums); // start iterating through the maxPage.
-        while (lastPageInCheckpoint < currentPage - 1) {
-          newInteractionLogRec = query(
-            totalInteractionsRef,
-            limit(pageSize),
-            startAfter(pageCheckpoints[lastPageInCheckpoint][1]),
-          );
-          pageDocs = await getDocs(newInteractionLogRec);
-          pageCheckpoints[lastPageInCheckpoint + 1] = [
-            pageDocs.docs[0],
-            pageDocs.docs[pageDocs.docs.length - 1],
-          ];
-          // add pageCheckpoint here.
-          lastPageInCheckpoint++;
-          console.log(
-            "From VisitCard pageCheckpoints fr error:",
-            JSON.stringify(Object.keys(pageCheckpoints)),
-          );
-        }
-        newInteractionLogRec = query(
-          totalInteractionsRef,
-          limit(pageSize),
-          startAfter(pageCheckpoints[lastPageInCheckpoint][1]),
-        );
-      } else {
-        newInteractionLogRec = query(totalInteractionsRef, limit(pageSize)); //Get the First Page
-      }
     }
 
-    //iterate from MaxPage to the desiredPage(currentPage).
+    newInteractionLogRec = query(
+      totalInteractionsRef,
+      limit(pageSize)
+    );
+    //Handle Forward pagination
+    if (lastVisible && direction === "next") {
+      newInteractionLogRec = query(
+        newInteractionLogRec,
+        startAfter(lastVisible)
+      );
+    }
+
+    // Handle Backward pagination
+    if (lastVisible && direction === "prev" && pageHistory.length > 2) {
+      newInteractionLogRec = query(
+        newInteractionLogRec,
+        startAfter(pageHistory[pageHistory.length - 3])
+      );
+    }
 
     const totalRecords = await getCountFromServer(totalInteractionsRef);
     const visitLogSnapshot = await getDocs(newInteractionLogRec);
-    console.log("visitLogSnapshot:", visitLogSnapshot);
-    const visitLogs = await interactionLogHelperFunction(visitLogSnapshot); // gotta have a modifed version of this function. for interaction Logs
-    console.log("Trying this part.");
+    const visitLogs = await visitLogHelperFunction(visitLogSnapshot);
     const lastDoc = visitLogSnapshot.docs[visitLogSnapshot.docs.length - 1];
-    pageCheckpoints[currentPage] = [
-      visitLogSnapshot.docs[0],
-      visitLogSnapshot.docs[visitLogSnapshot.docs.length - 1],
-    ];
-    console.log("From VisitLogCard:", pageCheckpoints);
+
+    // Store history of cursors for backward pagination
+    if (direction === "next") {
+      pageHistory.push(lastDoc);
+    } else if (direction === "prev") {
+      pageHistory.pop();
+    }
 
     return {
-      visitLogs: visitLogs, //add visitLogs here
+      visitLogs: visitLogs,
       lastVisible: lastDoc,
+      pageHistory,
       newInteractionLogRec: newInteractionLogRec,
       totalRecords: totalRecords.data().count,
-      currentPage: currentPage,
-      pageCheckpoints: pageCheckpoints,
     };
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchVisitLogs VisitLogCardService.js- ${error.message}`,
+      `error on fetchVisitLogs VisitLogCardService.js- ${error.message}`
     );
     throw error;
   }
@@ -467,13 +340,13 @@ const descriptionFilterOutreaches = (searchTerm, filterQuery) => {
     or(
       and(
         where("location.city", ">=", searchTerm),
-        where("location.city", "<=", searchTerm + "\uf8ff"),
+        where("location.city", "<=", searchTerm + "\uf8ff")
       ),
       and(
         where("description", ">=", searchTerm),
-        where("description", "<=", searchTerm + "\uf8ff"),
-      ),
-    ),
+        where("description", "<=", searchTerm + "\uf8ff")
+      )
+    )
   );
 };
 
@@ -484,20 +357,20 @@ export const fetchPendingPosts = async (
   lastVisible = null,
   pageSize = 6,
   direction = "next",
-  pageHistory = [],
+  pageHistory = []
 ) => {
   let totalOutReachRef, pastOutreachRef;
   if (tab === "outreaches") {
     pastOutreachRef = query(
       collection(db, outreachEvents_collection),
-      where("status", "==", "pending"),
+      where("status", "==", "pending")
     );
     totalOutReachRef = pastOutreachRef;
 
     if (searchValue) {
       const descriptionQuery = descriptionFilterOutreaches(
         searchValue,
-        totalOutReachRef,
+        totalOutReachRef
       );
       totalOutReachRef = descriptionQuery;
     }
@@ -511,13 +384,13 @@ export const fetchPendingPosts = async (
       default:
         totalOutReachRef = query(
           totalOutReachRef,
-          orderBy("eventDate", "desc"),
+          orderBy("eventDate", "desc")
         );
     }
   } else {
     pastOutreachRef = query(
       collection(db, visitLogsNew_collection),
-      where("status", "==", "pending"),
+      where("status", "==", "pending")
     );
     totalOutReachRef = pastOutreachRef;
 
@@ -532,7 +405,7 @@ export const fetchPendingPosts = async (
       case "Alphabetical":
         totalOutReachRef = query(
           totalOutReachRef,
-          orderBy("description", "asc"),
+          orderBy("description", "asc")
         );
         break;
       default:
@@ -551,7 +424,7 @@ export const fetchPendingPosts = async (
   if (lastVisible && direction === "prev" && pageHistory.length > 2) {
     pastOutreachRef = query(
       pastOutreachRef,
-      startAfter(pageHistory[pageHistory.length - 3]),
+      startAfter(pageHistory[pageHistory.length - 3])
     );
   }
 
@@ -567,7 +440,7 @@ export const fetchPendingPosts = async (
         userName: userDetails?.username || "Unknown User",
         userType: userDetails?.type || "",
       };
-    }),
+    })
   );
   const lastDoc = outReachData.docs[outReachData.docs.length - 1];
   if (direction === "next") {
@@ -590,7 +463,7 @@ export const fetchHomeVisitLogs = async () => {
       collection(db, visitLogsNew_collection),
       where("status", "==", "approved"), // Filter applied
       orderBy("timeStamp", "desc"),
-      limit(3),
+      limit(3)
     );
 
     const snapshot = await getDocs(visitLogsRef);
@@ -616,7 +489,7 @@ export const fetchPersonalVisitLogById = async (visitLogId) => {
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchPersonalVisitLogById VisitLogCardService.js- ${error.message}`,
+      `error on fetchPersonalVisitLogById VisitLogCardService.js- ${error.message}`
     );
     throw error;
   }

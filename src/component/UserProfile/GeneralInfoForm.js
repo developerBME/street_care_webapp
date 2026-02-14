@@ -1,10 +1,4 @@
-import {
-  useState,
-  useEffect,
-  useRef,
-  useImperativeHandle,
-  forwardRef,
-} from "react";
+import { useState, useEffect, useRef } from "react";
 import CheckboxGroup from "../FormBuilder/CheckboxGroup";
 import TextInput from "../Inputs/TextInput";
 import InlineWrapper from "../Inputs/InlineWrapper";
@@ -16,10 +10,8 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
 import dayjs from "dayjs";
 import AddressAutofill from "../FormBuilder/AddressAutofill";
-import { areObjectsEqual } from "../../utils/helperFns";
-import { obj1 } from "./InteractionLogForm";
 
-const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
+export default function GeneralInfoForm({ onUpdate = () => {} }) {
   const sxTheme = {
     backgroundColor: "white",
     "& .MuiOutlinedInput-root": {
@@ -69,8 +61,7 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
   });
 
   const mergeDateTime = (startTime, endTime, interactionDate) => {
-    interactionDate = interactionDate || dayjs();
-    if (!startTime || !endTime) return;
+    if (!startTime || !endTime || !interactionDate) return;
 
     const date = dayjs(interactionDate); // ensure it's a Day.js object
 
@@ -84,7 +75,7 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
       .minute(dayjs(endTime, "hh:mm A").minute())
       .second(0);
 
-    // console.log(mergedDateEndTime, mergedDateStartTime);
+    console.log(mergedDateEndTime, mergedDateStartTime);
     setGeneralInfoData((prev) => ({
       ...prev,
       startTimestamp: mergedDateStartTime,
@@ -99,23 +90,8 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
     }));
   };
 
-  useImperativeHandle(
-    ref,
-    () => {
-      return {
-        checkIsEmpty() {
-          return areObjectsEqual(generalInfoData, obj1);
-        },
-        getGeneralInfoData() {
-          return generalInfoData;
-        },
-      };
-    },
-    [generalInfoData]
-  );
-
   useEffect(() => {
-    // onUpdate(generalInfoData); Comment this out since we dont need to raise data state at each keystroke
+    onUpdate(generalInfoData);
   }, [generalInfoData]);
 
   return (
@@ -152,7 +128,7 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
         <TextInput
           type="full-single-text-input"
           label="Email"
-          placeholder="johndoe@example.com"
+          placeholder="vinayakkiranji@brightmindenrichment.org"
           onChange={(e) => {
             setGeneralInfoData((prev) => ({ ...prev, email: e.target.value }));
           }}
@@ -162,7 +138,7 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
         <TextInput
           type="full-single-text-input"
           label="Phone Number"
-          placeholder="+1(123)-123-1234"
+          placeholder="+1((123)-34-1234"
           onChange={(e) => {
             const value = e.target.value;
             if (value.length <= 10 && /^\d*$/.test(value)) {
@@ -190,7 +166,6 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
                   generalInfoData.interactionDate
                 );
               }}
-              maxDate={dayjs()}
               slotProps={{
                 textField: {
                   required: false,
@@ -225,8 +200,6 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
               }}
               variant="desktop"
               views={["hours", "minutes"]}
-              minTime={dayjs().hour(9).minute(0)} // ⏰ Earliest selectable time: 9:00 AM
-              maxTime={dayjs().hour(19).minute(0)} // ⏰ Latest selectable time: 7:00 PM
               viewRenderers={{
                 hours: renderTimeViewClock,
                 minutes: renderTimeViewClock,
@@ -236,7 +209,7 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
                 textField: {
                   fullWidth: true,
                   required: false,
-                  placeholder: "hh:mm",
+                  placeholder: "hh:mm:aa",
                   label: "",
                   InputLabelProps: { shrink: false },
                   sx: sxTheme,
@@ -266,8 +239,6 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
               }}
               variant="desktop"
               views={["hours", "minutes"]}
-              minTime={dayjs().hour(9).minute(0)} // ⏰ Earliest selectable time: 9:00 AM
-              maxTime={dayjs().hour(19).minute(0)} // ⏰ Latest selectable time: 7:00 PM
               viewRenderers={{
                 hours: renderTimeViewClock,
                 minutes: renderTimeViewClock,
@@ -277,7 +248,7 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
                 textField: {
                   fullWidth: true,
                   required: false,
-                  placeholder: "hh:mm",
+                  placeholder: "hh:mm:aa",
                   label: "",
                   InputLabelProps: { shrink: false },
                   sx: sxTheme,
@@ -323,7 +294,7 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
 
       <TextInput
         type="full-single-text-input"
-        label="Number of care items given out"
+        label="Number of care packages given out"
         placeholder="e.g. 1"
         onChange={(e) => {
           const value = e.target.value;
@@ -378,6 +349,4 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
       <AddressAutofill onAddressChange={handleAddressChange} />
     </>
   );
-});
-
-export default GeneralInfoForm;
+}

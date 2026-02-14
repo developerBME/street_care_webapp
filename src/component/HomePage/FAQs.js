@@ -148,7 +148,7 @@ export default function FAQs() {
               <a
                 href="https://streetcare.us/app"
                 className="underline px-1 text-blue-500"
-                target="_blank" rel="noreferrer"
+                target="_blank"
               >
                 downloading our app
               </a>
