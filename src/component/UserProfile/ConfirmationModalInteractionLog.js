@@ -44,6 +44,13 @@ const ConfirmationModalInteractionLog = ({
                 navigate("/");
               }}
             />
+            <CustomButton
+              label="Fill Out Another Interaction Log."
+              name="buttonborder"
+              onClick={() => {
+                window.location.reload();
+              }}
+            />
           </div>
         </div>
       </div>
