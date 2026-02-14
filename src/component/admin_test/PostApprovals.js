@@ -49,7 +49,7 @@ const PostApprovals = () => {
         const outreachQuery = query(
           collection(db, outreachEvents_collection),
           where("status", "==", "pending"),
-          orderBy("eventDate", "desc"),
+          orderBy("eventDate", "desc")
         );
 
         const outreachSnapshot = await getDocs(outreachQuery);
@@ -62,14 +62,14 @@ const PostApprovals = () => {
               userName: userDetails?.username || "Unknown User",
               userType: userDetails?.type || "",
             };
-          }),
+          })
         );
 
         // --- Fetch visit logs from NEW collection ---
         const visitLogQueryNew = query(
           collection(db, visitLogsNew_collection),
           where("status", "==", "pending"),
-          orderBy("timeStamp", "desc"),
+          orderBy("timeStamp", "desc")
         );
 
         const visitLogSnapshotNew = await getDocs(visitLogQueryNew);
@@ -82,7 +82,7 @@ const PostApprovals = () => {
               userName: userDetails?.username || "Unknown User",
               userType: userDetails?.type || "",
             };
-          }),
+          })
         );
 
         setPendingPosts({ outreaches, visitLogs });
@@ -200,7 +200,7 @@ const PostApprovals = () => {
       // Update state after approval
       const updatedPosts = { ...pendingPosts };
       updatedPosts[activeTab] = pendingPosts[activeTab].filter(
-        (post) => !selectedItems.includes(post.id),
+        (post) => !selectedItems.includes(post.id)
       );
       setPendingPosts(updatedPosts);
       setSelectedItems([]);
@@ -227,7 +227,7 @@ const PostApprovals = () => {
       // Update state after rejection
       const updatedPosts = { ...pendingPosts };
       updatedPosts[activeTab] = pendingPosts[activeTab].filter(
-        (post) => !selectedItems.includes(post.id),
+        (post) => !selectedItems.includes(post.id)
       );
       setPendingPosts(updatedPosts);
       setSelectedItems([]);
@@ -254,7 +254,7 @@ const PostApprovals = () => {
             x.location.city &&
             x.location.city.toLowerCase().includes(searchValue)) ||
           (x.city && x.city.toLowerCase().includes(searchValue)) ||
-          x.peopleHelpedDescription?.toLowerCase().includes(searchValue),
+          x.peopleHelpedDescription?.toLowerCase().includes(searchValue)
       ),
     };
 
@@ -322,7 +322,7 @@ const PostApprovals = () => {
       setPendingPosts((prev) => ({
         ...prev,
         [activeTab]: prev[activeTab].filter(
-          (post) => post.id !== selectedPost.id,
+          (post) => post.id !== selectedPost.id
         ),
       }));
 
@@ -347,7 +347,7 @@ const PostApprovals = () => {
       setPendingPosts((prev) => ({
         ...prev,
         [activeTab]: prev[activeTab].filter(
-          (post) => post.id !== selectedPost.id,
+          (post) => post.id !== selectedPost.id
         ),
       }));
 
@@ -366,7 +366,7 @@ const PostApprovals = () => {
   // Toggle selection for a post
   const toggleSelect = (id) => {
     setSelectedItems((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
@@ -376,7 +376,7 @@ const PostApprovals = () => {
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = filteredPosts[activeTab].slice(
     indexOfFirstPost,
-    indexOfLastPost,
+    indexOfLastPost
   );
 
   useEffect(() => {
@@ -410,7 +410,7 @@ const PostApprovals = () => {
         currentPage,
         currentPage + 1,
         "...",
-        totalPages,
+        totalPages
       );
     }
 
@@ -451,7 +451,7 @@ const PostApprovals = () => {
             >
               {page}
             </button>
-          ),
+          )
         )}
 
         {/* Next Button */}
@@ -643,7 +643,7 @@ const PostApprovals = () => {
                       selectedButton={true}
                       onClick={() => handleCardClick(post)}
                     />
-                  ),
+                  )
                 )}
               </div>
 
