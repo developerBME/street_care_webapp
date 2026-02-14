@@ -167,7 +167,7 @@ fetchFlagStatus();
 
   return (
     <div
-      className="bg-[#F5EEFE] w-[320px] rounded-[30px] mb-4 flex flex-col p-[24px] h-auto cursor-pointer border-b-[1px] border-gray-200"
+      className="bg-[#F5EEFE] w-[90%] max-w-[20rem]  md:w-full min-w-0 rounded-[30px] mb-4 flex flex-col p-6 h-auto cursor-pointer border-b-[1px] border-gray-200"
       onClick={handleViewDetails}
     >
       <div className="relative group">
@@ -237,9 +237,9 @@ fetchFlagStatus();
         <CardTags tags={interactionLogCardData?.listOfSupportsProvided || []} />
       </div>
 
-      <p className="text-sm mt-2 line-clamp-2">
+      {/* <p className="text-sm mt-2 line-clamp-2">
         {interactionLogCardData?.peopleHelpedDescription || ""}
-      </p>
+      </p> */}
     </div>
   );
 };
