@@ -18,8 +18,7 @@ import infoIcon from "../../images/info_icon.png";
 import arrowBack from "../../images/arrowBack.png";
 import searchIcon from "../../images/search-icon-PostApproval.png";
 import { fetchUserTypeDetails } from "../EventCardService";
-import { fetchPendingHelpRequests } from "./HelpRequests.js"; 
-
+import { fetchPendingHelpRequests } from "./HelpRequests.js";
 
 import collectionMapping from "../../utils/firestoreCollections";
 
@@ -33,27 +32,38 @@ const PostApprovals = () => {
     visitLogs: [],
     helpRequests: [],
   });
+
+  // State
   const [activeTab, setActiveTab] = useState("outreaches");
   const [selectedItems, setSelectedItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [helpLoaded, setHelpLoaded] = useState(false);
-const [helpLoading, setHelpLoading] = useState(false);
-
+  const [helpLoading, setHelpLoading] = useState(false);
   const [filteredPosts, setFilteredPosts] = useState({
     outreaches: [],
     visitLogs: [],
     helpRequests: [],
   });
   const [sortOption, setSortOption] = useState("Most Recent");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
+
   const postsPerPage = 6;
+
   const searchRef = useRef("");
+
   const collectionMap = {
     outreaches: outreachEvents_collection,
     visitLogs: visitLogsNew_collection,
     helpRequests: helpRequests_collection,
   };
+
+  const totalPosts =
+    pendingPosts.outreaches.length + pendingPosts.visitLogs.length;
+
+  // UseEffect 1/4
   useEffect(() => {
     const fetchPendingPosts = async () => {
       try {
@@ -62,7 +72,7 @@ const [helpLoading, setHelpLoading] = useState(false);
         const outreachQuery = query(
           collection(db, outreachEvents_collection),
           where("status", "==", "pending"),
-          orderBy("eventDate", "desc")
+          orderBy("eventDate", "desc"),
         );
 
         const outreachSnapshot = await getDocs(outreachQuery);
@@ -75,14 +85,14 @@ const [helpLoading, setHelpLoading] = useState(false);
               userName: userDetails?.username || "Unknown User",
               userType: userDetails?.type || "",
             };
-          })
+          }),
         );
 
         // --- Fetch visit logs from NEW collection ---
         const visitLogQueryNew = query(
           collection(db, visitLogsNew_collection),
           where("status", "==", "pending"),
-          orderBy("timeStamp", "desc")
+          orderBy("timeStamp", "desc"),
         );
 
         const visitLogSnapshotNew = await getDocs(visitLogQueryNew);
@@ -95,11 +105,10 @@ const [helpLoading, setHelpLoading] = useState(false);
               userName: userDetails?.username || "Unknown User",
               userType: userDetails?.type || "",
             };
-          })
+          }),
         );
 
-
-        setPendingPosts({ outreaches, visitLogs, helpRequests:[] });
+        setPendingPosts({ outreaches, visitLogs, helpRequests: [] });
         setIsError(false);
       } catch (error) {
         console.error("Error fetching pending posts:", error);
@@ -112,40 +121,360 @@ const [helpLoading, setHelpLoading] = useState(false);
     fetchPendingPosts();
   }, []);
 
+  // UseEffect 2/4
   useEffect(() => {
-  const loadHelpRequests = async () => {
-    // only load when user opens the tab, and only once
-    if (activeTab !== "helpRequests" || helpLoaded) return;
+    const loadHelpRequests = async () => {
+      // only load when user opens the tab, and only once
+      if (activeTab !== "helpRequests" || helpLoaded) return;
 
-    try {
-      setHelpLoading(true);
+      try {
+        setHelpLoading(true);
 
-      const helpRequests = await fetchPendingHelpRequests();
+        const helpRequests = await fetchPendingHelpRequests();
 
-      setPendingPosts((prev) => ({
-        ...prev,
-        helpRequests,
-      }));
+        setPendingPosts((prev) => ({
+          ...prev,
+          helpRequests,
+        }));
 
-      setHelpLoaded(true);
-    } catch (e) {
-      console.error("Error fetching help requests:", e);
-      setIsError(true);
-    } finally {
-      setHelpLoading(false);
-    }
-  };
+        setHelpLoaded(true);
+      } catch (e) {
+        console.error("Error fetching help requests:", e);
+        setIsError(true);
+      } finally {
+        setHelpLoading(false);
+      }
+    };
 
-  loadHelpRequests();
-}, [activeTab, helpLoaded]);
+    loadHelpRequests();
+  }, [activeTab, helpLoaded]);
 
+  // UseEffect 3/4
+  useEffect(() => {
+    // Initialize filteredPosts with fetched data (already sorted from backend)
+    setFilteredPosts(pendingPosts);
+  }, [pendingPosts]);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPost, setSelectedPost] = useState(null);
+  // useEffect 4/4
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab]);
 
+  // =========== Functions ============
+  // ----------- 1. Ui Functions [3]
   const handleCardClick = (post) => {
     setSelectedPost(post);
     setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedPost(null);
+    setIsModalOpen(false);
+  };
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+  };
+
+  // ----------- 2. API functions [2]
+  // Approve selected posts
+  const handleApproveSelected = async () => {
+    try {
+      const newCollection = collectionMap[activeTab];
+
+      for (const itemID of selectedItems) {
+        const docRefNew = doc(db, newCollection, itemID);
+
+        try {
+          await updateDoc(docRefNew, {
+            approved: true,
+            status: "approved",
+          });
+        } catch (error) {
+          console.error(`Approval failed for item: ${itemID}`, error);
+        }
+      }
+
+      // Update state after approval
+      const updatedPosts = { ...pendingPosts };
+      updatedPosts[activeTab] = pendingPosts[activeTab].filter(
+        (post) => !selectedItems.includes(post.id),
+      );
+      setPendingPosts(updatedPosts);
+      setSelectedItems([]);
+    } catch (error) {
+      console.error("Error approving posts:", error);
+    }
+  };
+
+  // Reject selected posts
+  const handleRejectSelected = async () => {
+    try {
+      const collectionName = collectionMap[activeTab];
+
+      for (const itemId of selectedItems) {
+        await updateDoc(doc(db, collectionName, itemId), {
+          approved: false,
+          status: "rejected",
+        });
+      }
+
+      // Update state after rejection
+      const updatedPosts = { ...pendingPosts };
+      updatedPosts[activeTab] = pendingPosts[activeTab].filter(
+        (post) => !selectedItems.includes(post.id),
+      );
+      setPendingPosts(updatedPosts);
+      setSelectedItems([]);
+    } catch (error) {
+      console.error("Error rejecting posts:", error);
+    }
+  };
+
+  // ------------------- 3. Search and sort
+  //Search Function
+  const searchChange = () => {
+    const searchValue = searchRef.current.value.toLowerCase();
+
+    const filtered = pendingPosts[activeTab].filter((x) => {
+      if (activeTab === "outreaches") {
+        return (
+          x.title?.toLowerCase().includes(searchValue) ||
+          x.userName?.toLowerCase().includes(searchValue) ||
+          x.location?.city?.toLowerCase().includes(searchValue)
+        );
+      }
+
+      if (activeTab === "visitLogs") {
+        return (
+          x.peopleHelpedDescription?.toLowerCase().includes(searchValue) ||
+          x.userName?.toLowerCase().includes(searchValue) ||
+          x.city?.toLowerCase().includes(searchValue)
+        );
+      }
+
+      if (activeTab === "helpRequests") {
+        return (
+          x.firstName?.toLowerCase().includes(searchValue) ||
+          x.interactionLogFirstName?.toLowerCase().includes(searchValue) ||
+          x.additionalDetails?.toLowerCase().includes(searchValue) ||
+          x.locationLandmark?.toLowerCase().includes(searchValue) ||
+          x.helpProvidedCategory?.some((c) =>
+            c.toLowerCase().includes(searchValue),
+          ) ||
+          x.furtherHelpCategory?.some((c) =>
+            c.toLowerCase().includes(searchValue),
+          )
+        );
+      }
+
+      return false;
+    });
+
+    setFilteredPosts((prev) => ({
+      ...prev,
+      [activeTab]: filtered,
+    }));
+
+    setCurrentPage(1); // reset to the first page
+  };
+
+  // Sort By Function
+  const handleSortChange = (event) => {
+    const selectedOption = event.target.value;
+    setSortOption(selectedOption);
+    setCurrentPage(1);
+    let sortedData = [...filteredPosts[activeTab]];
+
+    // Determine the correct date field based on the active tab
+    let dateField;
+    let alphaSortedField;
+
+    if (activeTab === "outreaches") {
+      dateField = "eventDate";
+      alphaSortedField = "title";
+    } else if (activeTab === "visitLogs") {
+      dateField = "timeStamp";
+      alphaSortedField = "peopleHelpedDescription";
+    } else {
+      dateField = "lastModifiedTimestamp";
+      alphaSortedField = "firstName";
+    }
+
+    if (selectedOption === "Most Recent") {
+      sortedData.sort((a, b) => {
+        const dateA = a[dateField]?.seconds
+          ? new Date(a[dateField].seconds * 1000).getTime()
+          : 0;
+        const dateB = b[dateField]?.seconds
+          ? new Date(b[dateField].seconds * 1000).getTime()
+          : 0;
+        return dateB - dateA;
+      });
+    } else if (selectedOption === "Oldest First") {
+      sortedData.sort((a, b) => {
+        const dateA = a[dateField]?.seconds
+          ? new Date(a[dateField].seconds * 1000).getTime()
+          : 0;
+        const dateB = b[dateField]?.seconds
+          ? new Date(b[dateField].seconds * 1000).getTime()
+          : 0;
+        return dateA - dateB;
+      });
+    } else if (selectedOption === "Alphabetical") {
+      sortedData.sort((a, b) => {
+        const valueA = a[alphaSortedField] || ""; // Fallback to an empty string if null/undefined
+        const valueB = b[alphaSortedField] || ""; // Fallback to an empty string if null/undefined
+        return valueA.localeCompare(valueB);
+      });
+    }
+
+    setFilteredPosts((prevState) => ({
+      ...prevState,
+      [activeTab]: sortedData,
+    }));
+  };
+
+  const handleAccept = async () => {
+    try {
+      const collectionName = collectionMap[activeTab];
+      await updateDoc(doc(db, collectionName, selectedPost.id), {
+        status: "approved",
+      });
+
+      // Update state to remove the accepted post
+      setPendingPosts((prev) => ({
+        ...prev,
+        [activeTab]: prev[activeTab].filter(
+          (post) => post.id !== selectedPost.id,
+        ),
+      }));
+
+      setSelectedPost(null);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Error accepting post:", error);
+    }
+  };
+
+  const handleReject = async () => {
+    try {
+      const collectionName = collectionMap[activeTab];
+      await updateDoc(doc(db, collectionName, selectedPost.id), {
+        status: "rejected",
+      });
+
+      // Update state to remove the rejected post
+      setPendingPosts((prev) => ({
+        ...prev,
+        [activeTab]: prev[activeTab].filter(
+          (post) => post.id !== selectedPost.id,
+        ),
+      }));
+
+      setSelectedPost(null);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Error rejecting post:", error);
+    }
+  };
+
+  // Cancel selection
+  const handleCancelSelection = () => {
+    setSelectedItems([]);
+  };
+
+  // Toggle selection for a post
+  const toggleSelect = (id) => {
+    setSelectedItems((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
+    );
+  };
+
+  // Pagination calculations
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = filteredPosts[activeTab].slice(
+    indexOfFirstPost,
+    indexOfLastPost,
+  );
+
+  // Render pagination buttons with ellipsis style
+  const renderPaginationButtons = () => {
+    const totalPages = Math.ceil(pendingPosts[activeTab].length / postsPerPage);
+    const pages = [];
+
+    // Generate pagination buttons
+    if (totalPages <= 5) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else if (currentPage <= 3) {
+      pages.push(1, 2, 3, "...", totalPages);
+    } else if (currentPage >= totalPages - 2) {
+      pages.push(1, "...", totalPages - 2, totalPages - 1, totalPages);
+    } else {
+      pages.push(
+        1,
+        "...",
+        currentPage - 1,
+        currentPage,
+        currentPage + 1,
+        "...",
+        totalPages,
+      );
+    }
+
+    const loadingForTab =
+      activeTab === "helpRequests" ? helpLoading : isLoading;
+
+    return (
+      <div className="flex items-center space-x-1 text-sm">
+        {/* Previous Button */}
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className="w-8 h-8 flex items-center justify-center rounded-full bg-white border border-[#9B82CF] disabled:opacity-50"
+        >
+          &lt;
+        </button>
+
+        {/* Page Buttons */}
+        {pages.map((page, index) =>
+          page === "..." ? (
+            <span
+              key={`ellipsis-${index}`}
+              className="w-8 h-8 flex items-center justify-center"
+            >
+              ...
+            </span>
+          ) : (
+            <button
+              key={`page-${page}`}
+              onClick={() => setCurrentPage(page)}
+              className={`w-8 h-8 flex items-center justify-center rounded-full ${
+                currentPage === page
+                  ? "bg-[#1F0A58] text-white"
+                  : "bg-white text-black border border-[#9B82CF]"
+              }`}
+            >
+              {page}
+            </button>
+          ),
+        )}
+
+        {/* Next Button */}
+        <button
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
+          disabled={currentPage === totalPages}
+          className="w-8 h-8 flex items-center justify-center rounded-full bg-white border border-[#9B82CF] disabled:opacity-50"
+        >
+          &gt;
+        </button>
+      </div>
+    );
   };
 
   const Modal = ({ post, onClose, onAccept, onReject }) => {
@@ -218,341 +547,14 @@ const [helpLoading, setHelpLoading] = useState(false);
     );
   };
 
-  const handleCloseModal = () => {
-    setSelectedPost(null);
-    setIsModalOpen(false);
-  };
-
-  // Approve selected posts
-  const handleApproveSelected = async () => {
-    try {
-      const newCollection = collectionMap[activeTab];
-
-      for (const itemID of selectedItems) {
-        const docRefNew = doc(db, newCollection, itemID);
-
-        try {
-          await updateDoc(docRefNew, {
-            approved: true,
-            status: "approved",
-          });
-        } catch (error) {
-          console.error(`Approval failed for item: ${itemID}`, error);
-        }
-      }
-
-      // Update state after approval
-      const updatedPosts = { ...pendingPosts };
-      updatedPosts[activeTab] = pendingPosts[activeTab].filter(
-        (post) => !selectedItems.includes(post.id)
-      );
-      setPendingPosts(updatedPosts);
-      setSelectedItems([]);
-    } catch (error) {
-      console.error("Error approving posts:", error);
-    }
-  };
-
-  // Reject selected posts
-  const handleRejectSelected = async () => {
-    try {
-      const collectionName = collectionMap[activeTab];
-
-      for (const itemId of selectedItems) {
-        await updateDoc(doc(db, collectionName, itemId), {
-          approved: false,
-          status: "rejected",
-        });
-      }
-
-      // Update state after rejection
-      const updatedPosts = { ...pendingPosts };
-      updatedPosts[activeTab] = pendingPosts[activeTab].filter(
-        (post) => !selectedItems.includes(post.id)
-      );
-      setPendingPosts(updatedPosts);
-      setSelectedItems([]);
-    } catch (error) {
-      console.error("Error rejecting posts:", error);
-    }
-  };
-  useEffect(() => {
-    // Initialize filteredPosts with fetched data (already sorted from backend)
-    setFilteredPosts(pendingPosts);
-  }, [pendingPosts]);
-
-  //Search Function
-  const searchChange = () => {
-  const searchValue = searchRef.current.value.toLowerCase();
-
-  const filtered = pendingPosts[activeTab].filter((x) => {
-    if (activeTab === "outreaches") {
-      return (
-        x.title?.toLowerCase().includes(searchValue) ||
-        x.userName?.toLowerCase().includes(searchValue) ||
-        x.location?.city?.toLowerCase().includes(searchValue)
-      );
-    }
-
-    if (activeTab === "visitLogs") {
-      return (
-        x.peopleHelpedDescription?.toLowerCase().includes(searchValue) ||
-        x.userName?.toLowerCase().includes(searchValue) ||
-        x.city?.toLowerCase().includes(searchValue)
-      );
-    }
-
-    
-    if (activeTab === "helpRequests") {
-      return (
-        x.firstName?.toLowerCase().includes(searchValue) ||
-        x.interactionLogFirstName?.toLowerCase().includes(searchValue) ||
-        x.additionalDetails?.toLowerCase().includes(searchValue) ||
-        x.locationLandmark?.toLowerCase().includes(searchValue) ||
-        x.helpProvidedCategory?.some((c) =>
-          c.toLowerCase().includes(searchValue)
-        ) ||
-        x.furtherHelpCategory?.some((c) =>
-          c.toLowerCase().includes(searchValue)
-        )
-      );
-    }
-
-    return false;
-  });
-
-  setFilteredPosts((prev) => ({
-    ...prev,
-    [activeTab]: filtered,
-  }));
-
-  setCurrentPage(1); // reset to the first page
-};
-
-
-  // Sort By Function
-  const handleSortChange = (event) => {
-    const selectedOption = event.target.value;
-    setSortOption(selectedOption);
-    setCurrentPage(1); 
-    let sortedData = [...filteredPosts[activeTab]];
-
-    // Determine the correct date field based on the active tab
-    let dateField;
-    let alphaSortedField;
-
-    if (activeTab === "outreaches") {
-      dateField = "eventDate";
-      alphaSortedField = "title";
-    } else if (activeTab === "visitLogs") {
-      dateField = "timeStamp";
-      alphaSortedField = "peopleHelpedDescription";
-    } else {
-      dateField = "lastModifiedTimestamp";
-      alphaSortedField = "firstName";
-    }
-
-    if (selectedOption === "Most Recent") {
-      sortedData.sort((a, b) => {
-        const dateA = a[dateField]?.seconds
-          ? new Date(a[dateField].seconds * 1000).getTime()
-          : 0;
-        const dateB = b[dateField]?.seconds
-          ? new Date(b[dateField].seconds * 1000).getTime()
-          : 0;
-        return dateB - dateA;
-      });
-    } else if (selectedOption === "Oldest First") {
-      sortedData.sort((a, b) => {
-        const dateA = a[dateField]?.seconds
-          ? new Date(a[dateField].seconds * 1000).getTime()
-          : 0;
-        const dateB = b[dateField]?.seconds
-          ? new Date(b[dateField].seconds * 1000).getTime()
-          : 0;
-        return dateA - dateB;
-      });
-    } else if (selectedOption === "Alphabetical") {
-      sortedData.sort((a, b) => {
-        const valueA = a[alphaSortedField] || ""; // Fallback to an empty string if null/undefined
-        const valueB = b[alphaSortedField] || ""; // Fallback to an empty string if null/undefined
-        return valueA.localeCompare(valueB);
-      });
-    }
-
-    setFilteredPosts((prevState) => ({
-      ...prevState,
-      [activeTab]: sortedData,
-    }));
-  };
-
-  const handleAccept = async () => {
-    try {
-      const collectionName = collectionMap[activeTab];
-      await updateDoc(doc(db, collectionName, selectedPost.id), {
-        status: "approved",
-      });
-
-      // Update state to remove the accepted post
-      setPendingPosts((prev) => ({
-        ...prev,
-        [activeTab]: prev[activeTab].filter(
-          (post) => post.id !== selectedPost.id
-        ),
-      }));
-
-      setSelectedPost(null);
-      setIsModalOpen(false);
-    } catch (error) {
-      console.error("Error accepting post:", error);
-    }
-  };
-
-  const handleReject = async () => {
-    try {
-      const collectionName = collectionMap[activeTab];
-      await updateDoc(doc(db, collectionName, selectedPost.id), {
-        status: "rejected",
-      });
-
-      // Update state to remove the rejected post
-      setPendingPosts((prev) => ({
-        ...prev,
-        [activeTab]: prev[activeTab].filter(
-          (post) => post.id !== selectedPost.id
-        ),
-      }));
-
-      setSelectedPost(null);
-      setIsModalOpen(false);
-    } catch (error) {
-      console.error("Error rejecting post:", error);
-    }
-  };
-
-  // Cancel selection
-  const handleCancelSelection = () => {
-    setSelectedItems([]);
-  };
-
-  // Toggle selection for a post
-  const toggleSelect = (id) => {
-    setSelectedItems((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
-  };
-
-  // Pagination calculations
-
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = filteredPosts[activeTab].slice(
-    indexOfFirstPost,
-    indexOfLastPost
-  );
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [activeTab]);
-
-  // Tab switching logic
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
-  };
-
-  // Render pagination buttons with ellipsis style
-  const renderPaginationButtons = () => {
-    const totalPages = Math.ceil(pendingPosts[activeTab].length / postsPerPage);
-    const pages = [];
-
-    // Generate pagination buttons
-    if (totalPages <= 5) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
-    } else if (currentPage <= 3) {
-      pages.push(1, 2, 3, "...", totalPages);
-    } else if (currentPage >= totalPages - 2) {
-      pages.push(1, "...", totalPages - 2, totalPages - 1, totalPages);
-    } else {
-      pages.push(
-        1,
-        "...",
-        currentPage - 1,
-        currentPage,
-        currentPage + 1,
-        "...",
-        totalPages
-      );
-    }
-
-       const loadingForTab = activeTab === "helpRequests" ? helpLoading : isLoading;
-
-    return (
-      <div className="flex items-center space-x-1 text-sm">
-        {/* Previous Button */}
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-          className="w-8 h-8 flex items-center justify-center rounded-full bg-white border border-[#9B82CF] disabled:opacity-50"
-        >
-          &lt;
-        </button>
-
-        {/* Page Buttons */}
-        {pages.map((page, index) =>
-          page === "..." ? (
-            <span
-              key={`ellipsis-${index}`}
-              className="w-8 h-8 flex items-center justify-center"
-            >
-              ...
-            </span>
-          ) : (
-            <button
-              key={`page-${page}`}
-              onClick={() => setCurrentPage(page)}
-              className={`w-8 h-8 flex items-center justify-center rounded-full ${
-                currentPage === page
-                  ? "bg-[#1F0A58] text-white"
-                  : "bg-white text-black border border-[#9B82CF]"
-              }`}
-            >
-              {page}
-            </button>
-          )
-        )}
-
-        {/* Next Button */}
-        <button
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
-          disabled={currentPage === totalPages}
-          className="w-8 h-8 flex items-center justify-center rounded-full bg-white border border-[#9B82CF] disabled:opacity-50"
-        >
-          &gt;
-        </button>
-      </div>
-    );
-  };
-
-  const totalPosts =
-    pendingPosts.outreaches.length + pendingPosts.visitLogs.length;
-
   return (
     <div className="relative flex flex-col items-center">
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-16 lg:mx-40 mt-16 rounded-2xl bg-white text-black">
         <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
-          {/* Headline Section */}
-          {/* Page Title */}
           <div className="flex justify-between items-center gap-4 w-full max-w-[1324px] mb-6">
-            {/* <!-- Post Approvals Title --> */}
             <p className="font-bricolage font-medium text-xl md:text-[32px] text-[#1F0A58]">
               Post Approvals
             </p>
-
-            {/* <!-- Search and Sort by section --> */}
             <div className="flex justify-end items-center gap-[49px] w-[492px] h-[40px]">
               {/* <!-- Search Input --> */}
               <div className="flex items-center gap-[5px] w-[253px] h-[40px] border border-gray-300 rounded px-2">
@@ -598,7 +600,7 @@ const [helpLoading, setHelpLoading] = useState(false);
               pending to be published on the live website
             </p>
           </div>
-
+          {/* NOT REFACTORED [START]: approve, reject selected */}
           {/* Top Buttons */}
           {selectedItems.length > 0 && (
             <div className="relative flex justify-between items-center mt-4 bg-[#E4EEEA] p-4 rounded-lg shadow">
@@ -641,6 +643,7 @@ const [helpLoading, setHelpLoading] = useState(false);
               </div>
             </div>
           )}
+          {/* NOT REFACTORED [END]: approve, reject selected */}
 
           {/* Tabs */}
           <div className="pt-4 pb-3">
@@ -700,7 +703,6 @@ const [helpLoading, setHelpLoading] = useState(false);
             <>
               {/* Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-[20px] gap-y-[30px] mt-[20px]">
-                {console.log("Current Posts:", currentPosts)}
                 {currentPosts.map((post) =>
                   activeTab === "outreaches" ? (
                     <ApprovalCardOutreachEvents
@@ -731,7 +733,7 @@ const [helpLoading, setHelpLoading] = useState(false);
                       selectedButton={true}
                       onClick={() => handleCardClick(post)}
                     />
-                  )
+                  ),
                 )}
               </div>
 
@@ -758,6 +760,6 @@ const [helpLoading, setHelpLoading] = useState(false);
       )}
     </div>
   );
-};
+};;;
 
 export default PostApprovals;
