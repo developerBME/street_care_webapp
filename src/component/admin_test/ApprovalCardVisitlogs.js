@@ -1,4 +1,3 @@
-import React from "react";
 import calendarIcon from "../../images/calendar_month.svg";
 import locationIcon from "../../images/location_on.svg";
 import verifiedPurple from "../../images/verified_purple.png";
@@ -7,7 +6,6 @@ import verifiedBlue from "../../images/verified_blue.png";
 import verifiedYellow from "../../images/verified_yellow.png";
 
 const getTags = (postData, isVisitLogs) => {
-  console.log("ApprovalCard postData:", postData);
   const tags = isVisitLogs ? postData?.whatGiven || [] : postData?.skills || [];
 
   return tags.map((tag, index) => (
@@ -42,14 +40,17 @@ const ApprovalCardVisitlogs = ({
   selectedButton,
 }) => {
   // Inline date  formatting to handle Firebase Timestamp
-  const formattedDate = postData?.timeStamp?.seconds
-    ? new Date(postData.timeStamp.seconds * 1000).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      })
+  const formattedDate = postData?.interactionDate?.seconds
+    ? new Date(postData.interactionDate.seconds * 1000).toLocaleDateString(
+        "en-US",
+        {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        },
+      )
     : "Unknown Date";
 
   let userImage = null;
@@ -78,7 +79,7 @@ const ApprovalCardVisitlogs = ({
       <div className="mt-2 text-right mb-2">
         <span
           className={`px-3 py-1 text-sm font-medium rounded-full ${getStatusStyle(
-            postData.status
+            postData.status,
           )}`}
         >
           {postData.status || "No Status"}
@@ -88,7 +89,7 @@ const ApprovalCardVisitlogs = ({
       {/* UserName Section */}
       <div className="flex items-center space-x-2 mb-3">
         <span className="text-sm text-[#37168B] font-medium">
-          {postData?.userName || "Unknown User"}
+          {`${postData?.firstName} ${postData?.lastName}` || "Unknown User"}
         </span>
         {userImage && <img alt="" src={userImage} className="w-5 h-5" />}
       </div>
@@ -108,16 +109,16 @@ const ApprovalCardVisitlogs = ({
           <div className="flex items-center space-x-2">
             <img alt="location" src={locationIcon} className="w-4 h-4" />
             <span className="text-sm text-[#37168B] font-medium">
-              {postData?.location?.city || postData?.city 
-              ? (
+              {postData?.location?.city || postData?.city ? (
                 <>
                   {postData.location?.city || postData.city}
                   {postData.stateAbbv || postData.state
                     ? `, ${postData.stateAbbv || postData.state}`
                     : ""}
                 </>
-              ) 
-              : "Unknown City"}
+              ) : (
+                "Unknown City"
+              )}
             </span>
           </div>
         </div>
@@ -158,3 +159,51 @@ const ApprovalCardVisitlogs = ({
 };
 
 export default ApprovalCardVisitlogs;
+
+const api = {
+  id: "82233B15-4796-4597-B2AE-93C9FFB63077",
+  lastActionPerformed: null,
+  interactionDate: {
+    seconds: 1764101210,
+    nanoseconds: 558508000,
+  },
+  zipcode: "07306-3876",
+  status: "Pending",
+  lastName: "Warlock",
+  endTimestamp: {
+    seconds: 1764101210,
+    nanoseconds: 558272000,
+  },
+  listOfSupportsProvided: [],
+  carePackageContents: null,
+  helpRequestDocIds: [
+    "zntAweS6jll026eJwQmN",
+    "ZZEvXBO2npdFlwKLtqFP",
+    "kTfo5eRsP0IkqnQy33kq",
+  ],
+  carePackagesDistributed: 0,
+  state: "New Jersey",
+  numPeopleJoined: 2,
+  helpRequestCount: 3,
+  country: "USA",
+  outreachId: "",
+  email: "adamwarlock@gmai.com",
+  addr1: "789 Newark Ave, Jersey City, NJ 07306, USA",
+  isPublic: false,
+  userId: "",
+  numPeopleHelped: 3,
+  addr2: "",
+  phoneNumber: "",
+  city: "Jersey City",
+  startTimestamp: {
+    seconds: 1764101210,
+    nanoseconds: 558560000,
+  },
+  firstName: "Adam",
+  lastModifiedTimestamp: {
+    seconds: 1764101210,
+    nanoseconds: 558509000,
+  },
+  userName: "Unknown User",
+  userType: "",
+};

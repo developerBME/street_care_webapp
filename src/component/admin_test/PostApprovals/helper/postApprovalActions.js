@@ -1,4 +1,4 @@
-import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
 
 export async function approveSelectedPosts({
@@ -11,9 +11,8 @@ export async function approveSelectedPosts({
   for (const id of selectedItems) {
     try {
       await updateDoc(doc(db, collectionName, id), {
+        approved: true,
         status: "approved",
-        lastModifiedTimestamp: serverTimestamp(),
-        lastActionPerformed: "approved",
       });
     } catch (error) {
       console.error(`Approval failed for item: ${id}`, error);
@@ -31,25 +30,22 @@ export async function rejectSelectedPosts({
   for (const id of selectedItems) {
     try {
       await updateDoc(doc(db, collectionName, id), {
+        approved: false,
         status: "rejected",
-        lastModifiedTimestamp: serverTimestamp(),
-        lastActionPerformed: "rejected",
       });
     } catch (error) {
       console.error(`Rejection failed for item: ${id}`, error);
     }
   }
 }
-//Approve / Reject Single Post fnc not needed
-//Instead pass the postId in agrs of approve/rejectSelectedPosts as [postId]
+
 export async function approveSinglePost({ collectionMap, activeTab, postId }) {
   const collectionName = collectionMap[activeTab];
 
   try {
     await updateDoc(doc(db, collectionName, postId), {
+      approved: true,
       status: "approved",
-      lastModifiedTimestamp: serverTimestamp(),
-      lastActionPerformed: "approved",
     });
   } catch (error) {
     console.error(`Approval failed for item: ${postId}`, error);
@@ -62,13 +58,11 @@ export async function rejectSinglePost({ collectionMap, activeTab, postId }) {
 
   try {
     await updateDoc(doc(db, collectionName, postId), {
+      approved: false,
       status: "rejected",
-      lastModifiedTimestamp: serverTimestamp(),
-      lastActionPerformed: "rejected",
     });
   } catch (error) {
     console.error(`Rejection failed for item: ${postId}`, error);
     throw error;
   }
 }
-//TODO: Update last modified Timestamp too.
