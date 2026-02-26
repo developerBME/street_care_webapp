@@ -323,7 +323,7 @@ export const fetchPublicVisitLogs = async (
 
     newInteractionLogRec = query(
       collection(db, interactionLog_collection), //visitLogsNew_collection
-      where("status", "==", "Pending"),
+      where("status", "==", "approved"),
       orderBy("lastModifiedTimestamp", "desc"),
     );
     console.log("Fetching public visit logs...");
@@ -637,3 +637,4 @@ export const ToggleApproveStatus = async function (documentId) {
     console.error("Error updating document:", error.message);
   }
 };
+
