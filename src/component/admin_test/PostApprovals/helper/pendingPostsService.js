@@ -15,7 +15,7 @@ import { fetchUserTypeDetails } from "../../../EventCardService";
 export async function fetchPendingCount({ collectionName }) {
   const q = query(
     collection(db, collectionName),
-    where("status", "==", "Pending"),
+    where("status", "==", "pending"),
   );
   const snap = await getCountFromServer(q);
   return snap.data().count;
@@ -29,7 +29,7 @@ export async function fetchPendingPage({
 }) {
   const base = [
     collection(db, collectionName),
-    where("status", "==", "Pending"), // TODO: change 
+    where("status", "==", "pending"), // TODO: change
     orderBy(orderField, "desc"),
 
     limit(pageSize),
