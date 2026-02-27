@@ -197,6 +197,10 @@ export default function PostApprovals() {
     loadTabIfNeeded();
   }, [activeTab, hasPage1LoadedForActiveTab]);
 
+  useEffect(() => {
+    console.log("Posts:", posts);
+  }, [posts]);
+
   // ==========================================================================
   // ------------------------ *** UI handlers *** -----------------------------
   // ==========================================================================
