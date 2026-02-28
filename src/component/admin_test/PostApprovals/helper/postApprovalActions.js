@@ -13,7 +13,7 @@ export async function approveSelectedPosts({
       await updateDoc(doc(db, collectionName, id), {
         status: "approved",
         lastModifiedTimestamp: serverTimestamp(),
-        lastActionPerformed: "approved",
+        lastActionPerformed: "approve",
       });
     } catch (error) {
       console.error(`Approval failed for item: ${id}`, error);
@@ -33,7 +33,7 @@ export async function rejectSelectedPosts({
       await updateDoc(doc(db, collectionName, id), {
         status: "rejected",
         lastModifiedTimestamp: serverTimestamp(),
-        lastActionPerformed: "rejected",
+        lastActionPerformed: "reject",
       });
     } catch (error) {
       console.error(`Rejection failed for item: ${id}`, error);
@@ -49,7 +49,7 @@ export async function approveSinglePost({ collectionMap, activeTab, postId }) {
     await updateDoc(doc(db, collectionName, postId), {
       status: "approved",
       lastModifiedTimestamp: serverTimestamp(),
-      lastActionPerformed: "approved",
+      lastActionPerformed: "approve",
     });
   } catch (error) {
     console.error(`Approval failed for item: ${postId}`, error);
@@ -64,7 +64,7 @@ export async function rejectSinglePost({ collectionMap, activeTab, postId }) {
     await updateDoc(doc(db, collectionName, postId), {
       status: "rejected",
       lastModifiedTimestamp: serverTimestamp(),
-      lastActionPerformed: "rejected",
+      lastActionPerformed: "reject",
     });
   } catch (error) {
     console.error(`Rejection failed for item: ${postId}`, error);

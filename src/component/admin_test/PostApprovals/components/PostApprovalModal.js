@@ -2,9 +2,8 @@ import { useEffect } from "react";
 
 import arrowBack from "../../../../images/arrowBack.png";
 import ApprovalCardOutreachEvents from "../../ApprovalCardOutreachEvents";
-import ApprovalCardVisitlogs from "../../ApprovalCardVisitlogs";
 import ApprovalCardHelpRequests from "../../ApprovalCardHelpRequests";
-
+import { VisitLogExpandedView } from "./VisitLogExpandedView";
 export default function PostApprovalModal({
   post,
   activeTab,
@@ -50,7 +49,11 @@ export default function PostApprovalModal({
     );
   } else if (activeTab === "visitLogs") {
     card = (
-      <ApprovalCardVisitlogs {...selectableCardProps} isVisitLogs={true} />
+      <VisitLogExpandedView
+        {...selectableCardProps}
+        userImage={post.userImage}
+        isVisitLogs={true}
+      />
     );
   }
 
