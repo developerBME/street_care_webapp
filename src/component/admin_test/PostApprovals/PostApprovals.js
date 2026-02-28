@@ -6,11 +6,11 @@ import PostTabs from "./components/PostTabs";
 import SearchSort from "./components/SearchSort";
 import PostApprovalModal from "./components/PostApprovalModal";
 import ApprovalCardOutreachEvents from "../ApprovalCardOutreachEvents";
-import ApprovalCardVisitlogs from "../ApprovalCardVisitlogs";
+// import ApprovalCardVisitlogs from "../ApprovalCardVisitlogs";
 import ApprovalCardHelpRequests from "../ApprovalCardHelpRequests";
 import SelectionActionsBar from "./components/SelectionActionBar";
 import Pagination from "./components/Pagination";
-
+import ApprovalCardVisitlogs  from "./components/VisitLogExpandedView";
 import {
   calculateTotalPostsFromCounts,
   createTabsFromCounts,
