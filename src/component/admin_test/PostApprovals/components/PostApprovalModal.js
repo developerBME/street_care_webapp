@@ -2,8 +2,9 @@ import { useEffect } from "react";
 
 import arrowBack from "../../../../images/arrowBack.png";
 import ApprovalCardOutreachEvents from "../../ApprovalCardOutreachEvents";
-import ApprovalCardHelpRequests from "../../ApprovalCardHelpRequests";
+// import ApprovalCardHelpRequests from "../../ApprovalCardHelpRequests";
 import { VisitLogExpandedView } from "./VisitLogExpandedView";
+import { HelpRequestExpandedView } from "./HelpRequestExpandedView";
 export default function PostApprovalModal({
   post,
   activeTab,
@@ -38,7 +39,7 @@ export default function PostApprovalModal({
     isSelected: false,
   };
 
-  let card = <ApprovalCardHelpRequests {...commonCardProps} />;
+  let card = <HelpRequestExpandedView {...commonCardProps} />;
 
   if (activeTab === "outreaches") {
     card = (
