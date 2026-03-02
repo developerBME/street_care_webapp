@@ -18,8 +18,7 @@ import infoIcon from "../../images/info_icon.png";
 import arrowBack from "../../images/arrowBack.png";
 import searchIcon from "../../images/search-icon-PostApproval.png";
 import { fetchUserTypeDetails } from "../EventCardService";
-import { fetchPendingHelpRequests } from "./HelpRequests.js"; 
-
+import { fetchPendingHelpRequests } from "./HelpRequests.js";
 
 import collectionMapping from "../../utils/firestoreCollections";
 
@@ -39,7 +38,7 @@ const PostApprovals = () => {
   const [isError, setIsError] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [helpLoaded, setHelpLoaded] = useState(false);
-const [helpLoading, setHelpLoading] = useState(false);
+  const [helpLoading, setHelpLoading] = useState(false);
 
   const [filteredPosts, setFilteredPosts] = useState({
     outreaches: [],
@@ -62,7 +61,7 @@ const [helpLoading, setHelpLoading] = useState(false);
         const outreachQuery = query(
           collection(db, outreachEvents_collection),
           where("status", "==", "pending"),
-          orderBy("eventDate", "desc")
+          orderBy("eventDate", "desc"),
         );
 
         const outreachSnapshot = await getDocs(outreachQuery);
@@ -75,14 +74,14 @@ const [helpLoading, setHelpLoading] = useState(false);
               userName: userDetails?.username || "Unknown User",
               userType: userDetails?.type || "",
             };
-          })
+          }),
         );
 
         // --- Fetch visit logs from NEW collection ---
         const visitLogQueryNew = query(
           collection(db, visitLogsNew_collection),
           where("status", "==", "pending"),
-          orderBy("timeStamp", "desc")
+          orderBy("timeStamp", "desc"),
         );
 
         const visitLogSnapshotNew = await getDocs(visitLogQueryNew);
@@ -95,11 +94,10 @@ const [helpLoading, setHelpLoading] = useState(false);
               userName: userDetails?.username || "Unknown User",
               userType: userDetails?.type || "",
             };
-          })
+          }),
         );
 
-
-        setPendingPosts({ outreaches, visitLogs, helpRequests:[] });
+        setPendingPosts({ outreaches, visitLogs, helpRequests: [] });
         setIsError(false);
       } catch (error) {
         console.error("Error fetching pending posts:", error);
@@ -113,32 +111,31 @@ const [helpLoading, setHelpLoading] = useState(false);
   }, []);
 
   useEffect(() => {
-  const loadHelpRequests = async () => {
-    // only load when user opens the tab, and only once
-    if (activeTab !== "helpRequests" || helpLoaded) return;
+    const loadHelpRequests = async () => {
+      // only load when user opens the tab, and only once
+      if (activeTab !== "helpRequests" || helpLoaded) return;
 
-    try {
-      setHelpLoading(true);
+      try {
+        setHelpLoading(true);
 
-      const helpRequests = await fetchPendingHelpRequests();
+        const helpRequests = await fetchPendingHelpRequests();
 
-      setPendingPosts((prev) => ({
-        ...prev,
-        helpRequests,
-      }));
+        setPendingPosts((prev) => ({
+          ...prev,
+          helpRequests,
+        }));
 
-      setHelpLoaded(true);
-    } catch (e) {
-      console.error("Error fetching help requests:", e);
-      setIsError(true);
-    } finally {
-      setHelpLoading(false);
-    }
-  };
+        setHelpLoaded(true);
+      } catch (e) {
+        console.error("Error fetching help requests:", e);
+        setIsError(true);
+      } finally {
+        setHelpLoading(false);
+      }
+    };
 
-  loadHelpRequests();
-}, [activeTab, helpLoaded]);
-
+    loadHelpRequests();
+  }, [activeTab, helpLoaded]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
@@ -149,12 +146,20 @@ const [helpLoading, setHelpLoading] = useState(false);
   };
 
   const Modal = ({ post, onClose, onAccept, onReject }) => {
+    // Wider modal for help requests expanded view
+    const modalWidth =
+      activeTab === "helpRequests"
+        ? "max-w-2xl" // 1024px for help requests
+        : "max-w-lg"; // 512px for others
+
     return (
-      <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-md">
+      <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-md p-4 overflow-auto">
         {/* Modal Container */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-lg flex flex-col items-center">
+        <div
+          className={`bg-white rounded-2xl shadow-lg p-6 w-full ${modalWidth} flex flex-col items-center`}
+        >
           {/* Back Button */}
-          <div className="flex items-center w-full mb-4">
+          {/* <div className="flex items-center w-full mb-4">
             <img
               src={arrowBack}
               alt="Back"
@@ -167,8 +172,15 @@ const [helpLoading, setHelpLoading] = useState(false);
             >
               Go Back
             </button>
+          </div> */}
+          <div className="flex justify-end w-full mb-4">
+            <button
+              onClick={onClose}
+              className="w-8 h-8 flex items-center justify-center rounded-full border-2 border-gray-500 text-gray-700 hover:bg-gray-100 transition text-lg font-bold"
+            >
+              X{" "}
+            </button>
           </div>
-
           {/* Approval Card */}
           {activeTab === "outreaches" ? (
             <ApprovalCardOutreachEvents
@@ -192,9 +204,12 @@ const [helpLoading, setHelpLoading] = useState(false);
             />
           ) : (
             <ApprovalCardHelpRequests
+              key={post.id || post.docId || post.interactionLogDocId}
               postData={post}
+              expanded={true}
               selectedButton={false}
               onClick={() => {}}
+              onClose={onClose}
             />
           )}
 
@@ -244,7 +259,10 @@ const [helpLoading, setHelpLoading] = useState(false);
       // Update state after approval
       const updatedPosts = { ...pendingPosts };
       updatedPosts[activeTab] = pendingPosts[activeTab].filter(
-        (post) => !selectedItems.includes(post.id)
+        (post) =>
+          !selectedItems.includes(
+            post.id || post.docId || post.interactionLogDocId,
+          ),
       );
       setPendingPosts(updatedPosts);
       setSelectedItems([]);
@@ -268,7 +286,10 @@ const [helpLoading, setHelpLoading] = useState(false);
       // Update state after rejection
       const updatedPosts = { ...pendingPosts };
       updatedPosts[activeTab] = pendingPosts[activeTab].filter(
-        (post) => !selectedItems.includes(post.id)
+        (post) =>
+          !selectedItems.includes(
+            post.id || post.docId || post.interactionLogDocId,
+          ),
       );
       setPendingPosts(updatedPosts);
       setSelectedItems([]);
@@ -283,58 +304,84 @@ const [helpLoading, setHelpLoading] = useState(false);
 
   //Search Function
   const searchChange = () => {
-  const searchValue = searchRef.current.value.toLowerCase();
+    const searchValue = searchRef.current.value.toLowerCase();
 
-  const filtered = pendingPosts[activeTab].filter((x) => {
-    if (activeTab === "outreaches") {
-      return (
-        x.title?.toLowerCase().includes(searchValue) ||
-        x.userName?.toLowerCase().includes(searchValue) ||
-        x.location?.city?.toLowerCase().includes(searchValue)
-      );
-    }
+    const filtered = pendingPosts[activeTab].filter((x) => {
+      if (activeTab === "outreaches") {
+        return (
+          x.title?.toLowerCase().includes(searchValue) ||
+          x.userName?.toLowerCase().includes(searchValue) ||
+          x.location?.city?.toLowerCase().includes(searchValue)
+        );
+      }
 
-    if (activeTab === "visitLogs") {
-      return (
-        x.peopleHelpedDescription?.toLowerCase().includes(searchValue) ||
-        x.userName?.toLowerCase().includes(searchValue) ||
-        x.city?.toLowerCase().includes(searchValue)
-      );
-    }
+      if (activeTab === "visitLogs") {
+        return (
+          x.peopleHelpedDescription?.toLowerCase().includes(searchValue) ||
+          x.userName?.toLowerCase().includes(searchValue) ||
+          x.city?.toLowerCase().includes(searchValue)
+        );
+      }
 
-    
-    if (activeTab === "helpRequests") {
-      return (
-        x.firstName?.toLowerCase().includes(searchValue) ||
-        x.interactionLogFirstName?.toLowerCase().includes(searchValue) ||
-        x.additionalDetails?.toLowerCase().includes(searchValue) ||
-        x.locationLandmark?.toLowerCase().includes(searchValue) ||
-        x.helpProvidedCategory?.some((c) =>
-          c.toLowerCase().includes(searchValue)
-        ) ||
-        x.furtherHelpCategory?.some((c) =>
-          c.toLowerCase().includes(searchValue)
-        )
-      );
-    }
+      if (activeTab === "helpRequests") {
+        return (
+          x.firstName?.toLowerCase().includes(searchValue) ||
+          x.interactionLogFirstName?.toLowerCase().includes(searchValue) ||
+          x.additionalDetails?.toLowerCase().includes(searchValue) ||
+          x.locationLandmark?.toLowerCase().includes(searchValue) ||
+          x.helpProvidedCategory?.some((c) =>
+            c.toLowerCase().includes(searchValue),
+          ) ||
+          x.furtherHelpCategory?.some((c) =>
+            c.toLowerCase().includes(searchValue),
+          )
+        );
+      }
 
-    return false;
-  });
+      return false;
+    });
 
-  setFilteredPosts((prev) => ({
-    ...prev,
-    [activeTab]: filtered,
-  }));
+    setFilteredPosts((prev) => ({
+      ...prev,
+      [activeTab]: filtered,
+    }));
 
-  setCurrentPage(1); // reset to the first page
-};
-
+    setCurrentPage(1); // reset to the first page
+  };
 
   // Sort By Function
-  const handleSortChange = (event) => {
+  const handleSortChange = async (event) => {
     const selectedOption = event.target.value;
     setSortOption(selectedOption);
-    setCurrentPage(1); 
+    setCurrentPage(1);
+    if (activeTab === "helpRequests") {
+      try {
+        setHelpLoading(true);
+
+        const helpRequests = await fetchPendingHelpRequests({
+          sortOption: selectedOption,
+        });
+
+        setPendingPosts((prev) => ({
+          ...prev,
+          helpRequests,
+        }));
+
+        setFilteredPosts((prev) => ({
+          ...prev,
+          helpRequests,
+        }));
+
+        setIsError(false);
+      } catch (e) {
+        console.error("Error sorting help requests via DB:", e);
+        setIsError(true);
+      } finally {
+        setHelpLoading(false);
+      }
+
+      return;
+    }
     let sortedData = [...filteredPosts[activeTab]];
 
     // Determine the correct date field based on the active tab
@@ -349,7 +396,7 @@ const [helpLoading, setHelpLoading] = useState(false);
       alphaSortedField = "peopleHelpedDescription";
     } else {
       dateField = "lastModifiedTimestamp";
-      alphaSortedField = "firstName";
+      alphaSortedField = "additionalDetails";
     }
 
     if (selectedOption === "Most Recent") {
@@ -397,7 +444,7 @@ const [helpLoading, setHelpLoading] = useState(false);
       setPendingPosts((prev) => ({
         ...prev,
         [activeTab]: prev[activeTab].filter(
-          (post) => post.id !== selectedPost.id
+          (post) => post.id !== selectedPost.id,
         ),
       }));
 
@@ -419,7 +466,7 @@ const [helpLoading, setHelpLoading] = useState(false);
       setPendingPosts((prev) => ({
         ...prev,
         [activeTab]: prev[activeTab].filter(
-          (post) => post.id !== selectedPost.id
+          (post) => post.id !== selectedPost.id,
         ),
       }));
 
@@ -438,7 +485,7 @@ const [helpLoading, setHelpLoading] = useState(false);
   // Toggle selection for a post
   const toggleSelect = (id) => {
     setSelectedItems((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
     );
   };
 
@@ -448,7 +495,7 @@ const [helpLoading, setHelpLoading] = useState(false);
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = filteredPosts[activeTab].slice(
     indexOfFirstPost,
-    indexOfLastPost
+    indexOfLastPost,
   );
 
   useEffect(() => {
@@ -458,6 +505,7 @@ const [helpLoading, setHelpLoading] = useState(false);
   // Tab switching logic
   const handleTabChange = (tab) => {
     setActiveTab(tab);
+    setSelectedItems([]);
   };
 
   // Render pagination buttons with ellipsis style
@@ -482,11 +530,12 @@ const [helpLoading, setHelpLoading] = useState(false);
         currentPage,
         currentPage + 1,
         "...",
-        totalPages
+        totalPages,
       );
     }
 
-       const loadingForTab = activeTab === "helpRequests" ? helpLoading : isLoading;
+    const loadingForTab =
+      activeTab === "helpRequests" ? helpLoading : isLoading;
 
     return (
       <div className="flex items-center space-x-1 text-sm">
@@ -520,7 +569,7 @@ const [helpLoading, setHelpLoading] = useState(false);
             >
               {page}
             </button>
-          )
+          ),
         )}
 
         {/* Next Button */}
@@ -724,14 +773,16 @@ const [helpLoading, setHelpLoading] = useState(false);
                     />
                   ) : (
                     <ApprovalCardHelpRequests
-                      key={post.id}
+                      key={post.id || post.docId || post.interactionLogDocId}
                       postData={post}
                       onToggleSelect={toggleSelect}
-                      isSelected={selectedItems.includes(post.id)}
+                      isSelected={selectedItems.includes(
+                        post.id || post.docId || post.interactionLogDocId,
+                      )}
                       selectedButton={true}
                       onClick={() => handleCardClick(post)}
                     />
-                  )
+                  ),
                 )}
               </div>
 
