@@ -63,9 +63,9 @@ fetchFlagStatus();
     navigate(`/VisitLogDetails/${interactionLogCardData.id}`);
   };
 
-  useEffect(() => {
-    console.log("This is Working.");
-  }, []);
+  // useEffect(() => {
+  //   console.log("This is Working.");
+  // }, []);
 
   let verifiedImg;
   switch (currentUserType) {

@@ -38,10 +38,7 @@ const interactionLogHelperFunction = async (interactionLogSnap) => {
       : [interactionLogSnap];
 
     const userIds = [...new Set(docsArray.map((doc) => doc.data()?.userId))];
-    console.log(userIds);
-
     const userCache = await fetchUserDetailsBatch(userIds);
-    console.log(userCache);
 
     for (const doc of docsArray) {
       const interactionLogData = doc.data();
@@ -299,12 +296,11 @@ export const fetchPublicVisitLogs = async (
   let direction = "not";
   try {
     //query variables
-    //Another Issue when jumping to last page from somewhere else causes it to crash undefined reading 1
     let newInteractionLogRec, totalInteractionsRef;
-    console.log(
-      "Check this pageCheckpoints:",
-      JSON.stringify(Object.keys(pageCheckpoints)),
-    );
+    // console.log(
+    //   "Check this pageCheckpoints:",
+    //   JSON.stringify(Object.keys(pageCheckpoints)),
+    // );
 
     //Handle date Values
     if (!(startDate instanceof Date) || isNaN(startDate)) {
@@ -316,28 +312,23 @@ export const fetchPublicVisitLogs = async (
       return;
     }
 
-    // newInteractionLogRec = query(
-    //   collection(db, visitLogsNew_collection),
-    //   where("status", "==", "approved")
-    // );
-
     newInteractionLogRec = query(
-      collection(db, interactionLog_collection), //visitLogsNew_collection
+      collection(db, interactionLog_collection),
       where("status", "==", "approved"),
       orderBy("lastModifiedTimestamp", "desc"),
     );
-    console.log("Fetching public visit logs...");
+    // console.log("Fetching public visit logs...");
 
     totalInteractionsRef = newInteractionLogRec;
 
-    // if (searchValue) {
-    //   const descriptionQuery = descriptionFilter(
-    //     searchValue,
-    //     totalInteractionsRef
-    //   );
-    //   totalInteractionsRef = descriptionQuery;
-    //   // pageStartDocs = [];
-    // }
+    if (searchValue) {
+      const descriptionQuery = descriptionFilter(
+        searchValue,
+        totalInteractionsRef,
+      );
+      totalInteractionsRef = descriptionQuery;
+      // pageStartDocs = [];
+    }
 
     if (city) {
       const cityQuery = cityFilter(city, totalInteractionsRef);
@@ -346,7 +337,7 @@ export const fetchPublicVisitLogs = async (
     }
 
     if (isDateFilter) {
-      console.log("dateInputs:", { startDate, endDate });
+      // console.log("dateInputs:", { startDate, endDate });
       const dateQuery = dateFilter(
         startDate,
         endDate,
@@ -356,48 +347,28 @@ export const fetchPublicVisitLogs = async (
       totalInteractionsRef = dateQuery;
       // pageStartDocs = [];
     }
-    //Add Function to get result docs
-    // if lastVisible is null then
 
     if (
       pageCheckpoints[currentPage] ||
       pageCheckpoints[currentPage - 1] ||
       pageCheckpoints[currentPage + 1]
     ) {
-      //get the startAfter or endBefore
-      //for currentPage in checkpoint get firstDoc-- startAt
-      //for currentPage - 1 in checkpoint get lastDoc-- startAfter
-      //for currentPgae + 1 in checkpoint get reverse order + firstDoc-- startAfter
       if (pageCheckpoints[currentPage]) {
-        console.log("Getting page that exists in checkPoints.");
+        // console.log("Getting page that exists in checkPoints.");
         newInteractionLogRec = query(
           totalInteractionsRef,
           startAt(pageCheckpoints[currentPage][0]),
           limit(pageSize),
         );
       } else if (pageCheckpoints[currentPage - 1]) {
-        console.log("Getting Next Page.");
+        // console.log("Getting Next Page.");
         newInteractionLogRec = query(
           totalInteractionsRef,
           startAfter(pageCheckpoints[currentPage - 1][1]),
           limit(pageSize),
         );
       }
-      // } else if (pageCheckpoints[currentPage + 1]) {
-      //   //reverse the results to maintain order
-      //   console.log("Getting Previous Page");
-      //   newInteractionLogRec = query(
-      //     totalInteractionsRef,
-      //     orderBy("timestamp", "asc"),
-      //     startAfter(pageCheckpoints[currentPage + 1][0]),
-      //     limit(pageSize)
-      //   );
-      // }
     } else {
-      // write Fnc to get the currentPage doc
-      // Save Checkpoints to get to the current page.
-      // Rewire logic from AllOutreachVisitLogs to here.
-      // Function to iterate to that particular page.
       if (currentPage > 0) {
         const pageNums = Object.keys(pageCheckpoints).map(Number); // get pageNums as num type from pageCheckpoints.
         let pageDocs = [];
@@ -415,10 +386,10 @@ export const fetchPublicVisitLogs = async (
           ];
           // add pageCheckpoint here.
           lastPageInCheckpoint++;
-          console.log(
-            "From VisitCard pageCheckpoints fr error:",
-            JSON.stringify(Object.keys(pageCheckpoints)),
-          );
+          // console.log(
+          //   "From VisitCard pageCheckpoints fr error:",
+          //   JSON.stringify(Object.keys(pageCheckpoints)),
+          // );
         }
         newInteractionLogRec = query(
           totalInteractionsRef,
@@ -432,17 +403,16 @@ export const fetchPublicVisitLogs = async (
 
     //iterate from MaxPage to the desiredPage(currentPage).
 
-    const totalRecords = await getCountFromServer(totalInteractionsRef);
+    const totalRecordsPromise = getCountFromServer(totalInteractionsRef);
     const visitLogSnapshot = await getDocs(newInteractionLogRec);
-    console.log("visitLogSnapshot:", visitLogSnapshot);
-    const visitLogs = await interactionLogHelperFunction(visitLogSnapshot); // gotta have a modifed version of this function. for interaction Logs
-    console.log("Trying this part.");
+    const visitLogs = await interactionLogHelperFunction(visitLogSnapshot);
     const lastDoc = visitLogSnapshot.docs[visitLogSnapshot.docs.length - 1];
     pageCheckpoints[currentPage] = [
       visitLogSnapshot.docs[0],
       visitLogSnapshot.docs[visitLogSnapshot.docs.length - 1],
     ];
-    console.log("From VisitLogCard:", pageCheckpoints);
+
+    const totalRecords = await totalRecordsPromise;
 
     return {
       visitLogs: visitLogs, //add visitLogs here
@@ -637,4 +607,3 @@ export const ToggleApproveStatus = async function (documentId) {
     console.error("Error updating document:", error.message);
   }
 };
-

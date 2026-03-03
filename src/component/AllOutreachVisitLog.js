@@ -42,12 +42,12 @@ const AllOutreachVisitLog = () => {
   useEffect(() => {
     const getVisitLogs = async () => {
       setIsLoading(true);
-      console.log("cursorField.currentPage:", cursorFields.currentPage);
-      console.log("FilterData", filterData);
-      console.log(
-        "pageCheckPoints before sending:",
-        cursorFields.pageCheckpoints
-      );
+      // console.log("cursorField.currentPage:", cursorFields.currentPage);
+      // console.log("FilterData", filterData);
+      // console.log(
+      //   "pageCheckPoints before sending:",
+      //   cursorFields.pageCheckpoints
+      // );
       // if (!cursorFields.direction) return;
       const visitLogsData = await fetchPublicVisitLogs(
         filterData.searchValue,
@@ -59,21 +59,21 @@ const AllOutreachVisitLog = () => {
         cursorFields.pageSize,
         cursorFields.pageHistory,
         cursorFields.currentPage,
-        cursorFields.pageCheckpoints
+        cursorFields.pageCheckpoints,
       );
-      console.log("Got the Response.");
+      // console.log("Got the Response.");
       //cursorFields.pageStartDocs = visitLogsData.pageStartDocs;
       setCursorFields((prev) => ({
         ...prev,
         pageCheckpoints: visitLogsData.pageCheckpoints,
       }));
       // console.log("Receieved pageCheckpoints:", cursorFields.pageCheckpoints);
-      console.log("visitLogs:", visitLogsData.visitLogs);
+      // console.log("visitLogs:", visitLogsData.visitLogs);
       setTotalRecords(visitLogsData.totalRecords);
       setTotalPages(Math.ceil(visitLogsData.totalRecords / logsPerPage));
       // if (cursorFields.direction === "next")
       setCurrentPageLength(
-        visitLogsData.visitLogs.length + visitLogsData.currentPage * 6
+        visitLogsData.visitLogs.length + visitLogsData.currentPage * 6,
       );
       setFilteredVisitLogs(visitLogsData.visitLogs);
       setIsLoading(false);
@@ -91,14 +91,14 @@ const AllOutreachVisitLog = () => {
     cursorFields.currentPage,
   ]);
 
-  useEffect(() => {
-    console.log("CursorFields,pageCheckpoints:", cursorFields.pageCheckpoints);
-  }, [cursorFields.pageCheckpoints]);
+  // useEffect(() => {
+  //   console.log("CursorFields,pageCheckpoints:", cursorFields.pageCheckpoints);
+  // }, [cursorFields.pageCheckpoints]);
 
   const handleSortChange = (e) => {
     const sortBy = e.target.value;
-    console.log("cursorFields from handleSortChange", cursorFields);
-    console.log(sortBy);
+    // console.log("cursorFields from handleSortChange", cursorFields);
+    // console.log(sortBy);
     setSortOption(sortBy);
     //To make sure when the sort option is changed from None to city or date, api is not triggered
     if (sortOption === "") return;
@@ -145,7 +145,7 @@ const AllOutreachVisitLog = () => {
   const renderPaginationButtons = (
     lastPage = 10,
     currPage = 1,
-    windowSize = 5
+    windowSize = 5,
   ) => {
     const layout = getPageNumbersFormat(windowSize, currPage, lastPage);
     const disabledBtnCss =
@@ -174,7 +174,7 @@ const AllOutreachVisitLog = () => {
             cursorFields.currentPage == 0 ? "text-white" : "text-black"
           }`}
         />
-      </button>
+      </button>,
     );
     {
       // console.log("layout:", layout);
@@ -198,7 +198,7 @@ const AllOutreachVisitLog = () => {
           }}
         >
           {page}
-        </button>
+        </button>,
       );
       if (index < layout.length - 1 && layout[index + 1] !== page + 1) {
         buttons.push(
@@ -208,7 +208,7 @@ const AllOutreachVisitLog = () => {
             disabled={true}
           >
             ...
-          </button>
+          </button>,
         );
       }
     });
@@ -237,7 +237,7 @@ const AllOutreachVisitLog = () => {
               : "text-black"
           }`}
         />
-      </button>
+      </button>,
     );
 
     return buttons;
@@ -409,7 +409,7 @@ const AllOutreachVisitLog = () => {
                 {!isLoading &&
                   renderPaginationButtons(
                     totalPages,
-                    cursorFields?.currentPage + 1
+                    cursorFields?.currentPage + 1,
                   )}
               </div>
               <div>{/* <DummyDataButton /> */}</div>
