@@ -34,13 +34,12 @@ export async function fetchPendingPage({
 
     limit(pageSize),
   ];
-
   const q = cursor
-    ? query(...base, startAfter(cursor.orderValue))
+    ? query(...base, startAfter(cursor.id))
     : query(...base);
 
   const snap = await getDocs(q);
-
+  console.log({ snap});
   const posts = await Promise.all(
     snap.docs.map(async (d) => {
       const post = { id: d.id, ...d.data() };
@@ -58,7 +57,7 @@ export async function fetchPendingPage({
   const lastDoc = snap.docs.length ? snap.docs[snap.docs.length - 1] : null;
 
   const nextCursor = lastDoc
-    ? { id: lastDoc.id, orderValue: lastDoc.get(orderField) }
+    ? { docSnapshot: lastDoc, orderValue: lastDoc.get(orderField) }
     : null;
 
   return { posts, nextCursor };
