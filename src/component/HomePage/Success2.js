@@ -187,28 +187,6 @@ function Success2() {
             </div>
           </div>
 
-          {/* Help Request Card */}
-          <div className=" h-[265px] bg-white rounded-[30px] flex flex-col items-center text-center p-6">
-            <img
-              src={Outreach}
-              alt="Outreach Icon"
-              className="w-12 h-12 mb-4"
-            />
-            <p className="mt-4 font-dmsans font-normal text-[14px] leading-[22px] tracking-normal text-center text-[#444746]">
-              Need support for someone in your community? Create a help request
-              so others can step in and contribute.
-            </p>
-            <div className="mt-auto">
-              <CustomButton
-                label="Create a Help Request"
-                name="buttondefault"
-                onClick={() => {
-                  navigate("/helpRequestForm");
-                }}
-              />
-            </div>
-          </div>
-
           {/* Visit Log Card */}
           <div className=" h-[265px] bg-white rounded-[30px] flex flex-col items-center text-center p-6">
             <img
