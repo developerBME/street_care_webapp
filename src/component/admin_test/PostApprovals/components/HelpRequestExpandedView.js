@@ -1,12 +1,12 @@
-import { useState } from "react";
 
 import verifiedYellow from "../../../../images/verified_yellow.png";
 import verifiedGreen from "../../../../images/verified.png";
 import verifiedPurple from "../../../../images/verified_purple.png";
 import verifiedBlue from "../../../../images/verified_blue.png";
 import calendarIcon from "../../../../images/calendar_month.svg";
-import flagIcon from "../../../../images/flag.svg";
 import locationIcon from "../../../../images/location_on.svg";
+import defaultImage from "../../../../images/default_avatar.svg";
+
 
 /* ---------------- Helpers ---------------- */
 const getVerifiedBadge = (userType) => {
@@ -25,7 +25,7 @@ const getStatusStyle = (status) => {
   switch (status) {
     case "approved":
       return "bg-green-100 text-green-600 border border-green-600";
-    case "pending":
+    case "Pending":
       return "bg-yellow-100 text-yellow-600 border border-yellow-600";
     case "rejected":
       return "bg-red-100 text-red-600 border border-red-600";
@@ -71,7 +71,7 @@ const formatTimeOnly = (d, fallback = "N/A") => {
 
 const HelpRequestExpandedView = ({ postData}) => {
   const personName = safeValue(
-    postData?.firstName || postData?.interactionLogFirstName,
+    postData?.firstName 
   );
   const interactionLogName = safeValue(postData?.interactionLogFirstName);
 
@@ -85,33 +85,23 @@ const HelpRequestExpandedView = ({ postData}) => {
   const followUpDate = formatDateOnly(followUpDateObj);
   const followUpTime = formatTimeOnly(followUpDateObj);
 
-  const completedTimestamp = safeValue(postData?.completedTimestamp);
+  //const completedTimestamp = safeValue(postData?.completedTimestamp);
   const lastModifiedDateObj = toDateSafe(postData?.lastModifiedTimestamp);
   const lastModifiedDate = formatDateOnly(lastModifiedDateObj);
 
   const description = safeValue(postData?.additionalDetails);
-  const status = safeValue(postData?.status);
+ // const status = safeValue(postData?.status);
 
   const furtherHelpTags = postData?.furtherHelpCategory || [];
 
   return (
     <div className="w-full">
-      {/* OUTER WHITE CARD */}
-      {/* <div className="relative bg-white rounded-[28px] p-4 sm:p-6 shadow-lg">*/}
-
-      {/* CLOSE BUTTON */}
-      {/* <button
-          onClick={() => onClose?.()}
-          className="absolute -top-3 -right-3 w-9 h-9 rounded-md border-2 border-[#4B2AA6] bg-white flex items-center justify-center hover:bg-gray-50 transition z-10"
-        >
-          ✕
-        </button> */}
 
       <div className="bg-[#F4EEFF] rounded-[28px] p-6 sm:p-8 overflow-y-auto max-h-[60vh]">
         {/* HEADER */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3">
-            <img src={calendarIcon} alt="user" className="w-8 h-8" />
+            <img src={postData?.photoUrl || defaultImage} alt="user" className="w-8 h-8" />
             <h2 className="text-xl sm:text-2xl font-bold text-black">
               {personName}
             </h2>
@@ -121,7 +111,7 @@ const HelpRequestExpandedView = ({ postData}) => {
               className="w-6 h-6"
             />
           </div>
-          <img src={flagIcon} alt="flag" className="w-6 h-6" />
+          {/* <img src={flagIcon} alt="flag" className="w-6 h-6" /> */}
         </div>
 
         {/* Interaction Log Name if different */}
@@ -133,7 +123,7 @@ const HelpRequestExpandedView = ({ postData}) => {
         )}
 
         {/* INFO ROWS */}
-        <div className="flex flex-col gap-4 mb-6">
+        <div className="flex flex-col gap-4 mb-4">
           {/* Row 1: Date & Time of Interaction | Location */}
           <div className="flex flex-row gap-4">
             <div className="flex flex-1 items-center gap-3">
@@ -172,7 +162,7 @@ const HelpRequestExpandedView = ({ postData}) => {
             {description}
           </p>
         </div>
-        <div className="grid grid-cols-2 gap-x-6 gap-y-1 mb-4 text-[15px] font-bold">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-1 mb-4 text-[14px] font-medium">
           <span className="text-[#2E1065]">
             <span>Follow Up Time :</span> {followUpTime}
           </span>
@@ -203,7 +193,7 @@ const HelpRequestExpandedView = ({ postData}) => {
               ))
             ) : (
               <span className="text-gray-400 text-sm">
-                No further help required
+                N/A
               </span>
             )}
           </div>
@@ -225,7 +215,6 @@ const ApprovalCardHelpRequests = ({
   expanded = false,
   onClose,
 }) => {
-  const [showAllTags, setShowAllTags] = useState(false);
   if (expanded) {
     return <HelpRequestExpandedView postData={postData} onClose={onClose} />;
   }
@@ -235,103 +224,87 @@ const ApprovalCardHelpRequests = ({
     ? `${formatDateOnly(interactionDateObj)} ${formatTimeOnly(interactionDateObj)}`
     : "N/A";
 
-  const cardName = safeValue(
-    postData?.interactionLogFirstName || postData?.firstName,
-  );
+  const cardName = safeValue(postData?.firstName);
   const locationText = safeValue(postData?.locationLandmark);
   const followUpDateObj = toDateSafe(postData?.followUpTimestamp);
-  const followUpDateTime = followUpDateObj
-    ? `${formatDateOnly(followUpDateObj)} ${formatTimeOnly(followUpDateObj)}`
-    : "N/A";
+  const followUpDate = formatDateOnly(followUpDateObj);
+  const followUpTime = formatTimeOnly(followUpDateObj);
+  const followUpDateTime = followUpDateObj ? `${followUpDate} ${followUpTime}` : "N/A";
   const tags = postData?.furtherHelpCategory || [];
 
-  const visibleTags = showAllTags ? tags : tags.slice(0, 3);
-  const hasMoreTags = tags.length > 3;
+  const visibleTags = tags;
 
   return (
     <div
       onClick={() => onClick?.(postData)}
-      className="bg-[#F5EEFE] rounded-[20px] flex flex-col h-full min-h-[300px] w-full max-w-[320px] p-4 shadow-md cursor-pointer"
+      className="bg-[#F5EEFE] rounded-[20px] flex flex-col h-full w-full max-w-[320px] p-4 shadow-md cursor-pointer"
     >
-      {/*  Name , verified , flag */}
-      <div className="flex items-center justify-between mb-4 ">
-        <div className="flex items-center gap-2">
-          <img src={calendarIcon} alt="user" className="w-5 h-5" />
-          <span className="text-sm font-semibold text-black">{cardName}</span>
+      {/*  photo + name + badge + status*/}
+    <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center space-x-2 leading-none">
           <img
-            src={getVerifiedBadge(postData?.userType)}
-            alt="verified"
-            className="w-5 h-5"
+            src={postData?.photoUrl || defaultImage}
+            alt="User"
+            className="w-8 h-8 rounded-full object-cover flex-shrink-0"
           />
+          <span className="text-[16px] font-medium leading-none">{cardName}</span>
+          <img src={getVerifiedBadge(postData?.userType)} alt="verified" className="w-5 h-5" />
         </div>
-
-        <img src={flagIcon} alt="flag" className="w-4 h-4" />
-      </div>
-
-      {/* Date & Time */}
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2 mb-2">
-          <img
-            src={calendarIcon}
-            alt="calendar"
-            className="w-4 h-4 flex-shrink-0"
-          />
-          <span className="text-sm text-[#2E1065] font-medium">{dateTime}</span>
-        </div>
-
-        {/* Location */}
-        <div className="flex items-center gap-2 mb-2">
-          <img
-            src={locationIcon}
-            alt="location"
-            className="w-4 h-4 flex-shrink-0"
-          />
-          <span className="text-sm text-[#2E1065] font-medium">
-            {locationText}
-          </span>
-        </div>
-      </div>
-
-      {/* Follow Up Date & Time */}
-      <div className="flex items-center gap-2 mb-3">
-        <img
-          src={calendarIcon}
-          alt="followup"
-          className="w-4 h-4 flex-shrink-0"
-        />
-        <span className="text-xs text-[#444746] font-medium">
-          {followUpDateTime}
+        <span className={`px-3 py-1 text-sm font-medium rounded-full ${getStatusStyle(postData?.status)}`}>
+          {safeValue(postData?.status)}
         </span>
       </div>
 
-      {/* Further Help Needed */}
-      <div>
-        <p className="text-xs font-bold text-gray-500 tracking-wide mb-2">
-          Further Help Needed
-        </p>
+      {/* Date + checkbox  */}
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center space-x-2">
+          <img alt="calendar" src={calendarIcon} className="w-4 h-4" />
+          <span className="text-sm text-[#37168B] font-medium">{dateTime}</span>
+        </div>
+        {selectedButton && (
+          <label
+            className="inline-flex items-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <input
+              type="checkbox"
+              className="form-checkbox h-4 w-4 text-violet-900"
+              checked={isSelected}
+              onChange={() => {
+                const id = postData?.id || postData?.docId || postData?.interactionLogDocId;
+                onToggleSelect?.(id);
+              }}
+            />
+          </label>
+        )}
+      </div>
+
+
+      {/* Location */}
+      <div className="flex items-center space-x-2 mb-1">
+        <img alt="location" src={locationIcon} className="w-4 h-4" />
+        <span className="text-sm text-[#37168B] font-medium">{locationText}</span>
+      </div>
+
+      {/* Follow Up row */}
+      <div className="flex flex-row justify-between py-2 ">
+        <span className="font-medium text-[14px]">Follow Up Date : {followUpDateTime}</span>
+        <span className=" font-medium text-[14px]"></span>
+      </div>
+
+      {/* Further Help Needed tags */}
+      <div className="mt-2">
+        <p className=" text-xs font-medium text-gray-500 tracking-wide mb-2">Further Help Needed</p>
         <div className="flex flex-wrap gap-2">
           {tags.length > 0 ? (
-            <>
-              {visibleTags.map((tag, index) => (
-                <span
-                  key={index}
-                  className="px-3 py-1 text-xs border border-gray-300 rounded-full text-[#444746]"
-                >
-                  {tag}
-                </span>
-              ))}
-              {hasMoreTags && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowAllTags(!showAllTags);
-                  }}
-                  className="px-3 py-1 text-xs border border-[#6840E0] rounded-full text-[#6840E0] font-semibold hover:bg-[#6840E0] hover:text-white transition"
-                >
-                  {showAllTags ? "− Less" : `+${tags.length - 3} More`}
-                </button>
-              )}
-            </>
+            visibleTags.map((tag, index) => (
+              <span
+                key={index}
+                className="px-3 py-1 text-xs border border-gray-300 rounded-full text-[#444746]"
+              >
+                {tag}
+              </span>
+            ))
           ) : (
             <span className="text-xs text-gray-400">N/A</span>
           )}
