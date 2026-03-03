@@ -5,6 +5,7 @@ import ApprovalCardOutreachEvents from "../../ApprovalCardOutreachEvents";
 // import ApprovalCardHelpRequests from "../../ApprovalCardHelpRequests";
 import { VisitLogExpandedView } from "./VisitLogExpandedView";
 import { HelpRequestExpandedView } from "./HelpRequestExpandedView";
+import OutreachExpandedView from './OutreachExpandedView'
 export default function PostApprovalModal({
   post,
   activeTab,
@@ -43,7 +44,7 @@ export default function PostApprovalModal({
 
   if (activeTab === "outreaches") {
     card = (
-      <ApprovalCardOutreachEvents
+      <OutreachExpandedView
         {...selectableCardProps}
         isVisitLogs={false}
       />
