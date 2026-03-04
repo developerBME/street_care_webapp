@@ -42,13 +42,16 @@ export async function fetchPendingPage({
   const posts = await Promise.all(
     snap.docs.map(async (d) => {
       const post = { id: d.id, ...d.data() };
-      const userDetails = post.uid
-        ? await fetchUserTypeDetails(post.uid)
-        : null;
+      const userDetails =
+        post.uid || post.userId
+          ? await fetchUserTypeDetails(post.uid || post.userId)
+          : null;
+      console.log("UserDetails:", userDetails);
       return {
         ...post,
         userName: userDetails?.username || "Unknown User",
         userType: userDetails?.type || "",
+        photoUrl: userDetails?.photoUrl || "",
       };
     }),
   );
@@ -56,7 +59,11 @@ export async function fetchPendingPage({
   const lastDoc = snap.docs.length ? snap.docs[snap.docs.length - 1] : null;
 
   const nextCursor = lastDoc
-    ? { id: lastDoc.id, docSnapshot: lastDoc, orderValue: lastDoc.get(orderField) }
+    ? {
+        id: lastDoc.id,
+        docSnapshot: lastDoc,
+        orderValue: lastDoc.get(orderField),
+      }
     : null;
 
   return { posts, nextCursor };
