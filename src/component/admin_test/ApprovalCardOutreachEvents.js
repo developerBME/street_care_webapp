@@ -1,11 +1,11 @@
-import React from "react";
 import calendarIcon from "../../images/calendar_month.svg";
+import defaultImage from "../../images/default_avatar.svg";
 import locationIcon from "../../images/location_on.svg";
-import { formatDate } from "../HelperFunction";
-import verifiedPurple from "../../images/verified_purple.png";
 import verifiedGreen from "../../images/verified.png";
 import verifiedBlue from "../../images/verified_blue.png";
+import verifiedPurple from "../../images/verified_purple.png";
 import verifiedYellow from "../../images/verified_yellow.png";
+import { formatDate } from "../HelperFunction";
 
 const getTags = (postData, isVisitLogs) => {
   const tags = isVisitLogs ? postData?.whatGiven || [] : postData?.skills || [];
@@ -70,23 +70,26 @@ const ApprovalCardOutreachEvents = ({
       onClick={() => onClick?.(postData.id)}
       className="bg-[#F5EEFE] rounded-[20px] flex flex-col h-full w-full max-w-[320px] p-4 shadow-md cursor-pointer"
     >
-      {/* Status */}
-      <div className="mt-2 text-right mb-2">
+      {/* Header: Name + Badge on left, Status on right */}
+      <div className="mt-2 flex items-center justify-between mb-3">
+        <div className="flex items-center space-x-2 min-w-0">
+          <img
+            src={postData?.photoUrl || defaultImage}
+            alt="User"
+            className="w-8 h-8 rounded-full flex-shrink-0"
+          />
+          <span className="text-sm font-normal text-black min-w-0 truncate">
+            {postData?.userName || "Unknown User"}
+          </span>
+          {userImage && <img alt="" src={userImage} className="w-5 h-5 flex-shrink-0" />}
+        </div>
         <span
-          className={`px-3 py-1 text-sm font-medium rounded-full ${getStatusStyle(
+          className={`px-3 py-1 text-sm font-medium rounded-full flex-shrink-0 ml-2 ${getStatusStyle(
             postData.status
           )}`}
         >
           {postData.status || "No Status"}
         </span>
-      </div>
-
-      {/* UserName Section */}
-      <div className="flex items-center space-x-2 mb-3">
-        <span className="text-sm text-[#37168B] font-medium">
-          {postData?.userName || "Unknown User"}
-        </span>
-        {userImage && <img alt="" src={userImage} className="w-5 h-5" />}
       </div>
 
       {/* Top Section: Date and Location */}
