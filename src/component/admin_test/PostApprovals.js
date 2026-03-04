@@ -11,6 +11,7 @@ import {
 import { db } from "../firebase";
 import ApprovalCardOutreachEvents from "./ApprovalCardOutreachEvents";
 import ApprovalCardVisitlogs from "./ApprovalCardVisitlogs";
+import ApprovalCardHelpRequests from "./ApprovalCardHelpRequests";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import ErrorMessage from "../ErrorMessage";
 import infoIcon from "../../images/info_icon.png";
@@ -23,6 +24,7 @@ import collectionMapping from "../../utils/firestoreCollections";
 
 const outreachEvents_collection = collectionMapping.outreachEvents;
 const visitLogsNew_collection = collectionMapping.visitLogsBookNew;
+const helpRequests_collection = collectionMapping.helpRequestsInteractionLog;
 
 const PostApprovals = () => {
   const [pendingPosts, setPendingPosts] = useState({
@@ -161,76 +163,6 @@ const PostApprovals = () => {
   const handleCardClick = (post) => {
     setSelectedPost(post);
     setIsModalOpen(true);
-  };
-
-  const Modal = ({ post, onClose, onAccept, onReject }) => {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-md">
-        {/* Modal Container */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-lg flex flex-col items-center">
-          {/* Back Button */}
-          <div className="flex items-center w-full mb-4">
-            <img
-              src={arrowBack}
-              alt="Back"
-              className="w-6 h-6 cursor-pointer"
-              onClick={onClose} // Clicking on the image closes the modal
-            />
-            <button
-              onClick={onClose}
-              className="ml-2 text-sm text-gray-700 font-medium hover:underline"
-            >
-              Go Back
-            </button>
-          </div>
-
-          {/* Approval Card */}
-          {activeTab === "outreaches" ? (
-            <ApprovalCardOutreachEvents
-              postData={post}
-              userName={post.userName || "Unknown User"}
-              onToggleSelect={() => {}}
-              isSelected={false}
-              isVisitLogs={false}
-              selectedButton={false}
-              onClick={() => {}}
-            />
-          ) : activeTab == "visitLogs" ? (
-            <ApprovalCardVisitlogs
-              postData={post}
-              userName={post.userName || "Unknown User"}
-              onToggleSelect={() => {}}
-              isSelected={false}
-              isVisitLogs={true}
-              selectedButton={false}
-              onClick={() => {}}
-            />
-          ) : (
-            <ApprovalCardHelpRequests
-              postData={post}
-              selectedButton={false}
-              onClick={() => {}}
-            />
-          )}
-
-          {/* Buttons Section */}
-          <div className="flex justify-between items-center w-full px-4 pt-4">
-            <button
-              onClick={onReject}
-              className="flex justify-center items-center p-0 gap-2 text-red-600 border border-red-600 rounded-full hover:bg-red-100 transition w-[104px] h-[40px]"
-            >
-              Reject
-            </button>
-            <button
-              onClick={onAccept}
-              className="flex justify-center items-center px-6 py-2.5 text-white bg-green-600 rounded-full hover:bg-green-700 transition w-[104px] h-[40px]"
-            >
-              Accept
-            </button>
-          </div>
-        </div>
-      </div>
-    );
   };
 
   const handleCloseModal = () => {
@@ -773,7 +705,7 @@ const PostApprovals = () => {
                       selectedButton={true}
                       onClick={() => handleCardClick(post)}
                     />
-                  ) : (
+                  ) : activeTab === "visitLogs" ? (
                     <ApprovalCardVisitlogs
                       key={post.id}
                       postData={post}
@@ -819,6 +751,6 @@ const PostApprovals = () => {
       )}
     </div>
   );
-};;;
+};
 
 export default PostApprovals;
