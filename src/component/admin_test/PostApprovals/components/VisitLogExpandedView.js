@@ -11,6 +11,8 @@ import verifiedYellow from "../../../../images/verified_yellow.png";
 import defaultImage from "../../../../images/default_avatar.svg";
 import CardTags from "../../../Community/CardTags";
 
+import { useEffect } from "react";
+
 const getTags = (postData, isVisitLogs) => {
   console.log("ApprovalCard postData:", postData);
   const tags = isVisitLogs ? postData?.whatGiven || [] : postData?.skills || [];
@@ -347,6 +349,11 @@ const ApprovalCardVisitlogs = ({
       userImage = verifiedYellow;
       break;
   }
+
+  useEffect(() => {
+    console.log("postData:", postData);
+    console.log("PhotoUrl:", postData?.photoUrl); //remove this
+  }, []);
 
   return (
     <>
