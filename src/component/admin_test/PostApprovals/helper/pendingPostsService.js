@@ -46,7 +46,7 @@ export async function fetchPendingPage({
         post.uid || post.userId
           ? await fetchUserTypeDetails(post.uid || post.userId)
           : null;
-      console.log("UserDetails:", userDetails);
+      // console.log("UserDetails:", userDetails);
       return {
         ...post,
         userName: userDetails?.username || "Unknown User",

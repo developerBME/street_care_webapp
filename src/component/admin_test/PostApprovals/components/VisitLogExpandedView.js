@@ -14,7 +14,7 @@ import CardTags from "../../../Community/CardTags";
 import { useEffect } from "react";
 
 const getTags = (postData, isVisitLogs) => {
-  console.log("ApprovalCard postData:", postData);
+  // console.log("ApprovalCard postData:", postData);
   const tags = isVisitLogs ? postData?.whatGiven || [] : postData?.skills || [];
 
   return tags.map((tag, index) => (
@@ -350,10 +350,10 @@ const ApprovalCardVisitlogs = ({
       break;
   }
 
-  useEffect(() => {
-    console.log("postData:", postData);
-    console.log("PhotoUrl:", postData?.photoUrl); //remove this
-  }, []);
+  // useEffect(() => {
+  //   console.log("postData:", postData);
+  //   console.log("PhotoUrl:", postData?.photoUrl);
+  // }, []);
 
   return (
     <>

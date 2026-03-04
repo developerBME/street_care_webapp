@@ -134,7 +134,7 @@ export default function PostApprovals() {
           pageSize: postsPerPage,
           cursor: null,
         });
-        console.log({ initialPosts });
+        // console.log({ initialPosts });
 
         setPostsByTabByPage((prev) => ({
           ...prev,
@@ -196,9 +196,9 @@ export default function PostApprovals() {
     loadTabIfNeeded();
   }, [activeTab, hasPage1LoadedForActiveTab]);
 
-  useEffect(() => {
-    console.log("Posts:", posts);
-  }, [posts]);
+  // useEffect(() => {
+  //   console.log("Posts:", posts);
+  // }, [posts]);
 
   // ==========================================================================
   // ------------------------ *** UI handlers *** -----------------------------
@@ -498,7 +498,6 @@ export default function PostApprovals() {
             <div className="mt-5 grid gap-x-5 gap-y-8 md:grid-cols-2 lg:grid-cols-3">
               {posts.map((post) => {
                 const commonProps = {
-                  key: post.id,
                   postData: post,
                   onToggleSelect: toggleSelect,
                   isSelected: selectedItems.includes(post.id),
@@ -510,6 +509,7 @@ export default function PostApprovals() {
                   return (
                     <ApprovalCardOutreachEvents
                       {...commonProps}
+                      key={post.id}
                       isVisitLogs={false}
                     />
                   );
@@ -519,12 +519,15 @@ export default function PostApprovals() {
                   return (
                     <ApprovalCardVisitlogs
                       {...commonProps}
+                      key={post.id}
                       isVisitLogs={true}
                     />
                   );
                 }
 
-                return <ApprovalCardHelpRequests {...commonProps} />;
+                return (
+                  <ApprovalCardHelpRequests {...commonProps} key={post.id} />
+                );
               })}
             </div>
 
