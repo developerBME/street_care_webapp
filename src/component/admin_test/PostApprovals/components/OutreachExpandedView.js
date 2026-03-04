@@ -165,7 +165,7 @@ const OutreachExpandedView = ({ postData }) => {
           value !== undefined && (
             <div
               key={label}
-              className="flex flex-row justify-between py-2 border-b border-gray-200 last:border-none"
+              className="flex flex-row justify-between py-2"
             >
               <span className="font-bold text-[14px] font-dmsans">{label}</span>
               <span className="font-bold text-[14px] font-dmsans text-right max-w-[55%] break-words">
