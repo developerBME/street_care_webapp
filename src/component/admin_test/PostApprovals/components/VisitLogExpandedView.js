@@ -1,17 +1,16 @@
 import calendarIcon from "../../../../images/calendar_month.svg";
-import locationIcon from "../../../../images/location_on.svg";
-import verifiedPurple from "../../../../images/verified_purple.png";
 import emailIcon from "../../../../images/email.png";
+import locationIcon from "../../../../images/location_on.svg";
 import phoneIcon from "../../../../images/phone.png";
+import verifiedPurple from "../../../../images/verified_purple.png";
 // import closeIcon from "../../images/close.png";
+import defaultImage from "../../../../images/default_avatar.svg";
 import clockIcon from "../../../../images/ic_outline-access-time.svg";
 import verifiedGreen from "../../../../images/verified.png";
 import verifiedBlue from "../../../../images/verified_blue.png";
 import verifiedYellow from "../../../../images/verified_yellow.png";
-import defaultImage from "../../../../images/default_avatar.svg";
 import CardTags from "../../../Community/CardTags";
 
-import { useEffect } from "react";
 
 const getTags = (postData, isVisitLogs) => {
   // console.log("ApprovalCard postData:", postData);
@@ -282,7 +281,7 @@ const VisitLogExpandedView = ({ postData, userImage }) => {
           value !== undefined && (
             <div
               key={label}
-              className="flex flex-row justify-between py-2 border-b border-gray-200 last:border-none"
+              className="flex flex-row justify-between py-2"
             >
               <span className="font-bold text-[14px] font-dmsans">{label}</span>
               <span className="font-bold text-[14px] font-dmsans">{value}</span>
