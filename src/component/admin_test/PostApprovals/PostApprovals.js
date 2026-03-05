@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import EventCardSkeleton from "../../Skeletons/EventCardSkeleton";
 import ErrorMessage from "../../ErrorMessage";
 import PostTabs from "./components/PostTabs";
-import SearchSort from "./components/SearchSort";
+// import SearchSort from "./components/SearchSort";
 import PostApprovalModal from "./components/PostApprovalModal";
 import ApprovalCardOutreachEvents from "../ApprovalCardOutreachEvents";
 import SelectionActionsBar from "./components/SelectionActionBar";
@@ -455,9 +455,9 @@ export default function PostApprovals() {
             Post Approvals
           </p>
 
-          <div className="sm:flex sm:justify-end">
+          {/* <div className="sm:flex sm:justify-end">
             <SearchSort />
-          </div>
+          </div> */}
         </div>
 
         <div className="mt-12 flex w-full max-w-5xl items-center">
