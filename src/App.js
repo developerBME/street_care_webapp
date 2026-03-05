@@ -58,7 +58,8 @@ import AllSignedUpOutreaches from "./component/UserProfile/AllSignedUpOutreaches
 import AllLikedOutreaches from "./component/UserProfile/AllLikedOutreaches";
 import AllCreatedOutreaches from "./component/UserProfile/AllCreatedOutreaches.js";
 import OutreachEvents from "./component/Admin/OutreachEvents";
-import PostApprovals from "./component/admin_test/PostApprovals.js";
+import PostApprovals1 from "./component/admin_test/PostApprovals.js";
+import PostApprovals2 from "./component/admin_test/PostApprovals/PostApprovals.js";
 import AdminOutreachEvents from "./component/Admin/AdminOutreachEvents.js";
 import InteractionLogForm from "./component/UserProfile/InteractionLogForm.js";
 
@@ -82,7 +83,7 @@ function App() {
         try {
           const userRef = query(
             collection(db, users_collection),
-            where("uid", "==", fAuth?.currentUser?.uid)
+            where("uid", "==", fAuth?.currentUser?.uid),
           );
           const data = await getDocs(userRef);
           if (typeof data.docs[0] == "undefined") {
@@ -153,7 +154,10 @@ function App() {
               <Route path="/testAdmin" element={<TestAdmin />} />
               <Route path="/admin-panel/userlist" element={<UserList />} />
               <Route path="/admin" element={<AdminHomePage />} />
-              <Route path="/admin/postApprovals" element={<PostApprovals />} />
+              <Route
+                path="/admin/postApprovals"
+                element={<PostApprovals2 />}
+              />
               <Route path="/admin/userManagement" element={<UserListNew />} />
               <Route
                 path="/admin/outreach-events"
@@ -261,7 +265,7 @@ function App() {
             <Route path="/list" element={<ListUser />} />
             <Route
               path="/profile/visitlogform/:id"
-              element={<PersonalOutForm />}
+              element={<InteractionLogForm />}
             />
             <Route path="/myvisitlogs" element={<MoreVisitLogs />} />
 

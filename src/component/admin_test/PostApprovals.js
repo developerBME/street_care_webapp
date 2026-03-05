@@ -11,36 +11,57 @@ import {
 import { db } from "../firebase";
 import ApprovalCardOutreachEvents from "./ApprovalCardOutreachEvents";
 import ApprovalCardVisitlogs from "./ApprovalCardVisitlogs";
+import ApprovalCardHelpRequests from "./ApprovalCardHelpRequests";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import ErrorMessage from "../ErrorMessage";
 import infoIcon from "../../images/info_icon.png";
 import arrowBack from "../../images/arrowBack.png";
 import searchIcon from "../../images/search-icon-PostApproval.png";
 import { fetchUserTypeDetails } from "../EventCardService";
+import { fetchPendingHelpRequests } from "./HelpRequests.js";
 
 import collectionMapping from "../../utils/firestoreCollections";
 
 const outreachEvents_collection = collectionMapping.outreachEvents;
 const visitLogsNew_collection = collectionMapping.visitLogsBookNew;
+const helpRequests_collection = collectionMapping.helpRequestsInteractionLog;
 
 const PostApprovals = () => {
   const [pendingPosts, setPendingPosts] = useState({
     outreaches: [],
     visitLogs: [],
   });
+
+  // State
   const [activeTab, setActiveTab] = useState("outreaches");
   const [selectedItems, setSelectedItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [helpLoaded, setHelpLoaded] = useState(false);
+  const [helpLoading, setHelpLoading] = useState(false);
   const [filteredPosts, setFilteredPosts] = useState({
     outreaches: [],
     visitLogs: [],
   });
   const [sortOption, setSortOption] = useState("Most Recent");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
+
   const postsPerPage = 6;
+
   const searchRef = useRef("");
 
+  const collectionMap = {
+    outreaches: outreachEvents_collection,
+    visitLogs: visitLogsNew_collection,
+    helpRequests: helpRequests_collection,
+  };
+
+  const totalPosts =
+    pendingPosts.outreaches.length + pendingPosts.visitLogs.length;
+
+  // UseEffect 1/4
   useEffect(() => {
     const fetchPendingPosts = async () => {
       try {
@@ -49,7 +70,7 @@ const PostApprovals = () => {
         const outreachQuery = query(
           collection(db, outreachEvents_collection),
           where("status", "==", "pending"),
-          orderBy("eventDate", "desc")
+          orderBy("eventDate", "desc"),
         );
 
         const outreachSnapshot = await getDocs(outreachQuery);
@@ -62,14 +83,14 @@ const PostApprovals = () => {
               userName: userDetails?.username || "Unknown User",
               userType: userDetails?.type || "",
             };
-          })
+          }),
         );
 
         // --- Fetch visit logs from NEW collection ---
         const visitLogQueryNew = query(
           collection(db, visitLogsNew_collection),
           where("status", "==", "pending"),
-          orderBy("timeStamp", "desc")
+          orderBy("timeStamp", "desc"),
         );
 
         const visitLogSnapshotNew = await getDocs(visitLogQueryNew);
@@ -82,10 +103,10 @@ const PostApprovals = () => {
               userName: userDetails?.username || "Unknown User",
               userType: userDetails?.type || "",
             };
-          })
+          }),
         );
 
-        setPendingPosts({ outreaches, visitLogs });
+        setPendingPosts({ outreaches, visitLogs, helpRequests: [] });
         setIsError(false);
       } catch (error) {
         console.error("Error fetching pending posts:", error);
@@ -98,76 +119,50 @@ const PostApprovals = () => {
     fetchPendingPosts();
   }, []);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPost, setSelectedPost] = useState(null);
+  // UseEffect 2/4
+  useEffect(() => {
+    const loadHelpRequests = async () => {
+      // only load when user opens the tab, and only once
+      if (activeTab !== "helpRequests" || helpLoaded) return;
 
+      try {
+        setHelpLoading(true);
+
+        const helpRequests = await fetchPendingHelpRequests();
+
+        setPendingPosts((prev) => ({
+          ...prev,
+          helpRequests,
+        }));
+
+        setHelpLoaded(true);
+      } catch (e) {
+        console.error("Error fetching help requests:", e);
+        setIsError(true);
+      } finally {
+        setHelpLoading(false);
+      }
+    };
+
+    loadHelpRequests();
+  }, [activeTab, helpLoaded]);
+
+  // UseEffect 3/4
+  useEffect(() => {
+    // Initialize filteredPosts with fetched data (already sorted from backend)
+    setFilteredPosts(pendingPosts);
+  }, [pendingPosts]);
+
+  // useEffect 4/4
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab]);
+
+  // =========== Functions ============
+  // ----------- 1. Ui Functions [3]
   const handleCardClick = (post) => {
     setSelectedPost(post);
     setIsModalOpen(true);
-  };
-
-  const Modal = ({ post, onClose, onAccept, onReject }) => {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-md">
-        {/* Modal Container */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-lg flex flex-col items-center">
-          {/* Back Button */}
-          <div className="flex items-center w-full mb-4">
-            <img
-              src={arrowBack}
-              alt="Back"
-              className="w-6 h-6 cursor-pointer"
-              onClick={onClose} // Clicking on the image closes the modal
-            />
-            <button
-              onClick={onClose}
-              className="ml-2 text-sm text-gray-700 font-medium hover:underline"
-            >
-              Go Back
-            </button>
-          </div>
-
-          {/* Approval Card */}
-          {activeTab === "outreaches" ? (
-            <ApprovalCardOutreachEvents
-              postData={post}
-              userName={post.userName || "Unknown User"}
-              onToggleSelect={() => {}}
-              isSelected={false}
-              isVisitLogs={false}
-              selectedButton={false}
-              onClick={() => {}}
-            />
-          ) : (
-            <ApprovalCardVisitlogs
-              postData={post}
-              userName={post.userName || "Unknown User"}
-              onToggleSelect={() => {}}
-              isSelected={false}
-              isVisitLogs={true}
-              selectedButton={false}
-              onClick={() => {}}
-            />
-          )}
-
-          {/* Buttons Section */}
-          <div className="flex justify-between items-center w-full px-4 pt-4">
-            <button
-              onClick={onReject}
-              className="flex justify-center items-center p-0 gap-2 text-red-600 border border-red-600 rounded-full hover:bg-red-100 transition w-[104px] h-[40px]"
-            >
-              Reject
-            </button>
-            <button
-              onClick={onAccept}
-              className="flex justify-center items-center px-6 py-2.5 text-white bg-green-600 rounded-full hover:bg-green-700 transition w-[104px] h-[40px]"
-            >
-              Accept
-            </button>
-          </div>
-        </div>
-      </div>
-    );
   };
 
   const handleCloseModal = () => {
@@ -175,6 +170,11 @@ const PostApprovals = () => {
     setIsModalOpen(false);
   };
 
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+  };
+
+  // ----------- 2. API functions [2]
   // Approve selected posts
   const handleApproveSelected = async () => {
     try {
@@ -200,7 +200,7 @@ const PostApprovals = () => {
       // Update state after approval
       const updatedPosts = { ...pendingPosts };
       updatedPosts[activeTab] = pendingPosts[activeTab].filter(
-        (post) => !selectedItems.includes(post.id)
+        (post) => !selectedItems.includes(post.id),
       );
       setPendingPosts(updatedPosts);
       setSelectedItems([]);
@@ -227,7 +227,7 @@ const PostApprovals = () => {
       // Update state after rejection
       const updatedPosts = { ...pendingPosts };
       updatedPosts[activeTab] = pendingPosts[activeTab].filter(
-        (post) => !selectedItems.includes(post.id)
+        (post) => !selectedItems.includes(post.id),
       );
       setPendingPosts(updatedPosts);
       setSelectedItems([]);
@@ -235,38 +235,60 @@ const PostApprovals = () => {
       console.error("Error rejecting posts:", error);
     }
   };
-  useEffect(() => {
-    // Initialize filteredPosts with fetched data (already sorted from backend)
-    setFilteredPosts(pendingPosts);
-  }, [pendingPosts]);
 
+  // ------------------- 3. Search and sort
   //Search Function
   const searchChange = () => {
     const searchValue = searchRef.current.value.toLowerCase();
-    const filtered = {
-      ...filteredPosts,
-      [activeTab]: pendingPosts[activeTab].filter(
-        (x) =>
-          x.title?.toLowerCase().includes(searchValue) ||
-          (x.userName && x.userName.toLowerCase().includes(searchValue)) ||
-          // (x.location && x.location.city.toLowerCase().includes(searchValue)) ||
-          (x.location &&
-            x.location.city &&
-            x.location.city.toLowerCase().includes(searchValue)) ||
-          (x.city && x.city.toLowerCase().includes(searchValue)) ||
-          x.peopleHelpedDescription?.toLowerCase().includes(searchValue)
-      ),
-    };
 
-    setFilteredPosts(filtered);
-    setCurrentPage(1); // Reset to the first page after search
+    const filtered = pendingPosts[activeTab].filter((x) => {
+      if (activeTab === "outreaches") {
+        return (
+          x.title?.toLowerCase().includes(searchValue) ||
+          x.userName?.toLowerCase().includes(searchValue) ||
+          x.location?.city?.toLowerCase().includes(searchValue)
+        );
+      }
+
+      if (activeTab === "visitLogs") {
+        return (
+          x.peopleHelpedDescription?.toLowerCase().includes(searchValue) ||
+          x.userName?.toLowerCase().includes(searchValue) ||
+          x.city?.toLowerCase().includes(searchValue)
+        );
+      }
+
+      if (activeTab === "helpRequests") {
+        return (
+          x.firstName?.toLowerCase().includes(searchValue) ||
+          x.interactionLogFirstName?.toLowerCase().includes(searchValue) ||
+          x.additionalDetails?.toLowerCase().includes(searchValue) ||
+          x.locationLandmark?.toLowerCase().includes(searchValue) ||
+          x.helpProvidedCategory?.some((c) =>
+            c.toLowerCase().includes(searchValue),
+          ) ||
+          x.furtherHelpCategory?.some((c) =>
+            c.toLowerCase().includes(searchValue),
+          )
+        );
+      }
+
+      return false;
+    });
+
+    setFilteredPosts((prev) => ({
+      ...prev,
+      [activeTab]: filtered,
+    }));
+
+    setCurrentPage(1); // reset to the first page
   };
 
   // Sort By Function
   const handleSortChange = (event) => {
     const selectedOption = event.target.value;
     setSortOption(selectedOption);
-
+    setCurrentPage(1);
     let sortedData = [...filteredPosts[activeTab]];
 
     // Determine the correct date field based on the active tab
@@ -322,7 +344,7 @@ const PostApprovals = () => {
       setPendingPosts((prev) => ({
         ...prev,
         [activeTab]: prev[activeTab].filter(
-          (post) => post.id !== selectedPost.id
+          (post) => post.id !== selectedPost.id,
         ),
       }));
 
@@ -347,7 +369,7 @@ const PostApprovals = () => {
       setPendingPosts((prev) => ({
         ...prev,
         [activeTab]: prev[activeTab].filter(
-          (post) => post.id !== selectedPost.id
+          (post) => post.id !== selectedPost.id,
         ),
       }));
 
@@ -366,27 +388,17 @@ const PostApprovals = () => {
   // Toggle selection for a post
   const toggleSelect = (id) => {
     setSelectedItems((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
     );
   };
 
   // Pagination calculations
-
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = filteredPosts[activeTab].slice(
     indexOfFirstPost,
-    indexOfLastPost
+    indexOfLastPost,
   );
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [activeTab]);
-
-  // Tab switching logic
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
-  };
 
   // Render pagination buttons with ellipsis style
   const renderPaginationButtons = () => {
@@ -410,14 +422,12 @@ const PostApprovals = () => {
         currentPage,
         currentPage + 1,
         "...",
-        totalPages
+        totalPages,
       );
     }
 
-    const handleTabChange = (tab) => {
-      setActiveTab(tab);
-      setCurrentPage(1);
-    };
+    const loadingForTab =
+      activeTab === "helpRequests" ? helpLoading : isLoading;
 
     return (
       <div className="flex items-center space-x-1 text-sm">
@@ -451,7 +461,7 @@ const PostApprovals = () => {
             >
               {page}
             </button>
-          )
+          ),
         )}
 
         {/* Next Button */}
@@ -468,22 +478,84 @@ const PostApprovals = () => {
     );
   };
 
-  const totalPosts =
-    pendingPosts.outreaches.length + pendingPosts.visitLogs.length;
+  const Modal = ({ post, onClose, onAccept, onReject }) => {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-md">
+        {/* Modal Container */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-lg flex flex-col items-center">
+          {/* Back Button */}
+          <div className="flex items-center w-full mb-4">
+            <img
+              src={arrowBack}
+              alt="Back"
+              className="w-6 h-6 cursor-pointer"
+              onClick={onClose} // Clicking on the image closes the modal
+            />
+            <button
+              onClick={onClose}
+              className="ml-2 text-sm text-gray-700 font-medium hover:underline"
+            >
+              Go Back
+            </button>
+          </div>
+
+          {/* Approval Card */}
+          {activeTab === "outreaches" ? (
+            <ApprovalCardOutreachEvents
+              postData={post}
+              userName={post.userName || "Unknown User"}
+              onToggleSelect={() => {}}
+              isSelected={false}
+              isVisitLogs={false}
+              selectedButton={false}
+              onClick={() => {}}
+            />
+          ) : activeTab == "visitLogs" ? (
+            <ApprovalCardVisitlogs
+              postData={post}
+              userName={post.userName || "Unknown User"}
+              onToggleSelect={() => {}}
+              isSelected={false}
+              isVisitLogs={true}
+              selectedButton={false}
+              onClick={() => {}}
+            />
+          ) : (
+            <ApprovalCardHelpRequests
+              postData={post}
+              selectedButton={false}
+              onClick={() => {}}
+            />
+          )}
+
+          {/* Buttons Section */}
+          <div className="flex justify-between items-center w-full px-4 pt-4">
+            <button
+              onClick={onReject}
+              className="flex justify-center items-center p-0 gap-2 text-red-600 border border-red-600 rounded-full hover:bg-red-100 transition w-[104px] h-[40px]"
+            >
+              Reject
+            </button>
+            <button
+              onClick={onAccept}
+              className="flex justify-center items-center px-6 py-2.5 text-white bg-green-600 rounded-full hover:bg-green-700 transition w-[104px] h-[40px]"
+            >
+              Accept
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="relative flex flex-col items-center">
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-16 lg:mx-40 mt-16 rounded-2xl bg-white text-black">
         <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
-          {/* Headline Section */}
-          {/* Page Title */}
           <div className="flex justify-between items-center gap-4 w-full max-w-[1324px] mb-6">
-            {/* <!-- Post Approvals Title --> */}
             <p className="font-bricolage font-medium text-xl md:text-[32px] text-[#1F0A58]">
               Post Approvals
             </p>
-
-            {/* <!-- Search and Sort by section --> */}
             <div className="flex justify-end items-center gap-[49px] w-[492px] h-[40px]">
               {/* <!-- Search Input --> */}
               <div className="flex items-center gap-[5px] w-[253px] h-[40px] border border-gray-300 rounded px-2">
@@ -529,7 +601,7 @@ const PostApprovals = () => {
               pending to be published on the live website
             </p>
           </div>
-
+          {/* NOT REFACTORED [START]: approve, reject selected */}
           {/* Top Buttons */}
           {selectedItems.length > 0 && (
             <div className="relative flex justify-between items-center mt-4 bg-[#E4EEEA] p-4 rounded-lg shadow">
@@ -572,6 +644,7 @@ const PostApprovals = () => {
               </div>
             </div>
           )}
+          {/* NOT REFACTORED [END]: approve, reject selected */}
 
           {/* Tabs */}
           <div className="pt-4 pb-3">
@@ -621,7 +694,6 @@ const PostApprovals = () => {
             <>
               {/* Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-[20px] gap-y-[30px] mt-[20px]">
-                {console.log("Current Posts:", currentPosts)}
                 {currentPosts.map((post) =>
                   activeTab === "outreaches" ? (
                     <ApprovalCardOutreachEvents
@@ -633,7 +705,7 @@ const PostApprovals = () => {
                       selectedButton={true}
                       onClick={() => handleCardClick(post)}
                     />
-                  ) : (
+                  ) : activeTab === "visitLogs" ? (
                     <ApprovalCardVisitlogs
                       key={post.id}
                       postData={post}
@@ -643,7 +715,16 @@ const PostApprovals = () => {
                       selectedButton={true}
                       onClick={() => handleCardClick(post)}
                     />
-                  )
+                  ) : (
+                    <ApprovalCardHelpRequests
+                      key={post.id}
+                      postData={post}
+                      onToggleSelect={toggleSelect}
+                      isSelected={selectedItems.includes(post.id)}
+                      selectedButton={true}
+                      onClick={() => handleCardClick(post)}
+                    />
+                  ),
                 )}
               </div>
 
