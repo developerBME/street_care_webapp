@@ -113,8 +113,7 @@ const VisitLogExpandedView = ({ postData, userImage }) => {
             className="w-8 h-8 rounded-full"
           />
           <span className="text-[18px] font-bold font-dmsans">
-            {postData?.firstName || "Annonymous User"}{" "}
-            {postData?.lastName || ""}
+            {postData?.firstName || "Anonymous User"} {postData?.lastName || ""}
           </span>
           <img src={userBadge} alt="Verified" className="w-5 h-5" />
         </div>
@@ -397,7 +396,7 @@ const ApprovalCardVisitlogs = ({
             />
 
             <span className="text-[13px] font-normal font-inter">
-              {postData?.firstName || "Annonymous User"}{" "}
+              {postData?.firstName || "Anonymous User"}{" "}
               {postData?.lastName || ""}
             </span>
             <img src={userImage} alt="Verified" className="w-5 h-5" />
