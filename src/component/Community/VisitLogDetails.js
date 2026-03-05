@@ -199,9 +199,9 @@ const VisitLogDetails = () => {
                           : null}
                       </div>
                     </div>
-                    <div className="flex flex-row justify-normal space-x-2">
+                    <div className="flex flex-row justify-normal items-center space-x-2">
                       <img
-                        className="w-[12px] h-[15px] my-[3px]"
+                        className="w-[12px] h-[15px]"
                         src={locate}
                       />
                       <div className="font-medium font-dmsans text-[14px] text-[#37168B]">

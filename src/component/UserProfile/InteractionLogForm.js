@@ -23,6 +23,7 @@ import { fetchPersonalVisitLogById } from "../VisitLogCardService";
 import UpdateVisitLogConfirmationModal from "./UpdateVisitLogConfirmationModal";
 import { Timestamp } from "firebase/firestore";
 import { areObjectsEqual } from "../../utils/helperFns";
+import { areObjectsEqual } from "../../utils/helperFns";
 import { fetchUserTypeDetails } from "../EventCardService";
 import GeneralInfoForm from "./GeneralInfoForm";
 import DynamicSubSection from "../FormBuilder/DynamicSubsection";
@@ -77,7 +78,54 @@ export const obj2 = {
   completedTimestamp: "",
   isCompleted: false,
 };
+export const obj2 = {
+  interactionLogFirstName: "",
+  interactionLogDocId: "",
+  firstName: "",
+  locationLandmark: "",
+  timestampOfInteraction: "",
+  helpProvidedCategory: [],
+  furtherHelpCategory: [],
+  followUpTimestamp: "",
+  additionalDetails: "",
+  isPublic: true,
+  status: "pending",
+  lastModifiedTimestamp: null,
+  lastActionPerformed: null,
+  completedTimestamp: "",
+  isCompleted: false,
+};
 
+function InteractionLogForm() {
+  const navigate = useNavigate();
+  const [success, setSuccess] = useState(false);
+  const [isPublic, setIsPublic] = useState(false);
+  // const [interactions, setInteractions] = useState([1]); //Needed
+  const [provideInteractionDetail, setProvideInteractionDetail] = //Needed
+    useState("No");
+  const [emptyError, setEmptyError] = useState(false);
+  const [errors, setErrors] = useState({
+    numberHelpedError: "",
+    cityError: "",
+    stateError: "",
+    checkboxesError: "",
+    itemQtyError: "",
+    dateError: "",
+    timeError: "",
+    dateTimeError: "",
+    optDescError: "",
+    optLandmarkError: "",
+    infoShareCheckboxError: "",
+    idError: "",
+    streetError: "",
+    zipError: "",
+  });
+  const dynamicRef = useRef();
+  const generalInfoRef = useRef();
+
+  //   const { id } = useParams();
+
+  /* Firebase */
 function InteractionLogForm() {
   const navigate = useNavigate();
   const [success, setSuccess] = useState(false);
@@ -111,13 +159,32 @@ function InteractionLogForm() {
 
   const handleSubmmit = async () => {
     let interactionLogData, helpRequestData;
+    let interactionLogData, helpRequestData;
     let interactionLogDocId = "";
     let interactionLogFirstName = "";
     let helpRequestDocIds = [];
     // console.log("interactionLog_collection:", interactionLog_collection);
     // console.log("helpRequest_collection:", helpRequest_collection);
+    // console.log("interactionLog_collection:", interactionLog_collection);
+    // console.log("helpRequest_collection:", helpRequest_collection);
 
     try {
+      //---- Form Validation Starts -----
+      //Checking if with no interactionData is GeneralInfo Empty?
+      if (provideInteractionDetail === "No") {
+        if (generalInfoRef.current.checkIsEmpty()) {
+          setEmptyError(true);
+          return;
+        } else {
+          interactionLogData = generalInfoRef.current.getGeneralInfoData(); // get data if its not empty
+        }
+      }
+
+      // Checking if with interactionData, are GeneralInfo and DynamicSubsection both Empty?
+      if (
+        generalInfoRef.current.checkIsEmpty() &&
+        provideInteractionDetail == "Yes" &&
+        dynamicRef.current.checkIsEmpty()
       //---- Form Validation Starts -----
       //Checking if with no interactionData is GeneralInfo Empty?
       if (provideInteractionDetail === "No") {
@@ -148,13 +215,24 @@ function InteractionLogForm() {
         }
         helpRequestData = dynamicRef.current.getHelpRequestData(); //get HelpRequest Data from the component.
       }
+      interactionLogData = generalInfoRef.current.getGeneralInfoData(); // get data if not got it previously.
+      if (provideInteractionDetail == "Yes") {
+        if (dynamicRef.current.checkIsEmpty()) {
+          setEmptyError(true);
+          return;
+        }
+        helpRequestData = dynamicRef.current.getHelpRequestData(); //get HelpRequest Data from the component.
+      }
 
       setEmptyError(false);
 
       //---- Form Validation Ends -----
 
+      //---- Form Validation Ends -----
+
       // STEP 1: Augment interactionLogData
 
+      if (!generalInfoRef.current.checkIsEmpty()) {
       if (!generalInfoRef.current.checkIsEmpty()) {
         // Checking here if user has changed anything at all in GeneralInfoForm Data
         const nativeStartDate =
@@ -171,6 +249,7 @@ function InteractionLogForm() {
           lastModifiedTimestamp: Timestamp.now(),
           isPublic: isPublic,
           helpRequestCount: null,
+          helpRequestCount: null,
           startTimestamp: Timestamp.fromDate(nativeStartDate), //nativeStartDate
           endTimestamp: Timestamp.fromDate(nativeEndDate), //nativeEndDate
           interactionDate: Timestamp.fromDate(nativeDate), //nativeDate
@@ -179,6 +258,7 @@ function InteractionLogForm() {
         //   "InteractionLog Data just before send:",
         //   augmentedInteractionLog
         // );
+        //Handle if the individual interaction is empty should not throw error.
         //Handle if the individual interaction is empty should not throw error.
 
         // STEP 2: Add to interactionLog collection
@@ -195,6 +275,8 @@ function InteractionLogForm() {
 
       // STEP 3: Add each helpRequest entry individually
 
+      if (provideInteractionDetail === "Yes") {
+        const helpRequestDataWithoutKeys = helpRequestData;
       if (provideInteractionDetail === "Yes") {
         const helpRequestDataWithoutKeys = helpRequestData;
         // console.log("HelpRequestData:", helpRequestData);
@@ -237,6 +319,8 @@ function InteractionLogForm() {
       }
 
       if (
+        !generalInfoRef.current.checkIsEmpty() &&
+        provideInteractionDetail === "Yes"
         !generalInfoRef.current.checkIsEmpty() &&
         provideInteractionDetail === "Yes"
       ) {
@@ -297,6 +381,7 @@ function InteractionLogForm() {
                     </div>
 
                     <GeneralInfoForm ref={generalInfoRef} />
+                    <GeneralInfoForm ref={generalInfoRef} />
                   </div>
 
                   <div className="mb-6">
@@ -340,6 +425,7 @@ function InteractionLogForm() {
                   {provideInteractionDetail === "Yes" && (
                     <>
                       <DynamicSubSection ref={dynamicRef} />{" "}
+                      <DynamicSubSection ref={dynamicRef} />{" "}
                     </>
                   )}
 
@@ -367,6 +453,7 @@ function InteractionLogForm() {
                 <div className="justify-start items-start gap-4 inline-flex flex-col">
                   {emptyError && (
                     <div className="text-red-500 text-sm font-medium -mt-5">
+                      Please fill out the Form, Entire Form cannot be empty.
                       Please fill out the Form, Entire Form cannot be empty.
                     </div>
                   )}

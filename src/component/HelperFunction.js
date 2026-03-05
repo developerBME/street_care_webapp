@@ -78,7 +78,14 @@ export function formatDate(dateObj) {
     .toString()
     .padStart(2, "0")} ${ampm}`;
 
-  return `${month} ${day}, ${year} ${weekday} ${formattedTime}`;
+  // Get timezone abbreviation using Intl.DateTimeFormat
+  const timezone = new Intl.DateTimeFormat("en-US", {
+    timeZoneName: "short",
+  })
+    .formatToParts(dateObj)
+    .find((part) => part.type === "timeZoneName")?.value || "";
+
+  return `${month} ${day}, ${year} ${weekday} ${formattedTime} ${timezone}`;
 }
 
 export async function getNumberOfPages(recordsPerPage, collectionRef) {

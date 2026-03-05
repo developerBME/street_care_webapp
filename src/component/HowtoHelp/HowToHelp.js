@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import howtohelp from "../../images/howtohelp.png";
 import howToHelpOutreachSample from "../../images/howToHelpSampleOutreach.png";
 import EventOutrachesSection from "../HowtoHelp/EventOutrachesSection";
@@ -19,28 +19,108 @@ import badge3 from "../../images/badge3.png";
 import badge4 from "../../images/badge4.png";
 import badge5 from "../../images/badge5.png";
 import badge6 from "../../images/badge6.png";
+import useSuccessMetrics from "../../utils/successMetrics";
+
+/* ================= POPUP ================= */
+const MEMBERSHIP_URL = "https://streetcare.us/chapter-membership-form/";
+//const //LS_KEY = "sc_verify_popup_snooze_until"; // timestamp (ms)
+
+function shouldShowPopup() {
+  /*try {
+    const snooze = Number(localStorage.getItem(LS_KEY) || 0);
+    return Date.now() > snooze;
+  } catch {
+    return true;
+  }*/
+  return true;
+}
+/*function snooze(days = 7) {
+  try {
+    const until = Date.now() + days * 24 * 60 * 60 * 1000;
+    localStorage.setItem(LS_KEY, String(until));
+  } catch {}
+}*/
+
+function GetVerifiedPopup({ open, onClose }) {
+  const dialogRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const first = dialogRef.current?.querySelector("a,button");
+    first?.focus();
+    const onKey = (e) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  const handleClose = () => {
+    //snooze(7);
+    onClose();
+  };
+
+  // 🆕 open StreetCare in a new tab (and keep your site)
+  const handleCTA = () => {
+    window.open(MEMBERSHIP_URL, "_blank", "noopener,noreferrer"); // 🆕
+  };
+
+  // 🆕 close when user clicks the dark backdrop
+  const handleBackdropMouseDown = (e) => {
+    if (e.target === e.currentTarget) onClose();
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/50 p-4"
+      onMouseDown={handleBackdropMouseDown} // 🆕
+    >
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        className="w-full max-w-md rounded-2xl bg-white shadow-xl relative p-5"
+        onMouseDown={(e) => e.stopPropagation()} // 🆕 prevent inner clicks from closing
+      >
+        <button
+          onClick={handleClose}
+          className="absolute right-3 top-3 text-xl leading-none px-2"
+          aria-label="Close" // (minor a11y improvement)
+        >
+          ×
+        </button>
+        <p className="m-0 text-xs font-bold tracking-wide text-[#2563EB]">
+          NOW AVAILABLE
+        </p>
+        <h2 className="mt-1 mb-2 text-2xl font-bold">Get verified!</h2>
+        <p className="text-sm leading-snug">
+          Profile verification will allow anyone who is verified to post
+          upcoming events and document their interactions with homeless
+          individuals.
+        </p>
+        <button
+          onClick={handleCTA}
+          className="mt-4 ml-auto block rounded-full px-4 py-2 font-semibold text-white bg-black"
+        >
+          Become a Member
+        </button>
+      </div>
+    </div>
+  );
+}
+/* ======================================== */
 
 const skipItems = [
-  {
-    image: skipItem1,
-    content: "A ton of anything",
-  },
-  {
-    image: skipItem2,
-    content: "Alcohol",
-  },
-  {
-    image: skipItem3,
-    content: "Drugs",
-  },
-  {
-    image: skipItem4,
-    content: "Religious Material",
-  },
-  {
-    image: skipItem5,
-    content: "Political Material",
-  },
+  { image: skipItem1, content: "A ton of anything" },
+  { image: skipItem2, content: "Alcohol" },
+  { image: skipItem3, content: "Drugs" },
+  { image: skipItem4, content: "Religious Material" },
+  { image: skipItem5, content: "Political Material" },
 ];
 
 const renderStepTitle = (step, selectedStep) => {
@@ -53,9 +133,7 @@ const renderStepTitle = (step, selectedStep) => {
           </div>
           <div className="font-dmsans text-[24px] leading-8 text-[#616161]">
             <div
-              className={`${
-                selectedStep === step ? "text-black" : ""
-              } md:w-1/2`}
+              className={`${selectedStep === step ? "text-black" : ""} md:w-1/2`}
             >
               Join an Outreach
             </div>
@@ -70,9 +148,7 @@ const renderStepTitle = (step, selectedStep) => {
           </div>
           <div className="font-dmsans text-[24px] leading-8 text-[#616161]">
             <div
-              className={`${
-                selectedStep === step ? "text-black" : ""
-              } md:w-1/2`}
+              className={`${selectedStep === step ? "text-black" : ""} md:w-1/2`}
             >
               Prepare an Outreach
             </div>
@@ -87,9 +163,7 @@ const renderStepTitle = (step, selectedStep) => {
           </div>
           <div className="font-dmsans text-[24px] leading-8 text-[#616161]">
             <div
-              className={`${
-                selectedStep === step ? "text-black" : ""
-              } md:w-1/2`}
+              className={`${selectedStep === step ? "text-black" : ""} md:w-1/2`}
             >
               Attend Outreach
             </div>
@@ -104,9 +178,7 @@ const renderStepTitle = (step, selectedStep) => {
           </div>
           <div className="font-dmsans text-[24px] leading-8 text-[#616161]">
             <div
-              className={`${
-                selectedStep === step ? "text-black" : ""
-              } md:w-1/2`}
+              className={`${selectedStep === step ? "text-black" : ""} md:w-1/2`}
             >
               Document your Interaction
             </div>
@@ -130,7 +202,8 @@ const renderStepContent = (selectedStep) => {
               </div>
               <div className="text-[16px] font-dmsans text-[#181818] leading-6">
                 With StreetCare, you can sign up for existing outreaches or
-                create an outreach for any help request where you can provide assistance.
+                create an outreach for any help request where you can provide
+                assistance.
                 <br />
                 <br />
                 Outreaches are created by users who are willing to help for a
@@ -176,9 +249,7 @@ const renderStepContent = (selectedStep) => {
               </div>
             </div>
             <div className="flex w-full justify-end">
-              <div>
-                {/* <img alt="" src={howtohelp} /> */}
-              </div>
+              <div>{/* <img alt="" src={howtohelp} /> */}</div>
             </div>
           </div>
           <div className="px-10 pt-8">
@@ -325,6 +396,8 @@ const renderStepContent = (selectedStep) => {
 
 function HowToHelp() {
   const [selectedStep, setSelectedStep] = useState(1);
+  const [showPopup, setShowPopup] = useState(false);
+  const { isLoading, error, metrics } = useSuccessMetrics();
 
   const handleSelectStep = (step) => {
     setSelectedStep(step);
@@ -332,10 +405,15 @@ function HowToHelp() {
 
   useEffect(() => {
     document.title = "How to help - Street Care";
+    // Force popup with ?verify=1 for testing
+    setShowPopup(true);
   }, []);
 
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
+      {/* RENDER THE POPUP */}
+      <GetVerifiedPopup open={showPopup} onClose={() => setShowPopup(false)} />
+
       <div className="relative flex flex-col items-center ">
         <div className=" w-[95%] md:w-[90%] lg:w-[79%] mx-2 lg:mx-40 mt-32 rounded-2xl bg-white text-black ">
           {/*  casaskasjlkalslssas*/}
@@ -356,7 +434,7 @@ function HowToHelp() {
               </div>
               <div className="flex w-full ">
                 <div className="bg-gradient-to-br from-[#D3F2CE] to-[#E7E7E7] p-8 w-full rounded-l-2xl">
-                  <span className="font-dmsans text-[45px]">650k+</span>
+                  <span className="font-dmsans text-[45px]">771k+</span>
                   <br />
                   <span className="font-dmsans text-[12px]">
                     Total homeless population in United States
@@ -384,9 +462,11 @@ function HowToHelp() {
                   How to help with Street Care
                 </div>
                 <div className="font-dmsans text-1 text-grey-300 font-normal">
-                We’ve created a simple guide on how you can contribute to the help homeless.
-                 Join our team of 700+ members and contribute in your own way. 
-                 Over 35% of our volunteers are first-time volunteers.
+                  We’ve created a simple guide on how you can contribute to the
+                  help homeless. Join our team of{" "}
+                  {metrics.TotalVolunteers.toLocaleString()}+ members and
+                  contribute in your own way. Over 35% of our volunteers are
+                  first-time volunteers.
                 </div>
               </div>
               {/* Desktop screen */}
@@ -459,10 +539,9 @@ function HowToHelp() {
         </div>
 
         <div className=" w-[95%] md:w-[90%] lg:w-[79%] mx-2 lg:mx-40 mt-8 rounded-2xl bg-white text-black ">
-          
           {/* <div className="items-center justify-center p-8 lg:p-16 h-full w-full rounded-2xl bg-[#F7F7F7] "> */}
-            {/* <div className="flex-col justify-start items-start gap-10 inline-flex"> */}
-              {/* <div className="space-y-12">
+          {/* <div className="flex-col justify-start items-start gap-10 inline-flex"> */}
+          {/* <div className="space-y-12">
                 <div className="font-bricolage text-[57px] text-[#273164] font-medium">
                   What else can I do to help?
                 </div>
@@ -513,7 +592,7 @@ function HowToHelp() {
                   </div>
                 </div>
               </div> */}
-            {/* </div> */}
+          {/* </div> */}
           {/* </div> */}
         </div>
         {/* <div className="  w-[95%] md:w-[90%] lg:w-[75%] mx-2 lg:mx-40 mt-8 mb-20 rounded-2xl bg-white text-black ">
@@ -529,8 +608,7 @@ function HowToHelp() {
               label="Send the guide to a friend"
               name="buttondefault"
             />
-          </div>
-        </div> */}
+          </div> */}
       </div>
     </div>
   );

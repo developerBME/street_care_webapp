@@ -34,6 +34,7 @@ const adminUser_collection = collectionMapping.adminUsers;
 const initialSorted = {
   username: 0,
   deviceType: 0,
+  dateCreated: 0,
 };
 
 const filterValues = {
@@ -313,6 +314,17 @@ const changeUserType = async (email, docId, Type) => {
       );
     }
 
+// Sorting by Date Created -SR
+    if (sorted.dateCreated !== 0) {
+  filtered.sort((a, b) => {
+    const aDate = new Date(a.dateCreated?.toDate?.() || a.dateCreated);
+    const bDate = new Date(b.dateCreated?.toDate?.() || b.dateCreated);
+
+    return sorted.dateCreated === 1 ? aDate - bDate : bDate - aDate;
+  });
+}
+// End of Sorting by Date Created -SR
+
     if (sorted.username !== 0) {
       filtered.sort((a, b) =>
         sorted.username === 1
@@ -338,13 +350,28 @@ const changeUserType = async (email, docId, Type) => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  const sortTable = (key) => {
+  // commenting to fix sorting issue as it was cycling through asc, desc and no sort for 3rd click -SR
+  /*const sortTable = (key) => {
     let sortType = (sorted[key] + 1) % 3;
     setSorted({
       ...initialSorted,
       [key]: sortType,
     });
-  };
+  };*/ 
+
+  //Adding this instead to fix sorting issue -SR
+  const sortTable = (key) => {
+  // If this column is already ascending, switch to descending
+  if (sorted[key] === 1) {
+    setSorted({ ...initialSorted, [key]: 2 });
+  } 
+  // Otherwise switch to ascending
+  else {
+    setSorted({ ...initialSorted, [key]: 1 });
+  }
+};
+// End of sorting fix -SR
+
 
   const renderPageNumbers = () => {
     const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
@@ -466,7 +493,25 @@ const changeUserType = async (email, docId, Type) => {
             <table className="table-auto w-full text-center border-collapse">
               <thead className="bg-[#E4EEEA] py-4">
                 <tr>
-                  <th className="border-r rounded-tl-2xl py-3 px-2">Sr. No.</th>
+                  {/*
+                 <th className="border-r rounded-tl-2xl py-3 px-2">Sr. No.</th>   -SR */}
+                 {/*Date Created*/}
+<th className="border-r py-3 px-2">
+                    <div className="flex justify-center items-center whitespace-nowrap">
+                      <p>Date Created</p>
+                      <p className="ml-4">
+                        <RxCaretSort
+                          className={`w-6 h-6 cursor-pointer ${
+                            sorted.dateCreated &&
+                            "bg-[#565656] text-[#FFFFFF] border border-[#565656] rounded"
+                          }`}
+                          onClick={() => sortTable("dateCreated")}
+                        />
+                      </p>
+                    </div>
+                  </th>
+                
+
                   <th className="border-r py-3 px-2">UID</th>
                   <th className="border-r py-3 px-2">
                     <div className="flex justify-center items-center whitespace-nowrap">
@@ -511,9 +556,18 @@ const changeUserType = async (email, docId, Type) => {
                         bannedUsers[user.email] ? "text-red-600" : ""
                       }`}
                     >
+                      {/*
                       <td className="border-r border-b border-[#C8C8C8] whitespace-nowrap py-2">
-                        {indexOfFirstUser + index + 1}
-                      </td>
+                        {indexOfFirstUser + index + 1}  
+                      </td>  Commenting Sr.no to change with Date Created -SR*/}
+
+                      {/*Date Created*/}
+                   
+                   <td className="border-r border-b border-[#C8C8C8] whitespace-nowrap py-2 px-4">
+                  { user.dateCreated ? new Date(user.dateCreated?.toDate?.() || user.dateCreated).toLocaleDateString("en-US")
+                     : "—"}
+              </td>  {/* End of Date Created */}  
+
                       <td className="border-x border-b border-[#C8C8C8] whitespace-nowrap py-2 px-4">
                         {user.uid}
                       </td>
@@ -604,7 +658,7 @@ const changeUserType = async (email, docId, Type) => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6" className="text-center py-4">
+                    <td colSpan="6" className="text-center py-4"> 
                       No users found
                     </td>
                   </tr>

@@ -110,9 +110,9 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
     };
   }, [generalInfoData]);
 
-  useEffect(() => {
-    // onUpdate(generalInfoData); Comment this out since we dont need to raise data state at each keystroke
-  }, [generalInfoData]);
+  // useEffect(() => {
+  //   // onUpdate(generalInfoData); Comment this out since we dont need to raise data state at each keystroke
+  // }, [generalInfoData]);
 
   return (
     <>

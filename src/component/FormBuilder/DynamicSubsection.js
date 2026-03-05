@@ -24,14 +24,14 @@ const DynamicSubSection = forwardRef(({ onUpdate = () => {} }, ref) => {
               formData: formData,
               errors: errors,
             }
-          : { ...interaction }
-      )
+          : { ...interaction },
+      ),
     );
   };
 
   const handleRemove = (id) => {
     setInteractions((prev) =>
-      prev.filter((interaction) => interaction.id !== id)
+      prev.filter((interaction) => interaction.id !== id),
     );
   };
 
@@ -40,20 +40,20 @@ const DynamicSubSection = forwardRef(({ onUpdate = () => {} }, ref) => {
     () => ({
       checkIsEmpty() {
         return interactions.some((interaction) =>
-          areObjectsEqual(interaction.formData, obj2)
+          areObjectsEqual(interaction.formData, obj2),
         );
       },
       getHelpRequestData() {
         return interactions.map((interaction) => interaction.formData);
       },
     }),
-    [interactions]
+    [interactions],
   );
 
-  useEffect(() => {
-    console.log("Interactions:", interactions);
-    // onUpdate(interactionData); commented this since it uplifts the data which i do not want now
-  }, [interactions]);
+  // Use incase of Debugging.
+  // useEffect(() => {
+  //   console.log("Interactions:", interactions);
+  // }, [interactions]);
 
   return (
     <>

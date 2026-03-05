@@ -9,11 +9,12 @@ function useSuccessMetrics() {
   const [metrics, setMetrics] = useState({
     TimeStamp: null,
     HomelessPeopleAided: 12500,
-    TotalVolunteers: 900,
-    ItemsShared: 81000,
-    PeopleMentored: 11000,
+    TotalVolunteers: 1000,
+    ItemsShared: 81500,
+    PeopleMentored: 11200,
     TotalOutreach: 67,
-    ChapterMembers: 1800,
+    ChapterMembers: 1900,
+    firstTimeVolunteerPercentage: 35,
   });
 
   useEffect(() => {
@@ -40,6 +41,8 @@ function useSuccessMetrics() {
             PeopleMentored: Number(data.PeopleMentored) || 0,
             TotalOutreach: Number(data.TotalOutreach) || 0,
             ChapterMembers: Number(data.ChapterMembers) || 0,
+            firstTimeVolunteerPercentage:
+              Number(data.firstTimeVolunteerPercentage) || 0,
           });
         } else {
           console.log("No metrics documents found. Using default values.");

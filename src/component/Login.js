@@ -207,6 +207,8 @@ function Login() {
                     </div>
                   </div>
                   */}
+                  {
+                  /* Remove Twitter from Login.
                   <div
                     className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200 cursor-pointer"
                     onClick={handleTwitterSignIn}
@@ -217,7 +219,7 @@ function Login() {
                     <div className="w-8 h-8 left-[22.50px] top-[12px] absolute">
                       <RiTwitterXFill size={32} />
                     </div>
-                  </div>
+                  </div> */}
                   {/* <div className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200">
                     <div className="left-[80px] top-[16px] absolute text-neutral-600 text-lg font-semibold font-inter leading-normal">
                       Continue with Facebook
