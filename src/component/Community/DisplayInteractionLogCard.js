@@ -6,6 +6,10 @@ import dateIcon from "../../images/date.png";
 import flagIcon from "../../images/flag.svg";
 import infoIcon from "../../images/info_icon.png"; // Add an info icon image
 import locationIcon from "../../images/location.png";
+import calendarIcon from "../../images/calendar_month.svg";
+import emailIcon from "../../images/email.png";
+import phoneIcon from "../../images/phone.png";
+import clockIcon from "../../images/ic_outline-access-time.svg";
 import defaultImage from "../../images/default_avatar.svg";
 import { formatDate } from "../helper";
 import CardTags from "./CardTags";
@@ -23,7 +27,10 @@ import collectionMapping from "../../utils/firestoreCollections.js";
 const visitLogs_collection = collectionMapping.visitLogs;
 const users_collection = collectionMapping.users; // User collection
 
-const DisplayInteractionLogCard = ({ interactionLogCardData }) => {
+const DisplayInteractionLogCard = ({
+  interactionLogCardData,
+  openPopUpModal,
+}) => {
   const navigate = useNavigate();
 
   // Fetch flag info when component mounts
@@ -168,7 +175,7 @@ fetchFlagStatus();
   return (
     <div
       className="bg-[#F5EEFE] w-[90%] max-w-[20rem]  md:w-full min-w-0 rounded-[30px] mb-4 flex flex-col p-6 h-auto cursor-pointer border-b-[1px] border-gray-200"
-      onClick={handleViewDetails}
+      onClick={openPopUpModal}
     >
       <div className="relative group">
         {/* Flag Button */}
@@ -194,13 +201,13 @@ fetchFlagStatus();
       <div className="inline-flex items-center space-x-2">
         <img
           alt=""
-          src={interactionLogCardData?.defaultImage || defaultImage}
+          src={interactionLogCardData?.photoUrl || defaultImage}
           className="w-8 h-8 rounded-full"
         />
         <div className="font-normal font-inter text-[13px]">
           {interactionLogCardData?.firstName ||
             interactionLogCardData?.userName ||
-            ""}
+            "Anonymous User"}
         </div>
         <img alt="" src={verifiedImg} className="w-5 h-5" />
       </div>
@@ -211,13 +218,13 @@ fetchFlagStatus();
           <span className="ml-2 text-sm">
             {interactionLogCardData?.startTimestamp
               ? formatTimeStampDate(interactionLogCardData.startTimestamp)
-              : null}
+              : "N/A"}
           </span>
         </div>
 
         <div className="flex items-center">
           <img className="w-3 h-4" src={locationIcon} alt="Location" />
-          <span className="ml-2 text-sm">{`${interactionLogCardData?.city}, ${interactionLogCardData?.state}`}</span>
+          <span className="ml-2 text-sm">{`${interactionLogCardData?.city || "N/A"}, ${interactionLogCardData?.state}`}</span>
         </div>
       </div>
 
@@ -240,6 +247,200 @@ fetchFlagStatus();
       {/* <p className="text-sm mt-2 line-clamp-2">
         {interactionLogCardData?.peopleHelpedDescription || ""}
       </p> */}
+    </div>
+  );
+};
+
+export const ExpandedInteractionLogCard = ({ postData }) => {
+  // Format date from Firebase Timestamp — prefer timeStamp, fallback to lastModifiedTimestamp
+  const formattedDate = postData?.timeStamp?.seconds
+    ? new Date(postData.timeStamp.seconds * 1000).toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      })
+    : postData?.lastModifiedTimestamp?.seconds
+      ? new Date(
+          postData.lastModifiedTimestamp.seconds * 1000,
+        ).toLocaleDateString("en-US", {
+          month: "2-digit",
+          day: "2-digit",
+          year: "numeric",
+        })
+      : "Unknown Date";
+
+  let userBadge = null;
+  switch (postData.userType) {
+    case "Chapter Leader":
+      userBadge = verifiedGreen;
+      break;
+    case "Chapter Member":
+      userBadge = verifiedPurple;
+      break;
+    case "Street Care Hub Leader":
+      userBadge = verifiedBlue;
+      break;
+    default:
+      userBadge = verifiedYellow;
+      break;
+  }
+  // Build time range string e.g. "02:05PM  –  05:05PM"
+  const startTime = postData?.startTime || "";
+  const endTime = postData?.endTime || "";
+  const timeRange =
+    startTime && endTime
+      ? `${startTime}  –  ${endTime}`
+      : startTime || endTime || "N/A";
+
+  // Build city + state display string
+  const city = postData?.location?.city || postData?.city || "";
+  const state =
+    postData?.location?.state || postData?.stateAbbv || postData?.state || "";
+  const locationDisplay =
+    city || state ? `${city}${state ? `, ${state}` : ""}` : "Unknown City";
+
+  // Support tags — prefer listOfSupportsProvided, fallback to whatGiven
+  const tags = postData?.listOfSupportsProvided || postData?.whatGiven || [];
+
+  return (
+    <div className="w-full bg-[#F0EBFF] rounded-2xl p-5 text-sm font-sans">
+      {/* ── Header: person icon + name + badge  |  flag icon ── */}
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center space-x-2">
+          <img
+            src={postData?.photoUrl || defaultImage}
+            alt="User"
+            className="w-8 h-8 rounded-full"
+          />
+          <span className="text-[18px] font-bold font-dmsans">
+            {postData?.firstName || "Anonymous User"} {postData?.lastName || ""}
+          </span>
+          <img src={userBadge} alt="Verified" className="w-5 h-5" />
+        </div>
+
+        {/* Flag / report icon (top-right) */}
+        {/* <span className="text-gray-400 text-xl">
+          <img src={flagIcon} alt="Flag" className="w-7 h-7" />
+        </span> */}
+      </div>
+
+      {/* ── 2-column Info Grid ── */}
+      <div className="grid grid-cols-2 gap-x-6 gap-y-3 mb-4">
+        {/* Date — left column */}
+        <div className="flex items-center space-x-2">
+          <img alt="calendar" src={calendarIcon} className="w-4 h-4" />
+          <span className="text-sm text-[#37168B] font-medium">
+            {formattedDate}
+          </span>
+        </div>
+
+        {/* Location — right column */}
+        <div className="flex items-center space-x-2">
+          <img alt="location" src={locationIcon} className="w-4 h-4" />
+          <span className="text-sm text-[#37168B] font-medium">
+            {postData?.location?.city || postData?.city ? (
+              <>
+                {postData.location?.city || postData.city}
+                {postData.stateAbbv || postData.state
+                  ? `, ${postData.stateAbbv || postData.state}`
+                  : ""}
+              </>
+            ) : (
+              "Unknown City"
+            )}
+          </span>
+        </div>
+
+        {/* Phone — left column */}
+        <div className="flex items-center space-x-2">
+          <span className="text-[#37168B]">
+            <img alt="phone" src={phoneIcon} className="w-4 h-4" />
+          </span>
+          <span className="text-sm text-[#37168B] font-medium">
+            {postData?.phoneNumber || "N/A"}
+          </span>
+        </div>
+
+        {/* Time range — right column */}
+        <div className="flex items-center space-x-2">
+          <img alt="clock" src={clockIcon} className="w-4 h-4" />
+          <span className="text-sm text-[#37168B] font-medium">
+            {postData?.startTimestamp?.seconds &&
+            postData?.endTimestamp?.seconds
+              ? `${new Date(
+                  postData.startTimestamp.seconds * 1000,
+                ).toLocaleTimeString("en-US", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })} - ${new Date(
+                  postData.endTimestamp.seconds * 1000,
+                ).toLocaleTimeString("en-US", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}`
+              : "Unknown Time"}
+          </span>
+        </div>
+
+        {/* Address — left column */}
+        <div className="flex items-center space-x-2">
+          <img alt="location" src={locationIcon} className="w-4 h-4" />
+          <span className="text-sm text-[#37168B] font-medium">
+            {postData?.addr1 || postData?.location?.address || "N/A"}
+          </span>
+        </div>
+
+        {/* Email — right column */}
+        <div className="flex items-center space-x-2">
+          <span className="text-[#37168B] flex-shrink-0">
+            <img alt="email" src={emailIcon} className="w-4 h-4" />
+          </span>
+
+          <span className="text-sm text-[#37168B] font-medium break-all">
+            {postData?.email || "N/A"}
+          </span>
+        </div>
+      </div>
+
+      {[
+        { label: "People Joined", value: postData?.numPeopleJoined },
+        {
+          label: "Help Request Count",
+          value: postData?.helpRequestCount,
+        },
+        { label: "People Helped", value: postData?.numPeopleHelped },
+        { label: "Items Donated", value: postData?.numItemsDonated },
+        {
+          label: "Care Packages Distributed",
+          value: postData?.carePackagesDistributed,
+        },
+        {
+          label: "Items Donated",
+          value: postData?.numItemsDonated,
+        },
+      ].map(
+        ({ label, value }) =>
+          value !== undefined && (
+            <div key={label} className="flex flex-row justify-between py-2">
+              <span className="font-bold text-[14px] font-dmsans">{label}</span>
+              <span className="font-bold text-[14px] font-dmsans">{value}</span>
+            </div>
+          ),
+      )}
+
+      {/* ── Tag Pills ── */}
+      {tags.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {tags.map((tag, i) => (
+            <span
+              key={i}
+              className="px-3 py-1 text-xs border border-gray-400 rounded-full text-gray-700"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

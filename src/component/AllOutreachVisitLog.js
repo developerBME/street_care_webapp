@@ -9,7 +9,10 @@ import "react-datepicker/dist/react-datepicker.css";
 import UserTypeInfo from "./UserTypeInfo";
 import { getPageNumbersFormat } from "../utils/helperFns";
 import DummyDataButton from "./dummyDataScript";
-import DisplayInteractionLogCard from "./Community/DisplayInteractionLogCard";
+import arrowBack from "../images/arrowBack.png";
+import DisplayInteractionLogCard, {
+  ExpandedInteractionLogCard,
+} from "./Community/DisplayInteractionLogCard";
 // import RenderPaginationBtns from "./HomePage/RenderPaginationBtns";
 // Refactor to use PageCheckpoints and think of a way to handle pages.
 const AllOutreachVisitLog = () => {
@@ -38,6 +41,70 @@ const AllOutreachVisitLog = () => {
     endDate: new Date(),
     searchValue: "",
   });
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [popUpModalData, setPopUpModalData] = useState({});
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handlePopUpModalData = (data) => {
+    setPopUpModalData(data);
+    // console.log(data);
+  };
+
+  const Modal = ({ post, onClose }) => {
+    const modalRef = useRef();
+
+    const handleClickOutside = (e) => {
+      // If the click is outside the modal content
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
+        onClose();
+      }
+    };
+
+    useEffect(() => {
+      // Listen for all clicks on the document
+      document.addEventListener("mousedown", handleClickOutside);
+
+      // Cleanup
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
+    return (
+      <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-md">
+        {/* Modal Container */}
+        <div
+          ref={modalRef}
+          className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-lg flex flex-col items-center"
+        >
+          {/* Back Button */}
+          <div className="flex items-center w-full mb-4">
+            <img
+              src={arrowBack}
+              alt="Back"
+              className="w-6 h-6 cursor-pointer"
+              onClick={onClose} // Clicking on the image closes the modal
+            />
+            <button
+              onClick={onClose}
+              className="ml-2 text-sm text-gray-700 font-medium hover:underline"
+            >
+              Go Back
+            </button>
+          </div>
+
+          <ExpandedInteractionLogCard postData={post} />
+        </div>
+      </div>
+    );
+  };
 
   useEffect(() => {
     const getVisitLogs = async () => {
@@ -193,8 +260,8 @@ const AllOutreachVisitLog = () => {
           onClick={() => {
             setIsLoading(true);
             setCursorFields((prev) => ({ ...prev, currentPage: page - 1 }));
-            console.log("currentPage 0 Indexed-index:", page - 1);
-            console.log("Pagenumber 1 Indexed, index + 1:", page);
+            // console.log("currentPage 0 Indexed-index:", page - 1);
+            // console.log("Pagenumber 1 Indexed, index + 1:", page);
           }}
         >
           {page}
@@ -389,6 +456,11 @@ const AllOutreachVisitLog = () => {
                     <DisplayInteractionLogCard
                       key={visitLogData.id}
                       interactionLogCardData={visitLogData}
+                      openPopUpModal={() => {
+                        handleOpenModal();
+                        // console.log(visitLogData);
+                        handlePopUpModalData(visitLogData);
+                      }}
                     />
                   ))
                 ) : (
@@ -412,7 +484,7 @@ const AllOutreachVisitLog = () => {
                     cursorFields?.currentPage + 1,
                   )}
               </div>
-              <div>{/* <DummyDataButton /> */}</div>
+              <div></div>
               {/* <RenderPaginationBtns
                 handlePrev={handlePrev}
                 handleNext={handleNext}
@@ -423,6 +495,10 @@ const AllOutreachVisitLog = () => {
           )}
         </div>
       </div>
+      {/* Render Modal */}
+      {isModalOpen && (
+        <Modal post={popUpModalData} onClose={handleCloseModal} />
+      )}
     </div>
   );
 };

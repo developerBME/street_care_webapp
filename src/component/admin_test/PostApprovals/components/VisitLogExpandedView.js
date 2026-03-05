@@ -191,10 +191,11 @@ const VisitLogExpandedView = ({ postData, userImage }) => {
 
         {/* Email — right column */}
         <div className="flex items-center space-x-2">
-          <span className="text-[#37168B]">
+          <span className="text-[#37168B] flex-shrink-0">
             <img alt="email" src={emailIcon} className="w-4 h-4" />
           </span>
-          <span className="text-sm text-[#37168B] font-medium">
+
+          <span className="text-sm text-[#37168B] font-medium break-all">
             {postData?.email || "N/A"}
           </span>
         </div>

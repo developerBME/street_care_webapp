@@ -193,7 +193,7 @@ export async function fetchUserDetailsBatch(userIds) {
 
   // Firestore limits 'in' queries to 10 items
   const chunks = splitArrayIntoChunksOfLen(userIds, 10);
-  console.log(chunks);
+  // console.log(chunks);
   for (const chunk of chunks) {
     const userQuery = query(
       collection(db, users_collection),
