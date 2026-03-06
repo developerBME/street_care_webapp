@@ -30,6 +30,7 @@ const MobileAppRedirect = () => {
         <button
           className="w-[60px] h-[60px] flex flex-col items-center bg-nav text-white rounded-xl px-2 py-2 shadow-md shadow-gray-600 hover:shadow-lg hover:bg-[#504279] transition md:w-auto md:h-auto md:px-3 md:pt-1 md:pb-3"
           onClick={toggleModal}
+          data-testid="get-app-overlay"
         >
           <div className="relative block md:hidden w-20 h-20">
             <img
@@ -49,6 +50,7 @@ const MobileAppRedirect = () => {
             onClick={dismissWidget}
             className="absolute -top-2 -right-2 w-5 h-5 flex items-center justify-center text-lg bg-black text-white rounded-full cursor-pointer hover:bg-gray-700 z-10"
             aria-label="Dismiss"
+            data-testid="primary-close"
           >
             ×
           </span>
@@ -73,12 +75,15 @@ const MobileAppRedirect = () => {
       )}
 
       {ui.modalOpen && (
-        <div className="font-bricolage absolute bottom-10 md:bottom-16 right-10 md:right-20 bg-white rounded-xl py-5 px-3 shadow-md shadow-gray-600 w-55 overflow-visible">
+        <div className="font-bricolage absolute bottom-10 md:bottom-16 right-10 md:right-20 bg-white rounded-xl py-5 px-3 shadow-md shadow-gray-600 w-55 overflow-visible"
+          data-testid="secondary-overlay"
+        >
           <button
             onClick={() =>
               setUi(prev => ({ ...prev, modalOpen: false }))
             }
             className="absolute -top-2 -right-2 w-5 h-5 flex items-center justify-center text-white text-lg bg-black rounded-full cursor-pointer hover:bg-gray-700 z-10"
+            data-testid="secondary-close"
           >
             ×
           </button>
