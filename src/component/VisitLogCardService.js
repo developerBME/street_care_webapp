@@ -293,7 +293,6 @@ export const fetchPublicVisitLogs = async (
   currentPage = 0,
   pageCheckpoints,
 ) => {
-  let direction = "not";
   try {
     //query variables
     let newInteractionLogRec, totalInteractionsRef;

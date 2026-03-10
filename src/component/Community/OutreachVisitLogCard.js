@@ -22,7 +22,7 @@ import collectionMapping from "../../utils/firestoreCollections.js";
 const visitLogs_collection = collectionMapping.visitLogs;
 const users_collection = collectionMapping.users; // User collection
 
-const OutreachVisitLogCard = ({ visitLogCardData }) => {
+const OutreachVisitLogCard = ({ visitLogCardData, onClick }) => {
   const navigate = useNavigate();
 
   // Fetch flag info when component mounts
@@ -51,9 +51,9 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
     fetchFlagStatus();
   }, [visitLogCardData?.id]);
 
-  const handleViewDetails = () => {
-    navigate(`/VisitLogDetails/${visitLogCardData.id}`);
-  };
+  // const handleViewDetails = () => {
+  //   navigate(`/VisitLogDetails/${visitLogCardData.id}`);
+  // };
 
   let verifiedImg;
   switch (currentUserType) {
@@ -140,7 +140,7 @@ const OutreachVisitLogCard = ({ visitLogCardData }) => {
   return (
     <div
       className="bg-[#F5EEFE] w-[90%] max-w-[20rem]  md:w-full min-w-0 rounded-[30px] mb-4 flex flex-col p-6 h-auto cursor-pointer border-b-[1px] border-gray-200"
-      onClick={handleViewDetails}
+      onClick={onClick}
     >
       <div className="relative group">
         {/* Flag Button */}
