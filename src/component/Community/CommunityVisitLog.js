@@ -8,6 +8,7 @@ import CustomButton from "../Buttons/CustomButton";
 import ErrorMessage from "../ErrorMessage";
 import PopUpModal from "../PopUpModal";
 import { VisitLogExpandedView } from "../admin_test/PostApprovals/components/VisitLogExpandedView";
+import DisplayInteractionLogCard from "./DisplayInteractionLogCard";
 
 const CommunityVisitLog = ({ loggedIn }) => {
   const navigate = useNavigate();
@@ -30,6 +31,16 @@ const CommunityVisitLog = ({ loggedIn }) => {
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
+
+  const handleOpenPopUpModal = (cardData) => {
+    setIsModalOpen(true);
+    setSelectedPost(cardData);
+  };
+
+  const handleClosePopUpModal = () => {
+    setIsModalOpen(false);
+    setSelectedPost(null);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -125,13 +136,11 @@ const CommunityVisitLog = ({ loggedIn }) => {
         ) : visitLogs.length > 0 ? (
           <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
             {visitLogs.map((visitLogData, index) => (
-              <OutreachVisitLogCard
+              <DisplayInteractionLogCard
                 key={index}
-                visitLogCardData={visitLogData}
-                showProfileInfo={true}
-                onClick={() => {
-                  setSelectedPost(visitLogData);
-                  setIsModalOpen(true);
+                interactionLogCardData={visitLogData}
+                openPopUpModal={() => {
+                  handleOpenPopUpModal(visitLogData);
                 }}
               />
             ))}
@@ -143,12 +152,7 @@ const CommunityVisitLog = ({ loggedIn }) => {
         )}
       </div>
       {isModalOpen && (
-        <PopUpModal
-          onClose={() => {
-            setSelectedPost(null);
-            setIsModalOpen(false);
-          }}
-        >
+        <PopUpModal onClose={handleClosePopUpModal}>
           <VisitLogExpandedView postData={selectedPost} />
         </PopUpModal>
       )}
