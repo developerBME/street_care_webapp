@@ -556,15 +556,15 @@ export const fetchPendingPosts = async (
 export const fetchHomeVisitLogs = async () => {
   try {
     const visitLogsRef = query(
-      collection(db, visitLogsNew_collection),
+      collection(db, interactionLog_collection),
       where("status", "==", "approved"), // Filter applied
-      orderBy("timeStamp", "desc"),
+      orderBy("lastModifiedTimestamp", "desc"),
       limit(3),
     );
 
     const snapshot = await getDocs(visitLogsRef);
-    const visitLogs = await visitLogHelperFunction(snapshot);
-    return visitLogs;
+    const visitLogs = await interactionLogHelperFunction(snapshot);
+    return [...visitLogs];
   } catch (error) {
     console.error("Error fetching count:", error);
     return 0;

@@ -170,7 +170,7 @@ fetchFlagStatus();
     donatedItemsNum = interactionLogCardData?.carePackageContents?.length ?? 1;
   }
   const itemsDonated =
-    interactionLogCardData.carePackagesDistributed * donatedItemsNum || 1;
+    interactionLogCardData?.carePackagesDistributed * donatedItemsNum || 1;
 
   return (
     <div
