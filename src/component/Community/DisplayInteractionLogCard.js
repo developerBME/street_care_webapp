@@ -14,6 +14,7 @@ import defaultImage from "../../images/default_avatar.svg";
 import { formatDate } from "../helper";
 import CardTags from "./CardTags";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton.js";
+import InteractionLogCardSkeleton from "./InteractionLogCardSkeleton.js";
 
 import verifiedPurple from "../../images/verified_purple.png";
 import verifiedGreen from "../../images/verified.png";
@@ -153,7 +154,7 @@ fetchFlagStatus();
   };
 
   if (isLoading) {
-    return <EventCardSkeleton />; // Placeholder Skeleton while loading flag status
+    return <InteractionLogCardSkeleton />; // Placeholder Skeleton while loading flag status
   }
 
   // To calculate items Donated

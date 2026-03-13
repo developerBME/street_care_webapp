@@ -58,7 +58,7 @@ const CommunityVisitLog = ({ loggedIn }) => {
           queryState.currentPage,
           queryState.pageCheckpoints,
         );
-        console.log(visitLogsData.visitLogs);
+        // console.log(visitLogsData.visitLogs);
 
         setVisitLogs(visitLogsData.visitLogs);
         setCount(visitLogsData.totalRecords);
@@ -76,10 +76,10 @@ const CommunityVisitLog = ({ loggedIn }) => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log("Is user logged in? ", loggedIn); // Correctly logs true/false
-    // Fetch events logic
-  }, [loggedIn]);
+  // useEffect(() => {
+  //   console.log("Is user logged in? ", loggedIn); // Correctly logs true/false
+  //   // Fetch events logic
+  // }, [loggedIn]);
 
   return (
     <div>
