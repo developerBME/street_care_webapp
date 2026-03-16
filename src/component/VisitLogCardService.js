@@ -76,7 +76,7 @@ const visitLogHelperFunction = async (visitLogSnap) => {
 
     // Fetch user details in batch
     const userCache = await fetchUserDetailsBatch(userIds);
-    console.log("docsArray:", docsArray[0].data());
+    // console.log("docsArray:", docsArray[0].data());
 
     for (const doc of docsArray) {
       const visitLogData = doc.data();
@@ -293,7 +293,6 @@ export const fetchPublicVisitLogs = async (
   currentPage = 0,
   pageCheckpoints,
 ) => {
-  let direction = "not";
   try {
     //query variables
     let newInteractionLogRec, totalInteractionsRef;
@@ -557,15 +556,15 @@ export const fetchPendingPosts = async (
 export const fetchHomeVisitLogs = async () => {
   try {
     const visitLogsRef = query(
-      collection(db, visitLogsNew_collection),
+      collection(db, interactionLog_collection),
       where("status", "==", "approved"), // Filter applied
-      orderBy("timeStamp", "desc"),
+      orderBy("lastModifiedTimestamp", "desc"),
       limit(3),
     );
 
     const snapshot = await getDocs(visitLogsRef);
-    const visitLogs = await visitLogHelperFunction(snapshot);
-    return visitLogs;
+    const visitLogs = await interactionLogHelperFunction(snapshot);
+    return [...visitLogs];
   } catch (error) {
     console.error("Error fetching count:", error);
     return 0;

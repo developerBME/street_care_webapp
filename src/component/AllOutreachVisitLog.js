@@ -183,8 +183,8 @@ const AllOutreachVisitLog = () => {
 
   // Change page
 
-  const returnTarget = "/";
-  const returnText = "Return to Home";
+  const returnTarget = -1;
+  const returnText = "Go Back";
 
   const handleNext = () => {
     setIsLoading(true);
@@ -333,7 +333,11 @@ const AllOutreachVisitLog = () => {
         <div
           className="absolute flex mt-[-50px] items-center cursor-pointer"
           onClick={() => {
-            navigate(returnTarget);
+            if (window.history.length > 2) {
+              navigate(returnTarget);
+            } else {
+              navigate("/");
+            }
           }}
         >
           <IoIosArrowBack className="w-6 h-6" />

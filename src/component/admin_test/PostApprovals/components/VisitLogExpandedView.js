@@ -11,7 +11,6 @@ import verifiedBlue from "../../../../images/verified_blue.png";
 import verifiedYellow from "../../../../images/verified_yellow.png";
 import CardTags from "../../../Community/CardTags";
 
-
 const getTags = (postData, isVisitLogs) => {
   // console.log("ApprovalCard postData:", postData);
   const tags = isVisitLogs ? postData?.whatGiven || [] : postData?.skills || [];
@@ -50,7 +49,7 @@ const getStatusStyle = (status) => {
 //                  Items Donated, Care Packages Distributed, Care Package Contents
 //   • Tag pills at the bottom
 // NOTE: Accept / Reject buttons are NOT here — they live in PostApprovals.
-const VisitLogExpandedView = ({ postData, userImage }) => {
+const VisitLogExpandedView = ({ postData }) => {
   // Format date from Firebase Timestamp — prefer timeStamp, fallback to lastModifiedTimestamp
   const formattedDate = postData?.timeStamp?.seconds
     ? new Date(postData.timeStamp.seconds * 1000).toLocaleDateString("en-US", {
@@ -201,62 +200,6 @@ const VisitLogExpandedView = ({ postData, userImage }) => {
         </div>
       </div>
 
-      {/* ── Description with dotted underline (matches reference image) ── */}
-      {/* <div className="flex items-start gap-1 text-gray-700 mb-1">
-        <span className="font-semibold whitespace-nowrap">Description:</span>
-        <span className="text-gray-500 text-xs leading-5 border-b border-dotted border-gray-400 flex-1">
-          {postData?.peopleHelpedDescription || postData?.description || ""}
-        </span>
-      </div> */}
-      {/* Second dotted line beneath description */}
-      {/* <div className="border-b border-dotted border-gray-300 mb-4" /> */}
-
-      {/* ── Solid divider line ── */}
-      {/* <div className="border-t border-gray-300 mb-4" /> */}
-
-      {/* ── Stats Rows ── */}
-      {/* <div className="space-y-2 mb-5">
-        <div className="flex justify-between">
-          <span className="font-semibold text-black">People Joined</span>
-          <span className="font-semibold text-black">
-            {postData?.numPeopleJoined ?? "—"}
-          </span>
-        </div>
-        <div className="flex justify-between">
-          <span className="font-semibold text-black">Help Request Count</span>
-          <span className="font-semibold text-black">
-            {postData?.helpRequestCount ?? "—"}
-          </span>
-        </div>
-        <div className="flex justify-between">
-          <span className="font-semibold text-black">People Helped</span>
-          <span className="font-semibold text-black">
-            {postData?.numPeopleHelped ?? "—"}
-          </span>
-        </div>
-        <div className="flex justify-between">
-          <span className="font-semibold text-black">Items Donated</span>
-          <span className="font-semibold text-black">
-            {postData?.itemsDonated ?? postData?.numItemsDonated ?? "—"}
-          </span>
-        </div>
-        <div className="flex justify-between">
-          <span className="font-semibold text-black">
-            Care Packages Distributed
-          </span>
-          <span className="font-semibold text-black">
-            {postData?.carePackagesDistributed ?? "—"}
-          </span>
-        </div>
-        <div className="flex justify-between">
-          <span className="font-semibold text-black">
-            Care Package Contents
-          </span>
-          <span className="font-semibold text-black">
-            {postData?.carePackageContents ?? "—"}
-          </span>
-        </div>
-      </div> */}
       {[
         { label: "People Joined", value: postData?.numPeopleJoined },
         {
@@ -280,10 +223,7 @@ const VisitLogExpandedView = ({ postData, userImage }) => {
       ].map(
         ({ label, value }) =>
           value !== undefined && (
-            <div
-              key={label}
-              className="flex flex-row justify-between py-2"
-            >
+            <div key={label} className="flex flex-row justify-between py-2">
               <span className="font-bold text-[14px] font-dmsans">{label}</span>
               <span className="font-bold text-[14px] font-dmsans">{value}</span>
             </div>
@@ -464,18 +404,6 @@ const ApprovalCardVisitlogs = ({
             </label>
           )}
         </div>
-
-        {/* Middle Section: Title, Description, and Status */}
-        {/* <div className="mt-4">
-          <h1 className="text-lg font-medium text-[#1F0A58] line-clamp-1">
-            {postData.peopleHelpedDescription || "Event Title"}
-          </h1>
-          <p className="text-sm text-[#444746] mt-2 line-clamp-2">
-            {postData.peopleHelpedDescription || "No description available."}
-          </p>
-        </div> */}
-
-        {/* New Code for middle section */}
 
         <div className="flex flex-row justify-between mt-4">
           <div className="font-bold text-[14px] font-dmsans line-clamp-1">

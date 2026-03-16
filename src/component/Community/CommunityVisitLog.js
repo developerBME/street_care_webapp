@@ -6,6 +6,9 @@ import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
 import { fetchPublicVisitLogs } from "../VisitLogCardService"; // Use this function
 import CustomButton from "../Buttons/CustomButton";
 import ErrorMessage from "../ErrorMessage";
+import PopUpModal from "../PopUpModal";
+import { VisitLogExpandedView } from "../admin_test/PostApprovals/components/VisitLogExpandedView";
+import DisplayInteractionLogCard from "./DisplayInteractionLogCard";
 
 const CommunityVisitLog = ({ loggedIn }) => {
   const navigate = useNavigate();
@@ -14,22 +17,48 @@ const CommunityVisitLog = ({ loggedIn }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [queryState, setQueryState] = useState({
+    searchValue: "",
+    city: "",
+    startDate: new Date("2024-01-02"),
+    endDate: new Date(),
+    isDateFilter: false,
+    lastVisible: null,
+    pageSize: 3,
+    pageHistory: [],
+    currentPage: 0,
+    pageCheckpoints: [],
+  });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
+
+  const handleOpenPopUpModal = (cardData) => {
+    setIsModalOpen(true);
+    setSelectedPost(cardData);
+  };
+
+  const handleClosePopUpModal = () => {
+    setIsModalOpen(false);
+    setSelectedPost(null);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Fetch all visit logs
         const visitLogsData = await fetchPublicVisitLogs(
-          "",
-          "",
-          new Date(),
-          new Date(),
-          false,
-          null,
-          6,
-          "next",
-          []
+          queryState.searchValue,
+          queryState.city,
+          queryState.startDate,
+          queryState.endDate,
+          queryState.isDateFilter,
+          queryState.lastVisible,
+          queryState.pageSize,
+          queryState.pageHistory,
+          queryState.currentPage,
+          queryState.pageCheckpoints,
         );
+        // console.log(visitLogsData.visitLogs);
 
         setVisitLogs(visitLogsData.visitLogs);
         setCount(visitLogsData.totalRecords);
@@ -37,19 +66,20 @@ const CommunityVisitLog = ({ loggedIn }) => {
       } catch (error) {
         setIsError(true);
         setErrorMsg(
-          "Interaction logs could not be loaded. Please try again later."
+          "Interaction logs could not be loaded. Please try again later.",
         );
         setIsLoading(false);
+        console.log(error);
       }
     };
 
     fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log("Is user logged in? ", loggedIn); // Correctly logs true/false
-    // Fetch events logic
-  }, [loggedIn]);
+  // useEffect(() => {
+  //   console.log("Is user logged in? ", loggedIn); // Correctly logs true/false
+  //   // Fetch events logic
+  // }, [loggedIn]);
 
   return (
     <div>
@@ -105,11 +135,13 @@ const CommunityVisitLog = ({ loggedIn }) => {
           <ErrorMessage displayName="Interaction Logs" />
         ) : visitLogs.length > 0 ? (
           <div className="w-full flex overflow-x-auto md:grid md:grid-cols-2 xl:grid-cols-3 gap-2">
-            {visitLogs.slice(0, 3).map((visitLogData, index) => (
-              <OutreachVisitLogCard
+            {visitLogs.map((visitLogData, index) => (
+              <DisplayInteractionLogCard
                 key={index}
-                visitLogCardData={visitLogData}
-                showProfileInfo={true}
+                interactionLogCardData={visitLogData}
+                openPopUpModal={() => {
+                  handleOpenPopUpModal(visitLogData);
+                }}
               />
             ))}
           </div>
@@ -119,6 +151,11 @@ const CommunityVisitLog = ({ loggedIn }) => {
           </div>
         )}
       </div>
+      {isModalOpen && (
+        <PopUpModal onClose={handleClosePopUpModal}>
+          <VisitLogExpandedView postData={selectedPost} />
+        </PopUpModal>
+      )}
     </div>
   );
 };
