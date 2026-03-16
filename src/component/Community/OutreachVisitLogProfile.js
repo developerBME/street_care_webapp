@@ -144,7 +144,7 @@ const OutreachVisitLogProfile = () => {
           name="buttondefaulticon"
           icon={icon}
           onClick={() => {
-            navigate("/profile/interactionLogForm");
+            navigate("/profile/personaloutform");
           }}
         />
       </div>

@@ -63,7 +63,7 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
     helpRequestCount: 0,
     helpRequestDocIds: [],
     isPublic: true,
-    status: "pending",
+    status: "Pending",
     lastModifiedTimestamp: null,
     lastActionPerformed: null,
   });
@@ -99,20 +99,20 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
     }));
   };
 
-  useImperativeHandle(ref, () => {
-    return {
-      checkIsEmpty() {
-        return areObjectsEqual(generalInfoData, obj1);
-      },
-      getGeneralInfoData() {
-        return generalInfoData;
-      },
-    };
-  }, [generalInfoData]);
-
-  // useEffect(() => {
-  //   // onUpdate(generalInfoData); Comment this out since we dont need to raise data state at each keystroke
-  // }, [generalInfoData]);
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        checkIsEmpty() {
+          return areObjectsEqual(generalInfoData, obj1);
+        },
+        getGeneralInfoData() {
+          return generalInfoData;
+        },
+      };
+    },
+    [generalInfoData]
+  );
 
   return (
     <>
@@ -183,7 +183,7 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
                 mergeDateTime(
                   startTime,
                   endTime,
-                  generalInfoData.interactionDate,
+                  generalInfoData.interactionDate
                 );
               }}
               maxDate={dayjs()}
@@ -216,7 +216,7 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
                 mergeDateTime(
                   formatted,
                   endTime,
-                  generalInfoData.interactionDate,
+                  generalInfoData.interactionDate
                 );
               }}
               variant="desktop"
@@ -257,7 +257,7 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
                 mergeDateTime(
                   startTime,
                   formatted,
-                  generalInfoData.interactionDate,
+                  generalInfoData.interactionDate
                 );
               }}
               variant="desktop"
@@ -335,7 +335,7 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
 
       <TextInput
         type="full-single-text-input"
-        label="What items were included ?"
+        label="What items were included in the care package?"
         placeholder="e.g. Blankets, Socks"
         onChange={(e) => {
           setGeneralInfoData((prev) => ({

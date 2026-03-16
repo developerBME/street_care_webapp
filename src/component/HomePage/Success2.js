@@ -207,7 +207,7 @@ function Success2() {
                 //   const user = fAuth.currentUser;
 
                 //   if (user) {
-                //     navigate("/profile/interactionLogForm");
+                //     navigate("/profile/personaloutform");
                 //   } else {
                 //     navigate("/login"); // or show a message
                 //   }
