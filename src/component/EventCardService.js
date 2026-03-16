@@ -27,43 +27,46 @@ const visitLogs_collection = collectionMapping.visitLogs;
 const outreachEvents_collection = collectionMapping.outreachEvents;
 const officialEvents_collection = collectionMapping.officialEvents;
 
-const descriptionFilter = (searchTerm,filterQuery)=>{
+const descriptionFilter = (searchTerm, filterQuery) => {
   return query(
     filterQuery,
     or(
       and(
-          where("location.city", ">=", searchTerm),
-          where("location.city", "<=", searchTerm + "\uf8ff")
+        where("location.city", ">=", searchTerm),
+        where("location.city", "<=", searchTerm + "\uf8ff"),
       ),
       and(
-          where("description", ">=", searchTerm),
-          where("description", "<=", searchTerm + "\uf8ff")
-      )
-    ));
-}
+        where("description", ">=", searchTerm),
+        where("description", "<=", searchTerm + "\uf8ff"),
+      ),
+    ),
+  );
+};
 
-const cityFilter = (city,filterQuery)=>{
+const cityFilter = (city, filterQuery) => {
   return query(
     filterQuery,
-    where('location.city', '>=', city),
-    where('location.city', '<=', city + '\uf8ff')
-    );
-}
+    where("location.city", ">=", city),
+    where("location.city", "<=", city + "\uf8ff"),
+  );
+};
 
-const dateFilter = (startDate,endDate,filterQuery) =>{
+const dateFilter = (startDate, endDate, filterQuery) => {
   return query(
     filterQuery,
     where("eventDate", ">=", startDate),
-    where("eventDate", "<=", endDate)
-    );
-}
+    where("eventDate", "<=", endDate),
+  );
+};
 
-const timeFilter = (filterQuery,isPast) =>{
+const timeFilter = (filterQuery, isPast) => {
   return query(
     filterQuery,
-    isPast ? where("eventDate","<=",new Date()) : where("eventDate",">=",new Date())
-  )
-}
+    isPast
+      ? where("eventDate", "<=", new Date())
+      : where("eventDate", ">=", new Date()),
+  );
+};
 
 export const fetchEvents = async (
   searchValue,
@@ -76,54 +79,66 @@ export const fetchEvents = async (
   lastVisible = null,
   pageSize = 6,
   direction = "next",
-  pageHistory = []
+  pageHistory = [],
 ) => {
   try {
-    let totalOutReachRef, pastOutreachRef
-    pastOutreachRef = query(collection(db, outreachEvents_collection),where("status", "==", "approved"))
-    totalOutReachRef = pastOutreachRef
-    
-    if(searchValue){
-      const descriptionQuery = descriptionFilter(searchValue,totalOutReachRef)
-      totalOutReachRef = descriptionQuery
+    let totalOutReachRef, pastOutreachRef;
+    pastOutreachRef = query(
+      collection(db, outreachEvents_collection),
+      where("status", "==", "approved"),
+    );
+    totalOutReachRef = pastOutreachRef;
+
+    if (searchValue) {
+      const descriptionQuery = descriptionFilter(searchValue, totalOutReachRef);
+      totalOutReachRef = descriptionQuery;
     }
 
-    if(city){
-      const cityQuery = cityFilter(city,totalOutReachRef)
-      totalOutReachRef = cityQuery
+    if (city) {
+      const cityQuery = cityFilter(city, totalOutReachRef);
+      totalOutReachRef = cityQuery;
     }
 
-    if(isDateFilter){
-      const dateQuery = dateFilter(startDate,endDate,totalOutReachRef)
-      totalOutReachRef = dateQuery
+    if (isDateFilter) {
+      const dateQuery = dateFilter(startDate, endDate, totalOutReachRef);
+      totalOutReachRef = dateQuery;
     }
 
-    if(isTimeFilter){
-      const timeQuery = timeFilter(totalOutReachRef,timeframe==="past"?true:false)
-      totalOutReachRef = timeQuery
+    if (isTimeFilter) {
+      const timeQuery = timeFilter(
+        totalOutReachRef,
+        timeframe === "past" ? true : false,
+      );
+      totalOutReachRef = timeQuery;
     }
-    pastOutreachRef = query(totalOutReachRef,orderBy("eventDate", "asc"),limit(pageSize))
+    pastOutreachRef = query(
+      totalOutReachRef,
+      orderBy("eventDate", "asc"),
+      limit(pageSize),
+    );
     //Handle Forward pagination
     if (lastVisible && direction === "next") {
       pastOutreachRef = query(pastOutreachRef, startAfter(lastVisible));
     }
-    
+
     // Handle Backward pagination
     if (lastVisible && direction === "prev" && pageHistory.length > 2) {
-      pastOutreachRef = query(pastOutreachRef, startAfter(pageHistory[pageHistory.length - 3]));
+      pastOutreachRef = query(
+        pastOutreachRef,
+        startAfter(pageHistory[pageHistory.length - 3]),
+      );
     }
     const eventSnapshot = await getDocs(pastOutreachRef);
     const lastDoc = eventSnapshot.docs[eventSnapshot.docs.length - 1];
 
-
-
     // Collecting all unique user IDs
     const userIds = new Set();
-    eventSnapshot.docs.forEach((doc) => {if(doc.data().uid) userIds.add(doc.data().uid)});
-   
+    eventSnapshot.docs.forEach((doc) => {
+      if (doc.data().uid) userIds.add(doc.data().uid);
+    });
+
     // Batch fetch user details
     const userDetails = await fetchUserDetailsBatch(Array.from(userIds));
-
 
     const totalRecords = await getCountFromServer(totalOutReachRef);
     const fAuth = getAuth();
@@ -153,11 +168,16 @@ export const fetchEvents = async (
       pageHistory.pop();
     }
 
-    return {outreachEvents,totalRecords:totalRecords.data().count,lastDoc,pageHistory};
+    return {
+      outreachEvents,
+      totalRecords: totalRecords.data().count,
+      lastDoc,
+      pageHistory,
+    };
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchEvents in EventCardService.js- ${error.message}`
+      `error on fetchEvents in EventCardService.js- ${error.message}`,
     );
     throw error;
   }
@@ -169,13 +189,15 @@ export async function calculateNumberOfPagesForOutreach(outreachesPerPage) {
 
 export async function fetchUserDetailsBatch(userIds) {
   const userDetails = {};
+  if (userIds.length === 0 || !userIds[0]) return userDetails;
+
   // Firestore limits 'in' queries to 10 items
   const chunks = splitArrayIntoChunksOfLen(userIds, 10);
-  console.log(chunks)
+  // console.log(chunks);
   for (const chunk of chunks) {
     const userQuery = query(
       collection(db, users_collection),
-      where("uid", "in", chunk)
+      where("uid", "in", chunk),
     );
     const querySnapshot = await getDocs(userQuery);
     querySnapshot.forEach((doc) => {
@@ -209,7 +231,7 @@ export const fetchPaginatedEvents = async (
   lastVisible = null,
   pageSize = 6,
   direction = "next",
-  pageHistory = []
+  pageHistory = [],
 ) => {
   try {
     let eventsQuery;
@@ -218,7 +240,7 @@ export const fetchPaginatedEvents = async (
     let filters = [
       where("status", "==", "approved"),
       where("eventDate", ">=", startDate),
-      orderBy("eventDate", "asc")
+      orderBy("eventDate", "asc"),
     ];
 
     if (endDate && endDate.getFullYear() < 9000) {
@@ -227,7 +249,7 @@ export const fetchPaginatedEvents = async (
 
     if (city && city.trim() !== "") {
       filters.push(where("location.city", ">=", city.trim()));
-      filters.push(where("location.city", "<=", city.trim() + '\uf8ff'));
+      filters.push(where("location.city", "<=", city.trim() + "\uf8ff"));
     }
 
     if (searchDescription && searchDescription.trim() !== "") {
@@ -272,7 +294,7 @@ export const fetchPaginatedEvents = async (
 
     const snapshot = await getDocs(paginatedQuery);
 
-    const userIds = [...new Set(snapshot.docs.map(doc => doc.data().uid))];
+    const userIds = [...new Set(snapshot.docs.map((doc) => doc.data().uid))];
     const userDetails = await fetchUserDetailsBatch(userIds);
 
     const fetchedEvents = snapshot.docs.map((doc) => {
@@ -286,23 +308,23 @@ export const fetchPaginatedEvents = async (
             : "",
         userName: userDetails[data.uid]?.username || "Unknown User",
         photoUrl: userDetails[data.uid]?.photoUrl || "",
-        userType: userDetails[data.uid]?.userType || ""
+        userType: userDetails[data.uid]?.userType || "",
       };
     });
 
     const lastDoc = snapshot.docs[snapshot.docs.length - 1] || null;
 
-    return { 
-      events: fetchedEvents, 
-      lastVisible: lastDoc, 
-      pageHistory: updatedPageHistory, 
-      totalFilteredEvents: totalRecords 
+    return {
+      events: fetchedEvents,
+      lastVisible: lastDoc,
+      pageHistory: updatedPageHistory,
+      totalFilteredEvents: totalRecords,
     };
   } catch (error) {
     console.error("Error fetching paginated events:", error);
     logEvent(
       "STREET_CARE_ERROR",
-      `Error fetching paginated events with search: ${error.message}`
+      `Error fetching paginated events with search: ${error.message}`,
     );
     throw error;
   }
@@ -316,7 +338,7 @@ export const fetchPaginatedPastOutreachEvents = async (
   lastVisible = null,
   pageSize = 6,
   direction = "next",
-  pageHistory = []
+  pageHistory = [],
 ) => {
   try {
     let pastOutreachQuery = query(
@@ -325,14 +347,14 @@ export const fetchPaginatedPastOutreachEvents = async (
       where("eventDate", "<", new Date()),
       where("eventDate", ">=", startDate),
       where("eventDate", "<=", endDate),
-      orderBy("eventDate", "desc")
+      orderBy("eventDate", "desc"),
     );
 
     if (city && city.trim() !== "") {
       pastOutreachQuery = query(
         pastOutreachQuery,
         where("location.city", ">=", city),
-        where("location.city", "<=", city + "\uf8ff")
+        where("location.city", "<=", city + "\uf8ff"),
       );
     }
 
@@ -340,39 +362,37 @@ export const fetchPaginatedPastOutreachEvents = async (
       pastOutreachQuery = query(
         pastOutreachQuery,
         where("description", ">=", searchTerm),
-        where("description", "<=", searchTerm + "\uf8ff")
+        where("description", "<=", searchTerm + "\uf8ff"),
       );
     }
 
-      const totalRecordsSnapshot = await getCountFromServer(pastOutreachQuery);
-      const totalRecords = totalRecordsSnapshot.data().count;
-  
-      let paginatedQuery = query(pastOutreachQuery, limit(pageSize));
-      const historyReference = Array.isArray(pageHistory)
-        ? [...pageHistory]
-        : [];
-      const historyLength = historyReference.length;
-  
-      if (lastVisible && direction === "next") {
-        paginatedQuery = query(paginatedQuery, startAfter(lastVisible));
-      } else if (direction === "prev" && historyLength > 2) {
+    const totalRecordsSnapshot = await getCountFromServer(pastOutreachQuery);
+    const totalRecords = totalRecordsSnapshot.data().count;
+
+    let paginatedQuery = query(pastOutreachQuery, limit(pageSize));
+    const historyReference = Array.isArray(pageHistory) ? [...pageHistory] : [];
+    const historyLength = historyReference.length;
+
+    if (lastVisible && direction === "next") {
+      paginatedQuery = query(paginatedQuery, startAfter(lastVisible));
+    } else if (direction === "prev" && historyLength > 2) {
+      paginatedQuery = query(
+        paginatedQuery,
+        startAfter(historyReference[historyLength - 3]),
+      );
+    } else if (direction === "current") {
+      if (historyLength > 1) {
         paginatedQuery = query(
           paginatedQuery,
-          startAfter(historyReference[historyLength - 3])
+          startAfter(historyReference[historyLength - 2]),
         );
-      } else if (direction === "current") {
-        if (historyLength > 1) {
-          paginatedQuery = query(
-            paginatedQuery,
-            startAfter(historyReference[historyLength - 2])
-          );
-        } else if (!historyLength && lastVisible) {
-          paginatedQuery = query(paginatedQuery, startAfter(lastVisible));
-        }
+      } else if (!historyLength && lastVisible) {
+        paginatedQuery = query(paginatedQuery, startAfter(lastVisible));
       }
+    }
 
     const snapshot = await getDocs(paginatedQuery);
-    const userIds = [...new Set(snapshot.docs.map(doc => doc.data().uid))];
+    const userIds = [...new Set(snapshot.docs.map((doc) => doc.data().uid))];
     const userDetails = await fetchUserDetailsBatch(userIds);
 
     const fetchedEvents = snapshot.docs.map((doc) => {
@@ -386,48 +406,48 @@ export const fetchPaginatedPastOutreachEvents = async (
             : "",
         userName: userDetails[data.uid]?.username || "Unknown User",
         photoUrl: userDetails[data.uid]?.photoUrl || "",
-        userType: userDetails[data.uid]?.userType || ""
+        userType: userDetails[data.uid]?.userType || "",
       };
     });
 
-      const lastDoc = snapshot.docs[snapshot.docs.length - 1];
-      let updatedPageHistory = [...historyReference];
-  
-      if (direction === "next") {
-        if (lastDoc) {
+    const lastDoc = snapshot.docs[snapshot.docs.length - 1];
+    let updatedPageHistory = [...historyReference];
+
+    if (direction === "next") {
+      if (lastDoc) {
+        updatedPageHistory.push(lastDoc);
+      }
+    } else if (direction === "prev") {
+      updatedPageHistory.pop();
+    } else if (direction === "current") {
+      if (lastDoc) {
+        if (updatedPageHistory.length === 0) {
           updatedPageHistory.push(lastDoc);
-        }
-      } else if (direction === "prev") {
-        updatedPageHistory.pop();
-      } else if (direction === "current") {
-        if (lastDoc) {
-          if (updatedPageHistory.length === 0) {
-            updatedPageHistory.push(lastDoc);
-          } else {
-            updatedPageHistory[updatedPageHistory.length - 1] = lastDoc;
-          }
+        } else {
+          updatedPageHistory[updatedPageHistory.length - 1] = lastDoc;
         }
       }
-  
-      return {
-        fetchedEvents,
-        lastVisible: lastDoc,
-        pageHistory: updatedPageHistory,
-        totalRecords,
-        totalFilteredEvents: totalRecords
-      };
+    }
+
+    return {
+      fetchedEvents,
+      lastVisible: lastDoc,
+      pageHistory: updatedPageHistory,
+      totalRecords,
+      totalFilteredEvents: totalRecords,
+    };
   } catch (error) {
-    logEvent("STREET_CARE_ERROR", `Error fetching paginated past outreach events: ${error.message}`);
+    logEvent(
+      "STREET_CARE_ERROR",
+      `Error fetching paginated past outreach events: ${error.message}`,
+    );
     throw error;
   }
 };
 
 export const fetchPastOutreachEvents = async () => {
   try {
-    const pastOureachEventsRef = collection(
-      db,
-      outreachEvents_collection
-    );
+    const pastOureachEventsRef = collection(db, outreachEvents_collection);
     const eventSnapshot = await getDocs(pastOureachEventsRef);
 
     const userIds = new Set();
@@ -452,7 +472,7 @@ export const fetchPastOutreachEvents = async () => {
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchPastOutreachEvents EventCardService.js- ${error.message}`
+      `error on fetchPastOutreachEvents EventCardService.js- ${error.message}`,
     );
     throw error;
   }
@@ -489,7 +509,7 @@ export const fetchOfficialEvents = async () => {
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchOfficialEvents EventCardService.js- ${error.message}`
+      `error on fetchOfficialEvents EventCardService.js- ${error.message}`,
     );
     throw error;
   }
@@ -507,7 +527,7 @@ export const fetchUserTypeDetails = async (uid) => {
     }
     const userQuery = query(
       collection(db, users_collection),
-      where("uid", "==", uid)
+      where("uid", "==", uid),
     );
     const userDocRef = await getDocs(userQuery);
     // const userDocID = userDocRef.docs[0].id;
@@ -515,11 +535,12 @@ export const fetchUserTypeDetails = async (uid) => {
     return {
       username: userData?.username || "",
       type: userData?.Type || "",
+      photoUrl: userData?.photoUrl || "",
     };
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchUserTypeDetails EventCardService.js- ${error.message}`
+      `error on fetchUserTypeDetails EventCardService.js- ${error.message}`,
     );
     throw error;
   }
@@ -538,7 +559,7 @@ export const fetchUserDetails = async (uid) => {
     }
     const userQuery = query(
       collection(db, users_collection),
-      where("uid", "==", uid)
+      where("uid", "==", uid),
     );
     const userDocRef = await getDocs(userQuery);
     // const userDocID = userDocRef.docs[0].id;
@@ -563,7 +584,7 @@ export const fetchUserDetails = async (uid) => {
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchUserDetails EventCardService.js- ${error.message}`
+      `error on fetchUserDetails EventCardService.js- ${error.message}`,
     );
     throw error;
   }
@@ -606,7 +627,7 @@ export const fetchEventById = async (eventId) => {
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchEventById EventCardService.js- ${error.message}`
+      `error on fetchEventById EventCardService.js- ${error.message}`,
     );
     throw error;
   }
@@ -629,7 +650,7 @@ export const isUserParticipantInEvent = async (eventId, userId) => {
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `Error checking participant in event (${eventId}): ${error.message}`
+      `Error checking participant in event (${eventId}): ${error.message}`,
     );
     throw error;
   }
@@ -671,12 +692,11 @@ export const fetchUserSignedUpOutreaches = async (uid) => {
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchUserSignedUpOutreaches in EventCardService.js- ${error.message}`
+      `error on fetchUserSignedUpOutreaches in EventCardService.js- ${error.message}`,
     );
     throw error;
   }
 };
-
 
 export const fetchLikedOutreaches = async (uid) => {
   try {
@@ -699,8 +719,7 @@ export const fetchLikedOutreaches = async (uid) => {
           userName: userName,
           id: doc.id,
           label:
-            fAuth.currentUser &&
-            currentLikes.includes(fAuth?.currentUser?.uid)
+            fAuth.currentUser && currentLikes.includes(fAuth?.currentUser?.uid)
               ? "DISLIKE"
               : "LIKE",
           nop: currentLikes.length,
@@ -714,12 +733,11 @@ export const fetchLikedOutreaches = async (uid) => {
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchLikedOutreaches in EventCardService.js- ${error.message}`
+      `error on fetchLikedOutreaches in EventCardService.js- ${error.message}`,
     );
     throw error;
   }
 };
-
 
 export const handleRsvp = async (
   e,
@@ -729,7 +747,7 @@ export const handleRsvp = async (
   label2,
   setLabel2,
   isBMEFlow,
-  refresh
+  refresh,
 ) => {
   // check if button is going to RSVP or EDIT
   if (label2 === "RSVP") {
@@ -751,7 +769,7 @@ export const handleRsvp = async (
         // find the userdoc with uid of the current user
         const userQuery = query(
           collection(db, users_collection),
-          where("uid", "==", fAuth?.currentUser?.uid)
+          where("uid", "==", fAuth?.currentUser?.uid),
         );
         const userDocRef = await getDocs(userQuery);
         const userDocID = userDocRef.docs[0].id;
@@ -806,7 +824,7 @@ export const handleRsvp = async (
 
           logEvent(
             "STREET_CARE_INFO_OUTREACH",
-            "RSVP added for user" + fAuth.currentUser.uid
+            "RSVP added for user" + fAuth.currentUser.uid,
           );
 
           console.log("successfully added outreach to users collection");
@@ -840,7 +858,7 @@ export const handleRsvp = async (
         // find the userdoc with uid of the current user
         const userQuery = query(
           collection(db, users_collection),
-          where("uid", "==", fAuth?.currentUser?.uid)
+          where("uid", "==", fAuth?.currentUser?.uid),
         );
         const userDocRef = await getDocs(userQuery);
         const userDocID = userDocRef.docs[0].id;
@@ -895,7 +913,7 @@ export const handleRsvp = async (
             }
             logEvent(
               "STREET_CARE_INFO_OUTREACH",
-              "RSVP edited for user" + userDocID
+              "RSVP edited for user" + userDocID,
             );
           }
         } else {
@@ -917,7 +935,7 @@ export const handleRsvp = async (
   }
 };
 
-export const setInitialLike = ( likes=[], ) => {
+export const setInitialLike = (likes = []) => {
   const fAuth = getAuth();
   const currentUser = fAuth.currentUser;
   if (!currentUser) {
@@ -935,7 +953,7 @@ export const handleLikes = async (
   setLike,
   setLikesCount,
   isVisitLog,
-  refresh
+  refresh,
 ) => {
   e.stopPropagation();
   // check if button is going to RSVP or EDIT
@@ -958,7 +976,7 @@ export const handleLikes = async (
         // find the userdoc with uid of the current user
         const userQuery = query(
           collection(db, users_collection),
-          where("uid", "==", fAuth?.currentUser?.uid)
+          where("uid", "==", fAuth?.currentUser?.uid),
         );
         const userDocRef = await getDocs(userQuery);
         const userDocID = userDocRef.docs[0].id;
@@ -979,10 +997,7 @@ export const handleLikes = async (
         // check if user exists in current likes and add if not
         if (currentLikes.includes(fAuth.currentUser.uid)) {
         } else {
-          const newLikes = [
-            ...currentLikes,
-            fAuth.currentUser.uid,
-          ];
+          const newLikes = [...currentLikes, fAuth.currentUser.uid];
           console.log(newLikes);
           setLikesCount(newLikes.length);
           const eventDocUpdate = isVisitLog
@@ -991,7 +1006,9 @@ export const handleLikes = async (
           const updateRef = await updateDoc(eventDocUpdate, {
             likes: newLikes,
           });
-          console.log("successfully added to user to outreach collection likes");
+          console.log(
+            "successfully added to user to outreach collection likes",
+          );
           // alert('Signed up for event')
         }
 
@@ -1014,7 +1031,7 @@ export const handleLikes = async (
 
           logEvent(
             "STREET_CARE_INFO_LIKES",
-            "Like added for user" + fAuth.currentUser.uid
+            "Like added for user" + fAuth.currentUser.uid,
           );
 
           console.log("successfully added outreach to users collection");
@@ -1048,7 +1065,7 @@ export const handleLikes = async (
         // find the userdoc with uid of the current user
         const userQuery = query(
           collection(db, users_collection),
-          where("uid", "==", fAuth?.currentUser?.uid)
+          where("uid", "==", fAuth?.currentUser?.uid),
         );
         const userDocRef = await getDocs(userQuery);
         const userDocID = userDocRef.docs[0].id;
@@ -1104,7 +1121,7 @@ export const handleLikes = async (
             }
             logEvent(
               "STREET_CARE_INFO_LIKES",
-              "Like edited for user" + userDocID
+              "Like edited for user" + userDocID,
             );
           }
         } else {
@@ -1125,8 +1142,6 @@ export const handleLikes = async (
     }
   }
 };
-
-
 
 export const fetchByCityOrState = async (searchValue, startDate, endDate) => {
   try {
@@ -1152,7 +1167,7 @@ export const fetchByCityOrState = async (searchValue, startDate, endDate) => {
       pastOutreachRef,
       where("location.city", "==", searchValue),
       where("eventDate", ">=", startDate),
-      where("eventDate", "<=", endDate)
+      where("eventDate", "<=", endDate),
     );
 
     const outreachDocRef = await getDocs(outreachByLocationQuery);
@@ -1174,7 +1189,7 @@ export const fetchByCityOrState = async (searchValue, startDate, endDate) => {
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchByCityOrState AllPastOrtreachEvents.js- ${error.message}`
+      `error on fetchByCityOrState AllPastOrtreachEvents.js- ${error.message}`,
     );
     throw error;
   }
@@ -1184,10 +1199,7 @@ export const fetchByCityOrState = async (searchValue, startDate, endDate) => {
 
 export const fetchPastOutreaches = async () => {
   try {
-    const pastOureachEventsRef = collection(
-      db,
-      outreachEvents_collection
-    );
+    const pastOureachEventsRef = collection(db, outreachEvents_collection);
     const outreachDocRef = await getDocs(pastOureachEventsRef);
 
     const totaloutreaches = outreachDocRef.size;
@@ -1195,7 +1207,7 @@ export const fetchPastOutreaches = async () => {
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchPastOutreachEvents EventCardService.js- ${error.message}`
+      `error on fetchPastOutreachEvents EventCardService.js- ${error.message}`,
     );
     throw error;
   }
@@ -1206,13 +1218,10 @@ export const fetchByCityOrStates = async (
   startDate,
   endDate,
   curr_page,
-  outreachPerPages
+  outreachPerPages,
 ) => {
   try {
-    const pastOureachEventsRef = collection(
-      db,
-      outreachEvents_collection
-    );
+    const pastOureachEventsRef = collection(db, outreachEvents_collection);
     const outreachDocRef = await getDocs(pastOureachEventsRef);
 
     const totaloutreaches = outreachDocRef.size;
@@ -1228,7 +1237,7 @@ export const fetchByCityOrStates = async (
         collection(db, outreachEvents_collection),
         where("eventDate", ">=", startDate),
         where("eventDate", "<=", endDate),
-        orderBy("eventDate", "desc")
+        orderBy("eventDate", "desc"),
       );
       const snapshots = await getDocs(pastOutreachRef);
       const tot = snapshots.size;
@@ -1241,7 +1250,7 @@ export const fetchByCityOrStates = async (
         const outreachByLocationQuery = query(
           pastOutreachRef,
           startAt(init_doc),
-          limit(outreachPerPages)
+          limit(outreachPerPages),
         );
 
         const userIds = new Set();
@@ -1282,7 +1291,7 @@ export const fetchByCityOrStates = async (
 
       console.error("No PastOutreaches available for the given date range");
       throw new Error(
-        "No PastOutreaches available for the given date range and city"
+        "No PastOutreaches available for the given date range and city",
       );
     }
 
@@ -1299,7 +1308,7 @@ export const fetchByCityOrStates = async (
       collection(db, outreachEvents_collection),
       where("location.city", "==", searchValue),
       where("eventDate", ">=", startDate),
-      where("eventDate", "<=", endDate)
+      where("eventDate", "<=", endDate),
     );
     const snapshots = await getDocs(pastOutreachRef);
     const tot = snapshots.size;
@@ -1308,11 +1317,10 @@ export const fetchByCityOrStates = async (
 
     // Full text search - Search filtering by City/State fields matching exact value
     if (tot != 0) {
-
       const outreachByLocationQuery = query(
         pastOutreachRef,
         startAt(init_doc),
-        limit(outreachPerPages)
+        limit(outreachPerPages),
       );
 
       while (outreachPerPages < totaloutreaches) {
@@ -1332,15 +1340,15 @@ export const fetchByCityOrStates = async (
       }
     }
     console.error(
-      "No PastOutreaches available for the given date range and city"
+      "No PastOutreaches available for the given date range and city",
     );
     throw new Error(
-      "No PastOutreaches available for the given date range and city"
+      "No PastOutreaches available for the given date range and city",
     );
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchByCityOrState AllPastOrtreachEvents.js- ${error.message}`
+      `error on fetchByCityOrState AllPastOrtreachEvents.js- ${error.message}`,
     );
     throw error;
   }
@@ -1357,7 +1365,7 @@ export const fetchUserOutreaches = async () => {
 
     const userQuery = query(
       collection(db, outreachEvents_collection),
-      where("uid", "==", user.uid)
+      where("uid", "==", user.uid),
     );
 
     const eventSnapshot = await getDocs(userQuery);
@@ -1385,7 +1393,7 @@ export const fetchUserOutreaches = async () => {
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `error on fetchUserOutreaches in EventCardService.js- ${error.message}`
+      `error on fetchUserOutreaches in EventCardService.js- ${error.message}`,
     );
     throw error;
   }
@@ -1399,7 +1407,7 @@ export const fetchTopOutreaches = async () => {
     const latestRecordsQuery = query(
       outreachRef,
       orderBy("eventDate", "desc"),
-      limit(6)
+      limit(6),
     );
 
     const snapshots = await getDocs(latestRecordsQuery);
@@ -1420,7 +1428,7 @@ export const fetchTopOutreaches = async () => {
   } catch (error) {
     logEvent(
       "STREET_CARE_ERROR",
-      `Error in fetchLatestRecords - ${error.message}`
+      `Error in fetchLatestRecords - ${error.message}`,
     );
     throw error;
   }
@@ -1435,7 +1443,7 @@ export async function fetchUnapprovedOutreaches() {
 
   if (snapshot.empty) {
     console.log(
-      `No unapproved documents found in '${outreachEvents_collection}'`
+      `No unapproved documents found in '${outreachEvents_collection}'`,
     );
     return [];
   }
@@ -1447,7 +1455,7 @@ export async function fetchUnapprovedOutreaches() {
 
   console.log(
     `Unapproved documents from '${outreachEvents_collection}':`,
-    unapprovedDocs
+    unapprovedDocs,
   );
   return unapprovedDocs;
 }
@@ -1463,7 +1471,7 @@ export async function fetchUnapprovedPastOutreaches() {
 
   if (snapshot.empty) {
     console.log(
-      `No unapproved documents found in '${outreachEvents_collection}'`
+      `No unapproved documents found in '${outreachEvents_collection}'`,
     );
     return [];
   }
@@ -1475,7 +1483,7 @@ export async function fetchUnapprovedPastOutreaches() {
 
   console.log(
     `Unapproved documents from '${outreachEvents_collection}':`,
-    unapprovedDocs
+    unapprovedDocs,
   );
   return unapprovedDocs;
 }
@@ -1495,7 +1503,7 @@ export const ToggleApproveStatus = async function (documentId) {
     let newApprovalStatus = data.approved === true ? false : true;
     await updateDoc(docRef, { approved: newApprovalStatus });
     console.log(
-      `Document with ID ${documentId} successfully updated. 'approved' field is now ${newApprovalStatus}.`
+      `Document with ID ${documentId} successfully updated. 'approved' field is now ${newApprovalStatus}.`,
     );
   } catch (error) {
     console.error("Error updating document:", error.message);

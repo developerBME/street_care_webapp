@@ -38,7 +38,7 @@
 }
 
 .bg-nav {
-  background-color: #36295e;
+  background-color: #36295e; /*#ffee03*/
 }
 
 .font-open-sans {
@@ -53,13 +53,12 @@
   @apply border border-2 border-[#F7F7F7];
 }
 
-
 .primary-bg-color {
-  background-color: #6840E0;
+  background-color: #6840e0;
 }
 
 .secondary-bg-color {
-  background-color: #F3EDF7;
+  background-color: #f3edf7;
 }
 
 .rounded-container {

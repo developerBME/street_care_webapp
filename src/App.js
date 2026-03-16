@@ -58,7 +58,8 @@ import AllSignedUpOutreaches from "./component/UserProfile/AllSignedUpOutreaches
 import AllLikedOutreaches from "./component/UserProfile/AllLikedOutreaches";
 import AllCreatedOutreaches from "./component/UserProfile/AllCreatedOutreaches.js";
 import OutreachEvents from "./component/Admin/OutreachEvents";
-import PostApprovals from "./component/admin_test/PostApprovals.js";
+import PostApprovals1 from "./component/admin_test/PostApprovals.js";
+import PostApprovals2 from "./component/admin_test/PostApprovals/PostApprovals.js";
 import AdminOutreachEvents from "./component/Admin/AdminOutreachEvents.js";
 import InteractionLogForm from "./component/UserProfile/InteractionLogForm.js";
 
@@ -72,22 +73,25 @@ function App() {
   const [loadingUser, setLoadingUser] = useState(true);
 
   useEffect(() => {
+    // const auth = getAuth();
+
     const unsubscribe = onAuthStateChanged(fAuth, async (user) => {
+      setLoadingUser(false);
+
       if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/auth.user
         setLoggedIn(true);
         setFirebaseUser(user);
-        setLoadingUser(false);
+
         try {
           const userRef = query(
             collection(db, users_collection),
-            where("uid", "==", fAuth?.currentUser?.uid)
+            where("uid", "==", user.uid),
           );
+
           const data = await getDocs(userRef);
-          if (typeof data.docs[0] == "undefined") {
+
+          if (!data.docs.length) {
             setPhotoUrl("");
-            console.log("UNDEFINED");
           } else {
             setPhotoUrl(data.docs[0].data().photoUrl);
           }
@@ -95,7 +99,10 @@ function App() {
           console.log(err);
         }
       } else {
-        setLoadingUser(false);
+        console.log("user not logged in");
+        setLoggedIn(false);
+        setFirebaseUser(null);
+        setPhotoUrl("");
       }
     });
 
@@ -153,7 +160,7 @@ function App() {
               <Route path="/testAdmin" element={<TestAdmin />} />
               <Route path="/admin-panel/userlist" element={<UserList />} />
               <Route path="/admin" element={<AdminHomePage />} />
-              <Route path="/admin/postApprovals" element={<PostApprovals />} />
+              <Route path="/admin/postApprovals" element={<PostApprovals2 />} />
               <Route path="/admin/userManagement" element={<UserListNew />} />
               <Route
                 path="/admin/outreach-events"
@@ -261,7 +268,7 @@ function App() {
             <Route path="/list" element={<ListUser />} />
             <Route
               path="/profile/visitlogform/:id"
-              element={<PersonalOutForm />}
+              element={<InteractionLogForm />}
             />
             <Route path="/myvisitlogs" element={<MoreVisitLogs />} />
 
