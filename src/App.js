@@ -60,8 +60,6 @@ import AllCreatedOutreaches from "./component/UserProfile/AllCreatedOutreaches.j
 import OutreachEvents from "./component/Admin/OutreachEvents";
 import PostApprovals1 from "./component/admin_test/PostApprovals.js";
 import PostApprovals2 from "./component/admin_test/PostApprovals/PostApprovals.js";
-import PostApprovals1 from "./component/admin_test/PostApprovals.js";
-import PostApprovals2 from "./component/admin_test/PostApprovals/PostApprovals.js";
 import AdminOutreachEvents from "./component/Admin/AdminOutreachEvents.js";
 import InteractionLogForm from "./component/UserProfile/InteractionLogForm.js";
 
