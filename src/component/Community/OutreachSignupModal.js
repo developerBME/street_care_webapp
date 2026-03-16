@@ -33,7 +33,7 @@ const OutreachSignupModal = ({ data, closeModal, onSignUp, onEventWithdraw}) => 
                 <div className="justify-start items-center gap-2 inline-flex">
                   <img
                     className="w-9 h-9 rounded-full"
-                    src={data.photoUrl || defaultImage}
+                    src={data .photoUrl || defaultImage}
                   />
                   <div className="justify-start items-center gap-1 flex">
                     {data ? (

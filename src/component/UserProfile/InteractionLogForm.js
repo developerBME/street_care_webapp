@@ -55,7 +55,7 @@ export const obj1 = {
   helpRequestCount: 0,
   helpRequestDocIds: [],
   isPublic: true,
-  status: "pending",
+  status: "Pending",
   lastModifiedTimestamp: null,
   lastActionPerformed: null,
 };
@@ -184,7 +184,7 @@ function InteractionLogForm() {
         // STEP 2: Add to interactionLog collection
         const interactionLogRef = await addDoc(
           collection(db, interactionLog_collection),
-          augmentedInteractionLog,
+          augmentedInteractionLog
         );
 
         interactionLogDocId = interactionLogRef.id;
@@ -210,17 +210,17 @@ function InteractionLogForm() {
               helpEntry.timestampOfInteraction == ""
                 ? null
                 : Timestamp.fromDate(
-                    helpEntry.timestampOfInteraction?.toDate?.() ?? new Date(),
+                    helpEntry.timestampOfInteraction?.toDate?.() ?? new Date()
                   ),
             followUpTimestamp:
               helpEntry.followUpTimestamp == ""
                 ? null
                 : Timestamp.fromDate(
-                    helpEntry.followUpTimestamp?.toDate?.() ?? new Date(),
+                    helpEntry.followUpTimestamp?.toDate?.() ?? new Date()
                   ),
             interactionLogFirstName: interactionLogFirstName,
             isPublic: isPublic,
-          }),
+          })
         );
 
         // console.log(
@@ -230,7 +230,7 @@ function InteractionLogForm() {
         for (const entry of enrichedHelpEntry) {
           const helpRef = await addDoc(
             collection(db, helpRequest_collection),
-            entry,
+            entry
           );
           helpRequestDocIds.push(helpRef.id);
         }
@@ -246,7 +246,7 @@ function InteractionLogForm() {
           {
             helpRequestDocIds: helpRequestDocIds,
             helpRequestCount: helpRequestDocIds.length,
-          },
+          }
         );
       }
 
