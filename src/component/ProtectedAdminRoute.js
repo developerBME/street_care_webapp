@@ -86,7 +86,8 @@ export const ProtectedAdminRoute = ({ user, loading }) => {
 
 
  // Show loading state while fetching user verification
- if (loading || !fetchComplete || isUserVerified === null) {
+ // First wait only for auth state to finish loading
+ if (loading) {
    return (
      <div className="flex justify-center items-center h-screen">
        <p>Loading...</p> {/* Add a spinner here if needed */}
@@ -94,10 +95,18 @@ export const ProtectedAdminRoute = ({ user, loading }) => {
    );
  }
 
-
- // If the user is not logged in, redirect to the login page
+ // If the user is not logged in, redirect immediately
  if (!user || !Object.keys(user).length) {
    return <Navigate to="/login" />;
+ }
+
+ // User is logged in, so now admin verification may still be loading
+ if (!fetchComplete || isUserVerified === null) {
+   return (
+     <div className="flex justify-center items-center h-screen">
+       <p>Loading...</p> {/* Add a spinner here if needed */}
+     </div>
+   );
  }
 
 
