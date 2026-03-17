@@ -116,7 +116,7 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
     if (user?.email) {
       setGeneralInfoData((prev) => ({ ...prev, email: user.email }));
     }
-    console.log("userDetails from useUserContext():", user);
+    // console.log("userDetails from useUserContext():", user);
   }, [user]);
   // useEffect(() => {
   //   // onUpdate(generalInfoData); Comment this out since we dont need to raise data state at each keystroke
