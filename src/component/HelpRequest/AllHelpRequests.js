@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -9,6 +9,7 @@ import { fetchPublicHelpRequests } from "../VisitLogCardService";
 
 const AllHelpRequests = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [filteredHelpRequests, setFilteredHelpRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [sortOption, setSortOption] = useState("");
@@ -88,8 +89,11 @@ const AllHelpRequests = () => {
     setCurrentPageLength(0);
   };
 
-  const returnTarget = "/";
-  const returnText = "Return to Home";
+  const isFromCommunity = location.state?.from === "community";
+  const returnTarget = isFromCommunity ? "/community" : "/";
+  const returnText = isFromCommunity
+    ? "Return to Community"
+    : "Return to Home";
 
   const handleNext = () => {
     setCursorFields((prev) => ({ ...prev, direction: "" }));

@@ -24,15 +24,15 @@ const COLLECTIONS = {
     outreachEvents: process.env.REACT_APP_DEV_OUTREACH_EVENTS_COLLECTION,
     visitLogs: process.env.REACT_APP_DEV_VISIT_LOG_COLLECTION,
     bmeEvents: process.env.REACT_APP_BMEEVENTS_COLLECTION,
-    helpRequests: process.env.REACT_APP_HELP_REQUESTS_COLLECTION,
+    helpRequests:
+    process.env.REACT_APP_HELP_REQUEST_COLLECTION_DEV,
     contacts: process.env.REACT_APP_CONTACTS_COLLECTION,
     testUser: process.env.REACT_APP_TEST_USER_COLLECTION,
     auditLog: process.env.REACT_APP_AUDIT_LOG_COLLECTION,
     officialEvents: process.env.REACT_APP_OFFICIAL_EVENTS,
     events: process.env.REACT_APP_EVENTS_COLLECTION,
     visitLogsBookNew: process.env.REACT_APP_DEV_VISIT_LOG_NEW_COLLECTION,
-    helpRequestsInteractionLog:
-      process.env.REACT_APP_HELP_REQUEST_COLLECTION_DEV,
+
     interactionLog: process.env.REACT_APP_INTERACTION_LOG_COLLECTION_DEV,
     metrics: process.env.REACT_APP_METRICS_COLLECTION || "Metrics",
   },

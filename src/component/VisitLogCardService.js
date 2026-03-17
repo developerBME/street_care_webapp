@@ -25,7 +25,7 @@ const outreachEvents_collection = collectionMapping.outreachEvents;
 const users_collection = collectionMapping.users;
 const visitLogs_collection = collectionMapping.visitLogs;
 const visitLogsNew_collection = collectionMapping.visitLogsBookNew;
-const helpRequests_collection = collectionMapping.helpRequestsInteractionLog;
+const helpRequests_collection = collectionMapping.helpRequests;
 
 const visitLogHelperFunction = async (visitLogSnap) => {
   try {
