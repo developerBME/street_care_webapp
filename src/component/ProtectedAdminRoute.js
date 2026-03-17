@@ -21,7 +21,7 @@ export const ProtectedAdminRoute = ({ user, loading }) => {
         setFetchComplete(true); // Mark fetch as complete
       }
     } else {
-      console.log("user not logged in from protected Route.");
+      // console.log("user not logged in from protected Route.");
       setFetchComplete(true); // Mark as complete even if no user/accessToken
     }
   };

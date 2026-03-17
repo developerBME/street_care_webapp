@@ -217,9 +217,11 @@ fetchFlagStatus();
         <div className="flex items-center">
           <img className="w-4 h-4" src={dateIcon} alt="Date" />
           <span className="ml-2 text-sm">
-            {interactionLogCardData?.startTimestamp
-              ? formatTimeStampDate(interactionLogCardData.startTimestamp)
-              : "N/A"}
+            {formatTimeStampDate(
+              interactionLogCardData?.interactionDate ||
+                interactionLogCardData?.startTimestamp ||
+                interactionLogCardData?.endTimestamp,
+            ) || "N/A"}
           </span>
         </div>
 
@@ -314,7 +316,7 @@ export const ExpandedInteractionLogCard = ({ postData }) => {
             className="w-8 h-8 rounded-full"
           />
           <span className="text-[18px] font-bold font-dmsans">
-            {postData?.firstName || "Anonymous User"} {postData?.lastName || ""}
+            {postData?.firstName || postData?.userName || "Anonymous User"}
           </span>
           <img src={userBadge} alt="Verified" className="w-5 h-5" />
         </div>
