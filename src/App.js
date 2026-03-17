@@ -173,6 +173,10 @@ function App() {
               }
             >
               <Route path="/profile" element={<Profile />} />
+              <Route
+                path="profile/interactionLogForm"
+                element={<InteractionLogForm />}
+              />
               <Route path="/profile/accsetting" element={<AccSetting />} />
               <Route
                 path="/profile/profilesettings"
@@ -223,10 +227,6 @@ function App() {
             <Route
               path="/allPastOutreachEvents"
               element={<AllPastOutreachEvents />}
-            />
-            <Route
-              path="profile/interactionLogForm"
-              element={<InteractionLogForm />}
             />
             <Route
               path="/allOutreachVisitLog"
