@@ -343,7 +343,7 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
 
       <TextInput
         type="full-single-text-input"
-        label="What items were included ?"
+        label="What care items were included?"
         placeholder="e.g. Blankets, Socks"
         onChange={(e) => {
           setGeneralInfoData((prev) => ({
