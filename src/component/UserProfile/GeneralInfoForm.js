@@ -17,7 +17,7 @@ import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
 import dayjs from "dayjs";
 import AddressAutofill from "../FormBuilder/AddressAutofill";
 import { areObjectsEqual } from "../../utils/helperFns";
-import { baseDataGeneralInfoForm } from "./InteractionLogForm";
+import { obj1 } from "./InteractionLogForm";
 import { useUserContext } from "../../context/Usercontext";
 
 const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
@@ -104,7 +104,7 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
   useImperativeHandle(ref, () => {
     return {
       checkIsEmpty() {
-        return areObjectsEqual(generalInfoData, baseDataGeneralInfoForm);
+        return areObjectsEqual(generalInfoData, obj1);
       },
       getGeneralInfoData() {
         return generalInfoData;
