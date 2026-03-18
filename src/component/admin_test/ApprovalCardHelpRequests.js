@@ -1,3 +1,4 @@
+import React from "react";
 import calendarIcon from "../../images/calendar_month.svg";
 import locationIcon from "../../images/location_on.svg";
 import verifiedPurple from "../../images/verified_purple.png";
@@ -5,9 +6,9 @@ import verifiedGreen from "../../images/verified.png";
 import verifiedBlue from "../../images/verified_blue.png";
 import verifiedYellow from "../../images/verified_yellow.png";
 
-const getTags = (postData, isVisitLogs) => {
-  const tags = isVisitLogs ? postData?.whatGiven || [] : postData?.skills || [];
-
+// Helper to render tags
+const getTags = (postData) => {
+  const tags = postData?.furtherHelpCategory || [];
   return tags.map((tag, index) => (
     <span
       key={index}
@@ -18,6 +19,7 @@ const getTags = (postData, isVisitLogs) => {
   ));
 };
 
+// Helper for status styling
 const getStatusStyle = (status) => {
   switch (status) {
     case "approved":
@@ -31,44 +33,31 @@ const getStatusStyle = (status) => {
   }
 };
 
-const ApprovalCardVisitlogs = ({
+const ApprovalCardHelpRequests = ({
   postData,
   onToggleSelect,
   isSelected,
-  isVisitLogs,
   onClick,
   selectedButton,
 }) => {
-  // Inline date  formatting to handle Firebase Timestamp
-  const formattedDate = postData?.interactionDate?.seconds
-    ? new Date(postData.interactionDate.seconds * 1000).toLocaleDateString(
-        "en-US",
-        {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        },
-      )
+  // Format encounter timestamp
+  const encounterDate = postData?.timestampOfInteraction
+    ? new Date(postData.timestampOfInteraction.seconds * 1000)
+    : null;
+
+  const formattedDate = encounterDate
+    ? encounterDate.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
     : "Unknown Date";
 
-  let userImage = null;
-
-  switch (postData.userType) {
-    case "Chapter Leader":
-      userImage = verifiedGreen;
-      break;
-    case "Chapter Member":
-      userImage = verifiedPurple;
-      break;
-    case "Street Care Hub Leader":
-      userImage = verifiedBlue;
-      break;
-    default:
-      userImage = verifiedYellow;
-      break;
-  }
+  // Verified icon (optional)
+  let userImage = verifiedYellow; // default
+  if (postData.isPublic) userImage = verifiedGreen;
 
   return (
     <div
@@ -86,10 +75,10 @@ const ApprovalCardVisitlogs = ({
         </span>
       </div>
 
-      {/* UserName Section */}
+      {/* Name Section */}
       <div className="flex items-center space-x-2 mb-3">
         <span className="text-sm text-[#37168B] font-medium">
-          {`${postData?.firstName} ${postData?.lastName}` || "Unknown User"}
+          {postData.firstName || "Unknown Name"}
         </span>
         {userImage && <img alt="" src={userImage} className="w-5 h-5" />}
       </div>
@@ -109,21 +98,12 @@ const ApprovalCardVisitlogs = ({
           <div className="flex items-center space-x-2">
             <img alt="location" src={locationIcon} className="w-4 h-4" />
             <span className="text-sm text-[#37168B] font-medium">
-              {postData?.location?.city || postData?.city ? (
-                <>
-                  {postData.location?.city || postData.city}
-                  {postData.stateAbbv || postData.state
-                    ? `, ${postData.stateAbbv || postData.state}`
-                    : ""}
-                </>
-              ) : (
-                "Unknown City"
-              )}
+              {postData.locationLandmark || "Unknown Location"}
             </span>
           </div>
         </div>
 
-        {/* Checkbox Section */}
+        {/* Checkbox */}
         {selectedButton && (
           <label className="inline-flex items-center">
             <input
@@ -137,73 +117,24 @@ const ApprovalCardVisitlogs = ({
         )}
       </div>
 
-      {/* Middle Section: Title, Description, and Status */}
+      {/* Description Section */}
       <div className="mt-4">
         <h1 className="text-lg font-medium text-[#1F0A58] line-clamp-1">
-          {postData.peopleHelpedDescription || "Event Title"}
+          {postData?.furtherHelpCategory?.length
+            ? postData.furtherHelpCategory.join(", ")
+            : "Help Request"}
         </h1>
-        {/* {Added scroll bar for description} */}
         <div className="mt-2 max-h-20 overflow-y-auto">
           <p className="text-sm text-[#444746] leading-relaxed">
-            {postData.peopleHelpedDescription || "No description available."}
+            {postData.additionalDetails || "No additional details provided."}
           </p>
         </div>
       </div>
 
       {/* Tags Section */}
-      <div className="mt-4 flex flex-wrap gap-2">
-        {getTags(postData, isVisitLogs)}
-      </div>
+      <div className="mt-4 flex flex-wrap gap-2">{getTags(postData)}</div>
     </div>
   );
 };
 
-export default ApprovalCardVisitlogs;
-
-const api = {
-  id: "82233B15-4796-4597-B2AE-93C9FFB63077",
-  lastActionPerformed: null,
-  interactionDate: {
-    seconds: 1764101210,
-    nanoseconds: 558508000,
-  },
-  zipcode: "07306-3876",
-  status: "Pending",
-  lastName: "Warlock",
-  endTimestamp: {
-    seconds: 1764101210,
-    nanoseconds: 558272000,
-  },
-  listOfSupportsProvided: [],
-  carePackageContents: null,
-  helpRequestDocIds: [
-    "zntAweS6jll026eJwQmN",
-    "ZZEvXBO2npdFlwKLtqFP",
-    "kTfo5eRsP0IkqnQy33kq",
-  ],
-  carePackagesDistributed: 0,
-  state: "New Jersey",
-  numPeopleJoined: 2,
-  helpRequestCount: 3,
-  country: "USA",
-  outreachId: "",
-  email: "adamwarlock@gmai.com",
-  addr1: "789 Newark Ave, Jersey City, NJ 07306, USA",
-  isPublic: false,
-  userId: "",
-  numPeopleHelped: 3,
-  addr2: "",
-  phoneNumber: "",
-  city: "Jersey City",
-  startTimestamp: {
-    seconds: 1764101210,
-    nanoseconds: 558560000,
-  },
-  firstName: "Adam",
-  lastModifiedTimestamp: {
-    seconds: 1764101210,
-    nanoseconds: 558509000,
-  },
-  userName: "Unknown User",
-  userType: "",
-};
+export default ApprovalCardHelpRequests;

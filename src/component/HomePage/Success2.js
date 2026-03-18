@@ -88,7 +88,7 @@ function Success2() {
             <div className="flex lg:flex-col xl:flex-row gap-4 mt-auto">
               <div className=" px-8 w-fit py-2 bg-white rounded-[100px]">
                 <div className="text-violet-950  font-bricolage text-[40px] font-normal leading-[64px]">
-                  900+
+                  {metrics.TotalVolunteers.toLocaleString()}+
                 </div>
               </div>
             </div>
@@ -207,7 +207,7 @@ function Success2() {
                 //   const user = fAuth.currentUser;
 
                 //   if (user) {
-                //     navigate("/profile/personaloutform");
+                //     navigate("/profile/interactionLogForm");
                 //   } else {
                 //     navigate("/login"); // or show a message
                 //   }
