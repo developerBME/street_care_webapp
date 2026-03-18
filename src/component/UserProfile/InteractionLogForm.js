@@ -32,7 +32,7 @@ import ConfirmationModalInteractionLog from "./ConfirmationModalInteractionLog";
 const interactionLog_collection = collectionMapping.interactionLog;
 const helpRequest_collection = collectionMapping.helpRequestsInteractionLog;
 
-export const obj1 = {
+export const baseDataGeneralInfoForm = {
   userId: "",
   firstName: "",
   lastName: "",
@@ -60,7 +60,7 @@ export const obj1 = {
   lastActionPerformed: null,
 };
 
-export const obj2 = {
+export const baseDataDynamicSubsection = {
   interactionLogFirstName: "",
   interactionLogDocId: "",
   firstName: "",
@@ -81,7 +81,7 @@ export const obj2 = {
 function InteractionLogForm() {
   const navigate = useNavigate();
   const [success, setSuccess] = useState(false);
-  const [isPublic, setIsPublic] = useState(false);
+  const [isPublic, setIsPublic] = useState(true);
   // const [interactions, setInteractions] = useState([1]); //Needed
   const [provideInteractionDetail, setProvideInteractionDetail] = //Needed
     useState("No");
@@ -353,12 +353,12 @@ function InteractionLogForm() {
                       className="w-[18px] h-[18px] bg-violet-700 rounded-sm cursor-pointer mt-[2px]"
                     />
                     <span className="ml-2 font-dm-sans text-[12px] leading-[18px]">
-                      By selecting this checkbox, I consent to sharing my
-                      contact details and event address publicly on this
-                      platform / community space to facilitate participation in
-                      the outreach event. I understand that this information
-                      will be visible to others and acknowledge the associated
-                      privacy considerations.
+                      This information will be publicly visible on the
+                      platform/community space to help facilitate participation
+                      in the outreach event. You may uncheck this option if you
+                      prefer not to share your contact details and event address
+                      publicly. Please note that making this information private
+                      may limit participation or coordination.
                     </span>
                   </div>
                 </div>

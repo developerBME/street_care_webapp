@@ -3,7 +3,7 @@ import { Info } from "lucide-react";
 import CustomButton from "../Buttons/CustomButton";
 import StaticSubsection from "./StaticSubsection";
 import { areObjectsEqual } from "../../utils/helperFns";
-import { obj2 } from "../UserProfile/InteractionLogForm";
+import { baseDataDynamicSubsection } from "../UserProfile/InteractionLogForm";
 
 const DynamicSubSection = forwardRef(({ onUpdate = () => {} }, ref) => {
   const generateId = () => `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
@@ -40,7 +40,7 @@ const DynamicSubSection = forwardRef(({ onUpdate = () => {} }, ref) => {
     () => ({
       checkIsEmpty() {
         return interactions.some((interaction) =>
-          areObjectsEqual(interaction.formData, obj2),
+          areObjectsEqual(interaction.formData, baseDataDynamicSubsection),
         );
       },
       getHelpRequestData() {
