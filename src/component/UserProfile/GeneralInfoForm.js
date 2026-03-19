@@ -18,6 +18,7 @@ import dayjs from "dayjs";
 import AddressAutofill from "../FormBuilder/AddressAutofill";
 import { areObjectsEqual } from "../../utils/helperFns";
 import { obj1 } from "./InteractionLogForm";
+import { useUserContext } from "../../context/Usercontext";
 
 const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
   const sxTheme = {
@@ -38,6 +39,7 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
     },
   };
 
+  const { user } = useUserContext();
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [generalInfoData, setGeneralInfoData] = useState({
@@ -110,6 +112,12 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
     };
   }, [generalInfoData]);
 
+  useEffect(() => {
+    if (user?.email) {
+      setGeneralInfoData((prev) => ({ ...prev, email: user.email }));
+    }
+    // console.log("userDetails from useUserContext():", user);
+  }, [user]);
   // useEffect(() => {
   //   // onUpdate(generalInfoData); Comment this out since we dont need to raise data state at each keystroke
   // }, [generalInfoData]);
@@ -152,7 +160,7 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
           onChange={(e) => {
             setGeneralInfoData((prev) => ({ ...prev, email: e.target.value }));
           }}
-          value={generalInfoData.email}
+          value={generalInfoData.email || ""}
         />
 
         <TextInput
@@ -335,7 +343,7 @@ const GeneralInfoForm = forwardRef(({ onUpdate = () => {} }, ref) => {
 
       <TextInput
         type="full-single-text-input"
-        label="What items were included ?"
+        label="What items were included?"
         placeholder="e.g. Blankets, Socks"
         onChange={(e) => {
           setGeneralInfoData((prev) => ({
