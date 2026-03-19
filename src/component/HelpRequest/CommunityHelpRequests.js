@@ -58,9 +58,13 @@ const CommunityHelpRequests = () => {
           <div
             className="flex flex-row cursor-pointer gap-2 items-center"
             onClick={() => {
-              navigate("/allHelpRequests", {
-                state: { from: "community" },
-              });
+              if (typeof window !== "undefined") {
+                window.sessionStorage.setItem(
+                  "helpRequestsReturnSource",
+                  "community"
+                );
+              }
+              navigate("/allHelpRequests");
             }}
           >
             <div className="font-medium text-[16px] lg:text-[20px] font-dmsans text-[#37168B] whitespace-nowrap">

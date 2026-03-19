@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -9,7 +9,11 @@ import { fetchPublicHelpRequests } from "../VisitLogCardService";
 
 const AllHelpRequests = () => {
   const navigate = useNavigate();
-  const location = useLocation();
+  const returnSourceRef = useRef(
+    typeof window !== "undefined"
+      ? window.sessionStorage.getItem("helpRequestsReturnSource")
+      : null
+  );
   const [filteredHelpRequests, setFilteredHelpRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [sortOption, setSortOption] = useState("");
@@ -70,6 +74,15 @@ const AllHelpRequests = () => {
     cursorFields.direction,
   ]);
 
+  useEffect(() => {
+    if (
+      typeof window !== "undefined" &&
+      returnSourceRef.current === "community"
+    ) {
+      window.sessionStorage.removeItem("helpRequestsReturnSource");
+    }
+  }, []);
+
   const handleSortChange = (e) => {
     const sortBy = e.target.value;
     setSortOption(sortBy);
@@ -89,11 +102,19 @@ const AllHelpRequests = () => {
     setCurrentPageLength(0);
   };
 
-  const isFromCommunity = location.state?.from === "community";
+  const isFromCommunity = returnSourceRef.current === "community";
   const returnTarget = isFromCommunity ? "/community" : "/";
   const returnText = isFromCommunity
     ? "Return to Community"
     : "Return to Home";
+
+  const handleNavigateBack = () => {
+    if (typeof window !== "undefined" && window.history.length > 1) {
+      window.history.back();
+      return;
+    }
+    navigate(returnTarget);
+  };
 
   const handleNext = () => {
     setCursorFields((prev) => ({ ...prev, direction: "" }));
@@ -180,9 +201,7 @@ const AllHelpRequests = () => {
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-16 lg:mx-40 mt-48 rounded-2xl bg-white text-black">
         <div
           className="absolute flex mt-[-50px] items-center cursor-pointer"
-          onClick={() => {
-            navigate(returnTarget);
-          }}
+          onClick={handleNavigateBack}
         >
           <IoIosArrowBack className="w-6 h-6" />
           <p className="font-bricolage text-xl font-bold leading-7">
