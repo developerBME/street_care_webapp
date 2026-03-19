@@ -3,69 +3,34 @@ import { useNavigate } from "react-router-dom";
 import arrowRight from "../../images/arrowRight.png";
 import OutreachVisitLogCard from "../Community/OutreachVisitLogCard";
 import EventCardSkeleton from "../Skeletons/EventCardSkeleton";
-import {
-  fetchHomeVisitLogs,
-  fetchPublicVisitLogs,
-} from "../VisitLogCardService";
+import { fetchHomeVisitLogs } from "../VisitLogCardService";
 import ErrorMessage from "../ErrorMessage";
 import CustomButton from "../Buttons/CustomButton";
 import UserTypeInfo from "../UserTypeInfo";
 
 import collectionMapping from "../../utils/firestoreCollections";
-
-console.log(collectionMapping);
+import DisplayInteractionLogCard from "../Community/DisplayInteractionLogCard";
+import PopUpModal from "../PopUpModal";
+import { VisitLogExpandedView } from "../admin_test/PostApprovals/components/VisitLogExpandedView";
 
 const HomePageVisitlog = () => {
   const navigate = useNavigate();
 
-  const cardData = [
-    {
-      userName: "William Smith",
-      title: "BK Fort Green Outreach",
-      eventDate: "Sept 9, 2023 SAT 5:00pm",
-      location: {
-        street: "200 Eastern Pkwy",
-        city: "Brooklyn",
-        state: "NY",
-        zipcode: "11238",
-      },
-      helpType: "Childcare Specialist needed",
-      totalSlots: 20,
-      interests: 5,
-    },
-    {
-      userName: "William Smith",
-      title: "BK Fort Green Outreach",
-      eventDate: "Sept 9, 2023 SAT 5:00pm",
-      location: {
-        street: "200 Eastern Pkwy",
-        city: "Brooklyn",
-        state: "NY",
-        zipcode: "11238",
-      },
-      helpType: "Childcare Specialist needed",
-      totalSlots: 20,
-      interests: 5,
-    },
-    {
-      userName: "William Smith",
-      title: "BK Fort Green Outreach",
-      eventDate: "Sept 9, 2023 SAT 5:00pm",
-      location: {
-        street: "200 Eastern Pkwy",
-        city: "Brooklyn",
-        state: "NY",
-        zipcode: "11238",
-      },
-      helpType: "Childcare Specialist needed",
-      totalSlots: 20,
-      interests: 5,
-    },
-  ];
-
-  const [visitLogs, setVisitLogs] = useState(null);
+  const [visitLogs, setVisitLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSelectedPost, setIsSelectedPost] = useState(null);
+
+  const handleOpenPopUpModal = (CardData) => {
+    setIsSelectedPost(CardData);
+    setIsModalOpen(true);
+  };
+
+  const handleClosePopUpModal = () => {
+    setIsSelectedPost(null);
+    setIsModalOpen(false);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -74,22 +39,19 @@ const HomePageVisitlog = () => {
       try {
         const visitLogsData = await fetchHomeVisitLogs();
         setVisitLogs(visitLogsData);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching interaction logs:", error);
         setIsError(true);
-      } finally {
-        setIsLoading(false);
       }
     };
 
     fetchData();
   }, []);
 
-  useEffect(() => {
-    if (Array.isArray(visitLogs)) {
-      setIsLoading(false);
-    }
-  }, [visitLogs]);
+  // useEffect(() => {
+  //   console.log("InteractionLogData", visitLogs);
+  // }, [visitLogs]);
 
   return (
     <div>
@@ -110,7 +72,7 @@ const HomePageVisitlog = () => {
                 <img src={arrowRight} className="w-6 h-6 lg:w-10 lg:h-10 " />
               </div>
             </div>
-            <UserTypeInfo/>
+            <UserTypeInfo />
           </div>
         </div>
 
@@ -124,14 +86,16 @@ const HomePageVisitlog = () => {
             </div>
           ) : isError ? (
             <ErrorMessage displayName="Interaction Logs" />
-          ) : visitLogs.length > 0 ? (
+          ) : visitLogs?.length > 0 ? (
             // <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
             <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-5">
-              {visitLogs.slice(0, 3).map((visitLogData, index) => (
-                <OutreachVisitLogCard
-                  key={index}
-                  visitLogCardData={visitLogData}
-                  showProfileInfo={true}
+              {visitLogs.map((visitLogData) => (
+                <DisplayInteractionLogCard
+                  key={visitLogData.id}
+                  interactionLogCardData={visitLogData}
+                  openPopUpModal={() => {
+                    handleOpenPopUpModal(visitLogData);
+                  }}
                 />
               ))}
             </div>
@@ -151,6 +115,11 @@ const HomePageVisitlog = () => {
           />
         </div>
       </div>
+      {isModalOpen && (
+        <PopUpModal onClose={handleClosePopUpModal}>
+          <VisitLogExpandedView postData={isSelectedPost} />
+        </PopUpModal>
+      )}
     </div>
   );
 };

@@ -4,49 +4,63 @@ import { SiAppstore } from "@icons-pack/react-simple-icons";
 
 const MobileAppRedirect = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isGetAppOpen, setIsGetAppOpen] = useState(true);
 
   return (
     <div className="font-bricolage relative">
-      <button
-        className="w-[60px] h-[60px] flex flex-col items-center bg-nav text-white rounded-xl px-2 py-2 shadow-md shadow-gray-600 hover:shadow-lg hover:bg-[#504279] transition md:w-auto md:h-auto md:px-3 md:pt-1 md:pb-3"
-        onClick={() => setIsModalOpen(!isModalOpen)}
-      >
-        <div className="relative block md:hidden w-20 h-20">
-          <img
-            src="/stash-smartphone-light.png"
-            alt="Smart-Phone Logo"
-            className="absolute inset-0 m-auto w-6 h-12 z-10"
-          />
-          <img
-            src="/Vector.png"
-            alt="Download-Vector"
-            className="absolute inset-0 m-auto w-4 h-4 z-20"
-          />
-        </div>
-
-        <span className="mb-1 text-lg font-medium hidden md:inline">
-          Get the App
-        </span>
-
-        <div className="hidden md:flex items-center gap-6">
-          <img
-            src="/stash-smartphone-light.png"
-            alt="Smart-Phone Logo"
-            className="w-10 h-20"
-          />
-
-          <div className="flex flex-col gap-3">
-            <SiAppstore className="w-8 h-8" title="App Store" />
-            <IoLogoGooglePlaystore className="w-8 h-8" />
+      {isGetAppOpen && (
+        <button
+          className="w-[60px] h-[60px] flex flex-col items-center bg-nav text-white rounded-xl px-2 py-2 shadow-md shadow-gray-600 hover:shadow-lg hover:bg-[#504279] transition md:w-auto md:h-auto md:px-3 md:pt-1 md:pb-3"
+          onClick={() => setIsModalOpen(!isModalOpen)}
+        >
+          <div className="relative block md:hidden w-20 h-20">
+            <img
+              src="/stash-smartphone-light.png"
+              alt="Smart-Phone Logo"
+              className="absolute inset-0 m-auto w-6 h-12 z-10"
+            />
+            <img
+              src="/Vector.png"
+              alt="Download-Vector"
+              className="absolute inset-0 m-auto w-4 h-4 z-20"
+            />
           </div>
-        </div>
-      </button>
+
+          <span
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsModalOpen(false)
+              setIsGetAppOpen(false);
+            }}
+            className="absolute -top-2 -right-2 w-5 h-5 flex items-center justify-center text-lg bg-black text-white rounded-full cursor-pointer hover:bg-gray-700 z-10"
+          >
+            ×
+          </span>
+
+          <span className="mb-1 text-lg font-medium hidden md:inline">
+            Get the App
+          </span>
+
+          <div className="hidden md:flex items-center gap-6">
+            <img
+              src="/stash-smartphone-light.png"
+              alt="Smart-Phone Logo"
+              className="w-10 h-20"
+            />
+
+            <div className="flex flex-col gap-3">
+              <SiAppstore className="w-8 h-8" title="App Store" />
+              <IoLogoGooglePlaystore className="w-8 h-8" />
+            </div>
+          </div>
+        </button>
+      )}
 
       {isModalOpen && (
-        <div className="font-bricolage absolute bottom-10 md:bottom-16 right-10 md:right-20 bg-white rounded-xl py-5 px-3 shadow-md shadow-gray-600 w-55">
+        <div className="font-bricolage absolute bottom-10 md:bottom-16 right-10 md:right-20 bg-white rounded-xl py-5 px-3 shadow-md shadow-gray-600 w-55 overflow-visible">
           <button
             onClick={() => setIsModalOpen(false)}
-            className="absolute right-1 top-1 w-3 h-3 flex items-center justify-center text-white text-sm bg-black rounded-full hover:text-lightgray-600"
+            className="absolute -top-2 -right-2 w-5 h-5 flex items-center justify-center text-white text-lg bg-black rounded-full cursor-pointer hover:bg-gray-700 z-10"
           >
             ×
           </button>

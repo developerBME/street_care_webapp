@@ -59,28 +59,34 @@ const UpcomingOutreachEvents = ({
         ) : (
           <>
             <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
-              {events.map((eventData) => (
-                <OutreachEventCard
-                  key={eventData.id}
-                  cardData={{
-                    ...eventData,
-                    eventDate: eventData.eventDate?.seconds
-                      ? formatDate(new Date(eventData.eventDate.seconds * 1000))
-                      : eventData.eventDate,
-                  }}
-                  openModal={() =>
-                    openModal({
+              {!events || events.length === 0 ? (
+                <h1>No Upcoming Events</h1>
+              ) : (
+                events.map((eventData) => (
+                  <OutreachEventCard
+                    key={eventData.id}
+                    cardData={{
                       ...eventData,
                       eventDate: eventData.eventDate?.seconds
                         ? formatDate(
-                            new Date(eventData.eventDate.seconds * 1000)
+                            new Date(eventData.eventDate.seconds * 1000),
                           )
                         : eventData.eventDate,
-                    })
-                  }
-                  loggedIn={loggedIn}
-                />
-              ))}
+                    }}
+                    openModal={() =>
+                      openModal({
+                        ...eventData,
+                        eventDate: eventData.eventDate?.seconds
+                          ? formatDate(
+                              new Date(eventData.eventDate.seconds * 1000),
+                            )
+                          : eventData.eventDate,
+                      })
+                    }
+                    loggedIn={loggedIn}
+                  />
+                ))
+              )}
             </div>
           </>
         )}
