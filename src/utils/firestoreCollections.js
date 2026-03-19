@@ -39,7 +39,7 @@ const COLLECTIONS = {
 };
 
 const env = process.env.REACT_APP_ENV || "main";
-// "development";
+//"development";
 
 // Determine the collections based on the branch
 const collectionMapping =

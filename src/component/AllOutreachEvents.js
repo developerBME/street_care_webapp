@@ -9,12 +9,12 @@ import RSVPConfirmationModal from "./UserProfile/RSVPConfirmationModal";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import UserTypeInfo from "./UserTypeInfo";
-import { 
-  getCountFromServer, 
-  collection, 
-  query, 
-  where, 
-  orderBy, 
+import {
+  getCountFromServer,
+  collection,
+  query,
+  where,
+  orderBy,
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { fetchPaginatedEvents } from "./EventCardService.js";
@@ -28,14 +28,16 @@ const createDefaultCursorFields = () => ({
   lastVisible: null,
   pageSize: OUTREACHES_PER_PAGE,
   direction: "next",
-  pageHistory: []
+  pageHistory: [],
 });
 
 const cloneCursorFields = (fields) => ({
   lastVisible: fields?.lastVisible || null,
   pageSize: fields?.pageSize || OUTREACHES_PER_PAGE,
   direction: fields?.direction || "next",
-  pageHistory: Array.isArray(fields?.pageHistory) ? [...fields.pageHistory] : []
+  pageHistory: Array.isArray(fields?.pageHistory)
+    ? [...fields.pageHistory]
+    : [],
 });
 
 let cachedUpcomingOutreachState = null;
@@ -70,52 +72,52 @@ const AllOutreachEvents = ({ loggedIn }) => {
   const [cursorFields, setCursorFields] = useState(() =>
     cachedState?.cursorFields
       ? { ...cloneCursorFields(cachedState.cursorFields), direction: "current" }
-      : createDefaultCursorFields()
+      : createDefaultCursorFields(),
   );
-  
+
   const [currentPage, setCurrentPage] = useState(
-    cachedState?.currentPage ?? initialPageFromUrl
+    cachedState?.currentPage ?? initialPageFromUrl,
   );
   const [events, setEvents] = useState(cachedState?.events || []);
-  const [isLoading, setIsLoading] = useState(!(cachedState?.events?.length));
+  const [isLoading, setIsLoading] = useState(!cachedState?.events?.length);
   const [totalPages, setTotalPages] = useState(cachedState?.totalPages || 0);
 
   const [searchDescription, setSearchDescription] = useState(
-    cachedState?.searchDescription || ""
+    cachedState?.searchDescription || "",
   );
   const [debouncedSearchDescription, setDebouncedSearchDescription] = useState(
     cachedState?.debouncedSearchDescription ??
       cachedState?.searchDescription ??
-      ""
+      "",
   );
-  const [filterOption, setFilterOption] = useState(cachedState?.filterOption || "");
+  const [filterOption, setFilterOption] = useState(
+    cachedState?.filterOption || "",
+  );
   const [startDate, setStartDate] = useState(defaultStartDate);
   const [endDate, setEndDate] = useState(defaultEndDate);
   const [cityToSearch, setCityToSearch] = useState(
-    cachedState?.cityToSearch || ""
+    cachedState?.cityToSearch || "",
   );
   const [debouncedCityToSearch, setDebouncedCityToSearch] = useState(
-    cachedState?.debouncedCityToSearch ??
-      cachedState?.cityToSearch ??
-      ""
+    cachedState?.debouncedCityToSearch ?? cachedState?.cityToSearch ?? "",
   );
   const searchCity = useRef("");
   const [errorMessage, setErrorMessage] = useState("");
   const [filteredTotal, setFilteredTotal] = useState(
-    cachedState?.filteredTotal || 0
+    cachedState?.filteredTotal || 0,
   );
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showWithdrawnModal, setShowWithdrawnModal] = useState(false);
   const [triggerEffect, setTriggerEffect] = useState(false);
   const [totalOutreaches, setTotalOutreaches] = useState(
-    cachedState?.totalOutreaches || 0
+    cachedState?.totalOutreaches || 0,
   );
   const [cumulativeEventsCount, setCumulativeEventsCount] = useState(
-    cachedState?.cumulativeEventsCount || 0
+    cachedState?.cumulativeEventsCount || 0,
   );
   const [paginationTrigger, setPaginationTrigger] = useState(
-    cachedState?.paginationTrigger || 0
+    cachedState?.paginationTrigger || 0,
   );
 
   const searchDescriptionTimer = useRef(null);
@@ -133,7 +135,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
     if (searchDescriptionTimer.current) {
       clearTimeout(searchDescriptionTimer.current);
     }
-    
+
     searchDescriptionTimer.current = setTimeout(() => {
       setDebouncedSearchDescription(searchDescription);
       if (isInitialSearchEffect.current) {
@@ -142,7 +144,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
         resetPagination();
       }
     }, 500);
-    
+
     return () => {
       if (searchDescriptionTimer.current) {
         clearTimeout(searchDescriptionTimer.current);
@@ -154,7 +156,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
     if (citySearchTimer.current) {
       clearTimeout(citySearchTimer.current);
     }
-    
+
     citySearchTimer.current = setTimeout(() => {
       setDebouncedCityToSearch(cityToSearch);
       if (isInitialCityEffect.current) {
@@ -163,7 +165,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
         resetPagination();
       }
     }, 500);
-    
+
     return () => {
       if (citySearchTimer.current) {
         clearTimeout(citySearchTimer.current);
@@ -181,7 +183,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
             where("status", "==", "approved"),
             where("location.city", "==", debouncedCityToSearch),
             where("eventDate", ">=", new Date()),
-            orderBy("eventDate", "asc")
+            orderBy("eventDate", "asc"),
           );
         } else if (filterOption === "datePeriod") {
           countQuery = query(
@@ -189,14 +191,14 @@ const AllOutreachEvents = ({ loggedIn }) => {
             where("status", "==", "approved"),
             where("eventDate", ">=", startDate),
             where("eventDate", "<=", endDate),
-            orderBy("eventDate", "asc")
+            orderBy("eventDate", "asc"),
           );
         } else {
           countQuery = query(
             collection(db, outreachEvents_collection),
             where("status", "==", "approved"),
             where("eventDate", ">=", new Date()),
-            orderBy("eventDate", "asc")
+            orderBy("eventDate", "asc"),
           );
         }
         const snapshot = await getCountFromServer(countQuery);
@@ -208,13 +210,11 @@ const AllOutreachEvents = ({ loggedIn }) => {
     };
     getTotalCount();
   }, [filterOption, startDate, endDate, debouncedCityToSearch]);
-  
 
   useEffect(() => {
     const getEvents = async () => {
       const shouldShowLoader = !(
-        cursorFields.direction === "current" &&
-        events.length > 0
+        cursorFields.direction === "current" && events.length > 0
       );
 
       if (shouldShowLoader) {
@@ -228,7 +228,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
           events: fetchedEvents,
           lastVisible,
           pageHistory,
-          totalFilteredEvents
+          totalFilteredEvents,
         } = await fetchPaginatedEvents(
           filterOption === "city" ? debouncedCityToSearch : "",
           filterOption === "datePeriod" ? startDate : new Date(),
@@ -237,14 +237,14 @@ const AllOutreachEvents = ({ loggedIn }) => {
           cursorFields.lastVisible,
           cursorFields.pageSize,
           cursorFields.direction,
-          cursorFields.pageHistory
+          cursorFields.pageHistory,
         );
-        
+
         setEvents(fetchedEvents);
         setCursorFields((prev) => ({
           ...prev,
           lastVisible: lastVisible,
-          pageHistory: pageHistory
+          pageHistory: pageHistory,
         }));
 
         if (
@@ -253,7 +253,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
         ) {
           setFilteredTotal(totalFilteredEvents || 0);
           setTotalPages(
-            Math.ceil((totalFilteredEvents || 0) / OUTREACHES_PER_PAGE)
+            Math.ceil((totalFilteredEvents || 0) / OUTREACHES_PER_PAGE),
           );
         } else {
           setFilteredTotal(0);
@@ -266,8 +266,15 @@ const AllOutreachEvents = ({ loggedIn }) => {
       }
     };
     getEvents();
-  }, [paginationTrigger, debouncedCityToSearch, startDate, endDate, debouncedSearchDescription, filterOption]);
-  
+  }, [
+    paginationTrigger,
+    debouncedCityToSearch,
+    startDate,
+    endDate,
+    debouncedSearchDescription,
+    filterOption,
+  ]);
+
   useEffect(() => {
     if (
       typeof window !== "undefined" &&
@@ -314,7 +321,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
       cursorFields: cloneCursorFields(cursorFields),
       paginationTrigger,
       cumulativeEventsCount,
-      scrollPosition: previousScrollPosition
+      scrollPosition: previousScrollPosition,
     };
   }, [
     events,
@@ -331,7 +338,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
     totalOutreaches,
     cursorFields,
     paginationTrigger,
-    cumulativeEventsCount
+    cumulativeEventsCount,
   ]);
 
   const updateUrlPage = useCallback(
@@ -358,10 +365,10 @@ const AllOutreachEvents = ({ loggedIn }) => {
           pathname: location.pathname,
           search: newSearch ? `?${newSearch}` : "",
         },
-        { replace }
+        { replace },
       );
     },
-    [location.pathname, navigate]
+    [location.pathname, navigate],
   );
 
   useEffect(() => {
@@ -382,7 +389,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
       setPaginationTrigger((prev) => prev + 1);
     }
   }, [location.search]);
-  
+
   useEffect(() => {
     setTotalPages(Math.ceil(totalOutreaches / OUTREACHES_PER_PAGE));
   }, [totalOutreaches]);
@@ -391,9 +398,9 @@ const AllOutreachEvents = ({ loggedIn }) => {
     setCursorFields(createDefaultCursorFields());
     setCurrentPage(1);
     setCumulativeEventsCount(0);
-    setPaginationTrigger(prev => prev + 1);
+    setPaginationTrigger((prev) => prev + 1);
   };
-  
+
   const handleFilterChange = (e) => {
     const selected = e.target.value;
     setFilterOption(selected);
@@ -402,7 +409,10 @@ const AllOutreachEvents = ({ loggedIn }) => {
   };
 
   const getTotalToDisplay = () => {
-    if (debouncedSearchDescription.trim() !== "" || debouncedCityToSearch.trim() !== "") {
+    if (
+      debouncedSearchDescription.trim() !== "" ||
+      debouncedCityToSearch.trim() !== ""
+    ) {
       return filteredTotal > 0 ? filteredTotal : events.length;
     } else {
       return totalOutreaches;
@@ -410,7 +420,10 @@ const AllOutreachEvents = ({ loggedIn }) => {
   };
 
   const getDisplayCount = () => {
-    if (debouncedSearchDescription.trim() !== "" || debouncedCityToSearch.trim() !== "") {
+    if (
+      debouncedSearchDescription.trim() !== "" ||
+      debouncedCityToSearch.trim() !== ""
+    ) {
       return events.length;
     } else {
       return Math.min(currentPage * OUTREACHES_PER_PAGE, totalOutreaches);
@@ -424,28 +437,34 @@ const AllOutreachEvents = ({ loggedIn }) => {
     setCityToSearch(e.target.value);
   };
 
-  const handleNavigateHome = () => {
+  const returnTarget = -1;
+  const returnText = "Go Back";
+  const handleGoBack = () => {
     cachedUpcomingOutreachState = null;
-    navigate("/");
+    if (window.history.length > 2) {
+      navigate(returnTarget);
+    } else {
+      navigate("/");
+    }
   };
 
   const handleNext = () => {
     setCurrentPage((prev) => prev + 1);
-    setCursorFields(prev => ({
+    setCursorFields((prev) => ({
       ...prev,
-      direction: "next"
+      direction: "next",
     }));
-    setPaginationTrigger(prev => prev + 1);
+    setPaginationTrigger((prev) => prev + 1);
   };
 
   const handlePrev = () => {
     if (currentPage === 1) return;
     setCurrentPage((prev) => prev - 1);
-    setCursorFields(prev => ({
+    setCursorFields((prev) => ({
       ...prev,
-      direction: "prev"
+      direction: "prev",
     }));
-    setPaginationTrigger(prev => prev + 1);
+    setPaginationTrigger((prev) => prev + 1);
   };
 
   const renderPaginationButtons = () => {
@@ -458,15 +477,17 @@ const AllOutreachEvents = ({ loggedIn }) => {
           className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
         >
           <IoIosArrowBack />
-        </button>
+        </button>,
       );
     }
-    
-    const hasMoreItems = 
-      (debouncedSearchDescription.trim() !== "" || debouncedCityToSearch.trim() !== "" || filterOption === "datePeriod") 
+
+    const hasMoreItems =
+      debouncedSearchDescription.trim() !== "" ||
+      debouncedCityToSearch.trim() !== "" ||
+      filterOption === "datePeriod"
         ? currentPage < totalPages
         : currentPage * cursorFields.pageSize < totalOutreaches;
-    
+
     if (hasMoreItems) {
       buttons.push(
         <button
@@ -475,7 +496,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
           className="mx-1 px-3 py-1 rounded-full bg-gray-200 text-gray-600"
         >
           <IoIosArrowForward />
-        </button>
+        </button>,
       );
     }
     return buttons;
@@ -510,18 +531,18 @@ const AllOutreachEvents = ({ loggedIn }) => {
 
   const searchChange = (e) => {
     setSearchDescription(e.target.value);
-  };  
+  };
 
   return (
     <div className="relative flex flex-col items-center">
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-16 lg:mx-40 mt-48 rounded-2xl bg-white text-black">
         <div
           className="absolute flex mt-[-50px] items-center cursor-pointer"
-          onClick={handleNavigateHome}
+          onClick={handleGoBack}
         >
           <IoIosArrowBack className="w-6 h-6" />
           <p className="font-bricolage text-xl font-bold leading-7">
-            Return to Home
+            {returnText}
           </p>
         </div>
         <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
@@ -619,8 +640,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
           <UserTypeInfo />
 
           <div className="flex justify-between items-center mt-8 w-full mb-11">
-            <p className="text-gray-600">
-            </p>
+            <p className="text-gray-600"></p>
             <div className="flex justify-end">{renderPaginationButtons()}</div>
           </div>
           {isLoading ? (
@@ -661,7 +681,10 @@ const AllOutreachEvents = ({ loggedIn }) => {
         <RSVPConfirmationModal closeModal={closeSignUpModal} type="edit" />
       </Modal>
       <Modal open={showWithdrawnModal}>
-        <RSVPConfirmationModal closeModal={closeWithdrawModal} type="withdraw" />
+        <RSVPConfirmationModal
+          closeModal={closeWithdrawModal}
+          type="withdraw"
+        />
       </Modal>
     </div>
   );
