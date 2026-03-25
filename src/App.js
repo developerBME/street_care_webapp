@@ -1,68 +1,70 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense, lazy } from "react";
 import { getDocs, collection, query, where } from "firebase/firestore";
 import { db } from "./component/firebase";
 import { UserProvider } from "./context/Usercontext.js";
 import collectionMapping from "./utils/firestoreCollections.js";
 import { Analytics } from "@vercel/analytics/react";
-import Home from "./component/Home";
-import UserList from "./component/admin_test/UserList.js";
 import NavBar from "./component/Navbar";
 import Footer from "./component/Footer";
-import Login from "./component/Login";
-import ForgotPassword from "./component/UserProfile/ForgotPassword";
-import Profile from "./component/UserProfile/Profile";
-import Signup2 from "./component/Signup";
-import HowToHelp from "./component/HowtoHelp/HowToHelp";
-import Community from "./component/Community/Community";
-import About from "./component/About/About";
-import Contact from "./component/Contact/Contact";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import CommOutForm from "./component/UserProfile/CommOutForm";
-import PersonalOutForm from "./component/UserProfile/PersonalOutForm";
-import Documenting from "./component/UserProfile/Documenting";
-import AccSetting from "./component/UserProfile/AccSetting";
-import OutreachSignup from "./component/Community/OutreachSignup";
-import AllOutreachEvents from "./component/AllOutreachEvents";
-import AllPastOutreachEvents from "./component/AllPastOutreachEvents";
-import AllOutreachVisitLog from "./component/AllOutreachVisitLog";
 import ScrollToTop from "./component/helper/ScrollToTop";
-import Not404 from "./component/404";
-import Newscard from "./component/HomePage/Newscard";
-import ComingSoon from "./component/ComingSoon";
-import Readmorenews from "./component/HomePage/Readmorenews";
-import CommunityComingSoon from "./component/CommunityComingSoon";
-import VisitLogDetails from "./component/Community/VisitLogDetails";
-import Temp_Profile from "./component/Temp_Profile";
+// import CommunityComingSoon from "./component/CommunityComingSoon";
 import { ProtectedRoute } from "./component/ProtectedRoute";
-import EmailVerificationModal from "./component/EmailVerificationModal";
-import SampleForm from "./component/Sample_form";
-import ProfileSettings from "./component/UserProfile/ProfileSettings";
-import UpdateEmailAddress from "./component/UserProfile/ProfileSettings/UpdateEmailAddress";
-import DeleteAccount from "./component/UserProfile/ProfileSettings/DeleteAccount";
-import PersonalVisitLogDetails from "./component/Community/PersonalVisitLogDetails";
-import EmailUpdateConfirmation from "./component/UserProfile/ProfileSettings/EmailUpdateConfirmation";
-import DeleteAccConfirmation from "./component/UserProfile/ProfileSettings/DeleteAccConfirmation";
-import UpdateProfile from "./component/UserProfile/ProfileSettings/UpdateProfile";
-import UserListNew from "./component/Admin/UserListNew.js";
-import CreateOutreachAdmin from "./component/admin_test/CreateOutreachAdmin.js";
 
-import TestUser from "./component/Test/Test";
-import ListUser from "./component/Test/ListUser";
 import { ProtectedAdminRoute } from "./component/ProtectedAdminRoute";
-import TestAdmin from "./component/UserProfile/TestAdmin";
-import AdminHomePage from "./component/Admin/AdminHomePage.js";
-import MoreVisitLogs from "./component/Community/MoreVisitLogs";
-import CreateOutreach from "./component/Community/CreateOutreach";
-import AllSignedUpOutreaches from "./component/UserProfile/AllSignedUpOutreaches";
-import AllLikedOutreaches from "./component/UserProfile/AllLikedOutreaches";
-import AllCreatedOutreaches from "./component/UserProfile/AllCreatedOutreaches.js";
-import OutreachEvents from "./component/Admin/OutreachEvents";
-import PostApprovals from "./component/admin_test/PostApprovals.js";
-import AdminOutreachEvents from "./component/Admin/AdminOutreachEvents.js";
-import InteractionLogForm from "./component/UserProfile/InteractionLogForm.js";
+
+const AdminHomePage = lazy(() => import("./component/Admin/AdminHomePage.js"));
+const Home = lazy(() => import("./component/Home"));
+const About = lazy(() => import("./component/About/About"));
+const Contact = lazy(() => import("./component/Contact/Contact"));
+const Community = lazy(() => import("./component/Community/Community"));
+const Login = lazy(() => import("./component/Login"));
+const Signup2 = lazy(() => import("./component/Signup"));
+const ForgotPassword = lazy(() => import("./component/UserProfile/ForgotPassword"));
+const Profile = lazy(() => import("./component/UserProfile/Profile"));
+const ProfileSettings = lazy(() => import("./component/UserProfile/ProfileSettings"));
+const UpdateProfile = lazy(() => import("./component/UserProfile/ProfileSettings/UpdateProfile"));
+const UpdateEmailAddress = lazy(() => import("./component/UserProfile/ProfileSettings/UpdateEmailAddress"));
+const DeleteAccount = lazy(() => import("./component/UserProfile/ProfileSettings/DeleteAccount"));
+const AccSetting = lazy(() => import("./component/UserProfile/AccSetting"));
+const UserList = lazy(() => import("./component/admin_test/UserList.js"));
+const UserListNew = lazy(() => import("./component/Admin/UserListNew.js"));
+const CreateOutreachAdmin = lazy(() => import("./component/admin_test/CreateOutreachAdmin.js"));
+const PostApprovals = lazy(() => import("./component/admin_test/PostApprovals.js"));
+const OutreachEvents = lazy(() => import("./component/Admin/OutreachEvents"));
+const AdminOutreachEvents = lazy(() => import("./component/Admin/AdminOutreachEvents.js"));
+const AllOutreachEvents = lazy(() => import("./component/AllOutreachEvents"));
+const AllPastOutreachEvents = lazy(() => import("./component/AllPastOutreachEvents"));
+const AllOutreachVisitLog = lazy(() => import("./component/AllOutreachVisitLog"));
+const VisitLogDetails = lazy(() => import("./component/Community/VisitLogDetails"));
+const PersonalVisitLogDetails = lazy(() => import("./component/Community/PersonalVisitLogDetails"));
+const TestUser = lazy(() => import("./component/Test/Test"));
+const ListUser = lazy(() => import("./component/Test/ListUser"));
+const SampleForm = lazy(() => import("./component/Sample_form"));
+const Temp_Profile = lazy(() => import("./component/Temp_Profile"));
+const Not404 = lazy(() => import("./component/404"));
+const HowToHelp = lazy(() => import("./component/HowtoHelp/HowToHelp"));
+const CommOutForm = lazy(() => import("./component/UserProfile/CommOutForm"));
+const PersonalOutForm = lazy(() => import("./component/UserProfile/PersonalOutForm"));
+const Documenting = lazy(() => import("./component/UserProfile/Documenting"));
+const OutreachSignup = lazy(() => import("./component/Community/OutreachSignup"));
+const Newscard = lazy(() => import("./component/HomePage/Newscard"));
+const ComingSoon = lazy(() => import("./component/ComingSoon"));
+const Readmorenews = lazy(() => import("./component/HomePage/Readmorenews"));
+const EmailVerificationModal = lazy(() => import("./component/EmailVerificationModal"));
+const EmailUpdateConfirmation = lazy(() => import("./component/UserProfile/ProfileSettings/EmailUpdateConfirmation"));
+const DeleteAccConfirmation = lazy(() => import("./component/UserProfile/ProfileSettings/DeleteAccConfirmation"));
+const TestAdmin = lazy(() => import("./component/UserProfile/TestAdmin"));
+const MoreVisitLogs = lazy(() => import("./component/Community/MoreVisitLogs"));
+const CreateOutreach = lazy(() => import("./component/Community/CreateOutreach"));
+const AllSignedUpOutreaches = lazy(() => import("./component/UserProfile/AllSignedUpOutreaches"));
+const AllLikedOutreaches = lazy(() => import("./component/UserProfile/AllLikedOutreaches"));
+const AllCreatedOutreaches = lazy(() => import("./component/UserProfile/AllCreatedOutreaches"));
+const InteractionLogForm = lazy(() => import("./component/UserProfile/InteractionLogForm"));
 
 const users_collection = collectionMapping.users;
+
 
 function App() {
   const fAuth = getAuth();
@@ -112,161 +114,163 @@ function App() {
             photoUrl={photoUrl}
             setLoggedIn={setLoggedIn}
           />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/howtohelp" element={<HowToHelp />} />
-            <Route
-              path="/community"
-              element={<Community loggedIn={loggedIn} />}
-            />
-            {/* <Route path="/community" element={<CommunityComingSoon />} /> */}
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/ForgotPassword" element={<ForgotPassword />} />
-            <Route path="/signup" element={<Signup2 />} />
-            <Route
-              path="/admin-panel/createoutreachadmin"
-              element={<CreateOutreachAdmin />}
-            />
-            <Route path="/allnews" element={<Newscard />} />
-            <Route path="/allnews/:id" element={<Readmorenews />} />
-            {/* <Route path="/user/:uid" element={<UserDetails />} /> // Route for
-          user details */}
-            <Route
-              path="/verifyemail"
-              element={
-                <EmailVerificationModal
-                  setLoggedIn={setLoggedIn}
-                  user={firebaseUser}
+          <Suspense fallback={<div>Loading...</div>}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/howtohelp" element={<HowToHelp />} />
+              <Route
+                path="/community"
+                element={<Community loggedIn={loggedIn} />}
+              />
+              {/* <Route path="/community" element={<CommunityComingSoon />} /> */}
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/ForgotPassword" element={<ForgotPassword />} />
+              <Route path="/signup" element={<Signup2 />} />
+              <Route
+                path="/admin-panel/createoutreachadmin"
+                element={<CreateOutreachAdmin />}
+              />
+              <Route path="/allnews" element={<Newscard />} />
+              <Route path="/allnews/:id" element={<Readmorenews />} />
+              {/* <Route path="/user/:uid" element={<UserDetails />} /> // Route for
+            user details */}
+              <Route
+                path="/verifyemail"
+                element={
+                  <EmailVerificationModal
+                    setLoggedIn={setLoggedIn}
+                    user={firebaseUser}
+                  />
+                }
+              />
+              <Route
+                element={
+                  <ProtectedAdminRoute
+                    user={firebaseUser}
+                    loading={loadingUser}
+                  />
+                }
+              >
+                <Route path="/testAdmin" element={<TestAdmin />} />
+                <Route path="/admin-panel/userlist" element={<UserList />} />
+                <Route path="/admin" element={<AdminHomePage />} />
+                <Route path="/admin/postApprovals" element={<PostApprovals />} />
+                <Route path="/admin/userManagement" element={<UserListNew />} />
+                <Route
+                  path="/admin/outreach-events"
+                  element={<OutreachEvents />}
                 />
-              }
-            />
-            <Route
-              element={
-                <ProtectedAdminRoute
-                  user={firebaseUser}
-                  loading={loadingUser}
+              </Route>
+              <Route
+                element={
+                  <ProtectedRoute user={firebaseUser} loading={loadingUser} />
+                }
+              >
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/profile/accsetting" element={<AccSetting />} />
+                <Route
+                  path="/profile/profilesettings"
+                  element={<ProfileSettings />}
                 />
-              }
-            >
-              <Route path="/testAdmin" element={<TestAdmin />} />
-              <Route path="/admin-panel/userlist" element={<UserList />} />
+                <Route
+                  path="/profile/profilesettings/updateprofile"
+                  element={<UpdateProfile />}
+                />
+                <Route
+                  path="/profile/profilesettings/updateemailaddress"
+                  element={<UpdateEmailAddress />}
+                />
+                <Route
+                  path="/profile/profilesettings/emailupdateconfirmation/:email"
+                  element={<EmailUpdateConfirmation />}
+                />
+                <Route
+                  path="/profile/profilesettings/deleteaccount"
+                  element={<DeleteAccount setLoggedIn={setLoggedIn} />}
+                />
+
+                <Route path="/profile/commoutform" element={<CommOutForm />} />
+                <Route
+                  path="/profile/personaloutform"
+                  element={<PersonalOutForm />}
+                />
+                <Route path="/createOutreach" element={<CreateOutreach />} />
+              </Route>
+              <Route
+                path="/profile/profilesettings/deleteaccconfirmation"
+                element={<DeleteAccConfirmation />}
+              />
+              <Route path="/profile/select-outreach" element={<Documenting />} />
+              {/* <Route path="/profile/commoutform" element={<ComingSoon />} /> */}
+              <Route path="/outreachsignup" element={<OutreachSignup />} />
+              <Route path="/outreachsignup/:id" element={<OutreachSignup />} />
+              {/* <Route path="/helpRequestEventWindow" element={<ComingSoon />} /> */}
+              {/* <Route path="/helpRequestForm" element={<ComingSoon />} /> */}
+              {/* <Route path="/icanhelp" element={<ComingSoon />} /> */}
+              {/* <Route path="/donateForm" element={<DonateForm />} /> */}
+              <Route path="/donateForm" element={<ComingSoon />} />
+              <Route
+                path="/allOutreachEvents"
+                element={<AllOutreachEvents loggedIn={loggedIn} />}
+              />
+              {/* <Route path="/createBME" element={<CreateBME />} /> */}
+              <Route
+                path="/allPastOutreachEvents"
+                element={<AllPastOutreachEvents />}
+              />
+              <Route
+                path="profile/interactionLogForm"
+                element={<InteractionLogForm />}
+              />
+              <Route
+                path="/allOutreachVisitLog"
+                element={<AllOutreachVisitLog />}
+              />
+              <Route
+                path="profile/allSignedUpOutreaches"
+                element={<AllSignedUpOutreaches />}
+              />
+              <Route
+                path="profile/allLikedOutreaches"
+                element={<AllLikedOutreaches />}
+              />
+              <Route
+                path="profile/allCreatedOutreaches"
+                element={<AllCreatedOutreaches />}
+              />
+
               <Route path="/admin" element={<AdminHomePage />} />
-              <Route path="/admin/postApprovals" element={<PostApprovals />} />
-              <Route path="/admin/userManagement" element={<UserListNew />} />
               <Route
-                path="/admin/outreach-events"
-                element={<OutreachEvents />}
-              />
-            </Route>
-            <Route
-              element={
-                <ProtectedRoute user={firebaseUser} loading={loadingUser} />
-              }
-            >
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/profile/accsetting" element={<AccSetting />} />
-              <Route
-                path="/profile/profilesettings"
-                element={<ProfileSettings />}
-              />
-              <Route
-                path="/profile/profilesettings/updateprofile"
-                element={<UpdateProfile />}
-              />
-              <Route
-                path="/profile/profilesettings/updateemailaddress"
-                element={<UpdateEmailAddress />}
-              />
-              <Route
-                path="/profile/profilesettings/emailupdateconfirmation/:email"
-                element={<EmailUpdateConfirmation />}
-              />
-              <Route
-                path="/profile/profilesettings/deleteaccount"
-                element={<DeleteAccount setLoggedIn={setLoggedIn} />}
+                path="/admin/adminOutreachEvents"
+                element={<AdminOutreachEvents />}
               />
 
-              <Route path="/profile/commoutform" element={<CommOutForm />} />
+              <Route path="/sample_form" element={<SampleForm />} />
+              <Route path="visitLogDetails" element={<VisitLogDetails />} />
+              <Route path="visitLogDetails/:id" element={<VisitLogDetails />} />
               <Route
-                path="/profile/personaloutform"
-                element={<PersonalOutForm />}
+                path="personalVisitLogDetails"
+                element={<PersonalVisitLogDetails />}
               />
-              <Route path="/createOutreach" element={<CreateOutreach />} />
-            </Route>
-            <Route
-              path="/profile/profilesettings/deleteaccconfirmation"
-              element={<DeleteAccConfirmation />}
-            />
-            <Route path="/profile/select-outreach" element={<Documenting />} />
-            {/* <Route path="/profile/commoutform" element={<ComingSoon />} /> */}
-            <Route path="/outreachsignup" element={<OutreachSignup />} />
-            <Route path="/outreachsignup/:id" element={<OutreachSignup />} />
-            {/* <Route path="/helpRequestEventWindow" element={<ComingSoon />} /> */}
-            {/* <Route path="/helpRequestForm" element={<ComingSoon />} /> */}
-            {/* <Route path="/icanhelp" element={<ComingSoon />} /> */}
-            {/* <Route path="/donateForm" element={<DonateForm />} /> */}
-            <Route path="/donateForm" element={<ComingSoon />} />
-            <Route
-              path="/allOutreachEvents"
-              element={<AllOutreachEvents loggedIn={loggedIn} />}
-            />
-            {/* <Route path="/createBME" element={<CreateBME />} /> */}
-            <Route
-              path="/allPastOutreachEvents"
-              element={<AllPastOutreachEvents />}
-            />
-            <Route
-              path="profile/interactionLogForm"
-              element={<InteractionLogForm />}
-            />
-            <Route
-              path="/allOutreachVisitLog"
-              element={<AllOutreachVisitLog />}
-            />
-            <Route
-              path="profile/allSignedUpOutreaches"
-              element={<AllSignedUpOutreaches />}
-            />
-            <Route
-              path="profile/allLikedOutreaches"
-              element={<AllLikedOutreaches />}
-            />
-            <Route
-              path="profile/allCreatedOutreaches"
-              element={<AllCreatedOutreaches />}
-            />
+              <Route
+                path="personalVisitLogDetails/:id"
+                element={<PersonalVisitLogDetails />}
+              />
+              <Route path="/*" element={<Not404 />} />
+              <Route path="/temp_profile" element={<Temp_Profile />} />
+              <Route path="/test" element={<TestUser />} />
+              <Route path="/list" element={<ListUser />} />
+              <Route
+                path="/profile/visitlogform/:id"
+                element={<InteractionLogForm />}
+              />
+              <Route path="/myvisitlogs" element={<MoreVisitLogs />} />
 
-            <Route path="/admin" element={<AdminHomePage />} />
-            <Route
-              path="/admin/adminOutreachEvents"
-              element={<AdminOutreachEvents />}
-            />
-
-            <Route path="/sample_form" element={<SampleForm />} />
-            <Route path="visitLogDetails" element={<VisitLogDetails />} />
-            <Route path="visitLogDetails/:id" element={<VisitLogDetails />} />
-            <Route
-              path="personalVisitLogDetails"
-              element={<PersonalVisitLogDetails />}
-            />
-            <Route
-              path="personalVisitLogDetails/:id"
-              element={<PersonalVisitLogDetails />}
-            />
-            <Route path="/*" element={<Not404 />} />
-            <Route path="/temp_profile" element={<Temp_Profile />} />
-            <Route path="/test" element={<TestUser />} />
-            <Route path="/list" element={<ListUser />} />
-            <Route
-              path="/profile/visitlogform/:id"
-              element={<InteractionLogForm />}
-            />
-            <Route path="/myvisitlogs" element={<MoreVisitLogs />} />
-
-            {/* Admin Routes */}
-          </Routes>
+              {/* Admin Routes */}
+            </Routes>
+          </Suspense>
           <Footer />
           <Analytics />
         </Router>
