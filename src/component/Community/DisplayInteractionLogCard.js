@@ -175,48 +175,63 @@ fetchFlagStatus();
 
   return (
     <div
-      className="bg-[#F5EEFE] w-[90%] max-w-[20rem]  md:w-full min-w-0 rounded-[30px] mb-4 flex flex-col p-6 h-auto cursor-pointer border-b-[1px] border-gray-200"
+      className="bg-[#F5EEFE] w-full min-w-0 max-w-full rounded-2xl mb-4 flex flex-col p-3 sm:p-5 md:p-6 h-auto cursor-pointer border-b-[1px] border-gray-200"
       onClick={openPopUpModal}
     >
-      <div className="relative group">
-        {/* Flag Button */}
-        <img
-          onClick={handleFlag}
-          src={flagIcon}
-          alt="flag"
-          className={`absolute right-4 w-8 h-8 cursor-pointer rounded-full p-1 ${
-            isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
-          }`}
-        />
-        <div
-          className="absolute right-16 top-0 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-30 whitespace-normal"
-          style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
-        >
-          {!isFlagged
-            ? "Flag the Interaction Log?"
-            : "Unflag the Interaction Log?"}
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 mb-1">
+        {/* User name block: fixed left half */}
+        <div className="inline-flex min-w-0 items-center space-x-2 pr-2">
+          <img
+            alt=""
+            src={interactionLogCardData?.photoUrl || defaultImage}
+            className="w-7 h-7 rounded-full flex-shrink-0 sm:w-8 sm:h-8"
+          />
+          <div className="min-w-0 truncate font-normal font-inter text-[12px] sm:text-[13px]">
+            {interactionLogCardData?.firstName ||
+              interactionLogCardData?.userName ||
+              "Anonymous User"}
+          </div>
+          <img
+            alt=""
+            src={verifiedImg}
+            className="w-4 h-4 flex-shrink-0 sm:w-5 sm:h-5"
+          />
+        </div>
+
+        {/* Flag block: fixed right half with divider to avoid visual collision */}
+        <div className="group relative min-w-0 flex items-center justify-end pl-1">
+          <img
+            onClick={handleFlag}
+            src={flagIcon}
+            alt="flag"
+            className={`w-7 h-7 cursor-pointer rounded-full p-1 sm:w-8 sm:h-8 ${
+              isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
+            }`}
+          />
+          <div
+            className="pointer-events-none absolute right-0 top-full mt-1 z-10 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-30 whitespace-normal"
+            style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
+          >
+            {!isFlagged
+              ? "Flag the Interaction Log?"
+              : "Unflag the Interaction Log?"}
+          </div>
         </div>
       </div>
 
-      {/* Rest of the Component */}
-      <div className="inline-flex items-center space-x-2">
-        <img
-          alt=""
-          src={interactionLogCardData?.photoUrl || defaultImage}
-          className="w-8 h-8 rounded-full"
-        />
-        <div className="font-normal font-inter text-[13px]">
-          {interactionLogCardData?.firstName ||
-            interactionLogCardData?.userName ||
-            "Anonymous User"}
-        </div>
-        <img alt="" src={verifiedImg} className="w-5 h-5" />
-      </div>
-
-      <div className="flex justify-between items-center mt-2">
-        <div className="flex items-center">
-          <img className="w-4 h-4" src={dateIcon} alt="Date" />
-          <span className="ml-2 text-sm">
+      <div className="grid grid-cols-2 gap-2 mt-2">
+        <div className="min-w-0 flex items-center">
+          <img className="w-4 h-4 flex-shrink-0" src={dateIcon} alt="Date" />
+          <span
+            className="ml-2 block min-w-0 truncate text-xs sm:text-sm"
+            title={
+              formatTimeStampDate(
+                interactionLogCardData?.interactionDate ||
+                  interactionLogCardData?.startTimestamp ||
+                  interactionLogCardData?.endTimestamp,
+              ) || "N/A"
+            }
+          >
             {formatTimeStampDate(
               interactionLogCardData?.interactionDate ||
                 interactionLogCardData?.startTimestamp ||
@@ -225,22 +240,27 @@ fetchFlagStatus();
           </span>
         </div>
 
-        <div className="flex items-center">
-          <img className="w-3 h-4" src={locationIcon} alt="Location" />
-          <span className="ml-2 text-sm">{`${interactionLogCardData?.city || "N/A"}, ${interactionLogCardData?.state}`}</span>
+        <div className="min-w-0 flex items-center justify-end">
+          <img className="w-3 h-4 flex-shrink-0" src={locationIcon} alt="Location" />
+          <span
+            className="ml-2 block min-w-0 truncate text-right text-xs sm:text-sm"
+            title={`${interactionLogCardData?.city || "N/A"}, ${interactionLogCardData?.state || ""}`}
+          >
+            {`${interactionLogCardData?.city || "N/A"}, ${interactionLogCardData?.state || ""}`}
+          </span>
         </div>
       </div>
 
       <div className="flex justify-between items-center mt-4">
-        <div className="text-sm font-bold">People Helped</div>
-        <div className="text-xl font-bold">
+        <div className="min-w-0 pr-2 truncate text-xs sm:text-sm font-bold">People Helped</div>
+        <div className="text-lg sm:text-xl font-bold flex-shrink-0">
           {interactionLogCardData?.numPeopleHelped}
         </div>
       </div>
 
       <div className="flex justify-between items-center mt-2">
-        <div className="text-sm font-bold">Items Donated</div>
-        <div className="text-xl font-bold">{donatedItemsNum}</div>
+        <div className="min-w-0 pr-2 truncate text-xs sm:text-sm font-bold">Items Donated</div>
+        <div className="text-lg sm:text-xl font-bold flex-shrink-0">{donatedItemsNum}</div>
       </div>
 
       <div className="mt-3">
