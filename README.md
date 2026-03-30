@@ -68,3 +68,12 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+### Cypress E2E Tests
+
+Run tests with `npx cypress run` to execute specs in `cypress/e2e`.
+
+Use `npx cypress open` to run tests with the interactive debugger.
+
+Requires the app to be running at http://localhost:3000.
