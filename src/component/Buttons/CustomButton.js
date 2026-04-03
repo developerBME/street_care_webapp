@@ -55,7 +55,7 @@ function CustomButton({
         onClick={onClick}
         className={` text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
           disable !== "true"
-            ? "text-white bg-[#6840E0] hover:bg-[#504279]"
+            ? "text-dark bg-[#fbed4f] hover:bg-yellow-500"
             : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
         }`}
       >
@@ -68,7 +68,7 @@ function CustomButton({
         onClick={onClick}
         className={` text-[14px] inline-flex items-center gap-1 font-[700] py-[5px] px-[10px] rounded-full transition ease-in-out duration-200 ${
           disable !== "true"
-            ? "text-[#6840E0] bg-transparent hover:bg-gray-300"
+            ? "text-[#fbed4f] bg-transparent hover:bg-gray-300"
             : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
         }`}
       >
@@ -82,7 +82,7 @@ function CustomButton({
         onClick={onClick}
         className={`w-full text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
           disable !== "true"
-            ? "text-white bg-[#6840E0] hover:bg-[#504279]"
+            ? "text-dark bg-[#fbed4f] hover:bg-[#fff176]"
             : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
         }`}
       >
@@ -95,7 +95,7 @@ function CustomButton({
         onClick={onClick}
         className={`w-fit inline-flex gap-2 items-center text-[14px] font-medium py-[10px] pl-[16px] pr-[24px] rounded-full transition ease-in-out delay-300 ${
           disable !== "true"
-            ? "text-white bg-[#6840E0] hover:bg-[#504279]"
+            ? "ext-dark bg-[#fbed4f] hover:bg-yellow-500"
             : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
         }`}
       >
@@ -109,7 +109,7 @@ function CustomButton({
         onClick={onClick}
         className={`w-fit inline-flex gap-2 items-center text-[14px] font-medium py-[10px] px-[10px] rounded-full transition ease-in-out delay-300 ${
           disable !== "true"
-            ? "text-white bg-[#6840E0] hover:bg-[#504279]"
+            ? "text-dark bg-[#fbed4f] hover:bg-[#fff176]"
             : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
         }`}
       >
@@ -122,7 +122,7 @@ function CustomButton({
         onClick={onClick}
         className={`text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
           disable !== "true"
-            ? "text-[#181818] bg-violet-200 hover:bg-violet-300"
+            ? "text-[#181818] bg-[#fff176] hover:bg-yellow-500"
             : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
         }`}
       >
@@ -202,7 +202,7 @@ function CustomButton({
         onClick={onClick}
         className={`text-[14px] font-medium py-[5px] px-[24px] rounded-full transition ease-in-out delay-300 ${
           disable !== "true"
-            ? "text-white bg-[#6840E0] hover:bg-[#36295E]"
+            ? "text-white bg-[#fbed4f] hover:bg-[#36295E]"
             : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
         }`}
       >
@@ -215,7 +215,7 @@ function CustomButton({
         onClick={onClick}
         className={`w-fit inline-flex gap-2 text-[14px] font-medium py-[5px] pl-[16px] pr-[24px] rounded-full transition ease-in-out delay-300 ${
           disable !== "true"
-            ? "text-white bg-[#6840E0] hover:bg-[#36295E]"
+            ? "text-dark bg-[#fbed4f] hover:bg-[#36295E]"
             : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
         }`}
       >
@@ -229,7 +229,7 @@ function CustomButton({
         onClick={onClick}
         className={`text-[14px] font-medium py-[5px] px-[5px] rounded-full transition ease-in-out delay-300 ${
           disable !== "true"
-            ? "text-white bg-[#6840E0] hover:bg-[#36295E]"
+            ? "text-dark bg-[#fbed4f] hover:bg-[#36295E]"
             : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
         }`}
       >
@@ -429,7 +429,7 @@ function CustomButton({
         onClick={onClick}
         className={`text-[14px] font-medium py-[20px] px-[36px] rounded-full transition ease-in-out delay-300 ${
           disable !== "true"
-            ? "text-white bg-[#6840E0] hover:bg-[#504279]"
+            ? "text-dark bg-[#fbed4f] hover:bg-[#fff176]"
             : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
         }`}
       >
@@ -442,7 +442,7 @@ function CustomButton({
         onClick={onClick}
         className={`w-fit inline-flex gap-2 items-center text-[14px] font-medium py-[20px] pl-[26px] pr-[36px] rounded-full transition ease-in-out delay-300 ${
           disable !== "true"
-            ? "text-white bg-[#6840E0] hover:bg-[#504279]"
+            ? "text-dark bg-[#fbed4f] hover:bg-[#fff176]"
             : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
         }`}
       >
@@ -456,7 +456,7 @@ function CustomButton({
         onClick={onClick}
         className={`w-fit inline-flex gap-2 items-center text-[14px] font-medium py-[20px] px-[20px] rounded-full transition ease-in-out delay-300 ${
           disable !== "true"
-            ? "text-white bg-[#6840E0] hover:bg-[#504279]"
+            ? "text-dark bg-[#fbed4f] hover:bg-[#fff176]"
             : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
         }`}
       >
@@ -494,7 +494,7 @@ function CustomButton({
     return (
       <button
         onClick={onClick}
-        className={`w-fit inline-flex gap-2 items-center text-white text-[14px] font-medium py-[20px] px-[20px] rounded-full transition ease-in-out delay-300 ${
+        className={`w-fit inline-flex gap-2 items-center text-dark text-[14px] font-medium py-[20px] px-[20px] rounded-full transition ease-in-out delay-300 ${
           disable !== "true"
             ? "text-[#181818] bg-[#79EAFF] hover:bg-[#75daec]"
             : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
@@ -590,7 +590,7 @@ function CustomButton({
         type={type}
         className={` text-[16px] font-medium w-full py-[10px] px-[24px] rounded-full transition ease-in-out ${
           disable !== "true"
-            ? "text-white bg-[#6840E0] hover:bg-[#504279]"
+            ? "text-dark bg-[#fbed4f] hover:bg-[#fff176]"
             : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
         }`}
       >
@@ -631,7 +631,7 @@ function CustomButton({
         onClick={onClick}
         className={`text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
           disable !== "true"
-            ? "text-white bg-[#CF003E] hover:bg-[#cf003ec7]"
+            ? "text-dark bg-[#CF003E] hover:bg-[#cf003ec7]"
             : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
         }`}
       >
@@ -658,8 +658,8 @@ function CustomButton({
         onClick={onClick}
         className={`bg-[#000]] border border-[#C8C8C8] text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 inline-flex ${
           disable !== "true"
-            ? "text-[#1F0A58] border border-[#6840E0] hover:bg-[#c4b6e7]"
-            : " text-[#1F0A58] border border-[#6840E0] cursor-not-allowed"
+            ? "text-[#1F0A58] border border-[#fbed4f] hover:bg-[#c4b6e7]"
+            : " text-[#1F0A58] border border-[#fbed4f] cursor-not-allowed"
         }`}
       >
         {icon && <img src={icon} className="w-5 h-5 " />}
@@ -672,7 +672,7 @@ function CustomButton({
         onClick={onClick}
         className={`text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
           disable !== "true"
-            ? "text-white bg-violet-700 hover:bg-[#36295E]"
+            ? "text-dark bg-violet-700 hover:bg-[#36295E]"
             : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
         }`}
       >

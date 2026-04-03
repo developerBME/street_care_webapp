@@ -39,7 +39,7 @@ const Readmorenews = () => {
           </p>
 
           <div className="w-full h-fit pt-9 gap-5">
-            <article className="flex max-w-fit flex-col items-start justify-normal border-t-4 border-[#6840E0] bg-white h-full ">
+            <article className="flex max-w-fit flex-col items-start justify-normal border-t-4 border-[#fbed4f] bg-white h-full ">
               <div className="h-full">
                 <h1 className="text-[#1f1e1e] text-4xl pt-4 pb-2 px-2 font-bricolage font-medium">
                   {NewsTitle}

@@ -360,7 +360,7 @@ const UpdateEmailAddress = () => {
                     </div>
                     <div className="font-dmsans text-base font-normal">
                       We have sent a verification code to{" "}
-                      <span className="text-[#6840E0]">{email}</span>. Enter the
+                      <span className="text-[#fbed4f]">{email}</span>. Enter the
                       code below to verify your new email address
                     </div>
                     <form
@@ -406,8 +406,8 @@ const UpdateEmailAddress = () => {
                             ) : (
                               <button
                                 // className="disabled:text-black disabled:cursor-not-allowed
-                                // text-[#6840E0] cursor-pointer text-sm font-dmsans font-normal"
-                                className="text-[#6840E0] cursor-pointer text-sm font-dmsans font-normal"
+                                // text-[#fbed4f] cursor-pointer text-sm font-dmsans font-normal"
+                                className="text-[#fbed4f] cursor-pointer text-sm font-dmsans font-normal"
                                 onClick={(e) => resendCode(e)}
                               >
                                 Resend Code

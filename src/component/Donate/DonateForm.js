@@ -527,7 +527,7 @@ function DonateForm() {
                       onClick={() => handleSelectAmountDivClick(amount)}
                       className={`h-8 px-6 py-1.5 rounded-lg justify-center items-start gap-2.5 flex text-sm font-medium font-dmsans leading-tight w-24  ${
                         selectedAmount === amount
-                          ? "bg-[#6840E0] text-[#F6F3FF]"
+                          ? "bg-[#fbed4f] text-[#F6F3FF]"
                           : "bg-[#FFF] text-[#000]"
                       }`}
                     >

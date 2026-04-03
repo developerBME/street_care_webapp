@@ -363,7 +363,7 @@ const UpdateProfile = () => {
                         />
                       </div>
 
-                      <div className="absolute right-0 bottom-0 ml-4 mb-2 md:ml-0 md:mb-0 bg-[#CEBFFC] rounded-full p-1">
+                      <div className="absolute right-0 bottom-0 ml-4 mb-2 md:ml-0 md:mb-0 bg-[#FFF3B0] rounded-full p-1">
                         <CustomButton
                           label=""
                           name="buttonicon8small"
@@ -579,7 +579,7 @@ const UpdateProfile = () => {
                         type="submit"
                         className={`w-full text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
                           avatarLoading !== true
-                            ? "text-white bg-[#6840E0] hover:bg-[#504279]"
+                            ? "text-dark bg-[#fbed4f] hover:bg-[#fff176]"
                             : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
                         }`}
                         onClick={(e) => handleSubmitProfileUpdate(e)}

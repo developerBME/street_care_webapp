@@ -158,7 +158,7 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
                       label="Edit"
                       name="buttonlightsmall"
                       onClick={editButton}
-                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
+                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-dark cursor-pointer"
                     >
                       Edit
                     </a>
@@ -168,7 +168,7 @@ const OutreachVisitLogProfileCard = ({ visitLogCardData, onRefresh }) => {
                       label="Delete"
                       name="buttonlightsmall"
                       onClick={deleteButton}
-                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
+                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-dark cursor-pointer"
                     >
                       Delete
                     </a>

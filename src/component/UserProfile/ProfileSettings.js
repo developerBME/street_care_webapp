@@ -83,7 +83,7 @@ function ProfileSettings() {
                         className="flex-col border-b last:border-0 w-full cursor-pointer px-4 py-4 gap-1 hover:bg-slate-50 first:hover:rounded-t-xl last:hover:rounded-b-xl"
                       >
                         <div className="flex gap-4 items-center">
-                          <ul className="text-[#6840E0] text-base">
+                          <ul className="text-[#fbed4f] text-base">
                             <li className="text-2xl">{option.logo}</li>
                           </ul>
                           <div className="flex-col flex gap-1 justify-center">

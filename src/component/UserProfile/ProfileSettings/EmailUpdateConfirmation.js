@@ -27,7 +27,7 @@ const EmailUpdateConfirmation = () => {
               </div>
               <div className="text-black text-base font-normal">
                 You can now login with{" "}
-                <span className="text-[#6840E0]">
+                <span className="text-[#fbed4f]">
                   {/* {fAuth.currentUser.email} */}
                   {email}
                 </span>{" "}

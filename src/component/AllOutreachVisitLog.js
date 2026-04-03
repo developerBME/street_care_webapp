@@ -238,7 +238,7 @@ const AllOutreachVisitLog = () => {
       >
         <IoIosArrowBack
           className={`w-6 h-6 ${
-            cursorFields.currentPage == 0 ? "text-white" : "text-black"
+            cursorFields.currentPage == 0 ? "text-dark" : "text-black"
           }`}
         />
       </button>,
@@ -300,7 +300,7 @@ const AllOutreachVisitLog = () => {
         <IoIosArrowForward
           className={`w-6 h-6 ${
             cursorFields.currentPage == totalPages - 1
-              ? "text-white"
+              ? "text-dark"
               : "text-black"
           }`}
         />

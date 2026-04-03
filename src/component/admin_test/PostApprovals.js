@@ -455,7 +455,7 @@ const PostApprovals = () => {
               onClick={() => setCurrentPage(page)}
               className={`w-8 h-8 flex items-center justify-center rounded-full ${
                 currentPage === page
-                  ? "bg-[#1F0A58] text-white"
+                  ? "bg-[#1F0A58] text-dark"
                   : "bg-white text-black border border-[#9B82CF]"
               }`}
             >
@@ -538,7 +538,7 @@ const PostApprovals = () => {
             </button>
             <button
               onClick={onAccept}
-              className="flex justify-center items-center px-6 py-2.5 text-white bg-green-600 rounded-full hover:bg-green-700 transition w-[104px] h-[40px]"
+              className="flex justify-center items-center px-6 py-2.5 text-dark bg-green-600 rounded-full hover:bg-green-700 transition w-[104px] h-[40px]"
             >
               Accept
             </button>
@@ -625,7 +625,7 @@ const PostApprovals = () => {
                 </div>
                 <button
                   onClick={handleApproveSelected}
-                  className="bg-green-600 text-white px-4 py-2 rounded-[25px] hover:bg-green-700 transition"
+                  className="bg-green-600 text-dark px-4 py-2 rounded-[25px] hover:bg-green-700 transition"
                 >
                   Approve Selected
                 </button>
@@ -637,7 +637,7 @@ const PostApprovals = () => {
                 </button>
                 <button
                   onClick={handleCancelSelection}
-                  className="bg-gray-400 text-white px-4 py-2 rounded-[25px] hover:bg-gray-500 transition"
+                  className="bg-gray-400 text-dark px-4 py-2 rounded-[25px] hover:bg-gray-500 transition"
                 >
                   Cancel
                 </button>
@@ -654,7 +654,7 @@ const PostApprovals = () => {
                 <button
                   className={`flex justify-center items-center px-[16px] py-[12px] w-[186.5px] h-[48px] rounded-[16px] font-medium ${
                     activeTab === "outreaches"
-                      ? "bg-[#6840E0] text-white" // Active Tab Style
+                      ? "bg-[#fbed4f] text-dark" // Active Tab Style
                       : "bg-transparent text-black" // Inactive Tab Style
                   }`}
                   onClick={() => handleTabChange("outreaches")}
@@ -664,7 +664,7 @@ const PostApprovals = () => {
                 <button
                   className={`flex justify-center items-center px-[16px] py-[12px] w-[186.5px] h-[48px] rounded-[16px] font-medium ${
                     activeTab === "visitLogs"
-                      ? "bg-[#6840E0] text-white" // Active Tab Style
+                      ? "bg-[#fbed4f] text-dark" // Active Tab Style
                       : "bg-transparent text-black" // Inactive Tab Style
                   }`}
                   onClick={() => handleTabChange("visitLogs")}
@@ -674,7 +674,7 @@ const PostApprovals = () => {
               </div>
 
               {/* Select Items Text */}
-              <div className="w-[95px] h-[24px] flex items-center justify-center font-dm-sans text-[16px] font-bold text-[#6840E0]">
+              <div className="w-[95px] h-[24px] flex items-center justify-center font-dm-sans text-[16px] font-bold text-[#fbed4f]">
                 Select Items
               </div>
             </div>

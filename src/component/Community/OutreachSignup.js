@@ -319,7 +319,7 @@ const OutreachSignup = () => {
                       }`}
                     />
                     <div
-                      className="absolute top-full right-0 mt-1 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
+                      className="absolute top-full right-0 mt-1 bg-gray-800 text-dark text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
                       style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
                     >
                       {!isFlagged ? "Flag the Outreach Event?" : "Unflag the Outreach Event?"}
@@ -365,7 +365,7 @@ const OutreachSignup = () => {
                       }`}
                     />
                     <div
-                      className="absolute top-full right-0 mt-1 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
+                      className="absolute top-full right-0 mt-1 bg-gray-800 text-dark text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
                       style={{
                         minWidth: "150px",
                         maxWidth: "200px",
@@ -402,7 +402,7 @@ const OutreachSignup = () => {
                         className="w-8 h-8 cursor-pointer rounded-full p-1 hover:bg-gray-200"
                       />
                       {justCopied && (
-                        <div className="absolute right-0 top-full mt-1 bg-gray-800 text-white text-sm rounded-md px-2 py-1 z-10">
+                        <div className="absolute right-0 top-full mt-1 bg-gray-800 text-dark text-sm rounded-md px-2 py-1 z-10">
                           Copied To Clipboard!
                         </div>
                       )}
@@ -419,7 +419,7 @@ const OutreachSignup = () => {
                         }`}
                       />
                       <div
-                        className="absolute top-full right-0 mt-1 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
+                        className="absolute top-full right-0 mt-1 bg-gray-800 text-dark text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
                         style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
                       >
                         {!isFlagged ? "Flag the Outreach Event?" : "Unflag the Outreach Event?"}
@@ -555,7 +555,7 @@ const OutreachSignup = () => {
 
             {data && !isPastEvent ? (
               <div className="justify-start items-start gap-[15px] inline-flex">
-                <div className="h-10 bg-[#6840E0] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex">
+                <div className="h-10 bg-[#684fbed4f0E0] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex">
                   {label2 === "EDIT" ? (
                     <>
                       <CustomButton

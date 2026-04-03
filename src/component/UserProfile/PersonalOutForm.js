@@ -1422,7 +1422,7 @@ function PersonalOutForm() {
                     will help us better assist people in need. If yes{" "}
                     <b>
                       <button
-                        className="text-[#6840E0]"
+                        className="text-[#fbed4f]"
                         onClick={handleOptionalButtonClick}
                       >
                         click here.

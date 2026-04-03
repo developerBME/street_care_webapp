@@ -23,7 +23,7 @@ const DeleteAccConfirmation = () => {
               <div className="text-black text-base font-normal">
                 Thank you for being part of this wonderful community. Your
                 account -{" "}
-                <span className="text-[#6840E0]">
+                <span className="text-[#fbed4f]">
                   {state?.email}
                 </span>
                 , has been successfully deleted. You will be redirected to the

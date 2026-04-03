@@ -82,7 +82,7 @@ const StaticSubsection = ({ index, interaction, onUpdate, handleRemove }) => {
         {index !== 0 && (
           <button
             type="button"
-            className="bg-red-100 text-red-700 text-sm font-medium px-3 py-1 rounded transition duration-150 ease-in-out hover:bg-red-600 hover:text-white"
+            className="bg-red-100 text-red-700 text-sm font-medium px-3 py-1 rounded transition duration-150 ease-in-out hover:bg-red-600 hover:text-dark"
             onClick={() => {
               handleRemove(interaction.id);
             }}

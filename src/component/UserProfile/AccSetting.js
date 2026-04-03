@@ -226,7 +226,7 @@ function AccSetting() {
               </div>
               {avatarLoading && (
                 <div className="absolute rounded-full text-center inset-0 flex items-center justify-center bg-black bg-opacity-50 p-2 m-0">
-                  <div className="text-white text-sm">Updating</div>
+                  <div className="text-dark text-sm">Updating</div>
                 </div>
               )}
             </div>
@@ -287,7 +287,7 @@ function AccSetting() {
                 onClick={(e) => handleSubmit(e)}
                 className={`w-full text-[14px] font-medium py-[10px] px-[24px] rounded-full transition ease-in-out delay-300 ${
                   avatarLoading !== true
-                    ? "text-white bg-[#6840E0] hover:bg-[#504279]"
+                    ? "text-dark bg-[#fbed4f] hover:bg-[#fff176]"
                     : "text-[#a7a7a7] bg-[#d8d8d8] cursor-not-allowed"
                 }`}
               >

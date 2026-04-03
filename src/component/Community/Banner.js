@@ -99,7 +99,7 @@ function Banner() {
       <div className="px-[8px] pt-6 lg:px-24 lg:pt-[15px] md:px-[25px] md:pt-[15px] bg-[right_bottom_-150px] bg-no-repeat relative">
         <div className="lg:items-start md:items-center justify-center h-full w-full grid md:grid-cols-4 lg:grid-cols-5 gap-2">
           <div className="lg:col-span-2 md:col-span-2 lg:mt-[30px]">
-            <p className="font-sans font-medium lg:text-[44px] sm:text-[38px] text-[36px] text-[#6840E0]">
+            <p className="font-sans font-medium lg:text-[44px] sm:text-[38px] text-[36px] text-[#fbed4f]">
               Community
             </p>
             <p className="text-[#181818] lg:text-[24px] leading-8">

@@ -56,7 +56,7 @@ function MoreAboutUs() {
         </div>
       </div>
       <div className="mt-2 md:mt-4 flex justify-center md:justify-start min-[320px]:pt-4 ">
-        <button className="bg-[#5F36D6] hover:bg-blue-700 text-white font-semibold rounded-full py-3 px-6 text-sm ">
+        <button className="bg-[#5F36D6] hover:bg-blue-700 text-dark font-semibold rounded-full py-3 px-6 text-sm ">
           More About Us
         </button>
       </div>

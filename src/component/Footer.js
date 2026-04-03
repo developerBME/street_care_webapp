@@ -64,10 +64,10 @@ function Footer() {
       <div className=" lg:mx-auto  h-fit w-full max-w-screen-xl">
         <div className=" pt-14 pb-6 px-4 grid mx-7 grid-cols-2 gap-y-7 lg:gap-20 items-center lg:grid-cols-5">
           <div className=" col-span-2">
-            <h2 className="mb-6 font-bricolage text-6xl text-white dark:text-white">
+            <h2 className="mb-6 font-bricolage text-6xl text-dark dark:text-dark">
               Street Care
             </h2>
-            <ul className="text-white font-medium">
+            <ul className="text-dark font-medium">
               <li className="mb-4">
                 <div className="flex mt-4 space-x-2 md:mt-0">
                   {iconLinks.map((e, i) => {
@@ -123,10 +123,10 @@ function Footer() {
           <div className=" col-span-3">
             <div className="grid grid-cols-3">
               <div>
-                {/* <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
+                {/* <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-dark">
               Contact
             </h2> */}
-                <ul className="text-white font-medium">
+                <ul className="text-dark font-medium">
                   {/* <li className="mb-4">
                     <a href="" className="hover:underline">
                       Contact
@@ -140,7 +140,7 @@ function Footer() {
                 </ul>
               </div>
               <div>
-                {/* <ul className="text-white font-medium">
+                {/* <ul className="text-dark font-medium">
                   <li className="mb-4">
                     <a href="#" className="hover:underline">
                       About
@@ -159,10 +159,10 @@ function Footer() {
                 </ul> */}
               </div>
               <div>
-                {/* <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
+                {/* <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-dark">
               Download
             </h2> */}
-                <ul className="text-white font-medium">
+                <ul className="text-body font-medium">
                   <li className="mb-4">
                     <a href="/howtohelp" className="hover:underline">
                       How to help
@@ -186,7 +186,7 @@ function Footer() {
         <hr className=" bg-gray-800 mx-4" />
         <div className="px-4 pt-6 pb-12 sm:py-6 bg-nav md:flex md:items-center md:justify-between">
           <span className="text-sm text-gray-300 sm:text-center"></span>
-          <div className=" float-right text-white space-x-5 ">
+          <div className=" float-right text-dark space-x-5 ">
             Terms & Policies
           </div>
         </div>

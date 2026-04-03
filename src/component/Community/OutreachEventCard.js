@@ -229,7 +229,7 @@ const handleLikeToggle = async (e) => {
             className="w-8 h-8 cursor-pointer rounded-full p-1 hover:bg-gray-200"
           />
           {justCopied && (
-            <div className="absolute -left-[150px] top-0 bg-gray-800 text-white text-sm rounded-md px-2 py-1 z-10">
+            <div className="absolute -left-[150px] top-0 bg-gray-800 text-dark text-sm rounded-md px-2 py-1 z-10">
               {"Copied To Clipboard!"}
             </div>
           )}
@@ -248,7 +248,7 @@ const handleLikeToggle = async (e) => {
             }`}
           />
           {isHovered && (
-            <div className="absolute -left-[150px] top-0 bg-gray-800 text-white text-sm rounded-md px-2 py-1 z-10">
+            <div className="absolute -left-[150px] top-0 bg-gray-800 text-dark text-sm rounded-md px-2 py-1 z-10">
               {!isFlagged ? "Flag the Outreach Event?" : "Unflag the Outreach Event?"}
             </div>
           )}

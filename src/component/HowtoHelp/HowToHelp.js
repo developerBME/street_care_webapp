@@ -422,7 +422,7 @@ function HowToHelp() {
               <div className="w-fit text-neutral-800 text-[57px] font-medium font-bricolage leading-[64px]">
                 Make a Difference,
                 <br />
-                <span className="text-[#6840E0]">
+                <span className="text-[#7f6000]">
                   Your Support Transforms Lives
                 </span>
               </div>
@@ -477,7 +477,7 @@ function HowToHelp() {
                       key={step}
                       className={`border-x border-y w-full cursor-pointer px-4 py-6 space-y-8 ${
                         selectedStep === step
-                          ? "bg-[#CEBFFC] border-[#6840E0] border-1 rounded-b-lg"
+                          ? "bg-[#FFF3B0] border-[#fbed4f] border-1 rounded-b-lg"
                           : ""
                       }`}
                       style={{
@@ -508,7 +508,7 @@ function HowToHelp() {
                         key={step}
                         className={`border-x border-y w-full cursor-pointer px-4 py-6 space-y-8 ${
                           selectedStep === step
-                            ? "bg-[#CEBFFC] border-[#6840E0] border-1 rounded-b-lg"
+                            ? "bg-[#FFF3B0] border-[#fbed4f] border-1 rounded-b-lg"
                             : ""
                         }`}
                         style={{

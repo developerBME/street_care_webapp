@@ -7,7 +7,7 @@ const IconTextButton = ({ title, iconName: Icon, primaryText, secondaryText, lin
 
       <button
         onClick={() => window.open(link)}
-        className="flex items-center gap-3 w-full rounded-md px-2 py-1 border border-black bg-nav text-white rounded-xl px-6 py-4 shadow-sm hover:shadow-md hover:bg-[#504279] transition"
+        className="flex items-center gap-3 w-full rounded-md px-2 py-1 border border-black bg-nav text-dark rounded-xl px-6 py-4 shadow-sm hover:shadow-md hover:bg-[#fff176] transition"
       >
         {Icon && <Icon className="w-12 h-12" />}
 

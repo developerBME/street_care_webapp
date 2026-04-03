@@ -50,7 +50,7 @@ const SearchHeader = ({ searchChange, searchRef, filterNames, isMobile }) => {
   return (
     <div className="flex items-center justify-between flex-col md:flex-row">
       <div className="flex items-center text-[28px] md:text-4xl font-bricolage font-medium w-full">
-        <CiGlobe className="text-[#6840E0] w-10 h-10 stroke-1" />
+        <CiGlobe className="text-[#fbed4f] w-10 h-10 stroke-1" />
         <p className="mx-2.5 leading-7">Outreach Events</p>
       </div>
       <div className="flex items-center justify-between w-full">
@@ -324,7 +324,7 @@ const OutreachEvents = (props) => {
                         <CustomButton
                           label={"View"}
                           name="buttonsmallborder"
-                          textColor="#6840E0"
+                          textColor="#fbed4f"
                         />
                       </td>
                     </tr>

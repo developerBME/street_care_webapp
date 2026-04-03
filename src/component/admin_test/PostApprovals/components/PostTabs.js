@@ -5,7 +5,7 @@ export default function PostTabs({ tabs, activeTab, onTabChange }) {
     "inline-flex w-max items-start rounded-2xl bg-[#EEEEEE] h-12";
   const tabBaseClass =
     "flex items-center justify-center h-12 px-4 min-w-36 rounded-2xl font-medium shrink-0 whitespace-nowrap";
-  const tabActiveClass = "bg-[#6840E0] text-white";
+  const tabActiveClass = "bg-[#fbed4f] text-dark";
   const tabInactiveClass = "bg-transparent text-black";
 
   return (
@@ -32,7 +32,7 @@ export default function PostTabs({ tabs, activeTab, onTabChange }) {
           </div>
         </div>
 
-        <h3 className="hidden sm:block ml-6 font-dm-sans text-base font-bold text-[#6840E0] whitespace-normal break-normal">
+        <h3 className="hidden sm:block ml-6 font-dm-sans text-base font-bold text-[#fbed4f] whitespace-normal break-normal">
           Select Items
         </h3>
       </div>

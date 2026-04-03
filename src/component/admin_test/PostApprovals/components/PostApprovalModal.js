@@ -92,7 +92,7 @@ export default function PostApprovalModal({
           <button
             type="button"
             onClick={onAccept}
-            className="h-10 w-24 rounded-full bg-green-600 text-white hover:bg-green-700"
+            className="h-10 w-24 rounded-full bg-green-600 text-dark hover:bg-green-700"
           >
             Accept
           </button>

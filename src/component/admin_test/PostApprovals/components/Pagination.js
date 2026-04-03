@@ -82,7 +82,7 @@ export default function Pagination({
             disabled={!isPageClickable(page)}
             className={`flex h-8 w-8 items-center justify-center rounded-full ${
               clampedCurrentPage === page
-                ? "bg-[#1F0A58] text-white"
+                ? "bg-[#1F0A58] text-dark"
                 : "border border-[#9B82CF] bg-white text-black"
             } disabled:opacity-50`}
           >

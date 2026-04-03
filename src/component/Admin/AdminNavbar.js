@@ -115,14 +115,14 @@ const AdminNavbar = (props) => {
 
   return (
      <div className="h-full w-fit font-dmsans">
-       <div className="z-30 w-full flex fixed justify-between items-center h-[80px] text-white  bg-[#1F0A58] px-4">
+       <div className="z-30 w-full flex fixed justify-between items-center h-[80px] text-dark  bg-[#1F0A58] px-4">
         <div onClick={() => navigate("/")} className="cursor-pointer flex-nowrap">
           <h1 className="text-[28px] ml-4 font-medium leading-9">Street Care</h1>
         </div>
         {props.loggedIn && (
           <NavLink
             to="/profile"
-            className="invisible aria-[current=page]:visible md:aria-[current=page]:hidden md:hidden mx-6 my-3 text-lg font-medium text-white hover:scale-105 hover:text-[#1FCFF0] duration-200"
+            className="invisible aria-[current=page]:visible md:aria-[current=page]:hidden md:hidden mx-6 my-3 text-lg font-medium text-dark hover:scale-105 hover:text-[#f3820b] duration-200"
             onClick={() => {
               fireBaseSignOut();
             }}
@@ -135,7 +135,7 @@ const AdminNavbar = (props) => {
           {links.map(({ id, link, label }) => (
             <li
               key={id}
-              className="mx-6 my-3 text-lg font-medium text-white hover:scale-105 hover:text-[#1FCFF0] duration-200"
+              className="mx-6 my-3 text-lg font-medium text-dark hover:scale-105 hover:text-[#f3820b] duration-200"
             >
               <Link to={link}>{label}</Link>
             </li>
@@ -149,7 +149,7 @@ const AdminNavbar = (props) => {
           </div>
           {!props.loggedIn && (
             <li
-              className="mx-6 my-3 text-lg font-medium cursor-pointer text-white hover:scale-105 hover:text-[#1FCFF0] duration-200"
+              className="mx-6 my-3 text-lg font-medium cursor-pointer text-dark hover:scale-105 hover:text-[#f3820b] duration-200"
               onClick={() => navigate("/login")}
             >
               Login
@@ -204,12 +204,12 @@ const AdminNavbar = (props) => {
       </div>
       <div>
         {nav && (
-          <div className="flex flex-col fixed z-40 justify-center items-center w-full h-screen bg-purple-800 text-white">
+          <div className="flex flex-col fixed z-40 justify-center items-center w-full h-screen bg-purple-800 text-dark">
             <ul>
               {sideNavLinks.map(({ id, link }) => (
                 <li
                   key={id}
-                  className="px-4 cursor-pointer capitalize text-lg font-medium py-6 text-center text-white hover:scale-105 duration-200"
+                  className="px-4 cursor-pointer capitalize text-lg font-medium py-6 text-center text-dark hover:scale-105 duration-200"
                 >
                   <Link onClick={() => setNav(!nav)} to={link}>
                     {link}

@@ -313,7 +313,7 @@ const DeleteAccount = (props) => {
                   <Link
                     underline="hover"
                     to="../ProfileSettings"
-                    className="text-[#6840E0]"
+                    className="text-[#fbed4f]"
                   >
                     Account Settings
                   </Link>

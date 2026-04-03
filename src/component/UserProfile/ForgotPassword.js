@@ -72,7 +72,7 @@ const ForgotPassword = () => {
                             }}>
                             <div className="w-6 h-6 relative origin-top-left" >
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 20L13.41 18.59L7.83 13H20V11H7.83L13.41 5.41L12 4L4 12L12 20Z" fill="#6840E0"/>
+                                <path d="M12 20L13.41 18.59L7.83 13H20V11H7.83L13.41 5.41L12 4L4 12L12 20Z" fill="#fbed4f"/>
                                 </svg>
                             </div>
                             <div className="text-violet-600 text-base font-bold font-['DM Sans'] leading-normal">Back to login</div>

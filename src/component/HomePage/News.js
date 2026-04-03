@@ -7,7 +7,7 @@ const News = ({ NewsCardData }) => {
   return (
     <article
       key="123"
-      className="flex max-w-2xl flex-col items-start justify-normal border-t-4 border-[#6840E0] bg-white h-full "
+      className="flex max-w-2xl flex-col items-start justify-normal border-t-4 border-[#fbed4f] bg-white h-full "
     >
       <div className="">
         <h1 className="text-[#1f1e1e] text-xl pt-4 pb-2 px-6 font-bricolage font-medium">

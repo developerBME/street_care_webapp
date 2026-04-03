@@ -28,7 +28,7 @@ export default function SelectionActionsBar({
             <button
               type="button"
               onClick={onApprove}
-              className="rounded-full bg-green-600 px-4 py-2 text-white hover:bg-green-700"
+              className="rounded-full bg-green-600 px-4 py-2 text-dark hover:bg-green-700"
             >
               Approve Selected
             </button>
@@ -44,7 +44,7 @@ export default function SelectionActionsBar({
             <button
               type="button"
               onClick={onCancel}
-              className="rounded-full bg-gray-400 px-4 py-2 text-white hover:bg-gray-500"
+              className="rounded-full bg-gray-400 px-4 py-2 text-dark hover:bg-gray-500"
             >
               Cancel
             </button>

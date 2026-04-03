@@ -131,7 +131,7 @@ const OutreachSignupModal = ({ data, closeModal, onSignUp, onEventWithdraw}) => 
             </div>
 
             <div className="justify-start items-start gap-[15px] inline-flex">
-              <div className="h-10 bg-[#6840E0] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex">
+              <div className="h-10 bg-[#fbed4f] rounded-[100px] flex-col justify-center items-center gap-2 inline-flex">
                 {data.label === "EDIT" ? (
                   <>
                     <CustomButton

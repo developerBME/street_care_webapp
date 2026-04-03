@@ -114,7 +114,7 @@ const NavBar = (props) => {
 
   return (
     <div className="h-full w-fit ">
-      <div className="z-30 w-full flex fixed justify-between items-center h-[80px] text-white  bg-nav px-4">
+      <div className="z-30 w-full flex fixed justify-between items-center h-[80px] text-dark  bg-nav px-4">
         <div
           onClick={() => navigate("/")}
           className=" cursor-pointer flex-nowrap"
@@ -127,7 +127,7 @@ const NavBar = (props) => {
           <NavLink
             to="/profile"
             className="invisible aria-[current=page]:visible md:aria-[current=page]:hidden md:hidden mx-6 my-3 text-lg  font-inter font-medium
-             text-white hover:scale-105 hover:text-[#1FCFF0] duration-200 "
+             text-dark hover:scale-105 hover:text-[#f3820b] duration-200 "
             onClick={() => {
               fireBaseSignOut();
             }}
@@ -141,7 +141,7 @@ const NavBar = (props) => {
           {links.map(({ id, link, label }) => (
             <li
               key={id}
-              className=" mx-6 my-3 text-lg  font-inter font-medium text-white hover:scale-105 hover:text-[#1FCFF0] duration-200"
+              className=" mx-6 my-3 text-lg  font-inter font-medium text-dark hover:scale-105 hover:text-[#f3820b] duration-200"
             >
               <Link to={link}>{label}</Link>
             </li>
@@ -153,7 +153,7 @@ const NavBar = (props) => {
           </li> */}
           {!props.loggedIn && (
             <li
-              className=" mx-6 my-3 text-lg font-inter font-medium cursor-pointer text-white hover:scale-105 hover:text-[#1FCFF0] duration-200"
+              className=" mx-6 my-3 text-lg font-inter font-medium cursor-pointer text-dark hover:scale-105 hover:text-[#f3820b] duration-200"
               onClick={() => navigate("/login")}
             >
               Login
@@ -224,13 +224,13 @@ const NavBar = (props) => {
           {nav ? <FaTimes size={30} /> : <FaBars size={30} />}
         </div> */}
         {nav && (
-          <div className="flex flex-col  fixed z-40 justify-center items-center w-full h-screen bg-nav text-white">
+          <div className="flex flex-col  fixed z-40 justify-center items-center w-full h-screen bg-nav text-dark">
             <ul className="">
               {sideNavLinks.map(({ id, link }) => (
                 <li
                   key={id}
                   className="px-4 cursor-pointer capitalize text-lg font-inter font-medium py-6 text-center
-        text-white hover:scale-105 duration-200"
+        text-dark hover:scale-105 duration-200"
                 >
                   <Link onClick={() => setNav(!nav)} to={link}>
                     {link}
@@ -289,7 +289,7 @@ const NavBar = (props) => {
           <div className="grow shrink basis-0 pt-3 pb-4 flex-col justify-center items-center gap-1 inline-flex">
             <NavLink
               to="/profile"
-              className="aria-[current=page]:bg-purple-200 w-16 h-8 rounded-2xl justify-center py-1 px-5 items-center inline-flex"
+              className="aria-[current=page]:bg-orange-200 w-16 h-8 rounded-2xl justify-center py-1 px-5 items-center inline-flex"
             >
               <RiAccountCircleFill className="w-6 h-6  text-[#1F0A58]" />
             </NavLink>
