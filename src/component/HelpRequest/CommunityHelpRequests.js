@@ -12,16 +12,23 @@ const CommunityHelpRequests = () => {
   const [helpRequestsCount, setHelpRequestsCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+  const [filterData] = useState(() => ({
+    searchValue: "",
+    location: "",
+    startDate: new Date("2024-01-02"),
+    endDate: new Date(),
+    isDateFilter: false,
+  }));
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const helpRequestsData = await fetchPublicHelpRequests(
-          "",
-          "",
-          new Date("2024-01-02"),
-          new Date(),
-          false,
+          filterData.searchValue,
+          filterData.location,
+          filterData.startDate,
+          filterData.endDate,
+          filterData.isDateFilter,
           null,
           6,
           "next",
@@ -38,7 +45,7 @@ const CommunityHelpRequests = () => {
     };
 
     fetchData();
-  }, []);
+  }, [filterData]);
 
   return (
     <div>

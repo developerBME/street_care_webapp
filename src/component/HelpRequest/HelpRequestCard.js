@@ -104,7 +104,7 @@ const HelpRequestCard = ({ helpRequest }) => {
   return (
     <>
       <div
-        className="cursor-pointer transition-transform duration-150 hover:-translate-y-1"
+        className="cursor-pointer"
         role="button"
         tabIndex={0}
         onClick={handleOpenModal}
