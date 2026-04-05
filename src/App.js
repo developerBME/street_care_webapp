@@ -116,7 +116,7 @@ function App() {
             photoUrl={photoUrl}
             setLoggedIn={setLoggedIn}
           />
-          // Suspense Tag use to wrap around the Routes that contain lazy-loaded components, providing a fallback UI while they load
+          {/* Suspense Tag use to wrap around the Lazy Loaded Routes */}
           <Suspense fallback={<div>Loading...</div>}>
             <Routes>
               <Route path="/" element={<Home />} />
