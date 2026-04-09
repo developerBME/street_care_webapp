@@ -209,7 +209,7 @@ fetchFlagStatus();
             }`}
           />
           <div
-            className="pointer-events-none absolute right-0 top-full mt-1 z-10 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-30 whitespace-normal"
+            className="pointer-events-none absolute right-0 top-full mt-1 z-10 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-[30ms] whitespace-normal"
             style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
           >
             {!isFlagged
