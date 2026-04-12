@@ -201,6 +201,32 @@ const VisitLogExpandedView = ({ postData }) => {
       </div>
 
       {[
+        {
+          label: "Last Modified Timestamp",
+          value: postData?.lastModifiedTimestamp?.seconds
+            ? new Date(
+                postData.lastModifiedTimestamp.seconds * 1000,
+              ).toLocaleString("en-US", {
+                month: "2-digit",
+                day: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+            : "N/A",
+        },
+        {
+          label: "Interaction Date",
+          value: postData?.interactionDate?.seconds
+            ? new Date(
+                postData.interactionDate.seconds * 1000,
+              ).toLocaleDateString("en-US", {
+                month: "2-digit",
+                day: "2-digit",
+                year: "numeric",
+              })
+            : "N/A",
+        },
         { label: "People Joined", value: postData?.numPeopleJoined },
         {
           label: "Help Request Count",
