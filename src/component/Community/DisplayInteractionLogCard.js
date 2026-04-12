@@ -217,9 +217,11 @@ fetchFlagStatus();
         <div className="flex items-center">
           <img className="w-4 h-4" src={dateIcon} alt="Date" />
           <span className="ml-2 text-sm">
-            {interactionLogCardData?.startTimestamp
-              ? formatTimeStampDate(interactionLogCardData.startTimestamp)
-              : "N/A"}
+            {interactionLogCardData?.interactionDate
+              ? formatTimeStampDate(interactionLogCardData.interactionDate)
+              : interactionLogCardData?.startTimestamp
+                ? formatTimeStampDate(interactionLogCardData.startTimestamp)
+                : "N/A"}
           </span>
         </div>
 
@@ -253,22 +255,16 @@ fetchFlagStatus();
 };
 
 export const ExpandedInteractionLogCard = ({ postData }) => {
-  // Format date from Firebase Timestamp — prefer timeStamp, fallback to lastModifiedTimestamp
-  const formattedDate = postData?.timeStamp?.seconds
-    ? new Date(postData.timeStamp.seconds * 1000).toLocaleDateString("en-US", {
+  // Format date: prefer interactionDate, fallback to startTimestamp, then N/A
+  const dateTimestamp =
+    postData?.interactionDate || postData?.startTimestamp || null;
+  const formattedDate = dateTimestamp?.seconds
+    ? new Date(dateTimestamp.seconds * 1000).toLocaleDateString("en-US", {
         month: "2-digit",
         day: "2-digit",
         year: "numeric",
       })
-    : postData?.lastModifiedTimestamp?.seconds
-      ? new Date(
-          postData.lastModifiedTimestamp.seconds * 1000,
-        ).toLocaleDateString("en-US", {
-          month: "2-digit",
-          day: "2-digit",
-          year: "numeric",
-        })
-      : "Unknown Date";
+    : "N/A";
 
   let userBadge = null;
   switch (postData.userType) {
@@ -404,6 +400,20 @@ export const ExpandedInteractionLogCard = ({ postData }) => {
       </div>
 
       {[
+        {
+          label: "Last Modified Timestamp",
+          value: postData?.lastModifiedTimestamp?.seconds
+            ? new Date(
+                postData.lastModifiedTimestamp.seconds * 1000,
+              ).toLocaleString("en-US", {
+                month: "2-digit",
+                day: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+            : "N/A",
+        },
         { label: "People Joined", value: postData?.numPeopleJoined },
         {
           label: "Help Request Count",
