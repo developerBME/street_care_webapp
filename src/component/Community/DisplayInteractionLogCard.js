@@ -25,7 +25,7 @@ import { formatTimeStampDate } from "../../utils/helperFns.js";
 
 import collectionMapping from "../../utils/firestoreCollections.js";
 
-const visitLogs_collection = collectionMapping.visitLogs;
+const InteractionLog_collection = collectionMapping.interactionLog;
 const users_collection = collectionMapping.users; // User collection
 
 const DisplayInteractionLogCard = ({
@@ -36,22 +36,29 @@ const DisplayInteractionLogCard = ({
 
   // Fetch flag info when component mounts
   const [isFlagged, setIsFlagged] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // Change this back to true
+  const [isLoading, setIsLoading] = useState(true); // Change this back to true
+  const [isFlagLoading, setIsFlagLoading] = useState(false);//Manage Flag button loading state to prevent multiple rapid clicks
 
   const currentUserType = interactionLogCardData?.userType;
   const { user } = useUserContext();
   //UnComment the below when ready to plug the flag interaction functionality.
   {
-    /* 
-    Need to Plug the fetchFlagStatus again after the field is added.
+    
+   // Need to Plug the fetchFlagStatus again after the field is added.
     useEffect(() => {
         const fetchFlagStatus = async () => {
             try {
                 if (interactionLogCardData?.id) {
-                    const docRef = doc(db, visitLogs_collection, interactionLogCardData.id);
+                    const docRef = doc(db, InteractionLog_collection, interactionLogCardData.id);
                     const docSnap = await getDoc(docRef);
                     if (docSnap.exists()) {
-            setIsFlagged(docSnap.data().isFlagged || false);
+                       const data = docSnap.data();
+                      if (data.isFlagged === undefined) {
+                      await updateDoc(docRef, { isFlagged: false, flaggedByUser: null });
+                      setIsFlagged(false);
+           } else{
+                      setIsFlagged(data.isFlagged);
+                    }
           }
         }
     } catch (error) {
@@ -63,7 +70,7 @@ const DisplayInteractionLogCard = ({
 
 fetchFlagStatus();
 }, [interactionLogCardData?.id]);
-*/
+
   }
   //TODO: Add popup functionality for viewing additional details.
 
@@ -93,11 +100,14 @@ fetchFlagStatus();
 
   const handleFlag = async (e) => {
     e.stopPropagation(); // Prevent triggering parent click events
+    if(isFlagLoading)  return; // Prevent multiple rapid clicks
+
     if (!user) {
       alert("Please log in to flag or unflag the interaction log.");
       console.error("User is not logged in.");
       return;
     }
+    setIsFlagLoading(true);
     try {
       if (!interactionLogCardData?.id) {
         console.error("Invalid interactionLogCardData.id");
@@ -113,14 +123,14 @@ fetchFlagStatus();
       }
 
       const { Type: userType } = userDoc.data();
-      const docRef = doc(db, visitLogs_collection, interactionLogCardData?.id);
+      const docRef = doc(db, InteractionLog_collection, interactionLogCardData?.id);
       const docSnap = await getDoc(docRef);
 
       if (!docSnap.exists()) {
         console.error("Document does not exist:", user.uid);
         return;
       }
-      console.log("user:", userType);
+     // console.log("user:", userType);
       const { isFlagged: currentStatus, flaggedByUser } = docSnap.data();
       const canUnflag =
         flaggedByUser === user.uid || userType === "Street Care Hub Leader";
@@ -150,7 +160,9 @@ fetchFlagStatus();
       }
     } catch (error) {
       console.error("Error toggling flag status:", error);
-    }
+    } finally {
+    setIsFlagLoading(false); // always re-enables after done or error
+  }
   };
 
   if (isLoading) {
@@ -185,7 +197,8 @@ fetchFlagStatus();
           src={flagIcon}
           alt="flag"
           className={`absolute right-4 w-8 h-8 cursor-pointer rounded-full p-1 ${
-            isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
+    isFlagLoading ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+  } ${ isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
           }`}
         />
         <div
