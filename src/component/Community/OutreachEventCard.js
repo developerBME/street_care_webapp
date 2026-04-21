@@ -50,6 +50,8 @@ const OutreachEventCard = ({
 
   const [justCopied, setJustCopied] = useState(false);
 
+  const [isFlagLoading, setIsFlagLoading] = useState(false);
+
   // State for hover
   const [isHovered, setIsHovered] = useState(false);
 
@@ -85,12 +87,14 @@ const OutreachEventCard = ({
 
   const handleFlag = async (e) => {
     e.stopPropagation(); // Prevent triggering parent click events
+     if(isFlagLoading)    return; // Prevent multiple rapid clicks
+    
     if (!user) {
       alert("Please log in to flag or unflag the Outreach Events.");
       console.error("User is not logged in.");
       return;
     }
-
+     setIsFlagLoading(true);
     try {
       if (!id) {
         console.error("Invalid cardData.id:", id);
@@ -136,7 +140,9 @@ const OutreachEventCard = ({
       }
     } catch (error) {
       console.error("Error toggling document flag status:", error);
-    }
+    } finally {
+    setIsFlagLoading(false);
+  }
   };
 
   const detailOutreach = () => {
@@ -244,7 +250,8 @@ const handleLikeToggle = async (e) => {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             className={`w-8 h-8 cursor-pointer rounded-full p-1 ${
-              isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
+              isFlagLoading ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+             } ${isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
             }`}
           />
           {isHovered && (

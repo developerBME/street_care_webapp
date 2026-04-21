@@ -197,8 +197,8 @@ fetchFlagStatus();
           src={flagIcon}
           alt="flag"
           className={`absolute right-4 w-8 h-8 cursor-pointer rounded-full p-1 ${
-    isFlagLoading ? "cursor-not-allowed opacity-50" : "cursor-pointer"
-  } ${ isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
+          isFlagLoading ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+            } ${ isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
           }`}
         />
         <div
