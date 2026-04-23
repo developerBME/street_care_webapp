@@ -37,41 +37,38 @@ const DisplayInteractionLogCard = ({
   // Fetch flag info when component mounts
   const [isFlagged, setIsFlagged] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // Change this back to true
-  const [isFlagLoading, setIsFlagLoading] = useState(false);//Manage Flag button loading state to prevent multiple rapid clicks
+  const [isFlagLoading, setIsFlagLoading] = useState(false); //Manage Flag button loading state to prevent multiple rapid clicks
 
   const currentUserType = interactionLogCardData?.userType;
   const { user } = useUserContext();
-  //UnComment the below when ready to plug the flag interaction functionality.
-  {
-    
-   // Need to Plug the fetchFlagStatus again after the field is added.
-    useEffect(() => {
-        const fetchFlagStatus = async () => {
-            try {
-                if (interactionLogCardData?.id) {
-                    const docRef = doc(db, InteractionLog_collection, interactionLogCardData.id);
-                    const docSnap = await getDoc(docRef);
-                    if (docSnap.exists()) {
-                       const data = docSnap.data();
-                      if (data.isFlagged === undefined) {
-                      await updateDoc(docRef, { isFlagged: false, flaggedByUser: null });
-                      setIsFlagged(false);
-           } else{
-                      setIsFlagged(data.isFlagged);
-                    }
+
+  // Need to Plug the fetchFlagStatus again after the field is added.
+  useEffect(() => {
+    const fetchFlagStatus = async () => {
+      try {
+        if (interactionLogCardData?.id) {
+          const docRef = doc(db, InteractionLog_collection, interactionLogCardData.id);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            if (data.isFlagged === undefined) {
+              await updateDoc(docRef, { isFlagged: false, flaggedByUser: null });
+              setIsFlagged(false);
+            } else {
+              setIsFlagged(data.isFlagged);
+            }
           }
         }
-    } catch (error) {
+      } catch (error) {
         console.error("Error fetching flag status:", error);
-    } finally {
+      } finally {
         setIsLoading(false);
-    }
-};
+      }
+    };
 
-fetchFlagStatus();
-}, [interactionLogCardData?.id]);
+    fetchFlagStatus();
+  }, [interactionLogCardData?.id]);
 
-  }
   //TODO: Add popup functionality for viewing additional details.
 
   const handleViewDetails = () => {
@@ -100,7 +97,7 @@ fetchFlagStatus();
 
   const handleFlag = async (e) => {
     e.stopPropagation(); // Prevent triggering parent click events
-    if(isFlagLoading)  return; // Prevent multiple rapid clicks
+    if (isFlagLoading) return; // Prevent multiple rapid clicks
 
     if (!user) {
       alert("Please log in to flag or unflag the interaction log.");
@@ -130,7 +127,7 @@ fetchFlagStatus();
         console.error("Document does not exist:", user.uid);
         return;
       }
-     // console.log("user:", userType);
+      // console.log("user:", userType);
       const { isFlagged: currentStatus, flaggedByUser } = docSnap.data();
       const canUnflag =
         flaggedByUser === user.uid || userType === "Street Care Hub Leader";
@@ -161,8 +158,8 @@ fetchFlagStatus();
     } catch (error) {
       console.error("Error toggling flag status:", error);
     } finally {
-    setIsFlagLoading(false); // always re-enables after done or error
-  }
+      setIsFlagLoading(false); // always re-enables after done or error
+    }
   };
 
   if (isLoading) {
@@ -197,9 +194,8 @@ fetchFlagStatus();
           src={flagIcon}
           alt="flag"
           className={`absolute right-4 w-8 h-8 cursor-pointer rounded-full p-1 ${
-          isFlagLoading ? "cursor-not-allowed opacity-50" : "cursor-pointer"
-            } ${ isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
-          }`}
+            isFlagLoading ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+          } ${isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"}`}
         />
         <div
           className="absolute right-16 top-0 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-30 whitespace-normal"

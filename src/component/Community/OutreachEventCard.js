@@ -87,14 +87,14 @@ const OutreachEventCard = ({
 
   const handleFlag = async (e) => {
     e.stopPropagation(); // Prevent triggering parent click events
-     if(isFlagLoading)    return; // Prevent multiple rapid clicks
+    if(isFlagLoading)  return; // Prevent multiple rapid clicks
     
     if (!user) {
       alert("Please log in to flag or unflag the Outreach Events.");
       console.error("User is not logged in.");
       return;
     }
-     setIsFlagLoading(true);
+    setIsFlagLoading(true);
     try {
       if (!id) {
         console.error("Invalid cardData.id:", id);
@@ -142,7 +142,7 @@ const OutreachEventCard = ({
       console.error("Error toggling document flag status:", error);
     } finally {
     setIsFlagLoading(false);
-  }
+    }
   };
 
   const detailOutreach = () => {
