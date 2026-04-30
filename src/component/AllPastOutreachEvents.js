@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import OutreachEventCard from "./Community/OutreachEventCard";
+import PastOutreachEventModal from "./Community/PastOutreachEventModal";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -125,6 +126,8 @@ const AllPastOutreachEvents = () => {
       ? { ...cloneCursorFields(cachedState.cursorFields), direction: "current" }
       : createDefaultCursorFields(),
   );
+
+  const [selectedEventId, setSelectedEventId] = useState(null);
 
   const navigate = useNavigate();
   const directionResetTimeoutRef = useRef(null);
@@ -524,6 +527,12 @@ const AllPastOutreachEvents = () => {
 
   return (
     <div className="relative flex flex-col items-center ">
+      {selectedEventId && (
+        <PastOutreachEventModal
+          eventId={selectedEventId}
+          onClose={() => setSelectedEventId(null)}
+        />
+      )}
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-16 lg:mx-40 mt-48 rounded-2xl bg-white text-black">
         <div
           className="absolute flex mt-[-50px] items-center cursor-pointer"
@@ -634,6 +643,7 @@ const AllPastOutreachEvents = () => {
                     isPastEvent={true}
                     key={eventData.id}
                     cardData={eventData}
+                    onCardClick={(id) => setSelectedEventId(id)}
                   />
                 ))
               ) : (

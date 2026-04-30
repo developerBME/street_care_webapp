@@ -27,7 +27,8 @@ const OutreachEventCard = ({
   cardData,
   isProfilePage,
   isHelpRequestCard,
-  onUpdate, // NEW: parent refresh callback
+  onUpdate,
+  onCardClick,
 }) => {
   const { user } = useUserContext();
   const {
@@ -140,6 +141,10 @@ const OutreachEventCard = ({
   };
 
   const detailOutreach = () => {
+    if (typeof onCardClick === "function") {
+      onCardClick(id);
+      return;
+    }
     navigate(`/outreachsignup/${id}`, {
       state: { label: "EDIT", isProfilePage },
     });
