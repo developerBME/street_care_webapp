@@ -27,7 +27,8 @@ const OutreachEventCard = ({
   cardData,
   isProfilePage,
   isHelpRequestCard,
-  onUpdate, // NEW: parent refresh callback
+  onUpdate,
+  onClick,
 }) => {
   const { user } = useUserContext();
   const {
@@ -202,7 +203,7 @@ const handleLikeToggle = async (e) => {
         "min-w-full max-w-[320px] lg:w-full rounded-[30px] mb-4 flex flex-col justify-between cursor-pointer",
         { "bg-[#F5EEFE] p-6": !isHelpRequestCard }
       )}
-      onClick={detailOutreach}
+      onClick={onClick || detailOutreach}
     >
       <div className="relative flex justify-end space-x-2 absolute right-4 top-0">
         {/* Like Count */}

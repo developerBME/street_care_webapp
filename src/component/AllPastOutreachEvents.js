@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import OutreachEventCard from "./Community/OutreachEventCard";
+import { ExpandedOutreachEventCard } from "./Community/ExpandedOutreachEventCard";
 import DatePicker from "react-datepicker";
+import arrowBack from "../images/arrowBack.png";
 import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
@@ -125,6 +127,64 @@ const AllPastOutreachEvents = () => {
       ? { ...cloneCursorFields(cachedState.cursorFields), direction: "current" }
       : createDefaultCursorFields(),
   );
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [popUpModalData, setPopUpModalData] = useState({});
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handlePopUpModalData = (data) => {
+    setPopUpModalData(data);
+  };
+
+  const Modal = ({ post, onClose }) => {
+    const modalRef = useRef();
+
+    const handleClickOutside = (e) => {
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
+        onClose();
+      }
+    };
+
+    useEffect(() => {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
+
+    return (
+      <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-md">
+        <div
+          ref={modalRef}
+          className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-lg flex flex-col items-center"
+        >
+          <div className="flex items-center w-full mb-4">
+            <img
+              src={arrowBack}
+              alt="Back"
+              className="w-6 h-6 cursor-pointer"
+              onClick={onClose}
+            />
+            <button
+              onClick={onClose}
+              className="ml-2 text-sm text-gray-700 font-medium hover:underline"
+            >
+              Go Back
+            </button>
+          </div>
+
+          <ExpandedOutreachEventCard cardData={post} />
+        </div>
+      </div>
+    );
+  };
 
   const navigate = useNavigate();
   const directionResetTimeoutRef = useRef(null);
@@ -524,6 +584,9 @@ const AllPastOutreachEvents = () => {
 
   return (
     <div className="relative flex flex-col items-center ">
+      {isModalOpen && (
+        <Modal post={popUpModalData} onClose={handleCloseModal} />
+      )}
       <div className="w-[95%] md:w-[90%] lg:w-[80%] mx-2 mb-16 lg:mx-40 mt-48 rounded-2xl bg-white text-black">
         <div
           className="absolute flex mt-[-50px] items-center cursor-pointer"
@@ -634,6 +697,10 @@ const AllPastOutreachEvents = () => {
                     isPastEvent={true}
                     key={eventData.id}
                     cardData={eventData}
+                    onClick={() => {
+                      handleOpenModal();
+                      handlePopUpModalData(eventData);
+                    }}
                   />
                 ))
               ) : (
