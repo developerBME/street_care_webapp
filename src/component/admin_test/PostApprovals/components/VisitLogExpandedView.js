@@ -209,7 +209,7 @@ const VisitLogExpandedView = ({ postData }) => {
         { label: "People Helped", value: postData?.numPeopleHelped },
         { label: "Items Donated", value: postData?.numItemsDonated },
         {
-          label: "Care Packages Distributed",
+          label: "Care Items Distributed",
           value: postData?.carePackagesDistributed,
         },
         // {
