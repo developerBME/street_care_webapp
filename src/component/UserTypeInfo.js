@@ -52,7 +52,7 @@ const UserTypeInfo = () => {
   ];
 
   return (
-    <div className="flex items-center justify-start space-x-4 mt-4">
+    <div className="mt-4 grid grid-cols-1 gap-2 min-[420px]:grid-cols-2 lg:grid-cols-4">
       {userTypes.map((userType, index) => (
         <CustomTooltip
           title={userType.tooltip}
@@ -60,9 +60,13 @@ const UserTypeInfo = () => {
           key={index}
           arrow
         >
-          <div className="flex items-center space-x-2">
-            <img src={userType.src} alt={userType.alt} className="w-6 h-6" />
-            <span className="text-xs sm:text-sm font-medium text-gray-700">
+          <div className="flex min-w-0 items-center gap-2 rounded-md px-1 py-1">
+            <img
+              src={userType.src}
+              alt={userType.alt}
+              className="h-5 w-5 flex-shrink-0 sm:h-6 sm:w-6"
+            />
+            <span className="min-w-0 text-[11px] leading-tight text-gray-700 sm:text-sm font-medium">
               {userType.text}
             </span>
           </div>
