@@ -346,24 +346,23 @@ const AllOutreachVisitLog = () => {
           </p>
         </div>
         <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
-          <div className="lg:flex justify-between items-center mb-6">
+          <div className="flex flex-col xl:flex-row xl:items-center gap-4 mb-6 w-full">
             <div>
-              <p className="font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] lg:mt-2">
+              <p className="font-bricolage font-medium text-[34px] xl:text-[38px] text-[#1F0A58] whitespace-nowrap">
                 Interaction Logs
               </p>
             </div>
-            <div className="flex flex-wrap lg:flex-nowrap items-center gap-4 mt-6 lg:mt-0">
+            <div className="flex items-center gap-3 flex-wrap xl:flex-nowrap">
               {/* Search input */}
               <label className="relative text-gray-400 focus-within:text-gray-600 w-full sm:w-auto">
                 <input
                   type="text"
                   name="searchValue"
                   id="searchText"
-                  placeholder="Search..."
+                  placeholder="Search by Description"
                   ref={searchRef}
                   onChange={handleChange}
-                  className="form-input w-full sm:w-fit md:w-[20rem] lg:w-[18rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-10 rounded-2xl"
-                  style={{ borderRadius: "0px" }}
+                  className="form-input w-[210px] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-10 rounded-2xl"
                 />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -388,8 +387,7 @@ const AllOutreachVisitLog = () => {
                 <select
                   value={sortOption}
                   onChange={handleSortChange}
-                  className="form-select w-full sm:w-fit md:w-[8rem] py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block rounded-2xl"
-                  style={{ borderRadius: "0px" }}
+                  className="form-select w-[125px] py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block rounded-2xl"
                 >
                   <option value="">None</option>
                   <option value="city">City</option>
@@ -407,8 +405,7 @@ const AllOutreachVisitLog = () => {
                   ref={searchCity}
                   value={filterData.city}
                   onChange={handleChange}
-                  className="form-input w-full sm:w-fit md:w-[12rem] lg:w-[8rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-2 rounded-2xl"
-                  style={{ borderRadius: "0px" }}
+                  className="form-input w-[125px] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-2 rounded-2xl"
                 />
               )}
 
@@ -424,8 +421,9 @@ const AllOutreachVisitLog = () => {
                     value={filterData.startDate}
                     onChange={(date) => handleDateChange(date, "startDate")}
                     placeholderText="Select Start Date"
-                    className="form-input w-full sm:w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
+                    className="form-input w-[125px] py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block rounded-2xl"
                   />
+                  <p>To</p>
                   <DatePicker
                     selected={filterData.endDate}
                     selectsEnd
@@ -435,7 +433,7 @@ const AllOutreachVisitLog = () => {
                     value={filterData.endDate}
                     onChange={(date) => handleDateChange(date, "endDate")}
                     placeholderText="Select End Date"
-                    className="form-input w-full sm:w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
+                    className="form-input w-[125px] py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block rounded-2xl"
                   />
                 </>
               )}

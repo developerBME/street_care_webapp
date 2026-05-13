@@ -546,13 +546,13 @@ const AllOutreachEvents = ({ loggedIn }) => {
           </p>
         </div>
         <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
-          <div className="lg:flex gap-1 justify-between mb-12">
+          <div className="flex flex-col xl:flex-row xl:items-center gap-4 mb-6 w-full">
             <div>
-              <p className="font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] lg:mt-2">
+              <p className="font-bricolage font-medium text-[34px] xl:text-[36px] text-[#1F0A58] whitespace-nowrap">
                 Upcoming Outreach Events
               </p>
             </div>
-            <div className="flex items-center gap-4 mt-6 lg:mt-0">
+            <div className="flex items-center gap-2 flex-nowrap shrink w-full min-w-0">
               <label className="relative text-gray-400 focus-within:text-gray-600">
                 <input
                   type="text"
@@ -561,7 +561,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
                   placeholder="Search by Description"
                   value={searchDescription}
                   onChange={searchChange}
-                  className="form-input w-fit md:w-[16rem] lg:w-[16rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 block pl-10 rounded-2xl"
+                  className="form-input w-[170px] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 block pl-10 rounded-2xl"
                 />
 
                 <svg
@@ -586,8 +586,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
                 <select
                   value={filterOption}
                   onChange={handleFilterChange}
-                  className="form-select w-fit md:w-[8rem] py-2 px-2 border border-[#CACACA] text-gray-500 bg-white block rounded-2xl"
-                  style={{ borderRadius: "0px" }}
+                  className="form-select w-[110px] py-2 px-2 border border-[#CACACA] text-gray-500 bg-white block rounded-2xl"
                 >
                   <option value="">None</option>
                   <option value="datePeriod">Date Period</option>
@@ -603,11 +602,10 @@ const AllOutreachEvents = ({ loggedIn }) => {
                   value={cityToSearch}
                   onChange={searchCityChange}
                   className="form-input w-fit md:w-[12rem] lg:w-[8rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 block pl-2 rounded-2xl"
-                  style={{ borderRadius: "0px" }}
                 />
               )}
               {filterOption === "datePeriod" && (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-nowrap shrink-0">
                   <DatePicker
                     selected={startDate}
                     onChange={(date) => {
@@ -618,7 +616,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
                     startDate={startDate}
                     endDate={endDate}
                     placeholderText="Select Start Date"
-                    className="form-input w-fit md:w-[9rem] lg:w-[9rem] py-2 px-2 border border-[#CACACA] text-gray-500 block"
+                    className="form-input w-[110px] py-2 px-2 border border-[#CACACA] text-gray-500 block block rounded-2xl"
                   />
                   <p>To</p>
                   <DatePicker
@@ -631,7 +629,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
                     startDate={startDate}
                     endDate={endDate}
                     placeholderText="Select End Date"
-                    className="form-input w-fit md:w-[9rem] lg:w-[9rem] py-2 px-2 border border-[#CACACA] text-gray-500 block"
+                    className="form-input w-[110px] py-2 px-2 border border-[#CACACA] text-gray-500 block block rounded-2xl"
                   />
                 </div>
               )}
