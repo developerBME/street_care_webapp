@@ -1,17 +1,70 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useReducer,
+} from "react";
+
 import { getPage } from "../services/paginationService";
+
+/**
+ * =========================================================
+ * REDUCER
+ * =========================================================
+ */
+
+export const initialPageParams = {
+  filters: {},
+  searchText: "",
+  pgNo: 1,
+};
+
+export function paginationReducer(state, action) {
+  switch (action.type) {
+    case "SET_PAGE":
+      return {
+        ...state,
+        pgNo: action.payload,
+      };
+
+    case "SET_FILTERS":
+      return {
+        ...state,
+        filters: action.payload,
+        pgNo: 1,
+      };
+
+    case "SET_SEARCH":
+      return {
+        ...state,
+        searchText: action.payload,
+        pgNo: 1,
+      };
+
+    default:
+      return state;
+  }
+}
+
+/**
+ * =========================================================
+ * CUSTOM HOOK
+ * =========================================================
+ */
 
 export default function usePagination({
   collection,
   logsPerPage = 6,
-  filters = {},
+  prevFilters = {},
   sort = {
     field: "createdAt",
     direction: "desc",
   },
+
+  pageParams,
 }) {
   const [data, setData] = useState([]);
-  const [page, setPage] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -27,96 +80,104 @@ export default function usePagination({
   const checkpointsRef = useRef({});
 
   /**
-   * Optional page cache
+   * Save previous filters
    */
-  const cacheRef = useRef({});
-
-  const loadPage = useCallback(
-    async (targetPage) => {
-      try {
-        setIsLoading(true);
-        setError(null);
-
-        const cacheKey = JSON.stringify({
-          collection,
-          filters,
-          sort,
-        });
-
-        /**
-         * CACHE HIT
-         */
-        if (cacheRef.current?.[cacheKey]?.[targetPage]) {
-          setData(cacheRef.current[cacheKey][targetPage]);
-          setPage(targetPage);
-          setIsLoading(false);
-          return;
-        }
-
-        const result = await getPage({
-          collection,
-          targetPage,
-          logsPerPage,
-          filters,
-          sort,
-          checkpoints: checkpointsRef.current,
-        });
-
-        /**
-         * Save checkpoints
-         */
-        checkpointsRef.current[targetPage] = {
-          firstDoc: result.firstDoc,
-          lastDoc: result.lastDoc,
-        };
-
-        /**
-         * Save cache
-         */
-        if (!cacheRef.current[cacheKey]) {
-          cacheRef.current[cacheKey] = {};
-        }
-
-        cacheRef.current[cacheKey][targetPage] = result.data;
-
-        setData(result.data);
-        setPage(targetPage);
-        setTotalRecords(result.totalRecords || 0);
-      } catch (err) {
-        console.error(err);
-        setError(err);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [collection, logsPerPage, filters, sort]
-  );
+  const prevFiltersRef = useRef(prevFilters);
 
   /**
-   * Reset pagination when filters/sort changes
+   * OPTIONAL CACHE
+   * COMMENTED OUT FOR LATER TASK
+   */
+
+  // const cacheRef = useRef({});
+
+  const loadPage = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      /**
+       * CACHE LOGIC
+       * COMMENTED OUT FOR LATER TASK
+       */
+
+      // const cacheKey = JSON.stringify({
+      //   collection,
+      //   filters: pageParams.filters,
+      //   searchText: pageParams.searchText,
+      //   sort,
+      // });
+
+      // if (cacheRef.current?.[cacheKey]?.[pageParams.pgNo]) {
+      //   setData(cacheRef.current[cacheKey][pageParams.pgNo]);
+      //   setIsLoading(false);
+      //   return;
+      // }
+
+      const result = await getPage({
+        collection,
+        targetPage: pageParams.pgNo,
+        logsPerPage,
+
+        filters: {
+          ...pageParams.filters,
+          searchText: pageParams.searchText,
+        },
+
+        sort,
+        checkpoints: checkpointsRef.current,
+      });
+
+      /**
+       * Save checkpoints
+       */
+      checkpointsRef.current[pageParams.pgNo] = {
+        firstDoc: result.firstDoc,
+        lastDoc: result.lastDoc,
+      };
+
+      /**
+       * CACHE SAVE
+       * COMMENTED OUT FOR LATER TASK
+       */
+
+      // if (!cacheRef.current[cacheKey]) {
+      //   cacheRef.current[cacheKey] = {};
+      // }
+
+      // cacheRef.current[cacheKey][pageParams.pgNo] = result.data;
+
+      setData(result.data);
+      setTotalRecords(result.totalRecords || 0);
+    } catch (err) {
+      console.error(err);
+      setError(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [collection, logsPerPage, pageParams, sort]);
+
+  /**
+   * Reset checkpoints when filters change
    */
   useEffect(() => {
-    checkpointsRef.current = {};
-    cacheRef.current = {};
+    const filtersChanged =
+      JSON.stringify(prevFiltersRef.current) !==
+      JSON.stringify(pageParams.filters);
 
-    loadPage(1);
-  }, [loadPage]);
+    if (filtersChanged) {
+      checkpointsRef.current = {};
+
+      prevFiltersRef.current = pageParams.filters;
+    }
+
+    loadPage();
+  }, [loadPage, pageParams.filters]);
 
   return {
     data,
-    page,
     totalRecords,
     isLoading,
     error,
-
-    setPage: loadPage,
-
-    nextPage: () => loadPage(page + 1),
-
-    prevPage: () => {
-      if (page > 1) {
-        loadPage(page - 1);
-      }
-    },
   };
 }
