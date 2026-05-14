@@ -47,12 +47,19 @@ const DisplayInteractionLogCard = ({
     const fetchFlagStatus = async () => {
       try {
         if (interactionLogCardData?.id) {
-          const docRef = doc(db, InteractionLog_collection, interactionLogCardData.id);
+          const docRef = doc(
+            db,
+            InteractionLog_collection,
+            interactionLogCardData.id,
+          );
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
             const data = docSnap.data();
             if (data.isFlagged === undefined) {
-              await updateDoc(docRef, { isFlagged: false, flaggedByUser: null });
+              await updateDoc(docRef, {
+                isFlagged: false,
+                flaggedByUser: null,
+              });
               setIsFlagged(false);
             } else {
               setIsFlagged(data.isFlagged);
@@ -120,7 +127,11 @@ const DisplayInteractionLogCard = ({
       }
 
       const { Type: userType } = userDoc.data();
-      const docRef = doc(db, InteractionLog_collection, interactionLogCardData?.id);
+      const docRef = doc(
+        db,
+        InteractionLog_collection,
+        interactionLogCardData?.id,
+      );
       const docSnap = await getDoc(docRef);
 
       if (!docSnap.exists()) {
@@ -184,7 +195,7 @@ const DisplayInteractionLogCard = ({
 
   return (
     <div
-      className="bg-[#F5EEFE] w-[90%] max-w-[20rem]  md:w-full min-w-0 rounded-[30px] mb-4 flex flex-col p-6 h-auto cursor-pointer border-b-[1px] border-gray-200"
+      className="bg-[#F5EEFE] w-full min-w-0 max-w-full rounded-2xl mb-4 flex flex-col p-3 sm:p-5 md:p-6 h-auto cursor-pointer border-b-[1px] border-gray-200"
       onClick={openPopUpModal}
     >
       <div className="relative group">
@@ -222,32 +233,58 @@ const DisplayInteractionLogCard = ({
         <img alt="" src={verifiedImg} className="w-5 h-5" />
       </div>
 
-      <div className="flex justify-between items-center mt-2">
-        <div className="flex items-center">
-          <img className="w-4 h-4" src={dateIcon} alt="Date" />
-          <span className="ml-2 text-sm">
-            {interactionLogCardData?.startTimestamp
-              ? formatTimeStampDate(interactionLogCardData.startTimestamp)
-              : "N/A"}
+      <div className="grid grid-cols-2 gap-2 mt-2">
+        <div className="min-w-0 flex items-center">
+          <img className="w-4 h-4 flex-shrink-0" src={dateIcon} alt="Date" />
+          <span
+            className="ml-2 block min-w-0 truncate text-xs sm:text-sm"
+            title={
+              formatTimeStampDate(
+                interactionLogCardData?.interactionDate ||
+                  interactionLogCardData?.startTimestamp ||
+                  interactionLogCardData?.endTimestamp,
+              ) || "N/A"
+            }
+          >
+            {formatTimeStampDate(
+              interactionLogCardData?.interactionDate ||
+                interactionLogCardData?.startTimestamp ||
+                interactionLogCardData?.endTimestamp,
+            ) || "N/A"}
           </span>
         </div>
 
-        <div className="flex items-center">
-          <img className="w-3 h-4" src={locationIcon} alt="Location" />
-          <span className="ml-2 text-sm">{`${interactionLogCardData?.city || "N/A"}, ${interactionLogCardData?.state}`}</span>
+        <div className="min-w-0 flex items-center justify-end">
+          <img
+            className="w-3 h-4 flex-shrink-0"
+            src={locationIcon}
+            alt="Location"
+          />
+          <span
+            className="ml-2 block min-w-0 truncate text-right text-xs sm:text-sm"
+            title={`${interactionLogCardData?.city || "N/A"}, ${interactionLogCardData?.state || ""}`}
+          >
+            {`${interactionLogCardData?.city || "N/A"}, ${interactionLogCardData?.state || ""}`}
+          </span>
         </div>
       </div>
 
       <div className="flex justify-between items-center mt-4">
-        <div className="text-sm font-bold">People Helped</div>
-        <div className="text-xl font-bold">
+        <div className="min-w-0 pr-2 truncate text-xs sm:text-sm font-bold">
+          People Helped
+        </div>
+        <div className="text-lg sm:text-xl font-bold flex-shrink-0">
           {interactionLogCardData?.numPeopleHelped}
         </div>
       </div>
 
       <div className="flex justify-between items-center mt-2">
-        <div className="text-sm font-bold">Items Donated</div>
-        <div className="text-xl font-bold">{donatedItemsNum}</div>
+        <div className="min-w-0 pr-2 truncate text-xs sm:text-sm font-bold">
+          Items Donated
+        </div>
+        <div className="text-lg sm:text-xl font-bold flex-shrink-0">
+          {donatedItemsNum}
+        </div>
       </div>
 
       <div className="mt-3">
@@ -323,7 +360,7 @@ export const ExpandedInteractionLogCard = ({ postData }) => {
             className="w-8 h-8 rounded-full"
           />
           <span className="text-[18px] font-bold font-dmsans">
-            {postData?.firstName || "Anonymous User"} {postData?.lastName || ""}
+            {postData?.firstName || postData?.userName || "Anonymous User"}
           </span>
           <img src={userBadge} alt="Verified" className="w-5 h-5" />
         </div>
