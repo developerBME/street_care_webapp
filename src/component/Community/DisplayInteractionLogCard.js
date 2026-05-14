@@ -25,7 +25,7 @@ import { formatTimeStampDate } from "../../utils/helperFns.js";
 
 import collectionMapping from "../../utils/firestoreCollections.js";
 
-const visitLogs_collection = collectionMapping.visitLogs;
+const InteractionLog_collection = collectionMapping.interactionLog;
 const users_collection = collectionMapping.users; // User collection
 
 const DisplayInteractionLogCard = ({
@@ -36,35 +36,46 @@ const DisplayInteractionLogCard = ({
 
   // Fetch flag info when component mounts
   const [isFlagged, setIsFlagged] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // Change this back to true
+  const [isLoading, setIsLoading] = useState(true); // Change this back to true
+  const [isFlagLoading, setIsFlagLoading] = useState(false); //Manage Flag button loading state to prevent multiple rapid clicks
 
   const currentUserType = interactionLogCardData?.userType;
   const { user } = useUserContext();
-  //UnComment the below when ready to plug the flag interaction functionality.
-  {
-    /* 
-    Need to Plug the fetchFlagStatus again after the field is added.
-    useEffect(() => {
-        const fetchFlagStatus = async () => {
-            try {
-                if (interactionLogCardData?.id) {
-                    const docRef = doc(db, visitLogs_collection, interactionLogCardData.id);
-                    const docSnap = await getDoc(docRef);
-                    if (docSnap.exists()) {
-            setIsFlagged(docSnap.data().isFlagged || false);
+
+  // Need to Plug the fetchFlagStatus again after the field is added.
+  useEffect(() => {
+    const fetchFlagStatus = async () => {
+      try {
+        if (interactionLogCardData?.id) {
+          const docRef = doc(
+            db,
+            InteractionLog_collection,
+            interactionLogCardData.id,
+          );
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            if (data.isFlagged === undefined) {
+              await updateDoc(docRef, {
+                isFlagged: false,
+                flaggedByUser: null,
+              });
+              setIsFlagged(false);
+            } else {
+              setIsFlagged(data.isFlagged);
+            }
           }
         }
-    } catch (error) {
+      } catch (error) {
         console.error("Error fetching flag status:", error);
-    } finally {
+      } finally {
         setIsLoading(false);
-    }
-};
+      }
+    };
 
-fetchFlagStatus();
-}, [interactionLogCardData?.id]);
-*/
-  }
+    fetchFlagStatus();
+  }, [interactionLogCardData?.id]);
+
   //TODO: Add popup functionality for viewing additional details.
 
   const handleViewDetails = () => {
@@ -93,11 +104,14 @@ fetchFlagStatus();
 
   const handleFlag = async (e) => {
     e.stopPropagation(); // Prevent triggering parent click events
+    if (isFlagLoading) return; // Prevent multiple rapid clicks
+
     if (!user) {
       alert("Please log in to flag or unflag the interaction log.");
       console.error("User is not logged in.");
       return;
     }
+    setIsFlagLoading(true);
     try {
       if (!interactionLogCardData?.id) {
         console.error("Invalid interactionLogCardData.id");
@@ -113,14 +127,18 @@ fetchFlagStatus();
       }
 
       const { Type: userType } = userDoc.data();
-      const docRef = doc(db, visitLogs_collection, interactionLogCardData?.id);
+      const docRef = doc(
+        db,
+        InteractionLog_collection,
+        interactionLogCardData?.id,
+      );
       const docSnap = await getDoc(docRef);
 
       if (!docSnap.exists()) {
         console.error("Document does not exist:", user.uid);
         return;
       }
-      console.log("user:", userType);
+      // console.log("user:", userType);
       const { isFlagged: currentStatus, flaggedByUser } = docSnap.data();
       const canUnflag =
         flaggedByUser === user.uid || userType === "Street Care Hub Leader";
@@ -150,6 +168,8 @@ fetchFlagStatus();
       }
     } catch (error) {
       console.error("Error toggling flag status:", error);
+    } finally {
+      setIsFlagLoading(false); // always re-enables after done or error
     }
   };
 
@@ -178,45 +198,39 @@ fetchFlagStatus();
       className="bg-[#F5EEFE] w-full min-w-0 max-w-full rounded-2xl mb-4 flex flex-col p-3 sm:p-5 md:p-6 h-auto cursor-pointer border-b-[1px] border-gray-200"
       onClick={openPopUpModal}
     >
-      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 mb-1">
-        {/* User name block: fixed left half */}
-        <div className="inline-flex min-w-0 items-center space-x-2 pr-2">
-          <img
-            alt=""
-            src={interactionLogCardData?.photoUrl || defaultImage}
-            className="w-7 h-7 rounded-full flex-shrink-0 sm:w-8 sm:h-8"
-          />
-          <div className="min-w-0 truncate font-normal font-inter text-[12px] sm:text-[13px]">
-            {interactionLogCardData?.firstName ||
-              interactionLogCardData?.userName ||
-              "Anonymous User"}
-          </div>
-          <img
-            alt=""
-            src={verifiedImg}
-            className="w-4 h-4 flex-shrink-0 sm:w-5 sm:h-5"
-          />
+      <div className="relative group">
+        {/* Flag Button */}
+        <img
+          onClick={handleFlag}
+          src={flagIcon}
+          alt="flag"
+          className={`absolute right-4 w-8 h-8 cursor-pointer rounded-full p-1 ${
+            isFlagLoading ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+          } ${isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"}`}
+        />
+        <div
+          className="absolute right-16 top-0 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-30 whitespace-normal"
+          style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
+        >
+          {!isFlagged
+            ? "Flag the Interaction Log?"
+            : "Unflag the Interaction Log?"}
         </div>
+      </div>
 
-        {/* Flag block: fixed right half with divider to avoid visual collision */}
-        <div className="group relative min-w-0 flex items-center justify-end pl-1">
-          <img
-            onClick={handleFlag}
-            src={flagIcon}
-            alt="flag"
-            className={`w-7 h-7 cursor-pointer rounded-full p-1 sm:w-8 sm:h-8 ${
-              isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
-            }`}
-          />
-          <div
-            className="pointer-events-none absolute right-0 top-full mt-1 z-10 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-[30ms] whitespace-normal"
-            style={{ minWidth: "150px", maxWidth: "200px", textAlign: "center" }}
-          >
-            {!isFlagged
-              ? "Flag the Interaction Log?"
-              : "Unflag the Interaction Log?"}
-          </div>
+      {/* Rest of the Component */}
+      <div className="inline-flex items-center space-x-2">
+        <img
+          alt=""
+          src={interactionLogCardData?.photoUrl || defaultImage}
+          className="w-8 h-8 rounded-full"
+        />
+        <div className="font-normal font-inter text-[13px]">
+          {interactionLogCardData?.firstName ||
+            interactionLogCardData?.userName ||
+            "Anonymous User"}
         </div>
+        <img alt="" src={verifiedImg} className="w-5 h-5" />
       </div>
 
       <div className="grid grid-cols-2 gap-2 mt-2">
@@ -241,7 +255,11 @@ fetchFlagStatus();
         </div>
 
         <div className="min-w-0 flex items-center justify-end">
-          <img className="w-3 h-4 flex-shrink-0" src={locationIcon} alt="Location" />
+          <img
+            className="w-3 h-4 flex-shrink-0"
+            src={locationIcon}
+            alt="Location"
+          />
           <span
             className="ml-2 block min-w-0 truncate text-right text-xs sm:text-sm"
             title={`${interactionLogCardData?.city || "N/A"}, ${interactionLogCardData?.state || ""}`}
@@ -252,15 +270,21 @@ fetchFlagStatus();
       </div>
 
       <div className="flex justify-between items-center mt-4">
-        <div className="min-w-0 pr-2 truncate text-xs sm:text-sm font-bold">People Helped</div>
+        <div className="min-w-0 pr-2 truncate text-xs sm:text-sm font-bold">
+          People Helped
+        </div>
         <div className="text-lg sm:text-xl font-bold flex-shrink-0">
           {interactionLogCardData?.numPeopleHelped}
         </div>
       </div>
 
       <div className="flex justify-between items-center mt-2">
-        <div className="min-w-0 pr-2 truncate text-xs sm:text-sm font-bold">Items Donated</div>
-        <div className="text-lg sm:text-xl font-bold flex-shrink-0">{donatedItemsNum}</div>
+        <div className="min-w-0 pr-2 truncate text-xs sm:text-sm font-bold">
+          Items Donated
+        </div>
+        <div className="text-lg sm:text-xl font-bold flex-shrink-0">
+          {donatedItemsNum}
+        </div>
       </div>
 
       <div className="mt-3">
