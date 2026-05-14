@@ -14,18 +14,10 @@ import arrowBack from "../images/arrowBack.png";
 import DisplayInteractionLogCard, {
   ExpandedInteractionLogCard,
 } from "./Community/DisplayInteractionLogCard";
+import NoLogsFound from "./NologsFound";
 // import RenderPaginationBtns from "./HomePage/RenderPaginationBtns";
 // Refactor to use PageCheckpoints and think of a way to handle pages.
-const NoLogsFound = () => {
-  return (
-    <div className="col-span-3 w-full flex flex-col items-center justify-center min-h-[400px] py-16 gap-4">
-      <TbZoomCancel className="w-20 h-20 text-gray-300" />
-      <p className="text-black text-xl font-medium font-dmsans">
-        No Interaction Logs Found
-      </p>
-    </div>
-  );
-};
+
 const AllOutreachVisitLog = () => {
   const navigate = useNavigate();
   const [filteredVisitLogs, setFilteredVisitLogs] = useState([]);
@@ -482,7 +474,7 @@ const AllOutreachVisitLog = () => {
                   // <p className="col-span-3 text-center text-gray-500">
                   //   No logs found.
                   // </p>
-                  <NoLogsFound />
+                  <NoLogsFound message="No Interaction Logs Found" icon={TbZoomCancel} />
                 )}
               </div>
 
