@@ -99,7 +99,6 @@ function App() {
           console.log(err);
         }
       } else {
-        console.log("user not logged in");
         setLoggedIn(false);
         setFirebaseUser(null);
         setPhotoUrl("");
