@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import OutreachVisitLogCard from "./Community/OutreachVisitLogCard";
 import { useNavigate } from "react-router-dom";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { IoIosArrowBack, IoIosArrowForward} from "react-icons/io";
+import { TbZoomCancel } from "react-icons/tb";
 import { fetchPublicVisitLogs } from "./VisitLogCardService";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 import DatePicker from "react-datepicker";
@@ -13,8 +14,10 @@ import arrowBack from "../images/arrowBack.png";
 import DisplayInteractionLogCard, {
   ExpandedInteractionLogCard,
 } from "./Community/DisplayInteractionLogCard";
+import NoLogsFound from "./NologsFound";
 // import RenderPaginationBtns from "./HomePage/RenderPaginationBtns";
 // Refactor to use PageCheckpoints and think of a way to handle pages.
+
 const AllOutreachVisitLog = () => {
   const navigate = useNavigate();
   const [filteredVisitLogs, setFilteredVisitLogs] = useState([]);
@@ -345,7 +348,7 @@ const AllOutreachVisitLog = () => {
             {returnText}
           </p>
         </div>
-        <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
+        <div className="items-center justify-center px-4 py-8 lg:p-24 h-full min-h-screen w-full rounded-2xl bg-[#F7F7F7]">
           <div className="lg:flex justify-between items-center mb-6">
             <div>
               <p className="font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] lg:mt-2">
@@ -454,7 +457,7 @@ const AllOutreachVisitLog = () => {
           ) : (
             <>
               {/* <OutreachVisitLogCard /> */}
-              <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+              <div className={`w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5 ${filteredVisitLogs.length === 0 ? "min-h-[400px]" : "h-fit"}`}>
                 {filteredVisitLogs.length > 0 ? (
                   filteredVisitLogs.map((visitLogData) => (
                     <DisplayInteractionLogCard
@@ -468,26 +471,31 @@ const AllOutreachVisitLog = () => {
                     />
                   ))
                 ) : (
-                  <p className="col-span-3 text-center text-gray-500">
-                    No logs found.
-                  </p>
+                  // <p className="col-span-3 text-center text-gray-500">
+                  //   No logs found.
+                  // </p>
+                  <NoLogsFound message="No Interaction Logs Found" icon={TbZoomCancel} />
                 )}
               </div>
 
-              {/* Pagination */}
-              <div className="flex justify-center items-center mt-8 w-full mx-auto">
-                <p className="text-gray-600">
-                  Showing {currentPageLength} of {totalRecords} events
-                </p>
-              </div>
-              <div className="flex justify-between items-center w-full md:w-3/4 lg:w-3/4 mx-auto mt-4">
-                {/* {renderPaginationButtons()} */}
-                {!isLoading &&
-                  renderPaginationButtons(
-                    totalPages,
-                    cursorFields?.currentPage + 1,
-                  )}
-              </div>
+              {filteredVisitLogs.length > 0 && (
+                <>
+                  {/* Pagination */}
+                  <div className="flex justify-center items-center mt-8 w-full mx-auto">
+                    <p className="text-gray-600">
+                      Showing {currentPageLength} of {totalRecords} events
+                    </p>
+                  </div>
+                  <div className="flex justify-between items-center w-full md:w-3/4 lg:w-3/4 mx-auto mt-4">
+                    {!isLoading &&
+                      renderPaginationButtons(
+                        totalPages,
+                        cursorFields?.currentPage + 1,
+                      )}
+                  </div>
+                </>
+              )}
+              <div></div>
               <div></div>
               {/* <RenderPaginationBtns
                 handlePrev={handlePrev}
