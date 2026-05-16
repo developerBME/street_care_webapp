@@ -1,26 +1,25 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import paginationService from "../../services/paginationService";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useReducer,
+} from "react";
+import {
+  mockPaginationService,
+  paginationService,
+} from "../../services/paginationService";
 
 const reducerFn = (state, action) => {
   switch (action.type) {
-    case "NEXT PG": {
-      const pg = state.pgNo + 1;
-      return { ...state, pgNo: pg };
-    }
-
-    case "PREV PG": {
-      const pg = state.pgNo - 1;
-      return { ...state, pgNo: pg };
-    }
-
     case "SET SEARCHTEXT": {
       const searchText = action.payload;
-      return { ...state, searchText: searchText };
+      return { ...state, searchText: searchText, pgNo: 0 };
     }
 
     case "SET SORT FIELD": {
       const sortField = action.payload;
-      return { ...state, sortField: sortField };
+      return { ...state, sortField: sortField, pgNo: 0 };
     }
 
     case "SET PAGE": {
@@ -31,7 +30,8 @@ const reducerFn = (state, action) => {
 };
 //getDocs-> single req res POLL , onSnapShot(query, callback()) -> open connection returns matching query document(auto updates), return unsubscribe()
 const usePagination = ({ baseQuery, pageCheckpoints = {} }) => {
-  // might not need collectionName baseQuery can be passed which would include the collectionName and pageSize
+  // might not need collectionName baseQuery can be passed which would include the collectionName, pageSize and sortBy
+  //pass in default query constraints eg:- defaults ={sortByField:field, searchTextField: field}
   // this way we can keep our hook clean , baseQuery includes  collectionName, pageSize thru limit()
   // const [data, setData] = useState({null})
   // const [isLoading,setIsLoading] = useState(true) // using Isloading as StateMachine ?
@@ -58,11 +58,13 @@ const usePagination = ({ baseQuery, pageCheckpoints = {} }) => {
   const setSearchText = (searchText) => {
     setHookState({ state: "Loading", data: null, error: null });
     dispatch({ type: "SET SEARCHTEXT", payload: searchText });
+    pgCheckpointsRef.current = {}; // Flush chckpnts when criteria variables rewrite
   };
 
   const setFilterField = (filters) => {
     setHookState({ state: "Loading", data: null, error: null });
     dispatch({ type: "SET SORT FIELD", payload: filters });
+    pgCheckpointsRef.current = {}; // Flush chckpnts when criteria variables rewrite
   };
 
   const pgTriggerFns = {
@@ -74,13 +76,13 @@ const usePagination = ({ baseQuery, pageCheckpoints = {} }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { pgQuery, pgCheckpoints } = await paginationService(
+        const { pgQuery, pgCheckpoints } = await mockPaginationService({
           baseQuery,
           pgParams,
-          pgCheckpointsRef.current,
-        );
+          pgChckpnts: pgCheckpointsRef.current,
+        });
         pgCheckpointsRef.current = pgCheckpoints;
-        const result = await getDocs(pgQuery);
+        const result = await pgQuery(); //getDocs(pgQuery);
         setHookState({ state: "Success", data: result, error: null });
       } catch (e) {
         console.error("Error Fetching Docs:", e);
