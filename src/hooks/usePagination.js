@@ -1,19 +1,7 @@
-import {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  useReducer,
-} from "react";
-
+import { useState, useEffect, useRef, useReducer } from "react";
 import { getPage } from "../services/paginationService";
 
-/**
- * =========================================================
- * REDUCER
- * =========================================================
- */
-
+// ─── Reducer ────────────────────────────────────────────────
 export const initialPageParams = {
   filters: {},
   searchText: "",
@@ -23,161 +11,107 @@ export const initialPageParams = {
 export function paginationReducer(state, action) {
   switch (action.type) {
     case "SET_PAGE":
-      return {
-        ...state,
-        pgNo: action.payload,
-      };
+      return { ...state, pgNo: action.payload };
 
     case "SET_FILTERS":
-      return {
-        ...state,
-        filters: action.payload,
-        pgNo: 1,
-      };
+      return { ...state, filters: action.payload, pgNo: 1 };
 
     case "SET_SEARCH":
-      return {
-        ...state,
-        searchText: action.payload,
-        pgNo: 1,
-      };
+      return { ...state, searchText: action.payload, pgNo: 1 };
 
     default:
       return state;
   }
 }
 
-/**
- * =========================================================
- * CUSTOM HOOK
- * =========================================================
- */
-
+// ─── Hook ────────────────────────────────────────────────────
 export default function usePagination({
   collection,
   logsPerPage = 6,
-  prevFilters = {},
-  sort = {
-    field: "createdAt",
-    direction: "desc",
-  },
-
-  pageParams,
+  sort = { field: "createdAt", direction: "desc" },
 }) {
+
+  const [pageParams, dispatch] = useReducer(paginationReducer, initialPageParams);
+
   const [data, setData] = useState([]);
   const [totalRecords, setTotalRecords] = useState(0);
-
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  /**
-   * Stores:
-   * {
-   *   1: { firstDoc, lastDoc },
-   *   2: { firstDoc, lastDoc }
-   * }
-   */
   const checkpointsRef = useRef({});
 
-  /**
-   * Save previous filters
-   */
-  const prevFiltersRef = useRef(prevFilters);
 
-  /**
-   * OPTIONAL CACHE
-   * COMMENTED OUT FOR LATER TASK
-   */
+  const prevCriteriaRef = useRef({
+    filters: { ...initialPageParams.filters },
+    searchText: initialPageParams.searchText,
+  });
 
-  // const cacheRef = useRef({});
+  useEffect(() => {
+  const controller = new AbortController();
+  const { signal } = controller;
 
-  const loadPage = useCallback(async () => {
+  const loadPage = async () => {
     try {
       setIsLoading(true);
       setError(null);
-
-      /**
-       * CACHE LOGIC
-       * COMMENTED OUT FOR LATER TASK
-       */
-
-      // const cacheKey = JSON.stringify({
-      //   collection,
-      //   filters: pageParams.filters,
-      //   searchText: pageParams.searchText,
-      //   sort,
-      // });
-
-      // if (cacheRef.current?.[cacheKey]?.[pageParams.pgNo]) {
-      //   setData(cacheRef.current[cacheKey][pageParams.pgNo]);
-      //   setIsLoading(false);
-      //   return;
-      // }
 
       const result = await getPage({
         collection,
         targetPage: pageParams.pgNo,
         logsPerPage,
-
         filters: {
           ...pageParams.filters,
           searchText: pageParams.searchText,
         },
-
         sort,
         checkpoints: checkpointsRef.current,
       });
 
-      /**
-       * Save checkpoints
-       */
+      if (signal.aborted) return;
+
       checkpointsRef.current[pageParams.pgNo] = {
         firstDoc: result.firstDoc,
         lastDoc: result.lastDoc,
       };
 
-      /**
-       * CACHE SAVE
-       * COMMENTED OUT FOR LATER TASK
-       */
-
-      // if (!cacheRef.current[cacheKey]) {
-      //   cacheRef.current[cacheKey] = {};
-      // }
-
-      // cacheRef.current[cacheKey][pageParams.pgNo] = result.data;
-
       setData(result.data);
       setTotalRecords(result.totalRecords || 0);
     } catch (err) {
+      if (signal.aborted) return;
       console.error(err);
       setError(err);
     } finally {
-      setIsLoading(false);
+      if (!signal.aborted) setIsLoading(false);
     }
-  }, [collection, logsPerPage, pageParams, sort]);
+  };
 
-  /**
-   * Reset checkpoints when filters change
-   */
-  useEffect(() => {
-    const filtersChanged =
-      JSON.stringify(prevFiltersRef.current) !==
-      JSON.stringify(pageParams.filters);
 
-    if (filtersChanged) {
-      checkpointsRef.current = {};
+  const filtersChanged =
+    JSON.stringify(prevCriteriaRef.current.filters) !==
+    JSON.stringify(pageParams.filters);
 
-      prevFiltersRef.current = pageParams.filters;
-    }
+  const searchChanged =
+    prevCriteriaRef.current.searchText !== pageParams.searchText;
 
-    loadPage();
-  }, [loadPage, pageParams.filters]);
+  if (filtersChanged || searchChanged) {
+    checkpointsRef.current = {};
+    prevCriteriaRef.current = {
+      filters: pageParams.filters,
+      searchText: pageParams.searchText,
+    };
+  }
+
+  loadPage();
+
+  return () => controller.abort();
+}, [collection, logsPerPage, pageParams, sort]);
 
   return {
     data,
     totalRecords,
     isLoading,
     error,
+    pageParams,
+    dispatch,
   };
 }
