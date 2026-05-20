@@ -205,7 +205,7 @@ const NavBar = (props) => {
                 } <
                 /ul> < /
                 div > <
-                /div> { / * * / } < /
+                /div> < /
                 li >
             )
         } <
