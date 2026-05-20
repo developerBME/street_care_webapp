@@ -1,19 +1,18 @@
-import { buildPaginatedQuery } from "../../utils/buildPaginatedQuery";
+import {
+  buildPaginatedQuery,
+  getNearestCachedPageBefore,
+} from "../../utils/buildPaginatedQuery";
 import { getPageCheckpoint } from "../../utils/getPageCheckpoint";
 import { createPaginationRequest } from "../../services/paginationService";
 import { limit, query, startAfter, startAt } from "firebase/firestore";
 
-// Mock only Firestore query builders. These tests verify cursor decisions,
-// not live Firebase reads or Firestore index behavior.
-// Example: startAfter(doc) returns a plain object so we can assert the cursor.
+// Mock Firestore query builders. The tests verify cursor decisions and
+// checkpoint behavior without hitting live Firebase.
 jest.mock("firebase/firestore", () => ({
-  limit: jest.fn((n) => ({ type: "limit", n })),
-  query: jest.fn((baseQuery, ...constraints) => ({
-    baseQuery,
-    constraints,
-  })),
-  startAfter: jest.fn((doc) => ({ type: "startAfter", doc })),
-  startAt: jest.fn((doc) => ({ type: "startAt", doc })),
+  limit: jest.fn(),
+  query: jest.fn(),
+  startAfter: jest.fn(),
+  startAt: jest.fn(),
 }));
 
 const PAGE_SIZE = 6;
@@ -25,9 +24,18 @@ const makeDocsForPage = (page) =>
 
 const makeCheckpointForPage = (page) => getPageCheckpoint(makeDocsForPage(page));
 
+const resetFirestoreMocks = () => {
+  limit.mockImplementation((n) => ({ type: "limit", n }));
+  query.mockImplementation((queryBase, ...constraints) => ({
+    baseQuery: queryBase,
+    constraints,
+  }));
+  startAfter.mockImplementation((doc) => ({ type: "startAfter", doc }));
+  startAt.mockImplementation((doc) => ({ type: "startAt", doc }));
+};
+
 describe("getPageCheckpoint", () => {
   test("returns first and last docs for a page", () => {
-    // Plain objects are enough here because the helper only stores snapshots.
     // Example: six fake docs produce firstDoc = doc 1 and lastDoc = doc 6.
     const checkpoint = getPageCheckpoint(makeDocsForPage(0));
 
@@ -47,9 +55,25 @@ describe("getPageCheckpoint", () => {
   });
 });
 
+describe("getNearestCachedPageBefore", () => {
+  test("returns the nearest cached page before the requested page", () => {
+    const checkpoints = {
+      0: makeCheckpointForPage(0),
+      2: makeCheckpointForPage(2),
+    };
+
+    expect(getNearestCachedPageBefore(5, checkpoints)).toBe(2);
+  });
+
+  test("returns null when no previous page is cached", () => {
+    expect(getNearestCachedPageBefore(5, {})).toBeNull();
+  });
+});
+
 describe("buildPaginatedQuery", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    resetFirestoreMocks();
   });
 
   test("builds first page query without a cursor", () => {
@@ -63,15 +87,15 @@ describe("buildPaginatedQuery", () => {
     expect(limit).toHaveBeenCalledWith(PAGE_SIZE);
     expect(startAt).not.toHaveBeenCalled();
     expect(startAfter).not.toHaveBeenCalled();
-    expect(result.pageToCache).toBe(0);
-    expect(result.isTargetPage).toBe(true);
+    expect(result.pageQuery).toBeDefined();
+    expect(result.isTargetPage).toBeUndefined();
   });
 
   test("builds cached page query with startAt", () => {
-    // Example: if page 1 is cached, we can fetch it directly from its first doc.
+    // Example: if page 1 is cached, fetch it directly from its first doc.
     const pageOneCheckpoint = makeCheckpointForPage(1);
 
-    const result = buildPaginatedQuery({
+    buildPaginatedQuery({
       baseQuery,
       page: 1,
       pageSize: PAGE_SIZE,
@@ -82,81 +106,23 @@ describe("buildPaginatedQuery", () => {
 
     expect(startAt).toHaveBeenCalledWith(pageOneCheckpoint.firstDoc);
     expect(limit).toHaveBeenCalledWith(PAGE_SIZE);
-    expect(result.pageToCache).toBe(1);
-    expect(result.isTargetPage).toBe(true);
   });
 
-  test("builds next missing page query with nearest previous checkpoint", () => {
-    // Example: page 1 is fetched with startAfter(page 0's last doc).
-    const pageZeroCheckpoint = makeCheckpointForPage(0);
+  test("builds missing page query from nearest previous checkpoint", () => {
+    // Example: page 3 with page 2 cached uses startAfter(page 2's last doc).
+    const pageTwoCheckpoint = makeCheckpointForPage(2);
 
-    const result = buildPaginatedQuery({
-      baseQuery,
-      page: 1,
-      pageSize: PAGE_SIZE,
-      pageCheckpoints: {
-        0: pageZeroCheckpoint,
-      },
-    });
-
-    expect(startAfter).toHaveBeenCalledWith(pageZeroCheckpoint.lastDoc);
-    expect(limit).toHaveBeenCalledWith(PAGE_SIZE);
-    expect(result.pageToCache).toBe(1);
-    expect(result.isTargetPage).toBe(true);
-  });
-
-  test("returns the first missing page when target page is not reachable yet", () => {
-    // With no checkpoints, page 2 cannot be fetched directly. The service asks
-    // the hook to fetch and cache page 0 first.
-    const result = buildPaginatedQuery({
-      baseQuery,
-      page: 2,
-      pageSize: PAGE_SIZE,
-      pageCheckpoints: {},
-    });
-
-    expect(startAfter).not.toHaveBeenCalled();
-    expect(result.pageToCache).toBe(0);
-    expect(result.isTargetPage).toBe(false);
-  });
-
-  test("continues from the nearest cached page while jumping forward", () => {
-    // The target is page 3, but page 2 is the next missing page after cache.
-    const pageZeroCheckpoint = makeCheckpointForPage(0);
-    const pageOneCheckpoint = makeCheckpointForPage(1);
-
-    const result = buildPaginatedQuery({
+    buildPaginatedQuery({
       baseQuery,
       page: 3,
       pageSize: PAGE_SIZE,
       pageCheckpoints: {
-        0: pageZeroCheckpoint,
-        1: pageOneCheckpoint,
-      },
-    });
-
-    expect(startAfter).toHaveBeenCalledWith(pageOneCheckpoint.lastDoc);
-    expect(result.pageToCache).toBe(2);
-    expect(result.isTargetPage).toBe(false);
-  });
-
-  test("skips older checkpoints and starts after the nearest cached page", () => {
-    const pageZeroCheckpoint = makeCheckpointForPage(0);
-    const pageTwoCheckpoint = makeCheckpointForPage(2);
-
-    const result = buildPaginatedQuery({
-      baseQuery,
-      page: 4,
-      pageSize: PAGE_SIZE,
-      pageCheckpoints: {
-        0: pageZeroCheckpoint,
         2: pageTwoCheckpoint,
       },
     });
 
     expect(startAfter).toHaveBeenCalledWith(pageTwoCheckpoint.lastDoc);
-    expect(result.pageToCache).toBe(3);
-    expect(result.isTargetPage).toBe(false);
+    expect(limit).toHaveBeenCalledWith(PAGE_SIZE);
   });
 
   test("throws for negative pages", () => {
@@ -173,63 +139,110 @@ describe("buildPaginatedQuery", () => {
 describe("createPaginationRequest", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    resetFirestoreMocks();
   });
 
-  test("returns a page query and resolves docs into updated checkpoints", () => {
-    // The hook will fetch request.pageQuery, then pass snapshot.docs to resolve.
-    // Example: resolving six docs caches page 0 as { firstDoc, lastDoc }.
-    const request = createPaginationRequest({
+  test("fills missing checkpoints up to the page before the requested page", async () => {
+    // Pages 0-2 are cached. Requesting page 5 should fetch pages 3 and 4 only.
+    const pageZeroCheckpoint = makeCheckpointForPage(0);
+    const pageOneCheckpoint = makeCheckpointForPage(1);
+    const pageTwoCheckpoint = makeCheckpointForPage(2);
+    const fetchDocs = jest
+      .fn()
+      .mockResolvedValueOnce(makeDocsForPage(3))
+      .mockResolvedValueOnce(makeDocsForPage(4));
+
+    const result = await createPaginationRequest({
       baseQuery,
-      page: 0,
+      page: 5,
+      pageSize: PAGE_SIZE,
+      pageCheckpoints: {
+        0: pageZeroCheckpoint,
+        1: pageOneCheckpoint,
+        2: pageTwoCheckpoint,
+      },
+      fetchDocs,
+    });
+
+    expect(fetchDocs).toHaveBeenCalledTimes(2);
+    expect(result.pageCheckpoints[3].firstDoc.id).toBe("page-3-doc-1");
+    expect(result.pageCheckpoints[3].lastDoc.id).toBe("page-3-doc-6");
+    expect(result.pageCheckpoints[4].firstDoc.id).toBe("page-4-doc-1");
+    expect(result.pageCheckpoints[4].lastDoc.id).toBe("page-4-doc-6");
+    expect(startAfter).toHaveBeenLastCalledWith(
+      result.pageCheckpoints[4].lastDoc,
+    );
+    expect(result.pageQuery).toBeDefined();
+    expect(result.reachedEnd).toBe(false);
+    expect(result.isTargetPage).toBeUndefined();
+  });
+
+  test("does not fetch intermediate pages when the requested page is already cached", async () => {
+    const pageTwoCheckpoint = makeCheckpointForPage(2);
+    const fetchDocs = jest.fn();
+
+    const result = await createPaginationRequest({
+      baseQuery,
+      page: 2,
+      pageSize: PAGE_SIZE,
+      pageCheckpoints: {
+        2: pageTwoCheckpoint,
+      },
+      fetchDocs,
+    });
+
+    expect(fetchDocs).not.toHaveBeenCalled();
+    expect(startAt).toHaveBeenCalledWith(pageTwoCheckpoint.firstDoc);
+    expect(result.pageCheckpoints[2]).toEqual(pageTwoCheckpoint);
+    expect(result.pageQuery).toBeDefined();
+  });
+
+  test("starts from page 0 when no checkpoints exist", async () => {
+    const fetchDocs = jest
+      .fn()
+      .mockResolvedValueOnce(makeDocsForPage(0))
+      .mockResolvedValueOnce(makeDocsForPage(1));
+
+    const result = await createPaginationRequest({
+      baseQuery,
+      page: 2,
       pageSize: PAGE_SIZE,
       pageCheckpoints: {},
+      fetchDocs,
     });
 
-    const result = request.resolve(makeDocsForPage(0));
-
-    expect(request.pageToCache).toBe(0);
-    expect(request.isTargetPage).toBe(true);
-    expect(result.pageCheckpoints[0].firstDoc.id).toBe("page-0-doc-1");
+    expect(fetchDocs).toHaveBeenCalledTimes(2);
     expect(result.pageCheckpoints[0].lastDoc.id).toBe("page-0-doc-6");
-    expect(result.docs).toHaveLength(PAGE_SIZE);
-  });
-
-  test("resolves an intermediate page during a forward jump without marking it as target", () => {
-    const request = createPaginationRequest({
-      baseQuery,
-      page: 3,
-      pageSize: PAGE_SIZE,
-      pageCheckpoints: {
-        0: makeCheckpointForPage(0),
-      },
-    });
-
-    const result = request.resolve(makeDocsForPage(1));
-
-    expect(request.pageToCache).toBe(1);
-    expect(request.isTargetPage).toBe(false);
-    expect(result.pageCheckpoints[1].firstDoc.id).toBe("page-1-doc-1");
     expect(result.pageCheckpoints[1].lastDoc.id).toBe("page-1-doc-6");
-    expect(result.isTargetPage).toBe(false);
+    expect(startAfter).toHaveBeenLastCalledWith(
+      result.pageCheckpoints[1].lastDoc,
+    );
   });
 
-  test("does not add a checkpoint when resolved docs are empty", () => {
-    // Example: an empty Firestore page leaves the checkpoint cache unchanged.
-    const existingCheckpoint = makeCheckpointForPage(0);
-    const request = createPaginationRequest({
+  test("returns reachedEnd when an intermediate page is empty", async () => {
+    const fetchDocs = jest.fn().mockResolvedValueOnce([]);
+
+    const result = await createPaginationRequest({
       baseQuery,
-      page: 1,
+      page: 2,
       pageSize: PAGE_SIZE,
-      pageCheckpoints: {
-        0: existingCheckpoint,
-      },
+      pageCheckpoints: {},
+      fetchDocs,
     });
 
-    const result = request.resolve([]);
+    expect(result.pageQuery).toBeNull();
+    expect(result.reachedEnd).toBe(true);
+    expect(result.missingPage).toBe(0);
+    expect(result.pageCheckpoints).toEqual({});
+  });
 
-    expect(result.isEmpty).toBe(true);
-    expect(result.pageCheckpoints).toEqual({
-      0: existingCheckpoint,
-    });
+  test("throws when fetchDocs is not provided", async () => {
+    await expect(
+      createPaginationRequest({
+        baseQuery,
+        page: 1,
+        pageSize: PAGE_SIZE,
+      }),
+    ).rejects.toThrow("fetchDocs must be provided.");
   });
 });
