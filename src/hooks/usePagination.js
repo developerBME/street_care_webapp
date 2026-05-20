@@ -5,7 +5,7 @@ import { getPage } from "../services/paginationService";
 export const initialPageParams = {
   filters: {},
   searchText: "",
-  pgNo: 1,
+  pgNo: 0,
 };
 
 export function paginationReducer(state, action) {
@@ -14,10 +14,10 @@ export function paginationReducer(state, action) {
       return { ...state, pgNo: action.payload };
 
     case "SET_FILTERS":
-      return { ...state, filters: action.payload, pgNo: 1 };
+      return { ...state, filters: action.payload, pgNo: 0 };
 
     case "SET_SEARCH":
-      return { ...state, searchText: action.payload, pgNo: 1 };
+      return { ...state, searchText: action.payload, pgNo: 0 };
 
     default:
       return state;
@@ -26,39 +26,33 @@ export function paginationReducer(state, action) {
 
 // ─── Hook ────────────────────────────────────────────────────
 export default function usePagination({
-  collection,
-  logsPerPage = 6,
-  sort = { field: "createdAt", direction: "desc" },
+  baseQuery,
+  sort,
 }) {
 
   const [pageParams, dispatch] = useReducer(paginationReducer, initialPageParams);
 
   const [data, setData] = useState([]);
   const [totalRecords, setTotalRecords] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const [status, setStatus] = useState("idle");
   const [error, setError] = useState(null);
 
   const checkpointsRef = useRef({});
 
 
-  const prevCriteriaRef = useRef({
-    filters: { ...initialPageParams.filters },
-    searchText: initialPageParams.searchText,
-  });
-
   useEffect(() => {
   const controller = new AbortController();
   const { signal } = controller;
 
+
   const loadPage = async () => {
     try {
-      setIsLoading(true);
+      setStatus("loading");
       setError(null);
 
       const result = await getPage({
-        collection,
+        baseQuery,
         targetPage: pageParams.pgNo,
-        logsPerPage,
         filters: {
           ...pageParams.filters,
           searchText: pageParams.searchText,
@@ -75,41 +69,25 @@ export default function usePagination({
       };
 
       setData(result.data);
-      setTotalRecords(result.totalRecords || 0);
+      if (result.totalRecords != null) setTotalRecords(result.totalRecords);
+      setStatus("success");
     } catch (err) {
       if (signal.aborted) return;
       console.error(err);
       setError(err);
-    } finally {
-      if (!signal.aborted) setIsLoading(false);
+      setStatus("error");
     }
   };
-
-
-  const filtersChanged =
-    JSON.stringify(prevCriteriaRef.current.filters) !==
-    JSON.stringify(pageParams.filters);
-
-  const searchChanged =
-    prevCriteriaRef.current.searchText !== pageParams.searchText;
-
-  if (filtersChanged || searchChanged) {
-    checkpointsRef.current = {};
-    prevCriteriaRef.current = {
-      filters: pageParams.filters,
-      searchText: pageParams.searchText,
-    };
-  }
-
+  
   loadPage();
 
   return () => controller.abort();
-}, [collection, logsPerPage, pageParams, sort]);
+}, [baseQuery, pageParams, sort]);
 
   return {
     data,
     totalRecords,
-    isLoading,
+    isLoading: status === "loading",
     error,
     pageParams,
     dispatch,
