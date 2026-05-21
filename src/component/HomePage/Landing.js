@@ -47,7 +47,7 @@ const Landing = forwardRef(({ scorllFuntion }, ref) => {
 
         <div className="  col-span-1 ">
           
-          <img src={three} className="rounded-2xl w-full h-56 md:h-60 lg:h-72  "></img>
+          <img src={three} className="rounded-2xl w-full h-fit lg:w -full lg:h-fit  "></img>
         </div>
       </div>
     </div>
