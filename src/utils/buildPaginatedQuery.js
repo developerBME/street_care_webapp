@@ -1,4 +1,4 @@
-import { limit, query, startAfter, startAt } from "firebase/firestore";
+import { query, startAfter, startAt } from "firebase/firestore";
 
 // Firestore cursor pagination needs a known document snapshot before it can
 // fetch a later page. This finds the closest cached page behind the target.
@@ -16,7 +16,6 @@ export const getNearestCachedPageBefore = (page, pageCheckpoints) => {
 export const buildPaginatedQuery = ({
   baseQuery,
   page,
-  pageSize,
   pageCheckpoints = {},
 }) => {
   if (page < 0) {
@@ -31,16 +30,15 @@ export const buildPaginatedQuery = ({
       pageQuery: query(
         baseQuery,
         startAt(pageCheckpoints[page].firstDoc),
-        limit(pageSize),
       ),
     };
   }
 
   // Page zero never needs a cursor.
-  // Example: page 0 always becomes query(baseQuery, limit(pageSize)).
+  // Example: page 0 is just the baseQuery, which already includes limit(...).
   if (page === 0) {
     return {
-      pageQuery: query(baseQuery, limit(pageSize)),
+      pageQuery: baseQuery,
     };
   }
 
@@ -53,7 +51,7 @@ export const buildPaginatedQuery = ({
   // Example: target page 3 with page 2 cached uses startAfter(page2.lastDoc).
   return {
     pageQuery: cursor
-      ? query(baseQuery, startAfter(cursor), limit(pageSize))
-      : query(baseQuery, limit(pageSize)),
+      ? query(baseQuery, startAfter(cursor))
+      : baseQuery,
   };
 };
