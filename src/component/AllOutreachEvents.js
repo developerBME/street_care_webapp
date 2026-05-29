@@ -561,7 +561,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
                   placeholder="Search by Description"
                   value={searchDescription}
                   onChange={searchChange}
-                  className="form-input w-[170px] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 block pl-10 rounded-2xl"
+                  className="form-input w-[185px] py-2 px-2 border border-[#CACACA] placeholder-gray-500 text-gray-600 text-sm block pl-9 pr-2 rounded-2xl truncate"
                 />
 
                 <svg
@@ -570,7 +570,7 @@ const AllOutreachEvents = ({ loggedIn }) => {
                   viewBox="0 0 20 20"
                   strokeWidth="2.0"
                   stroke="currentColor"
-                  className="w-5 h-5 pointer-events-none absolute top-1/2 transform -translate-y-1/2 left-3"
+                  className="w-4 h-4 pointer-events-none absolute top-1/2 transform -translate-y-1/2 left-3"
                 >
                   <path
                     strokeLinecap="round"
