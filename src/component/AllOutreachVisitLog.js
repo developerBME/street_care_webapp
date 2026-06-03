@@ -345,7 +345,7 @@ const AllOutreachVisitLog = () => {
             {returnText}
           </p>
         </div>
-        <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
+        <div className="items-center justify-center px-4 py-8 lg:p-24 h-full min-h-screen w-full rounded-2xl bg-[#F7F7F7]">
           <div className="flex flex-col xl:flex-row xl:items-center gap-4 mb-6 w-full">
             <div>
               <p className="font-bricolage font-medium text-[34px] xl:text-[38px] text-[#1F0A58] whitespace-nowrap">
