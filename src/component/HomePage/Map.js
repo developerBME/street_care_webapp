@@ -14,9 +14,14 @@ const annotations = [
   { coordinates: [78.9629, 20.5937], label: "India" },
   { coordinates: [37.9062, 0.0236], label: "Kenya" },
   { coordinates: [-81.5158, 27.6648], label: "Florida" },
-  { coordinates: [-76.6413, 39.0458], label: "Maryland" },
+  { coordinates: [-76.6413, 39.0458], label: "Baltimore" },
   { coordinates: [-73.935242, 40.73061], label: "New York" },
-  { coordinates: [-75.695, 45.424721], label: "Ottawa" },
+  { coordinates: [-75.695, 45.424721], label: "Canada" },
+  { coordinates: [-77.0369, 38.9072], label: "DC" },
+  { coordinates: [-71.4774, 41.5801], label: "Rhode Island" },
+  { coordinates: [-119.4179, 36.7783], label: "California" },
+  { coordinates: [-71.0589, 42.3601], label: "Boston" },
+  { coordinates: [-99.9018, 31.9686], label: "Texas" },
 ];
 
 const Map = () => {
@@ -54,6 +59,7 @@ const Map = () => {
               ))
             }
           </Geographies>
+          {/* ===== India (index 0) — right ===== */}
           <Annotation
             key={annotations[0].label}
             subject={annotations[0].coordinates}
@@ -76,27 +82,26 @@ const Map = () => {
             <circle cx="0" cy="50" r="1.5" fill="#172146" />
             <rect
               x="40"
-              y="37"
-              width="35"
-              height="25"
-              rx="11"
-              ry="14"
+              y="41"
+              width="28"
+              height="18"
+              rx="9"
+              ry="9"
               fill="#172146"
-              // fillOpacity={0.9}
-              // opacity={0.3}
             />
             <text
-              x={46}
+              x={45}
               y={50}
               textAnchor="start"
               alignmentBaseline="middle"
-              fontSize={10}
+              fontSize={8}
               fill="#FFF"
               fontFamily="Open Sans"
             >
               {annotations[0].label}
             </text>
           </Annotation>
+          {/* ===== Kenya (index 1) — right ===== */}
           <Annotation
             key={annotations[1].label}
             subject={annotations[1].coordinates}
@@ -119,27 +124,26 @@ const Map = () => {
             <circle cx="0" cy="50" r="1.5" fill="#172146" />
             <rect
               x="40"
-              y="36"
-              width="43"
-              height="25"
-              rx="11"
-              ry="14"
+              y="41"
+              width="34"
+              height="18"
+              rx="9"
+              ry="9"
               fill="#172146"
-              // fillOpacity={0.9}
-              // opacity={0.3}
             />
             <text
-              x={47}
-              y={48}
+              x={45}
+              y={50}
               textAnchor="start"
               alignmentBaseline="middle"
-              fontSize={10}
+              fontSize={8}
               fill="#FFF"
               fontFamily="Open Sans"
             >
               {annotations[1].label}
             </text>
           </Annotation>
+          {/* ===== Florida (index 2) — straight down ===== */}
           <Annotation
             key={annotations[2].label}
             subject={annotations[2].coordinates}
@@ -154,35 +158,34 @@ const Map = () => {
             <line
               x1="0"
               y1="50"
-              x2="41"
-              y2="50"
+              x2="0"
+              y2="85"
               stroke="#172146"
               strokeWidth="1"
             />
             <circle cx="0" cy="50" r="1.5" fill="#172146" />
             <rect
-              x="40"
-              y="36"
-              width="45"
-              height="25"
-              rx="11"
-              ry="14"
+              x="-18"
+              y="76"
+              width="36"
+              height="18"
+              rx="9"
+              ry="9"
               fill="#172146"
-              // fillOpacity={0.9}
-              // opacity={0.3}
             />
             <text
-              x={46}
-              y={49}
+              x={-13}
+              y={85}
               textAnchor="start"
               alignmentBaseline="middle"
-              fontSize={10}
+              fontSize={8}
               fill="#FFF"
               fontFamily="Open Sans"
             >
               {annotations[2].label}
             </text>
           </Annotation>
+          {/* ===== Baltimore (index 3) — right, above DC ===== */}
           <Annotation
             key={annotations[3].label}
             subject={annotations[3].coordinates}
@@ -197,35 +200,34 @@ const Map = () => {
             <line
               x1="0"
               y1="50"
-              x2="41"
-              y2="50"
+              x2="70"
+              y2="55"
               stroke="#172146"
               strokeWidth="1"
             />
             <circle cx="0" cy="50" r="1.5" fill="#172146" />
             <rect
-              x="40"
-              y="36"
-              width="55"
-              height="25"
-              rx="11"
-              ry="14"
+              x="69"
+              y="46"
+              width="46"
+              height="18"
+              rx="9"
+              ry="9"
               fill="#172146"
-              // fillOpacity={0.9}
-              // opacity={0.3}
             />
             <text
-              x={45}
-              y={49}
+              x={74}
+              y={55}
               textAnchor="start"
               alignmentBaseline="middle"
-              fontSize={10}
+              fontSize={8}
               fill="#FFF"
               fontFamily="Open Sans"
             >
               {annotations[3].label}
             </text>
           </Annotation>
+          {/* ===== New York (index 4) — left ===== */}
           <Annotation
             key={annotations[4].label}
             subject={annotations[4].coordinates}
@@ -247,28 +249,27 @@ const Map = () => {
             />
             <circle cx="0" cy="50" r="1.5" fill="#172146" />
             <rect
-              x="-95"
-              y="35"
-              width="55"
-              height="25"
-              rx="11"
-              ry="14"
+              x="-84"
+              y="41"
+              width="44"
+              height="18"
+              rx="9"
+              ry="9"
               fill="#172146"
-              // fillOpacity={0.9}
-              // opacity={0.3}
             />
             <text
-              x={-90}
-              y={48}
+              x={-79}
+              y={50}
               textAnchor="start"
               alignmentBaseline="middle"
-              fontSize={10}
+              fontSize={8}
               fill="#FFF"
               fontFamily="Open Sans"
             >
               {annotations[4].label}
             </text>
           </Annotation>
+          {/* ===== Canada (index 5) — straight up ===== */}
           <Annotation
             key={annotations[5].label}
             subject={annotations[5].coordinates}
@@ -283,33 +284,241 @@ const Map = () => {
             <line
               x1="0"
               y1="50"
-              x2="86"
+              x2="0"
+              y2="15"
+              stroke="#172146"
+              strokeWidth="1"
+            />
+            <circle cx="0" cy="50" r="1.5" fill="#172146" />
+            <rect
+              x="-19"
+              y="6"
+              width="38"
+              height="18"
+              rx="9"
+              ry="9"
+              fill="#172146"
+            />
+            <text
+              x={-14}
+              y={15}
+              textAnchor="start"
+              alignmentBaseline="middle"
+              fontSize={8}
+              fill="#FFF"
+              fontFamily="Open Sans"
+            >
+              {annotations[5].label}
+            </text>
+          </Annotation>
+          {/* ===== DC (index 6) — right, below Baltimore ===== */}
+          <Annotation
+            key={annotations[6].label}
+            subject={annotations[6].coordinates}
+            dx={0}
+            dy={-50}
+            connectorProps={{
+              stroke: "#FFF",
+              strokeWidth: 0,
+              strokeLinecap: "round",
+            }}
+          >
+            <line
+              x1="0"
+              y1="50"
+              x2="70"
+              y2="78"
+              stroke="#172146"
+              strokeWidth="1"
+            />
+            <circle cx="0" cy="50" r="1.5" fill="#172146" />
+            <rect
+              x="69"
+              y="69"
+              width="22"
+              height="18"
+              rx="9"
+              ry="9"
+              fill="#172146"
+            />
+            <text
+              x={74}
+              y={78}
+              textAnchor="start"
+              alignmentBaseline="middle"
+              fontSize={8}
+              fill="#FFF"
+              fontFamily="Open Sans"
+            >
+              {annotations[6].label}
+            </text>
+          </Annotation>
+          {/* ===== Rhode Island (index 7) — right ===== */}
+          <Annotation
+            key={annotations[7].label}
+            subject={annotations[7].coordinates}
+            dx={0}
+            dy={-50}
+            connectorProps={{
+              stroke: "#FFF",
+              strokeWidth: 0,
+              strokeLinecap: "round",
+            }}
+          >
+            <line
+              x1="0"
+              y1="50"
+              x2="70"
+              y2="35"
+              stroke="#172146"
+              strokeWidth="1"
+            />
+            <circle cx="0" cy="50" r="1.5" fill="#172146" />
+            <rect
+              x="69"
+              y="26"
+              width="58"
+              height="18"
+              rx="9"
+              ry="9"
+              fill="#172146"
+            />
+            <text
+              x={74}
+              y={35}
+              textAnchor="start"
+              alignmentBaseline="middle"
+              fontSize={8}
+              fill="#FFF"
+              fontFamily="Open Sans"
+            >
+              {annotations[7].label}
+            </text>
+          </Annotation>
+          {/* ===== California (index 8) — upper-left ===== */}
+          <Annotation
+            key={annotations[8].label}
+            subject={annotations[8].coordinates}
+            dx={0}
+            dy={-50}
+            connectorProps={{
+              stroke: "#FFF",
+              strokeWidth: 0,
+              strokeLinecap: "round",
+            }}
+          >
+            <line
+              x1="0"
+              y1="50"
+              x2="-30"
+              y2="25"
+              stroke="#172146"
+              strokeWidth="1"
+            />
+            <circle cx="0" cy="50" r="1.5" fill="#172146" />
+            <rect
+              x="-78"
+              y="16"
+              width="48"
+              height="18"
+              rx="9"
+              ry="9"
+              fill="#172146"
+            />
+            <text
+              x={-73}
+              y={25}
+              textAnchor="start"
+              alignmentBaseline="middle"
+              fontSize={8}
+              fill="#FFF"
+              fontFamily="Open Sans"
+            >
+              {annotations[8].label}
+            </text>
+          </Annotation>
+          {/* ===== Boston (index 9) — right, top of stack ===== */}
+          <Annotation
+            key={annotations[9].label}
+            subject={annotations[9].coordinates}
+            dx={0}
+            dy={-50}
+            connectorProps={{
+              stroke: "#FFF",
+              strokeWidth: 0,
+              strokeLinecap: "round",
+            }}
+          >
+            <line
+              x1="0"
+              y1="50"
+              x2="70"
+              y2="15"
+              stroke="#172146"
+              strokeWidth="1"
+            />
+            <circle cx="0" cy="50" r="1.5" fill="#172146" />
+            <rect
+              x="69"
+              y="6"
+              width="36"
+              height="18"
+              rx="9"
+              ry="9"
+              fill="#172146"
+            />
+            <text
+              x={74}
+              y={15}
+              textAnchor="start"
+              alignmentBaseline="middle"
+              fontSize={8}
+              fill="#FFF"
+              fontFamily="Open Sans"
+            >
+              {annotations[9].label}
+            </text>
+          </Annotation>
+          {/* ===== Texas (index 10) — left ===== */}
+          <Annotation
+            key={annotations[10].label}
+            subject={annotations[10].coordinates}
+            dx={0}
+            dy={-50}
+            connectorProps={{
+              stroke: "#FFF",
+              strokeWidth: 0,
+              strokeLinecap: "round",
+            }}
+          >
+            <line
+              x1="0"
+              y1="50"
+              x2="-41"
               y2="50"
               stroke="#172146"
               strokeWidth="1"
             />
             <circle cx="0" cy="50" r="1.5" fill="#172146" />
             <rect
-              x="85"
-              y="36"
-              width="46"
-              height="25"
-              rx="11"
-              ry="14"
+              x="-72"
+              y="41"
+              width="32"
+              height="18"
+              rx="9"
+              ry="9"
               fill="#172146"
-              // fillOpacity={0.9}
-              // opacity={0.3}
             />
             <text
-              x={90}
-              y={48}
+              x={-67}
+              y={50}
               textAnchor="start"
               alignmentBaseline="middle"
-              fontSize={10}
+              fontSize={8}
               fill="#FFF"
               fontFamily="Open Sans"
             >
-              {annotations[5].label}
+              {annotations[10].label}
             </text>
           </Annotation>
         </ZoomableGroup>
