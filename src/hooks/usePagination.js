@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useReducer, useMemo } from "react";
+import { getDocs } from "firebase/firestore";
 import { getPage } from "../services/paginationService";
 
 // ─── Reducer ────────────────────────────────────────────────
@@ -25,7 +26,8 @@ export function paginationReducer(state, action) {
 }
 
 // ─── Hook ────────────────────────────────────────────────────
-export default function usePagination({ baseQuery, sort }) {
+// baseQuery must already have filters, sort, and limit(...) chained.
+export default function usePagination({ baseQuery }) {
   const [pageParams, dispatch] = useReducer(paginationReducer, initialPageParams);
 
   const [hookState, setHookState] = useState({
@@ -48,8 +50,8 @@ export default function usePagination({ baseQuery, sort }) {
       },
 
       setSearchText: (searchText) => {
-        // Reset checkpoints on a new search — cursors from a previous query
-        // are no longer valid once the result set changes.
+        // Reset checkpoints — cursors from a previous query are no longer
+        // valid once the result set changes.
         checkpointsRef.current = {};
         dispatch({ type: "SET_SEARCH", payload: searchText });
       },
@@ -70,45 +72,54 @@ export default function usePagination({ baseQuery, sort }) {
     const { signal } = controller;
 
     const loadPage = async () => {
-      // Set loading here rather than in each trigger function.
-      // This keeps the triggers minimal and ensures loading state is
-      // always in sync with the actual fetch that's about to run.
+      // Set loading here rather than in each trigger function so loading
+      // state is always in sync with the fetch that's about to run.
       setHookState({ state: "Loading", data: null, error: null });
 
       try {
-        const result = await getPage({
+        // getPage (formerly createPaginationRequest) builds the cursor query
+        // and back-fills any missing intermediate checkpoints. It returns the
+        // constructed pageQuery and the full updated checkpoint map.
+        const { pageQuery, pageCheckpoints } = await getPage({
           baseQuery,
-          targetPage: pageParams.pgNo,
-          filters: {
-            ...pageParams.filters,
-            searchText: pageParams.searchText,
-          },
-          sort,
-          checkpoints: checkpointsRef.current,
+          page: pageParams.pgNo,
+          pageCheckpoints: checkpointsRef.current,
         });
 
         if (signal.aborted) return;
 
         // Merge back the full updated checkpoint map returned by the service.
-        // This captures any intermediate pages that were back-filled during
-        // the request (e.g. pages 3 and 4 when jumping to page 5).
+        // This captures any intermediate pages back-filled during the request
+        // (e.g. pages 3 and 4 when jumping straight to page 5).
         checkpointsRef.current = {
           ...checkpointsRef.current,
-          ...result.checkpoints,
+          ...pageCheckpoints,
         };
 
-        // Also store the checkpoint for the page we just fetched, using the
-        // live docs returned — not the cursor docs from the service internals.
-        if (result.firstDoc || result.lastDoc) {
-          checkpointsRef.current[pageParams.pgNo] = {
-            firstDoc: result.firstDoc,
-            lastDoc: result.lastDoc,
-          };
+        // No pageQuery means an empty intermediate page was hit while
+        // back-filling. Treat as empty result rather than an error.
+        if (!pageQuery) {
+          setHookState({ state: "Success", data: [], error: null });
+          return;
         }
 
-        if (result.totalRecords != null) setTotalRecords(result.totalRecords);
+        const snapshot = await getDocs(pageQuery);
 
-        setHookState({ state: "Success", data: result.data, error: null });
+        if (signal.aborted) return;
+
+        const docs = snapshot.docs;
+
+        // Store the checkpoint for this page from the live snapshot.
+        checkpointsRef.current[pageParams.pgNo] = {
+          firstDoc: docs[0] ?? null,
+          lastDoc: docs[docs.length - 1] ?? null,
+        };
+
+        setHookState({
+          state: "Success",
+          data: docs.map((d) => ({ id: d.id, ...d.data() })),
+          error: null,
+        });
       } catch (err) {
         if (signal.aborted) return;
         console.error(err);
@@ -119,7 +130,7 @@ export default function usePagination({ baseQuery, sort }) {
     loadPage();
 
     return () => controller.abort();
-  }, [baseQuery, pageParams, sort]);
+  }, [baseQuery, pageParams]);
 
   return {
     hookState,
