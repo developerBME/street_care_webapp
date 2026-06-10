@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useReducer } from "react";
+import { useState, useEffect, useRef, useReducer, useMemo } from "react";
 import { getPage } from "../services/paginationService";
 
 // ─── Reducer ────────────────────────────────────────────────
@@ -26,7 +26,6 @@ export function paginationReducer(state, action) {
 
 // ─── Hook ────────────────────────────────────────────────────
 export default function usePagination({ baseQuery, sort }) {
-
   const [pageParams, dispatch] = useReducer(paginationReducer, initialPageParams);
 
   const [hookState, setHookState] = useState({
@@ -40,24 +39,30 @@ export default function usePagination({ baseQuery, sort }) {
   const checkpointsRef = useRef({});
 
   // ─── Trigger Functions ──────────────────────────────────────
-  const pgTriggerFns = {
-    getPage: (pgNo) => {
-      setHookState({ state: "Loading", data: null, error: null });
-      dispatch({ type: "SET_PAGE", payload: pgNo });
-    },
+  // Memoised so consumers can safely use these in dependency arrays
+  // without triggering re-renders on every parent render cycle.
+  const pgTriggerFns = useMemo(
+    () => ({
+      getPage: (pgNo) => {
+        dispatch({ type: "SET_PAGE", payload: pgNo });
+      },
 
-    setSearchText: (searchText) => {
-      setHookState({ state: "Loading", data: null, error: null });
-      checkpointsRef.current = {};
-      dispatch({ type: "SET_SEARCH", payload: searchText });
-    },
+      setSearchText: (searchText) => {
+        // Reset checkpoints on a new search — cursors from a previous query
+        // are no longer valid once the result set changes.
+        checkpointsRef.current = {};
+        dispatch({ type: "SET_SEARCH", payload: searchText });
+      },
 
-    setFilterField: (filters) => {
-      setHookState({ state: "Loading", data: null, error: null });
-      checkpointsRef.current = {};
-      dispatch({ type: "SET_FILTERS", payload: filters });
-    },
-  };
+      setFilterField: (filters) => {
+        // Same reasoning as setSearchText — filters change the result set.
+        checkpointsRef.current = {};
+        dispatch({ type: "SET_FILTERS", payload: filters });
+      },
+    }),
+    // dispatch is stable across renders (guaranteed by useReducer).
+    [dispatch]
+  );
 
   // ─── Effect ─────────────────────────────────────────────────
   useEffect(() => {
@@ -65,6 +70,11 @@ export default function usePagination({ baseQuery, sort }) {
     const { signal } = controller;
 
     const loadPage = async () => {
+      // Set loading here rather than in each trigger function.
+      // This keeps the triggers minimal and ensures loading state is
+      // always in sync with the actual fetch that's about to run.
+      setHookState({ state: "Loading", data: null, error: null });
+
       try {
         const result = await getPage({
           baseQuery,
@@ -79,10 +89,22 @@ export default function usePagination({ baseQuery, sort }) {
 
         if (signal.aborted) return;
 
-        checkpointsRef.current[pageParams.pgNo] = {
-          firstDoc: result.firstDoc,
-          lastDoc: result.lastDoc,
+        // Merge back the full updated checkpoint map returned by the service.
+        // This captures any intermediate pages that were back-filled during
+        // the request (e.g. pages 3 and 4 when jumping to page 5).
+        checkpointsRef.current = {
+          ...checkpointsRef.current,
+          ...result.checkpoints,
         };
+
+        // Also store the checkpoint for the page we just fetched, using the
+        // live docs returned — not the cursor docs from the service internals.
+        if (result.firstDoc || result.lastDoc) {
+          checkpointsRef.current[pageParams.pgNo] = {
+            firstDoc: result.firstDoc,
+            lastDoc: result.lastDoc,
+          };
+        }
 
         if (result.totalRecords != null) setTotalRecords(result.totalRecords);
 
