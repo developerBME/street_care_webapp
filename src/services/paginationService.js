@@ -5,11 +5,37 @@ import {
 } from "../utils/buildPaginatedQuery";
 import { getPageCheckpoint } from "../utils/getPageCheckpoint";
 
-// Prepares the target page query and fills any missing prerequisite checkpoints.
-// Example: if pages 0-2 are cached and page 5 is requested, this fetches pages
-// 3 and 4, stores their checkpoints, then returns the page 5 query. The
-// incoming baseQuery must already include filters, sort, and limit(...).
-export const getPage = async ({
+const applyFiltersAndSort = ({ baseQuery, filters, sort }) => {
+  // TODO: apply filters and sort to baseQuery
+  return baseQuery;
+};
+
+export const getPage = async ({ baseQuery, targetPage, filters, sort, checkpoints }) => {
+  const filteredQuery = applyFiltersAndSort({ baseQuery, filters, sort });
+
+  const { pageQuery, pageCheckpoints } = await createPaginationRequest({
+    baseQuery: filteredQuery,
+    page: targetPage,
+    pageCheckpoints: checkpoints,
+  });
+
+  if (!pageQuery) {
+    return { data: [], firstDoc: null, lastDoc: null, totalRecords: null, pageCheckpoints: checkpoints };
+  }
+
+  const snapshot = await getDocs(pageQuery);
+  const docs = snapshot.docs;
+
+  return {
+    data: docs.map(d => ({ id: d.id, ...d.data() })),
+    firstDoc: docs[0] ?? null,
+    lastDoc: docs[docs.length - 1] ?? null,
+    totalRecords: null,
+    pageCheckpoints,
+  };
+};
+
+export const createPaginationRequest = async ({
   baseQuery,
   page,
   pageCheckpoints = {},
@@ -33,8 +59,6 @@ export const getPage = async ({
   const nearestCachedPage = getNearestCachedPageBefore(page, updatedCheckpoints);
   const firstMissingPage = nearestCachedPage === null ? 0 : nearestCachedPage + 1;
 
-  // Fetch only the pages needed to create a cursor for the requested page.
-  // Example: target page 5 requires checkpoints through page 4.
   for (let pageToCache = firstMissingPage; pageToCache < page; pageToCache += 1) {
     const { pageQuery } = buildPaginatedQuery({
       baseQuery,
