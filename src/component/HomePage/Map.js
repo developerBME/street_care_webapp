@@ -395,7 +395,7 @@ const Map = () => {
               {annotations[7].label}
             </text>
           </Annotation>
-          {/* ===== California (index 8) — upper-left ===== */}
+        {/* ===== California (index 8) — Shorter line, High & Left ===== */}
           <Annotation
             key={annotations[8].label}
             subject={annotations[8].coordinates}
@@ -407,18 +407,20 @@ const Map = () => {
               strokeLinecap: "round",
             }}
           >
+            {/* Line is half the length, reaching to y2="20" instead of "-10" */}
             <line
               x1="0"
               y1="50"
-              x2="-30"
-              y2="25"
+              x2="-8"
+              y2="20"
               stroke="#172146"
               strokeWidth="1"
             />
             <circle cx="0" cy="50" r="1.5" fill="#172146" />
+            {/* Box shifted down and slightly right to match the new line end */}
             <rect
-              x="-78"
-              y="16"
+              x="-32"
+              y="11"
               width="48"
               height="18"
               rx="9"
@@ -426,8 +428,8 @@ const Map = () => {
               fill="#172146"
             />
             <text
-              x={-73}
-              y={25}
+              x={-27}
+              y={20}
               textAnchor="start"
               alignmentBaseline="middle"
               fontSize={8}

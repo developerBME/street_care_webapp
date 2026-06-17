@@ -51,8 +51,8 @@ const UserTypeInfo = () => {
     },
   ];
 
-  return (
-    <div className="mt-4 grid grid-cols-1 gap-2 min-[420px]:grid-cols-2 lg:grid-cols-4">
+ return (
+    <div className="mt-4 flex flex-wrap items-center justify-start gap-3 sm:gap-5">
       {userTypes.map((userType, index) => (
         <CustomTooltip
           title={userType.tooltip}

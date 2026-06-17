@@ -382,22 +382,29 @@ const AllOutreachVisitLog = () => {
                 </svg>
               </label>
 
-              {/* Sort by filter */}
+        {/* Sort by filter */}
               <div className="flex items-center w-full sm:w-auto">
                 <label className="mr-2 text-gray-500 font-medium">
                   Filter:
                 </label>
-                <select
-                  value={sortOption}
-                  onChange={handleSortChange}
-                  className="form-select w-[125px] py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block rounded-2xl"
-                >
-                  <option value="">None</option>
-                  <option value="city">City</option>
-                  <option value="datePeriod">Date Period</option>
-                </select>
+                <div className="relative">
+                  <select
+                    value={sortOption}
+                    onChange={handleSortChange}
+                    className="form-select w-[125px] py-2 pl-3 pr-8 border border-[#CACACA] text-gray-500 appearance-none block rounded-2xl bg-transparent"
+                  >
+                    <option value="">None</option>
+                    <option value="city">City</option>
+                    <option value="datePeriod">Date Period</option>
+                  </select>
+                  {/* Changed 'px-3' to 'pr-2' to push the arrow to the right edge */}
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center text-gray-500">
+                    <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                      <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                    </svg>
+                  </div>
+                </div>
               </div>
-
               {/* Conditional rendering of City search */}
               {sortOption === "city" && (
                 <input
