@@ -63,6 +63,8 @@ import PostApprovals2 from "./component/admin_test/PostApprovals/PostApprovals.j
 import AdminOutreachEvents from "./component/Admin/AdminOutreachEvents.js";
 import InteractionLogForm from "./component/UserProfile/InteractionLogForm.js";
 
+import TestPagination from "./component/TestPagination.js";
+
 const users_collection = collectionMapping.users;
 
 function App() {
@@ -119,6 +121,7 @@ function App() {
             setLoggedIn={setLoggedIn}
           />
           <Routes>
+            <Route path="/test-pagination" element={<TestPagination />} />
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/howtohelp" element={<HowToHelp />} />

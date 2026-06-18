@@ -1,15 +1,20 @@
-import { getDocs } from "firebase/firestore";
+import { getDocs, getCountFromServer } from "firebase/firestore";
 import {
   buildPaginatedQuery,
   getNearestCachedPageBefore,
 } from "../utils/buildPaginatedQuery";
-import { getPageCheckpoint } from "../utils/getPageCheckpoint";
 
-const applyFiltersAndSort = ({ baseQuery, filters, sort }) => {
-  // TODO: apply filters and sort to baseQuery
+const applyFiltersAndSort = ({
+  baseQuery,
+  filters,
+  sort,
+}) => {
   return baseQuery;
 };
 
+// -----------------------------
+// Build request + checkpoint chain
+// -----------------------------
 export const createPaginationRequest = async ({
   baseQuery,
   page,
@@ -17,38 +22,50 @@ export const createPaginationRequest = async ({
 }) => {
   const updatedCheckpoints = { ...pageCheckpoints };
 
-  const targetPageIsCached = Boolean(updatedCheckpoints[page]?.firstDoc);
+  const cached =
+    updatedCheckpoints[page]?.firstDoc;
 
-  if (targetPageIsCached) {
+  if (cached) {
     const { pageQuery } = buildPaginatedQuery({
       baseQuery,
       page,
       pageCheckpoints: updatedCheckpoints,
     });
 
-    return { pageQuery, pageCheckpoints: updatedCheckpoints };
+    return {
+      pageQuery,
+      pageCheckpoints: updatedCheckpoints,
+    };
   }
 
-  const nearestCachedPage = getNearestCachedPageBefore(page, updatedCheckpoints);
-  const firstMissingPage = nearestCachedPage === null ? 0 : nearestCachedPage + 1;
+  const nearest = getNearestCachedPageBefore(
+    page,
+    updatedCheckpoints
+  );
 
-  for (let pageToCache = firstMissingPage; pageToCache < page; pageToCache++) {
+  const start =
+    nearest === null ? 0 : nearest + 1;
+
+  for (
+    let i = start;
+    i < page;
+    i++
+  ) {
     const { pageQuery } = buildPaginatedQuery({
       baseQuery,
-      page: pageToCache,
+      page: i,
       pageCheckpoints: updatedCheckpoints,
     });
 
-    const snapshot = await getDocs(pageQuery);
-    const docs = snapshot.docs;
+    const snap = await getDocs(pageQuery);
+    const docs = snap.docs;
 
-    const checkpoint = getPageCheckpoint(docs);
+    if (!docs.length) break;
 
-    if (!checkpoint) {
-      return { pageQuery: null, pageCheckpoints: updatedCheckpoints };
-    }
-
-    updatedCheckpoints[pageToCache] = checkpoint;
+    updatedCheckpoints[i] = {
+      firstDoc: docs[0],
+      lastDoc: docs[docs.length - 1],
+    };
   }
 
   const { pageQuery } = buildPaginatedQuery({
@@ -57,32 +74,64 @@ export const createPaginationRequest = async ({
     pageCheckpoints: updatedCheckpoints,
   });
 
-  return { pageQuery, pageCheckpoints: updatedCheckpoints };
+  return {
+    pageQuery,
+    pageCheckpoints: updatedCheckpoints,
+  };
 };
 
-  export const getPage = async ({ baseQuery, targetPage, filters, sort, checkpoints }) => {
-  const filteredQuery = applyFiltersAndSort({ baseQuery, filters, sort });
+// -----------------------------
+// MAIN API
+// -----------------------------
+export const getPage = async ({
+  baseQuery,
+  targetPage,
+  filters,
+  sort,
+  checkpoints,
+}) => {
+  const filteredQuery = applyFiltersAndSort({
+    baseQuery,
+    filters,
+    sort,
+  });
 
-  const { pageQuery, pageCheckpoints } = await createPaginationRequest({
+  const countSnap =
+    await getCountFromServer(filteredQuery);
+
+  const totalRecords =
+    countSnap.data().count;
+
+  const {
+    pageQuery,
+    pageCheckpoints,
+  } = await createPaginationRequest({
     baseQuery: filteredQuery,
     page: targetPage,
     pageCheckpoints: checkpoints,
   });
 
   if (!pageQuery) {
-    return { data: [], firstDoc: null, lastDoc: null, totalRecords: null, pageCheckpoints: checkpoints };
+    return {
+      data: [],
+      firstDoc: null,
+      lastDoc: null,
+      totalRecords,
+      pageCheckpoints,
+    };
   }
 
   const snapshot = await getDocs(pageQuery);
   const docs = snapshot.docs;
 
   return {
-    data: docs.map(d => ({ id: d.id, ...d.data() })),
+    data: docs.map((d) => ({
+      id: d.id,
+      ...d.data(),
+    })),
     firstDoc: docs[0] ?? null,
     lastDoc: docs[docs.length - 1] ?? null,
-    totalRecords: null,
+    totalRecords,
     pageCheckpoints,
   };
 };
-
- 
