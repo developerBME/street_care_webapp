@@ -394,8 +394,8 @@ const AllOutreachVisitLog = () => {
                     className="form-select w-[125px] py-2 pl-3 pr-8 border border-[#CACACA] text-gray-500 appearance-none block rounded-2xl bg-transparent"
                   >
                     <option value="">None</option>
-                    <option value="city">City</option>
                     <option value="datePeriod">Date Period</option>
+                    <option value="city">City</option>
                   </select>
                   {/* Changed 'px-3' to 'pr-2' to push the arrow to the right edge */}
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center text-gray-500">
