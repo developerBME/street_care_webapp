@@ -1,4 +1,4 @@
-import { getDocs, getCountFromServer } from "firebase/firestore";
+import { getDocs, getCountFromServer, query, where, orderBy } from "firebase/firestore";
 import {
   buildPaginatedQuery,
   getNearestCachedPageBefore,
@@ -6,10 +6,46 @@ import {
 
 const applyFiltersAndSort = ({
   baseQuery,
+  search,
   filters,
   sort,
 }) => {
-  return baseQuery;
+  let q = baseQuery;
+
+  // ─────────────────────────────
+  // SEARCH (single rule)
+  // ─────────────────────────────
+  if (search?.value?.trim()) {
+    const value = search.value.trim();
+
+    q = query(
+      q,
+      where(search.field || "name", search.op || "==", value)
+    );
+  }
+
+  // ─────────────────────────────
+  // FILTERS (multiple rules)
+  // ─────────────────────────────
+  if (Array.isArray(filters)) {
+    filters.forEach((f) => {
+    if (!f?.field || f.value == null || f.value === "") return;
+
+    q = query(q, where(f.field, f.op || "==", f.value));
+    });
+  }
+  
+  // ─────────────────────────────
+  // SORT
+  // ─────────────────────────────
+  if (sort?.field) {
+    q = query(
+      q,
+      orderBy(sort.field, sort.direction || "asc")
+    );
+  }
+
+  return q;
 };
 
 // -----------------------------
@@ -87,11 +123,13 @@ export const getPage = async ({
   baseQuery,
   targetPage,
   filters,
+  search,
   sort,
   checkpoints,
 }) => {
   const filteredQuery = applyFiltersAndSort({
     baseQuery,
+    search,
     filters,
     sort,
   });

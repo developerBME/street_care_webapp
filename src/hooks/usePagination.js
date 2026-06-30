@@ -3,8 +3,9 @@ import { getPage } from "../services/paginationService";
 
 // ─── Reducer ────────────────────────────────────────────────
 export const initialPageParams = {
-  filters: {},
-  searchText: "",
+  filters: [],
+  search: null,
+  sort: null,
   pgNo: 0,
 };
 
@@ -17,15 +18,17 @@ export function paginationReducer(state, action) {
       return { ...state, filters: action.payload, pgNo: 0 };
 
     case "SET_SEARCH":
-      return { ...state, searchText: action.payload, pgNo: 0 };
+      return { ...state, search: action.payload, pgNo: 0 };
 
+    case "SET_SORT":
+      return {...state, sort: action.payload, pgNo: 0};
     default:
       return state;
   }
 }
 
 // ─── Hook ────────────────────────────────────────────────────
-export default function usePagination({ baseQuery, sort }) {
+export default function usePagination({ baseQuery }) {
 
   const [pageParams, dispatch] = useReducer(paginationReducer, initialPageParams);
 
@@ -45,17 +48,23 @@ export default function usePagination({ baseQuery, sort }) {
       setHookState({ state: "Loading", data: null, error: null });
       dispatch({ type: "SET_PAGE", payload: pgNo });
     },
-
-    setSearchText: (searchText) => {
+    //search: { field: "name",  op: "==",  value: "john" }
+    setSearch: (search) => {
       setHookState({ state: "Loading", data: null, error: null });
       checkpointsRef.current = {};
-      dispatch({ type: "SET_SEARCH", payload: searchText });
+      dispatch({ type: "SET_SEARCH", payload: search });
     },
-
-    setFilterField: (filters) => {
+    //filters: [{ field: "status", op: "==", value: "active" }, { field: "role", op: "==", value: "admin" }]
+    setFilter: (filters) => {
       setHookState({ state: "Loading", data: null, error: null });
       checkpointsRef.current = {};
       dispatch({ type: "SET_FILTERS", payload: filters });
+    },
+    //sort: { field: "createdAt", direction: "desc" }
+    setSort: (sort) => {
+      setHookState({ state: "Loading", data: null, error: null });
+      checkpointsRef.current = {};
+      dispatch({ type: "SET_SORT", payload: sort });
     },
   }), []);
 
@@ -69,11 +78,9 @@ export default function usePagination({ baseQuery, sort }) {
         const result = await getPage({
           baseQuery,
           targetPage: pageParams.pgNo,
-          filters: {
-            ...pageParams.filters,
-            searchText: pageParams.searchText,
-          },
-          sort,
+          filters: pageParams.filters,
+          search: pageParams.search,
+          sort: pageParams.sort,
           checkpoints: checkpointsRef.current,
         });
 
@@ -94,7 +101,7 @@ export default function usePagination({ baseQuery, sort }) {
     loadPage();
 
     return () => controller.abort();
-  }, [baseQuery, pageParams, sort]);
+  }, [baseQuery, pageParams]);
 
   return {
     hookState,

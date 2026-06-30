@@ -5,19 +5,19 @@ import { db } from "./firebase";
 import collectionMapping from "../utils/firestoreCollections";
 
 export default function TestPagination() {
+  const q = useMemo(() => {
+    return query(collection(db, collectionMapping.users)
+      // where("isAdmin", "==", "true"),
+      // orderBy("username", "asc"));
+      );
+      }, []);
+      
   const {
     hookState,
     pageParams,
     pgTriggerFns,
     totalRecords,
-  } = usePagination({
-    baseQuery: query(
-      collection(db, collectionMapping.events),
-      where("title", "==", "Street Care SOS"),
-      orderBy("title", "asc")
-    ),
-    sort: null,
-  });
+  } = usePagination({ baseQuery: q });
 
   const PAGE_SIZE = 5;
 
