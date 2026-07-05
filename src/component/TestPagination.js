@@ -1,17 +1,17 @@
-import React from "react";
+import React, { useMemo } from "react";
 import usePagination from "../hooks/usePagination";
-import { collection, orderBy, query, where } from "firebase/firestore";
+import { collection, query, orderBy } from "firebase/firestore";
 import { db } from "./firebase";
 import collectionMapping from "../utils/firestoreCollections";
 
 export default function TestPagination() {
   const q = useMemo(() => {
-    return query(collection(db, collectionMapping.users)
-      // where("isAdmin", "==", "true"),
-      // orderBy("username", "asc"));
-      );
-      }, []);
-      
+    return query(
+      collection(db, collectionMapping.events),
+      //orderBy("date", "asc") // required for pagination
+    );
+  }, []);
+
   const {
     hookState,
     pageParams,
@@ -27,9 +27,15 @@ export default function TestPagination() {
 
   const rows = hookState.data || [];
 
-  // ─────────────────────────────────────────────
-  // STABLE COLUMN STORAGE (prevents flicker)
-  // ─────────────────────────────────────────────
+  // ─────────────────────────────
+  // UI STATE
+  // ─────────────────────────────
+  const [searchText, setSearchText] = React.useState("");
+  const [sortOption, setSortOption] = React.useState("date_asc");
+
+  // ─────────────────────────────
+  // COLUMN STABILITY
+  // ─────────────────────────────
   const columnsRef = React.useRef([]);
 
   React.useEffect(() => {
@@ -48,18 +54,15 @@ export default function TestPagination() {
 
   const columns = columnsRef.current;
 
-  // ─────────────────────────────────────────────
-  // Pagination window
-  // ─────────────────────────────────────────────
+  // ─────────────────────────────
+  // PAGINATION WINDOW
+  // ─────────────────────────────
   const getVisiblePages = () => {
     const current = pageParams.pgNo;
     const delta = 2;
 
     const start = Math.max(0, current - delta);
-    const end = Math.min(
-      totalPages - 1,
-      current + delta
-    );
+    const end = Math.min(totalPages - 1, current + delta);
 
     const pages = [];
 
@@ -88,6 +91,78 @@ export default function TestPagination() {
         Total Records: {totalRecords || 0}
       </div>
 
+      {/* ─────────────────────────────
+          SEARCH + SORT CONTROLS
+      ───────────────────────────── */}
+      <div style={{ marginBottom: 15, display: "flex", gap: 10 }}>
+        {/* SEARCH */}
+        <input
+          value={searchText}
+          placeholder="Search location..."
+          onChange={(e) => setSearchText(e.target.value)}
+          style={{
+            padding: "8px",
+            width: 250,
+          }}
+        />
+
+        <button
+          onClick={() =>
+            pgTriggerFns.setSearch(
+              searchText.trim()
+                ? {
+                    field: "location",
+                    op: "==",
+                    value: searchText.trim(),
+                  }
+                : null
+            )
+          }
+        >
+          Search
+        </button>
+
+        <button
+          onClick={() => {
+            setSearchText("");
+            pgTriggerFns.setSearch(null);
+          }}
+        >
+          Clear
+        </button>
+
+        {/* SORT */}
+        <select
+          value={sortOption}
+          onChange={(e) => {
+            const value = e.target.value;
+            setSortOption(value);
+
+            if (value === "date_asc") {
+              pgTriggerFns.setSort({
+                field: "date",
+                direction: "asc",
+              });
+            }
+
+            if (value === "date_desc") {
+              pgTriggerFns.setSort({
+                field: "date",
+                direction: "desc",
+              });
+            }
+          }}
+          style={{ padding: "8px", marginLeft: "auto" }}
+        >
+          <option value="date_asc">
+            Date (Asc)
+          </option>
+          <option value="date_desc">
+            Date (Desc)
+          </option>
+        </select>
+      </div>
+
       {/* TABLE */}
       <div style={{ overflowX: "auto" }}>
         <table
@@ -95,7 +170,7 @@ export default function TestPagination() {
             width: "100%",
             borderCollapse: "collapse",
             minWidth: 700,
-            tableLayout: "fixed", // prevents width jumping
+            tableLayout: "fixed",
           }}
         >
           <thead>
@@ -144,22 +219,16 @@ export default function TestPagination() {
 
         {getVisiblePages().map((pageNo, idx, arr) => {
           const prev = arr[idx - 1];
-          const showDots =
-            prev !== undefined &&
-            pageNo - prev > 1;
+          const showDots = prev !== undefined && pageNo - prev > 1;
 
           return (
             <React.Fragment key={pageNo}>
               {showDots && (
-                <span style={{ padding: "0 6px" }}>
-                  ...
-                </span>
+                <span style={{ padding: "0 6px" }}>...</span>
               )}
 
               <button
-                onClick={() =>
-                  pgTriggerFns.getPage(pageNo)
-                }
+                onClick={() => pgTriggerFns.getPage(pageNo)}
                 style={{
                   padding: "6px 10px",
                   border: "1px solid #ccc",
@@ -168,9 +237,7 @@ export default function TestPagination() {
                       ? "#1976d2"
                       : "#fff",
                   color:
-                    pageNo === pageParams.pgNo
-                      ? "#fff"
-                      : "#000",
+                    pageNo === pageParams.pgNo ? "#fff" : "#000",
                   fontWeight:
                     pageNo === pageParams.pgNo
                       ? "bold"
@@ -184,9 +251,7 @@ export default function TestPagination() {
         })}
 
         <button
-          disabled={
-            pageParams.pgNo >= totalPages - 1
-          }
+          disabled={pageParams.pgNo >= totalPages - 1}
           onClick={() =>
             pgTriggerFns.getPage(pageParams.pgNo + 1)
           }
@@ -198,9 +263,9 @@ export default function TestPagination() {
   );
 }
 
-// ─────────────────────────────────────────────
-// Cell renderer
-// ─────────────────────────────────────────────
+// ─────────────────────────────
+// CELL RENDERER
+// ─────────────────────────────
 function renderCell(value) {
   if (value == null) return "-";
 
@@ -208,16 +273,15 @@ function renderCell(value) {
     if (value.toDate) {
       return value.toDate().toLocaleString();
     }
-
     return JSON.stringify(value);
   }
 
   return String(value);
 }
 
-// ─────────────────────────────────────────────
-// Styles
-// ─────────────────────────────────────────────
+// ─────────────────────────────
+// STYLES
+// ─────────────────────────────
 const th = {
   textAlign: "left",
   padding: "10px",
