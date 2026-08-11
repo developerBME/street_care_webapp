@@ -20,26 +20,27 @@ import badge4 from "../../images/badge4.png";
 import badge5 from "../../images/badge5.png";
 import badge6 from "../../images/badge6.png";
 import useSuccessMetrics from "../../utils/successMetrics";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 /* ================= POPUP ================= */
 const MEMBERSHIP_URL = "https://streetcare.us/chapter-membership-form/";
-//const //LS_KEY = "sc_verify_popup_snooze_until"; // timestamp (ms)
+const LS_KEY = "sc_verify_popup_snooze_until"; // timestamp (ms)
 
 function shouldShowPopup() {
-  /*try {
+  try {
     const snooze = Number(localStorage.getItem(LS_KEY) || 0);
     return Date.now() > snooze;
   } catch {
     return true;
-  }*/
-  return true;
+  }
 }
-/*function snooze(days = 7) {
+
+function snoozePopup(days = 7) {
   try {
     const until = Date.now() + days * 24 * 60 * 60 * 1000;
     localStorage.setItem(LS_KEY, String(until));
   } catch {}
-}*/
+}
 
 function GetVerifiedPopup({ open, onClose }) {
   const dialogRef = useRef(null);
@@ -61,10 +62,9 @@ function GetVerifiedPopup({ open, onClose }) {
   if (!open) return null;
 
   const handleClose = () => {
-    //snooze(7);
-    onClose();
-  };
-
+  snoozePopup(7);
+  onClose();
+};
   // 🆕 open StreetCare in a new tab (and keep your site)
   const handleCTA = () => {
     window.open(MEMBERSHIP_URL, "_blank", "noopener,noreferrer"); // 🆕
@@ -397,17 +397,33 @@ const renderStepContent = (selectedStep) => {
 function HowToHelp() {
   const [selectedStep, setSelectedStep] = useState(1);
   const [showPopup, setShowPopup] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
   const { isLoading, error, metrics } = useSuccessMetrics();
+
+  useEffect(() => {
+  const fAuth = getAuth();
+  const unsubscribe = onAuthStateChanged(fAuth, (user) => {
+    setLoggedIn(!!user);
+    setAuthChecked(true);
+  });
+  return () => unsubscribe();
+}, []);
 
   const handleSelectStep = (step) => {
     setSelectedStep(step);
   };
 
   useEffect(() => {
-    document.title = "How to help - Street Care";
-    // Force popup with ?verify=1 for testing
+  document.title = "How to help - Street Care";
+}, []);
+
+useEffect(() => {
+  if (!authChecked) return;
+  if (!loggedIn && shouldShowPopup()) {
     setShowPopup(true);
-  }, []);
+  }
+}, [authChecked, loggedIn]);
 
   return (
     <div className="bg-gradient-to-tr from-[#E4EEEA] from-10% via-[#E4EEEA] via-60% to-[#EAEEB5] to-90% bg-fixed">
