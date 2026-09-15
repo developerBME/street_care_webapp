@@ -1,6 +1,14 @@
 import searchIcon from "../../../../images/search-icon-PostApproval.png";
 
-export default function SearchSort() {
+export default function SearchSort({
+  search,
+  onSearchChange,
+  sortField,
+  sortDirection,
+  sortOptions,
+  onSortFieldChange,
+  onSortDirectionChange,
+}) {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-end sm:gap-6">
       {/* Search */}
@@ -11,6 +19,9 @@ export default function SearchSort() {
           name="searchText"
           id="searchText"
           className="h-full min-w-0 flex-1 text-sm outline-none"
+          value={search}
+          onChange={(event) => onSearchChange(event.target.value)}
+          aria-label="Search pending posts"
         />
         <button type="button" className="h-6 w-6 shrink-0 text-gray-500">
           <img src={searchIcon} alt="Search" className="h-full w-full" />
@@ -28,11 +39,27 @@ export default function SearchSort() {
         <select
           id="sort"
           className="h-10 w-full rounded border border-gray-300 bg-white px-3 text-sm sm:w-44"
+          value={sortField}
+          onChange={(event) => onSortFieldChange(event.target.value)}
+          aria-label="Sort pending posts by"
         >
-          <option>Most Recent</option>
-          <option>Oldest First</option>
-          <option>Alphabetical</option>
+          {sortOptions.map((option) => (
+            <option key={option.field} value={option.field}>
+              {option.label}
+            </option>
+          ))}
         </select>
+        <button
+          type="button"
+          onClick={() =>
+            onSortDirectionChange(sortDirection === "asc" ? "desc" : "asc")
+          }
+          className="h-10 min-w-10 rounded border border-[#6840E0] bg-white px-2 text-[#6840E0]"
+          aria-label={`Sorted ${sortDirection === "asc" ? "ascending" : "descending"}. Change sort direction`}
+          title={sortDirection === "asc" ? "Ascending" : "Descending"}
+        >
+          {sortDirection === "asc" ? "↑" : "↓"}
+        </button>
       </div>
     </div>
   );

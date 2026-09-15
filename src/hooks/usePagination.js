@@ -22,13 +22,19 @@ export function paginationReducer(state, action) {
 
     case "SET_SORT":
       return {...state, sort: action.payload, pgNo: 0};
+    case "SET_QUERY":
+      return { ...state, ...action.payload, pgNo: 0 };
     default:
       return state;
   }
 }
 
 // ─── Hook ────────────────────────────────────────────────────
-export default function usePagination({ baseQuery }) {
+export default function usePagination({
+  baseQuery,
+  pageSize = 5,
+  pageLoader = getPage,
+}) {
 
   const [pageParams, dispatch] = useReducer(paginationReducer, initialPageParams);
 
@@ -39,6 +45,7 @@ export default function usePagination({ baseQuery }) {
   });
 
   const [totalRecords, setTotalRecords] = useState(0);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const checkpointsRef = useRef({});
 
@@ -66,6 +73,17 @@ export default function usePagination({ baseQuery }) {
       checkpointsRef.current = {};
       dispatch({ type: "SET_SORT", payload: sort });
     },
+    setQuery: ({ filters, search, sort }) => {
+      setHookState({ state: "Loading", data: null, error: null });
+      checkpointsRef.current = {};
+      dispatch({ type: "SET_QUERY", payload: { filters, search, sort } });
+    },
+    refresh: () => {
+      setHookState({ state: "Loading", data: null, error: null });
+      checkpointsRef.current = {};
+      dispatch({ type: "SET_PAGE", payload: 0 });
+      setRefreshKey((key) => key + 1);
+    },
   }), []);
 
   // ─── Effect ─────────────────────────────────────────────────
@@ -75,8 +93,9 @@ export default function usePagination({ baseQuery }) {
 
     const loadPage = async () => {
       try {
-        const result = await getPage({
+        const result = await pageLoader({
           baseQuery,
+          pageSize,
           targetPage: pageParams.pgNo,
           filters: pageParams.filters,
           search: pageParams.search,
@@ -101,7 +120,7 @@ export default function usePagination({ baseQuery }) {
     loadPage();
 
     return () => controller.abort();
-  }, [baseQuery, pageParams]);
+  }, [baseQuery, pageLoader, pageParams, pageSize, refreshKey]);
 
   return {
     hookState,

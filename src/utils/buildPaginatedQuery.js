@@ -23,12 +23,11 @@ export const getNearestCachedPageBefore = (
 // -----------------------------
 // Build paginated Firestore query
 // -----------------------------
-const PAGE_SIZE = 5;
-
 export const buildPaginatedQuery = ({
   baseQuery,
   page,
   pageCheckpoints = {},
+  pageSize = 5,
 }) => {
   if (page < 0) {
     throw new Error("Page must be 0 or greater.");
@@ -37,7 +36,7 @@ export const buildPaginatedQuery = ({
   // PAGE 0
   if (page === 0) {
     return {
-      pageQuery: query(baseQuery, limit(PAGE_SIZE)),
+      pageQuery: query(baseQuery, limit(pageSize)),
     };
   }
 
@@ -47,7 +46,7 @@ export const buildPaginatedQuery = ({
       pageQuery: query(
         baseQuery,
         startAt(pageCheckpoints[page].firstDoc),
-        limit(PAGE_SIZE)
+        limit(pageSize)
       ),
     };
   }
@@ -68,8 +67,8 @@ export const buildPaginatedQuery = ({
       ? query(
           baseQuery,
           startAfter(cursor),
-          limit(PAGE_SIZE)
+          limit(pageSize)
         )
-      : query(baseQuery, limit(PAGE_SIZE)),
+      : query(baseQuery, limit(pageSize)),
   };
 };

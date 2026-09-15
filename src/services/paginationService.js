@@ -55,6 +55,7 @@ export const createPaginationRequest = async ({
   baseQuery,
   page,
   pageCheckpoints = {},
+  pageSize = 5,
 }) => {
   const updatedCheckpoints = { ...pageCheckpoints };
 
@@ -66,11 +67,13 @@ export const createPaginationRequest = async ({
       baseQuery,
       page,
       pageCheckpoints: updatedCheckpoints,
+      pageSize,
     });
 
     return {
       pageQuery,
       pageCheckpoints: updatedCheckpoints,
+      pageSize,
     };
   }
 
@@ -91,6 +94,7 @@ export const createPaginationRequest = async ({
       baseQuery,
       page: i,
       pageCheckpoints: updatedCheckpoints,
+      pageSize,
     });
 
     const snap = await getDocs(pageQuery);
@@ -108,6 +112,7 @@ export const createPaginationRequest = async ({
     baseQuery,
     page,
     pageCheckpoints: updatedCheckpoints,
+    pageSize,
   });
 
   return {
@@ -126,6 +131,7 @@ export const getPage = async ({
   search,
   sort,
   checkpoints,
+  pageSize = 5,
 }) => {
   const filteredQuery = applyFiltersAndSort({
     baseQuery,
@@ -147,6 +153,7 @@ export const getPage = async ({
     baseQuery: filteredQuery,
     page: targetPage,
     pageCheckpoints: checkpoints,
+    pageSize,
   });
 
   if (!pageQuery) {

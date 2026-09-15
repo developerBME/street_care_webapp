@@ -51,6 +51,38 @@ export const orderFieldMap = {
   visitLogs: "lastModifiedTimestamp",
   helpRequests: "lastModifiedTimestamp",
 };
+
+// Adding a future tab only requires an entry here; the toolbar and query logic
+// consume the same shape and do not contain tab-specific conditionals.
+export const postQueryConfig = {
+  outreaches: {
+    searchFields: ["title", "description", "userName", "location.city", "location.stateAbbv"],
+    defaultSort: { field: "eventDate", direction: "desc" },
+    sortOptions: [
+      { field: "eventDate", label: "Event date" },
+      { field: "title", label: "Title" },
+      { field: "userName", label: "Submitted by" },
+    ],
+  },
+  visitLogs: {
+    searchFields: ["description", "userName", "firstName", "lastName", "city", "location.city", "whatGiven"],
+    defaultSort: { field: "lastModifiedTimestamp", direction: "desc" },
+    sortOptions: [
+      { field: "lastModifiedTimestamp", label: "Last modified" },
+      { field: "userName", label: "Submitted by" },
+      { field: "city", label: "City" },
+    ],
+  },
+  helpRequests: {
+    searchFields: ["firstName", "interactionLogFirstName", "additionalDetails", "locationLandmark", "furtherHelpCategory", "userName"],
+    defaultSort: { field: "lastModifiedTimestamp", direction: "desc" },
+    sortOptions: [
+      { field: "lastModifiedTimestamp", label: "Last modified" },
+      { field: "firstName", label: "Name" },
+      { field: "locationLandmark", label: "Location" },
+    ],
+  },
+};
 // userIdMappings according to collection
 
 export const userIdFieldMap = {

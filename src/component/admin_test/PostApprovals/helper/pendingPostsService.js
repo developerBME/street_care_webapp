@@ -26,11 +26,12 @@ export async function fetchPendingPage({
   orderField,
   pageSize,
   cursor, // anchor object: null OR { orderValue: any }
+  sortDirection = "desc",
 }) {
   const base = [
     collection(db, collectionName),
     where("status", "==", "pending"), // TODO: change
-    orderBy(orderField, "desc"),
+    orderBy(orderField, sortDirection),
 
     limit(pageSize),
   ];
@@ -67,4 +68,67 @@ export async function fetchPendingPage({
     : null;
 
   return { posts, nextCursor };
+}
+
+const valueAtPath = (value, path) =>
+  path.split(".").reduce((current, key) => current?.[key], value);
+
+const searchableText = (value) => {
+  if (Array.isArray(value)) return value.join(" ");
+  return value == null ? "" : String(value);
+};
+
+// Firestore has no native case-insensitive contains-across-fields query. For an
+// active search we still constrain/order on the backend, enrich the documents,
+// then apply the configurable multi-field match before slicing the requested page.
+export async function fetchPendingSearchPage({
+  collectionName,
+  orderField,
+  sortField = orderField,
+  sortDirection = "desc",
+  searchTerm,
+  searchFields,
+  pageSize,
+  page,
+}) {
+  const q = query(
+    collection(db, collectionName),
+    where("status", "==", "pending"),
+    orderBy(orderField, sortDirection),
+  );
+  const snap = await getDocs(q);
+  const needle = searchTerm.trim().toLocaleLowerCase();
+  const enriched = await Promise.all(
+    snap.docs.map(async (d) => {
+      const post = { id: d.id, ...d.data() };
+      const userDetails = post.uid || post.userId
+        ? await fetchUserTypeDetails(post.uid || post.userId)
+        : null;
+      return {
+        ...post,
+        userName: userDetails?.username || "Unknown User",
+        userType: userDetails?.type || "",
+        photoUrl: userDetails?.photoUrl || "",
+      };
+    }),
+  );
+  const matches = enriched.filter((post) =>
+    searchFields.some((field) =>
+      searchableText(valueAtPath(post, field)).toLocaleLowerCase().includes(needle),
+    ),
+  );
+  matches.sort((left, right) => {
+    const leftValue = valueAtPath(left, sortField);
+    const rightValue = valueAtPath(right, sortField);
+    const normalize = (value) => {
+      if (typeof value?.toMillis === "function") return value.toMillis();
+      if (value?.seconds != null) return value.seconds;
+      return searchableText(value).toLocaleLowerCase();
+    };
+    const comparison = normalize(leftValue) > normalize(rightValue) ? 1
+      : normalize(leftValue) < normalize(rightValue) ? -1 : 0;
+    return sortDirection === "asc" ? comparison : -comparison;
+  });
+  const start = (page - 1) * pageSize;
+  return { posts: matches.slice(start, start + pageSize), total: matches.length };
 }

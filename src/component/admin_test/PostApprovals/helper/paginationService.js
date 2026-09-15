@@ -6,6 +6,7 @@ export async function ensurePageCursor({
   orderFieldMap,
   postsPerPage,
   fetchPendingPage,
+  sortDirection = "desc",
 }) {
   let nextCursors = cursors || { 1: null };
 
@@ -20,6 +21,7 @@ export async function ensurePageCursor({
       orderField: orderFieldMap[tab],
       pageSize: postsPerPage,
       cursor: nextCursors[p] ?? null,
+      sortDirection,
     });
 
     if (nextCursor == null) {
@@ -46,6 +48,7 @@ export async function fetchPageWithCursor({
   orderFieldMap,
   postsPerPage,
   fetchPendingPage,
+  sortDirection = "desc",
 }) {
   if (targetPage > 1 && cursors[targetPage] == null) {
     throw new Error(`Missing cursor for page ${targetPage}`);
@@ -56,6 +59,7 @@ export async function fetchPageWithCursor({
     orderField: orderFieldMap[tab],
     pageSize: postsPerPage,
     cursor: cursors[targetPage] ?? null,
+    sortDirection,
   });
 
   const updatedCursors =
