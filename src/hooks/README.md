@@ -437,7 +437,7 @@ When modifying this module:
 # Quick Reference
 
 | Task | File |
-|------|------|
+|------------------|------|
 | Change page size | `src/utils/buildPaginatedQuery.js` (`PAGE_SIZE`) |
 | Modify hook state | `src/hooks/usePagination.js` |
 | Add reducer actions | `src/hooks/usePagination.js` |

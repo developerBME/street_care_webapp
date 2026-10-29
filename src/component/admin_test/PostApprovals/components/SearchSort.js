@@ -15,7 +15,8 @@ export default function SearchSort({
       <div className="flex h-10 min-w-0 flex-1 items-center gap-2 rounded border border-gray-300 px-2 sm:flex-initial sm:w-64">
         <input
           type="text"
-          placeholder="Search here..."
+          placeholder="Name, date, location, description..."
+          title="Search by name, date (e.g. Oct 29, 2026 or 2026-10-29), location, or description"
           name="searchText"
           id="searchText"
           className="h-full min-w-0 flex-1 text-sm outline-none"

@@ -78,6 +78,34 @@ const searchableText = (value) => {
   return value == null ? "" : String(value);
 };
 
+// Use the browser's local calendar date, just like the dates shown on the cards.
+const searchableDate = (value) => {
+  if (value == null || value === "") return "";
+  let date;
+  if (typeof value?.toDate === "function") date = value.toDate();
+  else if (typeof value?.seconds === "number") date = new Date(value.seconds * 1000);
+  else if (value instanceof Date) date = value;
+  else if (typeof value === "string" || typeof value === "number") {
+    date = new Date(typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value)
+      ? `${value}T00:00:00`
+      : value);
+  }
+  if (!(date instanceof Date) || Number.isNaN(date.getTime())) return "";
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return [
+    `${year}-${month}-${day}`,
+    `${month}/${day}/${year}`,
+    date.toLocaleDateString("en-US"),
+    date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+    date.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }),
+  ].join(" ");
+};
+
+const normalizeSearchText = (value) => value.toLocaleLowerCase().replace(/,/g, " ");
+
 // Firestore has no native case-insensitive contains-across-fields query. For an
 // active search we still constrain/order on the backend, enrich the documents,
 // then apply the configurable multi-field match before slicing the requested page.
@@ -88,6 +116,7 @@ export async function fetchPendingSearchPage({
   sortDirection = "desc",
   searchTerm,
   searchFields,
+  searchDateFields = [],
   pageSize,
   page,
 }) {
@@ -97,7 +126,7 @@ export async function fetchPendingSearchPage({
     orderBy(orderField, sortDirection),
   );
   const snap = await getDocs(q);
-  const needle = searchTerm.trim().toLocaleLowerCase();
+  const terms = normalizeSearchText(searchTerm.trim()).split(/\s+/).filter(Boolean);
   const enriched = await Promise.all(
     snap.docs.map(async (d) => {
       const post = { id: d.id, ...d.data() };
@@ -112,11 +141,14 @@ export async function fetchPendingSearchPage({
       };
     }),
   );
-  const matches = enriched.filter((post) =>
-    searchFields.some((field) =>
-      searchableText(valueAtPath(post, field)).toLocaleLowerCase().includes(needle),
-    ),
-  );
+  const matches = enriched.filter((post) => {
+    const text = normalizeSearchText([
+      ...searchFields.map((field) => searchableText(valueAtPath(post, field))),
+      ...searchDateFields.map((field) => searchableDate(valueAtPath(post, field))),
+    ].join(" "));
+    // Match every word so full names and city/state searches work across fields.
+    return terms.every((term) => text.includes(term));
+  });
   matches.sort((left, right) => {
     const leftValue = valueAtPath(left, sortField);
     const rightValue = valueAtPath(right, sortField);

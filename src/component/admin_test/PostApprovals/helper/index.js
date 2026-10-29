@@ -56,7 +56,8 @@ export const orderFieldMap = {
 // consume the same shape and do not contain tab-specific conditionals.
 export const postQueryConfig = {
   outreaches: {
-    searchFields: ["title", "description", "userName", "location.city", "location.stateAbbv"],
+    searchFields: ["title", "description", "userName", "location.city", "location.stateAbbv", "location.state", "location.address", "city", "stateAbbv"],
+    searchDateFields: ["eventDate"],
     defaultSort: { field: "eventDate", direction: "desc" },
     sortOptions: [
       { field: "eventDate", label: "Event date" },
@@ -65,7 +66,8 @@ export const postQueryConfig = {
     ],
   },
   visitLogs: {
-    searchFields: ["description", "userName", "firstName", "lastName", "city", "location.city", "whatGiven"],
+    searchFields: ["description", "userName", "firstName", "lastName", "city", "state", "stateAbbv", "addr1", "location.city", "location.state", "location.stateAbbv", "location.address", "whatGiven"],
+    searchDateFields: ["timeStamp", "lastModifiedTimestamp"],
     defaultSort: { field: "lastModifiedTimestamp", direction: "desc" },
     sortOptions: [
       { field: "lastModifiedTimestamp", label: "Last modified" },
@@ -74,7 +76,8 @@ export const postQueryConfig = {
     ],
   },
   helpRequests: {
-    searchFields: ["firstName", "interactionLogFirstName", "additionalDetails", "locationLandmark", "furtherHelpCategory", "userName"],
+    searchFields: ["firstName", "lastName", "interactionLogFirstName", "additionalDetails", "description", "locationLandmark", "furtherHelpCategory", "userName"],
+    searchDateFields: ["timestampOfInteraction", "followUpTimestamp", "lastModifiedTimestamp"],
     defaultSort: { field: "lastModifiedTimestamp", direction: "desc" },
     sortOptions: [
       { field: "lastModifiedTimestamp", label: "Last modified" },

@@ -63,14 +63,19 @@ export default function PostApprovals() {
 
   const loadApprovalPage = useCallback(
     async (request) => {
-      if (request.search?.value) {
+      const searchTerm = request.search?.value?.trim() || "";
+      const sortField = request.sort?.field || orderFieldMap[activeTab];
+      // Alternative sorts must use the enriched dataset even after search is
+      // cleared: fields such as userName do not exist on the post documents.
+      if (searchTerm || sortField !== orderFieldMap[activeTab]) {
         const result = await fetchPendingSearchPage({
           collectionName: collectionMap[activeTab],
           orderField: orderFieldMap[activeTab],
-          sortField: request.sort?.field || orderFieldMap[activeTab],
+          sortField,
           sortDirection: request.sort?.direction || "desc",
-          searchTerm: request.search.value,
+          searchTerm,
           searchFields: postQueryConfig[activeTab].searchFields,
+          searchDateFields: postQueryConfig[activeTab].searchDateFields,
           pageSize: request.pageSize,
           page: request.targetPage + 1,
         });
@@ -119,6 +124,9 @@ export default function PostApprovals() {
   const totalCountForActiveTab = totalRecords || 0;
   const isLoading = hookState.state === "Loading";
   const isError = hookState.state === "Error";
+  const isMissingIndex =
+    hookState.error?.code === "failed-precondition" &&
+    /index/i.test(hookState.error?.message || "");
 
   const totalPagesForActiveTab = Math.max(
     Math.ceil(totalCountForActiveTab / postsPerPage),
@@ -368,7 +376,12 @@ export default function PostApprovals() {
             </div>
           </>
         ) : isError ? (
-          <ErrorMessage displayName="posts" />
+          <ErrorMessage
+            displayName="posts"
+            message={isMissingIndex
+              ? "Posts cannot load until the required Firestore index is ready."
+              : undefined}
+          />
         ) : (
           <>
             <div className="mt-5 grid gap-x-5 gap-y-8 md:grid-cols-2 lg:grid-cols-3">
