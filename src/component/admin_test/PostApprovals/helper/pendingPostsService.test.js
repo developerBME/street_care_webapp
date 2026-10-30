@@ -99,3 +99,24 @@ test("filters before counting and paging, and clears whitespace-only searches", 
   expect(cleared.total).toBe(10);
   expect(cleared.posts).toHaveLength(6);
 });
+
+// Exercise every exposed sort option for all three approval tabs.
+describe.each(Object.keys(fixtures))("%s sort options", (tab) => {
+  test.each(postQueryConfig[tab].sortOptions.flatMap(({ field }) =>
+    ["asc", "desc"].flatMap(direction => ["", "warm"].map(term => [field, direction, term]))
+  ))("sorts %s %s with search=%j before pagination", async (field, direction, term) => {
+    const isDate = postQueryConfig[tab].searchDateFields.includes(field);
+    const values = isDate
+      ? [{ seconds: 300 }, { seconds: 100 }, { seconds: 200 }]
+      : ["Charlie", "alpha", "Bravo"];
+    fetchUserTypeDetails.mockImplementation(async (uid) => ({ username: values[Number(uid)] }));
+    setPosts(values.map((value, index) => ({ ...fixtures[tab], [field]: value, ...(field === "userName" ? { uid: String(index) } : {}) })));
+    const result = await search(tab, term, { sortField: field, sortDirection: direction, pageSize: 2 });
+    const expected = ["1", "2", "0"];
+    if (direction === "desc") expected.reverse();
+    expect(result.total).toBe(3);
+    expect(result.posts.map(post => post.id)).toEqual(expected.slice(0, 2));
+    const second = await search(tab, term, { sortField: field, sortDirection: direction, pageSize: 2, page: 2 });
+    expect(second.posts.map(post => post.id)).toEqual(expected.slice(2));
+  });
+});
