@@ -17,7 +17,7 @@ import { useUserContext } from "../../context/Usercontext.js";
 import collectionMapping from "../../utils/firestoreCollections.js";
 import heartOutline from "../../images/heart-outline.png";
 import heartFilled from "../../images/heart-filled.png";
-import share from "../../images/share-icon.png";
+import copy from "../../images/copy-icon.png";
 import { handleLikes, setInitialLike } from "../EventCardService";
 
 const outreachEvents_collection = collectionMapping.outreachEvents; // Collection name
@@ -50,14 +50,13 @@ const OutreachEventCard = ({
 
   const [justCopied, setJustCopied] = useState(false);
 
-  const [isFlagLoading, setIsFlagLoading] = useState(false);
-
-  // State for hover
-  const [isHovered, setIsHovered] = useState(false);
-
   const [isLiked, setIsLiked] = useState(setInitialLike(likes?likes:[]));
 
   const [likesCount, setLikesCount] = useState(likes ? likes.length : 0);
+
+  const [likeLoading, setLikeLoading] = useState(false);
+  const [copyLoading, setCopyLoading] = useState(false);
+  const [flagLoading, setFlagLoading] = useState(false);
 
   // Fetch flag status when component mounts
   useEffect(() => {
@@ -85,65 +84,67 @@ const OutreachEventCard = ({
     fetchFlagStatus();
   }, [id]);
 
-  const handleFlag = async (e) => {
-    e.stopPropagation(); // Prevent triggering parent click events
-    if(isFlagLoading)  return; // Prevent multiple rapid clicks
-    
-    if (!user) {
-      alert("Please log in to flag or unflag the Outreach Events.");
-      console.error("User is not logged in.");
+ const handleFlag = async (e) => {
+  e.stopPropagation();
+
+  if (flagLoading) return;
+
+  if (!user) {
+    alert("Please log in to flag or unflag the Outreach Events.");
+    console.error("User is not logged in.");
+    return;
+  }
+
+  try {
+    setFlagLoading(true);
+
+    if (!id) {
+      console.error("Invalid cardData.id:", id);
       return;
     }
-    setIsFlagLoading(true);
-    try {
-      if (!id) {
-        console.error("Invalid cardData.id:", id);
-        return;
-      }
 
-      const userRef = doc(db, users_collection, user.uid);
-      const userDoc = await getDoc(userRef);
+    const userRef = doc(db, users_collection, user.uid);
+    const userDoc = await getDoc(userRef);
 
-      if (!userDoc.exists()) {
-        console.error("User document does not exist:", user.uid);
-        return;
-      }
-
-      const { Type: userType } = userDoc.data();
-      const docRef = doc(db, outreachEvents_collection, id);
-      const currentDoc = await getDoc(docRef);
-
-      if (!currentDoc.exists()) {
-        console.error("Outreach document does not exist:", id);
-        return;
-      }
-
-      const { isFlagged: currentStatus, flaggedByUser } = currentDoc.data();
-
-      const canUnflag =
-        flaggedByUser === user.uid || userType === "Street Care Hub Leader";
-
-      if (currentStatus) {
-        if (!canUnflag) {
-          alert("Only the user who flagged this event or a Street Care Hub Leader can unflag it.")
-          console.error(
-            "Only the user who flagged this event or a Street Care Hub Leader can unflag it."
-          );
-          return;
-        }
-
-        await updateDoc(docRef, { isFlagged: false, flaggedByUser: null });
-        setIsFlagged(false);
-      } else {
-        await updateDoc(docRef, { isFlagged: true, flaggedByUser: user.uid });
-        setIsFlagged(true);
-      }
-    } catch (error) {
-      console.error("Error toggling document flag status:", error);
-    } finally {
-    setIsFlagLoading(false);
+    if (!userDoc.exists()) {
+      console.error("User document does not exist:", user.uid);
+      return;
     }
-  };
+
+    const { Type: userType } = userDoc.data();
+    const docRef = doc(db, outreachEvents_collection, id);
+    const currentDoc = await getDoc(docRef);
+
+    if (!currentDoc.exists()) {
+      console.error("Outreach document does not exist:", id);
+      return;
+    }
+
+    const { isFlagged: currentStatus, flaggedByUser } = currentDoc.data();
+
+    const canUnflag =
+      flaggedByUser === user.uid || userType === "Street Care Hub Leader";
+
+    if (currentStatus) {
+      if (!canUnflag) {
+        alert(
+          "Only the user who flagged this event or a Street Care Hub Leader can unflag it."
+        );
+        return;
+      }
+
+      await updateDoc(docRef, { isFlagged: false, flaggedByUser: null });
+      setIsFlagged(false);
+    } else {
+      await updateDoc(docRef, { isFlagged: true, flaggedByUser: user.uid });
+      setIsFlagged(true);
+    }
+  } catch (error) {
+    console.error("Error toggling document flag status:", error);
+  } finally {
+    setTimeout(() => setFlagLoading(false), 500);
+  }
+};
 
   const detailOutreach = () => {
     navigate(`/outreachsignup/${id}`, {
@@ -153,21 +154,37 @@ const OutreachEventCard = ({
 
 
   const handleShare = async (e) => {
-    e.stopPropagation();
-    const currentUrl = window.location.host + `/outreachsignup/${id}`;
-    try {
-      await navigator.clipboard.writeText(currentUrl);
-      setJustCopied(true);
-      setTimeout(() => setJustCopied(false), 2000);
-    }
-    catch (err) {
-      console.error("Failed to copy link: ", err);
+  e.stopPropagation();
+
+  if (copyLoading) return;
+
+  const currentUrl = window.location.host + `/outreachsignup/${id}`;
+
+  try {
+    setCopyLoading(true);
+
+    await navigator.clipboard.writeText(currentUrl);
+    setJustCopied(true);
+
+    setTimeout(() => {
       setJustCopied(false);
-    }
-  };
+      setCopyLoading(false);
+    }, 2000);
+  } catch (err) {
+    console.error("Failed to copy link: ", err);
+    setJustCopied(false);
+    setCopyLoading(false);
+  }
+};
+  
 const handleLikeToggle = async (e) => {
   e.stopPropagation();
+
+  if (likeLoading) return;
+
   try {
+    setLikeLoading(true);
+
     await handleLikes(
       e,
       id,
@@ -177,12 +194,14 @@ const handleLikeToggle = async (e) => {
       setLikesCount,
       false
     );
-    // Tell parent to refresh (this will hide the section when last like is removed)
+
     if (isProfilePage && typeof onUpdate === "function") {
       onUpdate();
     }
   } catch (err) {
     console.error("Toggle like failed:", err);
+  } finally {
+    setTimeout(() => setLikeLoading(false), 500);
   }
 };
 
@@ -219,50 +238,57 @@ const handleLikeToggle = async (e) => {
         )}
 
         {/* Like Button */}
-        <img
-  onClick={handleLikeToggle}
-  src={isLiked ? heartFilled : heartOutline}
-  alt="like"
-  className="w-8 h-8 cursor-pointer rounded-full p-1 hover:bg-gray-200"
-/>
-
-        {/* Share Button */}
-        <div className="relative">
+        <div className="relative group">
           <img
-            onClick={(e) => handleShare( e )}
-            src={share}
-            alt="share"
-            className="w-8 h-8 cursor-pointer rounded-full p-1 hover:bg-gray-200"
+            onClick={handleLikeToggle}
+            src={isLiked ? heartFilled : heartOutline}
+            alt="like"
+            className={`w-7 h-7 cursor-pointer p-1 hover:bg-gray-200 ${
+             likeLoading ? "opacity-50 pointer-events-none" : ""
+            }`}
           />
-          {justCopied && (
+          <div className="absolute right-0 top-10 hidden group-hover:block bg-gray-800 text-white text-sm rounded-md px-3 py-2 whitespace-nowrap z-50">
+            {isLiked ? "Unlike" : "Like"}
+          </div>
+       </div>
+
+        {/* Copy Button */}
+        <div className="relative group">
+          <img
+            onClick={ handleShare}
+            src={copy}
+            alt="Copy"
+            className={`w-8 h-8 cursor-pointer p-1 hover:bg-gray-200 ${
+            copyLoading ? "opacity-50 pointer-events-none" : ""
+            }`}
+          />
+          {justCopied ? (
             <div className="absolute -left-[150px] top-0 bg-gray-800 text-white text-sm rounded-md px-2 py-1 z-10">
               {"Copied To Clipboard!"}
             </div>
+          ) : (
+             <div className="absolute right-0 top-10 hidden group-hover:block bg-gray-800 text-white text-sm rounded-md px-3 py-2 whitespace-nowrap z-50">
+              {"Copy Link"}
+                </div>
           )}
         </div>
 
-        {/* Flag Button */}
-        <div className="relative">
+                {/* Flag Button */}
+        <div className="relative group">
           <img
             onClick={handleFlag}
             src={flagSvg}
             alt="flag"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
             className={`w-8 h-8 cursor-pointer rounded-full p-1 ${
-              isFlagLoading ? "cursor-not-allowed opacity-50" : "cursor-pointer"
-             } ${isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
-            }`}
+            isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
+            } ${flagLoading ? "opacity-50 pointer-events-none" : ""}`}
           />
-          {isHovered && (
-            <div className="absolute -left-[150px] top-0 bg-gray-800 text-white text-sm rounded-md px-2 py-1 z-10">
+            <div className="absolute right-0 top-10 hidden group-hover:block bg-gray-800 text-white text-sm rounded-md px-3 py-2 whitespace-nowrap z-50">
               {!isFlagged ? "Flag the Outreach Event?" : "Unflag the Outreach Event?"}
             </div>
-          )}
         </div>
       </div>
-
-
+        
       {/* User Information */}
       <div className="inline-flex items-center space-x-2">
         <img
