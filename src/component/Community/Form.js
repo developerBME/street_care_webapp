@@ -200,6 +200,24 @@ const Form = (hrid) => {
   };
 
 
+  const getEndMinTime = () => {
+    const baseDay = endDate || startDate || new Date();
+    const now = new Date();
+    let min = dayTime(baseDay, 9);
+
+    if (baseDay.toDateString() === now.toDateString() && now > min) {
+      min = now;
+    }
+    if (
+      startDate &&
+      baseDay.toDateString() === startDate.toDateString() &&
+      startDate > min
+    ) {
+      min = startDate;
+    }
+    return min;
+  };
+
   const [error, setError] = useState({
     nameError: "",
     contactError: "",
@@ -680,10 +698,12 @@ const Form = (hrid) => {
     }
 
     if (!startDate) {
-      updateErrorState("stimeError", "Start Date-Time is required");
-    } else {
-      updateErrorState("stimeError", "");
-    }
+  updateErrorState("stimeError", "Start Date-Time is required");
+} else if (startDate < new Date()) {
+  updateErrorState("stimeError", "Event date cannot be in the past");
+} else {
+  updateErrorState("stimeError", "");
+}
 
     if (!endDate) {
       updateErrorState("etimeError", "End Date-Time is required");
@@ -1278,23 +1298,32 @@ const Form = (hrid) => {
                 <p className="font-semibold font-['Inter'] text-[15px]">
                   Start Date-Time* ({getCurrentTimezone()})
                 </p>
-                <DatePicker
-                  selected={startDate}
-                  onChange={(date) => {
-                    setStartDate(date);
-                    handleStimeChange(date);
-                  }}
-                  showTimeSelect
-                  timeFormat="HH:mm"
-                  timeIntervals={15}
-                  dateFormat="Pp"
-                  minTime={dayTime(startDate, 9)}
-                  maxTime={dayTime(startDate, 17)}
-                  filterTime={(time) => {
+              <DatePicker
+  selected={startDate}
+  onChange={(date) => {
+    setStartDate(date);
+    handleStimeChange(date);
+  }}
+  showTimeSelect
+  timeFormat="HH:mm"
+  timeIntervals={15}
+  dateFormat="Pp"
+  minDate={new Date()}
+  minTime={
+    startDate && startDate.toDateString() === new Date().toDateString()
+      ? new Date()
+      : dayTime(startDate, 9)
+  }
+  maxTime={dayTime(startDate, 17)}
+  filterTime={(time) => {
+                    const now = new Date(); 
                     const h = time.getHours();
                     const m = time.getMinutes();
                     const total = h * 60 + m;
-                    return total >= 9 * 60 && total <= 17 * 60;
+                    const withinBusiness = total >= 9 * 60 && total <= 17 * 60;
+                    const isFutureOrNow = time >= now; 
+                    
+                    return withinBusiness && isFutureOrNow;
                   }}
                   customInput={
                     <CustomInput
@@ -1331,17 +1360,17 @@ const Form = (hrid) => {
                   timeFormat="HH:mm"
                   timeIntervals={15}
                   dateFormat="Pp"
-                  minTime={dayTime(endDate || startDate, 9)}
+                 minTime={getEndMinTime()}
                   maxTime={dayTime(endDate || startDate, 17)}
                   filterTime={(time) => {
-                    // Must be within business hours 09:00–17:00
+                    const now = new Date();
                     const h = time.getHours();
                     const m = time.getMinutes();
                     const total = h * 60 + m;
                     const withinBusiness = total >= 9 * 60 && total <= 17 * 60;
-                    // And after the selected startDate (if set)
+                    const isFutureOrNow = time >= now;
                     const afterStart = startDate ? time > startDate : true;
-                    return withinBusiness && afterStart;
+                    return withinBusiness && isFutureOrNow && afterStart;
                   }}
                   disabled={!startDate}
                   minDate={startDate}
