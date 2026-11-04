@@ -489,22 +489,23 @@ useEffect(() => {
               <div className="w-full hidden md:block">
                 <div className="flex w-full flex-col sm:flex-row">
                   {[1, 2, 3, 4].map((step) => (
-                    <div
-                      key={step}
-                      className={`border-x border-y w-full cursor-pointer px-4 py-6 space-y-8 ${
-                        selectedStep === step
-                          ? "bg-[#CEBFFC] border-[#6840E0] border-1 rounded-b-lg"
-                          : ""
-                      }`}
-                      style={{
-                        transform:
-                          selectedStep === step ? "scaleY(1.05)" : "none",
-                        transformOrigin: "top",
-                      }}
-                      onClick={() => handleSelectStep(step)}
-                    >
-                      {renderStepTitle(step, selectedStep)}
-                    </div>
+                    <button
+  key={step}
+  type="button"
+  className={`border-x border-y w-full cursor-pointer px-4 py-6 space-y-8 text-left ${
+    selectedStep === step
+      ? "bg-[#CEBFFC] border-[#6840E0] border-1 rounded-b-lg"
+      : ""
+  }`}
+  style={{
+    transform:
+      selectedStep === step ? "scaleY(1.05)" : "none",
+    transformOrigin: "top",
+  }}
+  onClick={() => handleSelectStep(step)}
+>
+  {renderStepTitle(step, selectedStep)}
+</button>
                   ))}
                 </div>
 
@@ -520,22 +521,22 @@ useEffect(() => {
                 <div className="flex w-full flex-col sm:flex-row">
                   {[1, 2, 3, 4].map((step) => (
                     <React.Fragment key={step}>
-                      <div
-                        key={step}
-                        className={`border-x border-y w-full cursor-pointer px-4 py-6 space-y-8 ${
-                          selectedStep === step
-                            ? "bg-[#CEBFFC] border-[#6840E0] border-1 rounded-b-lg"
-                            : ""
-                        }`}
-                        style={{
-                          transform:
-                            selectedStep === step ? "scaleY(1.05)" : "none",
-                          transformOrigin: "top",
-                        }}
-                        onClick={() => handleSelectStep(step)}
-                      >
-                        {renderStepTitle(step, selectedStep)}
-                      </div>
+                      <button
+  type="button"
+  className={`border-x border-y w-full cursor-pointer px-4 py-6 space-y-8 text-left ${
+    selectedStep === step
+      ? "bg-[#CEBFFC] border-[#6840E0] border-1 rounded-b-lg"
+      : ""
+  }`}
+  style={{
+    transform:
+      selectedStep === step ? "scaleY(1.05)" : "none",
+    transformOrigin: "top",
+  }}
+  onClick={() => handleSelectStep(step)}
+>
+  {renderStepTitle(step, selectedStep)}
+</button>
                       {step === selectedStep && (
                         <div className="border-l-2 border-r-2 border-b-2 w-full py-10 rounded-b-2xl bg-white">
                           {renderStepContent(step)}
