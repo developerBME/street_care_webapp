@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import OutreachVisitLogCard from "./Community/OutreachVisitLogCard";
 import { useNavigate } from "react-router-dom";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { IoIosArrowBack, IoIosArrowForward} from "react-icons/io";
+import { TbZoomCancel } from "react-icons/tb";
 import { fetchPublicVisitLogs } from "./VisitLogCardService";
 import EventCardSkeleton from "./Skeletons/EventCardSkeleton";
 import DatePicker from "react-datepicker";
@@ -13,8 +14,10 @@ import arrowBack from "../images/arrowBack.png";
 import DisplayInteractionLogCard, {
   ExpandedInteractionLogCard,
 } from "./Community/DisplayInteractionLogCard";
+import NoLogsFound from "./NologsFound";
 // import RenderPaginationBtns from "./HomePage/RenderPaginationBtns";
 // Refactor to use PageCheckpoints and think of a way to handle pages.
+
 const AllOutreachVisitLog = () => {
   const navigate = useNavigate();
   const [filteredVisitLogs, setFilteredVisitLogs] = useState([]);
@@ -345,25 +348,24 @@ const AllOutreachVisitLog = () => {
             {returnText}
           </p>
         </div>
-        <div className="items-center justify-center px-4 py-8 lg:p-24 h-full w-full rounded-2xl bg-[#F7F7F7]">
-          <div className="lg:flex justify-between items-center mb-6">
+        <div className="items-center justify-center px-4 py-8 lg:p-24 h-full min-h-screen w-full rounded-2xl bg-[#F7F7F7]">
+          <div className="flex flex-col xl:flex-row xl:items-center gap-4 mb-6 w-full">
             <div>
-              <p className="font-bricolage font-medium text-2xl md:text-[45px] text-[#1F0A58] lg:mt-2">
+              <p className="font-bricolage font-medium text-[34px] xl:text-[38px] text-[#1F0A58] whitespace-nowrap">
                 Interaction Logs
               </p>
             </div>
-            <div className="flex flex-wrap lg:flex-nowrap items-center gap-4 mt-6 lg:mt-0">
+            <div className="flex items-center gap-3 flex-wrap xl:flex-nowrap">
               {/* Search input */}
               <label className="relative text-gray-400 focus-within:text-gray-600 w-full sm:w-auto">
                 <input
                   type="text"
                   name="searchValue"
                   id="searchText"
-                  placeholder="Search..."
+                  placeholder="Search by Description"
                   ref={searchRef}
                   onChange={handleChange}
-                  className="form-input w-full sm:w-fit md:w-[20rem] lg:w-[18rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-10 rounded-2xl"
-                  style={{ borderRadius: "0px" }}
+                  className="form-input w-[210px] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-10 rounded-2xl"
                 />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -380,23 +382,29 @@ const AllOutreachVisitLog = () => {
                 </svg>
               </label>
 
-              {/* Sort by filter */}
+        {/* Sort by filter */}
               <div className="flex items-center w-full sm:w-auto">
                 <label className="mr-2 text-gray-500 font-medium">
                   Filter:
                 </label>
-                <select
-                  value={sortOption}
-                  onChange={handleSortChange}
-                  className="form-select w-full sm:w-fit md:w-[8rem] py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block rounded-2xl"
-                  style={{ borderRadius: "0px" }}
-                >
-                  <option value="">None</option>
-                  <option value="city">City</option>
-                  <option value="datePeriod">Date Period</option>
-                </select>
+                <div className="relative">
+                  <select
+                    value={sortOption}
+                    onChange={handleSortChange}
+                    className="form-select w-[125px] py-2 pl-3 pr-8 border border-[#CACACA] text-gray-500 appearance-none block rounded-2xl bg-transparent"
+                  >
+                    <option value="">None</option>
+                    <option value="datePeriod">Date Period</option>
+                    <option value="city">City</option>
+                  </select>
+                  {/* Changed 'px-3' to 'pr-2' to push the arrow to the right edge */}
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center text-gray-500">
+                    <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                      <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                    </svg>
+                  </div>
+                </div>
               </div>
-
               {/* Conditional rendering of City search */}
               {sortOption === "city" && (
                 <input
@@ -407,8 +415,7 @@ const AllOutreachVisitLog = () => {
                   ref={searchCity}
                   value={filterData.city}
                   onChange={handleChange}
-                  className="form-input w-full sm:w-fit md:w-[12rem] lg:w-[8rem] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-2 rounded-2xl"
-                  style={{ borderRadius: "0px" }}
+                  className="form-input w-[125px] py-2 px-2 border border-[#CACACA] placeholder-gray-400 text-gray-500 appearance-none block pl-2 rounded-2xl"
                 />
               )}
 
@@ -424,8 +431,9 @@ const AllOutreachVisitLog = () => {
                     value={filterData.startDate}
                     onChange={(date) => handleDateChange(date, "startDate")}
                     placeholderText="Select Start Date"
-                    className="form-input w-full sm:w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
+                    className="form-input w-[125px] py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block rounded-2xl"
                   />
+                  <p>To</p>
                   <DatePicker
                     selected={filterData.endDate}
                     selectsEnd
@@ -435,7 +443,7 @@ const AllOutreachVisitLog = () => {
                     value={filterData.endDate}
                     onChange={(date) => handleDateChange(date, "endDate")}
                     placeholderText="Select End Date"
-                    className="form-input w-full sm:w-fit py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block"
+                    className="form-input w-[125px] py-2 px-2 border border-[#CACACA] text-gray-500 appearance-none block rounded-2xl"
                   />
                 </>
               )}
@@ -454,7 +462,7 @@ const AllOutreachVisitLog = () => {
           ) : (
             <>
               {/* <OutreachVisitLogCard /> */}
-              <div className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5">
+              <div className={`w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pt-9 gap-5 ${filteredVisitLogs.length === 0 ? "min-h-[400px]" : "h-fit"}`}>
                 {filteredVisitLogs.length > 0 ? (
                   filteredVisitLogs.map((visitLogData) => (
                     <DisplayInteractionLogCard
@@ -468,26 +476,31 @@ const AllOutreachVisitLog = () => {
                     />
                   ))
                 ) : (
-                  <p className="col-span-3 text-center text-gray-500">
-                    No logs found.
-                  </p>
+                  // <p className="col-span-3 text-center text-gray-500">
+                  //   No logs found.
+                  // </p>
+                  <NoLogsFound message="No Interaction Logs Found" icon={TbZoomCancel} />
                 )}
               </div>
 
-              {/* Pagination */}
-              <div className="flex justify-center items-center mt-8 w-full mx-auto">
-                <p className="text-gray-600">
-                  Showing {currentPageLength} of {totalRecords} events
-                </p>
-              </div>
-              <div className="flex justify-between items-center w-full md:w-3/4 lg:w-3/4 mx-auto mt-4">
-                {/* {renderPaginationButtons()} */}
-                {!isLoading &&
-                  renderPaginationButtons(
-                    totalPages,
-                    cursorFields?.currentPage + 1,
-                  )}
-              </div>
+              {filteredVisitLogs.length > 0 && (
+                <>
+                  {/* Pagination */}
+                  <div className="flex justify-center items-center mt-8 w-full mx-auto">
+                    <p className="text-gray-600">
+                      Showing {currentPageLength} of {totalRecords} events
+                    </p>
+                  </div>
+                  <div className="flex justify-between items-center w-full md:w-3/4 lg:w-3/4 mx-auto mt-4">
+                    {!isLoading &&
+                      renderPaginationButtons(
+                        totalPages,
+                        cursorFields?.currentPage + 1,
+                      )}
+                  </div>
+                </>
+              )}
+              <div></div>
               <div></div>
               {/* <RenderPaginationBtns
                 handlePrev={handlePrev}
