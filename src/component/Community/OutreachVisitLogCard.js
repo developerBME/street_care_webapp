@@ -28,6 +28,7 @@ const OutreachVisitLogCard = ({ visitLogCardData, onClick }) => {
   // Fetch flag info when component mounts
   const [isFlagged, setIsFlagged] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [flagLoading, setFlagLoading] = useState(false);
 
   const currentUserType = visitLogCardData?.userType;
   const { user } = useUserContext();
@@ -71,67 +72,67 @@ const OutreachVisitLogCard = ({ visitLogCardData, onClick }) => {
       break;
   }
 
-  const handleFlag = async (e) => {
-    e.stopPropagation(); // Prevent triggering parent click events
-    if (!user) {
-      alert("Please log in to flag or unflag the interaction log.");
-      console.error("User is not logged in.");
+ const handleFlag = async (e) => {
+  e.stopPropagation();
+
+  if (flagLoading) return;
+
+  if (!user) {
+    alert("Please log in to flag or unflag the interaction log.");
+    console.error("User is not logged in.");
+    return;
+  }
+
+  try {
+    setFlagLoading(true);
+
+    if (!visitLogCardData?.id) {
+      console.error("Invalid visitLogCardData.id");
       return;
     }
-    try {
-      if (!visitLogCardData?.id) {
-        console.error("Invalid visitLogCardData.id");
-        return;
-      }
 
-      const userRef = doc(db, users_collection, user.uid);
-      const userDoc = await getDoc(userRef);
+    const userRef = doc(db, users_collection, user.uid);
+    const userDoc = await getDoc(userRef);
 
-      if (!userDoc.exists()) {
-        console.error("User document does not exist:", user.uid);
-        return;
-      }
-
-      const { Type: userType } = userDoc.data();
-      const docRef = doc(db, visitLogs_collection, visitLogCardData?.id);
-      const docSnap = await getDoc(docRef);
-
-      if (!docSnap.exists()) {
-        console.error("Document does not exist:", user.uid);
-        return;
-      }
-      console.log("user:", userType);
-      const { isFlagged: currentStatus, flaggedByUser } = docSnap.data();
-      const canUnflag =
-        flaggedByUser === user.uid || userType === "Street Care Hub Leader";
-      const currentIsFlagged = docSnap.data().isFlagged;
-
-      // Restrict unflagging to specific user types
-      if (currentIsFlagged && !canUnflag) {
-        alert(
-          "Only Street Care Hub Leader or User who flagged it can unflag this post.",
-        );
-        return;
-      }
-
-      if (currentStatus) {
-        if (!canUnflag) {
-          console.error(
-            "Only the user who flagged this event or a Street Care Hub Leader can unflag it.",
-          );
-          return;
-        }
-
-        await updateDoc(docRef, { isFlagged: false, flaggedByUser: null });
-        setIsFlagged(false);
-      } else {
-        await updateDoc(docRef, { isFlagged: true, flaggedByUser: user.uid });
-        setIsFlagged(true);
-      }
-    } catch (error) {
-      console.error("Error toggling flag status:", error);
+    if (!userDoc.exists()) {
+      console.error("User document does not exist:", user.uid);
+      return;
     }
-  };
+
+    const { Type: userType } = userDoc.data();
+    const docRef = doc(db, visitLogs_collection, visitLogCardData?.id);
+    const docSnap = await getDoc(docRef);
+
+    if (!docSnap.exists()) {
+      console.error("Document does not exist:", visitLogCardData?.id);
+      return;
+    }
+
+    const { isFlagged: currentStatus, flaggedByUser } = docSnap.data();
+
+    const canUnflag =
+      flaggedByUser === user.uid || userType === "Street Care Hub Leader";
+
+    if (currentStatus && !canUnflag) {
+      alert(
+        "Only Street Care Hub Leader or User who flagged it can unflag this post."
+      );
+      return;
+    }
+
+    if (currentStatus) {
+      await updateDoc(docRef, { isFlagged: false, flaggedByUser: null });
+      setIsFlagged(false);
+    } else {
+      await updateDoc(docRef, { isFlagged: true, flaggedByUser: user.uid });
+      setIsFlagged(true);
+    }
+  } catch (error) {
+    console.error("Error toggling flag status:", error);
+  } finally {
+    setTimeout(() => setFlagLoading(false), 500);
+  }
+};
 
   if (isLoading) {
     return <EventCardSkeleton />; // Placeholder Skeleton while loading flag status
@@ -149,8 +150,8 @@ const OutreachVisitLogCard = ({ visitLogCardData, onClick }) => {
           src={flagIcon}
           alt="flag"
           className={`absolute right-4 w-8 h-8 cursor-pointer rounded-full p-1 ${
-            isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
-          }`}
+           isFlagged ? "bg-red-500" : "bg-transparent hover:bg-gray-200"
+          } ${flagLoading ? "opacity-50 pointer-events-none" : ""}`}
         />
         <div
           className="absolute right-16 top-0 bg-gray-800 text-white text-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-30 whitespace-normal"
