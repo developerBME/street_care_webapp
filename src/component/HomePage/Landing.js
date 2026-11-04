@@ -1,6 +1,6 @@
 import React, { forwardRef, useImperativeHandle } from "react";
-import one from "../../images/one.png";
-import two from "../../images/two.png";
+import one from "../../images/four.png";
+import two from "../../images/six.png";
 import three from "../../images/three.png";
 import CustomButton from "../Buttons/CustomButton";
 
@@ -37,14 +37,17 @@ const Landing = forwardRef(({ scorllFuntion }, ref) => {
           />
         </div>
       </div>
-      <div className=" grid grid-cols-1 gap-y-4">
-        <div className=" grid grid-cols-5 gap-x-4">
-          <img src={one} className=" rounded-2xl h-full w-fit col-span-2"></img>
-          <img src={two} className=" rounded-2xl w-fit col-span-3"></img>
+      <div className=" grid grid-cols-1 gap-y-2">
+        <div className=" grid grid-cols-6 gap-x-2">
+          <img src={one} className=" rounded-2xl w-full h-52 md:h-56 lg:h-60 objecct-cover col-span-4  "></img>
+          <img src={two} className="  rounded-2xl w-full h-52 md:h-56 lg:h-60 object-cover col-span-2  "></img>
+          {/* <img src={three} className="  rounded-2xl h-fit  w-fit col-span-4 md:h-fit  md:w-full md:col-span-4 lg:h-45 lg:col-span-4 lg:w-full xl:h-fit  xl:w-full xl:col-span-4 "></img>
+          <img src={two} className="  rounded-2xl h-full w-fit col-span-2 md:h-full md:w-full md:col-span-2 lg:h-45 lg:col-span-2 lg:w-full xl:h-full xl:w-full xl:col-span-2 "></img> */}
         </div>
 
-        <div className="  col-span-2 ">
-          <img src={three} className="rounded-2xl"></img>
+        <div className="  col-span-1 ">
+          
+          <img src={three} className="rounded-2xl w-full h-fit lg:w -full lg:h-fit  "></img>
         </div>
       </div>
     </div>

@@ -114,7 +114,7 @@ function Banner() {
           <div className="lg:col-span-3 md:col-span-2 z-10">
             <img
               src={banner}
-              alt=""
+              alt="Community members interacting"
               className=" h-full lg:max-w-[120%] lg:w-[120%] lg:mt-0 md:mt-[30px] mt-[0px] lg:-ml-[50px] md:w-fit mx-auto"
             ></img>
           </div>

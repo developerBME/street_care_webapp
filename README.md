@@ -1,70 +1,131 @@
-# Getting Started with Create React App
+# Street Care Web App
+> www.streetcarenow.org
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A volunteer management and outreach platform built for [Bright Mind Enrichment](https://www.brightmindenrichment.org). It enables volunteers to log street care visits, manage outreach events, submit help requests, and coordinate community efforts.
 
-## Available Scripts
+## Prerequisites
 
-In the project directory, you can run:
+- Node.js 18+
+- Firebase CLI (`npm install -g firebase-tools`)
+- Access to the Firebase project (`streetcaredev` for dev, `streetcare-d0f33` for production)
 
-### `npm start`
+## Local Setup
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+2. **Configure environment variables**
 
-### `npm test`
+   Create a `.env` file in the project root with the following keys:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+   ```env
+   # Firebase project config
+   REACT_APP_FIREBASE_API_KEY=
+   REACT_APP_AUTH_DOMAIN=
+   REACT_APP_DATABASE_URL=
+   REACT_APP_PROJECT_ID=
+   REACT_APP_STORAGE_BUCKET=
+   REACT_APP_MESSAGING_SENDER_ID=
+   REACT_APP_APP_ID=
+   REACT_APP_MEASUREMENT_ID=
 
-### `npm run build`
+   # Environment switch: "main" or "development"
+   REACT_APP_ENV=development
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+   # Firestore collection names (shared across environments)
+   REACT_APP_USERS_COLLECTION=
+   REACT_APP_BANNED_USER_COLLECTION=
+   REACT_APP_ADMIN_USER_COLLECTION=
+   REACT_APP_BMEEVENTS_COLLECTION=
+   REACT_APP_HELP_REQUESTS_COLLECTION=
+   REACT_APP_CONTACTS_COLLECTION=
+   REACT_APP_TEST_USER_COLLECTION=
+   REACT_APP_AUDIT_LOG_COLLECTION=
+   REACT_APP_OFFICIAL_EVENTS=
+   REACT_APP_EVENTS_COLLECTION=
+   REACT_APP_HELP_REQUEST_COLLECTION=
+   REACT_APP_INTERACTION_LOG_COLLECTION=
+   REACT_APP_METRICS_COLLECTION=
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   # Firestore collections for "main" environment
+   REACT_APP_MAIN_OUTREACH_EVENTS_COLLECTION=
+   REACT_APP_MAIN_VISIT_LOG_COLLECTION=
+   REACT_APP_MAIN_VISIT_LOG_NEW_COLLECTION=
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+   # Firestore collections for "development" environment
+   REACT_APP_DEV_OUTREACH_EVENTS_COLLECTION=
+   REACT_APP_DEV_VISIT_LOG_COLLECTION=
+   REACT_APP_DEV_VISIT_LOG_NEW_COLLECTION=
+   REACT_APP_HELP_REQUEST_COLLECTION_DEV=
+   REACT_APP_INTERACTION_LOG_COLLECTION_DEV=
 
-### `npm run eject`
+   # External APIs
+   REACT_APP_GOOGLE_PLACES_API_KEY=
+   REACT_APP_X_PARSE_APPLICATION_ID=
+   REACT_APP_X_PARSE_REST_API_KEY=
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+   # Used by Cloud Functions (email/2FA)
+   REACT_APP_CLIENT_ID=
+   REACT_APP_CLIENT_SECRET=
+   REACT_APP_REFRESH_TOKEN=
+   REACT_APP_EMAIL=
+   REACT_APP_SECRET_KEY=
+   REACT_APP_confirmationLink=
+   ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+   Contact the project maintainers for the actual values.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+3. **Start the dev server**
+   ```bash
+   npm start
+   ```
+   App runs at `http://localhost:3000`.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Firebase Cloud Functions
 
-## Learn More
+The `functions/` directory is a separate Node 18 package for backend logic (email sending, 2FA, audit logging, email scheduling).
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+cd functions
+npm install
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+# Run locally with the Firebase emulator
+npm run serve
 
-### Code Splitting
+# Deploy to Firebase
+npm run deploy
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Environment Switching
 
-### Analyzing the Bundle Size
+`REACT_APP_ENV` controls which set of Firestore collections the app reads from:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+| Value | Usage |
+|---|---|
+| `development` | Dev/staging Firestore collections |
+| `main` | Production Firestore collections |
 
-### Making a Progressive Web App
+Collection names for each environment are mapped in `src/utils/firestoreCollections.js`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Deployment
 
-### Advanced Configuration
+The frontend deploys to GitHub Pages:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+```bash
+npm run build
+npm run deploy
+```
 
-### Deployment
+Cloud Functions deploy separately from the `functions/` directory (see above).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Tech Stack
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+| Layer | Technology |
+|---|---|
+| Frontend | React 18, React Router v6 |
+| Styling | Tailwind CSS, Material-UI (MUI) |
+| Backend/DB | Firebase (Auth, Firestore, Storage) |
+| Functions | Firebase Cloud Functions (Node 18) |
+| Hosting | GitHub Pages (frontend), Firebase (functions) |
