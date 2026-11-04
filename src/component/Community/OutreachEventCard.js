@@ -19,7 +19,6 @@ import heartOutline from "../../images/heart-outline.png";
 import heartFilled from "../../images/heart-filled.png";
 import copy from "../../images/copy-icon.png";
 import { handleLikes, setInitialLike } from "../EventCardService";
-import { Dice1 } from "lucide-react";
 
 const outreachEvents_collection = collectionMapping.outreachEvents; // Collection name
 const users_collection = collectionMapping.users; // User collection
@@ -50,9 +49,6 @@ const OutreachEventCard = ({
   const [isFlagged, setIsFlagged] = useState(false);
 
   const [justCopied, setJustCopied] = useState(false);
-
-  // State for hover
-  const [isHovered, setIsHovered] = useState(false);
 
   const [isLiked, setIsLiked] = useState(setInitialLike(likes?likes:[]));
 
