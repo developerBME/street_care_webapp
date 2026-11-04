@@ -181,17 +181,17 @@ function Login() {
               </div>
               <div className=" h-fit mt-16 flex flex-col justify-start items-start gap-9 ">
                 <div className="flex-col justify-start items-start gap-4 flex">
-                  <div
-                    className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200 cursor-pointer"
+                  <button
+                    type="button"
+                    className="w-[360px] h-14 bg-white rounded-[100px] border border-neutral-200 cursor-pointer flex items-center justify-center gap-3 focus:outline-none focus:ring-2 focus:ring-violet-500"
                     onClick={handleGoogleSignIn}
+                    aria-label="Continue with Google"
                   >
-                    <div className="left-[80px] top-[16px] absolute text-center text-neutral-600 text-lg font-medium font-inter leading-normal ">
+                    <FcGoogle size={32} />
+                    <span className="text-center text-neutral-600 text-lg font-medium font-inter leading-normal">
                       Continue with Google
-                    </div>
-                    <div className="w-8 h-8 left-[22.50px] top-[12px] absolute">
-                      <FcGoogle size={32} />
-                    </div>
-                  </div>
+                    </span>
+                  </button>
                   {/*
                   <div className="w-[360px] h-14 relative bg-white rounded-[100px] border border-neutral-200">
                     
